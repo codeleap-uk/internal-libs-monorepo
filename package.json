@@ -1,5 +1,5 @@
 {
-  "name": "turborepo-basic-shared",
+  "name": "codeleap",
   "version": "0.0.0",
   "private": true,
   "workspaces": [
@@ -23,8 +23,7 @@
           "^build"
         ],
         "outputs": [
-          "dist/**",
-          ".next/**"
+          "dist/**"
         ]
       },
       "lint": {
@@ -32,6 +31,9 @@
       },
       "dev": {
         "cache": false
+      },
+      "test": {
+        "outputs": []
       }
     }
   },

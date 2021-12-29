@@ -1,0 +1,414 @@
+{
+	// How snippets work: https://code.visualstudio.com/docs/editor/userdefinedsnippets
+  // Useful tool for generating snippets: https://snippet-generator.app
+
+  //
+  // GENERAL JS
+  //
+  "log({ obj })": {
+    "prefix": ["log", "console"],
+    "body": "log({ ${1:${CLIPBOARD}} })",
+    "description": "[CodeLeap] logger/debugger\n\n",
+  },
+  "ESLint ignores parameter": {
+    "prefix": "eslint ignore",
+    "body": "/* eslint ${1:quotes}: 'off' */",
+    "description": "[CodeLeap] Ignores eslint parameter\n\n",
+  },
+  "ESLint disables linter": {
+    "prefix": "eslint disable",
+    "body": "/* eslint-disable */",
+    "description": "[CodeLeap] Disables eslint in this file\n\n",
+  },
+  "TSLint disable next line": {
+    "prefix": "tslint disable next line",
+    "body": "// tslint:disable-next-line",
+    "description": "[CodeLeap] Disables tslint in the next line\n\n",
+  },
+  "TSLint disable this file": {
+    "prefix": "tslint disable this file",
+    "body": "/* tslint:disable */",
+    "description": "[CodeLeap] Disables tslint in this file\n\n",
+  },
+	"Import `THIS` from `THAT`": {
+    "prefix": ["import", "imp"],
+    "body": [
+      "import { ${1} } from '${2}'",
+      ""
+    ],
+    "description": "[CodeLeap] Imports `A` from `B`\n\n",
+  },
+  "Simple arrow function": {
+    "prefix": ["=>", "()=>null", "arrow function", "const"],
+    "body": [
+      "const ${1:handlePress} = (${2:args}) => {",
+      "  log({ ${2:args} })",
+      "  ${3:doSomething()}",
+      "}",
+      ""
+    ],
+    "description": "[CodeLeap] Simple arrow function\n\n",
+  },
+  "Simple actual function": {
+    "prefix": ["fn", "function", "func"],
+    "body": [
+      "function ${1:handlePress}(${2:args}) {",
+      "  log({ ${2:args} })",
+      "  ${3:doSomething()}",
+      "}",
+      ""
+    ],
+    "description": "[CodeLeap] Simple actual function\n\n",
+  },
+  "Simple actual function from clipboard": {
+    "prefix": ["clfn", "fn", "function", "func", "clip", "extend", "clbd", "ext"],
+    "body": [
+      "function ${1:${CLIPBOARD}}(${2:args}) {",
+      "  log({ ${2:args} })",
+      "  ${3:${CLIPBOARD}}()",
+      "}",
+      ""
+    ],
+    "description": "[CodeLeap] Simple actual function from clipboard\n\n",
+  },
+
+
+  //
+  // THEME AND STYLES STUFF
+  //
+  "StyleSheet template object": {
+    "prefix": ["ss", "stylesheet"],
+    "body": [
+      "const styles = {",
+      "  ${1:wrapper}: {",
+      "    ...Theme.center,",
+      "    backgroundColor: `blue`,",
+      "  },",
+      "  ${2:innerWrapper}: {",
+      "    backgroundColor: `green`,",
+      "  },",
+      "}",
+      "",
+    ],
+    "description": "[CodeLeap] Create template StyleSheet object\n\n",
+  },
+  "backgroundColor": {
+    "prefix": ["backgroundColor", "bkg"],
+    "description": "[CodeLeap] backgroundColor snippet,",
+    "body": "backgroundColor: '${1:blue}',",
+  },
+  "row": {
+    "prefix": ["row"],
+    "description": "[CodeLeap] ...Theme.row,",
+    "body": "...Theme.row,",
+  },
+  "center": {
+    "prefix": ["center"],
+    "description": "[CodeLeap] ...Theme.center,",
+    "body": "...Theme.center,",
+  },
+  "margin": {
+    "prefix": ["margin"],
+    "description": "[CodeLeap] Margins snippet",
+    "body": "margin${1|Top,Bottom,Left,Right,Vertical,Horizontal|}: Theme.spacing(${2:2}),",
+  },
+  "padding": {
+    "prefix": ["padding"],
+    "description": "[CodeLeap] Paddings snippet",
+    "body": "padding${1|Top,Bottom,Left,Right,Vertical,Horizontal|}: Theme.spacing(${2:2}),",
+  },
+  "media": {
+    "prefix": ["media"],
+    "description": "[CodeLeap] Media query snippet",
+    "body": [
+      "[Theme.media.${1|down,up,is,not|}('${2|zero,small,mid,large,xlarge|}')]: {",
+      "  backgroundColor: '${3:yellow}',",
+      "},",
+    ],
+  },
+
+
+  //
+  // IMPORTS
+  //
+  "Import ... from 'lib'": {
+      "prefix": ["implib", "import lib"],
+      "body": "import { React, View, Text } from 'lib'",
+      "description": "[CodeLeap] Template for importing lib components\n\n",
+    },
+  "Import ... from `components`": {
+      "prefix": ["impcomp", "import component"],
+      "body": "import { ${1:${CLIPBOARD}} } from 'components'",
+      "description": "[CodeLeap] Template for importing component components\n\n",
+    },
+  "Import ... from 'app'": {
+      "prefix": ["impapp", "import app", "import theme", "import settings"],
+      "body": "import { Theme, Settings } from 'app'",
+      "description": "[CodeLeap] Template for importing app components\n\n",
+    },
+  "Import ... from `actions`": {
+      "prefix": ["impact", "import actions"],
+      "body": "import { ${1:${CLIPBOARD}}, ${2:AppStatus} } from 'actions'",
+      "description": "[CodeLeap] Template for importing action functions\n\n",
+  },
+  "Add item...`": {
+      "prefix": ["add"],
+      "body": ", ${1:${CLIPBOARD}} ",
+      "description": "[CodeLeap] Adds item to end of array or object\n\n",
+  },
+  "Insert item...`": {
+      "prefix": ["insert", "ins"],
+      "body": " ${1:${CLIPBOARD}},",
+      "description": "[CodeLeap] Insert item to middle of array or object\n\n",
+  },
+
+  //
+  // COMPONENTS
+  //
+  "<Button/>": {
+    "prefix": ["button", "<Button/>"],
+    "body": [
+      "<Button variant={`${1:default}`} text={`${2:Hello World!}`} onPress={${3:() => log(`press`)}}/>",
+    ],
+    "description": "[CodeLeap] <Button/> lib component\n\n",
+  },
+  "<Touchable/>": {
+    "prefix": ["touch", "touchable", "<Touchable/>"],
+    "body": [
+      "<Touchable style={styles.${1:touchable}} onPress={() => ${2:() => log(`touch`)}}>",
+      "  ${3}",
+      "</Touchable>",
+    ],
+    "description": "[CodeLeap] <Touchable/> lib component\n\n",
+  },
+  "<Text/>": {
+    "prefix": ["text", "txt", "<Text/>"],
+    "body": [
+      "<Text variant={`${1:p1}`} text={`${2:Hello world!}`}/>",
+    ],
+    "description": "[CodeLeap] <Text/> lib component\n\n",
+  },
+  "<Image/>": {
+    "prefix": ["image", "img", "<Image/>"],
+    "body": [
+      "<Image source={${1:${CLIPBOARD}}} style={${2:styles.image}}/>",
+    ],
+    "description": "[CodeLeap] <Image/> lib component\n\n",
+  },
+  "<View/>": {
+    "prefix": ["view", "<View/>"],
+    "body": [
+      "<View style={styles.${1:innerWrapper}}>",
+      "  ${2}",
+      "</View>",
+    ],
+    "description": "[CodeLeap] <View/> lib component\n\n",
+  },
+  "Single line component shortcut": {
+    "prefix": ["single", "sing"],
+    "description": "[CodeLeap] Single line component shortcut\n\n",
+    "body": [
+      "<${1:${CLIPBOARD}}/>",
+    ],
+  },
+
+  //
+  // FUNCTION COMPONENTS
+  //
+  "Create new function component": {
+    "prefix": ["fncomp", "component"],
+    "description": "[CodeLeap] Standard function component to be used across apps and websites\n\n",
+    "body": [
+      "import { React, View, Text } from 'lib'",
+      "import { Theme } from 'app'",
+      "",
+      "function ${1:${TM_FILENAME_BASE}}(props) {",
+      "  log({ props })",
+      "  return (",
+      "    <View style={styles.wrapper}>",
+      "      <View style={styles.innerWrapper}>",
+      "        <Text variant={`h3`} text={`${1:${TM_FILENAME_BASE}}`}/>",
+      "      </View>",
+      "    </View>",
+      "  )",
+      "}",
+      "",
+      "const styles = {",
+      "  wrapper: {",
+      "    ...Theme.center,",
+      "    backgroundColor: `blue`,",
+      "  },",
+      "  innerWrapper: {",
+      "    backgroundColor: `green`,",
+      "  },",
+      "}",
+      "",
+      "export default ${1:${TM_FILENAME_BASE}}",
+      "",]
+  },
+  "Create new page": {
+    "prefix": ["page"],
+    "description": "[CodeLeap] Standard new page on website\n\n",
+    "body": [
+      "import { React, View, Text, Page } from 'lib'",
+      "import { Theme } from 'app'",
+      "",
+      "function ${1:${TM_FILENAME_BASE}}(props) {",
+      "  log({ props })",
+      "  return (",
+      "    <Page>",
+      "      <View style={styles.wrapper}>",
+      "        <View style={styles.innerWrapper}>",
+      "          <Text variant={`h3`} text={`${1:${TM_FILENAME_BASE}}`}/>",
+      "        </View>",
+      "      </View>",
+      "    </Page>",
+      "  )",
+      "}",
+      "",
+      "const styles = {",
+      "  wrapper: {",
+      "    ...Theme.center,",
+      "    backgroundColor: `blue`,",
+      "  },",
+      "  innerWrapper: {",
+      "    backgroundColor: `green`,",
+      "  },",
+      "}",
+      "",
+      "export default ${1:${TM_FILENAME_BASE}}",
+      "",]
+  },
+  "Render something": {
+    "prefix": ["renderItem", "renderfn" , "renderfunction"],
+    "description": "[CodeLeap] Simple render function that returns a View\n\n",
+    "body": [
+      "function ${1:renderItem}(${2:item}) {",
+      "  log({ ${2:item} })",
+      "  return (",
+      "    <View style={styles.${3:itemWrapper}}>",
+      "      <Text text={`${4:itemContent}`}/>",
+      "    </View>",
+      "  )",
+      "}",
+      ""
+    ],
+  },
+  "Use state in function component": {
+    "prefix": "usestate",
+    "description": "[CodeLeap] Single line useState hook\n\n",
+    "body": "const [${1:state}, set${2:State}] = useState(${3:null})",
+  },
+  "onMount hook shortcut": {
+    "prefix": "onmount",
+    "description": "[CodeLeap] onMount() hook\n\n",
+    "body": [
+      "onMount(() => {",
+      "  ${1:log('mount')}",
+      "})",
+    ],
+  },
+
+  //
+  // CLASS COMPONENTS
+  //
+  "constructor(props)": {
+    "prefix": "constructor",
+    "body": "constructor(props) {\n\tsuper(props)\n\tthis.state = {\n\t\t${1}\n\t}\n}",
+    "description": "[CodeLeap] Class Component constructor.\n\nNOTE: Prefer function component when possible.r\n\n",
+  },
+  "componentDidMount()": {
+      "prefix": "didmount",
+      "body": "componentDidMount() {\n\t${1}\n}",
+      "description": "[CodeLeap] Class Component `componentDidMount`.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+  "componentDidUpdate()": {
+      "prefix": "didupdate",
+      "body": "componentDidUpdate(prevProps, prevState) {\n\t${1}\n}",
+      "description": "[CodeLeap] Class Component `componentDidUpdate`.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+  "componentShouldUpdate()": {
+      "prefix": "shouldupdate",
+      "body": "shouldComponentUpdate(nextProps, nextState) {\n\t${1}\n}",
+      "description": "[CodeLeap] Class Component `shouldComponentUpdate`.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+  "Create new React Native Component": {
+      "prefix": "classcomponent",
+      "body": "import { React, Component, View, Text } from 'lib'\n\n// import { Theme, Settings } from 'app'\n\nexport default class ${1:MyComponent} extends Component {\n  constructor(props) {\n    super(props)\n    this.state = {}\n  }\n\n  render() {\n    return (\n      <View style={styles.wrapper}>\n        <View style={styles.innerWrapper}>\n          <Text style={styles.text} text={`Hello world!`}/>\n        </View>\n      </View>\n    )\n  }\n}\n\nconst styles = {\n  wrapper: {\n    justifyContent: `center`,\n    alignItems: `center`,\n  },\n  innerWrapper: {\n    backgroundColor: `green`,\n  },\n  text: {\n    fontSize: 16,\n  },\n}\n",
+      "description": "[CodeLeap] Create new React Native Class Component.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+  "Add Redux to a React Component": {
+      "prefix": "container",
+      "body": "import { connect } from 'react-redux'\n\nfunction MapStateToProps(state) {\n\treturn {\n\t\tsomeProp: state.someProp,\n\t}\n}\n\nfunction mapDispatchToProps(dispatch) {\n\treturn {\n\t\tsomeAction: (data) => dispatch(someAction(data)),\n\t}\n}\n\nconst ${1:MyComponent}Container = connect(MapStateToProps, mapDispatchToProps)(${1:MyComponent})\n\nexport default ${1:MyComponent}Container",
+      "description": "[CodeLeap] Class Component add Redux connect to props.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+  "Binds this to this": {
+      "prefix": "bind",
+      "body": "this.${1:myFunction} = this.${1:myFunction}.bind(this)",
+      "description": "[CodeLeap] Class Component this binding.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+  "ReactMixin({...}.prototype, TimerMixin)": {
+      "prefix": "timer",
+      "body": "import TimerMixin from 'react-timer-mixin'\nimport ReactMixin from 'react-mixin'\n\nReactMixin(${1:Component}.prototype, TimerMixin)\n",
+      "description": "[CodeLeap] Class Component Timer Mixing.\n\nNOTE: Prefer function component when possible.\n\n",
+  },
+
+
+  //
+  // REDUX AND NETWORKING
+  //
+  "Fetch(params)": {
+    "prefix": "fetch",
+    "body": [
+      "await Fetch({",
+      "  url: ${1:MODULE_NAME},",
+      "  method: `GET`,",
+      "  data,",
+      "  successCallback: (res) => {",
+      "    ${2:onSuccess(res)}",
+      "  },",
+      "  failureCallback: () => {",
+      "    info(\"Fetch failure\")",
+      "  },",
+      "})",
+      ""
+    ],
+    "description": "[CodeLeap] Fetch function\n\n",
+  },
+  "Reducer - redux": {
+    "prefix": "reducer",
+    "body": [
+      "/* eslint prefer-const: `off` */",
+      "",
+      "const initialState = {",
+      "  ${3:myVariable}: null,",
+      "}",
+      "",
+      "export const ${1:MyNewReducer} = (state = initialState, action) => {",
+      "  let newState = Object.assign({}, state)",
+      "  switch (action.type) {",
+      "    case `SET_${2:SOMETHING}`:",
+      "      newState.${3:myVariable} = action.${3:myVariable}",
+      "      return newState",
+      "    default:",
+      "      return state",
+      "  }",
+      "}",
+      ""
+    ],
+    "description": "[CodeLeap] Simple example reducer - redux\n\n",
+  },
+
+  //
+  // GENERAL PYTHON
+  //
+  "Python - Print": {
+    "prefix": "print",
+    "body": [
+      "print ('${1:item}', ${1:item})",
+    ],
+    "description": "print ('item', item)\n\n",
+  },
+
+
+}
