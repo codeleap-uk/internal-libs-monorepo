@@ -9,13 +9,22 @@ const presets = includePresets((styles) => createButtonStyle(() => ({ wrapper: s
 
 export const ButtonStyles = {
   ...presets,
-  default: createButtonStyle(() => ({
+  default: createButtonStyle((theme) => ({
     wrapper: {
       cursor: 'pointer',
       border: 'none',
       outline: 'none',
+      display: 'flex',
+      ...theme.presets.alignCenter,
+      ...theme.spacing.padding(1),
     },
-    text: {},
+    text: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    loader: {
+      ...theme.spacing.marginRight(1),
+    },
   })),
   circle: createButtonStyle((theme) => ({
     wrapper: {
@@ -25,9 +34,24 @@ export const ButtonStyles = {
   })),
   pill: createButtonStyle((theme) => ({
     wrapper: {
-      borderRadius: theme.borderRadius,
+      borderRadius: theme.borderRadius.medium,
       ...theme.spacing.paddingHorizontal(1),
       ...theme.spacing.paddingVertical(0.5),
+    },
+  })),
+  icon: createButtonStyle((theme) => ({
+    wrapper: {
+      ...theme.spacing.padding(0),
+    },
+    text: {
+      flex: 1,
+      textAlign: 'center',
+    },
+    loader: {
+      ...theme.spacing.margin(0),
+    },
+    icon: {
+      ...theme.spacing.margin(0),
     },
   })),
 }

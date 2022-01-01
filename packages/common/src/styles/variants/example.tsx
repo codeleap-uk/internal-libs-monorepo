@@ -135,6 +135,7 @@ const appTheme = createTheme({
       },
     },
   },
+  icons: {},
 })
 
 const variantProvider = new VariantProvider(appTheme, (style:CSSObject) => style) // Or StyleSheet.create for react-native

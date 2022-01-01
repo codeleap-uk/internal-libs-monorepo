@@ -13,6 +13,7 @@ const theme = createTheme({
   spacing: 10,
   baseFontSize: 16,
   borderRadius: 10,
+  icons: {},
   fontFamily: 'Arial, sans-serif',
 
 }, {

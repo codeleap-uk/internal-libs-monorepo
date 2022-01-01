@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
-import { DefaultVariants, DEFAULT_VARIANTS, VariantProvider } from '.'
-import { ComponentVariants } from '..'
+import { AppTheme, DefaultVariants, DEFAULT_VARIANTS, VariantProvider } from '.'
+import { ComponentVariants, NestedKeys, StylesOf } from '..'
 import { StyleContextProps, StyleContextValue } from './types'
 import {Logger } from '../tools/Logger'
 export const StyleContext = createContext({} as StyleContextValue<DefaultVariants>)
@@ -10,7 +10,7 @@ const silentLogger = new Logger({
   },
 })
 export const StyleProvider = 
-<S extends DefaultVariants, V extends VariantProvider<any, any>>({ children, variantProvider, variants, logger }:StyleContextProps<S, V>) => {
+<S extends DefaultVariants, V extends VariantProvider<any, AppTheme>>({ children, variantProvider, variants, logger }:StyleContextProps<S, V>) => {
 
   return (
     <StyleContext.Provider
@@ -33,13 +33,19 @@ export function useStyle() {
 type UseComponentStyleProps<
   ComponentName extends keyof DEFAULT_VARIANTS,
   C extends DefaultVariants[ComponentName] = DefaultVariants[ComponentName]
-> = ComponentVariants<C> & {
-  rootElement: keyof C[keyof C]
+> = ComponentVariants<C> &   {
+  rootElement?: keyof C[keyof C]
+  styles?: StylesOf
 }
 
 export function useComponentStyle< K extends keyof DEFAULT_VARIANTS >(componentName:K, props: UseComponentStyleProps<K>) {
   const { ComponentVariants: CV, provider } = useStyle()
 
-  return provider.getStyles(CV[componentName], props.variants, props.rootElement, props.responsiveVariants)
+  return provider.getStyles(CV[componentName], {
+    variants: props.variants || [],
+    responsiveVariants: props.responsiveVariants || {},
+    rootElement: props.rootElement,
+    styles: props.styles,
+  })
 }
 

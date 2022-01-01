@@ -7,8 +7,8 @@
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
-    "react": "^17.0.2",
-    "@codeleap/config": "*"
+    "@codeleap/config": "*",
+    "react": "^17.0.2"
   },
   "scripts": {
     "build": "tsc --build",
@@ -17,7 +17,8 @@
   "dependencies": {
     "@emotion/css": "^11.7.1",
     "@emotion/react": "^11.7.1",
-    "react-autosize-textarea": "^7.1.0"
+    "react-autosize-textarea": "^7.1.0",
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "@codeleap/common": "*",

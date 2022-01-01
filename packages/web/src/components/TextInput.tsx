@@ -50,7 +50,6 @@ export const TextInput: React.FC<TextInputProps> = (rawprops) => {
   const styles =useComponentStyle('TextInput', {
     variants,
     responsiveVariants,
-    rootElement: 'wrapper',
   })
   const InputElement = multiline ? TextareaAutosize : 'input'
 

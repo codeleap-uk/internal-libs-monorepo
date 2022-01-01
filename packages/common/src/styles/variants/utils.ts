@@ -3,9 +3,9 @@
 /* eslint-disable no-restricted-imports */
 import { CSSProperties } from 'react'
 import { ResponsiveVariantsProp, VariantProp } from '.'
-import { AppTheme, EnhancedTheme } from '..'
+import { AppTheme, EnhancedTheme, IconPlaceholder} from '..'
 import { ComponentVariants } from '../..'
-import { AnyFunction, NestedKeys } from '../../types/utility'
+import { AnyFunction, NestedKeys, StylesOf, ReplaceRecursive } from '../../types/utility'
 import { deepMerge, mapObject } from '../../utils/object'
 import { DEFAULT_VARIANTS, DEFAULT_STYLES, DefaultVariants } from './defaults'
 import {
@@ -17,13 +17,16 @@ import {
 
 function mapVariants<S = CSSProperties, 
 T extends DefaultVariantBuilder<S> = DefaultVariantBuilder<S>>
-(theme: EnhancedTheme<any>, variantsObject: T) {
+(theme: EnhancedTheme<any>, variantsObject:  T) {
   const thisComponentVariants = {} as FromVariantsBuilder<S, T>
 
   for (const [variantName, variantBuilder] of Object.entries(variantsObject)) {
-    thisComponentVariants[variantName as keyof T] = variantBuilder(theme) as ReturnType<T[keyof T]>
+    
+    thisComponentVariants[variantName as keyof T] = variantBuilder(theme, variantName) as ReturnType<T[keyof T]>
+      
+    
   }
-
+  
   return thisComponentVariants
 }
 
@@ -37,12 +40,13 @@ export function standardizeVariants(variants:VariantProp<any>):string[] {
   return variantList
 }
 
-type GetStylesArgs<VariantObject, Theme extends EnhancedTheme<any>, Root> = [
-  styles:VariantObject,
+type GetStylesArgs<VariantObject extends CommonVariantObject, Theme extends EnhancedTheme<any>, Root> = [styles:VariantObject, options: {
+  
   variants: VariantProp<VariantObject>,
   rootElement?:Root,
   responsiveVariants?: ResponsiveVariantsProp<Theme, VariantObject>
-]
+  styles?: NestedKeys<VariantObject> extends string ? StylesOf<NestedKeys<VariantObject>> : any
+}]
 type ApplyVariantsArgs = {
   variantName:string,
   styles: any,
@@ -63,6 +67,9 @@ function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme,
           ...theme.spacing[spacingFunction](Number(multiplier)),
         },
       })
+    } else if (variantName.startsWith('d:') && styles.dynamicHandler){
+   
+      return deepMerge(computedStyles, styles.dynamicHandler(theme, variantName.replace('d:', '')))
     }
 
     return computedStyles
@@ -77,12 +84,14 @@ type ComponentStyleMap<CSS = CSSProperties> = Partial<{
   [Property in keyof DefaultVariants] : CT<CSS>
 }>
 
-type ReplaceProps<T extends CT<any>, 
+type ReplaceProps<T extends CT<any>,
+Theme extends EnhancedTheme<any>, 
 NewProps = ComponentVariants<T[1], any>, 
-Props = Parameters<T[0]>[0]> = React.FC<Omit<Props, 'responsiveVariants'|'variants'> & NewProps>
+Props = Parameters<T[0]>[0],
+MergedProps = Omit<Props, 'responsiveVariants'|'variants'> & NewProps> = React.FC<ReplaceRecursive<MergedProps, IconPlaceholder, keyof Theme['icons']>>
 
 type TypedComponents<T extends ComponentStyleMap = ComponentStyleMap, Theme extends EnhancedTheme<any> = EnhancedTheme<any>> = {
-  [Property in keyof DEFAULT_VARIANTS] : ReplaceProps<T[Property], ComponentVariants<T[Property][1], Theme>>
+  [Property in keyof DEFAULT_VARIANTS] : ReplaceProps<T[Property], Theme, ComponentVariants<T[Property][1], Theme>>
 }
 
 /**
@@ -113,7 +122,7 @@ export class VariantProvider<
 
     if (!componentName) {
       Object.entries(DEFAULT_STYLES).forEach(([component, variantsObject]) => {
-
+      
         TransformedVariants[component] = mapVariants(this.theme, variantsObject)
       })
 
@@ -135,10 +144,10 @@ export class VariantProvider<
   }
 
   getStyles<VariantObject extends CommonVariantObject<any, CSSIn>>(...args:GetStylesArgs<VariantObject, Theme, keyof VariantObject[keyof VariantObject]>) {
-    const [styles, variants, rootElement, responsiveVariants] = args
+    const [styles, {variants, rootElement = 'wrapper', responsiveVariants, styles: override}] = args
     const variantList = standardizeVariants(variants)
 
-    let computedStyles = {}
+    let computedStyles = {} as Record<string, CSSOut>
 
     for (const variant of ['default', ...variantList]) {
       computedStyles = applyVariants({
@@ -172,7 +181,7 @@ export class VariantProvider<
       }
     }
 
-    const appliableStyles = Object.fromEntries(mapObject(computedStyles, ([k, v]) => [k, this.createStylesheet(v)])) as Record<
+    const appliableStyles = Object.fromEntries(mapObject(computedStyles, ([k, v]) => [k, this.createStylesheet({...v, ...override?.[k] })])) as Record<
       NestedKeys<VariantObject>,
       CSSOut
     >

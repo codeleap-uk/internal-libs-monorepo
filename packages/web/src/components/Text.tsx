@@ -4,15 +4,15 @@ import {  ComponentVariants, TextComposition, TextStyles, useComponentStyle } fr
 import { ComponentPropsWithoutRef, ElementType } from 'react';
 import { StylesOf } from '../types/utility';
 
-export type TextProps< T extends ElementType = 'h1'> = {
+export type TextProps< T extends ElementType> = {
     component?: T
-    text: string
+    text?: string
     styles?: StylesOf<TextComposition>
 } & ComponentPropsWithoutRef<T> & ComponentVariants<typeof TextStyles>
 
-export const Text = <T extends ElementType = 'p'>(textProps:TextProps<T>) => {
-  const {variants = [], responsiveVariants  = {}, text, children, component = 'div', ...props} = textProps
-  const styles = useComponentStyle('Text', {
+export const Text = <T extends ElementType >(textProps:TextProps<T>) => {
+  const {variants = [], responsiveVariants  = {}, text, children, component = 'p', styles, ...props} = textProps
+  const variantStyles = useComponentStyle('Text', {
     rootElement: 'text',
     responsiveVariants,
     variants,
@@ -21,7 +21,7 @@ export const Text = <T extends ElementType = 'p'>(textProps:TextProps<T>) => {
   const Component = component
 
 
-  return <Component {...props} css={{...styles.text, ...props.style}} >
+  return <Component {...props} css={{...variantStyles.text, ...props.style, ...styles?.text}} >
     {text || children}
   </Component>
 }

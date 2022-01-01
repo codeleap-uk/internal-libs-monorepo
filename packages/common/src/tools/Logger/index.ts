@@ -52,12 +52,9 @@ export class Logger {
     const useCSS = typeof window !== 'undefined'
 
     if (useCSS) {
-      const styles = [
-        `color: white;`,
-        `background: ${cl.toLowerCase()};`,
-      ].join('')
+   
       // eslint-disable-next-line no-console
-      console[logType](`%c[${logType.toUpperCase()}] ${args[2]} - ${args[0]}`, styles, args[1])
+      console[logType](`[${logType.toUpperCase()}] ${args[2]} - ${args[0]}`,  args[1])
     } else {
       // eslint-disable-next-line no-console
       console[logType](useColor, `[${logType.toUpperCase()}] ${args[2]} - ${args[0]}`, args[1], colors.Reset)

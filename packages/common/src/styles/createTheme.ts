@@ -37,6 +37,6 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       ...spacingFactory(values.spacing, 'padding'),
       ...spacingFactory(values.spacing, 'margin'),
     },
-    presets: deepMerge(defaultPresets, values.presets || {}),
+    presets: defaultPresets,
   }
 }

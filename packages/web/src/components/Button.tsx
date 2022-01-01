@@ -5,32 +5,38 @@ import React, { ComponentPropsWithRef } from 'react'
 import { StylesOf } from '../types/utility'; 
 import { Text } from './Text';
 import { Touchable } from './Touchable';
+import { Icon } from './Icon';
+import { ActivityIndicator } from './ActivityIndicator';
+import { IconPlaceholder } from '@codeleap/common/dist/styles/icons';
 
 type NativeButtonProps = ComponentPropsWithRef<'button'> 
 
 export type ButtonProps = NativeButtonProps &  ComponentVariants<typeof ButtonStyles>  & {  
-  text:string
-  rightIcon?: React.ReactNode 
+  text?:string
+  rightIcon?: IconPlaceholder
   onPress:NativeButtonProps['onClick']
   styles?: StylesOf<ButtonComposition>
+  loading?: boolean
+  
 } 
 
 
 export const Button:React.FC<ButtonProps> = (buttonProps) => {
-  const { variants = [], responsiveVariants = {}, children, text,  styles, onPress,  ...props } = buttonProps
-  const {logger} = useStyle()
-  logger.warn('Button', buttonProps, 'Styles')
+  const { variants = [], responsiveVariants = {}, children, text, loading, styles, onPress, rightIcon,  ...props } = buttonProps
+  
+  
   const variantStyles = useComponentStyle('Button', {
-    rootElement: 'wrapper',
     responsiveVariants,
     variants,
+    styles,
   })  
+
 
   function handlePress(e:Parameters<ButtonProps['onPress']>[0]){
     props.onClick && props.onClick(e)
     onPress && onPress(e)
   }
-
+  const { Theme} = useStyle()
   return (
     <Touchable
       {...props}
@@ -38,11 +44,12 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
       css={variantStyles.wrapper}
       onClick={handlePress}
     >
-    
-      {children || <Text text={text} style={{
-        ...variantStyles.text,
-        ...styles?.text,
+      {loading && <ActivityIndicator css={variantStyles.loader}/>}
+      
+      {children || <Text text={text} styles={{
+        text: variantStyles.text,
       }}/>}
+      <Icon name={rightIcon} style={variantStyles.icon}/>
      
     </Touchable>
   )

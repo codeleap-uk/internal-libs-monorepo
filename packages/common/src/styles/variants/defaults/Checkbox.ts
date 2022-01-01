@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type CheckboxComposition = 'wrapper' | 'label' | 'input';
+export type CheckboxComposition = 'wrapper' | 'label' | 'input' | 'checkmark' | 'checkmarkWrapper';
 
 const createCheckboxStyle = createDefaultVariantFactory<CheckboxComposition>()
 
@@ -13,11 +13,46 @@ export const CheckboxStyles = {
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      ...theme.spacing.padding(1),
+      position: 'relative',
+      cursor: 'pointer',
+      '.checkbox-label': {
+        height: '18px',
+        width: '18px',
+        border: `1px solid ${theme.colors.gray}`,
+        borderRadius: theme.borderRadius.small,
+        position: 'absolute',
+        overflow: 'hidden',
+        transition: 'background 0.3s ease',
+        ':after': {
+          content: '""',
+          border: `2px solid ${theme.colors.white}`,
+          borderLeftColor: 'transparent',
+          borderTopColor: 'transparent',
+          height: '40%',
+          width: '20%',
+          position: 'absolute',
+          left: '50%',
+          top: '40%',
+         
+          transform: 'translate(-50%,-50%) rotate(45deg) scale(0)',
+          transition: 'transform 0.2s ease',
+        },
+      },
+     
+    },
+    label: {
+      ...theme.spacing.marginLeft(1),
+      
+     
     },
     input: {
-      backgroundColor: theme.colors.primary,
+      visibility: 'hidden',
+      '&:checked + .checkbox-label': {
+        '&:after': {
+          transform: 'translate(-50%,-50%) rotate(45deg) scale(1)',
+        },
+        background: theme.colors.primary,
+      },
     },
   })),
 

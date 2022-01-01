@@ -2,10 +2,10 @@ import {  Fonts, TypographyStyle } from '../..';
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults' 
 
-export type TextComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
+export type TextComposition = 'text';
 const createTextStyle = createDefaultVariantFactory<TextComposition>()
 
-const presets = includePresets((styles) => createTextStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })))
 function createClampExpression(values:TypographyStyle, baseSize:number){
   const {max, min, multiplier, viewport} = values.size
   const add = typeof multiplier == 'string'  ?  multiplier : `${baseSize*multiplier}px`
@@ -14,7 +14,7 @@ function createClampExpression(values:TypographyStyle, baseSize:number){
   return s
   
 }
-function assignTextStyle(name:Fonts){
+function assignTextStyle(name:Fonts, add = {}){
   return createTextStyle((theme) => {
     const style = theme.typography.styles[name]
     return {
@@ -22,6 +22,7 @@ function assignTextStyle(name:Fonts){
         fontWeigth: style.weigth,
         fontSize: createClampExpression(style, theme.typography.baseFontSize),
         lineHeigth: style.lineHeight,
+        ...add,
       },
     }
   })
@@ -44,4 +45,5 @@ export const TextStyles = {
   p2: assignTextStyle('p2'),
   p3: assignTextStyle('p3'),
   p4: assignTextStyle('p4'),
+  link: assignTextStyle('p1'),
 }

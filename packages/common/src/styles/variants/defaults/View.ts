@@ -5,9 +5,14 @@ export type ViewComposition = 'wrapper';
 
 const createViewStyle = createDefaultVariantFactory<ViewComposition>()
 
-const a = includePresets((styles) => createViewStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) => createViewStyle(() => ({ wrapper: styles })))
 
 export const ViewStyles = {
-  ...a,
+  ...presets,
+  default: createViewStyle((t) =>  ({
+    wrapper: {
+      display: 'flex',
+    },
+  })),
 }
 

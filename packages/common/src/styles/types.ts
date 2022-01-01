@@ -11,7 +11,7 @@ type AnyProps<T = any> = {
     
   [x:string]: T
 } 
-
+export type IconPlaceholder = '__ICON__'
 export type DefaultColors = 'primary'|'secondary'|'positive'|'negative'|'white'|'black'|'gray'
 
 export type Fonts = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p1' | 'p2' | 'p3' | 'p4'
@@ -31,13 +31,16 @@ export type AppTheme = {
   readonly breakpoints: Record<string, number>;
   readonly spacing: number;
   readonly colors: Partial<Record<'primary'|'secondary'|'positive'|'negative'|'white'|'black'|'gray', string>> & AnyProps<string>
-  readonly presets?: Record<string, CSSProperties>;
+ 
 
   readonly borderRadius: {
     large: number
     medium: number
     small: number
   }
+
+  readonly icons: Record<string, any>
+
   readonly typography : {
     fontFamily: string
     styles: Record<Fonts, TypographyStyle>
@@ -52,7 +55,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<T, 'spacing'> & 
     Spacings<'padding'>;
   hooks: BreakpointHooks<keyof T['breakpoints'], boolean>;
   media: BreakpointHooks<keyof T['breakpoints'], string>;
-  presets: typeof defaultPresets & T['presets'];
+  presets: typeof defaultPresets;
 };
 export type ThemeValues = AppTheme;
 

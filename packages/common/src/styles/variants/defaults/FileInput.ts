@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type FileInputComposition = 'label' | 'wrapper' | '';
+export type FileInputComposition = 'label' | 'wrapper' | 'input';
 
 const createFileInputStyle = createDefaultVariantFactory<FileInputComposition>()
 
