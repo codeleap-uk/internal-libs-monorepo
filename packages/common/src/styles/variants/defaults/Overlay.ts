@@ -8,10 +8,9 @@ const presets = includePresets((styles) => createOverlayStyle(() => ({ wrapper: 
 
 export const OverlayStyles = {
   ...presets,
-  default: createOverlayStyle((theme) => ({
+  default: createOverlayStyle(() => ({
     wrapper: {
-      background: theme.colors.black,
-      opacity: 0,
+      
       top: 0,
       left: 0,
       right: 0,
@@ -20,11 +19,22 @@ export const OverlayStyles = {
       position: 'fixed',
     },
   })),
-  visible: createOverlayStyle(() => ({
+  dark: createOverlayStyle((theme) => ({
     wrapper: {
-   
-      opacity: 0.5,
-  
+      background: theme.colors.black,
     },
   })),
+  hidden: createOverlayStyle(() => ({
+    wrapper: {
+      visibility: 'hidden',
+      opacity: 0,
+    },
+  })),
+  visible: createOverlayStyle(() => ({
+    wrapper: {
+      visibility: 'visible',
+      opacity: 0.5,
+    },
+  })),
+
 }

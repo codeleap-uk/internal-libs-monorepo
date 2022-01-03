@@ -53,12 +53,12 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
   }, [id]);
 
   return (
-    <View  aria-hidden={!open} className={open ? 'visible' : ''} style={variantStyles.wrapper}>
-      <View  className='overlay' onClick={toggle} style={variantStyles.overlay}></View >
+    <View  aria-hidden={!open} className={open ? 'visible' : ''} css={variantStyles.wrapper}>
+      <View  className='overlay' onClick={toggle} css={variantStyles.overlay}></View >
       <View
         component='section'
         className='content'
-        style={variantStyles.box}
+        css={variantStyles.box}
         onKeyDown={closeOnEscPress}
         tabIndex={0}
         id={id}
@@ -69,7 +69,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
         {...props}
       >
         {title &&  (
-          <View component='header' className='modal-header header' id={`${id}-title`} style={variantStyles.header}>
+          <View component='header' className='modal-header header' id={`${id}-title`} css={variantStyles.header}>
             {typeof title === 'string' ? <Text text={title}/> : title}
             {
               showClose &&
@@ -77,11 +77,11 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
             }
           </View>
         )}
-        <View style={variantStyles.body}>
+        <View css={variantStyles.body}>
           {children}
         </View>
         {
-          footer && <View component='footer' style={variantStyles.footer}> 
+          footer && <View component='footer' css={variantStyles.footer}> 
             {footer}
           </View>
         }

@@ -123,6 +123,7 @@ const codeQuality = {
    
   'global-require': 'off',
   'handle-callback-err': 'warn',
+  'callback-return': 'off',
 }
 
 const typescript = {
@@ -130,6 +131,7 @@ const typescript = {
   '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '_ig|jsx' }],
   '@typescript-eslint/no-explicit-any': 'off',
   '@typescript-eslint/explicit-module-boundary-types': 'off',
+  '@typescript-eslint/ban-ts-comment': 'off',
 }
 
 module.exports = {

@@ -8,6 +8,7 @@ export type AppSettings = DeepPartial<{
         IsDev:boolean
         Type: 'production' | 'development'
     }
+    BaseURL: string
     Sentry: {
         enable: boolean,
         dsn:string

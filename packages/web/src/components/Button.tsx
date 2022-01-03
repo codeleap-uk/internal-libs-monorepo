@@ -14,6 +14,7 @@ type NativeButtonProps = ComponentPropsWithRef<'button'>
 export type ButtonProps = NativeButtonProps &  ComponentVariants<typeof ButtonStyles>  & {  
   text?:string
   rightIcon?: IconPlaceholder
+  icon?: IconPlaceholder
   onPress:NativeButtonProps['onClick']
   styles?: StylesOf<ButtonComposition>
   loading?: boolean
@@ -22,7 +23,17 @@ export type ButtonProps = NativeButtonProps &  ComponentVariants<typeof ButtonSt
 
 
 export const Button:React.FC<ButtonProps> = (buttonProps) => {
-  const { variants = [], responsiveVariants = {}, children, text, loading, styles, onPress, rightIcon,  ...props } = buttonProps
+  const { 
+    variants = [],
+    responsiveVariants = {},
+    children,
+    icon,
+    text,
+    loading,
+    styles,
+    onPress,
+    rightIcon,
+    ...props } = buttonProps
   
   
   const variantStyles = useComponentStyle('Button', {
@@ -36,20 +47,21 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
     props.onClick && props.onClick(e)
     onPress && onPress(e)
   }
-  const { Theme} = useStyle()
+
+ 
   return (
     <Touchable
-      {...props}
-      component='button'
       css={variantStyles.wrapper}
+      component='button'
       onClick={handlePress}
+      {...props}
     >
       {loading && <ActivityIndicator css={variantStyles.loader}/>}
-      
+      {!loading && <Icon name={icon} style={{...variantStyles.icon, ...variantStyles.leftIcon}}/>}
       {children || <Text text={text} styles={{
         text: variantStyles.text,
       }}/>}
-      <Icon name={rightIcon} style={variantStyles.icon}/>
+      <Icon name={rightIcon} style={{...variantStyles.icon, ...variantStyles.rightIcon}}/>
      
     </Touchable>
   )

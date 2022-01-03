@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable no-restricted-imports */
-import { CSSProperties } from 'react'
+import { CSSProperties, forwardRef } from 'react'
 import { ResponsiveVariantsProp, VariantProp } from '.'
 import { AppTheme, EnhancedTheme, IconPlaceholder} from '..'
 import { ComponentVariants } from '../..'
@@ -35,7 +35,7 @@ export function standardizeVariants(variants:VariantProp<any>):string[] {
   if (typeof variants === 'string') {
     variantList = variants.split(' ')
   } else {
-    variantList = [...variants]
+    variantList = [...(variants||[])]
   }
   return variantList
 }
@@ -61,10 +61,13 @@ function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme,
     if (variantName.startsWith('padding') || variantName.startsWith('margin')) {
 
       const [spacingFunction, multiplier] = variantName.split(':')
-
+      let arg:number|string = Number(multiplier)
+      if (Number.isNaN(arg)){
+        arg = multiplier
+      }
       return deepMerge(computedStyles, {
         [rootElement]: {
-          ...theme.spacing[spacingFunction](Number(multiplier)),
+          ...theme.spacing[spacingFunction](arg),
         },
       })
     } else if (variantName.startsWith('d:') && styles.dynamicHandler){
@@ -132,6 +135,11 @@ export class VariantProvider<
     }
   }
 
+  createComponentStyle<T extends Record<string, CSSIn>>(styles: T):Record<keyof T, CSSOut>{
+    const styleMap = mapObject(styles, ([key, value]) => [key, this.createStylesheet(value)] )
+    return Object.fromEntries(styleMap) as Record<keyof T, CSSOut>
+  }
+
 
   createVariantFactory<Composition extends string, T = PartialComponentStyle<Composition, CSSIn>>() {
     return (variant: ((theme: Theme) => T) | T) => {
@@ -190,21 +198,14 @@ export class VariantProvider<
 
 
   typeComponents<T extends ComponentStyleMap<CSSIn>>(components:T) {
-    const typedComponents = {} as TypedComponents<T>
+    const typed = {}
 
-    for (const [name, [Component, style]] of Object.entries(components)) {
-      const ReactComponent = (props: Parameters<typeof Component>[0] & ComponentVariants<typeof style, Theme>) => {
-        return Component({
-          ...props,
-        })
-      }
-
-
-      typedComponents[name] = ReactComponent
+    for (const [name, [render]] of Object.entries(components)){
+      typed[name] = render
     }
 
-    return typedComponents as TypedComponents<T, Theme>
+
+    return typed as unknown as TypedComponents<T, Theme>
   }
 }
-
 

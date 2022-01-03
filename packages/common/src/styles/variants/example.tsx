@@ -188,7 +188,7 @@ const { Button } = variantProvider.typeComponents({
 
 export const AppRoot:React.FC = () => {
   return (
-    <StyleProvider variantProvider={variantProvider} variants={Styles}>
+    <StyleProvider variantProvider={variantProvider} variants={Styles} settings={{}} imageQuery={{}}>
       <Button name='aaa' variants={'primary'} >abc</Button>
     </StyleProvider>
   )

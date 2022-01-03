@@ -1,3 +1,5 @@
+import { AppSettings } from '..'
+
 export function imagePathToFileObject(imagePath:string|null) {
   const parts = imagePath ? imagePath.split('.') : ''
 
@@ -54,4 +56,33 @@ export function waitFor(ms) {
       resolve()
     }, ms)
   })
+}
+
+type ParseSourceUrlArg = {
+  source?: string
+  src?: string
+}
+
+export function parseSourceUrl(args: string, Settings?:AppSettings): string
+export function parseSourceUrl(args: ParseSourceUrlArg, Settings?:AppSettings): string
+export function parseSourceUrl(args: ParseSourceUrlArg | string, Settings?:AppSettings): string {
+  if (!args) return null
+
+  let res = ''
+  let address = ''
+  if (typeof args === 'string') {
+    address = args
+  } else {
+    address = args.source || args.src || ''
+  }
+
+  if (address && address.startsWith('/media/')) {
+    const tmp = address.substr(1, address.length)
+    res = `${Settings.BaseURL}${tmp}`
+  } else if (address) {
+    res = address
+  } else {
+    res = `https://picsum.photos/600?random=${Math.random() * 100}`
+  }
+  return res
 }

@@ -44,13 +44,19 @@ export type Enumerate<N extends number> = EnumerateInternal<[], N> extends (infe
 
 export type Range<FROM extends number, TO extends number> = Exclude<Enumerate<TO>, Enumerate<FROM>>;
 
-export type StylesOf<C extends string = any, CSS = any> = Record<C, CSS>;
+export type StylesOf<C extends string = any, CSS = any> = Partial<Record<C, CSS>>;
+
+ 
+type IsDict<T> = 
+  T extends AnyFunction ? false : 
+    T extends Record<string, any> ?  true : false 
+
 
 export type ReplaceRecursive<T, Replace, With> = {
   [Property in keyof T] : 
     T[Property] extends Replace ?  
       With : 
-      T[Property] extends Record<any, any> ? 
+       IsDict<T[Property]> extends true ? 
         ReplaceRecursive<T[Property], Replace, With> : 
         T[Property]
 }

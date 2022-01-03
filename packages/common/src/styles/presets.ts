@@ -19,6 +19,12 @@ export const defaultPresets = {
   absolute: {
     position: 'absolute',
   },
+  fixed: {
+    position: 'fixed',
+  },
+  sticky: {
+    position: 'sticky',
+  },
   hidden: {
     display: 'none',
   },
@@ -33,7 +39,7 @@ export const defaultPresets = {
     width: '100%',
   },
   fullHeight: {
-    width: '100%',
+    height: '100%',
   },
   fullView: {
     width: '100vw',

@@ -1,6 +1,6 @@
-import { onUpdate } from '@codeleap/common';
-import {  useState } from 'react';
-
+import { AnyFunction, onUpdate } from '@codeleap/common';
+import {  useRef, useState } from 'react';
+import {v4} from 'uuid'
 export function useWindowSize(){
   const [size, setSize] = useState([window.innerWidth, window.innerWidth])
 
@@ -18,29 +18,25 @@ export function useWindowSize(){
   return size
 }
 
-export function useToggle<T extends readonly [any, any], V extends T[0]|T[1]>(options: T, initial:V){
-  const [value, setValue] = useState(initial)
+type UseClickOutsideOpts = {customId?:string, deps:any[]}
+export function useClickOutside(callback: AnyFunction, {customId, deps = []} : UseClickOutsideOpts){
+  const id = useRef(customId || v4()).current
 
-  function toggleOrSetValue(newValue?: V){
-    const v:V = newValue || options[Math.abs(options.indexOf(value) - 1)]
-
-    setValue(v)
-  }
-
-  return [value, toggleOrSetValue] as const
-}
-
-export function useBooleanToggle(initial:boolean){
-  const [v, setV] = useState(initial)
-
-  function toggleOrSet(value?:boolean){
-    if (typeof value === 'boolean'){
-      setV(value)
-    } else {
-      setV(previous => !previous)
+  function onClick(e:Event){
+    const element = document.getElementById(id)
+    const isInside = element.contains(e.target as Node)
+   
+    if (!isInside){
+      callback()
     }
-
   }
+ 
+  onUpdate(() => {
+    document.addEventListener('click', onClick)
+    return () => {
+      document.removeEventListener('click', onClick)
+    }
+  }, [...deps, onClick])
 
-  return [v, toggleOrSet] as const
+  return id
 }

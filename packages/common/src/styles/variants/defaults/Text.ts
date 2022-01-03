@@ -14,7 +14,7 @@ function createClampExpression(values:TypographyStyle, baseSize:number){
   return s
   
 }
-function assignTextStyle(name:Fonts, add = {}){
+export function assignTextStyle(name:Fonts, add = {}){
   return createTextStyle((theme) => {
     const style = theme.typography.styles[name]
     return {

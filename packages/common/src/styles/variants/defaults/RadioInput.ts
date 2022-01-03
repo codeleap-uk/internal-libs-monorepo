@@ -1,15 +1,15 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type RadioButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
+export type RadioInputComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
 
-const createRadioButtonStyle = createDefaultVariantFactory<RadioButtonComposition>()
+const createRadioInputStyle = createDefaultVariantFactory<RadioInputComposition>()
 
-const presets = includePresets((styles) => createRadioButtonStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) => createRadioInputStyle(() => ({ wrapper: styles })))
 
-export const RadioButtonStyles = {
+export const RadioInputStyles = {
   ...presets,
-  default: createRadioButtonStyle((theme) => ({
+  default: createRadioInputStyle((theme) => ({
     wrapper: {
       display: 'flex',
       alignItems: 'center',
@@ -17,7 +17,7 @@ export const RadioButtonStyles = {
       ...theme.spacing.padding(1),
     },
   })),
-  circle: createRadioButtonStyle((theme) => ({
+  circle: createRadioInputStyle((theme) => ({
     wrapper: {
       borderRadius: 100,
       ...theme.spacing.padding(2),
@@ -26,7 +26,7 @@ export const RadioButtonStyles = {
       color: 'yellow',
     },
   })),
-  pill: createRadioButtonStyle((theme) => ({
+  pill: createRadioInputStyle((theme) => ({
     wrapper: {
       borderRadius: theme.borderRadius,
     },

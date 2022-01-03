@@ -2,7 +2,7 @@ import { IconPlaceholder, useStyle } from '@codeleap/common'
 
 export type IconProps = {
     name:IconPlaceholder
-    style: {
+    style?: {
       color: string
       size:string|number
     }

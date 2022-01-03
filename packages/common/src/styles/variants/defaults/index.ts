@@ -5,14 +5,16 @@ import { ButtonStyles } from './Button'
 import { CheckboxStyles } from './Checkbox'
 import { ContentViewStyles } from './ContentView'
 import { FileInputStyles } from './FileInput'
+import { ImageStyles } from './Image'
 import { ModalStyles } from './Modal'
 import { OverlayStyles } from './Overlay'
-import { RadioButtonStyles } from './RadioButton'
+import { RadioInputStyles } from './RadioInput'
 import { SliderStyles } from './Slider'
 import { TextStyles } from './Text'
 import { TextInputStyles } from './TextInput'
 import { TouchableStyles } from './Touchable'
 import { ViewStyles } from './View'
+import { DrawerStyles } from './Drawer'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
@@ -22,11 +24,14 @@ export const DEFAULT_STYLES = {
   FileInput: FileInputStyles,
   Modal: ModalStyles,
   Overlay: OverlayStyles,
-  RadioButton: RadioButtonStyles,
+  RadioInput: RadioInputStyles,
   Slider: SliderStyles,
   Text: TextStyles,
   TextInput: TextInputStyles,
   Touchable: TouchableStyles,
+  Icon: {},
+  Image: ImageStyles,
+  Drawer: DrawerStyles,
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
@@ -43,8 +48,10 @@ export * from './ContentView'
 export * from './FileInput'
 export * from './Modal'
 export * from './Overlay'
-export * from './RadioButton'
+export * from './RadioInput' 
 export * from './Slider'
 export * from './Text'
 export * from './TextInput'
+export * from './Image'
 export * from './Touchable'
+export * from './Drawer'

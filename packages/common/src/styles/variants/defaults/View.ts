@@ -14,5 +14,15 @@ export const ViewStyles = {
       display: 'flex',
     },
   })),
+  scrollX: createViewStyle(() => ({
+    wrapper: {
+      overflowX: 'auto',
+    },
+  })),
+  scrollY: createViewStyle(() => ({
+    wrapper: {
+      overflowY: 'auto',
+    },
+  })),
 }
 

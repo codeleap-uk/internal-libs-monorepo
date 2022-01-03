@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react'
 import { AppTheme, DefaultVariants, DEFAULT_VARIANTS, VariantProvider } from '.'
-import { ComponentVariants, NestedKeys, StylesOf } from '..'
+import { ComponentVariants,  StylesOf } from '..'
 import { StyleContextProps, StyleContextValue } from './types'
 import {Logger } from '../tools/Logger'
 export const StyleContext = createContext({} as StyleContextValue<DefaultVariants>)
@@ -10,7 +10,7 @@ const silentLogger = new Logger({
   },
 })
 export const StyleProvider = 
-<S extends DefaultVariants, V extends VariantProvider<any, AppTheme>>({ children, variantProvider, variants, logger }:StyleContextProps<S, V>) => {
+<S extends DefaultVariants, V extends VariantProvider<any, AppTheme>>({ children, variantProvider, variants, logger, settings, imageQuery}:StyleContextProps<S, V>) => {
 
   return (
     <StyleContext.Provider
@@ -19,6 +19,8 @@ export const StyleProvider =
         ComponentVariants: variants,
         provider: variantProvider,
         logger: logger || silentLogger,
+        Settings: settings,
+        imageQuery,
       }}
     >
       {children}

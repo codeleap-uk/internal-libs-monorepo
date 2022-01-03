@@ -1,8 +1,9 @@
 /* eslint-disable no-restricted-imports */
 import { CSSProperties } from 'react'
 import { DefaultVariants, VariantProvider } from '.'
-import { Logger } from '..'
+import { AppSettings, Logger } from '..'
 import { AnyFunction } from '../types/utility'
+import { BorderHelpers } from './helpers'
 import { BreakpointHooks } from './MediaQuery'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
@@ -56,6 +57,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<T, 'spacing'> & 
   hooks: BreakpointHooks<keyof T['breakpoints'], boolean>;
   media: BreakpointHooks<keyof T['breakpoints'], string>;
   presets: typeof defaultPresets;
+  border: BorderHelpers<T>
 };
 export type ThemeValues = AppTheme;
 
@@ -64,6 +66,8 @@ export type StyleContextProps<Variants extends DefaultVariants, Provider extends
   variants: Variants
   children?: React.ReactNode
   logger?: Logger
+  settings:AppSettings
+  imageQuery: any
 };
 
 export type StyleContextValue<C extends DefaultVariants> = {
@@ -71,6 +75,8 @@ export type StyleContextValue<C extends DefaultVariants> = {
   provider:VariantProvider<any, any>
   ComponentVariants: C
   logger: Logger
+  Settings:AppSettings
+  imageQuery: any
 };
 
 export type AppComponent = 'Button';
@@ -85,11 +91,11 @@ export interface DynamicValueAccessors extends Partial<Record<Accessor, AnyFunct
   screenSize?: () => number[];
 }
 
-export const spacingVariants = ['Vertical', 'Horizontal', 'Bottom', 'Top', 'Left', 'Right', ''] as const
+export const spacingVariants = ['Vertical', 'Horizontal', 'Bottom', 'Top', 'Left', 'Right',  ''] as const
 
 export type SpacingVariants = typeof spacingVariants[number];
 
-export type SpacingMultiplier = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12';
+export type SpacingMultiplier = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | 'auto';
 
 export type Spacing = `padding${SpacingVariants}:${SpacingMultiplier}` | `margin${SpacingVariants}:${SpacingMultiplier}`;
 

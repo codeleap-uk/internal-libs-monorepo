@@ -10,14 +10,16 @@ export type ViewProps<T extends ElementType<any>> = ComponentVariants<typeof Vie
 } & ComponentPropsWithoutRef<T>
 
 export const View = <T extends ElementType = 'div'>(viewProps:ViewProps<T>) => {
-  const { responsiveVariants = {}, variants = [], component = 'div', children, css, style, ...props } = viewProps
+  const { responsiveVariants = {}, variants = [], component = 'div', children,   ...props } = viewProps
   const variantStyles = useComponentStyle('View', {
     responsiveVariants,
     variants,
   })
  
   const Component = component 
-  return <Component {...props} css={{...variantStyles.wrapper, ...style, ...css}}>
+
+ 
+  return <Component  css={variantStyles.wrapper} {...props}>
     {children}
   </Component>
 }   

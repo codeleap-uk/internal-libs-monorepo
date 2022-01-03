@@ -1,5 +1,7 @@
+import { CSSProperties } from '@emotion/serialize'
 import { DefaultColors } from '.'
-import { deepMerge } from '../utils/object'
+import { createBorderHelpers } from './helpers'
+
 import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
 import { defaultPresets } from './presets'
 import { spacingFactory } from './Spacing'
@@ -18,6 +20,9 @@ const defaultColors:Record<DefaultColors, string> = {
 const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
 }
+
+
+
 /**
  * [[include:Theme.md]]
  */
@@ -37,6 +42,7 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       ...spacingFactory(values.spacing, 'padding'),
       ...spacingFactory(values.spacing, 'margin'),
     },
+    border: createBorderHelpers(values),
     presets: defaultPresets,
   }
 }

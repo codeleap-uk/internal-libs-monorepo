@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type ButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
+export type ButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader';
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
 
@@ -23,6 +23,12 @@ export const ButtonStyles = {
       textAlign: 'center',
     },
     loader: {
+      ...theme.spacing.marginRight(1),
+    },
+    leftIcon: {
+      ...theme.spacing.marginRight(1),
+    },
+    rightIcon: {
       ...theme.spacing.marginRight(1),
     },
   })),
@@ -52,6 +58,12 @@ export const ButtonStyles = {
     },
     icon: {
       ...theme.spacing.margin(0),
+    },
+    leftIcon: {
+      ...theme.spacing.marginRight(0),
+    },
+    rightIcon: {
+      ...theme.spacing.marginRight(0),
     },
   })),
 }
