@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type ContentViewComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
+export type ContentViewComposition = 'placeholder' | 'wrapper' |  'loader';
 
 const createContentViewStyle = createDefaultVariantFactory<ContentViewComposition>()
 
@@ -12,7 +12,7 @@ export const ContentViewStyles = {
   default: createContentViewStyle((theme) => ({
     wrapper: {
       display: 'flex',
-      ...theme.spacing.padding(1),
+      ...theme.presets.column,
     },
   })),
  

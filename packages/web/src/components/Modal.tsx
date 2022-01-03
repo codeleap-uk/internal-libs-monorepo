@@ -31,7 +31,7 @@ function focusModal(event: FocusEvent, id: string) {
   }
 }
 export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) => {
-  const { children, open, title, toggle, id, responsiveVariants, variants, styles, showClose, footer, ...props } = modalProps
+  const { children, open, title = '', toggle, id, responsiveVariants, variants, styles, showClose, footer, ...props } = modalProps
   
   const variantStyles = useComponentStyle('Modal', {
     responsiveVariants,
@@ -68,15 +68,20 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
         aria-label='Close the modal by presing Escape key'
         {...props}
       >
-        {title &&  (
-          <View component='header' className='modal-header header' id={`${id}-title`} css={variantStyles.header}>
-            {typeof title === 'string' ? <Text text={title}/> : title}
-            {
-              showClose &&
-            <Button rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
-            }
-          </View>
-        )}
+        {
+          (title || showClose) && 
+
+            <View component='header' className='modal-header header' id={`${id}-title`} css={variantStyles.header}>
+          
+              {typeof title === 'string' ? <Text text={title}/> : title}
+            
+              {
+                showClose &&
+              <Button rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
+              }
+            </View>
+        }
+        
         <View css={variantStyles.body}>
           {children}
         </View>

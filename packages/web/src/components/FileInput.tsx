@@ -10,7 +10,7 @@ export type FileInputRef = {
 }
 
 type FileInputProps= Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
-  onFileSelect(files:InputFile[]|InputFile): void
+  onFileSelect(files:InputFile[]): void
 } 
 
 
@@ -40,7 +40,7 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>((inputPr
 
 
 
-    onFileSelect && onFileSelect( props.multiple ? files : files[0])
+    onFileSelect && onFileSelect(files)
 
   }
 

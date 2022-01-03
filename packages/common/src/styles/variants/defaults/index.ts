@@ -15,6 +15,7 @@ import { TextInputStyles } from './TextInput'
 import { TouchableStyles } from './Touchable'
 import { ViewStyles } from './View'
 import { DrawerStyles } from './Drawer'
+import { ActivityIndicatorStyles } from './ActivityIndicator'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
@@ -32,6 +33,8 @@ export const DEFAULT_STYLES = {
   Icon: {},
   Image: ImageStyles,
   Drawer: DrawerStyles,
+  FlatList: {},
+  ActivityIndicator: ActivityIndicatorStyles,
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
@@ -54,4 +57,5 @@ export * from './Text'
 export * from './TextInput'
 export * from './Image'
 export * from './Touchable'
+export * from './ActivityIndicator'
 export * from './Drawer'

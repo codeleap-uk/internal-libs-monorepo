@@ -1,7 +1,16 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type RadioInputComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
+export type RadioInputComposition = 
+  'text' |
+  'itemText' |
+  'button:checked' |
+  'button:unchecked' |
+  'button' |
+  'itemWrapper' |
+  'wrapper' |
+  'listWrapper' | 
+  'button:mark';
 
 const createRadioInputStyle = createDefaultVariantFactory<RadioInputComposition>()
 
@@ -12,24 +21,18 @@ export const RadioInputStyles = {
   default: createRadioInputStyle((theme) => ({
     wrapper: {
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      ...theme.presets.column,
       ...theme.spacing.padding(1),
     },
-  })),
-  circle: createRadioInputStyle((theme) => ({
-    wrapper: {
-      borderRadius: 100,
-      ...theme.spacing.padding(2),
+    itemWrapper: {
+      display: 'flex',
+      ...theme.presets.alignCenter,
+      ...theme.spacing.paddingVertical(0.2),
     },
-    text: {
-      color: 'yellow',
-    },
-  })),
-  pill: createRadioInputStyle((theme) => ({
-    wrapper: {
-      borderRadius: theme.borderRadius,
+    listWrapper: {
+      ...theme.presets.column,
+      ...theme.spacing.paddingVertical(1),
     },
   })),
-
+ 
 }

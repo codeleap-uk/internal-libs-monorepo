@@ -60,3 +60,6 @@ export type ReplaceRecursive<T, Replace, With> = {
         ReplaceRecursive<T[Property], Replace, With> : 
         T[Property]
 }
+export type SmartOmit<T, K extends keyof T> = {
+  [Property in  Exclude<keyof T, K>] : T[Property]
+}

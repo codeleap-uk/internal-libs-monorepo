@@ -7,7 +7,7 @@ import { Text } from './Text';
 import { Touchable } from './Touchable';
 import { Icon } from './Icon';
 import { ActivityIndicator } from './ActivityIndicator';
-import { IconPlaceholder } from '@codeleap/common/dist/styles/icons';
+import { IconPlaceholder } from '@codeleap/common';
 
 type NativeButtonProps = ComponentPropsWithRef<'button'> 
 
@@ -56,7 +56,7 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
       onClick={handlePress}
       {...props}
     >
-      {loading && <ActivityIndicator css={variantStyles.loader}/>}
+      {loading && <ActivityIndicator css={variantStyles.loader} />}
       {!loading && <Icon name={icon} style={{...variantStyles.icon, ...variantStyles.leftIcon}}/>}
       {children || <Text text={text} styles={{
         text: variantStyles.text,

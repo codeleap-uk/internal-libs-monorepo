@@ -30,9 +30,10 @@ export function assignTextStyle(name:Fonts, add = {}){
 
 export const TextStyles = {
   ...presets,
-  default: createTextStyle(({typography}) => ({
+  default: createTextStyle((theme) => ({
     text: { 
-      fontFamily: typography.fontFamily,
+      fontFamily: theme.typography.fontFamily,
+      ...assignTextStyle('p1')(theme),
     },
   })),
   h1: assignTextStyle('h1'),

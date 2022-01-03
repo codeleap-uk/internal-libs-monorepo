@@ -1,16 +1,16 @@
-import { standardizeVariants, ViewStyles } from '@codeleap/common'
+import { ComponentVariants, ContentViewStyles,  useComponentStyle, ViewComposition } from '@codeleap/common'
 import { ActivityIndicator } from '.'
 import { ViewProps, View } from './View'
 import { Text } from './Text'
+import { StylesOf } from '../types/utility'
 
-export type ContentViewProps<V = ViewProps<'div'>['variants']> = Omit<ViewProps<'div'>, 'variants'> & {
+export type ContentViewProps = Omit<ViewProps<'div'>, 'variants' | 'responsiveVariants'> & {
     placeholderMsg: string
     loading?:boolean
-    variants?: V
-} 
+    styles?: StylesOf<ViewComposition>
+} & ComponentVariants<typeof ContentViewStyles>
 
-const WrapContent = ({children, variants, ...props}:Partial<ContentViewProps<(keyof typeof ViewStyles)[]>>) => <View {...props} 
-  variants={['padding:2', ...variants]}>{children}</View>
+const WrapContent = ({children,  ...props}:Partial<ContentViewProps>) => <View {...props} >{children}</View>
 
 export const ContentView:React.FC<ContentViewProps> = (rawProps) => {
   const {
@@ -18,25 +18,31 @@ export const ContentView:React.FC<ContentViewProps> = (rawProps) => {
     placeholderMsg,
     loading,
     variants,
+    responsiveVariants,
+    styles,
     ...props
   } = rawProps
-  
-  const arrayVariants = standardizeVariants(variants) as (keyof typeof ViewStyles)[]
+
+  const variantStyle = useComponentStyle('ContentView', {
+    variants,
+    responsiveVariants,
+    styles,
+  })
     
   if (loading){
-    return <WrapContent {...props} variants={['center', ...arrayVariants]}>
-      <ActivityIndicator size={60}/>
+    return <WrapContent {...props} css={variantStyle.wrapper}>
+      <ActivityIndicator css={variantStyle.loader}/>
     </WrapContent>
   }
   const hasChildren = Object.keys(children||{}).length > 0
   if (hasChildren){
-    return <WrapContent {...props} variants={arrayVariants}>
+    return <WrapContent {...props}css={variantStyle.wrapper}>
       {children}
     </WrapContent>
   }
 
-  return <WrapContent {...props} variants={arrayVariants}>
-    <Text text={placeholderMsg} />
+  return <WrapContent {...props} css={variantStyle.wrapper}>
+    <Text text={placeholderMsg} css={variantStyle.placeholder}/>
   </WrapContent>
     
 }

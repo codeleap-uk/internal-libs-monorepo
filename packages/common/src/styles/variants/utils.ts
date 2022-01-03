@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-dupe-class-members */
 /* eslint-disable no-restricted-imports */
-import { CSSProperties, forwardRef } from 'react'
+import { CSSProperties, ReactElement } from 'react'
 import { ResponsiveVariantsProp, VariantProp } from '.'
 import { AppTheme, EnhancedTheme, IconPlaceholder} from '..'
 import { ComponentVariants } from '../..'
-import { AnyFunction, NestedKeys, StylesOf, ReplaceRecursive } from '../../types/utility'
+import { AnyFunction, NestedKeys, StylesOf, ReplaceRecursive, FunctionType } from '../../types/utility'
 import { deepMerge, mapObject } from '../../utils/object'
 import { DEFAULT_VARIANTS, DEFAULT_STYLES, DefaultVariants } from './defaults'
 import {
@@ -15,7 +15,7 @@ import {
   PartialComponentStyle, 
 } from './types'
 
-function mapVariants<S = CSSProperties, 
+export function mapVariants<S = CSSProperties, 
 T extends DefaultVariantBuilder<S> = DefaultVariantBuilder<S>>
 (theme: EnhancedTheme<any>, variantsObject:  T) {
   const thisComponentVariants = {} as FromVariantsBuilder<S, T>
@@ -81,7 +81,7 @@ function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme,
   }
 }
 
-type CT<StyleType> = [Component: React.FC<any>, style: CommonVariantObject<string, StyleType>]
+type CT<StyleType> = [Component: FunctionType<[any], ReactElement>, style: CommonVariantObject<string, StyleType>]
 
 type ComponentStyleMap<CSS = CSSProperties> = Partial<{
   [Property in keyof DefaultVariants] : CT<CSS>

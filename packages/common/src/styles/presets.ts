@@ -122,6 +122,20 @@ export const defaultPresets = {
   neumorphism: {
     boxShadow: '10px 10px 20px 0 #AEAEC077, -10px -10px 20px 0 #fff',
   },
+  scrollX: {
+    overflowX: 'auto',
+  },
+  scrollY: {
+    overflowY: 'auto',
+  },
+  scrollXY: {
+    overflowX: 'auto',
+    overflowY: 'auto',
+  },
+  wrap: {
+    flexWrap: 'wrap',
+  },
+
 } as const
 
 export type IncludePresetsReturn<T extends AnyFunction> = Record<keyof typeof defaultPresets, ReturnType<T>>

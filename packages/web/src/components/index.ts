@@ -12,4 +12,6 @@ export * from './FileInput'
 export * from './Image' 
 export * from './Overlay' 
 export * from './Drawer' 
-export * from './ContentVIew' 
+export * from './ContentView' 
+export * from './FlatList' 
+
