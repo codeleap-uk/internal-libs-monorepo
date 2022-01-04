@@ -1,0 +1,6 @@
+[submodule "apps/codeleap-web-template"]
+	path = apps/codeleap-web-template
+	url = git@github.com:codeleap-uk/new-web-template.git
+[submodule "apps/codeleap-web-template"]
+	path = apps/codeleap-web-template
+	url = https://github.com/codeleap-uk/new-web-template.git
