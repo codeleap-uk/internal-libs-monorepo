@@ -39,6 +39,6 @@ export const SelectStyles = {
       color: theme.colors.secondary,
       ...theme.spacing.padding(1),
       ...theme.spacing.paddingRight(3),
-    }
-  })),
+    },
+  })), 
 }

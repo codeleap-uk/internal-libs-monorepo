@@ -2,6 +2,8 @@
 import { jsx } from '@emotion/react';
 import { SelectStyles, ComponentVariants, useComponentStyle, StylesOf, SelectComposition } from '@codeleap/common';
 import { ComponentPropsWithRef } from 'react';
+import { View, ViewProps } from './View';
+
 
 type NativeSelectProps = ComponentPropsWithRef<'select'>;
 type Option = {
@@ -12,31 +14,34 @@ type Option = {
 export type SelectProps = NativeSelectProps & {
   options: Array<Option>
   styles?: StylesOf<SelectComposition>
-} & ComponentVariants<typeof SelectStyles>;
+  wrapperProps?: ViewProps<'div'>
+} & ComponentVariants<typeof SelectStyles>; 
 
 export const Select = (selectProps:SelectProps) => {
   const {
     variants = [],
     responsiveVariants = {},
     options,
-    styles
+    styles,
+    wrapperProps,
+    ...props
   } = selectProps;
 
   const variantStyles = useComponentStyle('Select', {
     responsiveVariants,
     variants,
-    styles
+    styles,
   })
 
   return (
-    <div css={variantStyles.wrapper}>
-      <select css={variantStyles.select}>
+    <View css={variantStyles.wrapper} {...wrapperProps}>
+      <View component='select' css={variantStyles.select} {...props}>
         {options.map((option, index) => (
           <option value={option.value} key={index}>
             {option.label}
           </option>
         ))}
-      </select>
-    </div>
+      </View>
+    </View>
   )
 }
