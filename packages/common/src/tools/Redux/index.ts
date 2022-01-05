@@ -1,9 +1,9 @@
 import { deepMerge } from '../../utils'
 import { combineReducers, createStore, Store } from '@reduxjs/toolkit'
-import { AnyRecord, Reducers, AsyncReducers, CreateSliceArgs, Slice, CreateReduxReturn } from './types'
+import {  Reducers, AsyncReducers, CreateSliceArgs, Slice, CreateReduxReturn } from './types'
 
 export function createSlice<
-  S extends AnyRecord, 
+  S extends any, 
   N extends string, 
   R extends  Reducers<S>, 
   AR extends AsyncReducers<S>
@@ -58,6 +58,7 @@ export function createSlice<
   
 }
 
+
 export function createRedux<T extends Record<string, Slice<any, any, any, any>>>(slices:T):CreateReduxReturn<T>{
   const reducers = {} as Record<string, T[string]['reducer']>
   const rootInitialState = {} as {[x:string] : T[string]['initialState'] }
@@ -86,3 +87,4 @@ export function createRedux<T extends Record<string, Slice<any, any, any, any>>>
     actions,
   }
 }
+

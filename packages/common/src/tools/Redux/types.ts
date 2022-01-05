@@ -1,49 +1,133 @@
-import { CombinedState, Store } from '@reduxjs/toolkit'
-import { DeepPartial, FunctionType } from '../..'
+import type { AnyAction, Dispatch, configureStore,  Store } from '@reduxjs/toolkit'
+import { createRedux, createSlice } from '.'
+import { AnyFunction, DeepPartial, FunctionType } from '../..'
 
-export type Reducers<S> = Record<string, FunctionType<[S, any], DeepPartial<S>>>
+export type Reducers<S> = Record<
+    string, 
+    FunctionType<
+        [ S, any ], 
+        DeepPartial<S>
+    >
+>
 
 export type AsyncReducers<S> = Record<
     string, 
-    FunctionType<
-        [
-            S, 
-            FunctionType<[DeepPartial<S>], void>,
-            any
-        ], 
-        Promise<
-            DeepPartial<S> | void
-        >
+    FunctionType<[
+        S, 
+        FunctionType<[
+            DeepPartial<S>
+        ], void>,
+        any
+    ],  
+    Promise<
+        DeepPartial<S> | void>
     >
+    
 >
-export type AnyRecord = Record<string, unknown>
+export type AnyRecord = any
 
-export type CreateSliceArgs<S extends AnyRecord, N extends string, R extends  Reducers<S>, AR extends AsyncReducers<S>> = {
+export type CreateSliceArgs<
+S extends AnyRecord, N, 
+R extends Reducers<S>, 
+AR extends AsyncReducers<S>
+> = {
     name: N
     initialState: S
     reducers: R
-    asyncReducers?: AR
+    asyncReducers: AR
 }
 
-export type BuildActions<S extends AnyRecord, R extends  Reducers<S>, AR  extends AsyncReducers<S>> = (store:Store<any>) => {
-    [Property in keyof R] : (args: Parameters<R[Property]>[1]) => void
+export type BuildActions<
+S extends AnyRecord, 
+R  extends Reducers<S>, 
+AR  extends AsyncReducers<S> 
+> = (store:Store<any>) => {
+    [Property in keyof R] : R[Property] extends 
+        (state: S,  ...args: infer A) => any 
+        ? (...a: A) => any
+        : AnyFunction
 } & {
-    [Property in keyof AR] : (args: Parameters<AR[Property]>[2]) => void
+    [Property in keyof AR] : AR[Property] extends 
+        (state: S, setState: any, ...args: infer A) => Promise<any> 
+        ? (...a: A) => any
+        : AnyFunction
 }
 
-export type Slice<S extends AnyRecord, N extends string, R extends  Reducers<S>, AR extends AsyncReducers<S>> = {
+export type Slice<
+S extends AnyRecord, 
+N extends string, 
+R extends  Reducers<S>, 
+AR extends AsyncReducers<S>
+> = {
     buildActions: BuildActions<S, R, AR>
     name:N
     initialState:S
     reducer: (state:S, action: {type: string, payload: DeepPartial<S>}) => S
 }
 
+export interface EnhancedStore<S = any> extends Store {
+    getState(): S
+    dispatch: Dispatch<AnyAction>
+}
 
-export type CreateReduxReturn<T extends Record<string, Slice<any, any, any, any>>> = {
-    store: Store<CombinedState<{
-      [Property in keyof T] : T[Property]['initialState']
-    }>>,
+export type CreateReduxReturn<
+T extends Record<string, Slice<any, any, any, any>
+>, RootState = {
+    [Property in keyof T] : T[Property]['initialState']
+  }> = {
+    store: EnhancedStore<RootState>,
     actions : {
       [Property in keyof T] : ReturnType<T[Property]['buildActions']>
     }
+}
+
+type Post = {
+    'id':number,
+    'username': string,
+    'created_datetime': string,
+    'title': string,
+    'content': string
   }
+  
+  type PostState = {
+    posts: Post[]
+    loading: boolean
+    error: {
+      message: string
+    } | null
+}
+
+// const initialState:PostState = {
+//     posts: [],
+//     loading: false,
+//     error: null,
+// }
+
+// const s =  createSlice({
+//   name: 'posts',
+//   initialState, 
+//   reducers: {
+//     pp: (state) => {
+//       return state
+//     },
+//   },
+//   asyncReducers: {
+//     getData: async ( state, setState, o: string) => {
+//       setState({loading: true})
+//       // api.get('/')
+//       //   .then(({data}) => {
+  
+//       //     setState({loading: false, posts: data.results})
+  
+//       //   }).catch(() => {
+  
+//       //     setState({
+//       //       error: {
+//       //         message: 'Error fetching data',
+//       //       },
+//       //     })
+  
+//       //   })
+//     },
+//   },
+// })

@@ -4,9 +4,8 @@ export function deepMerge(base ={}, changes={}): any {
   const obj = {
     ...base,
   }
-
   for (const [key, value] of Object.entries(changes)) {
-    obj[key] = typeof value === 'object' ? deepMerge(obj[key], changes[key] ) : value
+    obj[key] = typeof value === 'object' && !Array.isArray(value) ? deepMerge(obj[key], changes[key] ) : value
   }
 
   return obj

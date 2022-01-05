@@ -1,15 +1,15 @@
 /** @jsx jsx */
 import { CSSObject, jsx } from '@emotion/react'
 import { ComponentVariants, useComponentStyle, ViewStyles } from '@codeleap/common'
-import { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
+import { ComponentPropsWithRef, ElementType, forwardRef, ReactElement, ReactNode, Ref } from 'react'
 
 export type ViewProps<T extends ElementType<any>> = ComponentVariants<typeof ViewStyles> & {
     component?:T
     children?:ReactNode
     css?:CSSObject
-} & ComponentPropsWithoutRef<T>
+} & ComponentPropsWithRef<T>
 
-export const View = <T extends ElementType = 'div'>(viewProps:ViewProps<T>) => {
+export const ViewCP = forwardRef<any, ViewProps<any>>((viewProps:ViewProps<any>, ref) => {
   const { responsiveVariants = {}, variants = [], component: Component = 'div', children,   ...props } = viewProps
   const variantStyles = useComponentStyle('View', {
     responsiveVariants,
@@ -19,7 +19,9 @@ export const View = <T extends ElementType = 'div'>(viewProps:ViewProps<T>) => {
 
 
  
-  return <Component  css={variantStyles.wrapper} {...props}>
+  return <Component  css={variantStyles.wrapper} {...props} ref={ref}> 
     {children}
   </Component>
-}   
+})  
+
+export const View = ViewCP as <T extends ElementType, P extends  ViewProps<T> = ViewProps<T>>(props:P) => ReactElement
