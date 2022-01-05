@@ -8,6 +8,9 @@ export type AppSettings = DeepPartial<{
         IsDev:boolean
         Type: 'production' | 'development'
     }
+    Application: {
+        IsBrowser:boolean
+    }
     BaseURL: string
     Sentry: {
         enable: boolean,
@@ -17,7 +20,6 @@ export type AppSettings = DeepPartial<{
     Logger: {
         Level: LogType,
         IgnoreWarnings?: string[]
-
     }
     Vars: {
         GooglePlayURL : string
