@@ -29,12 +29,14 @@ export const Select = (selectProps:SelectProps) => {
   })
 
   return (
-    <select css={variantStyles.wrapper}>
-      {options.map((option, index) => (
-        <option value={option.value} key={index}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <div css={variantStyles.wrapper}>
+      <select css={variantStyles.select}>
+        {options.map((option, index) => (
+          <option value={option.value} key={index}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
   )
 }
