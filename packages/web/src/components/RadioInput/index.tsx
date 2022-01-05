@@ -2,7 +2,6 @@ import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react'
 import {v4} from 'uuid'
 
 import {Text } from '../Text'
-import { FlatList } from '../FlatList'
 import { Touchable } from '../Touchable'
 import { ComponentVariants, RadioInputComposition, RadioInputStyles, StylesOf, useComponentStyle } from '@codeleap/common'
 import { View } from '../View'
@@ -22,7 +21,7 @@ export type RadioButtonProps = Omit<ComponentPropsWithoutRef<'input'>, 'style'> 
 }  
 
 export type RadioGroupProps<T> = {
-    data: RadioItem<T>[]
+    options: RadioItem<T>[]
     selected: T
     setSelected(value:T):void
     label:ReactNode
@@ -47,7 +46,7 @@ export const RadioButton:React.FC<RadioButtonProps> = ({item, select, style, che
 
 
 export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T>) => {
-  const {data, selected, setSelected, label, responsiveVariants, variants, styles} = radioGroupProps
+  const {options, selected, setSelected, label, responsiveVariants, variants, styles} = radioGroupProps
   const radioName = useRef(v4()).current
 
   const radioStyle = getRadioStyle({
@@ -55,12 +54,11 @@ export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T
     variants,
     styles,
   })
-
-  return <>
+  return <View css={radioStyle.wrapper}>
     {typeof label === 'string' ? <Text text={label}/> : label }
     <View css={radioStyle.listWrapper}>
       {
-        data.map((item, idx) =>  <RadioButton 
+        options.map((item, idx) =>  <RadioButton 
           item={item} 
           key={idx} 
           style={radioStyle}
@@ -70,5 +68,5 @@ export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T
         />)
       }
     </View>
-  </>
+  </View>
 }
