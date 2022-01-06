@@ -7,7 +7,6 @@ import { scrollToElem } from '../lib/utils/pollyfils/scroll';
 import { stopPropagation } from '../lib/utils/stopPropagation';
 import { Text } from './Text';
 
-
 export const Link = <T extends ElementType = 'a'>(linkProps:TextProps<T>) => {
   const {  variants, to, ...props } = linkProps
 

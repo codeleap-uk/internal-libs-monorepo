@@ -1,19 +1,15 @@
 /** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react'
-import { ComponentVariants, useComponentStyle, useStyle, ViewStyles } from '@codeleap/common'
+import {  jsx } from '@emotion/react'
+import { ComponentVariants, useComponentStyle, useStyle, ViewStyles, BaseViewProps } from '@codeleap/common'
 import { ComponentPropsWithRef, ElementType, ReactNode } from 'react'
 
 export type ViewProps<T extends ElementType> =
- ComponentPropsWithRef<T>  & 
-ComponentVariants<typeof ViewStyles> & {
+ ComponentPropsWithRef<T> & 
+ ComponentVariants<typeof ViewStyles> & {
     component?:T
     children?:ReactNode
-    css?:CSSObject,
-    is?: string
-    not?: string
-    up?: string
-    down?: string
-}
+   
+} & BaseViewProps
 
 export const View = <T extends ElementType = 'div'>(viewProps:ViewProps<T>) => {
   const { 
@@ -24,6 +20,7 @@ export const View = <T extends ElementType = 'div'>(viewProps:ViewProps<T>) => {
     is,
     not,
     up,
+    onHover,
     down,
     ...props 
   } = viewProps
@@ -33,13 +30,20 @@ export const View = <T extends ElementType = 'div'>(viewProps:ViewProps<T>) => {
   })
   const { Theme } = useStyle()
 
- 
+  function handleHover(isMouseOverElement:boolean){
+    onHover && onHover(isMouseOverElement)
+  }
   const shouldRenderToPlatform = Theme.hooks.shouldRenderToPlatform({ is, not, up, down })
   if (!shouldRenderToPlatform) return null
   
   const platformMediaQuery = Theme.media.renderToPlatformQuery({ is, not, up, down })
   
-  return <Component  css={[variantStyles.wrapper, platformMediaQuery]} {...props}> 
+  return <Component  
+    css={[variantStyles.wrapper, platformMediaQuery]} 
+    {...props} 
+    onMouseEnter={() => handleHover(true)} 
+    onMouseLeave={() => handleHover(false)}
+  > 
     {children}
   </Component>
 }

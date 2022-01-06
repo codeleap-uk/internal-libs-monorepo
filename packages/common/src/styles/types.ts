@@ -104,3 +104,11 @@ export type SpacingMultiplier = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 
 
 export type Spacing = `padding${SpacingVariants}:${SpacingMultiplier}` | `margin${SpacingVariants}:${SpacingMultiplier}`;
 
+export type BaseViewProps = {
+  css?:any,
+  is?: string
+  not?: string
+  up?: string
+  down?: string
+  onHover?: (isHovering:boolean) => void
+}
