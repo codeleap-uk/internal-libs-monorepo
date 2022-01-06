@@ -52,7 +52,7 @@ export type UseApiState<T> = {
     data: T,
     loading: boolean
     hasError?: boolean
-}
+} 
 
 export type UseApiReturn<T, Err, R extends RoutesOf<T, Err >> = UseApiState<T> & {
   queries: {

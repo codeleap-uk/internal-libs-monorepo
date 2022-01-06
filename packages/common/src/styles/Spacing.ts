@@ -9,6 +9,9 @@ export type Spacings<T extends string> = {
   [Property in SpacingVariants as `${T}${string & Property}`]: SpacingFunction;
 } & {
   [Property in T]: (multiplier: number) => CSSProperties;
+} & {
+
+  value:  (multiplier?: number) => number
 };
 
 export function spacingFactory<T extends string>(base: number, property: T): Spacings<T> {
@@ -46,6 +49,7 @@ export function spacingFactory<T extends string>(base: number, property: T): Spa
     [`${property}`]: (n: number|string) => ({
       [`${property}`]: typeof n === 'string' ? n : base * n,
     }),
+    value: (n = 1) => base * n,
     ...Object.fromEntries(functions),
   }
 }
