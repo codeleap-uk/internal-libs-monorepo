@@ -41,7 +41,7 @@ export type TextInputProps =
     rightIcon?:IconProp
     styles?: StylesOf<TextInputComposition>
     validate?: ValidateFN | string
-    value:string
+    value?:string
   };
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops, inputRef) => {
@@ -108,10 +108,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
   const rightIconStyle = {...variantStyles.icon, ...variantStyles.rightIcon }
   
   onUpdate(() => {
-   
 
-    if ( validate){
-      const result:ReturnType<ValidateFN> = typeof validate === 'function' ? validate(value) : {message: validate, result: 'error'}
+    if (validate){
+      const result:ReturnType<ValidateFN> = typeof validate === 'function' ? 
+        validate(input?.current?.value) : 
+        {message: validate, result: 'error'}
 
       setError(result)
     }
