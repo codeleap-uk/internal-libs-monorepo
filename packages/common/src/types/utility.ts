@@ -1,4 +1,4 @@
-import {  CommonVariantObject, EnhancedTheme, ResponsiveVariantsProp, VariantProp } from '..'
+import {  BreakpointPlaceholder, CommonVariantObject, EnhancedTheme, ResponsiveVariantsProp, VariantProp } from '..'
 
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any;
@@ -21,6 +21,7 @@ export type ComponentVariants<
 > = {
   variants?: VP
   responsiveVariants?: ResponsiveVariantsProp<Theme, Styles, VP>
+ 
 }
 
 

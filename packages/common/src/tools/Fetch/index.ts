@@ -1,8 +1,10 @@
 import axios, { AxiosResponse, AxiosInstance, Axios, AxiosRequestConfig } from 'axios'
-import { AppSettings } from '../..'
+import { AppSettings, CancellablePromise } from '../..'
 import { allMethods } from './constants'
-import { CancellablePromise, IRequestClient, RequestClientConfig, RequestQueueItem } from './types'
+import {  IRequestClient, RequestClientConfig, RequestQueueItem } from './types'
 import { buildRequest, getRequestId, parseFailedRequest, toMultipart } from './utils'
+export * from 'axios'
+export * from './types'
 /**
  * [[include:RequestClient.md]]
  */
@@ -47,7 +49,7 @@ export class RequestClient extends Axios implements IRequestClient {
   setInQueue(req: RequestQueueItem) {
     const requestId = getRequestId(req)
     this.queue[requestId] = { ...this.queue[requestId], ...req }
-  }
+  } 
 
   removeFromQueue(req:RequestQueueItem) {
     const requestId = getRequestId(req)
