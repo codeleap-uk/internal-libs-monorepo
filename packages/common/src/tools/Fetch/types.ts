@@ -29,4 +29,4 @@ export type RequestClientConfig<D =any> = AxiosRequestConfig<D> & {
     responseMiddleware?: Middleware<AxiosResponse>[]
 }
 
-export type CancellablePromise<T> = Promise<T> & {abort?:() => void}
+

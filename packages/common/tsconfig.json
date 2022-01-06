@@ -21,7 +21,7 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "declaration": true,
-    "downlevelIteration": true,
+    "downlevelIteration": true
     
   },
   "include": [

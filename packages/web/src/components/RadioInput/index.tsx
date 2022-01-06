@@ -2,7 +2,6 @@ import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react'
 import {v4} from 'uuid'
 
 import {Text } from '../Text'
-import { FlatList } from '../FlatList'
 import { Touchable } from '../Touchable'
 import { ComponentVariants, RadioInputComposition, RadioInputStyles, StylesOf, useComponentStyle } from '@codeleap/common'
 import { View } from '../View'
@@ -32,7 +31,7 @@ export type RadioGroupProps<T> = {
 
 export const RadioButton:React.FC<RadioButtonProps> = ({item, select, style, checked, ...props}) => {
   const styleByState = checked ? style['button:checked'] : style['button:unchecked']
-  return <Touchable  onPress={select} css={style.itemWrapper}>
+  return <Touchable  onPress={select} css={style.itemWrapper} >
     <View  css={{
       ...style.button,
       ...styleByState,
