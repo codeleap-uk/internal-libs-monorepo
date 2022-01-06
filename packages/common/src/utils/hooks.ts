@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-restricted-imports */
 import { useEffect, useRef, useState } from 'react'
-import { AnyFunction } from '..'
+import { deepMerge } from '.'
+import { AnyFunction, DeepPartial } from '..'
 
 export const onMount = (func:AnyFunction) => {
   useEffect(() => {
@@ -49,4 +50,20 @@ export function useBooleanToggle(initial:boolean){
   }
 
   return [v, toggleOrSet] as const
+}
+
+type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>
+
+export function usePartialState<T = any>(initial:T){
+  const [state, setState] = useState(initial)
+
+  function setPartial(value:DeepPartial<T>|SetPartialStateCallback<T>){
+    if (typeof value === 'function'){
+      setState(v => deepMerge(v, value(v)))
+    } else {
+      setState(deepMerge(state, value))
+    }
+  }
+
+  return [state, setPartial] as const
 }
