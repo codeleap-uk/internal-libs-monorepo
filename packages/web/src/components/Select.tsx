@@ -12,6 +12,7 @@ type Option = {
 export type SelectProps = NativeSelectProps & {
   options: Array<Option>
   styles?: StylesOf<SelectComposition>
+  placeholder?: string
 } & ComponentVariants<typeof SelectStyles>;
 
 export const Select = (selectProps:SelectProps) => {
@@ -19,17 +20,23 @@ export const Select = (selectProps:SelectProps) => {
     variants = [],
     responsiveVariants = {},
     options,
-    styles
+    styles,
+    placeholder,
   } = selectProps;
 
   const variantStyles = useComponentStyle('Select', {
     responsiveVariants,
     variants,
-    styles
+    styles,
   })
 
   return (
     <div css={variantStyles.wrapper}>
+      {placeholder && (
+        <label css={variantStyles.label}>
+          {placeholder}
+        </label>
+      )}
       <select css={variantStyles.select}>
         {options.map((option, index) => (
           <option value={option.value} key={index}>

@@ -15,10 +15,10 @@ export const SelectStyles = {
       ':after': {
         content: '""',
         position: 'absolute',
-        top: `calc(50% - ${theme.typography.baseFontSize / 2}px)`,
-        right: `${theme.typography.baseFontSize / 2}px`,
-        width: `${theme.typography.baseFontSize / 2}px`,
-        height: `${theme.typography.baseFontSize / 2}px`,
+        bottom: 'calc(45% - 0.5rem)',
+        right: '0.5rem',
+        width: '0.5rem',
+        height: '0.5rem',
         borderBottom: '2px solid',
         borderLeft: '2px solid',
         borderColor: theme.colors.secondary,
@@ -27,7 +27,9 @@ export const SelectStyles = {
       },
     },
     select: {
+      minWidth: '100%',
       fontSize: theme.typography.baseFontSize,
+      fontFamily: theme.typography.fontFamily,
       display: 'flex',
       cursor: 'pointer',
       border: 'none',
@@ -39,6 +41,13 @@ export const SelectStyles = {
       color: theme.colors.secondary,
       ...theme.spacing.padding(1),
       ...theme.spacing.paddingRight(3),
-    }
+    },
+    label: {
+      fontSize: theme.typography.baseFontSize,
+      fontFamily: theme.typography.fontFamily,
+      color: theme.colors.secondary,
+      ...theme.spacing.padding(1),
+      ...theme.spacing.paddingLeft(0),
+    },
   })),
 }
