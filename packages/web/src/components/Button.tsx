@@ -15,12 +15,11 @@ export type ButtonProps = NativeButtonProps &  ComponentVariants<typeof ButtonSt
   text?:string
   rightIcon?: IconPlaceholder
   icon?: IconPlaceholder
-  onPress:NativeButtonProps['onClick']
+  onPress?:NativeButtonProps['onClick']
   styles?: StylesOf<ButtonComposition>
   loading?: boolean
   
 } 
-
 
 export const Button:React.FC<ButtonProps> = (buttonProps) => {
   const { 
@@ -33,7 +32,8 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
     styles,
     onPress,
     rightIcon,
-    ...props } = buttonProps
+    ...props 
+  } = buttonProps
   
   
   const variantStyles = useComponentStyle('Button', {
