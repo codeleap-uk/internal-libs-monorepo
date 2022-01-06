@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import { CSSProperties } from 'react'
-import { DefaultVariants, VariantProvider } from '.'
+import { DefaultVariants, Hooks, MediaQueries, VariantProvider } from '.'
 import { AppSettings, Logger } from '..'
 import { AnyFunction } from '../types/utility'
 import { BorderHelpers } from './helpers'
@@ -13,6 +13,8 @@ type AnyProps<T = any> = {
   [x:string]: T
 } 
 export type IconPlaceholder = '__ICON__'
+export type BreakpointPlaceholder = '__BREAKPOINT__'
+
 export type DefaultColors = 'primary'|'secondary'|'positive'|'negative'|'white'|'black'|'gray'
 
 export type Fonts = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p1' | 'p2' | 'p3' | 'p4'
@@ -31,7 +33,10 @@ export type TypographyStyle = {
 export type AppTheme = {
   readonly breakpoints: Record<string, number>;
   readonly spacing: number;
-  readonly colors: Partial<Record<'primary'|'secondary'|'positive'|'negative'|'white'|'black'|'gray', string>> & AnyProps<string>
+  readonly colors: Partial<
+    Record<DefaultColors, string>
+    > & AnyProps<string>
+   
  
 
   readonly borderRadius: {
@@ -54,8 +59,8 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<T, 'spacing'> & 
     base: number;
   } & Spacings<'margin'> &
     Spacings<'padding'>;
-  hooks: BreakpointHooks<keyof T['breakpoints'], boolean>;
-  media: BreakpointHooks<keyof T['breakpoints'], string>;
+  hooks: Hooks<keyof T['breakpoints'], boolean>;
+  media: MediaQueries<keyof T['breakpoints'], string>;
   presets: typeof defaultPresets;
   border: BorderHelpers<T>
 };
