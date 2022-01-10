@@ -27,7 +27,7 @@ export function useClickOutside(callback: AnyFunction, {customId, deps = []} : U
     const isInside = element.contains(e.target as Node)
    
     if (!isInside){
-      callback()
+      callback(e)
     }
   }
  

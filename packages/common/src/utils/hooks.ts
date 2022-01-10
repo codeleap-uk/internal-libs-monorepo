@@ -54,16 +54,55 @@ export function useBooleanToggle(initial:boolean){
 
 type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>
 
-export function usePartialState<T = any>(initial:T){
+export function usePartialState<T = any>(initial:T|(() => T)){
+  type ValueType = T extends AnyFunction ? ReturnType<T> : T
+
   const [state, setState] = useState(initial)
 
-  function setPartial(value:DeepPartial<T>|SetPartialStateCallback<T>){
+  function setPartial(value:DeepPartial<ValueType>|SetPartialStateCallback<ValueType>){
     if (typeof value === 'function'){
-      setState(v => deepMerge(v, value(v)))
+      setState(v => deepMerge(v, value(v as ValueType)))
     } else {
       setState(deepMerge(state, value))
     }
   }
 
-  return [state, setPartial] as const
+  return [state as ValueType, setPartial as React.Dispatch<React.SetStateAction<DeepPartial<ValueType>>>] as const
+}
+
+export function useInterval(callback:AnyFunction, interval:number){
+  const intervalRef = useRef(null)
+  function clear(){
+
+    clearInterval(intervalRef.current)
+    intervalRef.current = null
+    
+  }
+  useEffect(() => {
+    intervalRef.current = setInterval(callback, interval)
+    return clear
+  })
+
+  return {
+    clear,
+    interval: intervalRef.current,
+  }
+}
+
+export function useDebounce<T extends unknown>(value:T, debounce:number):T{
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+  
+    const timeout = setTimeout(() => {
+      setDebouncedValue(value)
+    }, debounce)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+    
+  }, [value])
+ 
+  return debouncedValue
 }

@@ -24,3 +24,17 @@ export function objectFromArray<T, Getter extends GetterFunction<T>>(arr:T[], ke
 export function uniqueArrayByProperty<T, G extends GetterFunction<T>>(array:T[], getProperty:G) {
   return Object.values(objectFromArray(array, getProperty))
 }
+
+export function flatten<T extends unknown>(arr: T[]){
+  let newArr = [] as T[]
+
+  arr.forEach(item => {
+    if (Array.isArray(item)){
+      newArr = [...newArr, ...flatten(item)]
+    } else {
+      newArr.push(item)
+    }
+  })
+
+  return newArr
+}

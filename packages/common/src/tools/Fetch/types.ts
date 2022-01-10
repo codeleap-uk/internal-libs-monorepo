@@ -1,4 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { Logger } from '..'
 
 export type FetchFailure = 'NO_RESPONSE' | 'SETUP_ERROR'| 'INVALID_STATUS_CODE' | 'REQUEST_ABORTED' | 'ALREADY_IN_PROGRESS'
 
@@ -27,6 +28,7 @@ export type RequestClientConfig<D =any> = AxiosRequestConfig<D> & {
     multipart?:MultipartConfig|boolean
     requestMiddleware?: Middleware<RequestClientConfig>[]
     responseMiddleware?: Middleware<AxiosResponse>[]
+    logger?: Logger
 }
 
 

@@ -1,16 +1,13 @@
 import React, {  ComponentPropsWithoutRef,  useImperativeHandle, useRef } from 'react'
+import { WebInputFile } from '@codeleap/common'
 
-type InputFile = {
-  file:File
-  preview: string
-}
 
 export type FileInputRef = {
     openFilePicker: () => void
 }
 
 type FileInputProps= Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
-  onFileSelect(files:InputFile[]): void
+  onFileSelect(files:WebInputFile[]): void
 } 
 
 
@@ -33,7 +30,7 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>((inputPr
     inputProps.onChange && inputProps.onChange(e)
     const fileArray = Array.from(e.target?.files||[])
     
-    const files:InputFile[] = fileArray.map((obj) => ({
+    const files:WebInputFile[] = fileArray.map((obj) => ({
       file: obj,
       preview: URL.createObjectURL(obj),
     }))

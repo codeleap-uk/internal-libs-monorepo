@@ -7,7 +7,7 @@ export type RadioInputComposition =
   'button:checked' |
   'button:unchecked' |
   'button' |
-  'itemWrapper' |
+  'itemWrapper' | 
   'wrapper' |
   'listWrapper' | 
   'button:mark';
