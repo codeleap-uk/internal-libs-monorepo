@@ -1,18 +1,11 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-dupe-class-members */
-/* eslint-disable no-restricted-imports */
-import { CSSProperties, ReactElement } from 'react'
-import { ResponsiveVariantsProp, VariantProp } from '.'
-import { AppTheme, EnhancedTheme, IconPlaceholder} from '..'
-import { ComponentVariants } from '../..'
-import { AnyFunction, NestedKeys, StylesOf, ReplaceRecursive, FunctionType } from '../../types/utility'
-import { deepMerge, mapObject } from '../../utils/object'
-import { DEFAULT_VARIANTS, DEFAULT_STYLES, DefaultVariants } from './defaults'
+import { CSSProperties } from 'react'
+import { VariantProp } from '.'
+import { EnhancedTheme} from '..'
+import { deepMerge } from '../../utils/object'
 import {
-  CommonVariantObject,
+  ApplyVariantsArgs,
   DefaultVariantBuilder,
-  FromVariantsBuilder,
-  PartialComponentStyle, 
+  FromVariantsBuilder, 
 } from './types'
 
 export function mapVariants<S = CSSProperties, 
@@ -40,22 +33,8 @@ export function standardizeVariants(variants:VariantProp<any>):string[] {
   return variantList
 }
 
-type GetStylesArgs<VariantObject extends CommonVariantObject, Theme extends EnhancedTheme<any>, Root> = [styles:VariantObject, options: {
-  
-  variants: VariantProp<VariantObject>,
-  rootElement?:Root,
-  responsiveVariants?: ResponsiveVariantsProp<Theme, VariantObject>
-  styles?: NestedKeys<VariantObject> extends string ? StylesOf<NestedKeys<VariantObject>> : any
-}]
-type ApplyVariantsArgs = {
-  variantName:string,
-  styles: any,
-  computedStyles:any,
-  rootElement:any,
-  theme:EnhancedTheme<any>
-}
 
-function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme, variantName }:ApplyVariantsArgs) {
+export function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme, variantName }:ApplyVariantsArgs) {
   if (!styles[variantName]) {
 
     if (variantName.startsWith('padding') || variantName.startsWith('margin')) {
@@ -81,131 +60,4 @@ function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme,
   }
 }
 
-type CT<StyleType> = [Component: FunctionType<[any], ReactElement>, style: CommonVariantObject<string, StyleType>]
-
-type ComponentStyleMap<CSS = CSSProperties> = Partial<{
-  [Property in keyof DefaultVariants] : CT<CSS>
-}>
-
-type ReplaceProps<T extends CT<any>,
-Theme extends EnhancedTheme<any>, 
-NewProps = ComponentVariants<T[1], any>, 
-Props = Parameters<T[0]>[0],
-MergedProps = Omit<Props, 'responsiveVariants'|'variants'> & NewProps> = React.FC<ReplaceRecursive<MergedProps, IconPlaceholder, keyof Theme['icons']>>
-
-type TypedComponents<T extends ComponentStyleMap = ComponentStyleMap, Theme extends EnhancedTheme<any> = EnhancedTheme<any>> = {
-  [Property in keyof DEFAULT_VARIANTS] : ReplaceProps<T[Property], Theme, ComponentVariants<T[Property][1], Theme>>
-}
-
-/**
- * [[include:Variants.md]]
- */
-export class VariantProvider<
-  RootStyler extends AnyFunction,
-  AT extends AppTheme,
-  Theme extends EnhancedTheme<AT> = EnhancedTheme<AT>,
-  CSSIn = Parameters<RootStyler>[0],
-  CSSOut = ReturnType<RootStyler>
-> {
-  createStylesheet: RootStyler
-
-  theme: Theme
-
-  constructor(theme: Theme, rootStyleFunction?: RootStyler) {
-    this.createStylesheet = rootStyleFunction || (((a) => a) as RootStyler)
-    this.theme = theme
-  }
-
-  getDefaultVariants(): DefaultVariants<CSSIn>;
-
-  getDefaultVariants<ComponentName extends keyof DefaultVariants>(componentName?: ComponentName): DefaultVariants<CSSIn>[ComponentName];
-
-  getDefaultVariants(componentName?: keyof DEFAULT_VARIANTS) {
-    const TransformedVariants = {} as DefaultVariants<CSSIn>
-
-    if (!componentName) {
-      Object.entries(DEFAULT_STYLES).forEach(([component, variantsObject]) => {
-      
-        TransformedVariants[component] = mapVariants(this.theme, variantsObject)
-      })
-
-      return TransformedVariants as DefaultVariants<CSSIn>
-    } else {
-      return mapVariants<CSSIn>(this.theme, DEFAULT_STYLES[componentName])
-    }
-  }
-
-  createComponentStyle<T extends Record<string, CSSIn>>(styles: T):Record<keyof T, CSSOut>{
-    const styleMap = mapObject(styles, ([key, value]) => [key, this.createStylesheet(value)] )
-    return Object.fromEntries(styleMap) as Record<keyof T, CSSOut>
-  }
-
-
-  createVariantFactory<Composition extends string, T = PartialComponentStyle<Composition, CSSIn>>() {
-    return (variant: ((theme: Theme) => T) | T) => {
-      if (typeof variant === 'function') {
-        const themeGetter = variant as (theme: Theme) => T
-        return themeGetter(this.theme)
-      }
-      return variant
-    }
-  }
-
-  getStyles<VariantObject extends CommonVariantObject<any, CSSIn>>(...args:GetStylesArgs<VariantObject, Theme, keyof VariantObject[keyof VariantObject]>) {
-    const [styles, {variants, rootElement = 'wrapper', responsiveVariants, styles: override}] = args
-    const variantList = standardizeVariants(variants)
-
-    let computedStyles = {} as Record<string, CSSOut>
-
-    for (const variant of ['default', ...variantList]) {
-      computedStyles = applyVariants({
-        computedStyles,
-        rootElement,
-        styles,
-        theme: this.theme,
-        variantName: variant,
-      })
-    }
-
-    if (responsiveVariants) {
-      for (const breakpoint in responsiveVariants) {
-
-        const shouldApplyResponsiveVariants = this.theme.hooks.down(breakpoint)
-
-        if (shouldApplyResponsiveVariants) {
-
-          const responseVariantList = standardizeVariants(responsiveVariants[breakpoint])
-
-          for (const variant of responseVariantList) {
-            computedStyles = applyVariants({
-              computedStyles,
-              rootElement,
-              styles,
-              theme: this.theme,
-              variantName: variant,
-            })
-          }
-        }
-      }
-    }
-
-    const appliableStyles = Object.fromEntries(mapObject(computedStyles, ([k, v]) => [k, this.createStylesheet({...v, ...override?.[k] })])) as Record<
-      NestedKeys<VariantObject>,
-      CSSOut
-    >
-    return appliableStyles
-  }
-
-
-  typeComponents<T extends ComponentStyleMap<CSSIn>>(components:T) {
-    const typed = {}
-
-    for (const [name, [render]] of Object.entries(components)){
-      typed[name] = render
-    }
-
-
-    return typed as unknown as TypedComponents<T, Theme>
-  }
-}
 

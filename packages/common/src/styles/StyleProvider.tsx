@@ -10,7 +10,9 @@ const silentLogger = new Logger({
   },
 })
 export const StyleProvider = 
-<S extends DefaultVariants, V extends VariantProvider<any, AppTheme>>({ children, variantProvider, variants, logger, settings, imageQuery}:StyleContextProps<S, V>) => {
+<S extends DefaultVariants, 
+V extends VariantProvider<any, AppTheme>
+>({ children, variantProvider, variants, logger, settings, imageQuery}:StyleContextProps<S, V>) => {
 
   return (
     <StyleContext.Provider

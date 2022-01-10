@@ -13,4 +13,5 @@ export * from './Overlay'
 export * from './Drawer' 
 export * from './ContentView' 
 export * from './FlatList' 
+export * from './Touchable'
 

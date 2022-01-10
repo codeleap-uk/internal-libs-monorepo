@@ -31,7 +31,7 @@ export type RadioGroupProps<T> = {
 
 export const RadioButton:React.FC<RadioButtonProps> = ({item, select, style, checked, ...props}) => {
   const styleByState = checked ? style['button:checked'] : style['button:unchecked']
-  return <Touchable  onPress={select} css={style.itemWrapper}>
+  return <Touchable  onPress={select} css={style.itemWrapper} >
     <View  css={{
       ...style.button,
       ...styleByState,

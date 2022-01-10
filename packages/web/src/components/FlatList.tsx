@@ -1,18 +1,18 @@
 import { VariableSizeList as List } from 'react-window';
 import { ComponentProps, CSSProperties, ReactElement } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { ComponentVariants, ViewComposition, ViewStyles } from '@codeleap/common';
+import { ComponentVariants, useComponentStyle, ViewComposition, ViewStyles } from '@codeleap/common';
 import { StylesOf } from '../types/utility';
 import { CSSObject } from '@emotion/react';
 
-
+export type FlatListRender<T> = (itemProps:{item:T, index:number, style:CSSProperties})  => ReactElement
 
 export type FlatListProps<T> = {
     styles?:StylesOf<ViewComposition>
     css?:CSSObject
     data: T[]
     getSize: (i:T, idx:number) => number
-    renderItem: (itemProps:{item:T, index:number, style:CSSProperties})  => ReactElement
+    renderItem: FlatListRender<T>
 
 } & Omit<ComponentProps<typeof List>, 'itemCount' | 'itemSize' | 'itemData' | 'itemHeight' |'width'|'height'|'children'> 
 & ComponentVariants<typeof ViewStyles>
@@ -20,7 +20,10 @@ export type FlatListProps<T> = {
 export const FlatList = <T extends unknown>(flatListProps:FlatListProps<T>) => {
   const { variants, responsiveVariants, styles, data, getSize, renderItem: Item, ...viewProps} = flatListProps
 
- 
+  const variantStyles = useComponentStyle('View', {
+    variants, responsiveVariants, styles,
+  })
+
   return <AutoSizer>
     {
       ({height, width}) => (
@@ -31,11 +34,11 @@ export const FlatList = <T extends unknown>(flatListProps:FlatListProps<T>) => {
           itemCount={data.length}
           itemData={data}
           itemSize={(idx) => getSize(data[idx], idx)}
-
+          css={variantStyles.wrapper}
           {...viewProps}
         > 
           {
-            ({style, index}) => <Item item={data[index]} style={style} index={index}/>
+            ({style, index}) =>  <Item item={data[index]} style={style} index={index}/>   
           }
         </List>
       )

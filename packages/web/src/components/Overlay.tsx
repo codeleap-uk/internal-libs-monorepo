@@ -1,13 +1,12 @@
-import { ComponentVariants, OverlayComposition, OverlayStyles, StylesOf, useComponentStyle } from '@codeleap/common'
-import { ComponentPropsWithoutRef } from 'react'
+import { ComponentVariants, OverlayComposition, OverlayStyles, SmartOmit, StylesOf, useComponentStyle } from '@codeleap/common'
 import { Touchable, TouchableProps } from './Touchable'
-import { View } from './View'
+import { View, ViewProps } from './View'
 
 export type OverlayProps = {
   visible?:boolean
   styles?: StylesOf<OverlayComposition>
   onPress?: TouchableProps<'div'>['onClick']
-} & ComponentVariants<typeof OverlayStyles> & ComponentPropsWithoutRef<'div'>
+} & ComponentVariants<typeof OverlayStyles> & Partial<SmartOmit<ViewProps<'div'>, 'variants' | 'responsiveVariants'>>
  
 export const Overlay:React.FC<OverlayProps> = (overlayProps) => {
   const {responsiveVariants, variants, styles, ...props} = overlayProps
@@ -15,5 +14,5 @@ export const Overlay:React.FC<OverlayProps> = (overlayProps) => {
     variants, responsiveVariants, styles,
   })
   const Component = props.onClick||props.onPress ? Touchable : View
-  return <Component {...props} css={variantStyles.wrapper}/>
+  return <Component {...props} css={variantStyles.wrapper} />
 }
