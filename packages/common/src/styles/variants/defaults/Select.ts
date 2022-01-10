@@ -12,10 +12,11 @@ export const SelectStyles = {
     wrapper: {
       position: 'relative',
       width: 'max-content',
+      flexDirection: 'column',
       ':after': {
         content: '""',
         position: 'absolute',
-        bottom: 'calc(45% - 0.5rem)',
+        bottom: '1rem',
         right: '0.5rem',
         width: '0.5rem',
         height: '0.5rem',
