@@ -1,15 +1,11 @@
 /* eslint-disable no-restricted-imports */
-import { CSSProperties } from 'react'
 import { DefaultVariants, Hooks, MediaQueries, VariantProvider } from '.'
 import { AppSettings, Logger } from '..'
 import { AnyFunction } from '../types/utility'
 import { BorderHelpers } from './helpers'
-import { BreakpointHooks } from './MediaQuery'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
-
 type AnyProps<T = any> = {
-    
   [x:string]: T
 } 
 export type IconPlaceholder = '__ICON__'
@@ -37,8 +33,6 @@ export type AppTheme = {
     Record<DefaultColors, string>
     > & AnyProps<string>
    
- 
-
   readonly borderRadius: {
     large: number
     medium: number
@@ -57,8 +51,7 @@ export type AppTheme = {
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<T, 'spacing'> & {
   spacing: {
     base: number;
-  } & Spacings<'margin'> &
-    Spacings<'padding'>;
+  } & Spacings<'margin'> & Spacings<'padding'>;
   hooks: Hooks<keyof T['breakpoints'], boolean>;
   media: MediaQueries<keyof T['breakpoints'], string>;
   presets: typeof defaultPresets;
@@ -84,8 +77,6 @@ export type StyleContextValue<C extends DefaultVariants> = {
   imageQuery: any
 };
 
-export type AppComponent = 'Button';
-
 export type VariantsStylesheet = Record<string, unknown>;
 
 export const accessors = ['screenSize'] as const
@@ -104,3 +95,11 @@ export type SpacingMultiplier = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 
 
 export type Spacing = `padding${SpacingVariants}:${SpacingMultiplier}` | `margin${SpacingVariants}:${SpacingMultiplier}`;
 
+export type BaseViewProps = {
+  css?:any,
+  is?: string
+  not?: string
+  up?: string
+  down?: string
+  onHover?: (isHovering:boolean) => void
+}

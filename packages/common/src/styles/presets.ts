@@ -35,6 +35,9 @@ export const defaultPresets = {
     width: '100%',
     height: '100%',
   },
+  noWrap: {
+    whiteSpace: 'nowrap',
+  },
   fullWidth: {
     width: '100%',
   },

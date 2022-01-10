@@ -9,10 +9,17 @@ export type OverlayProps = {
 } & ComponentVariants<typeof OverlayStyles> & Partial<SmartOmit<ViewProps<'div'>, 'variants' | 'responsiveVariants'>>
  
 export const Overlay:React.FC<OverlayProps> = (overlayProps) => {
-  const {responsiveVariants, variants, styles, ...props} = overlayProps
+  const {visible, responsiveVariants, variants, styles, ...props} = overlayProps
+
   const variantStyles = useComponentStyle('Overlay', {
     variants, responsiveVariants, styles,
   })
+
   const Component = props.onClick||props.onPress ? Touchable : View
-  return <Component {...props} css={variantStyles.wrapper} />
+
+  return <Component {...props} css={{
+    ...variantStyles.wrapper,
+    transition: 'opacity 0.2s ease',
+    ...(visible ? variantStyles['wrapper:visible'] : {}),
+  }} />
 }

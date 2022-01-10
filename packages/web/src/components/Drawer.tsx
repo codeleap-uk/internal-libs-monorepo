@@ -92,7 +92,7 @@ export const Drawer:React.FC<DrawerProps> = ({ ...rawProps}) => {
       transitionDelay: open ? '0' : animationDuration,
       visibility: open ?'visible' : 'hidden'   }}>
     {
-      darkenBackground && <Overlay variants={['dark', open ? 'visible' : 'hidden']} css={variantStyles.overlay}/> 
+      darkenBackground && <Overlay visible={open} css={variantStyles.overlay}/> 
     }
     <View variants={['fixed']} css={{
       transform: open ? `translate(0%, 0%)` : hiddenStyle,

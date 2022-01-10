@@ -1,4 +1,5 @@
 import axios, { AxiosResponse, AxiosInstance, Axios, AxiosRequestConfig } from 'axios'
+import { Logger } from '..'
 import { AppSettings, CancellablePromise } from '../..'
 import { allMethods } from './constants'
 import {  IRequestClient, RequestClientConfig, RequestQueueItem } from './types'
@@ -15,9 +16,17 @@ export class RequestClient extends Axios implements IRequestClient {
 
   axios:AxiosInstance
 
-  constructor(config?:RequestClientConfig) {
+  logger: Logger
+
+
+  constructor({logger, ...config} :RequestClientConfig) {
     super(config)
     this.axios = axios.create(config)
+    this.logger = logger || new Logger({
+      Logger: {
+        Level: 'silent',
+      },
+    })
     this.axios.interceptors.request.use((c) => {
       let reqConfig = c as RequestClientConfig
 
@@ -88,6 +97,8 @@ export class RequestClient extends Axios implements IRequestClient {
 
     this.setInQueue(failedRequest)
 
+    this.logger.error(`${request.method} to ${request.url} failed`, err?.response?.data || err, 'Network')
+
     if (shouldReject) {
       reject(failedRequest)
     }
@@ -126,6 +137,9 @@ export class RequestClient extends Axios implements IRequestClient {
             ...request,
             requestStatus: 'successful',
           })
+
+          this.logger.log(`${method.toUpperCase()} ${this.config.baseURL + request.url} Successful`, response.data, 'Network')
+
           resolve(response)
         }).catch((err) => this.onRequestFailure(err, request, reject))
       }) as CancellablePromise<T>

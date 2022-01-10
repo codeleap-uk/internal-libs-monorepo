@@ -1,6 +1,7 @@
 import { 
-  CommonVariantObject,
+
   ComponentVariants,
+  FormTypes,
   IconPlaceholder,
 
   onUpdate,
@@ -8,7 +9,7 @@ import {
   TextInputComposition,
   TextInputStyles,
   useComponentStyle } from '@codeleap/common';
-import React, { ComponentPropsWithoutRef,  forwardRef, Ref, useImperativeHandle, useRef, useState } from 'react'
+import React, { ComponentPropsWithoutRef,  forwardRef,  useImperativeHandle, useRef, useState } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { Text } from './Text';
 
@@ -22,7 +23,7 @@ import { Icon } from '.';
 
 type IconProp = {name: IconPlaceholder, action?:() => void}
 type MergedRef = React.LegacyRef<HTMLInputElement> & React.Ref<HTMLTextAreaElement>
-type ValidateFN = (value:string) => { result: 'error' | 'success', message?: string }
+type ValidateFN = (value:string) => { status: 'error' | 'success', message?: string }
 type NativeProps = ComponentPropsWithoutRef<'input'> & 
 ComponentPropsWithoutRef<'textarea'> 
 
@@ -40,7 +41,7 @@ export type TextInputProps =
     leftIcon?:IconProp
     rightIcon?:IconProp
     styles?: StylesOf<TextInputComposition>
-    validate?: ValidateFN | string
+    validate?: FormTypes.ValidatorFunction | string
     value?:string
   };
 
@@ -67,8 +68,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
 
   const [_ig, setFocus] = useState(false)
   const [editedState, setEdited] = useState(edited)
-  const [error, setError] = useState<ReturnType<ValidateFN>>({
-    result: 'success',
+  const [error, setError] = useState<ReturnType<FormTypes.ValidatorFunction>>({
+    valid: true,
     message: '',
   })
   const input = useRef<any>(null)
@@ -109,16 +110,19 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
   
   onUpdate(() => {
 
-    if (validate){
-      const result:ReturnType<ValidateFN> = typeof validate === 'function' ? 
-        validate(input?.current?.value) : 
-        {message: validate, result: 'error'}
-
-      setError(result)
-    }
+    
+    const result = typeof validate === 'function' ? 
+      validate(input?.current?.value) : 
+      {message: validate, valid: false}
+    setError(result)
+   
+   
   }, [value, validate])
 
   useImperativeHandle(inputRef, () => input.current)
+
+  const showError = (!error.valid  && error.message)
+
   return (
     <div
       css={{...variantStyles.wrapper}}
@@ -144,11 +148,21 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
         <InputIcon {...rightIcon} style={rightIconStyle}/>
       </div>
       {
-        error.result === 'error' && error.message  ?  <Text text={error.message} variants={['p2', 'marginTop:1']} css={variantStyles.error}/> : null
+        showError && <FormError message={error.message} css={variantStyles.error}/>
+        
+     
       }
+      
     </div>
   )
 })
+
+const FormError = ({message, ...props}) => {
+  if (['number', 'string'].includes(typeof message)){
+    return  <Text text={`${message}`} variants={['p2', 'marginTop:1']} {...props}/> 
+  }
+  return message
+}
 export const InputIcon:React.FC<{style:any} & IconProp> = ({name, style, action}) => {
   if (!name) return null
 

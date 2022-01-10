@@ -4,11 +4,13 @@ import { jsx } from '@emotion/react';
 import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { v4 } from 'uuid';
-import { StylesOf } from '../types/utility';
-import {Button} from './Button'
-import {View} from './View'
-import {Text} from './Text'
+import { StylesOf } from '../../types/utility';
+import {Button} from '../Button'
+import {View} from '../View'
+import {Text} from '../Text'
+import { Overlay } from '../Overlay';
 
+export * from './styles'
 
 export type ModalProps = {
   
@@ -18,6 +20,7 @@ export type ModalProps = {
   styles?: StylesOf<ModalComposition>
   accessible?:boolean
   showClose?: boolean
+  closable?: boolean
   footer?: ReactNode
 } & ComponentVariants<typeof ModalStyles> 
 
@@ -31,7 +34,20 @@ function focusModal(event: FocusEvent, id: string) {
   }
 }
 export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) => {
-  const { children, open, title = '', toggle, id, responsiveVariants, variants, styles, showClose, footer, ...props } = modalProps
+  const { 
+    children,
+    closable = true,
+    open,
+    title = '',
+    toggle,
+    id,
+    responsiveVariants,
+    variants,
+    styles,
+    showClose = true,
+    footer,
+    ...props 
+  } = modalProps
   
   const variantStyles = useComponentStyle('Modal', {
     responsiveVariants,
@@ -53,12 +69,15 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
   }, [id]);
 
   return (
-    <View  aria-hidden={!open} className={open ? 'visible' : ''} css={variantStyles.wrapper}>
-      <View  className='overlay' onClick={toggle} css={variantStyles.overlay}></View >
+    <View  aria-hidden={!open}  css={variantStyles.wrapper} className={open ? 'visible' : ''}>
+      <Overlay  visible={open} onClick={closable ? toggle : () => {}} css={variantStyles.overlay} />
       <View
         component='section'
+        css={{
+          ...variantStyles.box,
+          // visibility: open ? 'visible' : 'hidden',
+        }}
         className='content'
-        css={variantStyles.box}
         onKeyDown={closeOnEscPress}
         tabIndex={0}
         id={id}
@@ -76,7 +95,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
               {typeof title === 'string' ? <Text text={title}/> : title}
             
               {
-                showClose &&
+                (showClose && closable) &&
               <Button rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
               }
             </View>

@@ -133,6 +133,8 @@ const typescript = {
   '@typescript-eslint/explicit-module-boundary-types': 'off',
   '@typescript-eslint/ban-ts-comment': 'off',
   '@typescript-eslint/ban-types': 'off',
+  '@typescript-eslint/no-empty-function': 'off',
+
 }
 
 module.exports = {
