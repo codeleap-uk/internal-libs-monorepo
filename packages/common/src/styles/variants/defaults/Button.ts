@@ -20,7 +20,7 @@ export const ButtonStyles = {
       transition: 'background-color 0.2s ease',
       ...theme.presets.alignCenter,
       ...theme.spacing.padding(1),
-      ':hover': {
+      '&:hover': {
         backgroundColor: shadeColor(theme.colors.primary, -30),
       },
     },

@@ -1,10 +1,11 @@
 /** @jsx jsx */
 import {  CSSObject, jsx } from '@emotion/react'
-import { onUpdate, useBooleanToggle, useDebounce } from '@codeleap/common'
+import { ComponentVariants, onUpdate, TooltipComposition, TooltipStyles, useBooleanToggle, useComponentStyle, useDebounce } from '@codeleap/common'
 import { useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { View } from './View'
 import {  stopPropagation } from '../lib/utils'
+import { StylesOf } from '../types/utility'
 
 type TooltipPosition = 'left'| 'top' | 'bottom' | 'right'
 const arrowPositionStyles = {
@@ -55,19 +56,22 @@ const tooltipPositionStyles = {
 
 export type TooltipProps = {
     position?: TooltipPosition
-    styles?: CSSObject
+    styles?: StylesOf<TooltipComposition>
     showOn?: 'click' | 'hover'
-}
+} & ComponentVariants<typeof TooltipStyles>
 
 const invert = (pos) => {
   if (['top', 'bottom'].includes(pos)) return pos === 'top' ? 'bottom' : 'top'
   if (['left', 'right'].includes(pos)) return pos === 'left' ? 'right' : 'left'
 }
 
-export const Tooltip:React.FC<TooltipProps> = ({children, position, styles, showOn}) => {
+export const Tooltip:React.FC<TooltipProps> = (props) => {
+  const {children, position, styles,variants,responsiveVariants, showOn} = props
+
   const tooltipRef = useRef<HTMLDivElement>(null)
   const [isVisible, setVisible] = useBooleanToggle(false)
   const [isCursorOnTooltip, setCursorOnTooltip] = useState(false)
+
   onUpdate(() => {
     if (tooltipRef.current){
       
@@ -126,15 +130,23 @@ export const Tooltip:React.FC<TooltipProps> = ({children, position, styles, show
       
     }
   }, [showOn, isVisible, isCursorOnTooltip])
+  
   const debouncedVisible = useDebounce(isVisible, 100)
   const arrowPos = arrowPositionStyles[invert(position)]
 
+  const variantStyles = useComponentStyle('Tooltip', {
+    responsiveVariants,
+    variants,
+    styles
+  })
   const style = {
     position: 'absolute',
     // visibility: isVisible ? 'visible' :'hidden',
     zIndex: 10,
     transition: 'transform 0.2s ease',
+    ...variantStyles.wrapper,
     '&:after': {
+      ...variantStyles.arrow,
       content: '""',
       position: 'absolute',
       background: 'black',
