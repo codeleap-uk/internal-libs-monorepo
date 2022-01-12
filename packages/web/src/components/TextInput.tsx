@@ -1,5 +1,8 @@
 import { 
+<<<<<<< HEAD
 
+=======
+>>>>>>> a12dda01843fa72024f3245373d84e1a71940e6b
   ComponentVariants,
   FormTypes,
   IconPlaceholder,
@@ -9,7 +12,11 @@ import {
   TextInputComposition,
   TextInputStyles,
   useComponentStyle } from '@codeleap/common';
+<<<<<<< HEAD
 import React, { ComponentPropsWithoutRef,  forwardRef,  useImperativeHandle, useRef, useState } from 'react'
+=======
+import React, { ComponentPropsWithoutRef,  forwardRef, useImperativeHandle, useRef, useState } from 'react'
+>>>>>>> a12dda01843fa72024f3245373d84e1a71940e6b
 import TextareaAutosize from 'react-autosize-textarea'
 import { Text } from './Text';
 
@@ -139,7 +146,6 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
           value={value}
           disabled={disabled}
           onFocus={handleFocus}
-         
           onBlur={handleBlur}
           rows={4}
           {...props}
