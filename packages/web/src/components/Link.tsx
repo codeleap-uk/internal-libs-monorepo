@@ -44,7 +44,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
     component={Component}
     text={props.text} 
    
-    variants={[...passedVariants, 'link']}
+    variants={[...passedVariants]}
     onClick={handleClick}
   />
 }
