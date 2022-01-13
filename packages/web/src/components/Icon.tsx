@@ -1,4 +1,4 @@
-import { IconPlaceholder, useStyle } from '@codeleap/common'
+pimport { IconPlaceholder, useStyle } from '@codeleap/common'
 
 export type IconProps = {
     name:IconPlaceholder
