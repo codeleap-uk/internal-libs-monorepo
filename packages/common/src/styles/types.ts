@@ -32,6 +32,10 @@ export type AppTheme = {
   readonly colors: Partial<
     Record<DefaultColors, string>
     > & AnyProps<string>
+
+  readonly circle: (size: number) => any
+  
+  readonly semiCircle: (side: number) => any 
    
   readonly borderRadius: {
     large: number
@@ -56,6 +60,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<T, 'spacing'> & 
   media: MediaQueries<keyof T['breakpoints'], string>;
   presets: typeof defaultPresets;
   border: BorderHelpers<T>
+  semiCircle: (side: number) =>  any 
 };
 export type ThemeValues = AppTheme;
 
