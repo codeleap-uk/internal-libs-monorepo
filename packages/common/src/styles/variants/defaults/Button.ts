@@ -17,7 +17,6 @@ export const ButtonStyles = {
       outline: 'none',
       display: 'flex',
       backgroundColor: theme.colors.primary,
-      transition: 'background-color 0.2s ease',
       ...theme.presets.alignCenter,
       ...theme.spacing.padding(1),
       '&:hover': {
