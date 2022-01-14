@@ -13,5 +13,9 @@ export const ImageStyles = {
     
     },
   })),
- 
+  skeleton: createImageStyle(() => ({
+    wrapper: {
+      backgroundColor: '#f3f3f3',
+    },
+  })),
 }
