@@ -1,13 +1,11 @@
 /** @jsx jsx */
 import {  CSSObject, jsx } from '@emotion/react'
 import { ComponentVariants, onUpdate, TooltipComposition, TooltipStyles, useBooleanToggle, useComponentStyle, useDebounce } from '@codeleap/common'
-import { ReactNode, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { View } from './View'
-import {  stopPropagation} from '../lib/utils'
+import {  stopPropagation } from '../lib/utils'
 import { StylesOf } from '../types/utility'
-import { Touchable } from './Touchable'
-import {  useClickOutside } from '../lib/hooks'
 
 type TooltipPosition = 'left'| 'top' | 'bottom' | 'right'
 const arrowPositionStyles = {
@@ -56,18 +54,10 @@ const tooltipPositionStyles = {
   }),
 }
 
-const borders = {
-  left: ['top','right'],
-  right: ['left', 'bottom'],
-  bottom: ['top','left'],
-  top: ['bottom','right'],
-}
-
 export type TooltipProps = {
-    position: TooltipPosition
+    position?: TooltipPosition
     styles?: StylesOf<TooltipComposition>
     showOn?: 'click' | 'hover'
-    content?:ReactNode
 } & ComponentVariants<typeof TooltipStyles>
 
 const invert = (pos) => {
@@ -76,12 +66,71 @@ const invert = (pos) => {
 }
 
 export const Tooltip:React.FC<TooltipProps> = (props) => {
-  const {children, position, styles,variants,responsiveVariants, showOn, content} = props
+  const {children, position, styles,variants,responsiveVariants, showOn} = props
 
   const tooltipRef = useRef<HTMLDivElement>(null)
   const [isVisible, setVisible] = useBooleanToggle(false)
- 
- 
+  const [isCursorOnTooltip, setCursorOnTooltip] = useState(false)
+
+  onUpdate(() => {
+    if (tooltipRef.current){
+      
+      const parent = tooltipRef.current.parentElement
+      
+      if (!parent.style.position || parent.style.position === 'static'){
+        parent.style.setProperty('position', 'relative')
+      }
+      
+      if (showOn === 'click'){
+        
+        const onOutsideClick = (e) => {
+          const isToolTipOrParent = [
+            parent.isSameNode(e.target),
+            parent.contains(e.target),
+            tooltipRef.current.isSameNode(e.target),
+            tooltipRef.current.contains(e.target),
+          ].some((a) => a)
+          
+          if (
+            isToolTipOrParent
+          ){
+            if (!isVisible){
+              setVisible()          
+            }
+          } else if (isVisible){
+            setVisible(false)
+          }
+  
+        }
+          
+          
+          
+        document.addEventListener('click', onOutsideClick)
+        return () => {
+            
+          document.removeEventListener('click', onOutsideClick)
+            
+        }
+      } else {
+        const onEnter = () => setVisible(true)
+        const onLeave = () => {
+          if (isCursorOnTooltip) return
+          setVisible(false)
+        }
+          
+        parent.addEventListener('mouseenter', onEnter)
+        parent.addEventListener('mouseleave', onLeave)  
+          
+        return () => {
+          parent.removeEventListener('mouseenter', onEnter)
+          parent.removeEventListener('mouseleave', onLeave)  
+        }
+
+      }
+      
+    }
+  }, [showOn, isVisible, isCursorOnTooltip])
+  
   const debouncedVisible = useDebounce(isVisible, 100)
   const arrowPos = arrowPositionStyles[invert(position)]
 
@@ -90,43 +139,29 @@ export const Tooltip:React.FC<TooltipProps> = (props) => {
     variants,
     styles
   })
-
   const style = {
+    position: 'absolute',
+    // visibility: isVisible ? 'visible' :'hidden',
+    zIndex: 10,
     transition: 'transform 0.2s ease',
     ...variantStyles.wrapper,
     '&:after': {
       ...variantStyles.arrow,
+      content: '""',
+      position: 'absolute',
+      background: 'black',
+      height: 10,
+      width: 10,
       ...arrowPos,
       transform: arrowPos.transform + ' rotate(45deg)',
     },
     ...styles,
     ...tooltipPositionStyles[position](10, debouncedVisible),
   } as CSSObject
-
-  const wrapperId = useClickOutside(() => {
-    if(isVisible){
-      setVisible(false)
-    } 
-  },{
-    deps: [setVisible, isVisible]
-  })
-
-  if(showOn === 'click'){
-    return <Touchable onPress={() => setVisible()}  id={wrapperId}>
-      <View css={style} ref={tooltipRef} >
-        {content}
-      </View>
-      {children}
-    </Touchable>
-     
-  }
-
-
-  
-  return <View onHover={setVisible} id={wrapperId}>
-      <View css={style} >
-        {content}
-      </View>
-      {children}
-    </View>
+  return <View css={style} ref={tooltipRef} onHover={(hovering ) => {
+    setCursorOnTooltip(hovering)
+    if (showOn === 'hover' && debouncedVisible && !hovering) setVisible(false)  
+  }}>
+    {children}
+  </View>
 }
