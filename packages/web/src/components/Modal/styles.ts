@@ -33,8 +33,6 @@ export const WebModalStyles = {
       },
       box: {
         ...defaultStyles.box,
-      
-    
         width: '45vw',
     
       },

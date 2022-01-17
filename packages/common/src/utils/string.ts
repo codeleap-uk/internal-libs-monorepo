@@ -50,5 +50,5 @@ export function ellipsis(str:string, maxLen:number){
     return str.slice(0, maxLen - 3) + '...'
   }
 
-  return  str
+  return str
 }
