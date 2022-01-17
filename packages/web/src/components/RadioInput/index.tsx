@@ -58,7 +58,7 @@ export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T
     {typeof label === 'string' ? <Text text={label}/> : label }
     <View css={radioStyle.listWrapper}>
       {
-        options.map((item, idx) =>  <RadioButton 
+        options?.map((item, idx) =>  <RadioButton 
           item={item} 
           key={idx} 
           style={radioStyle}

@@ -9,7 +9,7 @@ export const defaultFieldValues:Partial<Record<Form.FormField['type'], any>> = {
 
 export const changeEventNames:Partial<Record<Form.FormField['type'], string>> = {
   checkbox: 'onValueChange',
-  select: 'setSelected',
+  select: 'onValueChange',
   radio: 'onValueChange',
   text: 'onChangeText',
 }

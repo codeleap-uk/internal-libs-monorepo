@@ -1,5 +1,6 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
+import shadeColor from '../../../utils/shadeColor'
 
 export type ButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader';
 
@@ -15,8 +16,12 @@ export const ButtonStyles = {
       border: 'none',
       outline: 'none',
       display: 'flex',
+      backgroundColor: theme.colors.primary,
       ...theme.presets.alignCenter,
       ...theme.spacing.padding(1),
+      '&:hover': {
+        backgroundColor: shadeColor(theme.colors.primary, -30),
+      },
     },
     text: {
       flex: 1,
