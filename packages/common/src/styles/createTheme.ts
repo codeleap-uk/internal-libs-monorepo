@@ -1,4 +1,3 @@
-import { CSSProperties } from '@emotion/serialize'
 import { DefaultColors } from '.'
 import { createBorderHelpers } from './helpers'
 
@@ -16,7 +15,7 @@ const defaultColors:Record<DefaultColors, string> = {
   secondary: '#000',
   white: '#fff',
 }
-
+ 
 const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
 }
@@ -44,5 +43,19 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
     },
     border: createBorderHelpers(values),
     presets: defaultPresets,
+    semiCircle: (side) => ({
+      width: side,
+      height: side,
+      borderRadius: values.borderRadius.small,
+    }),
+    circle: (side) => ({
+      width: side,
+      height: side,
+      borderRadius: '50%',
+    }),
+    square: (side) => ({
+      width: side,
+      height: side,
+    }),
   }
 }

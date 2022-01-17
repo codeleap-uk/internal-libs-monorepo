@@ -35,8 +35,6 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>((inputPr
       preview: URL.createObjectURL(obj),
     }))
 
-
-
     onFileSelect && onFileSelect(files)
 
   }

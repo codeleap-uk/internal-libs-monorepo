@@ -58,9 +58,9 @@ export class VariantProvider<
    }
  }
 
- createComponentStyle<T extends Record<string, CSSIn>>(styles: T):Record<keyof T, CSSOut>{
+ createComponentStyle<T extends Record<string, CSSIn> = Record<string, CSSIn>>(styles: T){
    const styleMap = mapObject(styles, ([key, value]) => [key, this.createStylesheet(value)] )
-   return Object.fromEntries(styleMap) as Record<keyof T, CSSOut>
+   return Object.fromEntries(styleMap) as Record<keyof T, CSSIn>
  }
 
 
