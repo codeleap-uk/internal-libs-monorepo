@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { useComponentStyle, ButtonStyles, ComponentVariants, ButtonComposition, useStyle } from '@codeleap/common';
+import { useComponentStyle, ButtonStyles, ComponentVariants, ButtonComposition } from '@codeleap/common';
 import React, { ComponentPropsWithRef } from 'react'
 import { StylesOf } from '../types/utility'; 
 import { Text } from './Text';
@@ -62,7 +62,6 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
         text: variantStyles.text,
       }}/>}
       <Icon name={rightIcon} style={{...variantStyles.icon, ...variantStyles.rightIcon}}/>
-     
     </Touchable>
   )
 }

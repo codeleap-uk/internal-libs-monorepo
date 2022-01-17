@@ -22,38 +22,16 @@ export const ModalStyles = {
       right: 0,
       bottom: 0,
       visibility: 'hidden',
-      transition: `visibility 0.01s ease`,
-      transitionDelay: transitionDuration,
+      
       zIndex: 2,
-      '&.visible': {
-        visibility: 'visible',
-        transitionDelay: '0s',
-      },
-      '&.visible .content': {
-        transform: 'scale(1)',
-      },
-      '&.visible .overlay': {
-        opacity: 0.5,
-      },
     },
     box: {
-      transform: 'scale(0)',
-      transition: `transform ${transitionDuration} ease`,
       background: 'white',
-      width: '45vw',
       alignSelf: 'center',
-     
       flexDirection: 'column',
     },
     overlay: {
-      background: theme.colors.black,
-      opacity: 0,
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
       zIndex: -1,
-      position: 'absolute',
       transition: `opacity ${transitionDuration} ease`,
     },
     body: {
@@ -72,6 +50,7 @@ export const ModalStyles = {
       background: 'transparent',
       ...theme.spacing.padding(1),
     },
+    
   })),
   roundish: createModalStyle((theme) => ({
     box: {

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { AnyFunction } from '@codeleap/common';
+import { AnyFunction, useStyle } from '@codeleap/common';
 import {  jsx, CSSObject } from '@emotion/react'
 
 import React, { ComponentPropsWithRef, ElementType } from 'react'
@@ -19,6 +19,7 @@ export type TouchableProps<T extends ElementType> = ComponentPropsWithRef<T> &  
 export const Touchable = <T extends ElementType = typeof View>(touchableProps:TouchableProps<T>) => {
   const { children, propagate = true, component: Component = View, disabled, onPress, onClick, ...props } = touchableProps
     
+  const {  logger } = useStyle()
     
   const handleClick = (event: React.MouseEvent<T>) => {
 
@@ -30,6 +31,8 @@ export const Touchable = <T extends ElementType = typeof View>(touchableProps:To
     onPress && onPress()
 
     onClick && onClick(event)
+
+    // logger.log('Touchable pressed', JSON.stringify(touchableProps, null, 2)  ,'Component')
   }
 
   return (

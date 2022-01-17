@@ -31,11 +31,13 @@
   "peerDependencies": {
     "axios": "^0.24.0",
     "react": "^17.0.2",
-    "react-icons": "^4.3.1"
+    "react-icons": "^4.3.1",
+    "yup": "^0.32.11"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1",
     "@sentry/browser": "^6.16.1",
-    "deep-equal": "^2.0.5"
+    "deep-equal": "^2.0.5",
+    "yup": "^0.32.11"
   }
 }

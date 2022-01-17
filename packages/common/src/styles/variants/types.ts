@@ -2,7 +2,7 @@
 /* eslint-disable no-restricted-imports */
 import { CSSProperties, ReactElement } from 'react'
 
-import { BreakpointPlaceholder, DefaultVariants, DEFAULT_VARIANTS, EnhancedTheme, IconPlaceholder, QueryKey, Spacing } from '..'
+import { BaseViewProps, BreakpointPlaceholder, DefaultVariants, DEFAULT_VARIANTS, EnhancedTheme, IconPlaceholder, QueryKey, Spacing } from '..'
 import { ComponentVariants, FunctionType, NestedKeys, ReplaceRecursive, StylesOf } from '../..'
 
 export type PartialComponentStyle<C extends string, S = CSSProperties> = Partial<Record<C, S>>  ;
@@ -44,9 +44,6 @@ export type ComponentStyleMap<CSS = CSSProperties> = Partial<{
   [Property in keyof DefaultVariants] : CT<CSS>
 }>
 
-
-
-
 // ReplaceRecursive<MergedProps, IconPlaceholder, keyof Theme['icons']>
 
 type ReplaceWithIcons<Props,
@@ -67,7 +64,8 @@ export type ReplaceProps<
 > = React.FC<
  ReplaceWithBreakpoints<ReplaceWithIcons<MergedProps & EX, Theme>, Theme>
 >
-type ViewPlatformProps = Partial<Record<QueryKey, BreakpointPlaceholder>>
+type ViewPlatformProps = Partial<BaseViewProps & Record<QueryKey, BreakpointPlaceholder> >
+
 export type TypedComponents<T extends ComponentStyleMap = ComponentStyleMap, Theme extends EnhancedTheme<any> = EnhancedTheme<any>> = {
   [Property in keyof DEFAULT_VARIANTS] : Property extends 'View' ? 
     ReplaceProps<T[Property], Theme, ViewPlatformProps, ComponentVariants<T[Property][1], Theme>> 

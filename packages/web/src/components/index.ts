@@ -14,4 +14,7 @@ export * from './Drawer'
 export * from './ContentView' 
 export * from './FlatList' 
 export * from './Touchable'
+export * from './Tooltip'
+export * from './Slider'
+export * from './Select'
 

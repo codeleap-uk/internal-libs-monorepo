@@ -1,9 +1,10 @@
-import { ComponentPropsWithoutRef, ElementType } from 'react'
-import {View, ViewProps } from '../View'
+import {View } from '../View'
 import {  CSSObject, keyframes } from '@emotion/react'
-import { useComponentStyle,  SmartOmit, ComponentVariants, ActivityIndicatorStyles, ActivityIndicatorComposition } from '@codeleap/common'
+import { useComponentStyle,  ComponentVariants, ActivityIndicatorStyles, ActivityIndicatorComposition } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
+
 export * from './styles'
+
 const spin = keyframes`
     from {
         transform: rotate(0deg);
@@ -27,7 +28,7 @@ export const ActivityIndicator:React.FC<ActivityIndicatorProps> = (indicatorProp
     animating = true,
     hidesWhenStopped = true,
   
-    variants,
+    variants, 
     responsiveVariants,
     styles,
     ...viewProps

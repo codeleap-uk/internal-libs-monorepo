@@ -18,12 +18,12 @@ export type RadioButtonProps = Omit<ComponentPropsWithoutRef<'input'>, 'style'> 
     item: RadioItem
     select: () => void
     style: ReturnType<typeof getRadioStyle>
-}  
+}   
 
 export type RadioGroupProps<T> = {
-    data: RadioItem<T>[]
-    selected: T
-    setSelected(value:T):void
+    options: RadioItem<T>[]
+    value: T
+    onValueChange(value:T):void
     label:ReactNode
     styles?: StylesOf<RadioInputComposition>
 } & ComponentVariants<typeof RadioInputStyles>
@@ -46,28 +46,27 @@ export const RadioButton:React.FC<RadioButtonProps> = ({item, select, style, che
 
 
 export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T>) => {
-  const {data, selected, setSelected, label, responsiveVariants, variants, styles} = radioGroupProps
+  const {options, value, onValueChange, label, responsiveVariants, variants, styles} = radioGroupProps
   const radioName = useRef(v4()).current
 
   const radioStyle = getRadioStyle({
     responsiveVariants,
     variants,
-    styles,
+    styles, 
   })
-
-  return <>
+  return <View css={radioStyle.wrapper}>
     {typeof label === 'string' ? <Text text={label}/> : label }
     <View css={radioStyle.listWrapper}>
       {
-        data.map((item, idx) =>  <RadioButton 
+        options?.map((item, idx) =>  <RadioButton 
           item={item} 
           key={idx} 
           style={radioStyle}
           name={radioName}
-          checked={selected === item.value}
-          select={() => setSelected(item.value)} 
+          checked={value === item.value}
+          select={() => onValueChange(item.value)} 
         />)
       }
     </View>
-  </>
+  </View>
 }

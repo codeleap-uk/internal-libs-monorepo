@@ -16,6 +16,8 @@ import { TouchableStyles } from './Touchable'
 import { ViewStyles } from './View'
 import { DrawerStyles } from './Drawer'
 import { ActivityIndicatorStyles } from './ActivityIndicator'
+import { SelectStyles } from './Select'
+import { TooltipStyles } from './Tooltip'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
@@ -35,6 +37,8 @@ export const DEFAULT_STYLES = {
   Drawer: DrawerStyles,
   FlatList: {},
   ActivityIndicator: ActivityIndicatorStyles,
+  Select: SelectStyles,
+  Tooltip: TooltipStyles
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
@@ -59,3 +63,5 @@ export * from './Image'
 export * from './Touchable'
 export * from './ActivityIndicator'
 export * from './Drawer'
+export * from './Select'
+export * from './Tooltip'
