@@ -14,7 +14,7 @@ export type LinkProps<T extends ElementType> = TextProps<T> & {
 export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
   const {  variants, to, openNewTab, component = 'a', ...props } = linkProps
 
-  const isExternal =  to.startsWith('http')
+  const isExternal =  ['http', 'tel', 'mailto'].some(start => to.startsWith(start))
 
   const Component = isExternal ? 'a' : component
 

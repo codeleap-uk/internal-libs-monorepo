@@ -73,7 +73,7 @@ export const Drawer:React.FC<DrawerProps> = ({ ...rawProps}) => {
   const fullProperty = sizeProperty === 'height' ? 'width' : 'height' 
 
   function onClickOutside(){
-    console.log(open)
+  
     if (open){
       toggle()
     }

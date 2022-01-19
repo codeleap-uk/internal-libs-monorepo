@@ -1,5 +1,5 @@
-import {View } from '../View'
-import {  CSSObject, keyframes } from '@emotion/react'
+import { View } from '../View'
+import { CSSObject, keyframes } from '@emotion/react'
 import { useComponentStyle,  ComponentVariants, ActivityIndicatorStyles, ActivityIndicatorComposition } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
 
@@ -15,7 +15,7 @@ const spin = keyframes`
 `
 
 
-
+ 
 export type ActivityIndicatorProps = {
     animating?:boolean
     hidesWhenStopped?:boolean

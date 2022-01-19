@@ -1,35 +1,43 @@
 /** @jsx jsx */
 import {  CSSObject, jsx } from '@emotion/react'
-import { ComponentVariants, onUpdate, TooltipComposition, TooltipStyles, useBooleanToggle, useComponentStyle, useDebounce } from '@codeleap/common'
-import { ReactNode, useRef, useState } from 'react'
-import { v4 } from 'uuid'
+import { ComponentVariants, TooltipComposition, TooltipStyles, useBooleanToggle, useComponentStyle, useDebounce } from '@codeleap/common'
+import { ReactNode } from 'react'
 import { View } from './View'
-import {  stopPropagation} from '../lib/utils'
+
 import { StylesOf } from '../types/utility'
 import { Touchable } from './Touchable'
 import {  useClickOutside } from '../lib/hooks'
 
 type TooltipPosition = 'left'| 'top' | 'bottom' | 'right'
+
 const arrowPositionStyles = {
   left: {
     right: `100%`,
     top: '50%',
     transform: 'translate(50%,-50%)',
+    borderRight: 'none',
+    borderTop: 'none',
   },
   right: {
     left: `100%`,
     top: '50%',
     transform: 'translate(-50%,-50%)',
+    borderLeft: 'none',
+    borderBottom: 'none',
   },
   bottom: {
     left: '50%',
     top: `100%`,
     transform: 'translate(-50%,-50%)',
+    borderTop: 'none',
+    borderLeft: 'none',
   },
   top: {
     left: '50%',
     bottom: `100%`,
     transform: 'translate(-50%,50%)',
+    borderBottom: 'none',
+    borderRight: 'none',
   },
 }
 
@@ -56,29 +64,29 @@ const tooltipPositionStyles = {
   }),
 }
 
-const borders = {
-  left: ['top','right'],
-  right: ['left', 'bottom'],
-  bottom: ['top','left'],
-  top: ['bottom','right'],
-}
-
 export type TooltipProps = {
     position: TooltipPosition
     styles?: StylesOf<TooltipComposition>
     showOn?: 'click' | 'hover'
-    content?:ReactNode
+    content?: string | ReactNode
 } & ComponentVariants<typeof TooltipStyles>
 
 const invert = (pos) => {
-  if (['top', 'bottom'].includes(pos)) return pos === 'top' ? 'bottom' : 'top'
-  if (['left', 'right'].includes(pos)) return pos === 'left' ? 'right' : 'left'
+  switch (pos){
+    case 'left':
+      return 'right'
+    case 'right':
+      return 'left'
+    case 'top':
+      return 'bottom'
+    case 'bottom':
+      return 'top'
+  }
 }
 
 export const Tooltip:React.FC<TooltipProps> = (props) => {
-  const {children, position, styles,variants,responsiveVariants, showOn, content} = props
+  const {children, position = 'top', styles, variants, responsiveVariants, showOn, content} = props
 
-  const tooltipRef = useRef<HTMLDivElement>(null)
   const [isVisible, setVisible] = useBooleanToggle(false)
  
  
@@ -88,12 +96,12 @@ export const Tooltip:React.FC<TooltipProps> = (props) => {
   const variantStyles = useComponentStyle('Tooltip', {
     responsiveVariants,
     variants,
-    styles
-  })
+    styles,
+  }) 
 
   const style = {
     transition: 'transform 0.2s ease',
-    ...variantStyles.wrapper,
+    ...variantStyles.bubble,
     '&:after': {
       ...variantStyles.arrow,
       ...arrowPos,
@@ -104,29 +112,27 @@ export const Tooltip:React.FC<TooltipProps> = (props) => {
   } as CSSObject
 
   const wrapperId = useClickOutside(() => {
-    if(isVisible){
+    if (isVisible){
       setVisible(false)
     } 
-  },{
-    deps: [setVisible, isVisible]
+  }, {
+    deps: [setVisible, isVisible],
   })
 
-  if(showOn === 'click'){
-    return <Touchable onPress={() => setVisible()}  id={wrapperId}>
-      <View css={style} ref={tooltipRef} >
+  if (showOn === 'click'){
+    return <Touchable onPress={() => setVisible()}  id={wrapperId} css={variantStyles.wrapper}>
+      <View css={style}  >
         {content}
-      </View>
+      </View> 
       {children}
     </Touchable>
      
   }
-
-
   
-  return <View onHover={setVisible} id={wrapperId}>
-      <View css={style} >
-        {content}
-      </View>
-      {children}
+  return <View onHover={setVisible} id={wrapperId} css={variantStyles.wrapper}>
+    <View css={style} >
+      {content}
     </View>
+    {children}
+  </View>
 }
