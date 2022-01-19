@@ -22,13 +22,13 @@ export const ViewCP = <T extends ElementType = 'div'>(viewProps:ViewProps<T>, re
     up,
     onHover,
     down,
-    ...props 
-  } = viewProps
+    ...props
+  } = viewProps;
   const variantStyles = useComponentStyle('View', {
     responsiveVariants,
     variants,
-  })
-  const { Theme } = useStyle()
+  });
+  const { Theme } = useStyle();
 
   function handleHover(isMouseOverElement:boolean){
     onHover && onHover(isMouseOverElement)

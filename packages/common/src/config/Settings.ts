@@ -29,4 +29,13 @@ export type AppSettings = DeepPartial<{
     Fetch: {
         ApiURL: string
     }
+    Social: {
+        FaceURL: string
+        LinkedinURL: string
+    }
+    ContactINFO: {
+      SupportEMAIL: string, 
+      ContactEMAIL: string,
+      ContactPHONE: string,
+    },
 }>
