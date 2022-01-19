@@ -11,20 +11,25 @@ export const TooltipStyles = {
   ...presets,
   default: createTooltipStyle((t) =>  ({
     wrapper: {
-      display: 'flex',
-      background: t.colors.white,
-      border: t.border.black(1),
-      position: 'absolute',
-      zIndex: 10,
+     
+      position: 'relative',
+     
     },
     arrow: {
       content: '""',
       position: 'absolute',
-      background: 'black',
+      background: t.colors.white,
       height: 10,
       width: 10,
-
-    }
+      zIndex: -1,
+    },
+    bubble: {
+      display: 'flex',
+      background: t.colors.white,
+      zIndex: 10,
+      position: 'absolute',
+      ...t.spacing.padding(1),
+    },
 
   })),
 }

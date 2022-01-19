@@ -61,7 +61,7 @@ export const TextInputStyles = {
   })),
   pill: createTextInputStyle((theme) => ({
     innerWrapper: {
-      border: theme.border.white(1),
+      border: theme.border.primary(1),
       borderRadius: 15,
     },
   })),

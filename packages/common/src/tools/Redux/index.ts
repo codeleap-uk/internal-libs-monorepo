@@ -75,6 +75,8 @@ export function createRedux<T extends Record<string, Slice<any, any, any, any>>>
   const store = createStore(
     combineReducers(reducers),
     rootInitialState,
+    // @ts-ignore
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ) as CreateReduxReturn<T>['store']
 
   const actions = Object.fromEntries(
