@@ -40,3 +40,20 @@ export function useClickOutside(callback: AnyFunction, {customId, deps = []} : U
 
   return id
 }
+
+export function useScrollEffect(
+  effect: (passed: boolean, current: number) => any,
+  breakpoint: number,
+) {
+  function handleScroll() {
+    const passed = window.scrollY > breakpoint
+    effect(passed, window.scrollY)
+  }
+
+  onUpdate(() => {
+    document.addEventListener('scroll', handleScroll)
+    return () => {
+      document.removeEventListener('scroll', handleScroll)
+    }
+  }, [breakpoint])
+}
