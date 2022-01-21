@@ -7,11 +7,12 @@ import {
 
   TextInputComposition,
   TextInputStyles,
+  useBooleanToggle,
   useComponentStyle } from '@codeleap/common';
 import React, { ComponentPropsWithoutRef,  forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { Text } from './Text';
-
+import { View  } from './View';
 import { Button } from './Button';
 
 
@@ -42,6 +43,8 @@ export type TextInputProps =
     styles?: StylesOf<TextInputComposition>
     validate?: FormTypes.ValidatorFunction | string
     value?:string
+    password?:boolean
+    visibilityToggle?: boolean
   };
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops, inputRef) => {
@@ -62,6 +65,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
     rightIcon,
     styles,
     validate,
+    password,
+    visibilityToggle,
     ...props
   } = rawprops
 
@@ -72,7 +77,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
     message: '',
   })
   const input = useRef<any>(null)
-
+  const [textIsVisible, setTextVisible] = useBooleanToggle(false)
   const variantStyles =useComponentStyle('TextInput', {
     variants,
     responsiveVariants,
@@ -103,9 +108,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
   }
   
 
-  const leftIconStyle = {...variantStyles.icon, ...variantStyles.leftIcon }
-  
-  const rightIconStyle = {...variantStyles.icon, ...variantStyles.rightIcon }
+
   
   onUpdate(() => {
 
@@ -121,19 +124,38 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
   useImperativeHandle(inputRef, () => input.current)
 
   const showError = (!error.valid  && error.message)
+  const inputType = type || password ? 'password' : 'text'
+
+  const inputVisibilityType = textIsVisible ? 'text' : 'password' 
+
+
+  const leftIconStyle = {
+    ...variantStyles.icon,
+    ...(showError ? variantStyles['icon:error'] : {} ),
+    ...variantStyles.leftIcon, 
+    ...(showError ? variantStyles['leftIcon:error'] : {} ),
+  }
+  
+  const rightIconStyle = {
+    ...variantStyles.icon,
+    ...(showError ? variantStyles['icon:error'] : {} ),
+    ...variantStyles.rightIcon, 
+    ...(showError ? variantStyles['rightIcon:error'] : {} ),
+  }
 
   return (
-    <div
-      css={{...variantStyles.wrapper}}
+    <View
+      css={[variantStyles.wrapper, showError && variantStyles['wrapper:error']]}
     >
       <InputLabel label={label} style={variantStyles.label}/>
 
-      <div css={{...variantStyles.innerWrapper}}>
+      <div css={[variantStyles.innerWrapper, showError && variantStyles['innerWrapper:error']]}>
+
   
         <InputIcon {...leftIcon} style={leftIconStyle}/>
         <InputElement
           ref={input}
-          type={type || 'text'}
+          type={visibilityToggle ? inputVisibilityType : inputType}
           onChange={handleChange}
           value={value}
           disabled={disabled}
@@ -141,23 +163,32 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
           onBlur={handleBlur}
           rows={4}
           {...props}
-          css={variantStyles.textField}
+          css={[variantStyles.textField, showError && variantStyles['textField:error']]}
         />
-        <InputIcon {...rightIcon} style={rightIconStyle}/>
+        {
+          visibilityToggle ? 
+            <InputIcon  name={
+                (textIsVisible ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder
+            } action={() => setTextVisible()} style={rightIconStyle}/>
+            :
+            <InputIcon {...rightIcon} style={rightIconStyle}/>
+        }
       </div>
-      {
-        showError && <FormError message={error.message} css={variantStyles.error}/>
-        
-     
-      }
       
-    </div>
+      <FormError message={error.message} css={{
+        ...variantStyles.error,
+       
+      }}/>
+        
+      
+    </View>
   )
 })
 
 const FormError = ({message, ...props}) => {
-  if (['number', 'string'].includes(typeof message)){
-    return  <Text text={`${message}`} variants={['p2', 'marginTop:1']} {...props}/> 
+  
+  if (['number', 'string', 'undefined'].includes(typeof message)){
+    return  <Text text={`${message||' '}`} variants={['p2', 'marginTop:1']} {...props}/> 
   }
   return message
 }

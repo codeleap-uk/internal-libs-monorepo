@@ -8623,11 +8623,14 @@ jpeg-js@^0.4.0:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.3.tgz#6158e09f1983ad773813704be80680550eff977b"
   integrity sha512-ru1HWKek8octvUHFHvE5ZzQ1yAsJmIvRdGWvSoKV52XKyuyYA437QWDttXT8eZXDSbuMpHlLzPDZUPd6idIz+Q==
 
+<<<<<<< HEAD
 jquery-extend@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/jquery-extend/-/jquery-extend-2.0.3.tgz#6815cdb01a866ddba30e6f4d0fc5fb6679272735"
   integrity sha1-aBXNsBqGbdujDm9ND8X7ZnknJzU=
 
+=======
+>>>>>>> 5aa79c04270b645ab57b53c9e44e802b06ddc2ad
 js-cookie@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"

@@ -37,6 +37,16 @@ export const ButtonStyles = {
       ...theme.spacing.marginRight(1),
     },
   })),
+  negative: createButtonStyle((theme) => ({
+    wrapper: {
+      backgroundColor: theme.colors.negative,
+   
+      '&:hover': {
+        backgroundColor: shadeColor(theme.colors.negative, -30),
+      },
+    },
+   
+  })),
   circle: createButtonStyle((theme) => ({
     wrapper: {
       borderRadius: 100,
@@ -53,6 +63,9 @@ export const ButtonStyles = {
   icon: createButtonStyle((theme) => ({
     wrapper: {
       ...theme.spacing.padding(0),
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
     },
     text: {
       flex: 1,

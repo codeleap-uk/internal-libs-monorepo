@@ -17,9 +17,9 @@ export const Overlay:React.FC<OverlayProps> = (overlayProps) => {
 
   const Component = props.onClick||props.onPress ? Touchable : View
 
-  return <Component {...props} css={{
+  return <Component  css={{
     ...variantStyles.wrapper,
     transition: 'opacity 0.2s ease',
     ...(visible ? variantStyles['wrapper:visible'] : {}),
-  }} />
+  }} {...props}/> 
 }

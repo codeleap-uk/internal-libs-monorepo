@@ -33,7 +33,7 @@ export const RouterPage:React.FC<RouterPageProps> = (props) => {
     let defaultPath = ''
 
     React.Children.forEach(children, (c) => {
-      if (React.isValidElement(c)){
+      if (React.isValidElement(c) && c.props){
         const {title, path, menuIcon} = c.props
         if ([title, path, menuIcon].some((i) => !i)){
           return
@@ -61,7 +61,7 @@ export const RouterPage:React.FC<RouterPageProps> = (props) => {
   return <>
     <Helmet>
       <title>
-        {pageGroupTitle ? `${pageGroupTitle} | ` : '' + currentPage ? currentPage.title : '' }
+        {(pageGroupTitle ? `${pageGroupTitle} | ` : '') + (currentPage ? currentPage?.title : '') }
       </title>
     </Helmet>
     <Menu 

@@ -2,7 +2,22 @@ import { assignTextStyle } from '.';
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type TextInputComposition = 'wrapper'|'icon'| 'leftIcon' | 'rightIcon' | 'textField'|'label'|'innerWrapper'|'error';
+export type TextInputComposition = 
+    'wrapper' 
+  | 'wrapper:error' 
+  | 'icon'
+  | 'icon:error'
+  | 'leftIcon' 
+  | 'leftIcon:error' 
+  | 'rightIcon' 
+  | 'rightIcon:error:error' 
+  | 'textField' 
+  | 'textField:error' 
+  | 'label' 
+  | 'label:error' 
+  | 'innerWrapper' 
+  | 'innerWrapper:error' 
+  | 'error';
 const createTextInputStyle = createDefaultVariantFactory<TextInputComposition>()
 
 const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })))
@@ -47,6 +62,15 @@ export const TextInputStyles = {
     error: {
       color: theme.colors.negative,
     },
+    'icon:error': {
+      color: theme.colors.negative,
+    },
+    'textField:error': {
+      caretColor: theme.colors.negative,
+    },
+    'innerWrapper:error': {
+      borderColor: theme.colors.negative,
+    },
   })),
   line: createTextInputStyle((theme) => ({
     innerWrapper: {
@@ -65,17 +89,4 @@ export const TextInputStyles = {
       borderRadius: 15,
     },
   })),
-  white: createTextInputStyle((theme) => ({
-    textField: {
-      color: theme.colors.white,
-      
-    },
-    icon: {
-      color: theme.colors.white,
-    },
-    innerWrapper: {
-      borderColor: theme.colors.white,
-    },
-  })),
-
 }

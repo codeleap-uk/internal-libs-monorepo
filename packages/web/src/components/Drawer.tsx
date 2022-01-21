@@ -1,6 +1,4 @@
 
-import { useClickOutside } from '../lib/hooks'
-
 import { AnyFunction, ComponentVariants, DrawerComposition, DrawerStyles, IconPlaceholder, useComponentStyle } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
 import React, { ReactNode } from 'react'
@@ -72,14 +70,6 @@ export const Drawer:React.FC<DrawerProps> = ({ ...rawProps}) => {
   const sizeProperty = axis === 'X' ? 'width' : 'height'
   const fullProperty = sizeProperty === 'height' ? 'width' : 'height' 
 
-  function onClickOutside(){
-  
-    if (open){
-      toggle()
-    }
-  }
-
-  const elementId = useClickOutside(onClickOutside, {deps: [open]})
 
   const variantStyles = useComponentStyle('Drawer', {
     styles,
@@ -92,7 +82,7 @@ export const Drawer:React.FC<DrawerProps> = ({ ...rawProps}) => {
       transitionDelay: open ? '0' : animationDuration,
       visibility: open ?'visible' : 'hidden'   }}>
     {
-      darkenBackground && <Overlay visible={open} css={variantStyles.overlay}/> 
+      darkenBackground && <Overlay visible={open} css={variantStyles.overlay} onPress={() => toggle()}/> 
     }
     <View variants={['fixed']} css={{
       transform: open ? `translate(0%, 0%)` : hiddenStyle,
@@ -103,7 +93,7 @@ export const Drawer:React.FC<DrawerProps> = ({ ...rawProps}) => {
       [position]: 0,
       ...variantStyles.box,
 
-    }} id={elementId}>
+    }} >
       <View component='header' variants={['justifySpaceBetween']} css={variantStyles.header}>
         {typeof title === 'string' ? <Text text={title} /> :  title}
         {

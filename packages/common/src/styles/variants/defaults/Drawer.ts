@@ -25,7 +25,8 @@ export const DrawerStyles = {
       overflowY: 'auto',
     },
     overlay: {
-     
+      background: theme.colors.black,
+      height: '100vh',
     },
     box: {
       background: theme.colors.white,

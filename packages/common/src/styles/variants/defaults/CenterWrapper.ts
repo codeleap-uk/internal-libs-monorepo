@@ -13,7 +13,7 @@ export const CenterWrapperStyles = {
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-    flex: 1,
+ 
     width: '100%',
   },
   innerWrapper: {
