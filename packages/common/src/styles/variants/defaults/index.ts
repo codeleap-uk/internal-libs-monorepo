@@ -18,6 +18,9 @@ import { DrawerStyles } from './Drawer'
 import { ActivityIndicatorStyles } from './ActivityIndicator'
 import { SelectStyles } from './Select'
 import { TooltipStyles } from './Tooltip'
+import { CenterWrapperStyles } from './CenterWrapper'
+import { PageRouterStyles } from './PageRouter'
+import { AvatarStyles } from './Avatar'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
@@ -38,7 +41,10 @@ export const DEFAULT_STYLES = {
   FlatList: {},
   ActivityIndicator: ActivityIndicatorStyles,
   Select: SelectStyles,
-  Tooltip: TooltipStyles
+  Tooltip: TooltipStyles,
+  CenterWrapper: CenterWrapperStyles,
+  Avatar: AvatarStyles,
+  PageRouter: PageRouterStyles,
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
@@ -63,5 +69,8 @@ export * from './Image'
 export * from './Touchable'
 export * from './ActivityIndicator'
 export * from './Drawer'
-export * from './Select'
+export * from './Select' 
 export * from './Tooltip'
+export * from './CenterWrapper'
+export * from './PageRouter'
+export * from './Avatar'

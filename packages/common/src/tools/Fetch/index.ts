@@ -56,12 +56,12 @@ export class RequestClient extends Axios implements IRequestClient {
   }
 
   setInQueue(req: RequestQueueItem) {
-    const requestId = getRequestId(req)
+    const requestId = getRequestId(req, this.config)
     this.queue[requestId] = { ...this.queue[requestId], ...req }
   } 
 
   removeFromQueue(req:RequestQueueItem) {
-    const requestId = getRequestId(req)
+    const requestId = getRequestId(req, this.config)
     delete this.queue[requestId]
   }
 
@@ -111,7 +111,7 @@ export class RequestClient extends Axios implements IRequestClient {
 
     if (isRequestMethod) {
       const { request, controller, axiosArgs } = buildRequest(methodId, args, this.config)
-      const requestId = getRequestId(request)
+      const requestId = getRequestId(request, this.config)
 
       if (this.queue[requestId]?.requestStatus === 'in_progress') {
         switch (request.duplicateBehavior) {

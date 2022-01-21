@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import {  jsx } from '@emotion/react'
-import { standardizeVariants } from '@codeleap/common';
+import { standardizeVariants, useStyle } from '@codeleap/common';
 import { ElementType } from 'react';
-import { TextProps } from '.';
+import { TextProps } from './Text';
 import { scrollToElem } from '../lib/utils/pollyfils/scroll';
 import { stopPropagation } from '../lib/utils/stopPropagation';
 import { Text } from './Text';
@@ -17,8 +17,9 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
   const isExternal =  ['http', 'tel', 'mailto'].some(start => to.startsWith(start))
 
   const Component = isExternal ? 'a' : component
-
+  const {logger} = useStyle()
   function handleClick(event: React.MouseEvent){
+    logger.log('Link pressed', {to, text: linkProps.text }, 'Component')
     if (to){
       if (to.startsWith('#')){
         event.preventDefault()
@@ -39,9 +40,9 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
   }
 
   return <Text   
+    component={Component}
     {...props}
     {...linkPropOverride} 
-    component={Component}
     text={props.text} 
    
     variants={[...passedVariants]}

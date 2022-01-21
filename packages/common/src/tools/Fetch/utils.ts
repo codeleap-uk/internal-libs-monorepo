@@ -25,8 +25,8 @@ export function buildRequest(methodId, args, instanceConfig) {
   return { request, controller, axiosArgs }
 
 }
-export function getRequestId(req:RequestQueueItem) {
-  return `${req.baseURL||this.config.baseURL}${req.url}`
+export function getRequestId(req:RequestQueueItem, config:RequestClientConfig) {
+  return `${req.baseURL|| config?.baseURL||''}${req.url}`
 }
 
 export function parseFailedRequest(err, request, instanceConfig) {

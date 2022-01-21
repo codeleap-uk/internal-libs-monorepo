@@ -10,7 +10,7 @@ const presets = includePresets((styles) => createViewStyle(() => ({ wrapper: sty
 export const ViewStyles = {
   ...presets,
   default: createViewStyle((t) =>  ({
-    wrapper: {
+    wrapper: { 
       display: 'flex',
     },
   })),

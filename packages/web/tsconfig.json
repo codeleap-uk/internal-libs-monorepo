@@ -32,7 +32,7 @@
   "exclude": [
     "node_modules",
     "**/*.stories.tsx",
-    "dist"
+    "dist/**/*"
   ],
   "typedocOptions": {
     "entryPoints": ["src/index.ts"],

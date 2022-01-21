@@ -8,7 +8,7 @@ export type ViewProps<T extends ElementType> =
  ComponentVariants<typeof ViewStyles> & {
     component?:T
     children?:ReactNode
-    css?: CSSObject
+    css?: any
 } & BaseViewProps
 
 export const ViewCP = <T extends ElementType = 'div'>(viewProps:ViewProps<T>, ref:Ref<any>) => {
@@ -40,10 +40,10 @@ export const ViewCP = <T extends ElementType = 'div'>(viewProps:ViewProps<T>, re
   
   return <Component  
     css={[variantStyles.wrapper, platformMediaQuery]} 
-    {...props} 
     ref={ref}
     onMouseEnter={() => handleHover(true)} 
     onMouseLeave={() => handleHover(false)}
+    {...props} 
   > 
     {children}
   </Component>
