@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type TouchableComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'loader';
+export type TouchableComposition = 'wrapper' 
 
 
 const createTouchableStyle = createDefaultVariantFactory<TouchableComposition>()
@@ -14,22 +14,7 @@ export const TouchableStyles = {
     wrapper: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      ...theme.spacing.padding(1),
-    },
-  })),
-  circle: createTouchableStyle((theme) => ({
-    wrapper: {
-      borderRadius: 100,
-      ...theme.spacing.padding(2),
-    },
-    text: {
-      color: 'yellow',
-    },
-  })),
-  pill: createTouchableStyle((theme) => ({
-    wrapper: {
-      borderRadius: theme.borderRadius,
+      justifyContent: 'center',
     },
   })),
 
