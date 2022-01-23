@@ -1,5 +1,6 @@
-import { ComponentVariants, useComponentStyle, useStyle, ViewStyles, BaseViewProps } from '@codeleap/common'
-import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import * as React from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { ComponentVariants, useComponentStyle, ViewStyles, BaseViewProps } from '@codeleap/common'
 import { View as NativeView } from  'react-native'
 
 export type ViewProps =
@@ -8,7 +9,9 @@ export type ViewProps =
     css?: any
 } & BaseViewProps
 
+
 export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
+
   const { 
     responsiveVariants = {}, 
     variants = [], 
@@ -16,11 +19,11 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
     onHover,
     ...props
   } = viewProps;
+  
   const variantStyles = useComponentStyle('View', {
     responsiveVariants,
     variants,
   });
-  const { Theme } = useStyle();
 
   return <NativeView  
     style={[variantStyles.wrapper]} 
@@ -29,4 +32,5 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   > 
     {children}
   </NativeView>
+  return null
 })

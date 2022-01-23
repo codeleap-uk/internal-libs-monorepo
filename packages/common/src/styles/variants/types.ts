@@ -38,7 +38,7 @@ export type ApplyVariantsArgs = {
   rootElement:any,
   theme:EnhancedTheme<any>
 }
-export type CT<StyleType> = [Component: FunctionType<[any], ReactElement>, style: CommonVariantObject<string, StyleType>]
+export type CT<StyleType> = [Component: FunctionType<[any], ReactElement|null>, style: CommonVariantObject<string, StyleType>]
 
 export type ComponentStyleMap<CSS = CSSProperties> = Partial<{
   [Property in keyof DefaultVariants] : CT<CSS>
