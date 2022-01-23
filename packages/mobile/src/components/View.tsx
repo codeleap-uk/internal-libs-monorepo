@@ -16,6 +16,7 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
     responsiveVariants = {}, 
     variants = [], 
     children,
+    style,
     onHover,
     ...props
   } = viewProps;
@@ -26,7 +27,7 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   });
 
   return <NativeView  
-    style={[variantStyles.wrapper]} 
+    style={[variantStyles.wrapper, style]} 
     ref={ref}
     {...props} 
   > 
