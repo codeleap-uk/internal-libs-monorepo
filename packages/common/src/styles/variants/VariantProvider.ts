@@ -17,8 +17,9 @@ import {
   DEFAULT_VARIANTS, 
   DEFAULT_STYLES, 
 } from './defaults'
-import { AppTheme, EnhancedTheme } from '..'
-import { AnyFunction, mapObject, NestedKeys } from '../..'
+import { AppTheme, EnhancedTheme } from '../types'
+import { AnyFunction,  NestedKeys } from '../../types'
+import { mapObject } from '../../utils'
 
 /**
  * [[include:Variants.md]]

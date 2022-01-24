@@ -12,7 +12,7 @@ const silentLogger = new Logger({
 export const StyleProvider = 
 <S extends DefaultVariants, 
 V extends VariantProvider<any, AppTheme>
->({ children, variantProvider, variants, logger, settings, imageQuery}:StyleContextProps<S, V>) => {
+>({ children, variantProvider, variants, logger, settings }:StyleContextProps<S, V>) => {
 
   return (
     <StyleContext.Provider
@@ -22,7 +22,6 @@ V extends VariantProvider<any, AppTheme>
         provider: variantProvider,
         logger: logger || silentLogger,
         Settings: settings,
-        imageQuery,
       }}
     >
       {children}
@@ -51,5 +50,5 @@ export function useComponentStyle< K extends keyof DEFAULT_VARIANTS >(componentN
     rootElement: props.rootElement,
     styles: props.styles,
   })
-}
+} 
 

@@ -24,7 +24,7 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   const variantStyles = useComponentStyle('View', {
     responsiveVariants,
     variants,
-  });
+  }); 
 
   return <NativeView  
     style={[variantStyles.wrapper, style]} 

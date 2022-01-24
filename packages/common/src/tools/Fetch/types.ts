@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Logger } from '..'
+import { Logger } from '../Logger'
 
 export type FetchFailure = 'NO_RESPONSE' | 'SETUP_ERROR'| 'INVALID_STATUS_CODE' | 'REQUEST_ABORTED' | 'ALREADY_IN_PROGRESS'
 

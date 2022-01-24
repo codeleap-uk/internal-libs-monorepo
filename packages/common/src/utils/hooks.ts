@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-restricted-imports */
 import { useEffect, useRef, useState } from 'react'
-import { deepMerge } from '.'
-import { AnyFunction, DeepPartial } from '..'
+import { deepMerge } from './object'
+import { AnyFunction, DeepPartial } from '../types'
 
 export const onMount = (func:AnyFunction) => {
   useEffect(() => {

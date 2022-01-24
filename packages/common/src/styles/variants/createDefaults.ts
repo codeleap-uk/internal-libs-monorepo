@@ -1,6 +1,6 @@
-import { PartialComponentStyle } from '.'
-import { EnhancedTheme } from '..'
-import {  FunctionType } from '../..'
+import { PartialComponentStyle } from './types'
+import { EnhancedTheme } from '../types'
+import {  FunctionType } from '../../types'
 
 type CreateVariantOptions = {
   dynamic?:boolean

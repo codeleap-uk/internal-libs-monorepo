@@ -2,7 +2,7 @@ import { defaultFieldValues } from './constants';
 import * as Form from './types';
 import * as yup from 'yup'
 import { humanizeCamelCase } from '../../utils';
-import { changeEventNames } from '.';
+import { changeEventNames } from './constants';
 function getDefaultValue( field:Partial<Form.FormField>){ 
   
   switch (field.type){

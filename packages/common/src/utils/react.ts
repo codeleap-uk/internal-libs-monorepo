@@ -1,5 +1,5 @@
 import equals from 'deep-equal'
-import { Logger } from '..'
+import { Logger } from '../tools/Logger'
 import { LogFunctionArgs } from '../tools/Logger/types'
 
 type ArePropsEqualOptions<MergedObject> = {

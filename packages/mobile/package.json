@@ -1,8 +1,7 @@
 {
   "name": "@codeleap/mobile",
   "version": "0.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",

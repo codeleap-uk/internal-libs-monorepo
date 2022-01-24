@@ -1,6 +1,8 @@
 /* eslint-disable no-restricted-imports */
-import { DefaultVariants, Hooks, MediaQueries, VariantProvider } from '.'
-import { AppSettings, Logger } from '..'
+import { DefaultVariants, VariantProvider } from './variants'
+import { Hooks, MediaQueries } from './MediaQuery'
+import { AppSettings } from '../config'
+import { Logger } from '../tools/Logger'
 import { AnyFunction } from '../types/utility'
 import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
@@ -71,7 +73,7 @@ export type StyleContextProps<Variants extends DefaultVariants, Provider extends
   children?: React.ReactNode
   logger?: Logger
   settings:AppSettings
-  imageQuery: any
+ 
 };
 
 export type StyleContextValue<C extends DefaultVariants> = {
@@ -80,7 +82,6 @@ export type StyleContextValue<C extends DefaultVariants> = {
   ComponentVariants: C
   logger: Logger
   Settings:AppSettings
-  imageQuery: any
 };
 
 export type VariantsStylesheet = Record<string, unknown>;

@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
 import { CSSProperties, ReactElement } from 'react'
-
-import { BaseViewProps, BreakpointPlaceholder, DefaultVariants, DEFAULT_VARIANTS, EnhancedTheme, IconPlaceholder, QueryKey, Spacing } from '..'
-import { ComponentVariants, FunctionType, NestedKeys, ReplaceRecursive, StylesOf } from '../..'
+import { QueryKey } from '../MediaQuery'
+import { BaseViewProps, BreakpointPlaceholder, EnhancedTheme, IconPlaceholder,  Spacing } from '../types'
+import { DefaultVariants, DEFAULT_VARIANTS } from './defaults'
+import { ComponentVariants, FunctionType, NestedKeys, ReplaceRecursive, StylesOf } from '../../types'
 
 export type PartialComponentStyle<C extends string, S = CSSProperties> = Partial<Record<C, S>>  ;
 

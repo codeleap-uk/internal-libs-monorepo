@@ -1,6 +1,4 @@
-import { EnhancedTheme, PartialComponentStyle } from '.'
-import { AnyFunction, FunctionType } from '..'
-import { createDefaultVariantFactory } from './variants/createDefaults'
+import { AnyFunction, FunctionType } from '../types'
 
 export const defaultPresets = {
   inline: {
