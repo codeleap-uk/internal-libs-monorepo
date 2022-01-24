@@ -3,7 +3,7 @@
 import { CSSProperties } from 'react'
 import { spacingVariants, SpacingVariants } from './types'
 
-export type SpacingFunction = (multiplier: number|string) => CSSProperties;
+export type SpacingFunction = (multiplier: number|string) => any;
 
 export type Spacings<T extends string> = {
   [Property in SpacingVariants as `${T}${string & Property}`]: SpacingFunction;

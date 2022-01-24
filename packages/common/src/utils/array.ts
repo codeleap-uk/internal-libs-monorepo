@@ -21,6 +21,7 @@ export function objectFromArray<T, Getter extends GetterFunction<T>>(arr:T[], ke
 
 }
 
+
 export function uniqueArrayByProperty<T, G extends GetterFunction<T>>(array:T[], getProperty:G) {
   return Object.values(objectFromArray(array, getProperty))
 }
