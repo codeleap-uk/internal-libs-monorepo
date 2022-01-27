@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { CSSProperties } from 'react'
 import { VariantProp } from '.'
 import { EnhancedTheme} from '..'
@@ -33,11 +34,14 @@ export function standardizeVariants(variants:VariantProp<any>):string[] {
   return variantList
 }
 
+const directions = ['Top', 'Right', 'Bottom', 'Left', 'Horizontal', 'Vertical', 'l', 'r', 't', 'b', 'h', 'v']
+
+const SPACING_VARIANTS = ['m', 'margin', 'mt', 'marginTop', 'mr', 'marginRight', 'mb', 'marginBottom', 'ml', 'marginLeft', 'mh', 'marginHorizontal', 'mv', 'marginVertical', 'p', 'padding', 'pt', 'paddingTop', 'pr', 'paddingRight', 'pb', 'paddingBottom', 'pl', 'paddingLeft', 'ph', 'paddingHorizontal', 'pv', 'paddingVertical']
 
 export function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme, variantName }:ApplyVariantsArgs) {
   if (!styles[variantName]) {
 
-    if (variantName.startsWith('padding') || variantName.startsWith('margin')) {
+    if (SPACING_VARIANTS.includes(variantName)) {
 
       const [spacingFunction, multiplier] = variantName.split(':')
       let arg:number|string = Number(multiplier)

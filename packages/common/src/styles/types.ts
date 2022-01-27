@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-restricted-imports */
 import { DefaultVariants, VariantProvider } from './variants'
 import { Hooks, MediaQueries } from './MediaQuery'
@@ -94,13 +95,20 @@ export interface DynamicValueAccessors extends Partial<Record<Accessor, AnyFunct
   screenSize?: () => number[];
 }
 
-export const spacingVariants = ['Vertical', 'Horizontal', 'Bottom', 'Top', 'Left', 'Right',  ''] as const
+export const spacingVariants = ['Vertical', 'Horizontal', 'Bottom', 'Top', 'Left', 'Right',  'r', 't', 'b', 'l', 'h', 'v', ''] as const
+
+export const spacingVariantsShort = ['r', 't', 'b', 'l', 'h', 'v', ''] as const
 
 export type SpacingVariants = typeof spacingVariants[number];
 
+export type SpacingVariantsShort = typeof spacingVariantsShort[number];
+
 export type SpacingMultiplier = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | 'auto';
 
-export type Spacing = `padding${SpacingVariants}:${SpacingMultiplier}` | `margin${SpacingVariants}:${SpacingMultiplier}`;
+export type SpacingShort = `p${SpacingVariantsShort}:${SpacingMultiplier}` | `m${SpacingVariantsShort}:${SpacingMultiplier}`;
+
+export type Spacing = `padding${SpacingVariants}:${SpacingMultiplier}` | `margin${SpacingVariants}:${SpacingMultiplier}` | SpacingShort;
+
 
 export type BaseViewProps = {
   css?:any,

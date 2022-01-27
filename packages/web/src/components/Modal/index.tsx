@@ -96,7 +96,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
             
               {
                 (showClose && closable) &&
-              <Button rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
+              <Button styles={{rightIcon: variantStyles.closeIcon  }} rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
               }
             </View>
         }
