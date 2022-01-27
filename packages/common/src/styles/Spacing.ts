@@ -30,6 +30,32 @@ export function spacingFactory<T extends string>(base: number, property: T): Spa
             [`${property}Top`]: value,
             [`${property}Bottom`]: value,
           }
+        case 'v':
+          return {
+            [`${property}Top`]: value,
+            [`${property}Bottom`]: value,
+          }
+        case 'h':
+          return {
+            [`${property}Left`]: value,
+            [`${property}Right`]: value,
+          }
+        case 'l':
+          return {
+            [`${property}Left`]: value,
+          }
+        case 'r':
+          return {
+            [`${property}Right`]: value,
+          }
+        case 'b':
+          return {
+            [`${property}Bottom`]: value,
+          }
+        case 't':
+          return {
+            [`${property}Top`]: value,
+          }
         case '':
           return {
             [`${property}Top`]: value,
