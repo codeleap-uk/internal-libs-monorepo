@@ -1,4 +1,5 @@
 import { FunctionType } from '..'
+import { Logger } from '../tools/Logger'
 
 export function deepMerge(base ={}, changes={}): any {
   const obj = {

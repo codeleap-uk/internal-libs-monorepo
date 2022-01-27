@@ -17,14 +17,26 @@ function createClampExpression(values:TypographyStyle, baseSize:number){
 export function assignTextStyle(name:Fonts, add = {}){
   return createTextStyle((theme) => {
     const style = theme.typography.styles[name]
+
+    if (theme.IsBrowser){
+      return {
+        text: {
+          fontWeight: style.weigth.toString(),
+          fontSize: createClampExpression(style, theme.typography.baseFontSize),
+          lineHeigth: style.lineHeight,
+          ...add,
+        },
+      }
+    }
     return {
       text: {
-        fontWeigth: style.weigth,
-        fontSize: createClampExpression(style, theme.typography.baseFontSize),
-        lineHeigth: style.lineHeight,
+        fontWeight: style.weigth.toString(),
+        fontSize: style.size.multiplier * theme.typography.baseFontSize,
+        // lineHeight: style.lineHeight,
         ...add,
       },
     }
+   
   })
 }
 
@@ -33,7 +45,7 @@ export const TextStyles = {
   default: createTextStyle((theme) => ({
     text: { 
       fontFamily: theme.typography.fontFamily,
-      ...assignTextStyle('p1')(theme),
+      ...assignTextStyle('p1')(theme).text,
     },
   })),
   h1: assignTextStyle('h1'),

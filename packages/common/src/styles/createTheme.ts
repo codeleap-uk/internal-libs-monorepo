@@ -27,7 +27,7 @@ const defaultAccessors: DynamicValueAccessors = {
  */
 export function createTheme<T extends ThemeValues>(values: T, accessors?: DynamicValueAccessors): EnhancedTheme<T> {
   const getters = { ...defaultAccessors, ...accessors }
-
+  const isBrowser = !window?.process
   return {
     ...values,
     colors: {
@@ -41,7 +41,7 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       ...spacingFactory(values.spacing, 'padding'),
       ...spacingFactory(values.spacing, 'margin'),
     },
-    border: createBorderHelpers(values),
+    border: createBorderHelpers(values, isBrowser),
     presets: defaultPresets,
     semiCircle: (side) => ({
       width: side,
@@ -57,5 +57,6 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       width: side,
       height: side,
     }),
+    IsBrowser: isBrowser,
   }
 }

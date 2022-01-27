@@ -64,7 +64,7 @@ export function createRedux<T extends Record<string, Slice<any, any, any, any>>>
   const rootInitialState = {} as {[x:string] : T[string]['initialState'] }
   const actionBuilders = {} as Record<string, T[string]['buildActions']>
 
-  for (const [name, {reducer, initialState, buildActions}] of Object.entries(slices)){
+  for (const {reducer, initialState, buildActions, name} of Object.values(slices)){
 
     reducers[name] = reducer
     rootInitialState[name] = initialState

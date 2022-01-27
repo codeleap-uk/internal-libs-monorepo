@@ -1,13 +1,11 @@
-import { includePresets } from '../../presets'
-import { createDefaultVariantFactory } from '../createDefaults'
-
+import {createDefaultVariantFactory, includePresets} from '@codeleap/common'
 export type CheckboxComposition = 'wrapper' | 'label' | 'input' | 'checkmark' | 'checkmarkWrapper';
 
 const createCheckboxStyle = createDefaultVariantFactory<CheckboxComposition>()
 
 const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })))
 
-export const CheckboxStyles = {
+export const WebCheckboxStyles = {
   ...presets,
   default: createCheckboxStyle((theme) => ({
     wrapper: {

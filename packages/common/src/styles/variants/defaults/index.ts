@@ -2,7 +2,6 @@
 import { CSSProperties } from 'react'
 import { FromVariantsBuilder } from '..'
 import { ButtonStyles } from './Button'
-import { CheckboxStyles } from './Checkbox'
 import { ContentViewStyles } from './ContentView'
 import { FileInputStyles } from './FileInput'
 import { ImageStyles } from './Image'
@@ -21,11 +20,12 @@ import { TooltipStyles } from './Tooltip'
 import { CenterWrapperStyles } from './CenterWrapper'
 import { PageRouterStyles } from './PageRouter'
 import { AvatarStyles } from './Avatar'
+import { SwitchStyles } from './Switch'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
   View: ViewStyles,
-  Checkbox: CheckboxStyles,
+  Checkbox: {},
   ContentView: ContentViewStyles,
   FileInput: FileInputStyles,
   Modal: ModalStyles,
@@ -45,6 +45,7 @@ export const DEFAULT_STYLES = {
   CenterWrapper: CenterWrapperStyles,
   Avatar: AvatarStyles,
   PageRouter: PageRouterStyles,
+  Switch: SwitchStyles,
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
@@ -56,7 +57,6 @@ export type DefaultVariants<S = CSSProperties> = {
 
 export * from './Button'
 export * from './View'
-export * from './Checkbox'
 export * from './ContentView'
 export * from './FileInput'
 export * from './Modal'
@@ -74,3 +74,4 @@ export * from './Tooltip'
 export * from './CenterWrapper'
 export * from './PageRouter'
 export * from './Avatar'
+export * from './Switch'

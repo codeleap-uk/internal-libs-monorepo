@@ -69,7 +69,7 @@ export class Logger {
 
 
     if (this.settings.Environment.IsDev) {
-      Logger.coloredLog(...logArgs)
+      Logger.coloredLog(...logArgs) 
 
     } else {
 

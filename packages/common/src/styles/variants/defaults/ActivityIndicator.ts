@@ -25,11 +25,11 @@ export const ActivityIndicatorStyles = {
         ...theme.presets.whole,
       },
       backCircle: {
-        border: theme.border.primary(size * 0.25),
+        ...theme.border.primary(size * 0.25),
         opacity: 0.5,
       },
       frontCircle: {
-        border: theme.border.create(size * 0.25, 'transparent'),
+        ...theme.border.create({width: size * 0.25, style: 'transparent'}),
         borderTopColor: theme.colors.primary,  
          
       },

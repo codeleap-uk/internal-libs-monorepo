@@ -1,0 +1,54 @@
+import {createDefaultVariantFactory, includePresets} from '@codeleap/common'
+
+type CheckboxParts = 'wrapper' | 'label' | 'input' | 'checkmark' | 'checkmarkWrapper'
+
+export type MobileCheckboxComposition = CheckboxParts | `${CheckboxParts}:checked` | `${CheckboxParts}:disabled`;
+const createCheckboxStyle = createDefaultVariantFactory<MobileCheckboxComposition>()
+
+const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })))
+
+export const MobileCheckboxStyles = {
+  ...presets,
+  default: createCheckboxStyle((theme) => {
+    const size = theme.typography.baseFontSize * 1.2
+
+    const markHeight = size * 0.5
+    const markWidth = size * 0.25
+
+    const translateX = -(markWidth/2)
+    const translateY = -(markHeight/2)
+    return {
+      wrapper: {
+       flexDirection: 'row',
+       ...theme.presets.alignCenter,
+       borderRadius: theme.borderRadius.small
+      },
+      label: {
+        ...theme.spacing.marginLeft(0.5),
+      },
+    
+      checkmark: {
+          position: 'absolute',
+          top: '40%',
+          left: '50%',
+          ...theme.border.white({
+              width: 2,
+              directions: ['right','bottom']
+          }),
+          height: markHeight,
+          width: markWidth,
+          transform: [{translateX}, {translateY}, {rotate: '45deg'},]
+      },
+      checkmarkWrapper: {
+          position: 'relative',
+          width: size,
+          height: size,
+          ...theme.border.gray(1)
+      },
+      "checkmarkWrapper:checked": {
+          backgroundColor: theme.colors.primary
+      }
+    }
+  }),
+
+}

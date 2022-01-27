@@ -1,9 +1,10 @@
+
 /** @jsx jsx */
 import {  jsx } from '@emotion/react'
 import { CheckboxComposition, CheckboxStyles, ComponentVariants, StylesOf, useComponentStyle, useStyle } from '@codeleap/common'
 import { ComponentPropsWithRef } from 'react'
-import { View } from './View'
-import { Text } from './Text'
+import { View } from '../View' 
+import { Text } from '../Text'
 
 type NativeCheckboxProps = ComponentPropsWithRef<'input'>
 

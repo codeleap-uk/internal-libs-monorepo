@@ -26,12 +26,24 @@ export const TextInputStyles = {
   ...presets,
   default: createTextInputStyle((theme) => ({
     textField: {
-      outline: 'none',
-      border: 'none',
-      caretColor: theme.colors.primary,
-      background: 'transparent',
+      ...(
+        theme.IsBrowser ? 
+          {
+            outline: 'none',
+            border: 'none',
+            caretColor: theme.colors.primary,
+          }
+          : 
+          {
+            ...theme.spacing.padding(0),
+            ...theme.spacing.paddingHorizontal(1),
+          }
+      ),
+     
+      backgroundColor: 'transparent',
       flex: 1,
-      ...assignTextStyle('p2')(theme).text,
+
+      // ...assignTextStyle('p2')(theme).text,
     },
     wrapper: {
       display: 'flex',
@@ -40,8 +52,12 @@ export const TextInputStyles = {
     innerWrapper: {
       ...theme.spacing.paddingVertical(0.5),
       ...theme.spacing.paddingHorizontal(1),
-      border: `1px solid ${theme.colors.primary}`,
+      ...theme.presets.row,
+      ...theme.border.primary({
+        width: 1,
+      }),
       display: 'flex',
+      alignItems: 'center',
 
     },
     label: {
@@ -74,18 +90,17 @@ export const TextInputStyles = {
   })),
   line: createTextInputStyle((theme) => ({
     innerWrapper: {
-      border: 'none',
-      borderBottom: theme.border.white(1),
+      ...theme.border.primary({width: 1, directions: ['bottom']}),
     },
   })),
   box: createTextInputStyle((theme) => ({
     innerWrapper: {
-      border: theme.border.white(1),
+      ...theme.border.primary(1),
     },
   })),
   pill: createTextInputStyle((theme) => ({
     innerWrapper: {
-      border: theme.border.primary(1),
+      ...theme.border.primary(1),
       borderRadius: 15,
     },
   })),
