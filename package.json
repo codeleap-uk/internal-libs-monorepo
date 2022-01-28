@@ -24,7 +24,10 @@
       "**/@react-navigation/drawer",
       "**/@react-navigation/native",
       "**/@react-navigation/native-stack",
-      "**/@react-navigation/core"
+      "**/@react-navigation/core",
+      "**/@react-navigation*",
+      "**/@react-navigation*/**",
+      "**/@react-navigation/routers"
     ]
   },
   "scripts": {

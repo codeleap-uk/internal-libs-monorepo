@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react'
 import {  RouteConfig } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -12,7 +13,7 @@ export type AppScenes = {
             render: AnyFunction, 
             icon?: IconPlaceholder
         })
-    }
+    } 
 }
 
 const parseModulePages = (pageModule:string, [pageName, Component])  => {
@@ -28,7 +29,7 @@ const parseModulePages = (pageModule:string, [pageName, Component])  => {
   }
 
   switch (typeof Component){
-    case 'function':
+    case 'function': 
       props.component = Component
     case 'object':
       props  = {
@@ -40,11 +41,8 @@ const parseModulePages = (pageModule:string, [pageName, Component])  => {
       }
 
       if (Component.render){
-        props.component = Component.render
+        props.component = typeof Component.render === 'function' ?  Component.render :  Component?.render?.default
       }
-
-      
-      
 
     default:
       break
