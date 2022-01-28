@@ -30,8 +30,8 @@ export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableP
   
   const styles = [variantStyles.wrapper, style]
 
-  return <NativeTouchable onPress={press} style={styles} ref={ref}> 
-    <View {...props}>
+  return <NativeTouchable onPress={press} {...props} ref={ref}> 
+    <View style={styles}>
       {children}
     </View>
   </NativeTouchable>
