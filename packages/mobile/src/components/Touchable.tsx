@@ -1,13 +1,14 @@
 import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
-import { ComponentVariants, useComponentStyle, BaseViewProps, ViewStyles } from '@codeleap/common'
+import { ComponentVariants, useComponentStyle, BaseViewProps, ViewStyles, useStyle } from '@codeleap/common'
 import { View } from '@codeleap/mobile/src'
-import { TouchableOpacity as NativeTouchable } from  'react-native'
+import { Animated, TouchableOpacity as NativeTouchable } from  'react-native'
 
 export type TouchableProps =
   ComponentPropsWithoutRef<typeof NativeTouchable> & 
 {
   variants?: ComponentVariants <typeof ViewStyles>['variants'],
+  component?: any
 } & BaseViewProps
 
 export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableProps, ref) => {
@@ -22,9 +23,9 @@ export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableP
   const variantStyles = useComponentStyle('View', {
     variants,
   })
-
+  const {logger} = useStyle()
   const press = () => {
-    console.log('<Touchable/> pressed', touchableProps)
+    logger.log('<Touchable/> pressed', touchableProps, 'Component')
     onPress(null)
   }
   
@@ -35,4 +36,18 @@ export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableP
       {children}
     </View>
   </NativeTouchable>
+})
+
+export type AnimatedTouchableProps =
+ComponentPropsWithoutRef<typeof Animated.View> & 
+TouchableProps
+
+export const AnimatedTouchable = forwardRef<typeof Animated.View, AnimatedTouchableProps>((viewProps, ref) => {
+  // @ts-ignore
+  return <Touchable
+    component={Animated.View}
+   
+    {...viewProps} 
+  /> 
+  
 })

@@ -22,10 +22,10 @@ export const RadioInputStyles = {
     wrapper: {
       display: 'flex',
       ...theme.presets.column,
-      ...theme.spacing.padding(1),
     },
     itemWrapper: {
       display: 'flex',
+      ...theme.presets.row,
       ...theme.presets.alignCenter,
       ...theme.spacing.paddingVertical(0.2),
     },

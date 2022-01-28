@@ -17,10 +17,10 @@ const getRadioStyle = (props) => useComponentStyle('RadioInput', props)
 export type RadioButtonProps = Omit<ComponentPropsWithoutRef<'input'>, 'style'> & {
     item: RadioItem
     select: () => void
-    style: ReturnType<typeof getRadioStyle>
+    style: StylesOf<RadioInputComposition>
 }   
 
-export type RadioGroupProps<T> = {
+export type RadioGroupProps<T> = { 
     options: RadioItem<T>[]
     value: T
     onValueChange(value:T):void

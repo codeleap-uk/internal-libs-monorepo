@@ -11,7 +11,7 @@ export type IconProps = {
     }
 
 }
-
+ 
 export const Icon:React.FC<IconProps> = ({name, style}) => {
   const {Theme} = useStyle()
   

@@ -9,9 +9,17 @@
     ],
     "nohoist": [
       "**/react",
-      "**/react-dom",
       "**/react-native",
-      "**/react-native/**"
+      "**/react-native/**",
+      "**/@react-native-firebase/**",
+      "**/@react-native-firebase/auth",
+      "**/@react-native-firebase/auth/**",
+      "**/@react-native-firebase/app",
+      "**/@react-native-firebase/app/**",
+      "**/*react-native*",
+      "**/*react-native*/**",
+      "**/react-native-image-crop-picker/**",
+      "**/react-native-image-crop-picker"
     ]
   },
   "scripts": {

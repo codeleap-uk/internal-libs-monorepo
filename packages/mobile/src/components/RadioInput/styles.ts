@@ -15,9 +15,9 @@ export const MobileRadioInputStyles = {
     const style = defaultStyles(theme)
 
     const itemHeight = theme.typography.baseFontSize * 1.2
-
-    const translateX = -(itemHeight/2)
-    const translateY = -(itemHeight/2)
+    const markHeight = itemHeight / 2
+    const translateX = -(markHeight/2)
+    const translateY = -(markHeight/2)
     return {
       ...style,
       itemWrapper: {
@@ -26,20 +26,20 @@ export const MobileRadioInputStyles = {
       button: { 
         height: itemHeight,
         width: itemHeight,
+        ...theme.border.primary(1),
         borderRadius: theme.borderRadius.large,
-        border: theme.border.primary(1),
         
         position: 'relative',
         ...theme.spacing.marginRight(1),
 
       },
       'buttonMark': {
-        background: theme.colors.primary,
+        backgroundColor: theme.colors.primary,
         position: 'absolute',
         left: '50%',
         top: '50%',
-        height: '50%',
-        width: '50%',
+        height: markHeight,
+        width: markHeight,
         
         transform: [{translateX},{translateY}],
         borderRadius: theme.borderRadius.large,

@@ -136,6 +136,18 @@ export const defaultPresets = {
   wrap: {
     flexWrap: 'wrap',
   },
+  debRed: {
+    backgroundColor: 'red',
+  },
+  debGreen: {
+    backgroundColor: 'green',
+  },
+  debBlue: {
+    backgroundColor: 'blue',
+  },
+  debYellow: {
+    backgroundColor: 'yellow',
+  },
 
 } as const
 

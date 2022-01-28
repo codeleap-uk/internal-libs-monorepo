@@ -12,7 +12,7 @@ type NativeSwitchProps = Omit<
 type SwitchProps = NativeSwitchProps & {
     variants?: ComponentVariants<typeof SwitchStyles>['variants']
     label?: ReactNode
-    styles?: StylesOf<SwitchComposition>
+    styles?: StylesOf<SwitchComposition> 
 } 
 
 export const Switch = forwardRef<NativeSwitch,SwitchProps>((switchProps,ref) => {

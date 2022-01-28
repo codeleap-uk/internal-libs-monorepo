@@ -46,6 +46,7 @@ export const DEFAULT_STYLES = {
   Avatar: AvatarStyles,
   PageRouter: PageRouterStyles,
   Switch: SwitchStyles,
+  Navigation: {},
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;

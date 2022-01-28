@@ -1,11 +1,13 @@
 import * as React from 'react'
-import { CheckboxStyles, CheckboxComposition, ComponentVariants, useComponentStyle, StylesOf, useStyle } from '@codeleap/common'
+import {  ComponentVariants, useComponentStyle, StylesOf, useStyle } from '@codeleap/common'
 import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
 import { Switch as NativeCheckbox } from 'react-native'
 import { InputLabel } from '../TextInput'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
-
+import {
+   MobileCheckboxStyles as CheckboxStyles, MobileCheckboxComposition as CheckboxComposition
+} from './styles' 
 export * from './styles'
 
 type NativeCheckboxProps = Omit<
@@ -30,6 +32,7 @@ export const Checkbox = forwardRef<NativeCheckbox,CheckboxProps>((checkboxProps,
     } = checkboxProps
 
     const variantStyles = useComponentStyle('Checkbox', {
+        // @ts-ignore
         variants,
         styles
     })

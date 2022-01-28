@@ -28,7 +28,7 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>((inputPr
   function handleChange(e:React.ChangeEvent<HTMLInputElement>){
     if (!e.target.files.length) return
     inputProps.onChange && inputProps.onChange(e)
-    const fileArray = Array.from(e.target?.files||[])
+    const fileArray = Array.from(e.target?.files||[]) as File[]
     
     const files:WebInputFile[] = fileArray.map((obj) => ({
       file: obj,

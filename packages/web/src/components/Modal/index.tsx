@@ -17,7 +17,7 @@ export type ModalProps = {
   open: boolean;
   title?: React.ReactNode;
   toggle: AnyFunction;
-  styles?: StylesOf<ModalComposition>
+  styles?: StylesOf<ModalComposition> 
   accessible?:boolean
   showClose?: boolean
   closable?: boolean

@@ -1,11 +1,11 @@
 
 /** @jsx jsx */
 import {  jsx } from '@emotion/react'
-import { CheckboxComposition, CheckboxStyles, ComponentVariants, StylesOf, useComponentStyle, useStyle } from '@codeleap/common'
+import {  ComponentVariants, NestedKeys, StylesOf, useComponentStyle, useStyle } from '@codeleap/common'
 import { ComponentPropsWithRef } from 'react'
 import { View } from '../View' 
 import { Text } from '../Text'
-
+import {CheckboxComposition, WebCheckboxStyles  as CheckboxStyles} from './styles'
 type NativeCheckboxProps = ComponentPropsWithRef<'input'>
 
 export type CheckboxProps = NativeCheckboxProps & {
@@ -23,11 +23,11 @@ export const Checkbox = (checkboxProps:CheckboxProps) => {
     onValueChange && onValueChange(e.target.checked)
   }
 
-  const variantStyles = useComponentStyle('Checkbox', {
+  const variantStyles  = useComponentStyle('Checkbox', {
     responsiveVariants,
     variants,
     styles,
-  })
+  }) as StylesOf<CheckboxComposition>
   
   const {logger} = useStyle()
   logger.log('Checkbox Style', variantStyles, 'Style')

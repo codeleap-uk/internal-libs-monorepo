@@ -11,7 +11,7 @@ export function stringiparse(string) {
 export function capitalize(str:string){
   return str[0].toUpperCase() + str.substring(1)
 }
-
+ 
 export function isUppercase(char:string){
   return /[A-Z]|[\u0080-\u024F]/.test(char) && char.toUpperCase() === char
 }

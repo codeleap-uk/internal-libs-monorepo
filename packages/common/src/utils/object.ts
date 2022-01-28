@@ -45,3 +45,17 @@ export const deepGet = (path, obj) => {
 
   return newObj
 }
+
+export function objectPaths(obj){
+  let paths = []
+
+  Object.entries(obj).forEach(([key, value]) => {
+    if (!Array.isArray(value) && typeof value === 'object'){
+      paths = [...paths, ...objectPaths(value).map(k => `${key}.${k}`)]
+    } else {
+      paths.push(key)
+    }
+  })
+
+  return paths
+}

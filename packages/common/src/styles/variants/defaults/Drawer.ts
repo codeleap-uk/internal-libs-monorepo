@@ -12,11 +12,14 @@ export const DrawerStyles = {
   default: createDrawerStyle((theme) =>  ({
     wrapper: {
         
-      zIndex: 2,
+      zIndex: 3000,
+      elevation: 3000,
   
-      position: 'fixed',
+      position: theme.IsBrowser ? 'fixed'  : 'absolute',
       ...theme.presets.whole,
       visibility: 'hidden',
+      display: 'flex',
+      ...theme.presets.row,
     },
     body: {
       ...theme.spacing.padding(1),
@@ -25,23 +28,27 @@ export const DrawerStyles = {
       overflowY: 'auto',
     },
     overlay: {
-      background: theme.colors.black,
-      height: '100vh',
+      backgroundColor: 'red',
+      height: theme.IsBrowser ? '100vh' : '100%',
+      elevation: 1,
+      
+      zIndex: 1,
     },
     box: {
-      background: theme.colors.white,
+      backgroundColor: theme.colors.white,
      
-       
+      elevation: 2,
+      zIndex: 2,
       flexDirection: 'column',
     },
     header: {
-      background: 'transparent',
+      backgroundColor: 'transparent',
       color: theme.colors.primary,
       ...theme.presets.justifySpaceBetween,
       ...theme.spacing.padding(1),
     },
     footer: {
-      background: 'transparent',
+      backgroundColor: 'transparent',
       ...theme.spacing.padding(1),
     },
   })),

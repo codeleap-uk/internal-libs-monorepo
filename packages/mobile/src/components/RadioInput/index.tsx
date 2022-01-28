@@ -1,11 +1,14 @@
+import * as React from 'react'
 import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react'
-import {v4} from 'uuid'
+import { v4 } from 'uuid'
 
 import {Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { ComponentVariants, StylesOf, useComponentStyle } from '@codeleap/common'
 import { View } from '../View'
 import { MobileRadioInputStyles, MobileRadioInputComposition} from './styles'
+
+export * from './styles'
 
 type RadioItem<T extends unknown = any> = {
     value: T,
@@ -49,8 +52,7 @@ export const RadioButton:React.FC<RadioButtonProps> = ({item, select, style, che
 
 export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T>) => {
   const {options, value, onValueChange, label, responsiveVariants, variants, styles} = radioGroupProps
-  const radioName = useRef(v4()).current
-
+  
   const radioStyle = getRadioStyle({
     responsiveVariants,
     variants,

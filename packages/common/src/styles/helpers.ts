@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react'
-import { ThemeValues } from '.'
-import { capitalize } from '..'
+import { ThemeValues } from './types'
+import { capitalize } from '../utils'
 
 type BorderArgs = {
   width: number|string, 

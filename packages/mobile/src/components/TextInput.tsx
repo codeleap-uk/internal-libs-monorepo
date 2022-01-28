@@ -62,6 +62,7 @@ import {
       validate,
       password,
       visibilityToggle,
+    
       ...props
     } = rawprops
   
@@ -136,10 +137,8 @@ import {
       ...(showError ? variantStyles['rightIcon:error'] : {} ),
     }
     
-    const logStyles = useLogStyles()
     function getStyles(key:TextInputComposition){
      const requestedStyles = [variantStyles[key], showError ? variantStyles[key + ':error'] : {}]
-     logStyles(`TextInput ${label}/${key}`, requestedStyles)
       return requestedStyles
     }
 
