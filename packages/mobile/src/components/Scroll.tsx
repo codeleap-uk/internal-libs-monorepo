@@ -1,15 +1,13 @@
 import * as React from 'react'
-import { ComponentPropsWithoutRef, forwardRef, ElementType, ComponentType, useState } from 'react'
-import { ComponentVariants, useComponentStyle, BaseViewProps, ButtonStyles, ButtonComposition } from '@codeleap/common'
-import { StylesOf } from '../types/utility'
-import { Touchable } from '@codeleap/mobile/src'
+import { forwardRef, useState } from 'react'
+import { useStyle } from '@codeleap/common'
 import { KeyboardAwareScrollViewProps, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, ScrollView, View } from 'react-native'
 import { onUpdate, usePrevious } from '@codeleap/common'
 import equals from 'deep-equal'
 import { useTimer } from 'react-timer-hook'
 
-export type ScrollProps = KeyboardAwareScrollViewProps
+export type ScrollProps = KeyboardAwareScrollViewProps & any
 
 export const Scroll = forwardRef<KeyboardAwareScrollView, ScrollProps>((scrollProps, ref) => {
   const { 
@@ -43,9 +41,14 @@ export const Scroll = forwardRef<KeyboardAwareScrollView, ScrollProps>((scrollPr
     setTimeout(time)
   }
 
+  const {
+    Theme
+  } = useStyle()
+
   return (
+    //@ts-ignore
     <KeyboardAwareScrollView
-      style={[{ width: '100%', height: '100%' }, style]}
+      style={[Theme.presets.full, style]}
       ref={ref} {...props}
       refreshControl={
         props.onRefresh &&
@@ -55,7 +58,7 @@ export const Scroll = forwardRef<KeyboardAwareScrollView, ScrollProps>((scrollPr
           />
       }
     > 
-        { children }
+      { children }
     </KeyboardAwareScrollView>
   )
 })
