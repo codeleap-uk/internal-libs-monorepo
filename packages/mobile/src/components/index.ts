@@ -1,3 +1,5 @@
 export { Text } from './Text'
 export { View } from './View'
 export { Touchable } from './Touchable'
+export { Scroll } from './Scroll'
+export { ActivityIndicator } from './ActivityIndicator'
