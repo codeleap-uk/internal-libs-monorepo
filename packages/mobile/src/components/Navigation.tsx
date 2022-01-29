@@ -1,17 +1,18 @@
 // @ts-nocheck
 import * as React from 'react'
 import {  RouteConfig } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createNativeStackNavigator, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { AnyFunction, EnhancedTheme, IconPlaceholder, useStyle } from '@codeleap/common'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from './Icon'
+import { Paths } from '@codeleap/common/dist/types/pathMapping'
 
 export type AppScenes = {
     [x:string] : {
-        [y:string] : AnyFunction | ( Pick<RouteConfig<any, any, any, any, any>, 'options'> & { 
+        [y:string] : AnyFunction | ( Partial<Pick<RouteConfig<any, any, any, any, any>, 'options'>> & { 
             render: AnyFunction, 
-            icon?: IconPlaceholder
+            icon?: any
         })
     } 
 }
@@ -80,7 +81,7 @@ type NavigationType = keyof typeof Navigators
 type NavigationProps<T extends NavigationType> = {
     scenes: AppScenes
     type: T
-} & Partial<React.ComponentPropsWithoutRef<(typeof Navigators)[T]['Navigator']>>
+} & React.ComponentPropsWithoutRef<(typeof Navigators)[T]['Navigator']>
 
 
 export  const Navigation = <T extends NavigationType, P extends NavigationProps<T> = NavigationProps<T>>({type, scenes, ...props}:P) => {
@@ -115,4 +116,10 @@ export  const Navigation = <T extends NavigationType, P extends NavigationProps<
     }
   </Navigator.Navigator>
           
+}
+export type NavigationScreenProps<S extends AppScenes, T  extends NativeStackScreenProps<any, any> = NativeStackScreenProps<any, any>> = Omit<T, 'navigation'> & {
+  navigation:  Omit<T['navigation'],'navigate'> & {
+    navigate: (to: Exclude<Paths<S, 1>, keyof S>) => void
+  }
+
 }

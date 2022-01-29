@@ -49,7 +49,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(name:string, form: T, i
 
 
     let fieldValue = null
-
+    
     if (type === 'composite'){
 
 
@@ -62,7 +62,9 @@ function buildInitialFormState<T extends Form.FieldsMap>(name:string, form: T, i
       }
     } else {  
       fieldValue = typeof defaultValue  !== 'undefined' ? defaultValue : getDefaultValue(value)
-    }
+    } 
+
+  
 
     const fieldProps:any = {
    
@@ -91,11 +93,12 @@ export function createForm<
     T extends Form.FieldsMap
   >(name:string, formArgs: Form.FormConfig<T> ):Form.CreateFormReturn<T>{
   const {state, props} = buildInitialFormState(name, formArgs)
-
+ 
   return {
     config: formArgs as T,
     defaultValue: state,
     staticFieldProps: props,
+    name,
   }
 }
   

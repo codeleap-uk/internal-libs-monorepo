@@ -31,13 +31,16 @@ export const MobileCheckboxStyles = {
           position: 'absolute',
           top: '40%',
           left: '50%',
-          ...theme.border.white({
-              width: 2,
-              directions: ['right','bottom']
-          }),
+         
           height: markHeight,
           width: markWidth,
           transform: [{translateX}, {translateY}, {rotate: '45deg'},]
+      },
+      "checkmark:checked": {
+        ...theme.border.white({
+          width: 2,
+          directions: ['right','bottom']
+        }),
       },
       checkmarkWrapper: {
           position: 'relative',

@@ -7,5 +7,7 @@ export *  from './Checkbox'
 export *  from './TextInput'
 export *  from './RadioInput'
 export *  from './Switch'
+export *  from './Select'
+export *  from './Slider'
 
 export *  from './Navigation'

@@ -20,8 +20,8 @@ export const SwitchStyles = {
       ...theme.spacing.marginLeft(0.5),
     },
     input: {
-      color: theme.colors.gray,
-      backgroundColor: theme.colors.white,
+      color: theme.colors.white,
+      backgroundColor: theme.colors.gray,
     },
     'input:on': {
       color: theme.colors.primary,

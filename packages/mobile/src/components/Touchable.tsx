@@ -25,6 +25,7 @@ export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableP
   })
   const {logger} = useStyle()
   const press = () => {
+    if(!onPress) throw {message: 'No onPress passed to touchable', touchableProps}
     logger.log('<Touchable/> pressed', touchableProps, 'Component')
     onPress(null)
   }

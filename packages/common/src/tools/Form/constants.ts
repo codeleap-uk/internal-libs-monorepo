@@ -5,10 +5,14 @@ export const defaultFieldValues:Partial<Record<Form.FormField['type'], any>> = {
   text: '',
   composite: {},
   file: null,
+  'range-slider': [0, 100],
+  slider: 1,
 }
 
 export const changeEventNames:Partial<Record<Form.FormField['type'], string>> = {
   checkbox: 'onValueChange',
+  'range-slider': 'onValueChange',
+  'slider': 'onValueChange',
   select: 'onValueChange',
   radio: 'onValueChange',
   text: 'onChangeText',

@@ -184,7 +184,7 @@ import {
     )
   })
   
-  const FormError = ({message, ...props}) => {
+  export const FormError = ({message, ...props}) => {
     
     if (['number', 'string', 'undefined'].includes(typeof message)){
       return  <Text text={`${message||' '}`} variants={['p2', 'marginTop:1']} {...props}/> 

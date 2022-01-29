@@ -23,5 +23,8 @@
     "@react-navigation/native-stack": "^6.2.5",
     "react": "*",
     "react-native": "*"
+  },
+  "dependencies": {
+    "@miblanchard/react-native-slider": "^2.1.0"
   }
 }

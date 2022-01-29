@@ -59,4 +59,5 @@ export const TextStyles = {
   p3: assignTextStyle('p3'),
   p4: assignTextStyle('p4'),
   link: assignTextStyle('p1'),
+ 
 }

@@ -14,6 +14,11 @@ type FormValidateOn = 'submit' | 'blur' | 'change'
 
 export type FormOutput = 'json' | 'multipart' | 'mixed'
 
+export type CommonSliderTypes = {
+    min?: number
+    max?: number
+}
+
 export type InputValueTypes = {
     checkbox:boolean
     switch: boolean
@@ -22,6 +27,8 @@ export type InputValueTypes = {
     radio: any
     file: WebInputFile[]
     composite: any
+    'range-slider': number[]
+    'slider': number
 }
 export type Label = string | ReactNode
 
@@ -30,6 +37,18 @@ export type CheckboxField = {
     defaultValue: boolean
     validate?: Validator<boolean>
 }
+export type SliderField = {
+    type: 'slider'
+    defaultValue: number
+    validate?: Validator<number>
+    labels?: string[]
+} & CommonSliderTypes
+
+export type RangeSliderField = {
+    type: 'range-slider'
+    defaultValue: number[]
+    validate?: Validator<number[]>
+} & CommonSliderTypes
 
 export type TextField = {
     type: 'text'
@@ -68,7 +87,7 @@ export type CompositeField = {
     defaultValue: Record<string, unknown>
     validate?:never
 }
-export type AllFields = CheckboxField | TextField | SelectField | RadioField | FileField | CompositeField
+export type AllFields = CheckboxField | TextField | SelectField | RadioField | FileField | CompositeField | SliderField | RangeSliderField
 
 export type FormField = {
     disabled?: boolean
@@ -120,11 +139,20 @@ export type CreateFormReturn<T extends FieldsMap> = {
     config: T
     defaultValue: MapValues<T>
     staticFieldProps: Record<string, any>
+    name: string
 }
+
+export type FormStep = 
+    'init'|
+    'setValue'|
+    'validate'|
+    'transform'
+
 
 export type UseFormConfig = {
     validateOn: FormValidateOn
     output:FormOutput
+    log?: FormStep[]
 }
 
 

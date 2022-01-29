@@ -1,9 +1,13 @@
 import * as FormTypes from './types';
 import { usePartialState, deepGet, deepSet } from '../../utils';
 import { FunctionType } from '../../types';
+import { useStyle } from '../../styles/StyleProvider';
 export * as FormTypes from  './types'
 
 
+const shouldLog = (x: FormTypes.FormStep, config:FormTypes.UseFormConfig ) => {
+  return  (config.log || []).includes(x)
+}
 
 export function useForm<
     Form extends FormTypes.CreateFormReturn<any>, 
@@ -14,8 +18,10 @@ export function useForm<
   config:FormTypes.UseFormConfig,
 ){
   
-  const [formValues, setFormValues] = usePartialState(form.defaultValue)
+ 
 
+  const [formValues, setFormValues] = usePartialState(form.defaultValue)
+  const { logger } = useStyle()
   const [fieldErrors, setFieldErrors] = usePartialState(() => {
     const errors = Object.keys(form.staticFieldProps).map(key => [key, ''])
 
@@ -26,6 +32,11 @@ export function useForm<
     // @ts-ignore
     const val = deepSet(args)
     
+    if (shouldLog('setValue', config)) {
+      // @ts-ignore
+      logger.log(`Set ${form.name}/${args[0]} to ${String(args[1])}`, '', 'useForm')
+
+    }
     setFormValues(val)
   }
 
@@ -77,6 +88,7 @@ export function useForm<
         setFieldValue(field, value)
       }
     }
+
 
     switch (config.validateOn){
       case 'change':
