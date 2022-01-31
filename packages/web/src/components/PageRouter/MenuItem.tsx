@@ -1,11 +1,13 @@
+import React from 'react'
 import { Text } from '../Text'
 import { Icon } from '../Icon'
-import { Link, LinkProps } from '../Link'
+import { Link } from '../Link'
 import { IconPlaceholder, MenuComposition, StylesOf, useStyle } from '@codeleap/common';
 import { url } from '../../lib/utils';
 import {Link as IntlLink} from 'gatsby-plugin-intl'
 
-const RouterLink:React.FC<LinkProps<typeof IntlLink>> = (props) => <Link component={IntlLink} {...props}/>
+
+const RouterLink:React.FC<any> = (props) => <Link component={IntlLink} {...props}/>
 
 export type MenuItemProps = {
     data: {
