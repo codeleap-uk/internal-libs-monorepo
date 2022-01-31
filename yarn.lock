@@ -2958,6 +2958,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-14.3.0.tgz#55aa79a879985261ee98989e1c9c7e133125eba5"
   integrity sha512-5RBHrcOSEC9l5H4ea4t2LfZdMfB3zhW8mAa4ltop+S2sz0rL4ra3H3lxBSgoKoZYjWMRZOzHi4dTFEC+e3M8Jg==
 
+"@react-native-google-signin/google-signin@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@react-native-google-signin/google-signin/-/google-signin-7.0.4.tgz#b557be28dac0af8fd020010b8a9670ae65bedba8"
+  integrity sha512-N5uVDlTp/mgpa5gFr6VIr8pldt68jlmHOlqcTSnSwBuZXusXMiK53DCIOWuYk4OJ1rlb8Esa9J4FJwUB0psU9Q==
+
 "@react-native/assets@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@react-native/assets/-/assets-1.0.0.tgz#c6f9bf63d274bafc8e970628de24986b30a55c8e"
@@ -10949,9 +10954,9 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-"license-checker@git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893":
+"license-checker@git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893":
   version "1.0.0"
-  resolved "git+https://github.com/mwittig/license-checker.git#d546e3f738e14c62e732346fa355162d46700893"
+  resolved "git+https://github.com/mwittig/license-checker#d546e3f738e14c62e732346fa355162d46700893"
   dependencies:
     chalk "~0.5.1"
     mkdirp "^0.3.5"

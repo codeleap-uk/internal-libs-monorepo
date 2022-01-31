@@ -7,5 +7,6 @@ export *  from './Checkbox'
 export *  from './TextInput'
 export *  from './RadioInput'
 export *  from './Switch'
+export * from './ContentView'
 
 export *  from './Navigation'
