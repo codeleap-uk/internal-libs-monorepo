@@ -19,5 +19,8 @@
     "@codeleap/common": "*",
     "react": "*",
     "react-native": "*"
+  },
+  "dependencies": {
+    "react-timer-hook": "^3.0.5"
   }
 }
