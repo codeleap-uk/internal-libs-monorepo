@@ -1,13 +1,15 @@
 /* eslint-disable max-len */
 import { CSSProperties } from 'react'
-import { VariantProp } from '.'
-import { EnhancedTheme} from '..'
+import { VariantProp } from './types'
+import { EnhancedTheme, spacingProps, spacingVariants,   spacingPropsShort, spacingVariantsShort } from '../types'
 import { deepMerge } from '../../utils/object'
 import {
   ApplyVariantsArgs,
   DefaultVariantBuilder,
   FromVariantsBuilder, 
+
 } from './types'
+
 
 export function mapVariants<S = CSSProperties, 
 T extends DefaultVariantBuilder<S> = DefaultVariantBuilder<S>>
@@ -34,15 +36,34 @@ export function standardizeVariants(variants:VariantProp<any>):string[] {
   return variantList
 }
 
-const directions = ['Top', 'Right', 'Bottom', 'Left', 'Horizontal', 'Vertical', 'l', 'r', 't', 'b', 'h', 'v']
 
-const SPACING_VARIANTS = ['m', 'margin', 'mt', 'marginTop', 'mr', 'marginRight', 'mb', 'marginBottom', 'ml', 'marginLeft', 'mh', 'marginHorizontal', 'mv', 'marginVertical', 'p', 'padding', 'pt', 'paddingTop', 'pr', 'paddingRight', 'pb', 'paddingBottom', 'pl', 'paddingLeft', 'ph', 'paddingHorizontal', 'pv', 'paddingVertical']
 
-export function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme, variantName }:ApplyVariantsArgs) {
+const SPACING_VARIANTS = {
+  ...spacingProps.reduce((acc, prop) => {
+    const newVariants = {}
+    spacingVariants.forEach((v) => {
+      newVariants[`${prop}${v}`] = 0
+    })
+
+    return {...acc, ...newVariants}
+  }, {}),
+  ...spacingPropsShort.reduce((acc, prop) => {
+    const newVariants = {}
+    spacingVariantsShort.forEach((v) => {
+      newVariants[`${prop}${v}`] = 0
+    })
+
+    return {...acc, ...newVariants}
+  }, {}),
+}
+
+export function applyVariants({ computedStyles, rootElement = 'wrapper', styles, theme, variantName = '' }:ApplyVariantsArgs) {
+  
+  
   if (!styles[variantName]) {
-
-    if (SPACING_VARIANTS.includes(variantName)) {
-
+   
+    if (variantName.split(':')[0] in SPACING_VARIANTS) {
+      console.log('abc', variantName)
       const [spacingFunction, multiplier] = variantName.split(':')
       let arg:number|string = Number(multiplier)
       if (Number.isNaN(arg)){

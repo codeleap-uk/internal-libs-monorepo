@@ -95,9 +95,9 @@ export interface DynamicValueAccessors extends Partial<Record<Accessor, AnyFunct
   screenSize?: () => number[];
 }
 
-export const spacingVariants = ['Vertical', 'Horizontal', 'Bottom', 'Top', 'Left', 'Right',  'r', 't', 'b', 'l', 'h', 'v', ''] as const
-
 export const spacingVariantsShort = ['r', 't', 'b', 'l', 'h', 'v', ''] as const
+export const spacingVariants = ['Vertical', 'Horizontal', 'Bottom', 'Top', 'Left', 'Right', ''] as const
+
 
 export type SpacingVariants = typeof spacingVariants[number];
 
@@ -105,10 +105,16 @@ export type SpacingVariantsShort = typeof spacingVariantsShort[number];
 
 export type SpacingMultiplier = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12' | 'auto';
 
-export type SpacingShort = `p${SpacingVariantsShort}:${SpacingMultiplier}` | `m${SpacingVariantsShort}:${SpacingMultiplier}`;
+export const spacingProps = ['padding', 'margin'] as const
+export const spacingPropsShort = ['p', 'm'] as const
 
-export type Spacing = `padding${SpacingVariants}:${SpacingMultiplier}` | `margin${SpacingVariants}:${SpacingMultiplier}` | SpacingShort;
+export type SpacingProperties = typeof spacingProps[number]
+export type SpacingPropertiesShort = typeof spacingPropsShort[number]
 
+export type SpacingShorthands = `${SpacingProperties}${SpacingVariants}`
+export type SpacingShorterShorthands = `${SpacingPropertiesShort}${SpacingVariantsShort}`
+
+export type Spacing = `${SpacingShorthands}:${SpacingMultiplier}` | `${SpacingShorterShorthands}:${SpacingMultiplier}`
 
 export type BaseViewProps = {
   css?:any,

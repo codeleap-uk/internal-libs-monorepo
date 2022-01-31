@@ -37,7 +37,7 @@ export const ViewCP = <T extends ElementType = 'div'>(viewProps:ViewProps<T>, re
   if (!shouldRenderToPlatform) return null
   
   const platformMediaQuery = Theme.media.renderToPlatformQuery({ is, not, up, down })
-  
+  console.log(variantStyles.wrapper)
   return <Component  
     css={[variantStyles.wrapper, platformMediaQuery]} 
     ref={ref}

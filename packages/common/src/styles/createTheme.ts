@@ -40,6 +40,8 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       base: values.spacing,
       ...spacingFactory(values.spacing, 'padding'),
       ...spacingFactory(values.spacing, 'margin'),
+      ...spacingFactory(values.spacing, 'p'),
+      ...spacingFactory(values.spacing, 'm'),
     },
     border: createBorderHelpers(values),
     presets: defaultPresets,

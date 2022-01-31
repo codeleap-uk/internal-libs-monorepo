@@ -19,5 +19,6 @@
     "@codeleap/common": "*",
     "react": "*",
     "react-native": "*"
-  }
+  },
+  "dependencies": {}
 }
