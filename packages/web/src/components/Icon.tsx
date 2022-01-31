@@ -11,11 +11,11 @@ export type IconProps = {
 } & ComponentVariants<typeof IconStyles>
 
 export const Icon:React.FC<IconProps> = ({name, style, responsiveVariants, variants}) => {
-  const {Theme} = useStyle()
+  const {Theme, logger} = useStyle()
   if (!name) return null
   const Component = Theme?.icons?.[name]
   
-  const {logger} = useStyle()
+  
 
   const variantStyles = useComponentStyle('Icon', {
     variants,

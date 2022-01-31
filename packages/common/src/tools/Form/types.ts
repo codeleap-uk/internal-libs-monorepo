@@ -143,10 +143,9 @@ export type CreateFormReturn<T extends FieldsMap> = {
 }
 
 export type FormStep = 
-    'init'|
+   
     'setValue'|
-    'validate'|
-    'transform'
+    'validate'
 
 
 export type UseFormConfig = {

@@ -16,12 +16,20 @@ export const ButtonStyles = {
       border: 'none',
       outline: 'none',
       display: 'flex',
+      flexDirection: 'row',
       backgroundColor: theme.colors.primary,
       ...theme.presets.alignCenter,
       ...theme.spacing.padding(1),
-      '&:hover': {
-        backgroundColor: shadeColor(theme.colors.primary, -30),
-      },
+      ...(
+        theme.IsBrowser ? 
+          {
+            '&:hover': {
+              backgroundColor: shadeColor(theme.colors.primary, -30),
+            },
+
+          }
+          : {}
+      ),
     },
     text: {
       flex: 1,

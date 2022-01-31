@@ -28,7 +28,7 @@ export const DrawerStyles = {
       overflowY: 'auto',
     },
     overlay: {
-      backgroundColor: 'red',
+      backgroundColor: theme.colors.black,
       height: theme.IsBrowser ? '100vh' : '100%',
       elevation: 1,
       

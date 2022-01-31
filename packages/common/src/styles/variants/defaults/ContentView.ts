@@ -14,6 +14,9 @@ export const ContentViewStyles = {
       display: 'flex',
       ...theme.presets.column,
     },
+    loader: {
+      alignSelf: 'center',
+    },
   })),
  
 }

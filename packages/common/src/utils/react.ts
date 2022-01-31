@@ -2,6 +2,8 @@ import equals from 'deep-equal'
 import { Logger } from '../tools/Logger'
 import { LogFunctionArgs } from '../tools/Logger/types'
 
+export const deepEqual = equals
+
 type ArePropsEqualOptions<MergedObject> = {
     check: (keyof MergedObject)[],
     debug?: boolean,

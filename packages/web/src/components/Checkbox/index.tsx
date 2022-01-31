@@ -1,18 +1,18 @@
 
 /** @jsx jsx */
 import {  jsx } from '@emotion/react'
-import {  ComponentVariants, NestedKeys, StylesOf, useComponentStyle, useStyle } from '@codeleap/common'
+import {  ComponentVariants, StylesOf, useComponentStyle, useStyle } from '@codeleap/common'
 import { ComponentPropsWithRef } from 'react'
 import { View } from '../View' 
 import { Text } from '../Text'
-import {CheckboxComposition, WebCheckboxStyles  as CheckboxStyles} from './styles'
+import {WebCheckboxComposition, WebCheckboxStyles  as CheckboxStyles} from './styles'
 type NativeCheckboxProps = ComponentPropsWithRef<'input'>
-
+export * from './styles'
 export type CheckboxProps = NativeCheckboxProps & {
-    checked?:boolean
+    checked?:boolean 
     onValueChange?: (checked:boolean) => any
     label?: React.ReactNode
-    styles?:StylesOf<CheckboxComposition>
+    styles?:StylesOf<WebCheckboxComposition>
 } & ComponentVariants<typeof CheckboxStyles>
 
 export const Checkbox = (checkboxProps:CheckboxProps) => {
@@ -27,7 +27,7 @@ export const Checkbox = (checkboxProps:CheckboxProps) => {
     responsiveVariants,
     variants,
     styles,
-  }) as StylesOf<CheckboxComposition>
+  }) as StylesOf<WebCheckboxComposition>
   
   const {logger} = useStyle()
   logger.log('Checkbox Style', variantStyles, 'Style')

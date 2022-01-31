@@ -26,14 +26,14 @@ export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableP
   const {logger} = useStyle()
   const press = () => {
     if(!onPress) throw {message: 'No onPress passed to touchable', touchableProps}
-    logger.log('<Touchable/> pressed', touchableProps, 'Component')
+    logger.log('<Touchable/> pressed', { style, variants }, 'Component')
     onPress(null)
   }
   
   const styles = [variantStyles.wrapper, style]
 
-  return <NativeTouchable onPress={press}  ref={ref}> 
-    <View {...props} style={styles}>
+  return <NativeTouchable onPress={press} {...props} ref={ref}> 
+    <View style={styles}>
       {children}
     </View>
   </NativeTouchable>

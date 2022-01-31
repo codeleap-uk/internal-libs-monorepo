@@ -1,8 +1,8 @@
 import {createDefaultVariantFactory, includePresets} from '@codeleap/common'
 
-type CheckboxParts = 'wrapper' | 'label' | 'input' | 'checkmark' | 'checkmarkWrapper'
+type CheckboxParts = 'wrapper' | 'label' | 'input' | 'checkmark' | 'checkmarkWrapper' | 'error'
 
-export type MobileCheckboxComposition = CheckboxParts | `${CheckboxParts}:checked` | `${CheckboxParts}:disabled`;
+export type MobileCheckboxComposition = CheckboxParts | `${CheckboxParts}:checked` | `${CheckboxParts}:disabled` | `${CheckboxParts}:error`;
 const createCheckboxStyle = createDefaultVariantFactory<MobileCheckboxComposition>()
 
 const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })))
@@ -19,9 +19,12 @@ export const MobileCheckboxStyles = {
     const translateY = -(markHeight/2)
     return {
       wrapper: {
-       flexDirection: 'row',
-       ...theme.presets.alignCenter,
-       borderRadius: theme.borderRadius.small
+        
+      },
+      input: {
+        flexDirection: 'row',
+        ...theme.presets.alignCenter,
+        borderRadius: theme.borderRadius.small
       },
       label: {
         ...theme.spacing.marginLeft(0.5),
@@ -50,6 +53,9 @@ export const MobileCheckboxStyles = {
       },
       "checkmarkWrapper:checked": {
           backgroundColor: theme.colors.primary
+      },
+      error: {
+        color: theme.colors.negative
       }
     }
   }),

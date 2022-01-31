@@ -4,6 +4,7 @@ import { FunctionType } from '../../types';
 import { useStyle } from '../../styles/StyleProvider';
 export * as FormTypes from  './types'
 
+const SCOPE = 'useForm'
 
 const shouldLog = (x: FormTypes.FormStep, config:FormTypes.UseFormConfig ) => {
   return  (config.log || []).includes(x)
@@ -34,7 +35,7 @@ export function useForm<
     
     if (shouldLog('setValue', config)) {
       // @ts-ignore
-      logger.log(`Set ${form.name}/${args[0]} to ${String(args[1])}`, '', 'useForm')
+      logger.log(`Set ${form.name}/${args[0]} to ${String(args[1])}`, '', SCOPE)
 
     }
     setFormValues(val)
@@ -43,11 +44,15 @@ export function useForm<
   function validateField(field: FieldPaths[0], set = false ){
     // @ts-ignore
     const { validate } = form.staticFieldProps[field as string]
+    console.log(form.staticFieldProps[field])
 
     if (validate){
       
       // @ts-ignore
       const result = validate(deepGet(field, formValues))
+      if (shouldLog('validate', config)){
+        logger.log(`Validation for ${form.name} ->`, result, SCOPE)
+      }
 
       if (set){
     
@@ -119,6 +124,8 @@ export function useForm<
         break
       
     }
+
+
     return out as Values
   }
 

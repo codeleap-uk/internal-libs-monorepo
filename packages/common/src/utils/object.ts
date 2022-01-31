@@ -59,3 +59,7 @@ export function objectPaths(obj){
 
   return paths
 }
+
+export function optionalObject(condition:boolean, ifTrue: any, ifFalse: any){
+  return condition ? ifTrue : ifFalse 
+}

@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { ComponentVariants, useComponentStyle, BaseViewProps, TextStyles } from '@codeleap/common'
-import { StyleSheet, Text as NativeText } from  'react-native'
+import { Text as NativeText } from  'react-native'
+
 
 export type TextProps =
   ComponentPropsWithoutRef<typeof NativeText> & 

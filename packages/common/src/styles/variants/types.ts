@@ -42,7 +42,7 @@ export type ApplyVariantsArgs = {
 export type CT<StyleType> = [Component: FunctionType<[any], ReactElement|null>, style: CommonVariantObject<string, StyleType>]
 
 export type ComponentStyleMap<CSS = CSSProperties> = Partial<{
-  [Property in keyof DefaultVariants] : CT<CSS>
+  [x:string] : CT<CSS>
 }>
 
 // ReplaceRecursive<MergedProps, IconPlaceholder, keyof Theme['icons']>
@@ -68,17 +68,22 @@ export type ReplaceProps<
 type ViewPlatformProps = Partial<BaseViewProps & Record<QueryKey, BreakpointPlaceholder> >
 
 export type TypedComponents<T extends ComponentStyleMap = ComponentStyleMap, Theme extends EnhancedTheme<any> = EnhancedTheme<any>> = {
-  [Property in keyof DEFAULT_VARIANTS] : Property extends 'View' ? 
+  [Property in keyof T] : Property extends 'View' ? 
     ReplaceProps<
       T[Property], 
       Theme, 
       ViewPlatformProps, 
       ComponentVariants<T[Property][1], Theme> | {variants?: VariantProp<T[Property][1]>}
     > 
-  :  ReplaceProps<
+  : Property extends keyof DEFAULT_VARIANTS ? ReplaceProps<
       T[Property], 
       Theme, 
       {}, 
       ComponentVariants<T[Property][1], Theme>|VariantProp<T[Property][1]>
-    >
+    > :  ReplaceProps<
+          T[Property], 
+          Theme, 
+          ViewPlatformProps, 
+          ComponentVariants<T[Property][1], Theme> | {variants?: VariantProp<T[Property][1]>}
+        > 
 }

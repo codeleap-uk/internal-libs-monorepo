@@ -3,13 +3,12 @@ import {
     ComponentVariants,
     FormTypes,
     IconPlaceholder,
-  
-    onUpdate,
-  
     TextInputComposition,
     TextInputStyles,
     useBooleanToggle,
-    useComponentStyle } from '@codeleap/common';
+    useComponentStyle,
+    useValidate  
+} from '@codeleap/common';
   import { ComponentPropsWithoutRef,  forwardRef, useImperativeHandle, useRef, useState } from 'react'
   import { Text } from './Text';
   import { View  } from './View';
@@ -17,7 +16,7 @@ import {
   import { StylesOf } from '../types/utility';
   import { Icon } from './Icon';
   import {NativeSyntheticEvent, TextInput as NativeTextInput, TextInputChangeEventData} from 'react-native'
-  import { useLogStyles } from '../utils/styles';
+ 
   type IconProp = {name: IconPlaceholder, action?:() => void}
 
   type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
@@ -68,10 +67,7 @@ import {
   
     const [_ig, setFocus] = useState(false)
     const [editedState, setEdited] = useState(edited)
-    const [error, setError] = useState<ReturnType<FormTypes.ValidatorFunction>>({
-      valid: true,
-      message: '',
-    })
+    
     const input = useRef<any>(null)
     const [textIsVisible, setTextVisible] = useBooleanToggle(false)
     const variantStyles =useComponentStyle('TextInput', {
@@ -105,22 +101,11 @@ import {
     }
     
   
-  
-    
-    onUpdate(() => {
-  
-      
-      const result = typeof validate === 'function' ? 
-        validate(input?.current?.value) : 
-        {message: validate, valid: false}
-      setError(result)
-     
-     
-    }, [value, validate])
+
   
     useImperativeHandle(inputRef, () => input.current)
   
-    const showError = (!error.valid  && error.message)
+    const {showError, error} = useValidate(value, validate)
   
   
     const leftIconStyle = {
@@ -155,7 +140,7 @@ import {
           <InputIcon {...leftIcon} style={leftIconStyle}/>
           <InputElement
             ref={input}
-            secureTextEntry={false}
+            secureTextEntry={password && !textIsVisible}
             onChange={handleChange}
             value={value}
             editable={disabled}
@@ -185,6 +170,7 @@ import {
   })
   
   export const FormError = ({message, ...props}) => {
+  
     
     if (['number', 'string', 'undefined'].includes(typeof message)){
       return  <Text text={`${message||' '}`} variants={['p2', 'marginTop:1']} {...props}/> 
@@ -196,10 +182,10 @@ import {
   
     if (action){
     
-    //   return <Button icon={name} onPress={() => action()}  styles={{
-    //     icon: style,
-    //   }} variants={['icon']}/>
-        return null
+      return <Button icon={name} onPress={() => action()}  styles={{
+        icon: style,
+      }} variants={['icon']}/>
+  
     }
   
     return <Icon name={name} style={style}/>

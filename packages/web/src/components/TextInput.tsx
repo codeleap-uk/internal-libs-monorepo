@@ -70,7 +70,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
     ...props
   } = rawprops
 
-  const [_ig, setFocus] = useState(false)
+  const [focused, setFocus] = useState(false)
   const [editedState, setEdited] = useState(edited)
   const [error, setError] = useState<ReturnType<FormTypes.ValidatorFunction>>({
     valid: true,
@@ -132,24 +132,28 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
   const leftIconStyle = {
     ...variantStyles.icon,
     ...(showError ? variantStyles['icon:error'] : {} ),
+    ...(focused ? variantStyles['icon:focus'] : {} ),
     ...variantStyles.leftIcon, 
     ...(showError ? variantStyles['leftIcon:error'] : {} ),
+    ...(focused ? variantStyles['leftIcon:focus'] : {}),
   }
   
   const rightIconStyle = {
     ...variantStyles.icon,
+    ...(focused ? variantStyles['icon:focus'] : {}),
     ...(showError ? variantStyles['icon:error'] : {} ),
     ...variantStyles.rightIcon, 
     ...(showError ? variantStyles['rightIcon:error'] : {} ),
+    ...(focused ? variantStyles['rightIcon:focus'] : {}),
   }
 
   return (
     <View
-      css={[variantStyles.wrapper, showError && variantStyles['wrapper:error']]}
+      css={[variantStyles.wrapper, focused && variantStyles['wrapper:focus'], showError && variantStyles['wrapper:error']]}
     >
       <InputLabel label={label} style={variantStyles.label}/>
 
-      <div css={[variantStyles.innerWrapper, showError && variantStyles['innerWrapper:error']]}>
+      <View css={[variantStyles.innerWrapper, focused && variantStyles['innerWrapper:focus'], showError && variantStyles['innerWrapper:error']]}>
 
   
         <InputIcon {...leftIcon} style={leftIconStyle}/>
@@ -163,7 +167,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
           onBlur={handleBlur}
           rows={4}
           {...props}
-          css={[variantStyles.textField, showError && variantStyles['textField:error']]}
+          css={[variantStyles.textField, focused && variantStyles['textField:focus'], showError && variantStyles['textField:error']]}
         />
         {
           visibilityToggle ? 
@@ -173,7 +177,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
             :
             <InputIcon {...rightIcon} style={rightIconStyle}/>
         }
-      </div>
+      </View>
       
       <FormError message={error.message} css={{
         ...variantStyles.error,

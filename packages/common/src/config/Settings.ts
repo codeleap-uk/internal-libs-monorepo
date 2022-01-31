@@ -38,4 +38,12 @@ export type AppSettings = DeepPartial<{
       ContactEMAIL: string,
       ContactPHONE: string,
     },
+    ApiCredentials: {
+        GoogleSignin: {
+            WebClientId: string
+        }
+        FacebookSDK: {
+            AppId: string
+        }
+    }
 }>

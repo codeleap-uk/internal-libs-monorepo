@@ -30,7 +30,7 @@ export const ContentView:React.FC<ContentViewProps> = (rawProps) => {
   })
     
   if (loading){
-    return <WrapContent {...props} css={variantStyle.wrapper}>
+    return <WrapContent {...props} css={{...variantStyle.wrapper}}>
       <ActivityIndicator css={variantStyle.loader}/>
     </WrapContent>
   }

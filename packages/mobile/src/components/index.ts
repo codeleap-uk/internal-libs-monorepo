@@ -10,5 +10,7 @@ export *  from './Switch'
 export *  from './Select'
 export *  from './FileInput'
 export *  from './Slider'
-
 export *  from './Navigation'
+export * from './Scroll'
+export * from './ActivityIndicator'
+export * from './Button'

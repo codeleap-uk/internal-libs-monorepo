@@ -24,7 +24,8 @@
     "lint": "./node_modules/.bin/eslint -c .eslintrc.js \"./src/**/*.{ts,tsx,js,jsx}\"",
     "test": "./node_modules/.bin/mocha --require ts-node/register **/*.spec.ts",
     "run-sc": "tsnd --transpile-only",
-    "test:watch": "./node_modules/.bin/mocha --require ts-node/register **/*.spec.ts -w --watch-files ./**/*.spec.ts"
+    "test:watch": "./node_modules/.bin/mocha --require ts-node/register **/*.spec.ts -w --watch-files ./**/*.spec.ts",
+    "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
     "axios": "^0.24.0",

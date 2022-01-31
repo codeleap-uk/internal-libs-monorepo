@@ -7,7 +7,7 @@
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "eslint.format.enable": true,
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "eslint.workingDirectories": [ "./apps/*", "./packages/common" ],
   "emeraldwalk.runonsave": {

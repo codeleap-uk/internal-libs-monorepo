@@ -26,6 +26,7 @@
     "react-native-fast-image": "^8.5.11"
   },
   "dependencies": {
-    "@miblanchard/react-native-slider": "^2.1.0"
+    "@miblanchard/react-native-slider": "^2.1.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5"
   }
 }

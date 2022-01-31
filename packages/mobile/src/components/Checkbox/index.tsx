@@ -1,8 +1,8 @@
 import * as React from 'react'
-import {  ComponentVariants, useComponentStyle, StylesOf, useStyle } from '@codeleap/common'
+import {  ComponentVariants, useComponentStyle, StylesOf,  Form, useValidate } from '@codeleap/common'
 import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
 import { Switch as NativeCheckbox } from 'react-native'
-import { InputLabel } from '../TextInput'
+import { InputLabel, FormError } from '../TextInput'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
 import {
@@ -18,6 +18,7 @@ type CheckboxProps = NativeCheckboxProps & {
     variants?: ComponentVariants<typeof CheckboxStyles>['variants']
     label?: ReactNode
     styles?: StylesOf<CheckboxComposition>
+    validate?: Form.ValidatorFunction | string
 } 
 
 export const Checkbox = forwardRef<NativeCheckbox,CheckboxProps>((checkboxProps,ref) => {
@@ -28,31 +29,40 @@ export const Checkbox = forwardRef<NativeCheckbox,CheckboxProps>((checkboxProps,
         label,
         value,
         onValueChange,
+        validate,
         ...props
     } = checkboxProps
-
+   
     const variantStyles = useComponentStyle('Checkbox', {
         // @ts-ignore
         variants,
-        styles
     })
+
+    const {error, showError} = useValidate(value,validate)
+
 
     function getStyles(key:CheckboxComposition){
         return [
             variantStyles[key],
+            variantStyles[key],
             key === 'wrapper' ? style : {},
             value ? variantStyles[key + ':checked'] : {},
+            value ? styles[key + ':checked'] : {},
+            showError ? variantStyles[key + ':error'] : {},
+            showError ? styles[key + ':error'] : {},
             checkboxProps.disabled ? variantStyles[key + ':disabled'] : {},
-            
+            checkboxProps.disabled ? styles[key + ':disabled'] : {},
         ]
     }
 
+    return <View style={getStyles('wrapper')} {...props}>
+        <Touchable style={getStyles('input')}  onPress={() => onValueChange(!value)}>
+            <View style={getStyles('checkmarkWrapper')}>
+                <View style={getStyles('checkmark')}/>
+            </View>
+            <InputLabel label={label} style={getStyles('label')}/>
 
-    return <Touchable  style={getStyles('wrapper')} onPress={() => onValueChange(!value)}>
-        <View style={getStyles('checkmarkWrapper')}>
-            <View style={getStyles('checkmark')}/>
-        </View>
-        <InputLabel label={label} style={getStyles('label')}/>
-
-    </Touchable>
+        </Touchable>
+        <FormError message={error.message} style={getStyles('error')} />
+    </View>
 })
