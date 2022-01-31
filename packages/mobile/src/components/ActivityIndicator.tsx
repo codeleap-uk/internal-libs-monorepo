@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
-import { ActivityIndicator as Indicator } from 'react-native'
+import { ActivityIndicator as Indicator, StyleSheet } from 'react-native'
 import { ActivityIndicatorComposition, ActivityIndicatorStyles,
   useComponentStyle, ComponentVariants, useStyle } from '@codeleap/common'
 import { StylesOf } from '../types/utility'
@@ -8,7 +8,6 @@ import { StylesOf } from '../types/utility'
 export type ActivityIndicatorProps =
   ComponentPropsWithoutRef<typeof Indicator> & 
   {
-    activity?: string,
     variants?: ComponentVariants <typeof ActivityIndicatorStyles>['variants'],
     styles?: StylesOf<ActivityIndicatorComposition>
   }
@@ -19,7 +18,6 @@ export const ActivityIndicator =
   const { 
     variants = [], 
     style,
-    activity,
     ...props
   } = activityIndicatorProps
 
@@ -29,11 +27,11 @@ export const ActivityIndicator =
 
   const { Theme } = useStyle()
 
-  const styles = [variantStyles.wrapper, style]
-  const color = Theme.colors.gray
-
-  return (
-    <Indicator size={'large'} ref={ref} color={color} style={styles} {...props} />
+  const styles = StyleSheet.flatten([variantStyles.wrapper, style])
+  const color = styles?.color || Theme.colors.gray
+  const size = styles?.height || styles?.width || 'large'
+  return (  
+    <Indicator size={size} ref={ref} color={color} style={styles} {...props} />
   )
 
 })

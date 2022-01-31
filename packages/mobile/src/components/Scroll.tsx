@@ -1,57 +1,80 @@
 import * as React from 'react'
 import { forwardRef, useState } from 'react'
-import { useStyle } from '@codeleap/common'
-import { KeyboardAwareScrollViewProps, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { RefreshControl } from 'react-native'
-import { onUpdate, usePrevious } from '@codeleap/common'
-import equals from 'deep-equal'
-import { useTimer } from 'react-timer-hook'
+import { deepEqual, onUpdate, useComponentStyle, usePrevious, useStyle } from '@codeleap/common'
+import { KeyboardAwareScrollViewProps, KeyboardAwareScrollView  as KBDView} from 'react-native-keyboard-aware-scroll-view'
+import { RefreshControl, ScrollView } from 'react-native'
+import { ViewProps } from './View'
 
-export type ScrollProps = KeyboardAwareScrollViewProps & any
 
-export const Scroll = forwardRef<KeyboardAwareScrollView, ScrollProps>((scrollProps, ref) => {
+export type ScrollProps = KeyboardAwareScrollViewProps & ViewProps & {
+  onRefresh?:() => void
+  refreshTimeout?: number
+  changeData?:any
+}
+
+const KeyboardAwareScrollView = KBDView as unknown as React.ForwardRefExoticComponent<
+  ViewProps & 
+  {
+    refreshControl?: JSX.Element
+    ref?: ScrollView
+    
+  }
+>
+
+
+export const Scroll = forwardRef<ScrollView, ScrollProps>((scrollProps, ref) => {
   const { 
     variants = [], 
     style,
+    refreshTimeout = 3000,
     children,
+    changeData,
     ...props
   } = scrollProps
-
+  const hasRefresh = !!props.onRefresh
   const [refreshing, setRefreshing] = useState(false)
-  const prevProps = usePrevious(props)
 
-  let setTimeout = () => null
-  if (props.hasOwnProperty('onRefresh')) {
-    setTimeout = useTimer({ expiryTimestamp: new Date(), onExpire: () => setRefreshing(false) }).restart
-  }
-
-  onUpdate(() => {
-    if (refreshing && props.extraData) {
-      if (!equals(props.extraData, prevProps.extraData)) {
-        setRefreshing(false)
-      }
-    }
-  })
+  const timer = React.useRef(null)
+  const previousData = usePrevious(changeData)
 
   const onRefresh = () => {
-    setRefreshing(true)
-    props.onRefresh()
-    const time = new Date()
-    time.setSeconds(time.getSeconds() + 3)
-    setTimeout(time)
-  }
+    if(timer.current){
+      clearTimeout(timer.current)
+    }
 
+    setRefreshing(true)   
+  
+    props.onRefresh()
+   
+    timer.current = setTimeout(() => {
+      setRefreshing(false)
+    }, refreshTimeout)
+
+  }
+  onUpdate(() => {
+    if(refreshing && !deepEqual(previousData, changeData)){
+      setRefreshing(false)
+      if(timer.current){
+        clearTimeout(timer.current)
+      }
+    }
+  },[refreshing, changeData])
   const {
     Theme
   } = useStyle()
 
+  const variantStyles  = useComponentStyle('View', {
+    variants
+  })
+
   return (
-    //@ts-ignore
+
     <KeyboardAwareScrollView
-      style={[Theme.presets.full, style]}
-      ref={ref} {...props}
+      style={[Theme.presets.full, variantStyles.wrapper, style]}
+      ref={ref as unknown as ScrollView}
+      {...props}
       refreshControl={
-        props.onRefresh &&
+        hasRefresh &&
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
