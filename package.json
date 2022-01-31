@@ -25,7 +25,10 @@
       "**/@react-navigation/native",
       "**/@react-navigation/native-stack",
       "**/@react-navigation/core",
-      "**/@react-navigation*",
+      "**/@react-navigation*/**",
+      "**/@sentry*",
+      "**/@sentry/react-native",
+      "**/@sentry/browser",
       "**/@react-navigation*/**",
       "**/@react-navigation/routers"
     ]

@@ -18,17 +18,21 @@ export const AvatarStyles = {
       ...Theme.semiCircle(140),
       position: 'relative',
       overflow: 'visible',
-      objectFit: 'cover',
+      ...( Theme.IsBrowser ? {
+        objectFit: 'cover', 
+        '&:hover': {
+          cursor: 'pointer',
+        },
+        [Theme.media.is('small')]: {
+          ...Theme.semiCircle(70),
+        },
+      }: {}),
       opacity: 1,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      '&:hover': {
-        cursor: 'pointer',
-      },
-      [Theme.media.is('small')]: {
-        ...Theme.semiCircle(70),
-      },
+      
+      
     },
     text: {
       fontSize: 26,

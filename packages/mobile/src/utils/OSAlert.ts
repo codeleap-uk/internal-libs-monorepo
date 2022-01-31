@@ -23,7 +23,7 @@ type OSAlertArgs = {
 }
 type AlertEvent = AlertButton['onPress']
 
-type NamedEvents<E extends string> = Record<E, AlertEvent>
+type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
 function ask({ title, body, options = null }:OSAlertArgs) {
 
@@ -54,12 +54,12 @@ function warn({ title, body, onAccept, onReject }:OSAlertArgs & NamedEvents<'onR
     options: [
       {
         text: 'Cancel',
-        onPress: () => onReject(),
+        onPress:onReject,
       },
       {
         text: 'OK',
         style: 'destructive',
-        onPress: () => onAccept(),
+        onPress: onAccept,
       },
     ],
   })
@@ -76,7 +76,7 @@ function info({ title, body, onDismiss = () => null }:OSAlertArgs & NamedEvents<
     options: [
       {
         text: 'OK',
-        onPress: () => onDismiss(),
+        onPress:onDismiss,
       },
     ],
   })

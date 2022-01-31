@@ -57,6 +57,10 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       width: side,
       height: side,
     }),
+    sized: (size) => ({
+      width: size * values.spacing,
+      height: size * values.spacing,
+    }),
     IsBrowser: isBrowser,
   }
 }

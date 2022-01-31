@@ -15,7 +15,7 @@ import {
   import { View  } from './View';
   import { Button } from './Button';
   import { StylesOf } from '../types/utility';
-  import { Icon } from '.';
+  import { Icon } from './Icon';
   import {NativeSyntheticEvent, TextInput as NativeTextInput, TextInputChangeEventData} from 'react-native'
   import { useLogStyles } from '../utils/styles';
   type IconProp = {name: IconPlaceholder, action?:() => void}

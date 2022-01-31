@@ -21,6 +21,7 @@ import { CenterWrapperStyles } from './CenterWrapper'
 import { PageRouterStyles } from './PageRouter'
 import { AvatarStyles } from './Avatar'
 import { SwitchStyles } from './Switch'
+import { IconStyles } from './Icon'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
@@ -35,7 +36,7 @@ export const DEFAULT_STYLES = {
   Text: TextStyles,
   TextInput: TextInputStyles,
   Touchable: TouchableStyles,
-  Icon: {},
+  Icon: IconStyles,
   Image: ImageStyles,
   Drawer: DrawerStyles,
   FlatList: {},
@@ -76,3 +77,4 @@ export * from './CenterWrapper'
 export * from './PageRouter'
 export * from './Avatar'
 export * from './Switch'
+export * from './Icon'

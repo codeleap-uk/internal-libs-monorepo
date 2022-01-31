@@ -64,6 +64,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<T, 'spacing'> & 
   readonly circle: (size: number) => any
   
   readonly semiCircle: (side: number) => any
+  readonly sized: (multiplier:number) => Record<'height'|'width', number>
   IsBrowser: boolean
 };
 export type ThemeValues = AppTheme;

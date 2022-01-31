@@ -31,7 +31,9 @@ export function getRequestId(req:RequestQueueItem, config:RequestClientConfig) {
 
 export function parseFailedRequest(err, request, instanceConfig) {
   let errorReason:FetchFailure = null
+  
   let shouldReject = true
+  
   if (err instanceof axios.Cancel) {
     errorReason = 'REQUEST_ABORTED'
     shouldReject = instanceConfig.rejectOnCancel

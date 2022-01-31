@@ -8,7 +8,7 @@ import { StyleProp, StyleSheet } from 'react-native'
 import { Text } from './Text'
 import { View, ViewProps } from './View'
 import { ComponentVariants, Form, SliderComposition, SliderStyles, useComponentStyle, useStyle } from '@codeleap/common'
-import { InputLabel } from '.'
+import { InputLabel } from './TextInput'
 import { StylesOf } from '../types/utility'
 
 type SliderProps = Partial<Omit<RNSliderProps,'value'|'onValueChange'>> & {
@@ -60,25 +60,25 @@ const SliderMark:React.FC<SliderMarkProps> = ({index, sliderProps,styles,variant
     }
     return <>
         {
-            showMarks &&
+            showMarks ? (
 
-        <View style={[
-            markStyles,
-            variantStyles.mark,
-            styles.mark,
-        ]}/>
+            <View style={[
+                markStyles,
+                variantStyles.mark,
+                styles.mark,
+            ]}/>) : null
         }
-      {l &&
-        <Text 
+      {l ?
+        (<Text 
      
-        style={[
-            labelStyles,
-            variantStyles.trackLabels,
-            styles.trackLabels,
-        ]} 
-            text={l}
-        />
-    }
+            style={[
+                labelStyles,
+                variantStyles.trackLabels,
+                styles.trackLabels,
+            ]} 
+                text={l}
+            />) : null
+        }
     </>
 } 
 

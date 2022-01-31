@@ -1,4 +1,4 @@
-import { assignTextStyle } from '.'
+import { assignTextStyle } from './Text'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 

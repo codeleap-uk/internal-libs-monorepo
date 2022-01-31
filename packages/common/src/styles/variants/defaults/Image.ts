@@ -18,4 +18,9 @@ export const ImageStyles = {
       backgroundColor: '#f3f3f3',
     },
   })),
+  round: createImageStyle(() => ({
+    wrapper: {
+      borderRadius: 100,
+    },
+  })),
 }

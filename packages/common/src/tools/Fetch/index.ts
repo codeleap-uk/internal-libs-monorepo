@@ -98,11 +98,12 @@ export class RequestClient extends Axios implements IRequestClient {
 
     this.setInQueue(failedRequest)
 
-    this.logger.error(`${request.method} to ${request.url} failed`, err?.response?.data || err, 'Network')
+    this.logger.error(`${request.method.toUpperCase()} to ${request.url} failed`, err?.response?.data || err, 'Network')
 
     if (shouldReject) {
       reject(failedRequest)
-    }
+    } 
+
   }
 
 
@@ -142,7 +143,7 @@ export class RequestClient extends Axios implements IRequestClient {
           this.logger.log(`${method.toUpperCase()} ${this.config.baseURL + request.url} Successful`, response.data, 'Network')
 
           resolve(response)
-        }).catch((err) => this.onRequestFailure(err, request, reject))
+        }).catch((err) => this.onRequestFailure(err, {...request, method}, reject))
       }) as CancellablePromise<T>
 
       promise.abort = () => {

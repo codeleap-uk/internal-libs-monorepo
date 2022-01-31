@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { ComponentVariants, useComponentStyle, BaseViewProps, ViewStyles, useStyle } from '@codeleap/common'
-import { View } from '@codeleap/mobile/src'
+import { View } from './View'
 import { Animated, TouchableOpacity as NativeTouchable } from  'react-native'
 
 export type TouchableProps =
