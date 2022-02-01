@@ -72,6 +72,7 @@ export const RouterPage:React.FC<RouterPageProps> = (props) => {
       <Router
         defaultPath={defaultPath}
         basePath={basePath}
+        style={variantStyles.router}
       >
         {children}
       </Router>
