@@ -1,4 +1,4 @@
-# Codeleap Common library
+# Codeleap Library
 
 This is were we keep code to be used on native and web projects.
 
