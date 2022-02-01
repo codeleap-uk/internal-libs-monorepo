@@ -125,9 +125,6 @@ import { useLogStyles } from '../utils/styles';
       return StyleSheet.flatten(requestedStyles)
     }
 
-    const logStyles = useLogStyles()
-    logStyles('innerWrapper', getStyles('innerWrapper'))
-    
     return (
       <View
         style={getStyles('wrapper')}
