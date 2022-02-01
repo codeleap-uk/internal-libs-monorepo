@@ -40,7 +40,7 @@ export const ContentView:React.FC<ContentViewProps> = (rawProps) => {
       {children}
     </WrapContent>
   }
-
+    
   return <WrapContent {...props} css={variantStyle.wrapper}>
     <Text text={placeholderMsg} css={variantStyle.placeholder}/>
   </WrapContent>
