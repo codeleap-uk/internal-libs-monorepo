@@ -1,23 +1,25 @@
 import { IconPlaceholder, onUpdate, optionalObject, StylesOf, useBooleanToggle, useComponentStyle, useValidate } from '@codeleap/common'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import {  InputLabel, FormError } from '../TextInput'
 import {  Icon } from '../Icon'
 import {  Touchable } from '../Touchable'
 import { View } from '../View'
 import { Text } from '../Text'
-import { SelectRenderFN, CustomSelectProps } from './types'
+import { useClickOutside } from '../../lib/hooks'
+import { CustomSelectProps } from './types'
 import { WebSelectComposition, WebSelectParts } from './styles'
 import { SelectRenderFNProps } from '.'
-
+import {v4} from 'uuid'
 const SelectItem:React.FC<SelectRenderFNProps<any> & { iconName?:string }>  = ({styles, iconName,  onPress, label, inList}) => {
   
   return <Touchable 
     onPress={onPress} 
     css={inList ? [
-      styles.itemWrapper, 
+      styles.itemWrapper,
     ] : [   
       styles.buttonWrapper,
-    ]}>
+    ]}
+  >
     { typeof label === 'string' ? 
       <Text text={label} css={inList ? styles.itemText : styles.buttonText}/> 
       :  label
@@ -32,11 +34,11 @@ const SelectItem:React.FC<SelectRenderFNProps<any> & { iconName?:string }>  = ({
   
 const InputWrapper = (props) => {
   
-  const {styles, label, children, currentContent, open, error, ...wrapperProps} = props
+  const {styles, label, children, currentContent, open, id, error, ...wrapperProps} = props
   
   return <View css={styles.wrapper} {...wrapperProps}>
     <InputLabel label={label} style={styles.label}/>
-    <View css={styles.inputWrapper}>
+    <View css={styles.inputWrapper} id={id}>
       {currentContent}
         
       <View css={styles.list}>
@@ -48,7 +50,7 @@ const InputWrapper = (props) => {
 }
   
   
-export const CustomSelect = <T extends string | number = string>(selectProps:CustomSelectProps<T>) => {
+export const CustomSelect:React.FC<CustomSelectProps<any>> = <T extends string | number = string>(selectProps:CustomSelectProps<T>) => {
 
   const {
     options = [],
@@ -74,7 +76,14 @@ export const CustomSelect = <T extends string | number = string>(selectProps:Cus
     return Object.fromEntries(options.map(({label, value}) => [value, label]))
   }, [options])
   
-
+  const inputId = useRef(v4()).current
+  
+  useClickOutside(() => {
+    if (isOpen){
+      setOpen(false)
+    }
+  }, { customId: inputId, deps: [] })
+  
   const variantStyles = useComponentStyle('Select', {
     styles,
     variants,
@@ -128,6 +137,7 @@ export const CustomSelect = <T extends string | number = string>(selectProps:Cus
       error: getStyles('error'),
     }} 
     {...props}
+    id={inputId}
     onHover={setHovering}
   >
     {
@@ -135,7 +145,10 @@ export const CustomSelect = <T extends string | number = string>(selectProps:Cus
         <Item
           {...item}
           inList
-          onPress={() => onValueChange(item.value)}
+          onPress={() => {
+            setOpen(false)
+            onValueChange(item.value)
+          }}
           selected={item.value === value}
           key={item.value}
           styles={{

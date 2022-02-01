@@ -70,12 +70,19 @@ export const WebSelectStyles = {
       ...Theme.spacing.padding(0.5),
       cursor: 'pointer',
       display: 'flex',
+      '&:hover': {
+        backgroundColor: '#0002',
+      },
     },
     'itemText:selected': {
-    
     },
     'itemWrapper:selected': {
-    
+      backgroundColor: Theme.colors.primary,
+      '&:hover': {
+        backgroundColor: Theme.colors.primary,
+        
+      },
+      
     },
     buttonWrapper: {
       ...Theme.border.primary(1),
