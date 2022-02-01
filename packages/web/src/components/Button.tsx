@@ -1,15 +1,15 @@
+import React from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { useComponentStyle, ButtonStyles, ComponentVariants, ButtonComposition } from '@codeleap/common';
-import React, { ComponentPropsWithRef } from 'react'
+import { useComponentStyle, ButtonStyles, ComponentVariants, ButtonComposition, IconPlaceholder } from '@codeleap/common';
 import { StylesOf } from '../types/utility'; 
 import { Text } from './Text';
 import { Touchable } from './Touchable';
 import { Icon } from './Icon';
 import { ActivityIndicator } from './ActivityIndicator';
-import { IconPlaceholder } from '@codeleap/common';
 
-type NativeButtonProps = ComponentPropsWithRef<'button'> 
+
+type NativeButtonProps = React.ComponentPropsWithoutRef<'button'>
 
 export type ButtonProps = NativeButtonProps &  ComponentVariants<typeof ButtonStyles>  & {  
   text?:string
@@ -49,7 +49,7 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
   }
 
  
-  return (
+  return ( 
     <Touchable
       css={variantStyles.wrapper}
       component='button'
