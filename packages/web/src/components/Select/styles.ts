@@ -44,13 +44,15 @@ export const WebSelectStyles = {
       right: 0,
       display: 'flex',
       top: '110%',
+      backgroundColor: Theme.colors.gray,
+
       ...Theme.presets.column,
       overflowY: 'hidden',
-      zIndex: 1,
+     
       transition: 'all 0.5s ease',
       maxHeight: 0,
       ...Theme.border.create({
-        width: 1,
+        width: 0,
         color: 'transparent',
       }),
       borderRadius: Theme.borderRadius.small,
@@ -58,7 +60,7 @@ export const WebSelectStyles = {
     'list:open': {
       maxHeight: '500%',
       overflowY: 'auto',
-      borderColor: Theme.colors.primary,
+      ...Theme.border.primary(1),
        
     },
     itemText: {
@@ -80,7 +82,7 @@ export const WebSelectStyles = {
       ...Theme.presets.fullWidth,
       ...Theme.presets.alignCenter,
       ...Theme.spacing.padding(0.5),
-      zIndex: 2,
+      backgroundColor: Theme.colors.gray,
       borderRadius: Theme.borderRadius.small,
       cursor: 'pointer',
       display: 'flex',
