@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
