@@ -58,7 +58,7 @@ export const RouterPage:React.FC<RouterPageProps> = (props) => {
   const variantStyles = useComponentStyle('PageRouter', {variants, responsiveVariants, styles})
   
   const currentPage = menuItems.find(({path}) => pathName.includes(path))
-  return <>
+  return <View css={variantStyles.wrapper}>
     <Helmet>
       <title>
         {(pageGroupTitle ? `${pageGroupTitle} | ` : '') + (currentPage ? currentPage?.title : '') }
@@ -76,6 +76,6 @@ export const RouterPage:React.FC<RouterPageProps> = (props) => {
         {children}
       </Router>
     </View>
-  </>
+  </View>
   
 }
