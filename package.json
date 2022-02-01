@@ -33,22 +33,7 @@
       "**/@react-navigation/routers"
     ]
   },
-  "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev --parallel",
-    "dev:mobile": "turbo run dev:mobile --parallel",
-    "dev:web": "turbo run dev:web --parallel",
-    "dev:ios": "turbo run dev:ios --parallel",
-    "dev:android": "turbo run dev:android --parallel",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
-  },
-  "devDependencies": {
-    "prettier": "^2.5.1",
-    "turbo": "latest",
-    "typedoc": "^0.22.10"
-  },
-  "turbo": {
+  "turbo":{
     "pipeline": {
       "build": {
         "dependsOn": [
@@ -80,9 +65,25 @@
         "cache": false
       }
     }
+  },  
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "dev:mobile": "turbo run dev:mobile --parallel",
+    "dev:web": "turbo run dev:web --parallel",
+    "dev:ios": "turbo run dev:ios --parallel",
+    "dev:android": "turbo run dev:android --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1",
+    "turbo": "^1.0.29",
+    "typedoc": "^0.22.10"
   },
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
-  }
+  },
+  "packageManager": "yarn@1.22.17"
 }

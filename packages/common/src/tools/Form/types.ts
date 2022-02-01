@@ -2,11 +2,15 @@ import { ReactNode } from 'react'
 import { Join, Paths, Prev } from '../../types/pathMapping'
 import * as yup from 'yup'
 import { WebInputFile } from '../../types'
+import { AnyObject } from 'yup/lib/types'
 type ValidationReturn = {message?: Label, valid?: boolean}
 
 export type ValidatorFunction<T = any> = (value:T) => ValidationReturn
 
-export type Validator<T> = ValidatorFunction<T>  | yup.SchemaOf<T>
+export type Validator<T> = 
+    ValidatorFunction<T>  | (
+        T extends boolean ? yup.BooleanSchema<boolean, AnyObject, true > | yup.BooleanSchema<boolean, AnyObject, false> : yup.SchemaOf<T> 
+    )
 
 export type Options<T> = {label: Label, value: T}[]
 

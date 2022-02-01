@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "1.0.1",
+  "version": "1.2.1",
   "main": "src/index.ts",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
@@ -13,8 +13,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "./node_modules/.bin/eslint -c .eslintrc.js \"./src/**/*.{ts,tsx,js,jsx}\"",
-    "publish": "npm publish"
+    "lint": "./node_modules/.bin/eslint -c .eslintrc.js \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "peerDependencies": {
     "@codeleap/common": "*",
