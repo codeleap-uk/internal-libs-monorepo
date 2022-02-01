@@ -33,6 +33,39 @@
       "**/@react-navigation/routers"
     ]
   },
+  "turbo":{
+    "pipeline": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**"
+        ]
+      },
+      "lint": {
+        "outputs": []
+      },
+      "dev:web": {
+        "cache": false
+      },
+      "dev:ios": {
+        "cache": false
+      },
+      "dev:android": {
+        "cache": false
+      },
+      "dev:mobile": {
+        "cache": false
+      },
+      "test": {
+        "outputs": []
+      },
+      "publish": {
+        "cache": false
+      }
+    }
+  },  
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -45,7 +78,7 @@
   },
   "devDependencies": {
     "prettier": "^2.5.1",
-    "turbo": "latest",
+    "turbo": "^1.0.29",
     "typedoc": "^0.22.10"
   },
   "engines": {
