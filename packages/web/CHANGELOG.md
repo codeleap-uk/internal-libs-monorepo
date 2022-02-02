@@ -1,5 +1,5 @@
 # Changelog
-## 1.3.2
+## 1.3.0
 
 - Adds option to render custom wrapper in page router, Exporting menu and menuItems
 
