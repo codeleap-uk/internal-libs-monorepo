@@ -10,7 +10,7 @@ import { StylesOf } from '../types/utility'
 
 
 const axisMap = {
-  top: [-1, 'Y'], 
+  top: [-1, 'Y'],
   bottom: [1, 'Y'],
   left: [-1, 'X'],
   right: [1, 'X'],

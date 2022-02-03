@@ -14,27 +14,17 @@ export type RouteProps = {
   menuIcon?: IconPlaceholder
   
 }
-type ContentProps = {
-  styles: StylesOf<PageRouterComposition>
-  menuItems: {
-    icon: string,
-    title: string,
-    path: string,
-  }[]
-}
+
 export * from './Router'
-export * from './Menu'
-export * from './MenuItem'
 
 type RouterPageProps = {
   basePath:string 
   styles?: StylesOf<PageRouterComposition>
   title?: string
-  renderContentWrapper?: React.FC<ContentProps>
 } & ComponentVariants<typeof PageRouterStyles>
 
 export const RouterPage:React.FC<RouterPageProps> = (props) => {
-  const {children,  basePath,  variants, title: pageGroupTitle, responsiveVariants, styles, renderContentWrapper} = props
+  const {children,  basePath,  variants, title: pageGroupTitle, responsiveVariants, styles} = props
   const pathName = url().pathname
 
   const {menuItems, defaultPath} = useMemo(() => {
@@ -68,40 +58,24 @@ export const RouterPage:React.FC<RouterPageProps> = (props) => {
   const variantStyles = useComponentStyle('PageRouter', {variants, responsiveVariants, styles})
   
   const currentPage = menuItems.find(({path}) => pathName.includes(path))
-
-  const Content = renderContentWrapper
-  return <View css={variantStyles.wrapper}>
+  return <>
     <Helmet>
       <title>
         {(pageGroupTitle ? `${pageGroupTitle} | ` : '') + (currentPage ? currentPage?.title : '') }
       </title>
     </Helmet>
-    {
-      renderContentWrapper ? <Content styles={variantStyles} menuItems={menuItems} > 
-        <Router
-          defaultPath={defaultPath}
-          basePath={basePath}
-          style={variantStyles.router}
-        >
-          {children}
-        </Router>
-      </Content> :
-        <>
-          <Menu 
-            items={menuItems}
-            styles={variantStyles}
-          />
-          <View css={variantStyles.content}>
-            <Router
-              defaultPath={defaultPath}
-              basePath={basePath}
-              style={variantStyles.router}
-            >
-              {children}
-            </Router>
-          </View>
-        </>  
-    }
-  </View>
+    <Menu 
+      items={menuItems}
+      styles={variantStyles}
+    />
+    <View css={variantStyles.content}>
+      <Router
+        defaultPath={defaultPath}
+        basePath={basePath}
+      >
+        {children}
+      </Router>
+    </View>
+  </>
   
 }

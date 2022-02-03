@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type ModalComposition = 'wrapper'| 'overlay' | 'box' | 'body' | 'header' | 'footer' | 'closeIcon';
+export type ModalComposition = 'wrapper'| 'overlay' | 'box' | 'body' | 'header' | 'footer';
 
 const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 

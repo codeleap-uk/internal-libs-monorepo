@@ -8,7 +8,6 @@ import { Text } from '../Text'
 import {WebCheckboxComposition, WebCheckboxStyles  as CheckboxStyles} from './styles'
 type NativeCheckboxProps = ComponentPropsWithRef<'input'>
 export * from './styles'
-
 export type CheckboxProps = NativeCheckboxProps & {
     checked?:boolean 
     onValueChange?: (checked:boolean) => any
@@ -28,7 +27,7 @@ export const Checkbox = (checkboxProps:CheckboxProps) => {
     responsiveVariants,
     variants,
     styles,
-  } as any) as StylesOf<WebCheckboxComposition>
+  }) as StylesOf<WebCheckboxComposition>
   
   const {logger} = useStyle()
   logger.log('Checkbox Style', variantStyles, 'Style')

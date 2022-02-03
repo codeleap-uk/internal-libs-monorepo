@@ -61,7 +61,7 @@ export const TextInputStyles = {
 
     },
     'innerWrapper:focus': {
-      ...theme.border.primary(1),
+      borderColor: theme.colors.primary,
     },
     'icon:focus': {
       color: theme.colors.primary,

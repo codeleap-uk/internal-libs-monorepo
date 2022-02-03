@@ -23,6 +23,7 @@ import { Icon } from '.';
 
 type IconProp = {name: IconPlaceholder, action?:() => void}
 type MergedRef = React.LegacyRef<HTMLInputElement> & React.Ref<HTMLTextAreaElement>
+type ValidateFN = (value:string) => { status: 'error' | 'success', message?: string }
 type NativeProps = ComponentPropsWithoutRef<'input'> & 
 ComponentPropsWithoutRef<'textarea'> 
 
@@ -188,10 +189,10 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((rawprops,
   )
 })
 
-export const FormError = ({message, ...props}) => {
+const FormError = ({message, ...props}) => {
   
   if (['number', 'string', 'undefined'].includes(typeof message)){
-    return  <Text text={`${message||' '}`} {...props}/> 
+    return  <Text text={`${message||' '}`} variants={['p2', 'marginTop:1']} {...props}/> 
   }
   return message
 }

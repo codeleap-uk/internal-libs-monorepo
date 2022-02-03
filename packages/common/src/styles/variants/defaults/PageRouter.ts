@@ -12,9 +12,7 @@ export type MenuComposition =
     'horizontalScroll' 
 export type PageRouterComposition = 
     'content' |
-    'wrapper' |
     'router' |
-    'routerWrapper' |
     MenuComposition
 const createPageRouterStyle = createDefaultVariantFactory<PageRouterComposition>()
 
@@ -23,12 +21,7 @@ const presets = includePresets((styles) => createPageRouterStyle(() => ({ topMen
 export const PageRouterStyles = {
   ...presets,
   default: createPageRouterStyle((Theme) => ({
-    routerWrapper: {
-      width: '100%',
-    },
-    wrapper: {
-      width: '100%',
-    },
+    
     menuItem: {
       alignItems: 'center',
       padding: Theme.spacing.value(2.5),

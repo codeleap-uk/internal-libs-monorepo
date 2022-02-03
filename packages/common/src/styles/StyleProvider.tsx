@@ -1,9 +1,8 @@
 import React, { createContext, useContext } from 'react'
 import { AppTheme, DefaultVariants, DEFAULT_VARIANTS, VariantProvider } from '.'
-import { mapObject } from '../utils'
+import { ComponentVariants,  StylesOf } from '..'
 import { StyleContextProps, StyleContextValue } from './types'
 import {Logger } from '../tools/Logger'
-import {AnyFunction, ComponentVariants,  StylesOf} from '../types/utility'
 export const StyleContext = createContext({} as StyleContextValue<DefaultVariants>)
 const silentLogger = new Logger({
   Logger: {
@@ -40,21 +39,16 @@ type UseComponentStyleProps<
 > = ComponentVariants<C> &   {
   rootElement?: keyof C[keyof C]
   styles?: StylesOf
-  transform?: AnyFunction
 }
 
 export function useComponentStyle< K extends keyof DEFAULT_VARIANTS >(componentName:K, props: UseComponentStyleProps<K>) {
   const { ComponentVariants: CV, provider } = useStyle()
-  const styles = props?.transform ? 
-    Object.fromEntries(
-      Object.entries(props?.styles||{}).map( ([key, value]) => [key, props.transform(value)]),
-    ) : props.styles
+
   return provider.getStyles(CV[componentName], {
     variants: props.variants || [],
     responsiveVariants: props.responsiveVariants || {},
     rootElement: props.rootElement,
-    styles,
+    styles: props.styles,
   })
 } 
 
- 

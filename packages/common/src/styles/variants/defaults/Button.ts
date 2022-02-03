@@ -1,7 +1,6 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 import shadeColor from '../../../utils/shadeColor'
-import { optionalObject } from '../../../utils';
 
 export type ButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader';
 
@@ -49,14 +48,10 @@ export const ButtonStyles = {
   negative: createButtonStyle((theme) => ({
     wrapper: {
       backgroundColor: theme.colors.negative,
-      ...optionalObject(theme.IsBrowser, {
-        '&:hover': {
-          backgroundColor: shadeColor(theme.colors.negative, -30),
-        },
-      }, {
-        
-      }),
-      
+   
+      '&:hover': {
+        backgroundColor: shadeColor(theme.colors.negative, -30),
+      },
     },
    
   })),

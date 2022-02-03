@@ -1,4 +1,5 @@
-import { ComponentVariants, ContentViewStyles,  useComponentStyle, ViewComposition } from '@codeleap/common'
+import React from 'react'
+import { ComponentVariants, ContentViewStyles, useComponentStyle, ViewComposition } from '@codeleap/common'
 import { ActivityIndicator } from '.'
 import { ViewProps, View } from './View'
 import { Text } from './Text'
@@ -12,7 +13,7 @@ export type ContentViewProps = Omit<ViewProps<'div'>, 'variants' | 'responsiveVa
 
 const WrapContent = ({children,  ...props}:Partial<ContentViewProps>) => <View {...props} >{children}</View>
 
-export const ContentView:React.FC<ContentViewProps> = (rawProps) => {
+export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
   const {
     children,
     placeholderMsg,
@@ -40,7 +41,7 @@ export const ContentView:React.FC<ContentViewProps> = (rawProps) => {
       {children}
     </WrapContent>
   }
-    
+
   return <WrapContent {...props} css={variantStyle.wrapper}>
     <Text text={placeholderMsg} css={variantStyle.placeholder}/>
   </WrapContent>

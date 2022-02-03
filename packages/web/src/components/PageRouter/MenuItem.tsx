@@ -11,7 +11,7 @@ const RouterLink:React.FC<any> = (props) => <Link component={IntlLink} {...props
 
 export type MenuItemProps = {
     data: {
-        icon: string
+        icon: IconPlaceholder
         title:string
         path:string
     }
@@ -38,12 +38,12 @@ export const MenuItem:React.FC<MenuItemProps> = (props) => {
         ]}
         msg={title}
       />
-      <Icon name={icon as IconPlaceholder} />
+      <Icon name={icon} />
     </RouterLink>
   }
 
   return (<RouterLink to={path}>
-    <Icon name={icon as IconPlaceholder} />
+    <Icon name={icon} />
     <Text
       variant={'p3'}
       css={[
