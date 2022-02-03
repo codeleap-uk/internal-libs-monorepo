@@ -1,4 +1,4 @@
-import { useComponentStyle, useStyle } from "@codeleap/common";
+import { useStyle } from "@codeleap/common";
 import { StyleSheet } from "react-native";
 
 export function useLogStyles(){

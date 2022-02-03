@@ -15,8 +15,7 @@ import {
   import { Button } from './Button';
   import { StylesOf } from '../types/utility';
   import { Icon } from './Icon';
-  import {NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData} from 'react-native'
-import { useLogStyles } from '../utils/styles';
+  import {NativeSyntheticEvent, TextInput as NativeTextInput, TextInputChangeEventData} from 'react-native'
  
   type IconProp = {name: IconPlaceholder, action?:() => void}
 
@@ -66,7 +65,7 @@ import { useLogStyles } from '../utils/styles';
       ...props
     } = rawprops
   
-    const [focused, setFocus] = useState(false)
+    const [_ig, setFocus] = useState(false)
     const [editedState, setEdited] = useState(edited)
     
     const input = useRef<any>(null)
@@ -75,7 +74,6 @@ import { useLogStyles } from '../utils/styles';
       variants,
       responsiveVariants,
       styles,
-      transform: StyleSheet.flatten
     })
     const InputElement = NativeTextInput
   
@@ -109,22 +107,27 @@ import { useLogStyles } from '../utils/styles';
   
     const {showError, error} = useValidate(value, validate)
   
-
+  
+    const leftIconStyle = {
+      ...variantStyles.icon,
+      ...(showError ? variantStyles['icon:error'] : {} ),
+      ...variantStyles.leftIcon, 
+      ...(showError ? variantStyles['leftIcon:error'] : {} ),
+    }
     
-    function getStyles(k:TextInputComposition|TextInputComposition[]){
-      let parts = k as string[]
-      if(typeof k === 'string'){
-        parts = [k]
-      }
-     const requestedStyles = parts.map(key => [
-      variantStyles[key], 
-      showError ? variantStyles[key + ':error'] : {},
-      focused ? variantStyles[key + ':focus'] : {}
-     ]) 
-
-      return StyleSheet.flatten(requestedStyles)
+    const rightIconStyle = {
+      ...variantStyles.icon,
+      ...(showError ? variantStyles['icon:error'] : {} ),
+      ...variantStyles.rightIcon, 
+      ...(showError ? variantStyles['rightIcon:error'] : {} ),
+    }
+    
+    function getStyles(key:TextInputComposition){
+     const requestedStyles = [variantStyles[key], showError ? variantStyles[key + ':error'] : {}]
+      return requestedStyles
     }
 
+    
     return (
       <View
         style={getStyles('wrapper')}
@@ -134,7 +137,7 @@ import { useLogStyles } from '../utils/styles';
         <View style={getStyles('innerWrapper')}>
   
     
-          <InputIcon {...leftIcon} style={getStyles(['icon','leftIcon'])}/>
+          <InputIcon {...leftIcon} style={leftIconStyle}/>
           <InputElement
             ref={input}
             secureTextEntry={password && !textIsVisible}
@@ -150,13 +153,16 @@ import { useLogStyles } from '../utils/styles';
             visibilityToggle ? 
               <InputIcon  name={
                   (textIsVisible ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder
-              } action={() => setTextVisible()} style={getStyles(['icon','rightIcon'])}/>
+              } action={() => setTextVisible()} style={rightIconStyle}/>
               :
-              <InputIcon {...rightIcon} style={getStyles(['icon','rightIcon'])}/>
+              <InputIcon {...rightIcon} style={rightIconStyle}/>
           }
         </View>
         
-        <FormError message={error.message} style={getStyles(['error'])}/>
+        <FormError message={error.message} style={{
+          ...variantStyles.error,
+         
+        }}/>
           
         
       </View>
