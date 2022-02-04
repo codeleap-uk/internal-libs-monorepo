@@ -84,6 +84,6 @@ export type TypedComponents<T extends ComponentStyleMap = ComponentStyleMap, The
           T[Property], 
           Theme, 
           ViewPlatformProps, 
-          ComponentVariants<T[Property][1], Theme> | {variants?: VariantProp<T[Property][1]>}
+          ComponentVariants<T[Property][1], Theme> 
         > 
 }

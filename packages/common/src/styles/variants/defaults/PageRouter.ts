@@ -2,6 +2,7 @@ import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
 export type MenuComposition = 
+    'wrapper' | 
     'menuItem' |
     'menuItem:mobile' |
     'menuItem:text' |

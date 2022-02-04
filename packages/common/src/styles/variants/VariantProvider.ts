@@ -121,7 +121,7 @@ export class VariantProvider<
  }
 
 
- typeComponents<T extends ComponentStyleMap<CSSIn>>(components:T) {
+ typeComponents<T extends ComponentStyleMap<CSSIn>>(components:T){
    const typed = {}
 
    for (const [name, [render]] of Object.entries(components)){
