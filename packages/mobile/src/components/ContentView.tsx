@@ -3,6 +3,7 @@ import { ComponentVariants, ContentViewStyles, useComponentStyle, ViewCompositio
 import { ViewProps, View } from './View'
 import { Text } from './Text'
 import { StylesOf } from '../types/utility'
+import { ActivityIndicator } from './ActivityIndicator'
 
 export type ContentViewProps = Omit<ViewProps, 'variants' | 'responsiveVariants'> & {
   placeholderMsg: string
@@ -30,7 +31,7 @@ export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
   if (loading) {
     return (
       <WrapContent {...props} style={variantStyle.wrapper}>
-        <Text text="loader" />
+        <ActivityIndicator styles={{wrapper: variantStyle.loader}}/>
       </WrapContent>
     )
   }

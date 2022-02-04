@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from 'react'
 import { AppTheme, DefaultVariants, DEFAULT_VARIANTS, VariantProvider } from '.'
-import { ComponentVariants,  StylesOf } from '..'
+import { ComponentVariants, StylesOf } from '..'
 import { StyleContextProps, StyleContextValue } from './types'
-import {Logger } from '../tools/Logger'
+import { Logger } from '../tools/Logger'
 export const StyleContext = createContext({} as StyleContextValue<DefaultVariants>)
 const silentLogger = new Logger({
   Logger: {

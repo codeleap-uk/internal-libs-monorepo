@@ -1,6 +1,6 @@
 import { AnyFunction, onUpdate } from '@codeleap/common';
-import {  useRef, useState } from 'react';
-import {v4} from 'uuid'
+import { useRef, useState } from 'react';
+import { v4 } from 'uuid'
 export function useWindowSize(){
   const [size, setSize] = useState([window.innerWidth, window.innerWidth])
 
@@ -25,12 +25,12 @@ export function useClickOutside(callback: AnyFunction, {customId, deps = []} : U
   function onClick(e:Event){
     const element = document.getElementById(id)
     const isInside = element.contains(e.target as Node)
-   
+
     if (!isInside){
       callback(e)
     }
   }
- 
+
   onUpdate(() => {
     document.addEventListener('click', onClick)
     return () => {
