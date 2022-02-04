@@ -84,7 +84,11 @@ export type FileField = {
     multiple?: boolean
     validate?: Validator<WebInputFile[]>
 }
-
+export type ImageField = {
+    type: 'image'
+    multiple?: boolean
+    validate?: Validator<WebInputFile[]>
+}
 export type CompositeField = {
     type: 'composite'
     fields?: FieldsMap

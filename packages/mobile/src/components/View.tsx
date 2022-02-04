@@ -1,7 +1,8 @@
 import * as React from 'react';
+import * as Animatable from 'react-native-animatable'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { ComponentVariants, useComponentStyle, ViewStyles, BaseViewProps } from '@codeleap/common'
-import { Animated, View as NativeView } from  'react-native'
+import { View as NativeView } from  'react-native'
 
 export type ViewProps =
  ComponentPropsWithoutRef<typeof NativeView> & 
@@ -38,16 +39,4 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   </Component>
 })
 
-export type AnimatedViewProps =
-ComponentPropsWithoutRef<typeof Animated.View> & 
-ComponentVariants<typeof ViewStyles>  & BaseViewProps
-
-export const AnimatedView = forwardRef<typeof Animated.View, AnimatedViewProps>((viewProps, ref) => {
-  // @ts-ignore
-  return <View
-    component={Animated.View}
-   
-    {...viewProps} 
-  /> 
-  
-})
+export const AnimatedView = Animatable.createAnimatableComponent(View)

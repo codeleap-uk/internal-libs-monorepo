@@ -8,8 +8,9 @@ export function stringiparse(string) {
 }
 
 
-export function capitalize(str:string){
-  return str[0].toUpperCase() + str.substring(1)
+export function capitalize(str:string, reverse = false){
+  const firstChar = reverse ? str[0].toLowerCase() : str[0].toUpperCase()
+  return firstChar + str.substring(1)
 }
  
 export function isUppercase(char:string){

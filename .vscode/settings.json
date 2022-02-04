@@ -18,8 +18,5 @@
         "cmd": "yarn build"
       }
     ]
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
   }
 }

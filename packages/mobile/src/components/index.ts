@@ -15,5 +15,7 @@ export * from './Scroll'
 export * from './ActivityIndicator'
 export * from './Button'
 export * from './ContentView'
+export * from './Overlay'
+export * from './Modal'
 
 export *  from './Navigation'
