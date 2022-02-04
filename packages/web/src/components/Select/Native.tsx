@@ -2,17 +2,17 @@
 import { jsx } from '@emotion/react';
 import { SelectStyles, ComponentVariants, useComponentStyle, StylesOf, SelectComposition } from '@codeleap/common';
 import { ComponentPropsWithRef, ReactNode } from 'react';
-import { View, ViewProps } from './View';
-import { Text } from './Text';
+import { View, ViewProps } from '../View';
+import { Text } from '../Text';
 
 
-type NativeSelectProps = ComponentPropsWithRef<'select'>;
+type HTMLSelectProps = ComponentPropsWithRef<'select'>;
 type Option = {
   label: string;
   value: string | number;
 }
 
-export type SelectProps = NativeSelectProps & {
+export type NativeSelectProps = HTMLSelectProps & {
   options: Array<Option>
   styles?: StylesOf<SelectComposition>
   label?: string | ReactNode
@@ -20,7 +20,7 @@ export type SelectProps = NativeSelectProps & {
   onValueChange?: (value: string | number) => void
 } & ComponentVariants<typeof SelectStyles>; 
 
-export const Select = (selectProps:SelectProps) => {
+export const NativeSelect = (selectProps:NativeSelectProps) => {
   const {
     variants = [],
     responsiveVariants = {},
