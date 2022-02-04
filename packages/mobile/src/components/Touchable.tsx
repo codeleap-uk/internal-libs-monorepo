@@ -3,20 +3,24 @@ import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import { ComponentVariants, useComponentStyle, BaseViewProps, ViewStyles, useStyle } from '@codeleap/common'
 import { View } from './View'
 import { Animated, TouchableOpacity as NativeTouchable } from  'react-native'
+import { useLogStyles } from '../utils/styles'
 
 export type TouchableProps =
   ComponentPropsWithoutRef<typeof NativeTouchable> & 
 {
   variants?: ComponentVariants <typeof ViewStyles>['variants'],
   component?: any
+  ref?: React.Ref<NativeTouchable>
+  debugName?:string
 } & BaseViewProps
 
-export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableProps, ref) => {
+export const Touchable:React.FC<TouchableProps> = forwardRef<NativeTouchable, TouchableProps>((touchableProps, ref) => {
   const { 
     variants = [],
     children,
     onPress,
     style,
+    debugName,
     ...props
   } = touchableProps
   
@@ -32,9 +36,15 @@ export const Touchable = forwardRef<NativeTouchable, TouchableProps>((touchableP
   
   const styles = [variantStyles.wrapper, style]
 
-  return <NativeTouchable onPress={press} {...props} ref={ref}> 
-    <View style={styles}>
-      {children}
+  const logStyles = useLogStyles()
+  if(debugName){
+    logStyles('Touchable: ' + debugName, style )
+  }
+
+  return <NativeTouchable onPress={press}  ref={ref}> 
+    <View {...props} style={styles}>
+
+        {children} 
     </View>
   </NativeTouchable>
 })

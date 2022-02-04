@@ -27,7 +27,7 @@ export const Checkbox = (checkboxProps:CheckboxProps) => {
     responsiveVariants,
     variants,
     styles,
-  }) as StylesOf<WebCheckboxComposition>
+  } as any) as StylesOf<WebCheckboxComposition>
   
   const {logger} = useStyle()
   logger.log('Checkbox Style', variantStyles, 'Style')

@@ -195,7 +195,7 @@ import {
     
     switch (typeof label){
       case 'string':
-        return <Text variants={['p2']} style={style} text={label}/>
+        return <Text style={style} text={label}/>
       case 'object':
       
         return label

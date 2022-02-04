@@ -1,7 +1,16 @@
+import { optionalObject } from '../../../utils';
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type OverlayComposition = 'wrapper' | 'wrapper:visible';
+export type OverlayComposition = 
+ 'wrapper' |
+ 'wrapper:pose' |
+ 'wrapper:visible' |
+ 'wrapper:visible:pose' |
+ 'header' |
+ 'title' |
+ 'closeButton';
+
 const createOverlayStyle = createDefaultVariantFactory<OverlayComposition>()
 
 const presets = includePresets((styles) => createOverlayStyle(() => ({ wrapper: styles })))
@@ -16,14 +25,20 @@ export const OverlayStyles = {
       right: 0,
       bottom: 0,
 
-      position: 'fixed',
-      background: theme.colors.black,
-      opacity: 0,
-      visibility: 'hidden',
+      position: theme.IsBrowser ? 'fixed' : 'absolute',
+      backgroundColor: theme.colors.black,
+      ...optionalObject(theme.IsBrowser, {visibility: 'hidden'}, {}),
     },
     'wrapper:visible': {
       opacity: 0.5,
-      visibility: 'visible',
+      ...optionalObject(theme.IsBrowser, {visibility: 'visible'}, {}),
+    },
+    closeButton: {
+      marginLeft: 'auto',
+    },
+    header: {
+      ...theme.presets.row,
+      ...theme.presets.justifySpaceBetween,
     },
   })),
 

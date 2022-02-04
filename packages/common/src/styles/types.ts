@@ -35,7 +35,10 @@ export type AppTheme = {
     Record<DefaultColors, string>
     > & AnyProps<string>
 
-   
+  readonly values?: {
+    width?: number
+    height?: number
+  }
    
   readonly borderRadius: {
     large: number

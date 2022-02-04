@@ -1,12 +1,15 @@
 import { ReactNode } from 'react'
 import { Join, Paths, Prev } from '../../types/pathMapping'
 import * as yup from 'yup'
-import { WebInputFile } from '../../types'
+import { WebInputFile, MobileInputFile } from '../../types'
+import { AnyObject } from 'yup/lib/object'
 type ValidationReturn = {message?: Label, valid?: boolean}
 
 export type ValidatorFunction<T = any> = (value:T) => ValidationReturn
 
-export type Validator<T> = ValidatorFunction<T>  | yup.SchemaOf<T>
+export type Validator<T> = T extends boolean ? 
+ValidatorFunction<true> | ValidatorFunction<false>  | yup.BooleanSchema<boolean, AnyObject, true> |  yup.BooleanSchema<boolean, AnyObject, false>
+: ValidatorFunction<T>  | yup.SchemaOf<T>
 
 export type Options<T> = {label: Label, value: T}[]
 
@@ -19,13 +22,14 @@ export type CommonSliderTypes = {
     max?: number
 }
 
+
 export type InputValueTypes = {
     checkbox:boolean
     switch: boolean
     text: string
     select: any
     radio: any
-    file: WebInputFile[]
+    file: (WebInputFile | MobileInputFile)[]
     composite: any
     'range-slider': number[]
     'slider': number
@@ -34,6 +38,13 @@ export type Label = string | ReactNode
 
 export type CheckboxField = {
     type: 'checkbox'
+    defaultValue: boolean
+    validate?: Validator<boolean>
+}
+
+
+export type SwitchField = {
+    type: 'switch'
     defaultValue: boolean
     validate?: Validator<boolean>
 }
@@ -75,7 +86,7 @@ export type RadioField<T = any> = {
 export type FileField = {
     type: 'file'
     allow?: string[]
-    defaultValue: WebInputFile[]
+    defaultValue: (WebInputFile | MobileInputFile)[]
     imageToBase64?: boolean
     multiple?: boolean
     validate?: Validator<WebInputFile[]>
@@ -87,7 +98,7 @@ export type CompositeField = {
     defaultValue: Record<string, unknown>
     validate?:never
 }
-export type AllFields = CheckboxField | TextField | SelectField | RadioField | FileField | CompositeField | SliderField | RangeSliderField
+export type AllFields = CheckboxField | SwitchField | TextField | SelectField | RadioField | FileField | CompositeField | SliderField | RangeSliderField
 
 export type FormField = {
     disabled?: boolean

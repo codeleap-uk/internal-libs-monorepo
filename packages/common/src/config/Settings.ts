@@ -25,6 +25,7 @@ export type AppSettings = DeepPartial<{
         GooglePlayURL : string
         AppStoreURL: string
         WebsiteURL: string
+        PrivacyPolicy: string
     },
     Fetch: {
         ApiURL: string
@@ -38,6 +39,7 @@ export type AppSettings = DeepPartial<{
       ContactEMAIL: string,
       ContactPHONE: string,
     },
+    
     ApiCredentials: {
         GoogleSignin: {
             WebClientId: string

@@ -45,7 +45,7 @@ export type Enumerate<N extends number> = EnumerateInternal<[], N> extends (infe
 
 export type Range<FROM extends number, TO extends number> = Exclude<Enumerate<TO>, Enumerate<FROM>>;
 
-export type StylesOf<C extends string = any, CSS = any> = Partial<Record<C, CSS>>;
+export type StylesOf<C extends string|number|symbol = any, CSS = any> = Partial<Record<C, CSS>>;
 
  
 type IsDict<T> = 

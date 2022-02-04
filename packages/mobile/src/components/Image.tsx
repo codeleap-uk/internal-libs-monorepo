@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ComponentVariants, ImageStyles, useComponentStyle } from "@codeleap/common"
+import { ComponentVariants, ImageStyles, MobileInputFile, useComponentStyle } from "@codeleap/common"
 import { ComponentPropsWithoutRef } from "react"
 import { Image as NativeImage } from 'react-native'
 import {FastImage} from '../modules/fastImage'
@@ -10,7 +10,7 @@ export type ImageProps = Omit<NativeImageProps, 'source'> & {
     fast?: boolean
     source: NativeImageProps['source'] & {
         priority?: keyof typeof FastImage.priority
-    }
+    } | MobileInputFile | string
     resizeMode?: keyof typeof FastImage.resizeMode
 }
 
@@ -38,6 +38,6 @@ export const Image:React.FC<ImageProps> = (props) => {
     }
     return <NativeImage 
         style={styles}
-        {...imageProps}
+        {...(imageProps as any)}
     />
 }

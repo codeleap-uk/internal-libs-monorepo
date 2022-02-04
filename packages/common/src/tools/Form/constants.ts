@@ -16,6 +16,7 @@ export const changeEventNames:Partial<Record<Form.FormField['type'], string>> = 
   select: 'onValueChange',
   radio: 'onValueChange',
   text: 'onChangeText',
+  file: 'onFileSelect',
 }
 
 // const myForm = createForm({
