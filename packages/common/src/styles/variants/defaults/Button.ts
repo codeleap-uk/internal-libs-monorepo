@@ -1,6 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 import shadeColor from '../../../utils/shadeColor'
+import { optionalObject } from '../../../utils';
 
 export type ButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader';
 
@@ -71,9 +72,11 @@ export const ButtonStyles = {
   icon: createButtonStyle((theme) => ({
     wrapper: {
       ...theme.spacing.padding(0),
-      '&:hover': {
-        backgroundColor: 'transparent',
-      },
+      ...optionalObject(theme.IsBrowser,
+        {'&:hover': {
+          backgroundColor: 'transparent',
+        }}
+        , {} ),
     },
     text: {
       flex: 1,

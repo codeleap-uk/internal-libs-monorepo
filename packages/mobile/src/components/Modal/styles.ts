@@ -1,4 +1,4 @@
-import { createDefaultVariantFactory, includePresets, ModalComposition, ModalStyles } from '@codeleap/common'
+import { ButtonComposition, createDefaultVariantFactory, includePresets, ModalComposition, ModalStyles } from '@codeleap/common'
 
 
 export const backgroundTransition = {
@@ -26,6 +26,9 @@ export type MobileModalParts =
 | 'touchableBackdrop'
 | 'box:pose'
 
+| 'title'
+| `closeButton${Capitalize<ButtonComposition>}`
+
 export type MobileModalComposition = MobileModalParts | `${MobileModalParts}:visible`
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
@@ -46,7 +49,7 @@ export const MobileModalStyles = {
       height: Theme?.values?.height,
     }
 
-    const a =  {
+    return {
       wrapper: {
         zIndex:1,
 
@@ -64,16 +67,14 @@ export const MobileModalStyles = {
         opacity: 0.5
       },
       innerWrapper: {
-        ...fullSize,
+     
         zIndex: 3,
        },
       innerWrapperScroll: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-     
-      
-        ...fullSize,
+        ...Theme.presets.justifyCenter,
+        minHeight: Theme.values.height,
         zIndex: 3
       },
       box: {
@@ -101,11 +102,18 @@ export const MobileModalStyles = {
         scale: 1,
         transition: modalTransition,
       },
+      header: {
+        flexDirection: 'row',
+        ...Theme.presets.justifySpaceBetween,
+        ...Theme.presets.alignCenter
+      },
+      closeButtonWrapper: {
+        alignSelf: 'center',
+
+      }
+    
      
     }
-    // console.log('aaaaaaaaaaa',JSON.stringify(a,null,3))
-    return a
-
 
    }),
    popup: createModalStyle((Theme) => ({

@@ -54,7 +54,8 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>( (buttonProps,re
     >
       {loading && <ActivityIndicator style={[variantStyles.loader, styles.loader]} />}
       {!loading && <Icon name={icon} style={StyleSheet.flatten([variantStyles.icon, styles.icon, variantStyles.leftIcon, styles.leftIcon])}/>}
-      {children || <Text text={text} style={[variantStyles.text, styles.text]}/>}
+      {text ? <Text text={text} style={[variantStyles.text, styles.text]}/> : null}
+      {children}
       <Icon name={rightIcon} style={StyleSheet.flatten([variantStyles.icon, styles.icon, variantStyles.rightIcon, styles.rightIcon])}/>
     </Touchable>
   )
