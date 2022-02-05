@@ -69,5 +69,11 @@ export const ModalStyles = {
       box: styles,
     }
   }, { dynamic: true }),
+  fullscreen: createModalStyle((theme) => ({
+    box: {
+      flex: 1,
+      width: '100%',
+    },
+  })),
 }
 

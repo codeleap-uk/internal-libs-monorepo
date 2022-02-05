@@ -1,19 +1,20 @@
 import * as React from 'react' 
 import { 
     View,
-    ViewProps
+    ViewProps,
+    AnimatedView
 } from '../View'
 import {  Button, ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'
-import { capitalize, ComponentVariants, IconPlaceholder, useComponentStyle, useStyle } from '@codeleap/common'
+import { capitalize, ComponentVariants, IconPlaceholder, onUpdate, useComponentStyle, useStyle } from '@codeleap/common'
 import { MobileModalComposition, MobileModalStyles, MobileModalParts } from './styles'
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
+
+import { Touchable } from '../Touchable'
 import { Text } from '../Text'
-import posed from 'react-native-pose'
-import { Overlay } from '../Overlay'
-import { useLogStyles } from '../../utils/styles'
 import { Animated } from '../Animated'
+
 
 export * from './styles'
 
@@ -41,7 +42,7 @@ export const Modal:React.FC<ModalProps> = (modalProps) => {
     style, 
     visible,
     showClose,
-    closable,
+    closable = true,
     title,
     footer,
     children,
@@ -56,12 +57,16 @@ export const Modal:React.FC<ModalProps> = (modalProps) => {
     styles
   }) as ModalProps['styles']
 
-  
+  if(Array.isArray(variants)){
+    variants.map((a) => a  === 'full')
+  }
 
   function getStyles(key:MobileModalParts){
     const s =  [
       variantStyles[key],
-      visible ?  variantStyles[key + ':visible'] : {}
+     styles[key],
+      visible ?  variantStyles[key + ':visible'] : {},
+      visible ?  styles[key + ':visible'] : {},
     ]
 
     return s
@@ -72,45 +77,62 @@ export const Modal:React.FC<ModalProps> = (modalProps) => {
 
     for(const [key,style] of Object.entries(variantStyles)){
         if(key.startsWith('button')){
-            buttonEntries[capitalize(key.replace('button', ''), true)] = getStyles(key as MobileModalParts)
+            buttonEntries[capitalize(key.replace('button', ''), true)] = style
         }
     }
-
     return buttonEntries
   }, [variantStyles])
 
-
-  const boxPoses = {
-    visible: {...variantStyles['box:pose:visible']},
-    hidden: {...variantStyles['box:pose']}
+  const boxAnimation = {
+    hidden : {
+      ...variantStyles['box:pose'],
+      ...styles['box:pose'],
+    },
+    visible : {
+      ...variantStyles['box:pose:visible'],
+      ...styles['box:pose:visible'],
+    }
   }
 
-  
   return (
-    <Overlay   onPress={() => visible && toggle()} visible={visible} styles={variantStyles}> 
-      <Scroll  style={getStyles('innerWrapper')} pointerEvents={visible ? 'auto' : 'none'} contentContainerStyle={getStyles('innerWrapperScroll')}>
-        <Animated component='View' config={boxPoses} pose={ visible ?'visible' :'hidden' } style={getStyles('box')}>
-            <View style={getStyles('header')}>
-                {typeof title === 'string' ? <Text text={title} style={getStyles('title')}/> : title}
-                
+
+      <View style={getStyles('wrapper')} pointerEvents={visible ? 'auto' : 'none'} >
+        <AnimatedView style={getStyles('overlay')} transition={'opacity'}/>
+        <Scroll style={getStyles('innerWrapper')} contentContainerStyle={getStyles('innerWrapperScroll')}>
+          <Touchable
+            debugName={`Close with backdrop press from ${debugName}`}
+            activeOpacity={1}
+            onPress={() => toggle()}
+            style={getStyles('touchableBackdrop')}
+            
+          />
+              <Animated component='View' config={boxAnimation} pose={visible ? 'visible' : 'hidden'}  style={getStyles('box')}>
                 {
-                (showClose && closable) &&
-                    <Button styles={buttonStyles} rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
+                  (title || showClose) && 
+
+                    <View   style={getStyles('header')}>
+                  
+                      {typeof title === 'string' ? <Text text={title}/> : title}
+                    
+                      {
+                        (showClose && closable) &&
+                          <Button rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle} styles={buttonStyles}/>
+                      }
+                    </View>
                 }
-            </View>
-            <View style={getStyles('body')}>
-                {children}
-            </View>
-            {
-                footer && <View  css={getStyles('footer')}> 
-                    {footer}
+            
+                <View style={getStyles('body')}>
+                  {children}
                 </View>
-            }
-        </Animated>    
-      </Scroll>
-     </Overlay>
-   
-      
+                {
+                  footer && <View style={getStyles('footer')}> 
+                    {footer}
+                  </View>
+                }
+            </Animated>
+          
+        </Scroll>
+      </View>
   )
 }
 

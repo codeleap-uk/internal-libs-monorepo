@@ -1,4 +1,4 @@
-import { ButtonComposition, createDefaultVariantFactory, includePresets, ModalComposition } from '@codeleap/common'
+import { createDefaultVariantFactory, includePresets, ModalComposition, ModalStyles } from '@codeleap/common'
 
 
 export const backgroundTransition = {
@@ -15,71 +15,99 @@ export const modalTransition = {
   
 
 export type MobileModalParts = 
-  ModalComposition | 
-  'innerWrapper' | 
-  'innerWrapperScroll' | 
-  'title' |
-  `closeButton${Capitalize<ButtonComposition>}`
-export type MobileModalComposition = MobileModalParts | `${MobileModalParts}:visible` | `${MobileModalParts}:pose:visible` | `${MobileModalParts}:pose`
+| 'wrapper' 
+| 'overlay' 
+| 'innerWrapper' 
+| 'innerWrapperScroll' 
+| 'box' 
+| 'footer' 
+| 'body' 
+| 'header'
+| 'touchableBackdrop'
+| 'box:pose'
+
+export type MobileModalComposition = MobileModalParts | `${MobileModalParts}:visible`
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
     
 const presets = includePresets((style ) =>  createModalStyle(() => ({wrapper: style})))
 
+const defaultModalStyles = ModalStyles
+
 export const MobileModalStyles = {
    ...presets,
-   default: createModalStyle((Theme) => ({
-     "box:pose": {
+   ...defaultModalStyles,
+   default: createModalStyle((Theme) => {
+
+    const fullSize = {
+      ...Theme.presets.whole,
+      position: 'absolute',
+      width: Theme?.values?.width,
+      height: Theme?.values?.height,
+    }
+
+    const a =  {
+      wrapper: {
+        zIndex:1,
+
+        ...fullSize
+      },
+      
+      overlay: {
+        opacity: 0,
+        zIndex: 2,
+        
+        backgroundColor: Theme.colors.black,
+        ...fullSize
+      },
+      "overlay:visible": {
+        opacity: 0.5
+      },
+      innerWrapper: {
+        ...fullSize,
+        zIndex: 3,
+       },
+      innerWrapperScroll: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+     
+      
+        ...fullSize,
+        zIndex: 3
+      },
+      box: {
+        width: '80%',
+        backgroundColor: Theme.colors.white,
+        zIndex: 10,
+        borderRadius: Theme.borderRadius.medium,
+        ...Theme.spacing.padding(1)
+      
+      },
+      touchableBackdrop: {
+        ...fullSize,
+    
+        zIndex:5
+      },
+      "box:pose": {
         opacity: 0,
         scale: 0.8,
-        y:  Theme.values.height * 0.15,
+        y: Theme.values.height * 0.15,
         transition: modalTransition,
-     },
-     "box:pose:visible": {
-        y: Theme.values.height * 0.3,
+      },
+      "box:pose:visible": {
+        y: 0,
         opacity: 1,
         scale: 1,
         transition: modalTransition,
-     },
+      },
      
-      wrapper: {
-        width: Theme.values?.width,
-        height: Theme.values?.height,
-        minHeight: Theme.values?.height,
-        ...Theme.presets.absolute,
-        ...Theme.presets.whole,
-        zIndex: 11,
-        backgroundColor: Theme.colors.black,
-        opacity: 0
-      },
-      "wrapper:visible": {  
-        opacity: 0.5,  
-      },
-      box: {
-        backgroundColor: Theme.colors.white,
-        flexDirection: 'column',
-        zIndex: 12,     
-        ...Theme.spacing.margin(1),
-        ...Theme.spacing.padding(1),
-        borderRadius: Theme.borderRadius.large,
-      },
+    }
+    // console.log('aaaaaaaaaaa',JSON.stringify(a,null,3))
+    return a
 
-      innerWrapper: {
-        minHeight: Theme.values?.height,
-        width: Theme.values?.width,
-        ...Theme.presets.absolute,
-        ...Theme.presets.whole,
-        zIndex: 10
-      },
-      innerWrapperScroll:{
-        ...Theme.presets.whole,
-     
-        ...Theme.presets.column,
-        ...Theme.presets.absolute,
-        minHeight: Theme.values?.height,
-        width: Theme.values?.width,
-      }
-   })),
+
+   }),
    popup: createModalStyle((Theme) => ({
 
    }))

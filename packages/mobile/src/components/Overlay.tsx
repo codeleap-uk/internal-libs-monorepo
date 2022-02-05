@@ -5,9 +5,10 @@ import { ReactNode } from "react"
 import {  InputLabel } from "./TextInput"
 import { Button } from './Button'
 
-import { View,AnimatedView  } from "./View"
+import { View  } from "./View"
 import { StylesOf } from "../types/utility"
-import { StyleSheet, ViewProps, Pressable } from "react-native"
+import { StyleSheet, ViewProps } from "react-native"
+import { AnimatedTouchable } from '.'
 
 
 export type OverlayProps = ViewProps & {
@@ -18,9 +19,8 @@ export type OverlayProps = ViewProps & {
     styles?: StylesOf<OverlayComposition>
     style?: any
     onPress?:() => void
-}   
+}   & React.ComponentPropsWithoutRef<typeof AnimatedTouchable>
 
-const AnimatedTouchable = Animatable.createAnimatableComponent(Pressable)
 
 export const Overlay:React.FC<OverlayProps> = (overlayProps) => {
 
@@ -41,30 +41,32 @@ export const Overlay:React.FC<OverlayProps> = (overlayProps) => {
         variants: variants as any
     })
 
+    const touchableStyle = [
+        variantStyles.wrapper, 
+        styles.wrapper, 
+        visible && variantStyles['wrapper:visible'], 
+        visible && styles['wrapper:visible']
+    ]
 
 
-    return <AnimatedView 
-        pointerEvents={visible ? 'auto' : 'none'}
-    > 
-        <AnimatedTouchable      
+    return <AnimatedTouchable      
             // @ts-ignore
             transition={'opacity'}
-            style={[variantStyles.wrapper, styles.wrapper, visible && variantStyles['wrapper:visible'], visible && styles['wrapper:visible']]}
+            style={touchableStyle}
             {...props}
         >
-        
-            {
-                (title || showClose) && (
+           <View>
+               
+               { (title || showClose) && (
                     <View style={variantStyles.header}>
                         <InputLabel style={variantStyles.title} label={title}/>
                         {
                             showClose && <Button variants={['icon']} icon={'close' as IconPlaceholder} style={variantStyles.closeButton}/>
                         }
                     </View>
-                )
-            }
-
+                )}
+        
+            </View> 
         </AnimatedTouchable>
-        {children}
-    </AnimatedView>
+    
 }
