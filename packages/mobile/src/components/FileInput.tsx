@@ -2,7 +2,7 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { DocumentPicker } from '../modules/documentPicker'
 import { ComponentVariants, FileInputComposition, FileInputStyles, IconPlaceholder, MobileInputFile, useComponentStyle, useStyle} from '@codeleap/common'
 import { StylesOf } from '../types/utility'
-import { Button } from './Button'
+import { Button, ButtonProps } from './Button'
 import { View } from './View'
 import { InputLabel } from './TextInput'
 
@@ -17,10 +17,12 @@ export type FileInputProps = {
     mode: 'hidden' | 'button'
     variants?: ComponentVariants<typeof FileInputStyles>['variants']
     onFileSelect(files:MobileInputFile[]): void
+    options?: DocumentPicker.DocumentPickerOptions
+    buttonProps?: ButtonProps
 }
 
 export const FileInput: React.FC<FileInputProps> = forwardRef<FileInputRef, FileInputProps>((fileInputProps,ref) => {
-    const {mode = 'hidden', onFileSelect, iconName, styles, label, variants} = fileInputProps
+    const {mode = 'hidden', onFileSelect, iconName, styles, label, variants, options, buttonProps} = fileInputProps
     
     const [file, setFile] = React.useState(null)
 
@@ -28,11 +30,11 @@ export const FileInput: React.FC<FileInputProps> = forwardRef<FileInputRef, File
     
     const openFilePicker = async () => {
         try {
-            let files = await DocumentPicker.pick()
-            if(!Array.isArray(file)){
+            let files = await DocumentPicker.pick(options)
+            if(!Array.isArray(files)){
                 files = [files]
             } 
-            setFile(file)
+            setFile(files)
             onFileSelect(files.map((file) => ({preview: file, file})))
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
@@ -53,11 +55,12 @@ export const FileInput: React.FC<FileInputProps> = forwardRef<FileInputRef, File
     useImperativeHandle(ref, () => ({
         openFilePicker
     }))
-
+    
+    const filenames = file ? file.map((f) => f.name) : ''  
     if(mode === 'button'){
         return (<View style={variantStyles.wrapper}>
             <InputLabel label={label} style={variantStyles.label}/>
-            <Button  onPress={() => openFilePicker()}  text={file?.[0]?.name || ''} icon={ iconName || 'fileInputButton' as IconPlaceholder} />
+            <Button  onPress={() => openFilePicker()}  text={filenames } icon={ iconName || 'fileInputButton' as IconPlaceholder} variants={filenames ? '' : 'icon' } {...buttonProps}/>
         </View>
         )
     }
