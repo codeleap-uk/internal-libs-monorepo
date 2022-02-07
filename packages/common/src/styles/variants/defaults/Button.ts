@@ -3,7 +3,9 @@ import { createDefaultVariantFactory } from '../createDefaults'
 import shadeColor from '../../../utils/shadeColor'
 import { optionalObject } from '../../../utils';
 
-export type ButtonComposition = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader';
+export type ButtonStates = 'disabled'
+export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader'
+export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts ;
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
 
@@ -44,6 +46,9 @@ export const ButtonStyles = {
     },
     rightIcon: {
       ...theme.spacing.marginRight(1),
+    },
+    'wrapper:disabled': {
+      opacity: 0.5,
     },
   })),
   negative: createButtonStyle((theme) => ({

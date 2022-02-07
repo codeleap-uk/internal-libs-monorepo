@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { parseFilePathData } from '../../utils'
 import { methodsWithData } from './constants'
 import { FetchFailure, RequestClientConfig, RequestQueueItem } from './types'
 
@@ -59,7 +60,7 @@ export function parseFailedRequest(err, request, instanceConfig) {
 
 const multipartDefaults:Exclude<RequestClientConfig['multipart'], boolean> = {
   keyTransforms: {
-    image: 'file',
+    image: 'image',
     data: 'json',
     file: 'file',
   },
@@ -75,18 +76,26 @@ export function toMultipart(request:RequestClientConfig) {
   const form = new FormData()
 
   for (const [key, rawValue] of Object.entries(request.data)) {
-    let value:string|Blob = rawValue as string
+    let value:string| Partial<Blob & {uri: string, name: string}> = rawValue as string
 
     switch (multipartConfig.keyTransforms[key]) {
       case 'json':
-        value = JSON.stringify(rawValue)
+        value = JSON.stringify({...(rawValue as object), type: 'application/json'})
+        break
+      case 'image':
+        if (typeof rawValue ==='string'){
+          value = {
+            uri: rawValue,
+            name: `image_${rawValue}`,
+            type: `image/${parseFilePathData(rawValue).extension}`,
+          } 
+        }
         break
       default:
         break
     }
 
-    form.append(key, value)
+    form.append(key, value as Blob)
   }
-
   return form
 }

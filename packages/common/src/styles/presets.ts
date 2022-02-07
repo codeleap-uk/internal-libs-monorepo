@@ -88,6 +88,15 @@ export const defaultPresets = {
   alignCenter: {
     alignItems: 'center',
   },
+  alignSelfCenter: {
+    alignSelf: 'center',
+  },
+  alignSelfStart: {
+    alignSelf: 'flex-start',
+  },
+  alignSelfEnd: {
+    alignSelf: 'flex-end',
+  },
   justifyStart: {
     justifyContent: 'flex-start',
   },

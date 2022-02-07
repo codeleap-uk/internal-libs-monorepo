@@ -5,7 +5,8 @@ import { WebInputFile, MobileInputFile } from '../../types'
 import { AnyObject } from 'yup/lib/object'
 type ValidationReturn = {message?: Label, valid?: boolean}
 
-export type ValidatorFunction<T = any> = (value:T) => ValidationReturn
+export type ValidatorFunction<T = any, F = any> = (value:T, formValues: F) => ValidationReturn
+export type ValidatorFunctionWithoutForm<T = any> = (value:T) => ValidationReturn
 
 export type Validator<T> = T extends boolean ? 
 ValidatorFunction<true> | ValidatorFunction<false>  | yup.BooleanSchema<boolean, AnyObject, true> |  yup.BooleanSchema<boolean, AnyObject, false>
@@ -65,6 +66,7 @@ export type TextField = {
     type: 'text'
     password?: boolean
     defaultValue: string 
+    placeholder?: string
     validate?: Validator<string>
 }
 
@@ -73,6 +75,7 @@ export type SelectField<T = any> = {
     options: Options<T>
     defaultValue:T
     native?: boolean
+    placeholder?: string
     validate?: Validator<T>
 }
 
@@ -103,7 +106,6 @@ export type AllFields = CheckboxField | SwitchField | TextField | SelectField | 
 export type FormField = {
     disabled?: boolean
     label?: Label
-    required?: boolean
     subtitle?: Label
     debounce?: number
 } & AllFields
@@ -159,10 +161,11 @@ export type FormStep =
     'validate'
 
 
-export type UseFormConfig = {
+export type UseFormConfig<T> = {
     validateOn: FormValidateOn
     output:FormOutput
     log?: FormStep[]
+    initialState?: T
 }
 
 
