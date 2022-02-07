@@ -5,6 +5,7 @@
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
+  "bin": "dist/index.js",
   "devDependencies": {
     "@codeleap/config": "*",
     "@types/inquirer": "^8.2.0",
@@ -20,7 +21,7 @@
     "@codeleap/common": "*"
   },
   "dependencies": {
-    "chalk": "^5.0.0",
+    "chalk": "4.1.2",
     "chalk-animation": "^1.6.0",
     "cleye": "^1.1.0",
     "figlet": "^1.5.2",

@@ -1,30 +1,31 @@
 import { waitFor } from '@codeleap/common'
-import { command } from 'cleye'
-import inquirer from 'inquirer'
+import { codeleapCommand } from '../lib/Command'
 
 import { spinWhileNotCompleted } from '../lib/spinner'
-import figlet from 'figlet'
-import chalk from 'chalk'
+import { chalk, inquirer, figlet } from '../lib'
 
-export const initCommand =  command({
+export const initCommand =  codeleapCommand({
   name: 'init',
-  parameters: ['<projectname>', '<platform>'],
+  parameters: [],
   alias: 'i',
 }, async ({_}) => {
-  console.log(chalk.blue(figlet.textSync('Codeleap')))
-
   const answers = await inquirer.prompt([
     {
-      message: `What's the development server's url? (Skip if there's not one)`,
-      default: '',
-      name: 'devServerURL',
+      message: `What's your name?`,
+      default: 'Codeleap',
+      name: 'name',
     },
   ])
 
   spinWhileNotCompleted(async () => {
     await waitFor(10000)
+    
+    console.log(chalk.greenBright(answers.name +', your awesomeness level is:'))
+    
+    console.log(chalk.yellow(figlet.textSync('Cacetinho')))
   }, {
-    name: 'Getting template for platform ' + _.platform,
+    name: 'Measuring your awesomeness...',
   })
+
 })
 

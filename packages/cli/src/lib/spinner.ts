@@ -8,7 +8,7 @@ type SpinWhileNotCompletedOpts = Options & {
 export async function spinWhileNotCompleted(operation:FunctionType<[], Promise<any>>, opts:SpinWhileNotCompletedOpts){
   const {name, ...others} = opts
   
-  const spinner = createSpinner(name, others)
+  const spinner = createSpinner(`${name}\n`, others)
 
   spinner.start()
 
