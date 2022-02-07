@@ -58,7 +58,6 @@ export const MobileModalStyles = {
       
       overlay: {
         opacity: 0,
-        zIndex: 2,
         
         backgroundColor: Theme.colors.black,
         ...fullSize
@@ -68,19 +67,16 @@ export const MobileModalStyles = {
       },
       innerWrapper: {
      
-        zIndex: 3,
        },
       innerWrapperScroll: {
         display: 'flex',
         alignItems: 'center',
         ...Theme.presets.justifyCenter,
         minHeight: Theme.values.height,
-        zIndex: 3
       },
       box: {
         width: '80%',
         backgroundColor: Theme.colors.white,
-        zIndex: 10,
         borderRadius: Theme.borderRadius.medium,
         ...Theme.spacing.padding(1)
       
@@ -88,7 +84,6 @@ export const MobileModalStyles = {
       touchableBackdrop: {
         ...fullSize,
     
-        zIndex:5
       },
       "box:pose": {
         opacity: 0,

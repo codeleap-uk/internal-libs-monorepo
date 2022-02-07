@@ -48,7 +48,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>( (buttonProps,re
   }
 
   function getStyles(key: ButtonParts){
-    console.log(disabled)
+  
     return [
       variantStyles[key],
       disabled && variantStyles[key + ':disabled']

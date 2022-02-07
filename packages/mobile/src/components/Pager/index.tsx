@@ -1,4 +1,4 @@
-import { ComponentVariants, onUpdate, useComponentStyle, useDebounce } from '@codeleap/common'
+import { ComponentVariants, onUpdate, useComponentStyle, useDebounce, useStyle } from '@codeleap/common'
 import React, { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { GestureDetector, Gesture } from '../../modules/gestureHandler'
@@ -23,6 +23,7 @@ export type PagerProps = {
 export type PagerRef = {
     forward(by?:number):void
     back(by?:number):void
+    to(index?:number):void
 }
 
 const initialGestureState  = {
@@ -47,15 +48,15 @@ export const Pager = forwardRef<PagerRef,PagerProps>((pagerProps,ref) => {
         transform: StyleSheet.flatten,
         variants
     })
-
+    const {logger} = useStyle()
     const nChildren = React.Children.count(children)
 
     const lastPage = nChildren - 1
 
-    const pagerRef = useRef<Pick<PagerRef,'back'|'forward'>>({
+    const pagerRef = useRef<PagerRef>({
         forward: (by = 1) => {
             setPage(currentPage => {
-                    if(currentPage < (nChildren - 1)){
+                    if(currentPage < lastPage){
                         return currentPage + by
                     }else if(loop){
                         return by - 1
@@ -73,6 +74,18 @@ export const Pager = forwardRef<PagerRef,PagerProps>((pagerProps,ref) => {
                 return currentPage
             })   
         },
+        to: (n:number) => {
+            if(n >= 0 && n <= lastPage){
+                setPage(n)  
+
+            }else{
+                logger.warn(
+                    'Attempted to go to a page which falls outside range',
+                    {currentPage: page, attemptedToGoTo : n, pageRange: [0, lastPage]},
+                    'Component'
+                )
+            }
+        }
        
     })
 
@@ -107,12 +120,12 @@ export const Pager = forwardRef<PagerRef,PagerProps>((pagerProps,ref) => {
             <View style={variantStyles.wrapper}>
                 {
                     React.Children.map(children, (child, idx) => <Page 
-                    {...pagerProps}
-                    idx={idx}
-                    lastPage={lastPage} 
-                    pagePoses={pagePoses}
-                    style={[variantStyles.page]}
-                    page={page}
+                        {...pagerProps}
+                        idx={idx}
+                        lastPage={lastPage} 
+                        pagePoses={pagePoses}
+                        style={[variantStyles.page]}
+                        page={page}
                     > 
                         {child}
                     </Page>)
@@ -150,42 +163,71 @@ const Page:React.FC<PageProps> = (pageProps) => {
 
     if(!React.isValidElement(child)) return null
 
-    const isLast = idx === lastPage
-    const isFirst = idx === 0
+    // const isLast = idx === lastPage
+    // const isFirst = idx === 0
 
-    const isLoopNext = (loop && isFirst && page === lastPage)
-    const isLoopPrevious = (loop && isLast && page === 0)
+    // const isLoopNext = (loop && isFirst && page === lastPage)
+    // const isLoopPrevious = (loop && isLast && page === 0)
 
-    const isCurrent = idx === page
-    const isSequenceNext = idx ===  page + 1 
-    const isSequencePrevious = idx ===  page  - 1 
+    // const isCurrent = idx === page
+    // const isSequenceNext = idx ===  page + 1 
+    // const isSequencePrevious = idx ===  page  - 1 
     
-    const isNext = isSequenceNext || isLoopNext
+    // const isNext = isSequenceNext || isLoopNext
 
-    const isPrevious = isSequencePrevious || isLoopPrevious
+    // const isPrevious = isSequencePrevious || isLoopPrevious
 
-    const isCurrentOrAdjacent = [
-        isCurrent,
-        isNext,
-        isPrevious
-    ].includes(true)
+    // const isCurrentOrAdjacent = [
+    //     isCurrent,
+    //     isNext,
+    //     isPrevious
+    // ].includes(true)
 
-    if(isCurrentOrAdjacent){
-        return <Animated 
-            key={idx}
-            component='View' 
-            config={pagePoses} 
-            pose={isCurrent ? 'current' : (isNext ? 'next' : 'previous')} 
-            style={[{
-                position: 'absolute',  
-                top: 0,
+    // if(isCurrentOrAdjacent){
+    //     return <Animated 
+    //         key={idx}
+    //         component='View' 
+    //         config={pagePoses} 
+    //         pose={isCurrent ? 'current' : (isNext ? 'next' : 'previous')} 
+    //         style={[{
+    //             position: 'absolute',  
+    //             top: 0,
                 
-            },style]}
-        > 
-            {child}
-        </Animated>
-    }
+    //         },style]}
+    //     > 
+    //         {child}
+    //     </Animated>
+    // }
+    const isCurrent = idx === page
+    const isNext = idx > page
+    const [_opacity, setOpacity] = useState(isCurrent ? 1: 0)
+
+    const [ opacity,resetDebounceTimer ] = useDebounce(_opacity, 800)
+
+    onUpdate(() => {
+        if(isCurrent){
+            setOpacity(1)
+        }else{      
+            setOpacity(0)
+        }
+
+        return resetDebounceTimer
+    },[idx,page])
+
+    return <Animated 
+        key={idx}
+        component='View' 
+        config={pagePoses} 
+        pose={isCurrent ? 'current' : (isNext ? 'next' : 'previous')} 
+        style={[{
+            position: 'absolute',  
+            top: 0,
+            opacity: isCurrent ? _opacity : opacity
+        },style]}
+    > 
+        {child}
+    </Animated>
 
 
-    return <View style={{display:'none'}} key={idx}>{child}</View>
+    // return <View style={{display:'none'}} key={idx}>{child}</View>
 }
