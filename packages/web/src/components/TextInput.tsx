@@ -42,7 +42,7 @@ export type TextInputProps =
     leftIcon?:IconProp
     rightIcon?:IconProp
     styles?: StylesOf<TextInputComposition>
-    validate?: FormTypes.ValidatorFunction | string
+    validate?: FormTypes.ValidatorFunctionWithoutForm | string
     value?:string
     password?:boolean
     visibilityToggle?: boolean
