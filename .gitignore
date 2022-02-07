@@ -16,6 +16,9 @@ build
 # misc
 .DS_Store
 *.pem
+*.cer
+*.mobileprovision
+*.p12
 
 # debug
 npm-debug.log*
