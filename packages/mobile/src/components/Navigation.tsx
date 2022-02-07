@@ -58,7 +58,6 @@ type FlattenScenesArgs = {
 }
 const flattenScenes = ({
   scenes,
-  Theme,
 }:FlattenScenesArgs) => {
 
   return Object.entries(scenes).reduce((acc, [pageModule, pages]) => {
