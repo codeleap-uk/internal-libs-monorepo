@@ -18,7 +18,7 @@ type CheckboxProps = NativeCheckboxProps & {
     variants?: ComponentVariants<typeof CheckboxStyles>['variants']
     label?: ReactNode
     styles?: StylesOf<CheckboxComposition>
-    validate?: Form.ValidatorFunction | string
+    validate?: Form.ValidatorFunctionWithoutForm | string
 } 
 
 export const Checkbox = forwardRef<NativeCheckbox,CheckboxProps>((checkboxProps,ref) => {

@@ -117,9 +117,9 @@ export  const Navigation = <T extends NavigationType, P extends NavigationProps<
   </Navigator.Navigator>
           
 }
-export type NavigationScreenProps<S extends AppScenes, T  extends NativeStackScreenProps<any, any> = NativeStackScreenProps<any, any>> = Omit<T, 'navigation'> & {
+export type NavigationScreenProps<T  extends NativeStackScreenProps<any, any> = NativeStackScreenProps<any, any>> = Omit<T, 'navigation'> & {
   navigation:  Omit<T['navigation'],'navigate'> & {
-    navigate: (to: Exclude<Paths<S, 1>, keyof S>) => void
+    navigate: (to: string) => void
   }
 
 }

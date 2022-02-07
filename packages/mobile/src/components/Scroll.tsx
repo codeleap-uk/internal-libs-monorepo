@@ -70,7 +70,8 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>((scrollProps, ref) => 
   return (
 
     <KeyboardAwareScrollView
-      style={[Theme.presets.full, variantStyles.wrapper, style]}
+      style={[Theme.presets.full]}
+      contentContainerStyle={[ variantStyles.wrapper, style]}
       ref={ref as unknown as ScrollView}
       {...props}
       refreshControl={

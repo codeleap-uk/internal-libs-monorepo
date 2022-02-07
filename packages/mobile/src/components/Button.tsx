@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useComponentStyle, ButtonStyles, ComponentVariants, ButtonComposition } from '@codeleap/common';
+import { useComponentStyle, ButtonStyles, ComponentVariants, ButtonComposition, ButtonParts } from '@codeleap/common';
 import {  forwardRef } from 'react'
 import { StylesOf } from '../types/utility'; 
 import { Text } from './Text';
@@ -30,6 +30,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>( (buttonProps,re
     loading,
     styles = {},
     onPress,
+    disabled,
     rightIcon,
     ...props 
   } = buttonProps
@@ -37,26 +38,38 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>( (buttonProps,re
   
   const variantStyles = useComponentStyle('Button', {
     variants,
+    transform: StyleSheet.flatten,
+    styles
   })  
 
 
   function handlePress(e:Parameters<ButtonProps['onPress']>[0]){
-    onPress && onPress(e)
+    onPress && onPress()
   }
 
- 
+  function getStyles(key: ButtonParts){
+    console.log(disabled)
+    return [
+      variantStyles[key],
+      disabled && variantStyles[key + ':disabled']
+    ]
+  }
+  
+  const iconStyle = getStyles('icon')
+
   return (
     <Touchable
-      style={[variantStyles.wrapper, styles.wrapper]}
+      style={getStyles('wrapper')}
       onPress={handlePress}
       ref={ref}
+      disabled={disabled}
       {...props}
     >
-      {loading && <ActivityIndicator style={[variantStyles.loader, styles.loader]} />}
-      {!loading && <Icon name={icon} style={StyleSheet.flatten([variantStyles.icon, styles.icon, variantStyles.leftIcon, styles.leftIcon])}/>}
-      {text ? <Text text={text} style={[variantStyles.text, styles.text]}/> : null}
+      {loading && <ActivityIndicator style={getStyles('loader')} />}
+      {!loading && <Icon name={icon} style={StyleSheet.flatten([iconStyle, getStyles('leftIcon')])}/>}
+      {text ? <Text text={text} style={getStyles('text')}/> : null}
       {children}
-      <Icon name={rightIcon} style={StyleSheet.flatten([variantStyles.icon, styles.icon, variantStyles.rightIcon, styles.rightIcon])}/>
+      <Icon name={rightIcon} style={StyleSheet.flatten([iconStyle, getStyles('rightIcon')])}/>
     </Touchable>
   )
 })
