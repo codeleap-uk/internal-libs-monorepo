@@ -34,6 +34,10 @@ export class RequestClient extends Axios implements IRequestClient {
       if (reqConfig.multipart) {
 
         reqConfig.data = toMultipart(reqConfig)
+        reqConfig.headers = {
+          ...reqConfig?.headers,
+          'Content-Type': 'multipart/form-data',
+        }
       }
 
       if (this.config.requestMiddleware) {

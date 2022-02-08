@@ -22,7 +22,7 @@ export function useForm<
   
  
 
-  const [formValues, setFormValues] = usePartialState(config.initialState || form.defaultValue)
+  const [formValues, setFormValues] = usePartialState<Values>(config.initialState || form.defaultValue)
   const { logger } = useStyle()
   const [fieldErrors, setFieldErrors] = usePartialState(() => {
     const errors = Object.keys(form.staticFieldProps).map(key => [key, ''])

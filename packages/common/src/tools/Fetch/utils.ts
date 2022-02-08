@@ -63,6 +63,7 @@ const multipartDefaults:Exclude<RequestClientConfig['multipart'], boolean> = {
     image: 'image',
     data: 'json',
     file: 'file',
+    files: 'image',
   },
 }
 
@@ -89,6 +90,8 @@ export function toMultipart(request:RequestClientConfig) {
             name: `image_${rawValue}`,
             type: `image/${parseFilePathData(rawValue).extension}`,
           } 
+        } else {
+          value = null
         }
         break
       default:
@@ -97,5 +100,6 @@ export function toMultipart(request:RequestClientConfig) {
 
     form.append(key, value as Blob)
   }
+
   return form
 }
