@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 export type IconProps = {
     name:IconPlaceholder
     style?: {
-      color: string
+      color?: string
       size?:string|number
       width?:string|number
       height?:string|number
