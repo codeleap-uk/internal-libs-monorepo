@@ -1,24 +1,24 @@
-import * as React from "react";
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import * as React from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import {
   ComponentVariants,
   useComponentStyle,
   BaseViewProps,
   TextStyles,
-} from "@codeleap/common";
-import { Text as NativeText } from "react-native";
+} from '@codeleap/common';
+import { Text as NativeText } from 'react-native';
 
 export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   text?: string;
-  variants?: ComponentVariants<typeof TextStyles>["variants"];
+  variants?: ComponentVariants<typeof TextStyles>['variants'];
 } & BaseViewProps;
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const { variants = [], text, style, ...props } = textProps;
 
-  const variantStyles = useComponentStyle("Text", {
+  const variantStyles = useComponentStyle('Text', {
     variants,
-    rootElement: "text",
+    rootElement: 'text',
   });
 
   const styles = [variantStyles.text, style];

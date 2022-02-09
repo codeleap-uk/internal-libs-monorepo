@@ -1,11 +1,11 @@
-import { Breadcrumb } from "@sentry/browser";
-import { AppSettings } from "../../config/Settings";
+import { Breadcrumb } from '@sentry/browser';
+import { AppSettings } from '../../config/Settings';
 import {
   LogFunctionArgs,
   LogType,
   SentrySeverityMap,
   SentryProvider,
-} from "./types";
+} from './types';
 
 export class SentryService {
   private sentry: SentryProvider;
@@ -32,7 +32,7 @@ export class SentryService {
       data,
       category,
       level: SentrySeverityMap[type],
-      type: "",
+      type: '',
     };
 
     this.sentry.addBreadcrumb(sentryArgs);

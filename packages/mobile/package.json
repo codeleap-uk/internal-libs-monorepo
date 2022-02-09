@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "./node_modules/.bin/eslint -c .eslintrc.js \"./src/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "publish": "npm publish"
   },
   "peerDependencies": {

@@ -1,10 +1,10 @@
 import {
   createDefaultVariantFactory,
   RadioInputStyles,
-} from "@codeleap/common";
-type RadioParts = "button" | "itemWrapper" | "text" | "buttonMark";
+} from '@codeleap/common';
+type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark';
 
-type RadioGroupParts = "label" | "wrapper" | "list";
+type RadioGroupParts = 'label' | 'wrapper' | 'list';
 
 export type MobileRadioInputComposition =
   | `${RadioParts}:checked`
@@ -36,14 +36,14 @@ export const MobileRadioInputStyles = {
         ...theme.border.primary(1),
         borderRadius: theme.borderRadius.large,
 
-        position: "relative",
+        position: 'relative',
         ...theme.spacing.marginRight(1),
       },
       buttonMark: {
         backgroundColor: theme.colors.primary,
-        position: "absolute",
-        left: "50%",
-        top: "50%",
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
         height: markHeight,
         width: markHeight,
 
@@ -51,7 +51,7 @@ export const MobileRadioInputStyles = {
         borderRadius: theme.borderRadius.large,
         opacity: 0,
       },
-      "buttonMark:checked": {
+      'buttonMark:checked': {
         opacity: 1,
       },
     };

@@ -6,18 +6,18 @@ import {
   useBooleanToggle,
   useComponentStyle,
   useValidate,
-} from "@codeleap/common";
-import { useMemo, useRef } from "react";
-import { InputLabel, FormError } from "../TextInput";
-import { Icon } from "../Icon";
-import { Touchable } from "../Touchable";
-import { View } from "../View";
-import { Text } from "../Text";
-import { useClickOutside } from "../../lib/hooks";
-import { CustomSelectProps } from "./types";
-import { WebSelectComposition, WebSelectParts } from "./styles";
-import { SelectRenderFNProps } from ".";
-import { v4 } from "uuid";
+} from '@codeleap/common';
+import { useMemo, useRef } from 'react';
+import { InputLabel, FormError } from '../TextInput';
+import { Icon } from '../Icon';
+import { Touchable } from '../Touchable';
+import { View } from '../View';
+import { Text } from '../Text';
+import { useClickOutside } from '../../lib/hooks';
+import { CustomSelectProps } from './types';
+import { WebSelectComposition, WebSelectParts } from './styles';
+import { SelectRenderFNProps } from '.';
+import { v4 } from 'uuid';
 const SelectItem: React.FC<
   SelectRenderFNProps<any> & { iconName?: string }
 > = ({ styles, iconName, onPress, label, inList }) => {
@@ -26,7 +26,7 @@ const SelectItem: React.FC<
       onPress={onPress}
       css={inList ? [styles.itemWrapper] : [styles.buttonWrapper]}
     >
-      {typeof label === "string" ? (
+      {typeof label === 'string' ? (
         <Text text={label} css={inList ? styles.itemText : styles.buttonText} />
       ) : (
         label
@@ -69,8 +69,8 @@ const InputWrapper = (props) => {
 export const CustomSelect: React.FC<CustomSelectProps<any>> = <
   T extends string | number = string
 >(
-  selectProps: CustomSelectProps<T>
-) => {
+    selectProps: CustomSelectProps<T>,
+  ) => {
   const {
     options = [],
     value,
@@ -93,7 +93,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
 
   const optionLabelMap = useMemo(() => {
     return Object.fromEntries(
-      options.map(({ label, value }) => [value, label])
+      options.map(({ label, value }) => [value, label]),
     );
   }, [options]);
 
@@ -105,10 +105,10 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
         setOpen(false);
       }
     },
-    { customId: inputId, deps: [] }
+    { customId: inputId, deps: [] },
   );
 
-  const variantStyles = useComponentStyle("Select", {
+  const variantStyles = useComponentStyle('Select', {
     styles,
     variants,
     responsiveVariants,
@@ -117,7 +117,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
   const CurrentContent = renderCurrentlySelected || SelectItem;
   const Item = renderItem || SelectItem;
 
-  const isValueEmpty = value === null || typeof value === "undefined";
+  const isValueEmpty = value === null || typeof value === 'undefined';
   const currentOption = isValueEmpty
     ? { label: placeholder, value }
     : { label: optionLabelMap[value], value };
@@ -146,21 +146,21 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
           {...currentOption}
           onPress={() => setOpen()}
           styles={{
-            buttonIcon: getStyles("buttonIcon"),
-            buttonText: getStyles("buttonText"),
-            buttonWrapper: getStyles("buttonWrapper"),
+            buttonIcon: getStyles('buttonIcon'),
+            buttonText: getStyles('buttonText'),
+            buttonWrapper: getStyles('buttonWrapper'),
           }}
           open={isOpen}
-          iconName={arrowIconName || "selectArrow"}
+          iconName={arrowIconName || 'selectArrow'}
         />
       }
       error={error}
       styles={{
-        wrapper: getStyles("wrapper"),
-        label: getStyles("label"),
-        inputWrapper: getStyles("inputWrapper"),
-        list: getStyles("list"),
-        error: getStyles("error"),
+        wrapper: getStyles('wrapper'),
+        label: getStyles('label'),
+        inputWrapper: getStyles('inputWrapper'),
+        list: getStyles('list'),
+        error: getStyles('error'),
       }}
       {...props}
       id={inputId}
@@ -177,18 +177,18 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
           selected={item.value === value}
           key={item.value}
           styles={{
-            itemText: getStyles("itemText", {
+            itemText: getStyles('itemText', {
               ...optionalObject(
                 item.value === value,
-                variantStyles["itemText:selected"],
-                {}
+                variantStyles['itemText:selected'],
+                {},
               ),
             }),
-            itemWrapper: getStyles("itemWrapper", {
+            itemWrapper: getStyles('itemWrapper', {
               ...optionalObject(
                 item.value === value,
-                variantStyles["itemWrapper:selected"],
-                {}
+                variantStyles['itemWrapper:selected'],
+                {},
               ),
             }),
           }}

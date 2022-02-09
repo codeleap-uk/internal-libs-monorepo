@@ -1,9 +1,9 @@
-import React, { ElementType } from "react";
-import { ViewProps } from ".";
-import { View } from "./View";
+import React, { ElementType } from 'react';
+import { ViewProps } from '.';
+import { View } from './View';
 
-export function HorizontalScroll<T extends ElementType = "div">(
-  props: ViewProps<T>
+export function HorizontalScroll<T extends ElementType = 'div'>(
+  props: ViewProps<T>,
 ) {
   const { children, style, ...otherProps } = props;
 
@@ -16,10 +16,10 @@ export function HorizontalScroll<T extends ElementType = "div">(
 
 const styles = {
   scroll: {
-    overflow: "auto",
-    "::-webkit-scrollbar": {
-      display: "none",
+    overflow: 'auto',
+    '::-webkit-scrollbar': {
+      display: 'none',
     },
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap',
   },
 };

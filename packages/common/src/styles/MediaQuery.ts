@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import { AppTheme } from ".";
-import { FunctionType } from "..";
-export type QueryKey = "up" | "down" | "is" | "not";
+import { AppTheme } from '.';
+import { FunctionType } from '..';
+export type QueryKey = 'up' | 'down' | 'is' | 'not';
 
-type ThemeBreakpoints = AppTheme["breakpoints"];
+type ThemeBreakpoints = AppTheme['breakpoints'];
 type Breakpoint = keyof ThemeBreakpoints | number;
 
 export type BreakpointHooks<B, R> = Record<
@@ -20,7 +20,7 @@ export type Hooks<B, R> = BreakpointHooks<B, R> & {
 };
 
 export function buildMediaQueries<T extends ThemeBreakpoints>(
-  breakpoints: T
+  breakpoints: T,
 ): MediaQueries<keyof T, string> {
   function getBreakpoint(breakpoint) {
     return getBreakpointValue(breakpoint, breakpoints);
@@ -52,8 +52,8 @@ export function buildMediaQueries<T extends ThemeBreakpoints>(
   const renderToPlatformQuery: MediaQueries<
     keyof T,
     string
-  >["renderToPlatformQuery"] = (props) => {
-    let mediaString = "";
+  >['renderToPlatformQuery'] = (props) => {
+    let mediaString = '';
 
     if (props?.is) {
       mediaString = queries.not(props.is);
@@ -66,10 +66,10 @@ export function buildMediaQueries<T extends ThemeBreakpoints>(
     }
     return mediaString
       ? {
-          [`${mediaString}`]: {
-            display: "none",
-          },
-        }
+        [`${mediaString}`]: {
+          display: 'none',
+        },
+      }
       : {};
   };
 
@@ -81,7 +81,7 @@ export function buildMediaQueries<T extends ThemeBreakpoints>(
 
 function getBreakpointValue(
   breakpoint: Breakpoint,
-  breakpoints: ThemeBreakpoints
+  breakpoints: ThemeBreakpoints,
 ) {
   if (breakpoints[breakpoint]) {
     return breakpoints[breakpoint];
@@ -92,7 +92,7 @@ function getBreakpointValue(
 
 export function breakpointHooksFactory<T extends ThemeBreakpoints>(
   breakpoints: T,
-  getCurrentSize: () => number[]
+  getCurrentSize: () => number[],
 ): Hooks<keyof T, boolean> {
   function getBreakpoint(breakpoint) {
     return getBreakpointValue(breakpoint, breakpoints);
@@ -128,7 +128,7 @@ export function breakpointHooksFactory<T extends ThemeBreakpoints>(
   const shouldRenderToPlatform: Hooks<
     keyof T,
     boolean
-  >["shouldRenderToPlatform"] = (props) => {
+  >['shouldRenderToPlatform'] = (props) => {
     let res = true;
     if (props?.is) {
       res = hooks.is(props.is);

@@ -1,5 +1,5 @@
-import type { AnyAction, Dispatch, Store } from "@reduxjs/toolkit";
-import { DeepPartial, FunctionType } from "../..";
+import type { AnyAction, Dispatch, Store } from '@reduxjs/toolkit';
+import { DeepPartial, FunctionType } from '../..';
 
 export type Reducers<S> = Record<
   string,
@@ -65,12 +65,12 @@ export interface EnhancedStore<S = any> extends Store {
 export type CreateReduxReturn<
   T extends Record<string, Slice<any, any, any, any>>,
   RootState = {
-    [Property in keyof T]: T[Property]["initialState"];
+    [Property in keyof T]: T[Property]['initialState'];
   }
 > = {
   store: EnhancedStore<RootState>;
   actions: {
-    [Property in keyof T]: ReturnType<T[Property]["buildActions"]>;
+    [Property in keyof T]: ReturnType<T[Property]['buildActions']>;
   };
 };
 

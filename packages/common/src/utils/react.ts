@@ -1,6 +1,6 @@
-import equals from "deep-equal";
-import { Logger } from "../tools/Logger";
-import { LogFunctionArgs } from "../tools/Logger/types";
+import equals from 'deep-equal';
+import { Logger } from '../tools/Logger';
+import { LogFunctionArgs } from '../tools/Logger/types';
 
 export const deepEqual = equals;
 
@@ -13,7 +13,7 @@ type ArePropsEqualOptions<MergedObject> = {
 export function arePropsEqual<A, B>(
   previous: A,
   next: B,
-  options: ArePropsEqualOptions<A & B>
+  options: ArePropsEqualOptions<A & B>,
 ) {
   const { check, excludeKeys = [], debug } = options;
   for (const c of check) {
@@ -29,11 +29,11 @@ export function arePropsEqual<A, B>(
 
     if (!propsAreEqual) {
       const logArgs: LogFunctionArgs = [
-        "Props not equal",
+        'Props not equal',
         { item: c, nextItem, prevItem, previous, next, check },
-        "arePropsEqual",
+        'arePropsEqual',
       ];
-      if (debug) Logger.coloredLog("debug", logArgs, "yellow");
+      if (debug) Logger.coloredLog('debug', logArgs, 'yellow');
       return false;
     }
   }

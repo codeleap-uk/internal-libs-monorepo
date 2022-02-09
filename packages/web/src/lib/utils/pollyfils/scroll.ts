@@ -2,7 +2,7 @@
 // @see: https://caniuse.com/#feat=css-scroll-behavior
 const nativeSmoothScrollTo = (elem) => {
   window.scroll({
-    behavior: "smooth",
+    behavior: 'smooth',
     left: 0,
     top: elem.getBoundingClientRect().top + window.pageYOffset,
   });
@@ -30,7 +30,7 @@ const smoothScrollTo = (to, duration) => {
     const currentDate = +new Date();
     const currentTime = currentDate - startDate;
     element.scrollTop = parseInt(
-      easeInOutQuad(currentTime, start, change, duration)
+      easeInOutQuad(currentTime, start, change, duration),
     );
     if (currentTime < duration) {
       requestAnimationFrame(animateScroll);
@@ -43,7 +43,7 @@ const smoothScrollTo = (to, duration) => {
 
 // detect support for the behavior property in ScrollOptions
 const supportsNativeSmoothScroll =
-  "scrollBehavior" in document.documentElement.style;
+  'scrollBehavior' in document.documentElement.style;
 
 // smooth scrolling stub
 export const scrollToElem = (elemSelector) => {

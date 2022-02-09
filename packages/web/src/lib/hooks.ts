@@ -1,6 +1,6 @@
-import { AnyFunction, onUpdate } from "@codeleap/common";
-import { useRef, useState } from "react";
-import { v4 } from "uuid";
+import { AnyFunction, onUpdate } from '@codeleap/common';
+import { useRef, useState } from 'react';
+import { v4 } from 'uuid';
 export function useWindowSize() {
   const [size, setSize] = useState([window.innerWidth, window.innerWidth]);
 
@@ -9,9 +9,9 @@ export function useWindowSize() {
   }
 
   onUpdate(() => {
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -21,7 +21,7 @@ export function useWindowSize() {
 type UseClickOutsideOpts = { customId?: string; deps: any[] };
 export function useClickOutside(
   callback: AnyFunction,
-  { customId, deps = [] }: UseClickOutsideOpts
+  { customId, deps = [] }: UseClickOutsideOpts,
 ) {
   const id = useRef(customId || v4()).current;
 
@@ -35,9 +35,9 @@ export function useClickOutside(
   }
 
   onUpdate(() => {
-    document.addEventListener("click", onClick);
+    document.addEventListener('click', onClick);
     return () => {
-      document.removeEventListener("click", onClick);
+      document.removeEventListener('click', onClick);
     };
   }, [...deps, onClick]);
 
@@ -46,7 +46,7 @@ export function useClickOutside(
 
 export function useScrollEffect(
   effect: (passed: boolean, current: number) => any,
-  breakpoint: number
+  breakpoint: number,
 ) {
   function handleScroll() {
     const passed = window.scrollY > breakpoint;
@@ -54,9 +54,9 @@ export function useScrollEffect(
   }
 
   onUpdate(() => {
-    document.addEventListener("scroll", handleScroll);
+    document.addEventListener('scroll', handleScroll);
     return () => {
-      document.removeEventListener("scroll", handleScroll);
+      document.removeEventListener('scroll', handleScroll);
     };
   }, [breakpoint]);
 }

@@ -2,20 +2,19 @@ import {
   createDefaultVariantFactory,
   includePresets,
   useComponentStyle,
-} from "@codeleap/common";
+} from '@codeleap/common';
 
 export type PagerComposition =
-  | "page"
-  | "page:transition"
-  | "page:pose:previous"
-  | "page:pose:next"
-  | "page:pose:current"
-  | "wrapper";
+  | 'page'
+  | 'page:transition'
+  | 'page:pose:previous'
+  | 'page:pose:next'
+  | 'page:pose:current'
+  | 'wrapper';
 
 const createPagerStyle = createDefaultVariantFactory<PagerComposition>();
 
-const presets = includePresets((style) =>
-  createPagerStyle(() => ({ wrapper: style }))
+const presets = includePresets((style) => createPagerStyle(() => ({ wrapper: style })),
 );
 
 export const MobilePagerStyles = {
@@ -23,7 +22,7 @@ export const MobilePagerStyles = {
   default: createPagerStyle((Theme) => {
     const transition = {
       duration: 500,
-      ease: "easeInOut",
+      ease: 'easeInOut',
       useNativeDriver: true,
     };
 
@@ -31,21 +30,21 @@ export const MobilePagerStyles = {
       wrapper: {
         ...Theme.presets.full,
       },
-      "page:pose:next": {
+      'page:pose:next': {
         left: Theme.values.width * 1.8,
         transition: transition,
       },
-      "page:pose:current": {
+      'page:pose:current': {
         left: 0,
         transition: transition,
       },
-      "page:pose:previous": {
+      'page:pose:previous': {
         left: -Theme.values.width * 1.8,
         transition: transition,
       },
       page: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
       },
     };
   }),

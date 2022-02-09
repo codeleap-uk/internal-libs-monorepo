@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 import {
   ComponentVariants,
   ContentViewStyles,
   useComponentStyle,
   ViewComposition,
-} from "@codeleap/common";
-import { ViewProps, View } from "./View";
-import { Text } from "./Text";
-import { StylesOf } from "../types/utility";
-import { ActivityIndicator } from "./ActivityIndicator";
+} from '@codeleap/common';
+import { ViewProps, View } from './View';
+import { Text } from './Text';
+import { StylesOf } from '../types/utility';
+import { ActivityIndicator } from './ActivityIndicator';
 
 export type ContentViewProps = Omit<
   ViewProps,
-  "variants" | "responsiveVariants"
+  'variants' | 'responsiveVariants'
 > & {
   placeholderMsg: string;
   loading?: boolean;
@@ -27,7 +27,7 @@ export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
   const { children, placeholderMsg, loading, variants, styles, ...props } =
     rawProps;
 
-  const variantStyle = useComponentStyle("ContentView", {
+  const variantStyle = useComponentStyle('ContentView', {
     variants,
     styles,
   });

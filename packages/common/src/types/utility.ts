@@ -4,7 +4,7 @@ import {
   EnhancedTheme,
   ResponsiveVariantsProp,
   VariantProp,
-} from "..";
+} from '..';
 
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any;
@@ -44,7 +44,7 @@ export type DeepPartial<T> = Partial<{
     : Partial<T[Property]>;
 }>;
 
-type PrependNextNum<A extends Array<unknown>> = A["length"] extends infer T
+type PrependNextNum<A extends Array<unknown>> = A['length'] extends infer T
   ? ((t: T, ...a: A) => void) extends (...x: infer X) => void
     ? X
     : never
@@ -53,7 +53,7 @@ type PrependNextNum<A extends Array<unknown>> = A["length"] extends infer T
 type EnumerateInternal<A extends Array<unknown>, N extends number> = {
   0: A;
   1: EnumerateInternal<PrependNextNum<A>, N>;
-}[N extends A["length"] ? 0 : 1];
+}[N extends A['length'] ? 0 : 1];
 
 export type Enumerate<N extends number> = EnumerateInternal<
   [],

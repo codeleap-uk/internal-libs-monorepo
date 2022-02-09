@@ -1,5 +1,5 @@
-import React from "react";
-import { Router as ReachRouter } from "@reach/router";
+import React from 'react';
+import { Router as ReachRouter } from '@reach/router';
 
 type RouterProps = {
   basePath: string;

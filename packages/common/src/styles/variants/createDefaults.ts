@@ -1,6 +1,6 @@
-import { PartialComponentStyle } from "./types";
-import { EnhancedTheme } from "../types";
-import { FunctionType } from "../../types";
+import { PartialComponentStyle } from './types';
+import { EnhancedTheme } from '../types';
+import { FunctionType } from '../../types';
 
 type CreateVariantOptions = {
   dynamic?: boolean;
@@ -15,13 +15,14 @@ export function createDefaultVariantFactory<
 >() {
   function createVariant(
     builder: FunctionType<[EnhancedTheme, string], VT>,
-    options = defaultOptions
+    options = defaultOptions,
   ) {
-    if (options.dynamic)
+    if (options.dynamic) {
       return (() => builder) as unknown as (
         theme: EnhancedTheme,
         variant?: string
-      ) => VT;
+      ) => VT; 
+    }
 
     return (theme: EnhancedTheme, variant?: string) => builder(theme, variant);
   }

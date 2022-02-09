@@ -1,20 +1,20 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/react";
+import { jsx } from '@emotion/react';
 import {
   ComponentVariants,
   StylesOf,
   useComponentStyle,
   useStyle,
-} from "@codeleap/common";
-import { ComponentPropsWithRef } from "react";
-import { View } from "../View";
-import { Text } from "../Text";
+} from '@codeleap/common';
+import { ComponentPropsWithRef } from 'react';
+import { View } from '../View';
+import { Text } from '../Text';
 import {
   WebCheckboxComposition,
   WebCheckboxStyles as CheckboxStyles,
-} from "./styles";
-type NativeCheckboxProps = ComponentPropsWithRef<"input">;
-export * from "./styles";
+} from './styles';
+type NativeCheckboxProps = ComponentPropsWithRef<'input'>;
+export * from './styles';
 export type CheckboxProps = NativeCheckboxProps & {
   checked?: boolean;
   onValueChange?: (checked: boolean) => any;
@@ -39,34 +39,34 @@ export const Checkbox = (checkboxProps: CheckboxProps) => {
     onValueChange && onValueChange(e.target.checked);
   }
 
-  const variantStyles = useComponentStyle("Checkbox", {
+  const variantStyles = useComponentStyle('Checkbox', {
     responsiveVariants,
     variants,
     styles,
   } as any) as StylesOf<WebCheckboxComposition>;
 
   const { logger } = useStyle();
-  logger.log("Checkbox Style", variantStyles, "Style");
+  logger.log('Checkbox Style', variantStyles, 'Style');
 
   return (
-    <View component="label" css={{ ...variantStyles.wrapper }}>
+    <View component='label' css={{ ...variantStyles.wrapper }}>
       <input
         {...props}
         css={variantStyles.input}
         onChange={handleChange}
-        type="checkbox"
+        type='checkbox'
         checked={checked}
       />
       <span
-        className="checkbox-label"
+        className='checkbox-label'
         css={{
           ...variantStyles.checkmarkWrapper,
-          "&:after": {
+          '&:after': {
             ...variantStyles.checkmark,
           },
         }}
       />
-      {typeof label === "string" ? (
+      {typeof label === 'string' ? (
         <Text text={label} styles={{ text: variantStyles.label }} />
       ) : (
         label

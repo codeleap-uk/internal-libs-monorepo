@@ -1,4 +1,4 @@
-import RCSlider, { SliderProps as RCSliderProps } from "rc-slider";
+import RCSlider, { SliderProps as RCSliderProps } from 'rc-slider';
 
 type SliderProps = RCSliderProps & {};
 

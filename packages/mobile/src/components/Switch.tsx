@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   SwitchStyles,
   SwitchComposition,
@@ -8,18 +8,18 @@ import {
   useStyle,
   FormTypes,
   useValidate,
-} from "@codeleap/common";
-import { ComponentPropsWithRef, forwardRef, ReactNode } from "react";
-import { StyleSheet, Switch as NativeSwitch } from "react-native";
-import { InputLabel, FormError } from "./TextInput";
-import { View } from "./View";
+} from '@codeleap/common';
+import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react';
+import { StyleSheet, Switch as NativeSwitch } from 'react-native';
+import { InputLabel, FormError } from './TextInput';
+import { View } from './View';
 
 type NativeSwitchProps = Omit<
   ComponentPropsWithRef<typeof NativeSwitch>,
-  "thumbColor" | "trackColor"
+  'thumbColor' | 'trackColor'
 >;
 type SwitchProps = NativeSwitchProps & {
-  variants?: ComponentVariants<typeof SwitchStyles>["variants"];
+  variants?: ComponentVariants<typeof SwitchStyles>['variants'];
   label?: ReactNode;
   styles?: StylesOf<SwitchComposition>;
   validate?: FormTypes.ValidatorFunctionWithoutForm | string;
@@ -37,7 +37,7 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
       ...props
     } = switchProps;
 
-    const variantStyles = useComponentStyle("Switch", {
+    const variantStyles = useComponentStyle('Switch', {
       variants,
     });
     const { error, showError } = useValidate(switchProps.value, validate);
@@ -45,17 +45,17 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
       return [
         variantStyles[key],
         styles[key],
-        key === "wrapper" ? style : {},
-        showError ? variantStyles[key + ":error"] : {},
-        showError ? styles[key + ":error"] : {},
-        value ? variantStyles[key + ":on"] : {},
-        value ? styles[key + ":on"] : {},
-        switchProps.disabled ? variantStyles[key + ":disabled"] : {},
-        switchProps.disabled ? styles[key + ":disabled"] : {},
+        key === 'wrapper' ? style : {},
+        showError ? variantStyles[key + ':error'] : {},
+        showError ? styles[key + ':error'] : {},
+        value ? variantStyles[key + ':on'] : {},
+        value ? styles[key + ':on'] : {},
+        switchProps.disabled ? variantStyles[key + ':disabled'] : {},
+        switchProps.disabled ? styles[key + ':disabled'] : {},
       ];
     }
 
-    const inputStyles = getStyles("input");
+    const inputStyles = getStyles('input');
 
     const { color, backgroundColor } = StyleSheet.flatten(inputStyles);
     const { Theme } = useStyle();
@@ -63,8 +63,8 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
     const thumbColor = color || Theme.colors.primary;
     const trackColor = backgroundColor || Theme.colors.gray;
     return (
-      <View style={getStyles("wrapper")}>
-        <View style={getStyles("inputWrapper")}>
+      <View style={getStyles('wrapper')}>
+        <View style={getStyles('inputWrapper')}>
           <NativeSwitch
             thumbColor={thumbColor}
             trackColor={{ false: trackColor, true: trackColor }}
@@ -72,10 +72,10 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
             value={value}
             {...props}
           />
-          <InputLabel label={label} style={getStyles("label")} />
+          <InputLabel label={label} style={getStyles('label')} />
         </View>
-        <FormError message={error.message} style={getStyles("error")} />
+        <FormError message={error.message} style={getStyles('error')} />
       </View>
     );
-  }
+  },
 );

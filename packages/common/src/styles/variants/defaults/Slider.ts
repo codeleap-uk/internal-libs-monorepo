@@ -1,26 +1,25 @@
-import { assignTextStyle } from "./Text";
-import { includePresets } from "../../presets";
-import { createDefaultVariantFactory } from "../createDefaults";
+import { assignTextStyle } from './Text';
+import { includePresets } from '../../presets';
+import { createDefaultVariantFactory } from '../createDefaults';
 
 export type SliderComposition =
-  | "wrapper"
-  | "handle"
-  | "track"
-  | "label"
-  | "selectedTrack"
-  | "inputContainer"
-  | "tooltip"
-  | "tooltip:visible"
-  | "tooltip:hidden"
-  | "trackLabels"
-  | "mark"
-  | "tooltipArrow"
-  | "tooltipText";
+  | 'wrapper'
+  | 'handle'
+  | 'track'
+  | 'label'
+  | 'selectedTrack'
+  | 'inputContainer'
+  | 'tooltip'
+  | 'tooltip:visible'
+  | 'tooltip:hidden'
+  | 'trackLabels'
+  | 'mark'
+  | 'tooltipArrow'
+  | 'tooltipText';
 
 const createSliderStyle = createDefaultVariantFactory<SliderComposition>();
 
-const presets = includePresets((styles) =>
-  createSliderStyle(() => ({ wrapper: styles }))
+const presets = includePresets((styles) => createSliderStyle(() => ({ wrapper: styles })),
 );
 
 export const SliderStyles = {
@@ -39,17 +38,17 @@ export const SliderStyles = {
     tooltip: {
       padding: theme.spacing.value(0.5),
       backgroundColor: theme.colors.primary,
-      position: "relative",
+      position: 'relative',
       borderRadius: theme.borderRadius.small,
     },
-    "tooltip:visible": {
+    'tooltip:visible': {
       opacity: 1,
     },
-    "tooltip:hidden": {
+    'tooltip:hidden': {
       opacity: 0,
     },
     mark: {
-      position: "absolute",
+      position: 'absolute',
       backgroundColor: theme.colors.primary,
       borderRadius: 29,
       height: 10,
@@ -57,22 +56,22 @@ export const SliderStyles = {
       top: -5,
     },
     trackLabels: {
-      position: "absolute",
+      position: 'absolute',
       top: 8,
-      ...assignTextStyle("p3")(theme).text,
+      ...assignTextStyle('p3')(theme).text,
     },
     tooltipArrow: {
       height: 6,
       width: 6,
-      position: "absolute",
+      position: 'absolute',
       backgroundColor: theme.colors.primary,
-      transform: [{ rotate: "45deg" }],
+      transform: [{ rotate: '45deg' }],
       bottom: -3,
-      left: "50%",
+      left: '50%',
     },
     tooltipText: {
       color: theme.colors.white,
-      ...assignTextStyle("p3")(theme).text,
+      ...assignTextStyle('p3')(theme).text,
     },
   })),
 };

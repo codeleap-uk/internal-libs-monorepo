@@ -1,12 +1,12 @@
-import { CSSProperties } from "react";
-import { VariantProp } from ".";
-import { EnhancedTheme } from "..";
-import { deepMerge } from "../../utils/object";
+import { CSSProperties } from 'react';
+import { VariantProp } from '.';
+import { EnhancedTheme } from '..';
+import { deepMerge } from '../../utils/object';
 import {
   ApplyVariantsArgs,
   DefaultVariantBuilder,
   FromVariantsBuilder,
-} from "./types";
+} from './types';
 
 export function mapVariants<
   S = CSSProperties,
@@ -17,7 +17,7 @@ export function mapVariants<
   for (const [variantName, variantBuilder] of Object.entries(variantsObject)) {
     thisComponentVariants[variantName as keyof T] = variantBuilder(
       theme,
-      variantName
+      variantName,
     ) as ReturnType<T[keyof T]>;
   }
 
@@ -26,8 +26,8 @@ export function mapVariants<
 
 export function standardizeVariants(variants: VariantProp<any>): string[] {
   let variantList = [];
-  if (typeof variants === "string") {
-    variantList = variants.split(" ");
+  if (typeof variants === 'string') {
+    variantList = variants.split(' ');
   } else {
     variantList = [...(variants || [])];
   }
@@ -36,14 +36,14 @@ export function standardizeVariants(variants: VariantProp<any>): string[] {
 
 export function applyVariants({
   computedStyles,
-  rootElement = "wrapper",
+  rootElement = 'wrapper',
   styles,
   theme,
   variantName,
 }: ApplyVariantsArgs) {
   if (!styles[variantName]) {
-    if (variantName.startsWith("padding") || variantName.startsWith("margin")) {
-      const [spacingFunction, multiplier] = variantName.split(":");
+    if (variantName.startsWith('padding') || variantName.startsWith('margin')) {
+      const [spacingFunction, multiplier] = variantName.split(':');
       let arg: number | string = Number(multiplier);
       if (Number.isNaN(arg)) {
         arg = multiplier;
@@ -53,10 +53,10 @@ export function applyVariants({
           ...theme.spacing[spacingFunction](arg),
         },
       });
-    } else if (variantName.startsWith("d:") && styles.dynamicHandler) {
+    } else if (variantName.startsWith('d:') && styles.dynamicHandler) {
       return deepMerge(
         computedStyles,
-        styles.dynamicHandler(theme, variantName.replace("d:", ""))
+        styles.dynamicHandler(theme, variantName.replace('d:', '')),
       );
     }
 

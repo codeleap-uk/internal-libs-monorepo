@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { cli } from "cleye";
-import { initCommand } from "./commands/init";
+import { cli } from 'cleye';
+import { initCommand } from './commands/init';
 
 cli({
-  name: "codeleap",
+  name: 'codeleap',
   commands: [initCommand],
 });
 

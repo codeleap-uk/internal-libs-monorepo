@@ -4,12 +4,12 @@ import {
   GetStylesArgs,
   ComponentStyleMap,
   TypedComponents,
-} from "./types";
-import { mapVariants, standardizeVariants, applyVariants } from "./utils";
-import { DefaultVariants, DEFAULT_VARIANTS, DEFAULT_STYLES } from "./defaults";
-import { AppTheme, EnhancedTheme } from "../types";
-import { AnyFunction, NestedKeys } from "../../types";
-import { mapObject } from "../../utils";
+} from './types';
+import { mapVariants, standardizeVariants, applyVariants } from './utils';
+import { DefaultVariants, DEFAULT_VARIANTS, DEFAULT_STYLES } from './defaults';
+import { AppTheme, EnhancedTheme } from '../types';
+import { AnyFunction, NestedKeys } from '../../types';
+import { mapObject } from '../../utils';
 
 /**
  * [[include:Variants.md]]
@@ -43,7 +43,7 @@ export class VariantProvider<
       Object.entries(DEFAULT_STYLES).forEach(([component, variantsObject]) => {
         TransformedVariants[component] = mapVariants(
           this.theme,
-          variantsObject
+          variantsObject,
         );
       });
 
@@ -54,7 +54,7 @@ export class VariantProvider<
   }
 
   createComponentStyle<T extends Record<string, CSSIn> = Record<string, CSSIn>>(
-    styles: T
+    styles: T,
   ) {
     const styleMap = mapObject(styles, ([key, value]) => [
       key,
@@ -68,7 +68,7 @@ export class VariantProvider<
     T = PartialComponentStyle<Composition, CSSIn>
   >() {
     return (variant: ((theme: Theme) => T) | T) => {
-      if (typeof variant === "function") {
+      if (typeof variant === 'function') {
         const themeGetter = variant as (theme: Theme) => T;
         return themeGetter(this.theme);
       }
@@ -87,7 +87,7 @@ export class VariantProvider<
       styles,
       {
         variants,
-        rootElement = "wrapper",
+        rootElement = 'wrapper',
         responsiveVariants,
         styles: override,
       },
@@ -96,7 +96,7 @@ export class VariantProvider<
 
     let computedStyles = {} as Record<string, CSSOut>;
 
-    for (const variant of ["default", ...variantList]) {
+    for (const variant of ['default', ...variantList]) {
       computedStyles = applyVariants({
         computedStyles,
         rootElement,
@@ -112,7 +112,7 @@ export class VariantProvider<
 
         if (shouldApplyResponsiveVariants) {
           const responseVariantList = standardizeVariants(
-            responsiveVariants[breakpoint]
+            responsiveVariants[breakpoint],
           );
 
           for (const variant of responseVariantList) {
@@ -132,7 +132,7 @@ export class VariantProvider<
       mapObject(computedStyles, ([k, v]) => [
         k,
         this.createStylesheet({ ...v, ...override?.[k] }),
-      ])
+      ]),
     ) as Record<NestedKeys<VariantObject>, CSSOut>;
     return appliableStyles;
   }

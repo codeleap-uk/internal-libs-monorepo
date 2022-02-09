@@ -1,18 +1,18 @@
-import { FunctionType } from "..";
+import { FunctionType } from '..';
 
 type GetterFunction<T> = FunctionType<[T, number], string | number> | keyof T;
 export function objectFromArray<T, Getter extends GetterFunction<T>>(
   arr: T[],
-  keyAccessor?: Getter
+  keyAccessor?: Getter,
 ): Record<string, T> {
   let getObjectKey = (_, idx) => idx;
 
   if (keyAccessor) {
     switch (typeof keyAccessor) {
-      case "string":
+      case 'string':
         getObjectKey = (value) => value[keyAccessor];
         break;
-      case "function":
+      case 'function':
         getObjectKey = keyAccessor;
         break;
     }
@@ -25,7 +25,7 @@ export function objectFromArray<T, Getter extends GetterFunction<T>>(
 
 export function uniqueArrayByProperty<T, G extends GetterFunction<T>>(
   array: T[],
-  getProperty: G
+  getProperty: G,
 ) {
   return Object.values(objectFromArray(array, getProperty));
 }

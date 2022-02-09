@@ -1,28 +1,28 @@
-import { ReactNode, useRef, ComponentPropsWithoutRef } from "react";
-import { v4 } from "uuid";
+import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react';
+import { v4 } from 'uuid';
 
-import { Text } from "../Text";
-import { Touchable } from "../Touchable";
+import { Text } from '../Text';
+import { Touchable } from '../Touchable';
 import {
   ComponentVariants,
   RadioInputComposition,
   RadioInputStyles,
   StylesOf,
   useComponentStyle,
-} from "@codeleap/common";
-import { View } from "../View";
-export { WebRadioInputStyles } from "./styles";
+} from '@codeleap/common';
+import { View } from '../View';
+export { WebRadioInputStyles } from './styles';
 
 type RadioItem<T extends unknown = any> = {
   value: T;
   label: ReactNode;
 };
 
-const getRadioStyle = (props) => useComponentStyle("RadioInput", props);
+const getRadioStyle = (props) => useComponentStyle('RadioInput', props);
 
 export type RadioButtonProps = Omit<
-  ComponentPropsWithoutRef<"input">,
-  "style"
+  ComponentPropsWithoutRef<'input'>,
+  'style'
 > & {
   item: RadioItem;
   select: () => void;
@@ -45,21 +45,21 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   ...props
 }) => {
   const styleByState = checked
-    ? style["button:checked"]
-    : style["button:unchecked"];
+    ? style['button:checked']
+    : style['button:unchecked'];
   return (
     <Touchable onPress={select} css={style.itemWrapper}>
       <View
         css={{
           ...style.button,
           ...styleByState,
-          "&:after": {
-            ...style["button:mark"],
-            ...styleByState?.["&:after"],
+          '&:after': {
+            ...style['button:mark'],
+            ...styleByState?.['&:after'],
           },
         }}
       />
-      {typeof item.label === "string" ? (
+      {typeof item.label === 'string' ? (
         <Text text={item.label} css={style.itemText} />
       ) : (
         item.label
@@ -69,7 +69,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
 };
 
 export const RadioGroup = <T extends unknown>(
-  radioGroupProps: RadioGroupProps<T>
+  radioGroupProps: RadioGroupProps<T>,
 ) => {
   const {
     options,
@@ -89,7 +89,7 @@ export const RadioGroup = <T extends unknown>(
   });
   return (
     <View css={radioStyle.wrapper}>
-      {typeof label === "string" ? <Text text={label} /> : label}
+      {typeof label === 'string' ? <Text text={label} /> : label}
       <View css={radioStyle.listWrapper}>
         {options?.map((item, idx) => (
           <RadioButton

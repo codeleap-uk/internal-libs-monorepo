@@ -1,14 +1,14 @@
-import { VariableSizeList as List } from "react-window";
-import { ComponentProps, CSSProperties, ReactElement } from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { VariableSizeList as List } from 'react-window';
+import { ComponentProps, CSSProperties, ReactElement } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
 import {
   ComponentVariants,
   useComponentStyle,
   ViewComposition,
   ViewStyles,
-} from "@codeleap/common";
-import { StylesOf } from "../types/utility";
-import { CSSObject } from "@emotion/react";
+} from '@codeleap/common';
+import { StylesOf } from '../types/utility';
+import { CSSObject } from '@emotion/react';
 
 export type FlatListRender<T> = (itemProps: {
   item: T;
@@ -24,18 +24,18 @@ export type FlatListProps<T> = {
   renderItem: FlatListRender<T>;
 } & Omit<
   ComponentProps<typeof List>,
-  | "itemCount"
-  | "itemSize"
-  | "itemData"
-  | "itemHeight"
-  | "width"
-  | "height"
-  | "children"
+  | 'itemCount'
+  | 'itemSize'
+  | 'itemData'
+  | 'itemHeight'
+  | 'width'
+  | 'height'
+  | 'children'
 > &
   ComponentVariants<typeof ViewStyles>;
 
 export const FlatList = <T extends unknown>(
-  flatListProps: FlatListProps<T>
+  flatListProps: FlatListProps<T>,
 ) => {
   const {
     variants,
@@ -47,7 +47,7 @@ export const FlatList = <T extends unknown>(
     ...viewProps
   } = flatListProps;
 
-  const variantStyles = useComponentStyle("View", {
+  const variantStyles = useComponentStyle('View', {
     variants,
     responsiveVariants,
     styles,

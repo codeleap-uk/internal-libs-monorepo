@@ -4,32 +4,32 @@ import {
   includePresets,
   ModalComposition,
   ModalStyles,
-} from "@codeleap/common";
+} from '@codeleap/common';
 
 export const backgroundTransition = {
   duration: 200,
-  ease: "easeOut",
+  ease: 'easeOut',
   useNativeDriver: false,
 };
 
 export const modalTransition = {
   duration: 150,
-  ease: "easeOut",
+  ease: 'easeOut',
   useNativeDriver: false,
 };
 
 export type MobileModalParts =
-  | "wrapper"
-  | "overlay"
-  | "innerWrapper"
-  | "innerWrapperScroll"
-  | "box"
-  | "footer"
-  | "body"
-  | "header"
-  | "touchableBackdrop"
-  | "box:pose"
-  | "title"
+  | 'wrapper'
+  | 'overlay'
+  | 'innerWrapper'
+  | 'innerWrapperScroll'
+  | 'box'
+  | 'footer'
+  | 'body'
+  | 'header'
+  | 'touchableBackdrop'
+  | 'box:pose'
+  | 'title'
   | `closeButton${Capitalize<ButtonComposition>}`;
 
 export type MobileModalComposition =
@@ -38,8 +38,7 @@ export type MobileModalComposition =
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>();
 
-const presets = includePresets((style) =>
-  createModalStyle(() => ({ wrapper: style }))
+const presets = includePresets((style) => createModalStyle(() => ({ wrapper: style })),
 );
 
 const defaultModalStyles = ModalStyles;
@@ -50,7 +49,7 @@ export const MobileModalStyles = {
   default: createModalStyle((Theme) => {
     const fullSize = {
       ...Theme.presets.whole,
-      position: "absolute",
+      position: 'absolute',
       width: Theme?.values?.width,
       height: Theme?.values?.height,
     };
@@ -68,18 +67,18 @@ export const MobileModalStyles = {
         backgroundColor: Theme.colors.black,
         ...fullSize,
       },
-      "overlay:visible": {
+      'overlay:visible': {
         opacity: 0.5,
       },
       innerWrapper: {},
       innerWrapperScroll: {
-        display: "flex",
-        alignItems: "center",
+        display: 'flex',
+        alignItems: 'center',
         ...Theme.presets.justifyCenter,
         minHeight: Theme.values.height,
       },
       box: {
-        width: "80%",
+        width: '80%',
         backgroundColor: Theme.colors.white,
         borderRadius: Theme.borderRadius.medium,
         ...Theme.spacing.padding(1),
@@ -87,25 +86,25 @@ export const MobileModalStyles = {
       touchableBackdrop: {
         ...fullSize,
       },
-      "box:pose": {
+      'box:pose': {
         opacity: 0,
         scale: 0.8,
         y: Theme.values.height * 0.15,
         transition: modalTransition,
       },
-      "box:pose:visible": {
+      'box:pose:visible': {
         y: 0,
         opacity: 1,
         scale: 1,
         transition: modalTransition,
       },
       header: {
-        flexDirection: "row",
+        flexDirection: 'row',
         ...Theme.presets.justifySpaceBetween,
         ...Theme.presets.alignCenter,
       },
       closeButtonWrapper: {
-        alignSelf: "center",
+        alignSelf: 'center',
       },
     };
   }),

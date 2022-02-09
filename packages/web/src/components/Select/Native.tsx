@@ -1,17 +1,17 @@
 /** @jsx jsx */
-import { jsx } from "@emotion/react";
+import { jsx } from '@emotion/react';
 import {
   SelectStyles,
   ComponentVariants,
   useComponentStyle,
   StylesOf,
   SelectComposition,
-} from "@codeleap/common";
-import { ComponentPropsWithRef, ReactNode } from "react";
-import { View, ViewProps } from "../View";
-import { Text } from "../Text";
+} from '@codeleap/common';
+import { ComponentPropsWithRef, ReactNode } from 'react';
+import { View, ViewProps } from '../View';
+import { Text } from '../Text';
 
-type HTMLSelectProps = ComponentPropsWithRef<"select">;
+type HTMLSelectProps = ComponentPropsWithRef<'select'>;
 type Option = {
   label: string;
   value: string | number;
@@ -21,7 +21,7 @@ export type NativeSelectProps = HTMLSelectProps & {
   options: Array<Option>;
   styles?: StylesOf<SelectComposition>;
   label?: string | ReactNode;
-  wrapperProps?: ViewProps<"div">;
+  wrapperProps?: ViewProps<'div'>;
   onValueChange?: (value: string | number) => void;
 } & ComponentVariants<typeof SelectStyles>;
 
@@ -38,7 +38,7 @@ export const NativeSelect = (selectProps: NativeSelectProps) => {
     ...props
   } = selectProps;
 
-  const variantStyles = useComponentStyle("Select", {
+  const variantStyles = useComponentStyle('Select', {
     responsiveVariants,
     variants,
     styles,
@@ -50,14 +50,14 @@ export const NativeSelect = (selectProps: NativeSelectProps) => {
   return (
     <View css={variantStyles.wrapper} {...wrapperProps}>
       {label ? (
-        typeof label === "string" ? (
+        typeof label === 'string' ? (
           <Text css={variantStyles.label} text={label} />
         ) : (
           label
         )
       ) : null}
       <View
-        component="select"
+        component='select'
         css={variantStyles.select}
         {...props}
         onChange={handleChange}

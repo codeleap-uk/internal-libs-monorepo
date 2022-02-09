@@ -2,7 +2,7 @@ import {
   createDefaultVariantFactory,
   RadioInputComposition,
   RadioInputStyles,
-} from "@codeleap/common";
+} from '@codeleap/common';
 
 const createRadioStyle = createDefaultVariantFactory<RadioInputComposition>();
 
@@ -16,43 +16,43 @@ export const WebRadioInputStyles = {
       ...style,
       itemWrapper: {
         ...style.itemWrapper,
-        cursor: "pointer",
+        cursor: 'pointer',
       },
       button: {
-        height: "1em",
-        width: "1em",
+        height: '1em',
+        width: '1em',
         borderRadius: theme.borderRadius.large,
         border: theme.border.primary(1),
 
-        position: "relative",
+        position: 'relative',
         ...theme.spacing.marginRight(1),
       },
-      "button:mark": {
+      'button:mark': {
         background: theme.colors.primary,
         content: '""',
-        position: "absolute",
-        left: "50%",
-        top: "50%",
+        position: 'absolute',
+        left: '50%',
+        top: '50%',
 
-        transform: "translate(-50%,-50%)",
+        transform: 'translate(-50%,-50%)',
         borderRadius: theme.borderRadius.large,
-        height: "50%",
-        width: "50%",
-        visibility: "hidden",
+        height: '50%',
+        width: '50%',
+        visibility: 'hidden',
       },
-      "button:checked": {
-        "&:after": {
-          visibility: "visible",
+      'button:checked': {
+        '&:after': {
+          visibility: 'visible',
         },
       },
     };
   }),
   square: createRadioStyle(() => ({
-    "button:mark": {
-      borderRadius: "1px",
+    'button:mark': {
+      borderRadius: '1px',
     },
     button: {
-      borderRadius: "1px",
+      borderRadius: '1px',
     },
   })),
 };

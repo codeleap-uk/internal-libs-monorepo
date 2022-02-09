@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
-import { Join, Paths, Prev } from "../../types/pathMapping";
-import * as yup from "yup";
-import { WebInputFile, MobileInputFile } from "../../types";
-import { AnyObject } from "yup/lib/object";
+import { ReactNode } from 'react';
+import { Join, Paths, Prev } from '../../types/pathMapping';
+import * as yup from 'yup';
+import { WebInputFile, MobileInputFile } from '../../types';
+import { AnyObject } from 'yup/lib/object';
 type ValidationReturn = { message?: Label; valid?: boolean };
 
 export type ValidatorFunction<T = any, F = any> = (
@@ -23,9 +23,9 @@ export type Validator<T> = T extends boolean
 
 export type Options<T> = { label: Label; value: T }[];
 
-type FormValidateOn = "submit" | "blur" | "change";
+type FormValidateOn = 'submit' | 'blur' | 'change';
 
-export type FormOutput = "json" | "multipart" | "mixed";
+export type FormOutput = 'json' | 'multipart' | 'mixed';
 
 export type CommonSliderTypes = {
   min?: number;
@@ -40,37 +40,37 @@ export type InputValueTypes = {
   radio: any;
   file: (WebInputFile | MobileInputFile)[];
   composite: any;
-  "range-slider": number[];
+  'range-slider': number[];
   slider: number;
 };
 export type Label = string | ReactNode;
 
 export type CheckboxField = {
-  type: "checkbox";
+  type: 'checkbox';
   defaultValue: boolean;
   validate?: Validator<boolean>;
 };
 
 export type SwitchField = {
-  type: "switch";
+  type: 'switch';
   defaultValue: boolean;
   validate?: Validator<boolean>;
 };
 export type SliderField = {
-  type: "slider";
+  type: 'slider';
   defaultValue: number;
   validate?: Validator<number>;
   labels?: string[];
 } & CommonSliderTypes;
 
 export type RangeSliderField = {
-  type: "range-slider";
+  type: 'range-slider';
   defaultValue: number[];
   validate?: Validator<number[]>;
 } & CommonSliderTypes;
 
 export type TextField = {
-  type: "text";
+  type: 'text';
   password?: boolean;
   defaultValue: string;
   placeholder?: string;
@@ -78,7 +78,7 @@ export type TextField = {
 };
 
 export type SelectField<T = any> = {
-  type: "select";
+  type: 'select';
   options: Options<T>;
   defaultValue: T;
   native?: boolean;
@@ -87,14 +87,14 @@ export type SelectField<T = any> = {
 };
 
 export type RadioField<T = any> = {
-  type: "radio";
+  type: 'radio';
   options: Options<T>;
   defaultValue: T;
   validate?: Validator<T>;
 };
 
 export type FileField = {
-  type: "file";
+  type: 'file';
   allow?: string[];
   defaultValue: (WebInputFile | MobileInputFile)[];
   imageToBase64?: boolean;
@@ -103,7 +103,7 @@ export type FileField = {
 };
 
 export type CompositeField = {
-  type: "composite";
+  type: 'composite';
   fields?: FieldsMap;
   defaultValue: Record<string, unknown>;
   validate?: never;
@@ -131,8 +131,8 @@ export type FieldsMap = Record<string, Partial<FormField>>;
 export type ResolveOptionsFieldValidation<
   T extends RadioField<any> | SelectField<any>
 > = T extends RadioField<any>
-  ? RadioField<T["options"][number]["value"]>
-  : SelectField<T["options"][number]["value"]>;
+  ? RadioField<T['options'][number]['value']>
+  : SelectField<T['options'][number]['value']>;
 
 export type ValidateFieldsMap<T extends FieldsMap> = {
   [Property in keyof T]: T[Property] extends RadioField<any> | SelectField<any>
@@ -144,18 +144,18 @@ export type FormConfig<T extends FieldsMap> = ValidateFieldsMap<T>;
 
 export type FlattenFields<T extends FieldsMap> = {
   [Property in keyof T]: T[Property] extends Partial<CompositeField>
-    ? FlattenFields<T[Property]["fields"]>
+    ? FlattenFields<T[Property]['fields']>
     : T[Property] extends RadioField<any> | SelectField
-    ? T[Property]["options"][number]["value"]
-    : InputValueTypes[T[Property]["type"]];
+    ? T[Property]['options'][number]['value']
+    : InputValueTypes[T[Property]['type']];
 };
 
 export type MapValues<T extends FieldsMap> = {
   [Property in keyof T]: T[Property] extends Partial<CompositeField>
-    ? MapValues<T[Property]["fields"]>
+    ? MapValues<T[Property]['fields']>
     : T[Property] extends RadioField<any> | SelectField
-    ? T[Property]["options"][number]["value"]
-    : InputValueTypes[T[Property]["type"]];
+    ? T[Property]['options'][number]['value']
+    : InputValueTypes[T[Property]['type']];
 };
 
 // export type CreateFormReturn<T extends FieldsMap, O extends FormOutput = 'json'> = {
@@ -171,7 +171,7 @@ export type CreateFormReturn<T extends FieldsMap> = {
   name: string;
 };
 
-export type FormStep = "setValue" | "validate";
+export type FormStep = 'setValue' | 'validate';
 
 export type UseFormConfig<T> = {
   validateOn: FormValidateOn;
@@ -193,4 +193,4 @@ export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
               ]
         : never;
     }[keyof T]
-  : "";
+  : '';

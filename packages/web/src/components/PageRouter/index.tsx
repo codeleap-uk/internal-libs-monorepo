@@ -1,18 +1,18 @@
-import { View } from "../View";
-import React, { useMemo } from "react";
+import { View } from '../View';
+import React, { useMemo } from 'react';
 
-import { Menu } from "./Menu";
-import { Router } from "./Router";
+import { Menu } from './Menu';
+import { Router } from './Router';
 import {
   ComponentVariants,
   IconPlaceholder,
   PageRouterComposition,
   PageRouterStyles,
   useComponentStyle,
-} from "@codeleap/common";
-import { StylesOf } from "../../types/utility";
-import { Helmet } from "react-helmet";
-import { url } from "../../lib/utils";
+} from '@codeleap/common';
+import { StylesOf } from '../../types/utility';
+import { Helmet } from 'react-helmet';
+import { url } from '../../lib/utils';
 
 export type RouteProps = {
   title?: string;
@@ -27,9 +27,9 @@ type ContentProps = {
     path: string;
   }[];
 };
-export * from "./Router";
-export * from "./Menu";
-export * from "./MenuItem";
+export * from './Router';
+export * from './Menu';
+export * from './MenuItem';
 
 type RouterPageProps = {
   basePath: string;
@@ -53,7 +53,7 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
   const { menuItems, defaultPath } = useMemo(() => {
     const items = [];
 
-    let defaultPath = "";
+    let defaultPath = '';
 
     React.Children.forEach(children, (c) => {
       if (React.isValidElement(c) && c.props) {
@@ -77,7 +77,7 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
     };
   }, [children]);
 
-  const variantStyles = useComponentStyle("PageRouter", {
+  const variantStyles = useComponentStyle('PageRouter', {
     variants,
     responsiveVariants,
     styles,
@@ -90,8 +90,8 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
     <View css={variantStyles.wrapper}>
       <Helmet>
         <title>
-          {(pageGroupTitle ? `${pageGroupTitle} | ` : "") +
-            (currentPage ? currentPage?.title : "")}
+          {(pageGroupTitle ? `${pageGroupTitle} | ` : '') +
+            (currentPage ? currentPage?.title : '')}
         </title>
       </Helmet>
       {renderContentWrapper ? (

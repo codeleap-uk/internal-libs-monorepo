@@ -2,14 +2,14 @@ import React, {
   ComponentPropsWithoutRef,
   useImperativeHandle,
   useRef,
-} from "react";
-import { WebInputFile } from "@codeleap/common";
+} from 'react';
+import { WebInputFile } from '@codeleap/common';
 
 export type FileInputRef = {
   openFilePicker: () => void;
 };
 
-type FileInputProps = Omit<ComponentPropsWithoutRef<"input">, "type"> & {
+type FileInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
   onFileSelect(files: WebInputFile[]): void;
 };
 
@@ -40,12 +40,12 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(
 
     return (
       <input
-        type={"file"}
-        css={{ visibility: "hidden" }}
+        type={'file'}
+        css={{ visibility: 'hidden' }}
         {...props}
         ref={inputRef}
         onChange={handleChange}
       />
     );
-  }
+  },
 );

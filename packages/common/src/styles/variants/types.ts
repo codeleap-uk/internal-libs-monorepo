@@ -1,22 +1,22 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
-import { ReactElement } from "react";
-import { QueryKey } from "../MediaQuery";
+import { ReactElement } from 'react';
+import { QueryKey } from '../MediaQuery';
 import {
   BaseViewProps,
   BreakpointPlaceholder,
   EnhancedTheme,
   IconPlaceholder,
   Spacing,
-} from "../types";
-import { DEFAULT_VARIANTS } from "./defaults";
+} from '../types';
+import { DEFAULT_VARIANTS } from './defaults';
 import {
   ComponentVariants,
   FunctionType,
   NestedKeys,
   ReplaceRecursive,
   StylesOf,
-} from "../../types";
+} from '../../types';
 
 export type PartialComponentStyle<C extends string, S = any> = Partial<
   Record<C, S>
@@ -43,7 +43,7 @@ export type ResponsiveVariantsProp<
   Styles = CommonVariantObject<any>,
   VP = VariantProp<Styles>
 > = Partial<{
-  [Property in keyof Theme["breakpoints"]]: VP;
+  [Property in keyof Theme['breakpoints']]: VP;
 }>;
 
 export type GetStylesArgs<
@@ -82,12 +82,12 @@ export type ComponentStyleMap<CSS = any> = Partial<{
 type ReplaceWithIcons<
   Props,
   Theme extends EnhancedTheme<any>
-> = ReplaceRecursive<Props, IconPlaceholder, keyof Theme["icons"]>;
+> = ReplaceRecursive<Props, IconPlaceholder, keyof Theme['icons']>;
 
 type ReplaceWithBreakpoints<
   Props,
   Theme extends EnhancedTheme<any>
-> = ReplaceRecursive<Props, BreakpointPlaceholder, keyof Theme["breakpoints"]>;
+> = ReplaceRecursive<Props, BreakpointPlaceholder, keyof Theme['breakpoints']>;
 
 export type ReplaceProps<
   T extends CT<any>,
@@ -95,7 +95,7 @@ export type ReplaceProps<
   EX = {},
   NewProps = ComponentVariants<T[1], any>,
   Props = Parameters<T[0]>[0],
-  MergedProps = Omit<Props, "responsiveVariants" | "variants"> & NewProps
+  MergedProps = Omit<Props, 'responsiveVariants' | 'variants'> & NewProps
 > = React.FC<
   ReplaceWithBreakpoints<ReplaceWithIcons<MergedProps & EX, Theme>, Theme>
 >;
@@ -107,7 +107,7 @@ export type TypedComponents<
   T extends ComponentStyleMap = ComponentStyleMap,
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>
 > = {
-  [Property in keyof T]: Property extends "View"
+  [Property in keyof T]: Property extends 'View'
     ? ReplaceProps<
         T[Property],
         Theme,

@@ -16,6 +16,11 @@
         "match": "packages\\\\.*",
         "isAsync": true,
         "cmd": "yarn build"
+      },
+      {
+        "match": "packages//.*",
+        "isAsync": true,
+        "cmd": "yarn build"
       }
     ]
   }

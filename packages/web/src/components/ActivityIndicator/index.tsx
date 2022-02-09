@@ -1,14 +1,14 @@
-import { View } from "../View";
-import { CSSObject, keyframes } from "@emotion/react";
+import { View } from '../View';
+import { CSSObject, keyframes } from '@emotion/react';
 import {
   useComponentStyle,
   ComponentVariants,
   ActivityIndicatorStyles,
   ActivityIndicatorComposition,
-} from "@codeleap/common";
-import { StylesOf } from "../../types/utility";
+} from '@codeleap/common';
+import { StylesOf } from '../../types/utility';
 
-export * from "./styles";
+export * from './styles';
 
 const spin = keyframes`
     from {
@@ -27,7 +27,7 @@ export type ActivityIndicatorProps = {
 } & ComponentVariants<typeof ActivityIndicatorStyles>;
 
 export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
-  indicatorProps
+  indicatorProps,
 ) => {
   const {
     animating = true,
@@ -39,7 +39,7 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
     ...viewProps
   } = indicatorProps;
 
-  const variantStyles = useComponentStyle("ActivityIndicator", {
+  const variantStyles = useComponentStyle('ActivityIndicator', {
     styles,
     responsiveVariants,
     variants,
@@ -57,7 +57,7 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
           ...variantStyles.circle,
           ...variantStyles.frontCircle,
           animation: `${spin} 1s infinite`,
-          animationPlayState: animating ? "running" : "paused",
+          animationPlayState: animating ? 'running' : 'paused',
         }}
       />
     </View>

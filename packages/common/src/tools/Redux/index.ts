@@ -1,12 +1,12 @@
-import { deepMerge } from "../../utils";
-import { combineReducers, createStore, Store } from "@reduxjs/toolkit";
+import { deepMerge } from '../../utils';
+import { combineReducers, createStore, Store } from '@reduxjs/toolkit';
 import {
   Reducers,
   AsyncReducers,
   CreateSliceArgs,
   Slice,
   CreateReduxReturn,
-} from "./types";
+} from './types';
 
 export function createSlice<
   S extends any,
@@ -23,7 +23,7 @@ export function createSlice<
   }
 
   const buildActions = (store: Store) => {
-    const actions = {} as Slice<S, N, R, AR>["buildActions"];
+    const actions = {} as Slice<S, N, R, AR>['buildActions'];
 
     for (const [actionName, action] of Object.entries(reducers)) {
       const nameInReducer = `${name}/${actionName}`;
@@ -38,8 +38,7 @@ export function createSlice<
     for (const [actionName, action] of Object.entries(asyncReducers)) {
       const nameInReducer = `${name}/${actionName}`;
 
-      const setState = (payload) =>
-        store.dispatch({ type: nameInReducer, payload });
+      const setState = (payload) => store.dispatch({ type: nameInReducer, payload });
 
       actions[actionName] = async (args) => {
         const currentState = store.getState()[name];
@@ -67,12 +66,12 @@ export function createSlice<
 export function createRedux<
   T extends Record<string, Slice<any, any, any, any>>
 >(slices: T): CreateReduxReturn<T> {
-  const reducers = {} as Record<string, T[string]["reducer"]>;
-  const rootInitialState = {} as { [x: string]: T[string]["initialState"] };
-  const actionBuilders = {} as Record<string, T[string]["buildActions"]>;
+  const reducers = {} as Record<string, T[string]['reducer']>;
+  const rootInitialState = {} as { [x: string]: T[string]['initialState'] };
+  const actionBuilders = {} as Record<string, T[string]['buildActions']>;
 
   for (const { reducer, initialState, buildActions, name } of Object.values(
-    slices
+    slices,
   )) {
     reducers[name] = reducer;
     rootInitialState[name] = initialState;
@@ -83,15 +82,15 @@ export function createRedux<
     combineReducers(reducers),
     rootInitialState,
     // @ts-ignore
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  ) as CreateReduxReturn<T>["store"];
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  ) as CreateReduxReturn<T>['store'];
 
   const actions = Object.fromEntries(
     Object.entries(actionBuilders).map(([key, builder]) => [
       key,
       builder(store),
-    ])
-  ) as CreateReduxReturn<T>["actions"];
+    ]),
+  ) as CreateReduxReturn<T>['actions'];
 
   return {
     store,

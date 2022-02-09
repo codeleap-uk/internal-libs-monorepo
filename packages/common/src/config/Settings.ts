@@ -1,12 +1,12 @@
-import { DeepPartial } from "..";
-import { LogType, SentryProvider } from "../tools/Logger/types";
+import { DeepPartial } from '..';
+import { LogType, SentryProvider } from '../tools/Logger/types';
 
 export type AppSettings = DeepPartial<{
   AppName: string;
   Description: string;
   Environment: {
     IsDev: boolean;
-    Type: "production" | "development";
+    Type: 'production' | 'development';
   };
   Application: {
     IsBrowser: boolean;

@@ -1,12 +1,12 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common";
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common';
 
 type CheckboxParts =
-  | "wrapper"
-  | "label"
-  | "input"
-  | "checkmark"
-  | "checkmarkWrapper"
-  | "error";
+  | 'wrapper'
+  | 'label'
+  | 'input'
+  | 'checkmark'
+  | 'checkmarkWrapper'
+  | 'error';
 
 export type MobileCheckboxComposition =
   | CheckboxParts
@@ -16,8 +16,7 @@ export type MobileCheckboxComposition =
 const createCheckboxStyle =
   createDefaultVariantFactory<MobileCheckboxComposition>();
 
-const presets = includePresets((styles) =>
-  createCheckboxStyle(() => ({ wrapper: styles }))
+const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })),
 );
 
 export const MobileCheckboxStyles = {
@@ -33,7 +32,7 @@ export const MobileCheckboxStyles = {
     return {
       wrapper: {},
       input: {
-        flexDirection: "row",
+        flexDirection: 'row',
         ...theme.presets.alignCenter,
         borderRadius: theme.borderRadius.small,
       },
@@ -42,27 +41,27 @@ export const MobileCheckboxStyles = {
       },
 
       checkmark: {
-        position: "absolute",
-        top: "40%",
-        left: "50%",
+        position: 'absolute',
+        top: '40%',
+        left: '50%',
 
         height: markHeight,
         width: markWidth,
-        transform: [{ translateX }, { translateY }, { rotate: "45deg" }],
+        transform: [{ translateX }, { translateY }, { rotate: '45deg' }],
       },
-      "checkmark:checked": {
+      'checkmark:checked': {
         ...theme.border.white({
           width: 2,
-          directions: ["right", "bottom"],
+          directions: ['right', 'bottom'],
         }),
       },
       checkmarkWrapper: {
-        position: "relative",
+        position: 'relative',
         width: size,
         height: size,
         ...theme.border.gray(1),
       },
-      "checkmarkWrapper:checked": {
+      'checkmarkWrapper:checked': {
         backgroundColor: theme.colors.primary,
       },
       error: {

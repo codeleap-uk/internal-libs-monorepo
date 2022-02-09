@@ -1,16 +1,16 @@
-import { onUpdate } from "@codeleap/common";
-import React, { useRef } from "react";
+import { onUpdate } from '@codeleap/common';
+import React, { useRef } from 'react';
 
-import posed from "react-native-pose";
-import { Touchable } from "./Touchable";
-import { View } from "./View";
+import posed from 'react-native-pose';
+import { Touchable } from './Touchable';
+import { View } from './View';
 const Components = {
   Touchable,
   View,
 };
 
 const PosedComponents = Object.fromEntries(
-  Object.entries(Components).map(([key, Render]) => [key, posed(Render)])
+  Object.entries(Components).map(([key, Render]) => [key, posed(Render)]),
 );
 
 type AnimatedComponents = typeof Components;
@@ -21,7 +21,7 @@ type AnimatedProps<T extends CP, CFG = Record<string, any>> = {
   config: CFG;
   pose: keyof CFG;
   initialPose?: keyof CFG;
-} & Omit<Parameters<AnimatedComponents[T]>[0], "component">;
+} & Omit<Parameters<AnimatedComponents[T]>[0], 'component'>;
 
 export const Animated = <T extends CP, CFG = any>({
   config,

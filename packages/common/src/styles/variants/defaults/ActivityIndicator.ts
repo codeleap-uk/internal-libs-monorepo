@@ -1,17 +1,16 @@
-import { includePresets } from "../../presets";
-import { createDefaultVariantFactory } from "../createDefaults";
+import { includePresets } from '../../presets';
+import { createDefaultVariantFactory } from '../createDefaults';
 
 export type ActivityIndicatorComposition =
-  | "wrapper"
-  | "backCircle"
-  | "frontCircle"
-  | "circle";
+  | 'wrapper'
+  | 'backCircle'
+  | 'frontCircle'
+  | 'circle';
 
 const createActivityIndicatorStyle =
   createDefaultVariantFactory<ActivityIndicatorComposition>();
 
-const presets = includePresets((styles) =>
-  createActivityIndicatorStyle(() => ({ wrapper: styles }))
+const presets = includePresets((styles) => createActivityIndicatorStyle(() => ({ wrapper: styles })),
 );
 
 export const ActivityIndicatorStyles = {
@@ -21,13 +20,13 @@ export const ActivityIndicatorStyles = {
 
     return {
       wrapper: {
-        position: "relative",
+        position: 'relative',
         height: size,
         width: size,
       },
       circle: {
         borderRadius: 100,
-        position: "absolute",
+        position: 'absolute',
         ...theme.presets.whole,
       },
       backCircle: {
@@ -35,7 +34,7 @@ export const ActivityIndicatorStyles = {
         opacity: 0.5,
       },
       frontCircle: {
-        ...theme.border.create({ width: size * 0.25, style: "transparent" }),
+        ...theme.border.create({ width: size * 0.25, style: 'transparent' }),
         borderTopColor: theme.colors.primary,
       },
     };

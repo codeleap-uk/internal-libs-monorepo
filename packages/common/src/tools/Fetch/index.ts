@@ -3,25 +3,25 @@ import axios, {
   AxiosInstance,
   Axios,
   AxiosRequestConfig,
-} from "axios";
-import { Logger } from "../Logger";
-import { CancellablePromise } from "../../types";
-import { AppSettings } from "../../config";
-import { allMethods } from "./constants";
-import { IRequestClient, RequestClientConfig, RequestQueueItem } from "./types";
+} from 'axios';
+import { Logger } from '../Logger';
+import { CancellablePromise } from '../../types';
+import { AppSettings } from '../../config';
+import { allMethods } from './constants';
+import { IRequestClient, RequestClientConfig, RequestQueueItem } from './types';
 import {
   buildRequest,
   getRequestId,
   parseFailedRequest,
   toMultipart,
-} from "./utils";
-export * from "axios";
-export * from "./types";
+} from './utils';
+export * from 'axios';
+export * from './types';
 /**
  * [[include:RequestClient.md]]
  */
 export class RequestClient extends Axios implements IRequestClient {
-  queue: IRequestClient["queue"];
+  queue: IRequestClient['queue'];
 
   config: RequestClientConfig;
 
@@ -36,7 +36,7 @@ export class RequestClient extends Axios implements IRequestClient {
       logger ||
       new Logger({
         Logger: {
-          Level: "silent",
+          Level: 'silent',
         },
       });
     this.axios.interceptors.request.use(async (c) => {
@@ -46,7 +46,7 @@ export class RequestClient extends Axios implements IRequestClient {
         reqConfig.data = toMultipart(reqConfig);
         reqConfig.headers = {
           ...reqConfig?.headers,
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         };
       }
 
@@ -92,56 +92,56 @@ export class RequestClient extends Axios implements IRequestClient {
   post<T = any, R = AxiosResponse<T, any>, D = any>(
     url: string,
     data?: D,
-    config?: RequestClientConfig<D>
+    config?: RequestClientConfig<D>,
   ): CancellablePromise<R> {
-    return this.onAxiosRequest<R>("post", [url, data, config]);
+    return this.onAxiosRequest<R>('post', [url, data, config]);
   }
 
   get<T = any, R = AxiosResponse<T, any>, D = any>(
     url: string,
-    config?: RequestClientConfig<D>
+    config?: RequestClientConfig<D>,
   ): CancellablePromise<R> {
-    return this.onAxiosRequest<R>("get", [url, config]);
+    return this.onAxiosRequest<R>('get', [url, config]);
   }
 
   patch<T = any, R = AxiosResponse<T, any>, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>
+    config?: AxiosRequestConfig<D>,
   ): CancellablePromise<R> {
-    return this.onAxiosRequest<R>("patch", [url, data, config]);
+    return this.onAxiosRequest<R>('patch', [url, data, config]);
   }
 
   delete<T = any, R = AxiosResponse<T, any>, D = any>(
     url: string,
-    config?: AxiosRequestConfig<D>
+    config?: AxiosRequestConfig<D>,
   ): CancellablePromise<R> {
-    return this.onAxiosRequest<R>("delete", [url, config]);
+    return this.onAxiosRequest<R>('delete', [url, config]);
   }
 
   put<T = any, R = AxiosResponse<T, any>, D = any>(
     url: string,
     data?: D,
-    config?: AxiosRequestConfig<D>
+    config?: AxiosRequestConfig<D>,
   ): CancellablePromise<R> {
-    return this.onAxiosRequest<R>("put", [url, data, config]);
+    return this.onAxiosRequest<R>('put', [url, data, config]);
   }
 
   onRequestFailure(err, request, reject) {
     const { failedRequest, shouldReject } = parseFailedRequest(
       err,
       request,
-      this.config
+      this.config,
     );
 
     this.setInQueue(failedRequest);
 
     this.logger.error(
       `${request.method.toUpperCase()} to ${request.url} failed with status ${
-        err?.response?.status || ""
+        err?.response?.status || ''
       }`,
       err?.response?.data || err,
-      "Network"
+      'Network',
     );
 
     if (shouldReject) {
@@ -157,18 +157,18 @@ export class RequestClient extends Axios implements IRequestClient {
       const { request, controller, axiosArgs } = buildRequest(
         methodId,
         args,
-        this.config
+        this.config,
       );
       const requestId = getRequestId(request, this.config);
 
-      if (this.queue[requestId]?.requestStatus === "in_progress") {
+      if (this.queue[requestId]?.requestStatus === 'in_progress') {
         switch (request.duplicateBehavior) {
-          case "cancelPrevious":
+          case 'cancelPrevious':
             this.abort(requestId);
             break;
-          case "maintainPrevious":
+          case 'maintainPrevious':
             return new Promise<any>((res, rej) => {
-              rej({ errorReason: "ALREADY_IN_PROGRESS" });
+              rej({ errorReason: 'ALREADY_IN_PROGRESS' });
             });
         }
       }
@@ -176,7 +176,7 @@ export class RequestClient extends Axios implements IRequestClient {
       this.setInQueue({
         ...request,
         controller,
-        requestStatus: "in_progress",
+        requestStatus: 'in_progress',
       } as RequestQueueItem);
 
       const promise = new Promise<T>((resolve, reject) => {
@@ -185,7 +185,7 @@ export class RequestClient extends Axios implements IRequestClient {
           .then((response) => {
             this.setInQueue({
               ...request,
-              requestStatus: "successful",
+              requestStatus: 'successful',
             });
 
             this.logger.log(
@@ -193,13 +193,12 @@ export class RequestClient extends Axios implements IRequestClient {
                 this.config.baseURL + request.url
               } Successful ${response.status}`,
               response.data,
-              "Network"
+              'Network',
             );
 
             resolve(response);
           })
-          .catch((err) =>
-            this.onRequestFailure(err, { ...request, method }, reject)
+          .catch((err) => this.onRequestFailure(err, { ...request, method }, reject),
           );
       }) as CancellablePromise<T>;
 
@@ -214,7 +213,7 @@ export class RequestClient extends Axios implements IRequestClient {
 
 export function makeFetcher(
   settings: AppSettings,
-  override?: Partial<RequestClientConfig>
+  override?: Partial<RequestClientConfig>,
 ) {
   return new RequestClient({
     baseURL: settings.Fetch.ApiURL,

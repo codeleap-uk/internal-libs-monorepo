@@ -1,5 +1,5 @@
-import { usePartialState, capitalize } from "../../utils";
-import { useReducer, useRef } from "react";
+import { usePartialState, capitalize } from '../../utils';
+import { useReducer, useRef } from 'react';
 import {
   QueryState,
   queryStatuses,
@@ -7,21 +7,20 @@ import {
   UseApiArgs,
   UseApiReturn,
   UseApiState,
-} from "./types";
+} from './types';
 
-const getQueryStatusBooleans = (setTo) =>
-  Object.fromEntries(
-    queryStatuses.map((s) => [`is${capitalize(s)}`, s === setTo])
-  );
+const getQueryStatusBooleans = (setTo) => Object.fromEntries(
+  queryStatuses.map((s) => [`is${capitalize(s)}`, s === setTo]),
+);
 
 function initRouteState(routes) {
   const state = {};
 
   for (const routeName of routes) {
     state[routeName] = {
-      ...getQueryStatusBooleans("idle"),
+      ...getQueryStatusBooleans('idle'),
       error: null,
-      status: "idle",
+      status: 'idle',
     };
   }
 
@@ -30,7 +29,7 @@ function initRouteState(routes) {
 
 function routesStateReducer(
   state: Record<string, QueryState<Error>>,
-  action: { type: string; payload: QueryState<Error> }
+  action: { type: string; payload: QueryState<Error> },
 ) {
   const newRouteState = {
     ...state[action.type],
@@ -57,7 +56,7 @@ export function useQuery<
   const [queryStates, dispatch] = useReducer(
     routesStateReducer,
     Object.keys(routes),
-    initRouteState
+    initRouteState,
   );
 
   const [apiState, setApiState] = usePartialState<UseApiState<T>>({
@@ -91,14 +90,14 @@ export function useQuery<
     }
   }
   const initialRoutePromises = Object.fromEntries(
-    Object.keys(routes).map((name) => [name, null])
+    Object.keys(routes).map((name) => [name, null]),
   );
   const promiseRefs = useRef(initialRoutePromises);
 
   async function callRoute(name, argument) {
     const setThisRoute = (to) => setRouteState(name, to);
     setThisRoute({
-      status: "loading",
+      status: 'loading',
     });
 
     const routeArgs = {
@@ -118,7 +117,7 @@ export function useQuery<
 
       promiseRefs.current[name].then((result) => {
         setThisRoute({
-          status: "success",
+          status: 'success',
         });
         resolve(result);
         promiseRefs.current[name] = null;
@@ -126,7 +125,7 @@ export function useQuery<
 
       promiseRefs.current[name].catch((err) => {
         setThisRoute({
-          status: "error",
+          status: 'error',
           error: err,
         });
         reject(err);
@@ -144,7 +143,7 @@ export function useQuery<
         ...queryStates[name],
       };
       return [name, queryInterface];
-    })
+    }),
   );
 
   return {

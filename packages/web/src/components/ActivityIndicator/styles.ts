@@ -2,7 +2,7 @@ import {
   ActivityIndicatorComposition,
   ActivityIndicatorStyles,
   createDefaultVariantFactory,
-} from "@codeleap/common";
+} from '@codeleap/common';
 
 const createActivityIndicatorStyle =
   createDefaultVariantFactory<ActivityIndicatorComposition>();

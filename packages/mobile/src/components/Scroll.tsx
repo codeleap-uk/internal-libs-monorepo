@@ -1,18 +1,18 @@
-import * as React from "react";
-import { forwardRef, useState } from "react";
+import * as React from 'react';
+import { forwardRef, useState } from 'react';
 import {
   deepEqual,
   onUpdate,
   useComponentStyle,
   usePrevious,
   useStyle,
-} from "@codeleap/common";
+} from '@codeleap/common';
 import {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollView as KBDView,
-} from "react-native-keyboard-aware-scroll-view";
-import { RefreshControl, ScrollView } from "react-native";
-import { ViewProps } from "./View";
+} from 'react-native-keyboard-aware-scroll-view';
+import { RefreshControl, ScrollView } from 'react-native';
+import { ViewProps } from './View';
 
 export type ScrollProps = KeyboardAwareScrollViewProps &
   ViewProps & {
@@ -68,7 +68,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     }, [refreshing, changeData]);
     const { Theme } = useStyle();
 
-    const variantStyles = useComponentStyle("View", {
+    const variantStyles = useComponentStyle('View', {
       variants,
     });
 
@@ -87,5 +87,5 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         {children}
       </KeyboardAwareScrollView>
     );
-  }
+  },
 );

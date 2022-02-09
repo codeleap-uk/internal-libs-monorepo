@@ -1,12 +1,12 @@
-import React from "react";
-import { View } from "./View";
-import { StylesOf } from "../types/utility";
+import React from 'react';
+import { View } from './View';
+import { StylesOf } from '../types/utility';
 import {
   ComponentVariants,
   useComponentStyle,
   CenterWrapperComposition,
   CenterWrapperStyles,
-} from "@codeleap/common";
+} from '@codeleap/common';
 
 export type CenterWrapperProps = {
   styles?: StylesOf<CenterWrapperComposition>;
@@ -21,7 +21,7 @@ export const CenterWrapper: React.FC<CenterWrapperProps> = (props) => {
     responsiveVariants,
   } = props;
 
-  const variantStyles = useComponentStyle("CenterWrapper", {
+  const variantStyles = useComponentStyle('CenterWrapper', {
     variants,
     styles,
     responsiveVariants,

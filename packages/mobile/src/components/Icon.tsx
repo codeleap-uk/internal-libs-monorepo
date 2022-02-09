@@ -1,12 +1,12 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   ComponentVariants,
   IconPlaceholder,
   IconStyles,
   useComponentStyle,
   useStyle,
-} from "@codeleap/common";
-import { StyleSheet } from "react-native";
+} from '@codeleap/common';
+import { StyleSheet } from 'react-native';
 
 export type IconProps = {
   name: IconPlaceholder;
@@ -16,7 +16,7 @@ export type IconProps = {
     width?: string | number;
     height?: string | number;
   };
-  variants?: ComponentVariants<typeof IconStyles>["variants"];
+  variants?: ComponentVariants<typeof IconStyles>['variants'];
 };
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
@@ -27,7 +27,7 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
   const Component = Theme?.icons?.[name];
 
   const { logger } = useStyle();
-  const variantStyles = useComponentStyle("Icon", {
+  const variantStyles = useComponentStyle('Icon', {
     variants,
     styles: {
       icon: StyleSheet.flatten([style]),
@@ -35,9 +35,9 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
   });
   if (!Component) {
     logger.warn(
-      "Icon",
+      'Icon',
       `No icon found in theme for name "${name}"`,
-      "Component"
+      'Component',
     );
     return null;
   }

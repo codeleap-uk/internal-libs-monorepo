@@ -1,13 +1,13 @@
-import { defaultFieldValues } from "./constants";
-import * as Form from "./types";
-import * as yup from "yup";
-import { humanizeCamelCase } from "../../utils";
-import { changeEventNames } from "./constants";
+import { defaultFieldValues } from './constants';
+import * as Form from './types';
+import * as yup from 'yup';
+import { humanizeCamelCase } from '../../utils';
+import { changeEventNames } from './constants';
 function getDefaultValue(field: Partial<Form.FormField>) {
   switch (field.type) {
-    case "radio":
-    case "select":
-      return field.options?.[0]?.value || "";
+    case 'radio':
+    case 'select':
+      return field.options?.[0]?.value || '';
     default:
       return defaultFieldValues[field.type];
   }
@@ -16,7 +16,7 @@ function getDefaultValue(field: Partial<Form.FormField>) {
 function getValidator(validate: Form.Validator<any>): Form.ValidatorFunction {
   if (!validate) return undefined;
 
-  if (typeof validate === "function") {
+  if (typeof validate === 'function') {
     return validate;
   }
 
@@ -27,7 +27,7 @@ function getValidator(validate: Form.Validator<any>): Form.ValidatorFunction {
       yupModel.validateSync(value);
       return { valid: true };
     } catch (e) {
-      return { valid: false, message: e?.errors?.join(" ") || "" };
+      return { valid: false, message: e?.errors?.join(' ') || '' };
     }
   };
 }
@@ -35,7 +35,7 @@ function getValidator(validate: Form.Validator<any>): Form.ValidatorFunction {
 function buildInitialFormState<T extends Form.FieldsMap>(
   name: string,
   form: T,
-  inside = []
+  inside = [],
 ) {
   const state = {} as Form.MapValues<T>;
   let props = {};
@@ -46,15 +46,15 @@ function buildInitialFormState<T extends Form.FieldsMap>(
     const key = k as keyof Form.MapValues<T>;
 
     const fieldPathParts = [...inside, key];
-    const fieldPath = fieldPathParts.join(".");
+    const fieldPath = fieldPathParts.join('.');
 
     let fieldValue = null;
 
-    if (type === "composite") {
+    if (type === 'composite') {
       const { props: subFieldProps, state } = buildInitialFormState(
         name,
         value.fields,
-        fieldPathParts
+        fieldPathParts,
       );
       fieldValue = state;
 
@@ -64,7 +64,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(
       };
     } else {
       fieldValue =
-        typeof defaultValue !== "undefined"
+        typeof defaultValue !== 'undefined'
           ? defaultValue
           : getDefaultValue(value);
     }
@@ -89,7 +89,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(
 
 export function createForm<T extends Form.FieldsMap>(
   name: string,
-  formArgs: Form.FormConfig<T>
+  formArgs: Form.FormConfig<T>,
 ): Form.CreateFormReturn<T> {
   const { state, props } = buildInitialFormState(name, formArgs);
 

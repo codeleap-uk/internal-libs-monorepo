@@ -1,36 +1,36 @@
-import { expect } from "chai";
-import { AppTheme, createTheme, EnhancedTheme } from "../..";
+import { expect } from 'chai';
+import { AppTheme, createTheme, EnhancedTheme } from '../..';
 const themeConfig: AppTheme = {
   breakpoints: {
     xs: 576,
     xxs: 10,
   },
   colors: {
-    primary: "red",
+    primary: 'red',
   },
   spacing: 10,
   baseFontSize: 16,
   borderRadius: 10,
   icons: {},
-  fontFamily: "Arial, sans-serif",
+  fontFamily: 'Arial, sans-serif',
 };
 
 let theme: EnhancedTheme<typeof themeConfig> = null;
 
 let screenSize = [400, 500];
-describe("Theme", () => {
+describe('Theme', () => {
   before(() => {
     theme = createTheme(themeConfig, {
       screenSize: () => screenSize,
     });
   });
 
-  it("Theme should be created", () => {
+  it('Theme should be created', () => {
     console.log(theme);
-    expect(theme.colors).to.be.an("object");
+    expect(theme.colors).to.be.an('object');
   });
 
-  it("All margins should be 20", () => {
+  it('All margins should be 20', () => {
     const props = {
       ...theme.spacing.marginVertical(2),
       ...theme.spacing.marginHorizontal(2),
@@ -40,16 +40,16 @@ describe("Theme", () => {
     expect(margins.every((v) => v === 20)).to.eq(true);
   });
 
-  it("should say screen is below xs breakpoint", () => {
-    expect(theme.hooks.down("xs")).to.eq(true);
+  it('should say screen is below xs breakpoint', () => {
+    expect(theme.hooks.down('xs')).to.eq(true);
   });
 
-  it("should say screen is over xxs breakpoint", () => {
-    expect(theme.hooks.up("xxs")).to.eq(true);
+  it('should say screen is over xxs breakpoint', () => {
+    expect(theme.hooks.up('xxs')).to.eq(true);
   });
 
-  it("should say screen is over xs breakpoint", () => {
+  it('should say screen is over xs breakpoint', () => {
     screenSize = [1000, 1000];
-    expect(theme.hooks.up("xs")).to.eq(true);
+    expect(theme.hooks.up('xs')).to.eq(true);
   });
 });

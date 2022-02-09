@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "./node_modules/.bin/eslint -c .eslintrc.js \"./src/**/*.{ts,tsx,js,jsx}\"",
+    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "test": "./node_modules/.bin/mocha --require ts-node/register **/*.spec.ts",
     "run-sc": "tsnd --transpile-only",
     "test:watch": "./node_modules/.bin/mocha --require ts-node/register **/*.spec.ts -w --watch-files ./**/*.spec.ts",

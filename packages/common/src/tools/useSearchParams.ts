@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 type UseSearchParamsReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 
@@ -26,7 +26,7 @@ export function useSearchParams<
         window.location.origin +
         window.location.pathname +
         `?${searchParams.current.toString()}`;
-      window.history.replaceState({ path: url }, "", url);
+      window.history.replaceState({ path: url }, '', url);
     }
   }, [params]);
 

@@ -1,5 +1,5 @@
 export function singleLine(text: string) {
-  return text?.replace(/\n/g, " ");
+  return text?.replace(/\n/g, ' ');
 }
 
 export function stringiparse(string) {
@@ -21,8 +21,8 @@ export function isLowercase(char: string) {
 
 export function humanizeCamelCase(str: string) {
   const characters = [];
-  let previousCharacter = "";
-  str.split("").forEach((char, idx) => {
+  let previousCharacter = '';
+  str.split('').forEach((char, idx) => {
     if (idx === 0) {
       characters.push(char.toUpperCase());
     } else {
@@ -36,12 +36,12 @@ export function humanizeCamelCase(str: string) {
     previousCharacter = char;
   });
 
-  return characters.join("");
+  return characters.join('');
 }
 
 export function ellipsis(str: string, maxLen: number) {
   if (str.length - 3 > maxLen) {
-    return str.slice(0, maxLen - 3) + "...";
+    return str.slice(0, maxLen - 3) + '...';
   }
 
   return str;

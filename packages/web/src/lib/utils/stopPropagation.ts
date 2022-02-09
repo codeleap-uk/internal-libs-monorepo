@@ -1,4 +1,4 @@
-import { AnyFunction } from "@codeleap/common";
+import { AnyFunction } from '@codeleap/common';
 
 export function stopPropagation(event: any) {
   const tryCalls = [

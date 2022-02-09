@@ -1,6 +1,6 @@
-import { DEFAULT_STYLES } from "../styles";
-import fs from "fs";
-import nodePath from "path";
+import { DEFAULT_STYLES } from '../styles';
+import fs from 'fs';
+import nodePath from 'path';
 const exists = (path) => {
   try {
     const fileStat = fs.statSync(path);
@@ -12,16 +12,16 @@ const exists = (path) => {
 };
 
 const components = Object.keys(DEFAULT_STYLES).filter(
-  (k) => Object.keys(DEFAULT_STYLES[k]).length > 0
+  (k) => Object.keys(DEFAULT_STYLES[k]).length > 0,
 );
 const DEFAULT_PATH = `${process.cwd()}/src/app/stylesheets/`;
 const stylesPath = nodePath.resolve(process.argv?.[3] || DEFAULT_PATH);
-const component = process.argv?.[2] || "--all";
+const component = process.argv?.[2] || '--all';
 
-const componentList = component === "--all" ? components : component.split(",");
+const componentList = component === '--all' ? components : component.split(',');
 
 if (!stylesPath) {
-  console.error("You must supply a path for the styles eg: " + DEFAULT_PATH);
+  console.error('You must supply a path for the styles eg: ' + DEFAULT_PATH);
   process.exit(1);
 }
 
@@ -29,7 +29,7 @@ const fileData = exists(stylesPath);
 
 if (!fileData || !fileData.isDirectory()) {
   console.error(
-    `Styles path ${stylesPath} either doesn't exist or is not a directory`
+    `Styles path ${stylesPath} either doesn't exist or is not a directory`,
   );
   process.exit(1);
 }
@@ -61,23 +61,23 @@ const { validFiles, invalidFiles } = componentList.reduce(
   {
     validFiles: [],
     invalidFiles: [],
-  }
+  },
 );
 
 if (invalidFiles.length > 0) {
   console.log(
     `Ignoring StyleSheets ${invalidFiles.join(
-      ", "
-    )} to not overwrite existing files`
+      ', ',
+    )} to not overwrite existing files`,
   );
 }
 
 if (validFiles.length < 1) {
-  console.log("No  StyleSheets to create. Exiting");
+  console.log('No  StyleSheets to create. Exiting');
   process.exit(0);
 }
 
-console.log(`Creating StyleSheets:\n\n${validFiles.join("  \n")}`);
+console.log(`Creating StyleSheets:\n\n${validFiles.join('  \n')}`);
 
 const template = `
 import { __CP__Composition } from '@codeleap/common'
@@ -99,7 +99,7 @@ validFiles.forEach((f) => {
   const content = template.replace(/__CP__/g, f);
 
   return fs.writeFileSync(fullPath, content, {
-    encoding: "utf-8",
+    encoding: 'utf-8',
   });
 });
 

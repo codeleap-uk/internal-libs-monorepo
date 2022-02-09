@@ -1,7 +1,7 @@
-import axios from "axios";
-import { parseFilePathData } from "../../utils";
-import { methodsWithData } from "./constants";
-import { FetchFailure, RequestClientConfig, RequestQueueItem } from "./types";
+import axios from 'axios';
+import { parseFilePathData } from '../../utils';
+import { methodsWithData } from './constants';
+import { FetchFailure, RequestClientConfig, RequestQueueItem } from './types';
 
 export function buildRequest(methodId, args, instanceConfig) {
   let reqConfig = methodsWithData.includes(methodId) ? args?.[2] : args?.[1];
@@ -27,9 +27,9 @@ export function buildRequest(methodId, args, instanceConfig) {
 }
 export function getRequestId(
   req: RequestQueueItem,
-  config: RequestClientConfig
+  config: RequestClientConfig,
 ) {
-  return `${req.baseURL || config?.baseURL || ""}${req.url}`;
+  return `${req.baseURL || config?.baseURL || ''}${req.url}`;
 }
 
 export function parseFailedRequest(err, request, instanceConfig) {
@@ -38,18 +38,18 @@ export function parseFailedRequest(err, request, instanceConfig) {
   let shouldReject = true;
 
   if (err instanceof axios.Cancel) {
-    errorReason = "REQUEST_ABORTED";
+    errorReason = 'REQUEST_ABORTED';
     shouldReject = instanceConfig.rejectOnCancel;
   } else if (err.response) {
-    errorReason = "INVALID_STATUS_CODE";
+    errorReason = 'INVALID_STATUS_CODE';
   } else if (err.request) {
-    errorReason = "NO_RESPONSE";
+    errorReason = 'NO_RESPONSE';
   } else {
-    errorReason = "SETUP_ERROR";
+    errorReason = 'SETUP_ERROR';
   }
   const failedRequest: RequestQueueItem = {
     ...request,
-    requestStatus: "failed",
+    requestStatus: 'failed',
     errorReason,
   };
 
@@ -59,18 +59,18 @@ export function parseFailedRequest(err, request, instanceConfig) {
   };
 }
 
-const multipartDefaults: Exclude<RequestClientConfig["multipart"], boolean> = {
+const multipartDefaults: Exclude<RequestClientConfig['multipart'], boolean> = {
   keyTransforms: {
-    image: "image",
-    data: "json",
-    file: "file",
-    files: "image",
+    image: 'image',
+    data: 'json',
+    file: 'file',
+    files: 'image',
   },
 };
 
 export function toMultipart(request: RequestClientConfig) {
   const options =
-    typeof request.multipart === "boolean" ? {} : request.multipart;
+    typeof request.multipart === 'boolean' ? {} : request.multipart;
   const multipartConfig = {
     ...multipartDefaults,
     ...options,
@@ -83,14 +83,14 @@ export function toMultipart(request: RequestClientConfig) {
       rawValue as string;
 
     switch (multipartConfig.keyTransforms[key]) {
-      case "json":
+      case 'json':
         value = JSON.stringify({
           ...(rawValue as object),
-          type: "application/json",
+          type: 'application/json',
         });
         break;
-      case "image":
-        if (typeof rawValue === "string") {
+      case 'image':
+        if (typeof rawValue === 'string') {
           value = {
             uri: rawValue,
             name: `image_${rawValue}`,

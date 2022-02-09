@@ -1,13 +1,12 @@
-import { includePresets } from "../../presets";
-import { createDefaultVariantFactory } from "../createDefaults";
+import { includePresets } from '../../presets';
+import { createDefaultVariantFactory } from '../createDefaults';
 
-export type FileInputComposition = "label" | "wrapper" | "input";
+export type FileInputComposition = 'label' | 'wrapper' | 'input';
 
 const createFileInputStyle =
   createDefaultVariantFactory<FileInputComposition>();
 
-const presets = includePresets((styles) =>
-  createFileInputStyle(() => ({ wrapper: styles }))
+const presets = includePresets((styles) => createFileInputStyle(() => ({ wrapper: styles })),
 );
 
 export const FileInputStyles = {

@@ -4,27 +4,27 @@ import {
   useComponentStyle,
   useDebounce,
   useStyle,
-} from "@codeleap/common";
+} from '@codeleap/common';
 import React, {
   forwardRef,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
-} from "react";
-import { StyleSheet } from "react-native";
-import { GestureDetector, Gesture } from "../../modules/gestureHandler";
-import { StylesOf } from "../../types/utility";
-import { Animated } from "../Animated";
-import { Button } from "../Button";
-import { View } from "../components";
-import { Text } from "../Text";
-import { MobilePagerStyles, PagerComposition } from "./styles";
+} from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureDetector, Gesture } from '../../modules/gestureHandler';
+import { StylesOf } from '../../types/utility';
+import { Animated } from '../Animated';
+import { Button } from '../Button';
+import { View } from '../components';
+import { Text } from '../Text';
+import { MobilePagerStyles, PagerComposition } from './styles';
 
-export * from "./styles";
+export * from './styles';
 
 export type PagerProps = {
-  variants?: ComponentVariants<typeof MobilePagerStyles>["variants"];
+  variants?: ComponentVariants<typeof MobilePagerStyles>['variants'];
   styles?: StylesOf<PagerComposition>;
   page?: number;
   loop?: boolean;
@@ -55,13 +55,13 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
 
   const [page, setPage] = useState(() => propPage ?? 0);
 
-  const variantStyles = useComponentStyle<"u:Pager", typeof MobilePagerStyles>(
-    "u:Pager",
+  const variantStyles = useComponentStyle<'u:Pager', typeof MobilePagerStyles>(
+    'u:Pager',
     {
       styles,
       transform: StyleSheet.flatten,
       variants,
-    }
+    },
   );
   const { logger } = useStyle();
   const nChildren = React.Children.count(children);
@@ -94,9 +94,9 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
         setPage(n);
       } else {
         logger.warn(
-          "Attempted to go to a page which falls outside range",
+          'Attempted to go to a page which falls outside range',
           { currentPage: page, attemptedToGoTo: n, pageRange: [0, lastPage] },
-          "Component"
+          'Component',
         );
       }
     },
@@ -106,7 +106,7 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
     onPageChange?.(page);
   }, [page]);
   onUpdate(() => {
-    if (typeof propPage === "number") {
+    if (typeof propPage === 'number') {
       setPage(propPage);
     }
   }, [propPage]);
@@ -120,9 +120,9 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
 
   const pagePoses = useMemo(() => {
     return {
-      current: variantStyles["page:pose:current"],
-      next: variantStyles["page:pose:next"],
-      previous: variantStyles["page:pose:previous"],
+      current: variantStyles['page:pose:current'],
+      next: variantStyles['page:pose:next'],
+      previous: variantStyles['page:pose:previous'],
     };
   }, [variantStyles]);
 
@@ -145,12 +145,12 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
 
         {debug && (
           <View
-            variants={["absolute"]}
+            variants={['absolute']}
             style={{ bottom: 0, left: 0, right: 0 }}
           >
-            <Button text="previous" onPress={pagerRef.current.back} />
+            <Button text='previous' onPress={pagerRef.current.back} />
             <Text text={page.toString()} />
-            <Button text="next" onPress={pagerRef.current.forward} />
+            <Button text='next' onPress={pagerRef.current.forward} />
           </View>
         )}
       </View>
@@ -232,12 +232,12 @@ const Page: React.FC<PageProps> = (pageProps) => {
   return (
     <Animated
       key={idx}
-      component="View"
+      component='View'
       config={pagePoses}
-      pose={isCurrent ? "current" : isNext ? "next" : "previous"}
+      pose={isCurrent ? 'current' : isNext ? 'next' : 'previous'}
       style={[
         {
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           opacity: isCurrent ? _opacity : opacity,
         },

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-restricted-imports */
-import { useEffect, useRef, useState } from "react";
-import { deepMerge } from "./object";
-import { AnyFunction, DeepPartial } from "../types";
+import { useEffect, useRef, useState } from 'react';
+import { deepMerge } from './object';
+import { AnyFunction, DeepPartial } from '../types';
 
 export const onMount = (func: AnyFunction) => {
   useEffect(() => {
@@ -27,7 +27,7 @@ export const usePrevious = <T>(value: T) => {
 
 export function useToggle<T extends readonly [any, any], V extends T[0] | T[1]>(
   options: T,
-  initial: V
+  initial: V,
 ) {
   const [value, setValue] = useState(initial);
 
@@ -44,7 +44,7 @@ export function useBooleanToggle(initial: boolean) {
   const [v, setV] = useState(initial);
 
   function toggleOrSet(value?: boolean) {
-    if (typeof value === "boolean") {
+    if (typeof value === 'boolean') {
       setV(value);
     } else {
       setV((previous) => !previous);
@@ -62,9 +62,9 @@ export function usePartialState<T = any>(initial: T | (() => T)) {
   const [state, setState] = useState(initial);
 
   function setPartial(
-    value: DeepPartial<ValueType> | SetPartialStateCallback<ValueType>
+    value: DeepPartial<ValueType> | SetPartialStateCallback<ValueType>,
   ) {
-    if (typeof value === "function") {
+    if (typeof value === 'function') {
       setState((v) => deepMerge(v, value(v as ValueType)));
     } else {
       setState(deepMerge(state, value));
@@ -97,7 +97,7 @@ export function useInterval(callback: AnyFunction, interval: number) {
 
 export function useDebounce<T extends unknown>(
   value: T,
-  debounce: number
+  debounce: number,
 ): [T, () => void] {
   const [debouncedValue, setDebouncedValue] = useState(value);
 

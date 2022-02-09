@@ -1,16 +1,16 @@
-import { includePresets } from "../../presets";
-import { createDefaultVariantFactory } from "../createDefaults";
-import { optionalObject } from "../../../utils";
+import { includePresets } from '../../presets';
+import { createDefaultVariantFactory } from '../createDefaults';
+import { optionalObject } from '../../../utils';
 type TextInputParts =
-  | "wrapper"
-  | "icon"
-  | "leftIcon"
-  | "rightIcon"
-  | "textField"
-  | "label"
-  | "innerWrapper"
-  | "error"
-  | "placeholder";
+  | 'wrapper'
+  | 'icon'
+  | 'leftIcon'
+  | 'rightIcon'
+  | 'textField'
+  | 'label'
+  | 'innerWrapper'
+  | 'error'
+  | 'placeholder';
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
@@ -20,8 +20,7 @@ export type TextInputComposition =
 const createTextInputStyle =
   createDefaultVariantFactory<TextInputComposition>();
 
-const presets = includePresets((styles) =>
-  createTextInputStyle(() => ({ wrapper: styles }))
+const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })),
 );
 
 export const TextInputStyles = {
@@ -30,16 +29,16 @@ export const TextInputStyles = {
     textField: {
       ...(theme.IsBrowser
         ? {
-            outline: "none",
-            border: "none",
-            caretColor: theme.colors.primary,
-          }
+          outline: 'none',
+          border: 'none',
+          caretColor: theme.colors.primary,
+        }
         : {
-            ...theme.spacing.padding(0),
-            ...theme.spacing.paddingHorizontal(1),
-          }),
+          ...theme.spacing.padding(0),
+          ...theme.spacing.paddingHorizontal(1),
+        }),
 
-      backgroundColor: "transparent",
+      backgroundColor: 'transparent',
       flex: 1,
 
       // ...assignTextStyle('p2')(theme).text,
@@ -48,16 +47,16 @@ export const TextInputStyles = {
       color: theme.colors.gray,
     },
     wrapper: {
-      display: "flex",
-      flexDirection: "column",
+      display: 'flex',
+      flexDirection: 'column',
       ...optionalObject(
         theme.IsBrowser,
         {
-          "*": {
-            transition: "all 0.2s ease",
+          '*': {
+            transition: 'all 0.2s ease',
           },
         },
-        {}
+        {},
       ),
     },
     innerWrapper: {
@@ -67,13 +66,13 @@ export const TextInputStyles = {
       ...theme.border.gray({
         width: 1,
       }),
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
     },
-    "innerWrapper:focus": {
+    'innerWrapper:focus': {
       ...theme.border.primary(1),
     },
-    "icon:focus": {
+    'icon:focus': {
       color: theme.colors.primary,
     },
     label: {
@@ -93,25 +92,25 @@ export const TextInputStyles = {
     error: {
       color: theme.colors.negative,
     },
-    "icon:error": {
+    'icon:error': {
       color: theme.colors.negative,
     },
-    "textField:error": {
+    'textField:error': {
       ...optionalObject(
         theme.IsBrowser,
         {
           caretColor: theme.colors.negative,
         },
-        {}
+        {},
       ),
     },
-    "innerWrapper:error": {
+    'innerWrapper:error': {
       ...theme.border.negative(1),
     },
   })),
   line: createTextInputStyle((theme) => ({
     innerWrapper: {
-      ...theme.border.gray({ width: 1, directions: ["bottom"] }),
+      ...theme.border.gray({ width: 1, directions: ['bottom'] }),
     },
   })),
   box: createTextInputStyle((theme) => ({

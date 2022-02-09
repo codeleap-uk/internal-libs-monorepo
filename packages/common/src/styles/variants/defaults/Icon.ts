@@ -1,12 +1,11 @@
-import { includePresets } from "../../presets";
-import { createDefaultVariantFactory } from "../createDefaults";
+import { includePresets } from '../../presets';
+import { createDefaultVariantFactory } from '../createDefaults';
 
-export type IconComposition = "icon";
+export type IconComposition = 'icon';
 
 const createIconStyle = createDefaultVariantFactory<IconComposition>();
 
-const presets = includePresets((styles) =>
-  createIconStyle(() => ({ icon: styles }))
+const presets = includePresets((styles) => createIconStyle(() => ({ icon: styles })),
 );
 
 export const IconStyles = {

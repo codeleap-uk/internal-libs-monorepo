@@ -1,5 +1,5 @@
-import * as React from "react";
-import { ComponentPropsWithoutRef, forwardRef } from "react";
+import * as React from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import {
   ComponentVariants,
   useComponentStyle,
@@ -7,16 +7,16 @@ import {
   ViewStyles,
   useStyle,
   AnyFunction,
-} from "@codeleap/common";
-import { View } from "./View";
-import { TouchableOpacity as NativeTouchable } from "react-native";
+} from '@codeleap/common';
+import { View } from './View';
+import { TouchableOpacity as NativeTouchable } from 'react-native';
 
-import { createAnimatableComponent } from "react-native-animatable";
+import { createAnimatableComponent } from 'react-native-animatable';
 export type TouchableProps = Omit<
   ComponentPropsWithoutRef<typeof NativeTouchable>,
-  "onPress"
+  'onPress'
 > & {
-  variants?: ComponentVariants<typeof ViewStyles>["variants"];
+  variants?: ComponentVariants<typeof ViewStyles>['variants'];
   component?: any;
   ref?: React.Ref<NativeTouchable>;
   debugName?: string;
@@ -37,18 +37,17 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     ...props
   } = touchableProps;
 
-  const variantStyles = useComponentStyle("View", {
+  const variantStyles = useComponentStyle('View', {
     variants,
   });
 
   const { logger } = useStyle();
   const press = () => {
-    if (!onPress)
-      throw { message: "No onPress passed to touchable", touchableProps };
+    if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps }; }
     logger.log(
-      `${debugName || "<Touchable/>"}  pressed`,
+      `${debugName || '<Touchable/>'}  pressed`,
       { style, variants },
-      "Component"
+      'Component',
     );
     onPress && onPress();
   };

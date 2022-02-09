@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { CSSObject, jsx } from "@emotion/react";
+import { CSSObject, jsx } from '@emotion/react';
 import {
   ComponentVariants,
   TooltipComposition,
@@ -7,94 +7,94 @@ import {
   useBooleanToggle,
   useComponentStyle,
   useDebounce,
-} from "@codeleap/common";
-import { ReactNode } from "react";
-import { View } from "./View";
+} from '@codeleap/common';
+import { ReactNode } from 'react';
+import { View } from './View';
 
-import { StylesOf } from "../types/utility";
-import { Touchable } from "./Touchable";
-import { useClickOutside } from "../lib/hooks";
+import { StylesOf } from '../types/utility';
+import { Touchable } from './Touchable';
+import { useClickOutside } from '../lib/hooks';
 
-type TooltipPosition = "left" | "top" | "bottom" | "right";
+type TooltipPosition = 'left' | 'top' | 'bottom' | 'right';
 
 const arrowPositionStyles = {
   left: {
     right: `100%`,
-    top: "50%",
-    transform: "translate(50%,-50%)",
-    borderRight: "none",
-    borderTop: "none",
+    top: '50%',
+    transform: 'translate(50%,-50%)',
+    borderRight: 'none',
+    borderTop: 'none',
   },
   right: {
     left: `100%`,
-    top: "50%",
-    transform: "translate(-50%,-50%)",
-    borderLeft: "none",
-    borderBottom: "none",
+    top: '50%',
+    transform: 'translate(-50%,-50%)',
+    borderLeft: 'none',
+    borderBottom: 'none',
   },
   bottom: {
-    left: "50%",
+    left: '50%',
     top: `100%`,
-    transform: "translate(-50%,-50%)",
-    borderTop: "none",
-    borderLeft: "none",
+    transform: 'translate(-50%,-50%)',
+    borderTop: 'none',
+    borderLeft: 'none',
   },
   top: {
-    left: "50%",
+    left: '50%',
     bottom: `100%`,
-    transform: "translate(-50%,50%)",
-    borderBottom: "none",
-    borderRight: "none",
+    transform: 'translate(-50%,50%)',
+    borderBottom: 'none',
+    borderRight: 'none',
   },
 };
 
 const tooltipPositionStyles = {
   left: (arrow = 0, visible = false) => ({
     right: `calc(100% + ${arrow}px)`,
-    top: "50%",
-    transform: `translate(0%,-50%) scale(${visible ? "1" : "0"})`,
+    top: '50%',
+    transform: `translate(0%,-50%) scale(${visible ? '1' : '0'})`,
   }),
   right: (arrow = 0, visible = false) => ({
     left: `calc(100% + ${arrow}px)`,
-    top: "50%",
-    transform: `translate(0%,-50%) scale(${visible ? "1" : "0"})`,
+    top: '50%',
+    transform: `translate(0%,-50%) scale(${visible ? '1' : '0'})`,
   }),
   bottom: (arrow = 0, visible = false) => ({
-    left: "50%",
+    left: '50%',
     top: `calc(100% + ${arrow}px)`,
-    transform: `translate(-50%,0%) scale(${visible ? "1" : "0"})`,
+    transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
   }),
   top: (arrow = 0, visible = false) => ({
-    left: "50%",
+    left: '50%',
     bottom: `calc(100% + ${arrow}px)`,
-    transform: `translate(-50%,0%) scale(${visible ? "1" : "0"})`,
+    transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
   }),
 };
 
 export type TooltipProps = {
   position: TooltipPosition;
   styles?: StylesOf<TooltipComposition>;
-  showOn?: "click" | "hover";
+  showOn?: 'click' | 'hover';
   content?: string | ReactNode;
 } & ComponentVariants<typeof TooltipStyles>;
 
 const invert = (pos) => {
   switch (pos) {
-    case "left":
-      return "right";
-    case "right":
-      return "left";
-    case "top":
-      return "bottom";
-    case "bottom":
-      return "top";
+    case 'left':
+      return 'right';
+    case 'right':
+      return 'left';
+    case 'top':
+      return 'bottom';
+    case 'bottom':
+      return 'top';
   }
 };
 
 export const Tooltip: React.FC<TooltipProps> = (props) => {
   const {
     children,
-    position = "top",
+    position = 'top',
     styles,
     variants,
     responsiveVariants,
@@ -107,19 +107,19 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
   const [debouncedVisible] = useDebounce(isVisible, 100);
   const arrowPos = arrowPositionStyles[invert(position)];
 
-  const variantStyles = useComponentStyle("Tooltip", {
+  const variantStyles = useComponentStyle('Tooltip', {
     responsiveVariants,
     variants,
     styles,
   });
 
   const style = {
-    transition: "transform 0.2s ease",
+    transition: 'transform 0.2s ease',
     ...variantStyles.bubble,
-    "&:after": {
+    '&:after': {
       ...variantStyles.arrow,
       ...arrowPos,
-      transform: arrowPos.transform + " rotate(45deg)",
+      transform: arrowPos.transform + ' rotate(45deg)',
     },
     ...styles,
     ...tooltipPositionStyles[position](10, debouncedVisible),
@@ -133,10 +133,10 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
     },
     {
       deps: [setVisible, isVisible],
-    }
+    },
   );
 
-  if (showOn === "click") {
+  if (showOn === 'click') {
     return (
       <Touchable
         onPress={() => setVisible()}

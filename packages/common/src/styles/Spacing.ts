@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
-import { CSSProperties } from "react";
-import { spacingVariants, SpacingVariants } from "./types";
+import { CSSProperties } from 'react';
+import { spacingVariants, SpacingVariants } from './types';
 
 export type SpacingFunction = (multiplier: number | string) => any;
 
@@ -15,24 +15,24 @@ export type Spacings<T extends string> = {
 
 export function spacingFactory<T extends string>(
   base: number,
-  property: T
+  property: T,
 ): Spacings<T> {
   const functions = spacingVariants.map((v) => [
     `${property}${v}`,
     (n: number | string) => {
-      const value = typeof n === "string" ? n : base * n;
+      const value = typeof n === 'string' ? n : base * n;
       switch (v) {
-        case "Horizontal":
+        case 'Horizontal':
           return {
             [`${property}Left`]: value,
             [`${property}Right`]: value,
           };
-        case "Vertical":
+        case 'Vertical':
           return {
             [`${property}Top`]: value,
             [`${property}Bottom`]: value,
           };
-        case "":
+        case '':
           return {
             [`${property}Top`]: value,
             [`${property}Left`]: value,
@@ -49,7 +49,7 @@ export function spacingFactory<T extends string>(
 
   return {
     [`${property}`]: (n: number | string) => ({
-      [`${property}`]: typeof n === "string" ? n : base * n,
+      [`${property}`]: typeof n === 'string' ? n : base * n,
     }),
     value: (n = 1) => base * n,
     ...Object.fromEntries(functions),

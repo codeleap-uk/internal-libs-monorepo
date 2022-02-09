@@ -1,10 +1,10 @@
-import * as React from "react";
-import { Slider as RNSlider } from "@miblanchard/react-native-slider";
-import { SliderProps as RNSliderProps } from "@miblanchard/react-native-slider/lib/types";
-import { useRef } from "react";
-import { StyleProp, StyleSheet } from "react-native";
-import { Text } from "./Text";
-import { View, ViewProps } from "./View";
+import * as React from 'react';
+import { Slider as RNSlider } from '@miblanchard/react-native-slider';
+import { SliderProps as RNSliderProps } from '@miblanchard/react-native-slider/lib/types';
+import { useRef } from 'react';
+import { StyleProp, StyleSheet } from 'react-native';
+import { Text } from './Text';
+import { View, ViewProps } from './View';
 import {
   ComponentVariants,
   Form,
@@ -12,11 +12,11 @@ import {
   SliderStyles,
   useComponentStyle,
   useStyle,
-} from "@codeleap/common";
-import { InputLabel } from "./TextInput";
-import { StylesOf } from "../types/utility";
+} from '@codeleap/common';
+import { InputLabel } from './TextInput';
+import { StylesOf } from '../types/utility';
 
-type SliderProps = Partial<Omit<RNSliderProps, "value" | "onValueChange">> & {
+type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>> & {
   debounce?: number;
   labels: string[];
   value: number;
@@ -25,16 +25,16 @@ type SliderProps = Partial<Omit<RNSliderProps, "value" | "onValueChange">> & {
   onValueChange: (val: number) => void;
   label: Form.Label;
   formatTooltip?: (val: number) => React.ReactNode;
-  variants?: ComponentVariants<typeof SliderStyles>["variants"];
+  variants?: ComponentVariants<typeof SliderStyles>['variants'];
   styles?: StylesOf<SliderComposition>;
-  style?: ViewProps["style"];
+  style?: ViewProps['style'];
 };
 
 type SliderMarkProps = {
   sliderProps: SliderProps;
   index: number;
-  styles: SliderProps["styles"];
-  variantStyles: SliderProps["styles"];
+  styles: SliderProps['styles'];
+  variantStyles: SliderProps['styles'];
 };
 
 const SliderMark: React.FC<SliderMarkProps> = ({
@@ -45,7 +45,7 @@ const SliderMark: React.FC<SliderMarkProps> = ({
 }) => {
   const { labels = [], showMarks } = sliderProps;
 
-  const l = labels?.[index] || "";
+  const l = labels?.[index] || '';
 
   const isFirst = index === 0;
   const isLast = index === labels.length - 1;
@@ -86,13 +86,13 @@ const ThumbTooltip = ({ children, visible, styles, variantStyles }) => {
         StyleSheet.flatten([variantStyles.tooltip, styles.tooltip]),
         visible
           ? StyleSheet.flatten([
-              variantStyles["tooltip:visible"],
-              styles["tooltip:visible"],
-            ])
+            variantStyles['tooltip:visible'],
+            styles['tooltip:visible'],
+          ])
           : StyleSheet.flatten([
-              variantStyles["tooltip:hidden"],
-              styles["tooltip:hidden"],
-            ]),
+            variantStyles['tooltip:hidden'],
+            styles['tooltip:hidden'],
+          ]),
       ]}
     >
       <Text
@@ -121,13 +121,13 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
     ...props
   } = sliderProps;
 
-  const changeDebounce = typeof debounce === "number" ? debounce : 100;
+  const changeDebounce = typeof debounce === 'number' ? debounce : 100;
 
   const debounceTimeout = useRef(null);
   const toggleTooltipTimeout = useRef(null);
   const valueRef = useRef(value);
 
-  const variantStyles = useComponentStyle("Slider", {
+  const variantStyles = useComponentStyle('Slider', {
     variants,
   });
 
@@ -159,20 +159,19 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
       <RNSlider
         value={value}
         onSlidingStart={() => {
-          if (toggleTooltipTimeout.current)
-            clearTimeout(toggleTooltipTimeout.current);
+          if (toggleTooltipTimeout.current) { clearTimeout(toggleTooltipTimeout.current); }
 
           setTooltipVisible(true);
         }}
         onSlidingComplete={() => {
           toggleTooltipTimeout.current = setTimeout(
             () => setTooltipVisible(false),
-            830
+            830,
           );
         }}
         onValueChange={onChange}
         renderAboveThumbComponent={(idx) => {
-          if (!valueOverThumb || typeof value !== "number") return null;
+          if (!valueOverThumb || typeof value !== 'number') return null;
 
           return (
             <ThumbTooltip

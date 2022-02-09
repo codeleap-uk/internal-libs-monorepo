@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   ComponentVariants,
   FormTypes,
@@ -8,32 +8,32 @@ import {
   useBooleanToggle,
   useComponentStyle,
   useValidate,
-} from "@codeleap/common";
+} from '@codeleap/common';
 import {
   ComponentPropsWithoutRef,
   forwardRef,
   useImperativeHandle,
   useRef,
   useState,
-} from "react";
-import { Text } from "./Text";
-import { View } from "./View";
-import { Button } from "./Button";
-import { StylesOf } from "../types/utility";
-import { Icon } from "./Icon";
+} from 'react';
+import { Text } from './Text';
+import { View } from './View';
+import { Button } from './Button';
+import { StylesOf } from '../types/utility';
+import { Icon } from './Icon';
 import {
   NativeSyntheticEvent,
   StyleSheet,
   TextInput as NativeTextInput,
   TextInputChangeEventData,
-} from "react-native";
+} from 'react-native';
 
 type IconProp = { name: IconPlaceholder; action?: () => void };
 
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>;
 
 export type TextInputProps = ComponentVariants<typeof TextInputStyles> &
-  Omit<NativeProps, "value"> & {
+  Omit<NativeProps, 'value'> & {
     multiline?: boolean;
     onChangeText?: (text: string) => void;
     disabled?: boolean;
@@ -80,14 +80,14 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>(
 
     const input = useRef<any>(null);
     const [textIsVisible, setTextVisible] = useBooleanToggle(false);
-    const variantStyles = useComponentStyle("TextInput", {
+    const variantStyles = useComponentStyle('TextInput', {
       variants,
       responsiveVariants,
       styles,
     });
     const InputElement = NativeTextInput;
 
-    const handleBlur: TextInputProps["onBlur"] = (e) => {
+    const handleBlur: TextInputProps['onBlur'] = (e) => {
       if (!editedState && value) setEdited(true);
       setFocus(false);
 
@@ -96,7 +96,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>(
       }
     };
 
-    const handleFocus: TextInputProps["onFocus"] = (e) => {
+    const handleFocus: TextInputProps['onFocus'] = (e) => {
       setFocus(true);
       if (onFocus) {
         onFocus(e);
@@ -104,7 +104,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>(
     };
 
     const handleChange = (
-      event: NativeSyntheticEvent<TextInputChangeEventData>
+      event: NativeSyntheticEvent<TextInputChangeEventData>,
     ) => {
       const text = event.nativeEvent.text;
 
@@ -118,36 +118,36 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>(
 
     const leftIconStyle = {
       ...variantStyles.icon,
-      ...(isFocused ? variantStyles["icon:focus"] : {}),
-      ...(showError ? variantStyles["icon:error"] : {}),
+      ...(isFocused ? variantStyles['icon:focus'] : {}),
+      ...(showError ? variantStyles['icon:error'] : {}),
       ...variantStyles.leftIcon,
-      ...(isFocused ? variantStyles["leftIcon:focus"] : {}),
-      ...(showError ? variantStyles["leftIcon:error"] : {}),
+      ...(isFocused ? variantStyles['leftIcon:focus'] : {}),
+      ...(showError ? variantStyles['leftIcon:error'] : {}),
     };
 
     const rightIconStyle = {
       ...variantStyles.icon,
-      ...(isFocused ? variantStyles["icon:focus"] : {}),
-      ...(showError ? variantStyles["icon:error"] : {}),
+      ...(isFocused ? variantStyles['icon:focus'] : {}),
+      ...(showError ? variantStyles['icon:error'] : {}),
       ...variantStyles.rightIcon,
-      ...(isFocused ? variantStyles["rightIcon:focus"] : {}),
-      ...(showError ? variantStyles["rightIcon:error"] : {}),
+      ...(isFocused ? variantStyles['rightIcon:focus'] : {}),
+      ...(showError ? variantStyles['rightIcon:error'] : {}),
     };
 
     function getStyles(key: TextInputComposition) {
       const requestedStyles = [
         variantStyles[key],
-        isFocused ? variantStyles[key + ":focus"] : {},
-        showError ? variantStyles[key + ":error"] : {},
+        isFocused ? variantStyles[key + ':focus'] : {},
+        showError ? variantStyles[key + ':error'] : {},
       ];
       return requestedStyles;
     }
 
     return (
-      <View style={getStyles("wrapper")}>
-        <InputLabel label={label} style={getStyles("label")} />
+      <View style={getStyles('wrapper')}>
+        <InputLabel label={label} style={getStyles('label')} />
 
-        <View style={getStyles("innerWrapper")}>
+        <View style={getStyles('innerWrapper')}>
           <InputIcon {...leftIcon} style={leftIconStyle} />
           <InputElement
             ref={input}
@@ -158,17 +158,17 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             placeholderTextColor={
-              StyleSheet.flatten(getStyles("placeholder"))?.color
+              StyleSheet.flatten(getStyles('placeholder'))?.color
             }
             {...props}
-            style={getStyles("textField")}
+            style={getStyles('textField')}
           />
           {visibilityToggle ? (
             <InputIcon
               name={
                 (textIsVisible
-                  ? "input-visiblity:visible"
-                  : "input-visiblity:hidden") as IconPlaceholder
+                  ? 'input-visiblity:visible'
+                  : 'input-visiblity:hidden') as IconPlaceholder
               }
               action={() => setTextVisible()}
               style={rightIconStyle}
@@ -186,15 +186,15 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>(
         />
       </View>
     );
-  }
+  },
 );
 
 export const FormError = ({ message, ...props }) => {
-  if (["number", "string", "undefined"].includes(typeof message)) {
+  if (['number', 'string', 'undefined'].includes(typeof message)) {
     return (
       <Text
-        text={`${message || " "}`}
-        variants={["p2", "marginTop:1"]}
+        text={`${message || ' '}`}
+        variants={['p2', 'marginTop:1']}
         {...props}
       />
     );
@@ -216,7 +216,7 @@ export const InputIcon: React.FC<{ style: any } & IconProp> = ({
         styles={{
           icon: style,
         }}
-        variants={["icon"]}
+        variants={['icon']}
       />
     );
   }
@@ -227,9 +227,9 @@ export const InputLabel = ({ label, style }) => {
   if (!label) return null;
 
   switch (typeof label) {
-    case "string":
+    case 'string':
       return <Text style={style} text={label} />;
-    case "object":
+    case 'object':
       return label;
     default:
       return null;

@@ -1,26 +1,26 @@
 // @ts-nocheck
-import * as React from "react";
-import { RouteConfig } from "@react-navigation/native";
+import * as React from 'react';
+import { RouteConfig } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
-} from "@react-navigation/native-stack";
+} from '@react-navigation/native-stack';
 import {
   AnyFunction,
   EnhancedTheme,
   IconPlaceholder,
   useStyle,
-} from "@codeleap/common";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Icon } from "./Icon";
-import { Paths } from "@codeleap/common/dist/types/pathMapping";
+} from '@codeleap/common';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Icon } from './Icon';
+import { Paths } from '@codeleap/common/dist/types/pathMapping';
 
 export type AppScenes = {
   [x: string]: {
     [y: string]:
       | AnyFunction
-      | (Partial<Pick<RouteConfig<any, any, any, any, any>, "options">> & {
+      | (Partial<Pick<RouteConfig<any, any, any, any, any>, 'options'>> & {
           render: AnyFunction;
           icon?: any;
         });
@@ -40,20 +40,20 @@ const parseModulePages = (pageModule: string, [pageName, Component]) => {
   };
 
   switch (typeof Component) {
-    case "function":
+    case 'function':
       props.component = Component;
-    case "object":
+    case 'object':
       props = {
         ...props,
         ...Component,
       };
-      if (typeof Component.default === "function") {
+      if (typeof Component.default === 'function') {
         props.component = Component.default;
       }
 
       if (Component.render) {
         props.component =
-          typeof Component.render === "function"
+          typeof Component.render === 'function'
             ? Component.render
             : Component?.render?.default;
       }
@@ -90,16 +90,16 @@ type NavigationType = keyof typeof Navigators;
 type NavigationProps<T extends NavigationType> = {
   scenes: AppScenes;
   type: T;
-} & React.ComponentPropsWithoutRef<typeof Navigators[T]["Navigator"]>;
+} & React.ComponentPropsWithoutRef<typeof Navigators[T]['Navigator']>;
 
 export const Navigation = <
   T extends NavigationType,
   P extends NavigationProps<T> = NavigationProps<T>
 >({
-  type,
-  scenes,
-  ...props
-}: P) => {
+    type,
+    scenes,
+    ...props
+  }: P) => {
   const Navigator: typeof Navigators[T] = Navigators[type];
   const { Theme } = useStyle();
   const flatScenes = flattenScenes({
@@ -109,9 +109,9 @@ export const Navigation = <
 
   const otherProps = props as any;
   // @ts-ignore
-  const screenOptions: P["screenOptions"] = ({ route, navigation }) => {
+  const screenOptions: P['screenOptions'] = ({ route, navigation }) => {
     const propOptions =
-      typeof (otherProps?.screenOptions || {}) === "function"
+      typeof (otherProps?.screenOptions || {}) === 'function'
         ? otherProps.screenOptions({ route, navigation })
         : otherProps?.screenOptions;
 
@@ -136,8 +136,8 @@ export const Navigation = <
 };
 export type NavigationScreenProps<
   T extends NativeStackScreenProps<any, any> = NativeStackScreenProps<any, any>
-> = Omit<T, "navigation"> & {
-  navigation: Omit<T["navigation"], "navigate"> & {
+> = Omit<T, 'navigation'> & {
+  navigation: Omit<T['navigation'], 'navigate'> & {
     navigate: (to: string) => void;
   };
 };
