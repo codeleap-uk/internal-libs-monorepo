@@ -21,3 +21,4 @@ export * from './Overlay'
 export * from './Modal'
 
 export *  from './Navigation'
+export * from './Pager'

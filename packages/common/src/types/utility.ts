@@ -33,7 +33,10 @@ export type ComponentWithVariants<
 
 
 export type DeepPartial<T> = Partial<{
-  [Property in keyof T] : T[Property] extends Record<string, any> ? DeepPartial<T[Property]> : Partial<T[Property]>
+  [Property in keyof T] : T[Property] extends Record<string, any> ? 
+    T[Property] extends null ? any :
+    DeepPartial<T[Property]> 
+    : Partial<T[Property]>
 }>
 
 

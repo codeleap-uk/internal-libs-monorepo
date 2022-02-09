@@ -15,7 +15,7 @@ import {
   import { Button } from './Button';
   import { StylesOf } from '../types/utility';
   import { Icon } from './Icon';
-  import {NativeSyntheticEvent, TextInput as NativeTextInput, TextInputChangeEventData} from 'react-native'
+  import {NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData} from 'react-native'
  
   type IconProp = {name: IconPlaceholder, action?:() => void}
 
@@ -35,7 +35,7 @@ import {
       leftIcon?:IconProp
       rightIcon?:IconProp
       styles?: StylesOf<TextInputComposition>
-      validate?: FormTypes.ValidatorFunction | string
+      validate?: FormTypes.ValidatorFunctionWithoutForm | string
       value?:string
       password?:boolean
       visibilityToggle?: boolean
@@ -65,7 +65,7 @@ import {
       ...props
     } = rawprops
   
-    const [_ig, setFocus] = useState(false)
+    const [isFocused, setFocus] = useState(false)
     const [editedState, setEdited] = useState(edited)
     
     const input = useRef<any>(null)
@@ -110,20 +110,29 @@ import {
   
     const leftIconStyle = {
       ...variantStyles.icon,
+      ...(isFocused ? variantStyles['icon:focus'] : {} ),
       ...(showError ? variantStyles['icon:error'] : {} ),
       ...variantStyles.leftIcon, 
+      ...(isFocused ? variantStyles['leftIcon:focus'] : {}),
       ...(showError ? variantStyles['leftIcon:error'] : {} ),
     }
     
     const rightIconStyle = {
       ...variantStyles.icon,
+      ...(isFocused ? variantStyles['icon:focus'] : {}),
       ...(showError ? variantStyles['icon:error'] : {} ),
       ...variantStyles.rightIcon, 
+      ...(isFocused ? variantStyles['rightIcon:focus'] : {}),
       ...(showError ? variantStyles['rightIcon:error'] : {} ),
     }
+  
     
     function getStyles(key:TextInputComposition){
-     const requestedStyles = [variantStyles[key], showError ? variantStyles[key + ':error'] : {}]
+      const requestedStyles = [
+       variantStyles[key], 
+       isFocused ? variantStyles[key + ':focus'] : {},
+       showError ? variantStyles[key + ':error'] : {},
+      ]
       return requestedStyles
     }
 
@@ -146,6 +155,7 @@ import {
             editable={disabled}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            placeholderTextColor={StyleSheet.flatten(getStyles('placeholder'))?.color}
             {...props}
             style={getStyles('textField')}
           />

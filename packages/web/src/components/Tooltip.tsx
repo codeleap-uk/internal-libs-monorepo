@@ -90,7 +90,7 @@ export const Tooltip:React.FC<TooltipProps> = (props) => {
   const [isVisible, setVisible] = useBooleanToggle(false)
  
  
-  const debouncedVisible = useDebounce(isVisible, 100)
+  const [debouncedVisible] = useDebounce(isVisible, 100)
   const arrowPos = arrowPositionStyles[invert(position)]
 
   const variantStyles = useComponentStyle('Tooltip', {

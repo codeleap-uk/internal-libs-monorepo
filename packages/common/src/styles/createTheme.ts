@@ -51,7 +51,7 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
     circle: (side) => ({
       width: side,
       height: side,
-      borderRadius: '50%',
+      borderRadius: values.borderRadius.large,
     }),
     square: (side) => ({
       width: side,
