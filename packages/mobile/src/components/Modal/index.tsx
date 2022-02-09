@@ -128,7 +128,7 @@ export const Modal:React.FC<ModalProps> = (modalProps) => {
                 </View>
                 {
                   footer && <View style={getStyles('footer')}> 
-                    {footer}
+                    {typeof footer === 'string' ? <Text text={footer}/> : footer}
                   </View>
                 }
             </Animated>

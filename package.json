@@ -42,7 +42,8 @@
     "dev:android": "turbo run dev:android --parallel",
     "dev:cli": "turbo run dev:cli",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clear": "rm -rf node_modules apps/mobile/node_modules apps/web/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules"
   },
   "devDependencies": {
     "prettier": "^2.5.1",

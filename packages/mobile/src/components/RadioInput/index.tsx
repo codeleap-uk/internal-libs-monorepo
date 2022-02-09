@@ -22,6 +22,7 @@ export type RadioButtonProps = Omit<ComponentPropsWithoutRef<typeof Touchable>, 
     select: () => void
     style: StylesOf<MobileRadioInputComposition>
     checked: boolean
+    defaultValue?: number
 }   
 
 export type RadioGroupProps<T> = {
@@ -66,7 +67,6 @@ export const RadioGroup =  <T extends unknown>(radioGroupProps:RadioGroupProps<T
           item={item} 
           key={idx} 
           style={radioStyle}
-         
           checked={value === item.value}
           select={() => onValueChange(item.value)} 
         />)
