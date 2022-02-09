@@ -34,9 +34,8 @@ export function createSlice<
       actions[actionName] = async (args) => {
         const currentState = store.getState()[name]
         const actionResult = await action(currentState, setState, args)
-        if (actionResult){
-          store.dispatch({type: nameInReducer, payload: actionResult })
-        }
+       
+        return actionResult || store.getState()[name]
       }
     }
     return actions

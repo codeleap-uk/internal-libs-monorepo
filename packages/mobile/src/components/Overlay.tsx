@@ -1,5 +1,4 @@
 import * as  React from 'react'
-import * as Animatable from 'react-native-animatable'
 import { ComponentVariants, IconPlaceholder, OverlayComposition, OverlayStyles, useComponentStyle } from "@codeleap/common"
 import { ReactNode } from "react"
 import {  InputLabel } from "./TextInput"
@@ -8,7 +7,7 @@ import { Button } from './Button'
 import { View  } from "./View"
 import { StylesOf } from "../types/utility"
 import { StyleSheet, ViewProps } from "react-native"
-import { AnimatedTouchable } from '.'
+import { AnimatedTouchable } from './Touchable'
 
 
 export type OverlayProps = ViewProps & {

@@ -1,4 +1,5 @@
 
+import { optionalObject } from '../../../utils';
 import { includePresets } from '../../presets';
 import { createDefaultVariantFactory } from '../createDefaults';
 
@@ -71,9 +72,9 @@ export const AvatarStyles = {
   large: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.semiCircle(200),
-      [Theme.media.is('small')]: {
+      ...optionalObject(Theme.IsBrowser, {[Theme.media.is('small')]: {
         ...Theme.semiCircle(80),
-      },
+      }}, {}),
     },
     text: {
       fontSize: 150,
@@ -83,9 +84,9 @@ export const AvatarStyles = {
   medium: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.semiCircle(100),
-      [Theme.media.is('small')]: {
+      ...optionalObject(Theme.IsBrowser, {[Theme.media.is('small')]: {
         ...Theme.semiCircle(60),
-      },
+      }}, {}),
     },
     text: {
       fontSize: 60,
@@ -95,9 +96,9 @@ export const AvatarStyles = {
   banner: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.semiCircle(60),
-      [Theme.media.is('small')]: {
+      ...optionalObject(Theme.IsBrowser, {[Theme.media.is('small')]: {
         ...Theme.semiCircle(40),
-      },
+      }}, {}),
     },
     text: {
       fontSize: 24,
@@ -109,9 +110,9 @@ export const AvatarStyles = {
   small: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.semiCircle(40),
-      [Theme.media.is('small')]: {
+      ...optionalObject(Theme.IsBrowser, {[Theme.media.is('small')]: {
         ...Theme.semiCircle(30),
-      },
+      }}, {}),
     },
     text: {
       fontSize: 20,
@@ -123,9 +124,9 @@ export const AvatarStyles = {
   verySmall: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.semiCircle(16),
-      [Theme.media.is('small')]: {
+      ...optionalObject(Theme.IsBrowser, {[Theme.media.is('small')]: {
         ...Theme.semiCircle(14),
-      },
+      }}, {}),
     },
     text: {
       fontSize: 11,
@@ -136,25 +137,29 @@ export const AvatarStyles = {
   largeCircle: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.circle(100),
-      [Theme.media.is('small')]: {
+      ...optionalObject(Theme.IsBrowser, {[Theme.media.is('small')]: {
         ...Theme.circle(60),
-      },
+      }}, {}),
     },
   })),
   midCircle: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.circle(40),
-      [Theme.media.is('small')]: {
-        ...Theme.circle(30),
-      },
+      ...optionalObject(Theme.IsBrowser, {
+        [Theme.media.is('small')]: {
+          ...Theme.circle(30),
+        },
+      }, {}),
     },
   })),
   smallCircle: createAvatarStyle((Theme) => ({
     image: {
       ...Theme.circle(30),
-      [Theme.media.is('small')]: {
-        ...Theme.circle(30),
-      },
+      ...optionalObject(Theme.IsBrowser, {
+        [Theme.media.is('small')]: {
+          ...Theme.circle(30),
+        },
+      }, {}),
     },
   })),
   borders: createAvatarStyle((Theme) => ({

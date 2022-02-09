@@ -1,6 +1,5 @@
-import type { AnyAction, Dispatch, configureStore,  Store } from '@reduxjs/toolkit'
-import { createRedux, createSlice } from '.'
-import { AnyFunction, DeepPartial, FunctionType } from '../..'
+import type { AnyAction, Dispatch,  Store } from '@reduxjs/toolkit'
+import { DeepPartial, FunctionType } from '../..'
 
 export type Reducers<S> = Record<
     string, 
@@ -20,7 +19,7 @@ export type AsyncReducers<S> = Record<
         any
     ],  
     Promise<
-        DeepPartial<S> | void>
+        unknown | void>
     >
     
 >
@@ -44,13 +43,13 @@ AR  extends AsyncReducers<S>
 > = (store:Store<any>) => {
     [Property in keyof R] : R[Property] extends 
         (state: S,  ...args: infer A) => any 
-        ? (...a: A) => any
-        : AnyFunction
+        ? (...a: A) => Parameters<R[Property]>[0]
+        : () => ReturnType<R[Property]>
 } & {
     [Property in keyof AR] : AR[Property] extends 
         (state: S, setState: any, ...args: infer A) => Promise<any> 
-        ? (...a: A) => any
-        : AnyFunction
+        ? (...a: A) => ReturnType<AR[Property]>
+        : () => ReturnType<AR[Property]>
 }
 
 export type Slice<

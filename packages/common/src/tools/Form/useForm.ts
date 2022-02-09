@@ -2,11 +2,12 @@ import * as FormTypes from './types';
 import { usePartialState, deepGet, deepSet } from '../../utils';
 import { FunctionType } from '../../types';
 import { useStyle } from '../../styles/StyleProvider';
+
 export * as FormTypes from  './types'
 
 const SCOPE = 'useForm'
 
-const shouldLog = (x: FormTypes.FormStep, config:FormTypes.UseFormConfig ) => {
+const shouldLog = (x: FormTypes.FormStep, config:FormTypes.UseFormConfig<any> ) => {
   return  (config.log || []).includes(x)
 }
 
@@ -16,12 +17,12 @@ export function useForm<
     Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<Form['config']>
 >(
   form:Form, 
-  config:FormTypes.UseFormConfig,
+  config:FormTypes.UseFormConfig<Values>,
 ){
   
  
 
-  const [formValues, setFormValues] = usePartialState(form.defaultValue)
+  const [formValues, setFormValues] = usePartialState<Values>(config.initialState || form.defaultValue)
   const { logger } = useStyle()
   const [fieldErrors, setFieldErrors] = usePartialState(() => {
     const errors = Object.keys(form.staticFieldProps).map(key => [key, ''])
@@ -41,23 +42,21 @@ export function useForm<
     setFormValues(val)
   }
 
-  function validateField(field: FieldPaths[0], set = false ){
+  function validateField(field: FieldPaths[0], set = false, val?: any){
     // @ts-ignore
     const { validate } = form.staticFieldProps[field as string]
-    console.log(form.staticFieldProps[field])
+  
 
     if (validate){
       
       // @ts-ignore
-      const result = validate(deepGet(field, formValues))
+      const result = validate( val !== undefined ?  val :  deepGet(field, formValues), formValues)
       if (shouldLog('validate', config)){
         logger.log(`Validation for ${form.name} ->`, result, SCOPE)
       }
 
       if (set){
-    
         setFieldErrors(() => ({
-  
           [field]: result.valid ? '' :  result.message, 
         }))
         
@@ -66,50 +65,63 @@ export function useForm<
       return result
     }
 
+    return {
+      valid: true,
+      message: '',
+    }
   }
 
-  function validateAll(){
+  function validateAll(set = false){
     const errors = {...fieldErrors}
     for (const [path] of Object.entries(form.staticFieldProps)){
       const result =  validateField(path)
       errors[path] = result.valid ? '' : result?.message
     }
-    setFieldErrors(errors)
+
+    if (set){
+      setFieldErrors(errors)
+
+    }
     return Object.values(errors).join('').length === 0
   }
-
+ 
   function register(field: FieldPaths[0]){
     // @ts-ignore
     const { changeEventName, validate,  ...staticProps} = form.staticFieldProps[field as string]
-
+    
     const dynamicProps:any = {
       value: deepGet(field, formValues),
     }
 
     if (changeEventName){
       dynamicProps[changeEventName] = (value) => {
-
+        if (config.validateOn === 'change'){
+          validateField(field, true, value)
+        }
         // @ts-ignore
         setFieldValue(field, value)
       }
     }
 
+    if (validate){
+      switch (config.validateOn){
+        case 'change':
+          // dynamicProps.validate = () => validateField(field, true)
+          dynamicProps.validate = fieldErrors[field]
+          break
+        case 'blur':
+          dynamicProps.onBlur = () => {
+            validateField(field, true)
+          }
+          dynamicProps.validate = fieldErrors[field]
+          break
+        case 'submit':
+          dynamicProps.validate = fieldErrors[field]
+          break
+      }
 
-    switch (config.validateOn){
-      case 'change':
-        dynamicProps.validate = validate
-        break
-      case 'blur':
-        dynamicProps.onBlur = () => {
-          validateField(field, true)
-        }
-        dynamicProps.validate = fieldErrors[field]
-        break
-      case 'submit':
-        dynamicProps.validate = fieldErrors[field]
-        break
     }
-      
+
     return {
       ...staticProps,
       ...dynamicProps,
@@ -133,12 +145,14 @@ export function useForm<
     if (e?.preventDefault) e.preventDefault()
 
     if (config.validateOn === 'submit'){
-      const valid = validateAll()
+      const valid = validateAll(true)
       if (!valid) return
     }
     
     await cb(getTransformedValue())
   }
+
+  
   return {
     setFieldValue,
     values: formValues as Values,
@@ -149,6 +163,6 @@ export function useForm<
     fieldErrors,
     getTransformedValue,
     setFormValues,
-    isValid: Object.values(fieldErrors).join('').length === 0,
+    isValid: validateAll(),
   } 
 }
