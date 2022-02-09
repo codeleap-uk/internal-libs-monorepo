@@ -1,27 +1,33 @@
-import { includePresets } from '../../presets'
-import { createDefaultVariantFactory } from '../createDefaults'
+import { includePresets } from "../../presets";
+import { createDefaultVariantFactory } from "../createDefaults";
 
-export type ActivityIndicatorComposition = 'wrapper' | 'backCircle' | 'frontCircle' | 'circle';
+export type ActivityIndicatorComposition =
+  | "wrapper"
+  | "backCircle"
+  | "frontCircle"
+  | "circle";
 
-const createActivityIndicatorStyle = createDefaultVariantFactory<ActivityIndicatorComposition>()
+const createActivityIndicatorStyle =
+  createDefaultVariantFactory<ActivityIndicatorComposition>();
 
-const presets = includePresets((styles) => createActivityIndicatorStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) =>
+  createActivityIndicatorStyle(() => ({ wrapper: styles }))
+);
 
 export const ActivityIndicatorStyles = {
   ...presets,
-  default: createActivityIndicatorStyle((theme) =>  {
-    const size = theme.spacing.base * 1.6
+  default: createActivityIndicatorStyle((theme) => {
+    const size = theme.spacing.base * 1.6;
 
     return {
       wrapper: {
-        position: 'relative',
+        position: "relative",
         height: size,
         width: size,
       },
       circle: {
-        
         borderRadius: 100,
-        position: 'absolute',
+        position: "absolute",
         ...theme.presets.whole,
       },
       backCircle: {
@@ -29,11 +35,9 @@ export const ActivityIndicatorStyles = {
         opacity: 0.5,
       },
       frontCircle: {
-        ...theme.border.create({width: size * 0.25, style: 'transparent'}),
-        borderTopColor: theme.colors.primary,  
-         
+        ...theme.border.create({ width: size * 0.25, style: "transparent" }),
+        borderTopColor: theme.colors.primary,
       },
-    }
+    };
   }),
-}
-
+};

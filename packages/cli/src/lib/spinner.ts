@@ -1,21 +1,23 @@
-import { FunctionType } from '@codeleap/common';
-import { createSpinner, Options } from 'nanospinner';
+import { FunctionType } from "@codeleap/common";
+import { createSpinner, Options } from "nanospinner";
 
 type SpinWhileNotCompletedOpts = Options & {
-    name: string
-}
+  name: string;
+};
 
-export async function spinWhileNotCompleted(operation:FunctionType<[], Promise<any>>, opts:SpinWhileNotCompletedOpts){
-  const {name, ...others} = opts
-  
-  const spinner = createSpinner(`${name}\n`, others)
+export async function spinWhileNotCompleted(
+  operation: FunctionType<[], Promise<any>>,
+  opts: SpinWhileNotCompletedOpts
+) {
+  const { name, ...others } = opts;
 
-  spinner.start()
+  const spinner = createSpinner(`${name}\n`, others);
 
-   
-  const result = await operation()
+  spinner.start();
 
-  spinner.success()
-    
-  return result
+  const result = await operation();
+
+  spinner.success();
+
+  return result;
 }

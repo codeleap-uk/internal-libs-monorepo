@@ -1,89 +1,91 @@
-import { ButtonComposition, createDefaultVariantFactory, includePresets, ModalComposition, ModalStyles } from '@codeleap/common'
-
+import {
+  ButtonComposition,
+  createDefaultVariantFactory,
+  includePresets,
+  ModalComposition,
+  ModalStyles,
+} from "@codeleap/common";
 
 export const backgroundTransition = {
-    duration: 200,
-    ease: 'easeOut',
-    useNativeDriver: false,
-} 
-  
+  duration: 200,
+  ease: "easeOut",
+  useNativeDriver: false,
+};
+
 export const modalTransition = {
-    duration: 150,
-    ease: 'easeOut',
-    useNativeDriver: false,
-}
-  
+  duration: 150,
+  ease: "easeOut",
+  useNativeDriver: false,
+};
 
-export type MobileModalParts = 
-| 'wrapper' 
-| 'overlay' 
-| 'innerWrapper' 
-| 'innerWrapperScroll' 
-| 'box' 
-| 'footer' 
-| 'body' 
-| 'header'
-| 'touchableBackdrop'
-| 'box:pose'
+export type MobileModalParts =
+  | "wrapper"
+  | "overlay"
+  | "innerWrapper"
+  | "innerWrapperScroll"
+  | "box"
+  | "footer"
+  | "body"
+  | "header"
+  | "touchableBackdrop"
+  | "box:pose"
+  | "title"
+  | `closeButton${Capitalize<ButtonComposition>}`;
 
-| 'title'
-| `closeButton${Capitalize<ButtonComposition>}`
+export type MobileModalComposition =
+  | MobileModalParts
+  | `${MobileModalParts}:visible`;
 
-export type MobileModalComposition = MobileModalParts | `${MobileModalParts}:visible`
+const createModalStyle = createDefaultVariantFactory<MobileModalComposition>();
 
-const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
-    
-const presets = includePresets((style ) =>  createModalStyle(() => ({wrapper: style})))
+const presets = includePresets((style) =>
+  createModalStyle(() => ({ wrapper: style }))
+);
 
-const defaultModalStyles = ModalStyles
+const defaultModalStyles = ModalStyles;
 
 export const MobileModalStyles = {
-   ...presets,
-   ...defaultModalStyles,
-   default: createModalStyle((Theme) => {
-
+  ...presets,
+  ...defaultModalStyles,
+  default: createModalStyle((Theme) => {
     const fullSize = {
       ...Theme.presets.whole,
-      position: 'absolute',
+      position: "absolute",
       width: Theme?.values?.width,
       height: Theme?.values?.height,
-    }
+    };
 
     return {
       wrapper: {
-        zIndex:1,
+        zIndex: 1,
 
-        ...fullSize
+        ...fullSize,
       },
-      
+
       overlay: {
         opacity: 0,
-        
+
         backgroundColor: Theme.colors.black,
-        ...fullSize
+        ...fullSize,
       },
       "overlay:visible": {
-        opacity: 0.5
+        opacity: 0.5,
       },
-      innerWrapper: {
-     
-       },
+      innerWrapper: {},
       innerWrapperScroll: {
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         ...Theme.presets.justifyCenter,
         minHeight: Theme.values.height,
       },
       box: {
-        width: '80%',
+        width: "80%",
         backgroundColor: Theme.colors.white,
         borderRadius: Theme.borderRadius.medium,
-        ...Theme.spacing.padding(1)
-      
+        ...Theme.spacing.padding(1),
       },
       touchableBackdrop: {
         ...fullSize,
-    
       },
       "box:pose": {
         opacity: 0,
@@ -98,20 +100,14 @@ export const MobileModalStyles = {
         transition: modalTransition,
       },
       header: {
-        flexDirection: 'row',
+        flexDirection: "row",
         ...Theme.presets.justifySpaceBetween,
-        ...Theme.presets.alignCenter
+        ...Theme.presets.alignCenter,
       },
       closeButtonWrapper: {
-        alignSelf: 'center',
-
-      }
-    
-     
-    }
-
-   }),
-   popup: createModalStyle((Theme) => ({
-
-   }))
-}
+        alignSelf: "center",
+      },
+    };
+  }),
+  popup: createModalStyle((Theme) => ({})),
+};

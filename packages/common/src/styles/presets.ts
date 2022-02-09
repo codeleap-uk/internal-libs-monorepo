@@ -1,57 +1,57 @@
-import { AnyFunction, FunctionType } from '../types'
+import { AnyFunction, FunctionType } from "../types";
 
 export const defaultPresets = {
   inline: {
-    display: 'inline-block',
+    display: "inline-block",
   },
   block: {
-    display: 'block',
+    display: "block",
   },
   flex: {
-    display: 'flex',
+    display: "flex",
     flex: 1,
   },
   inlineFlex: {
-    display: 'inline-flex',
+    display: "inline-flex",
   },
   absolute: {
-    position: 'absolute',
+    position: "absolute",
   },
   fixed: {
-    position: 'fixed',
+    position: "fixed",
   },
   sticky: {
-    position: 'sticky',
+    position: "sticky",
   },
   hidden: {
-    display: 'none',
+    display: "none",
   },
   //
   // *** Layout ***
   //
   full: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   noWrap: {
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   fullHeight: {
-    height: '100%',
+    height: "100%",
   },
   fullView: {
-    width: '100vw',
+    width: "100vw",
     // height: '100vh',
-    height: 'calc(100vh - calc(100vh - 100%))',
+    height: "calc(100vh - calc(100vh - 100%))",
   },
   fullViewWidth: {
-    width: '100vw',
+    width: "100vw",
   },
   fullViewHeight: {
-    height: 'calc(100vh - calc(100vh - 100%))',
+    height: "calc(100vh - calc(100vh - 100%))",
     // height: '100vh',
   },
   whole: {
@@ -61,113 +61,117 @@ export const defaultPresets = {
     right: 0,
   },
   centerRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
   },
   listStyles: {
-    overflow: 'auto',
+    overflow: "auto",
   },
   column: {
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   center: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   alignStart: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   alignEnd: {
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   alignCenter: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   alignSelfCenter: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   alignSelfStart: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   alignSelfEnd: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   justifyStart: {
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   justifyEnd: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
   },
   justifyCenter: {
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   justifySpaceBetween: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   textRight: {
-    textAlign: 'right',
+    textAlign: "right",
   },
   textLeft: {
-    textAlign: 'left',
+    textAlign: "left",
   },
   textCenter: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   //
   // *** Styles ***
   //
   blur: {
-    backdropFilter: 'blur(4px)',
-    '-webkit-backdrop-filter': 'blur(4px)',
-    transition: '500ms',
+    backdropFilter: "blur(4px)",
+    "-webkit-backdrop-filter": "blur(4px)",
+    transition: "500ms",
   },
   elevated: {
-    boxShadow: '0px 0px 16px 16px #aaaaaa1a',
+    boxShadow: "0px 0px 16px 16px #aaaaaa1a",
   },
   neumorphism: {
-    boxShadow: '10px 10px 20px 0 #AEAEC077, -10px -10px 20px 0 #fff',
+    boxShadow: "10px 10px 20px 0 #AEAEC077, -10px -10px 20px 0 #fff",
   },
   scrollX: {
-    overflowX: 'auto',
+    overflowX: "auto",
   },
   scrollY: {
-    overflowY: 'auto',
+    overflowY: "auto",
   },
   scrollXY: {
-    overflowX: 'auto',
-    overflowY: 'auto',
+    overflowX: "auto",
+    overflowY: "auto",
   },
   wrap: {
-    flexWrap: 'wrap',
+    flexWrap: "wrap",
   },
   debRed: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
   },
   debGreen: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   debBlue: {
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
   },
   debYellow: {
-    backgroundColor: 'yellow',
+    backgroundColor: "yellow",
   },
+} as const;
 
-} as const
+export type IncludePresetsReturn<T extends AnyFunction> = Record<
+  keyof typeof defaultPresets,
+  ReturnType<T>
+>;
 
-export type IncludePresetsReturn<T extends AnyFunction> = Record<keyof typeof defaultPresets, ReturnType<T>>
-
-export function includePresets<T extends FunctionType<[any], any>>(fn:T): IncludePresetsReturn<T> {
-  const presetsFromTheme = {}
+export function includePresets<T extends FunctionType<[any], any>>(
+  fn: T
+): IncludePresetsReturn<T> {
+  const presetsFromTheme = {};
 
   for (const [key, value] of Object.entries(defaultPresets)) {
-    presetsFromTheme[key] = fn(value)
+    presetsFromTheme[key] = fn(value);
   }
 
-  return presetsFromTheme as IncludePresetsReturn<T>
+  return presetsFromTheme as IncludePresetsReturn<T>;
 }

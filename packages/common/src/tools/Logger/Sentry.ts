@@ -1,43 +1,45 @@
-import { Breadcrumb } from '@sentry/browser'
-import { AppSettings } from '../../config/Settings'
-import { LogFunctionArgs, LogType, SentrySeverityMap, SentryProvider } from './types'
-
+import { Breadcrumb } from "@sentry/browser";
+import { AppSettings } from "../../config/Settings";
+import {
+  LogFunctionArgs,
+  LogType,
+  SentrySeverityMap,
+  SentryProvider,
+} from "./types";
 
 export class SentryService {
-  private sentry: SentryProvider
+  private sentry: SentryProvider;
 
-  private use:boolean
+  private use: boolean;
 
-  constructor(settings:AppSettings) {
-    
-    this.use = settings?.Sentry?.enable
-    this.sentry = settings?.Sentry?.provider as SentryProvider
+  constructor(settings: AppSettings) {
+    this.use = settings?.Sentry?.enable;
+    this.sentry = settings?.Sentry?.provider as SentryProvider;
     if (this.use) {
       this.sentry.init({
         dsn: settings.Sentry.dsn,
         debug: true,
-      })
+      });
     }
   }
 
+  captureBreadcrumb(type: LogType, content: LogFunctionArgs) {
+    if (!this.use) return;
+    const [message, data, category] = content;
 
-  captureBreadcrumb(type:LogType, content:LogFunctionArgs) {
-    if (!this.use) return
-    const [message, data, category] = content
-
-    const sentryArgs:Breadcrumb = {
+    const sentryArgs: Breadcrumb = {
       message,
       data,
       category,
       level: SentrySeverityMap[type],
-      type: '',
-    }
+      type: "",
+    };
 
-    this.sentry.addBreadcrumb(sentryArgs)
+    this.sentry.addBreadcrumb(sentryArgs);
   }
 
-  sendLog(err?:any) {
-    if (!this.use) return
-    this.sentry.captureException(err)
+  sendLog(err?: any) {
+    if (!this.use) return;
+    this.sentry.captureException(err);
   }
 }

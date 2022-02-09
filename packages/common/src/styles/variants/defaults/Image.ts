@@ -1,21 +1,21 @@
-import { includePresets } from '../../presets'
-import { createDefaultVariantFactory } from '../createDefaults'
+import { includePresets } from "../../presets";
+import { createDefaultVariantFactory } from "../createDefaults";
 
-export type ImageComposition = 'wrapper';
-const createImageStyle = createDefaultVariantFactory<ImageComposition>()
+export type ImageComposition = "wrapper";
+const createImageStyle = createDefaultVariantFactory<ImageComposition>();
 
-const presets = includePresets((styles) => createImageStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) =>
+  createImageStyle(() => ({ wrapper: styles }))
+);
 
 export const ImageStyles = {
   ...presets,
   default: createImageStyle(() => ({
-    wrapper: {
-    
-    },
+    wrapper: {},
   })),
   skeleton: createImageStyle(() => ({
     wrapper: {
-      backgroundColor: '#f3f3f3',
+      backgroundColor: "#f3f3f3",
     },
   })),
   round: createImageStyle(() => ({
@@ -23,4 +23,4 @@ export const ImageStyles = {
       borderRadius: 100,
     },
   })),
-}
+};

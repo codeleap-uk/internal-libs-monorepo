@@ -1,42 +1,45 @@
-import { includePresets } from '../../presets'
-import { createDefaultVariantFactory } from '../createDefaults'
-import { optionalObject } from '../../../utils';
-type TextInputParts = 
-    'wrapper' 
-  | 'icon'
-  | 'leftIcon' 
-  | 'rightIcon' 
-  | 'textField' 
-  | 'label' 
-  | 'innerWrapper' 
-  | 'error'
-  | 'placeholder';
+import { includePresets } from "../../presets";
+import { createDefaultVariantFactory } from "../createDefaults";
+import { optionalObject } from "../../../utils";
+type TextInputParts =
+  | "wrapper"
+  | "icon"
+  | "leftIcon"
+  | "rightIcon"
+  | "textField"
+  | "label"
+  | "innerWrapper"
+  | "error"
+  | "placeholder";
 
-export type TextInputComposition = `${TextInputParts}:error` | `${TextInputParts}:focus` | TextInputParts
+export type TextInputComposition =
+  | `${TextInputParts}:error`
+  | `${TextInputParts}:focus`
+  | TextInputParts;
 
-const createTextInputStyle = createDefaultVariantFactory<TextInputComposition>()
+const createTextInputStyle =
+  createDefaultVariantFactory<TextInputComposition>();
 
-const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) =>
+  createTextInputStyle(() => ({ wrapper: styles }))
+);
 
 export const TextInputStyles = {
   ...presets,
   default: createTextInputStyle((theme) => ({
     textField: {
-      ...(
-        theme.IsBrowser ? 
-          {
-            outline: 'none',
-            border: 'none',
+      ...(theme.IsBrowser
+        ? {
+            outline: "none",
+            border: "none",
             caretColor: theme.colors.primary,
           }
-          : 
-          {
+        : {
             ...theme.spacing.padding(0),
             ...theme.spacing.paddingHorizontal(1),
-          }
-      ),
-     
-      backgroundColor: 'transparent',
+          }),
+
+      backgroundColor: "transparent",
       flex: 1,
 
       // ...assignTextStyle('p2')(theme).text,
@@ -45,13 +48,17 @@ export const TextInputStyles = {
       color: theme.colors.gray,
     },
     wrapper: {
-      display: 'flex',
-      flexDirection: 'column',
-      ...optionalObject(theme.IsBrowser, {
-        '*': {
-          'transition': 'all 0.2s ease',
+      display: "flex",
+      flexDirection: "column",
+      ...optionalObject(
+        theme.IsBrowser,
+        {
+          "*": {
+            transition: "all 0.2s ease",
+          },
         },
-      }, {}),
+        {}
+      ),
     },
     innerWrapper: {
       ...theme.spacing.paddingVertical(0.5),
@@ -60,14 +67,13 @@ export const TextInputStyles = {
       ...theme.border.gray({
         width: 1,
       }),
-      display: 'flex',
-      alignItems: 'center',
-
+      display: "flex",
+      alignItems: "center",
     },
-    'innerWrapper:focus': {
+    "innerWrapper:focus": {
       ...theme.border.primary(1),
     },
-    'icon:focus': {
+    "icon:focus": {
       color: theme.colors.primary,
     },
     label: {
@@ -82,27 +88,30 @@ export const TextInputStyles = {
       ...theme.spacing.marginRight(1),
     },
     rightIcon: {
-    
       ...theme.spacing.marginLeft(1),
     },
     error: {
       color: theme.colors.negative,
     },
-    'icon:error': {
+    "icon:error": {
       color: theme.colors.negative,
     },
-    'textField:error': {
-      ...optionalObject(theme.IsBrowser, {
-        caretColor: theme.colors.negative,
-      }, {}),
+    "textField:error": {
+      ...optionalObject(
+        theme.IsBrowser,
+        {
+          caretColor: theme.colors.negative,
+        },
+        {}
+      ),
     },
-    'innerWrapper:error': {
+    "innerWrapper:error": {
       ...theme.border.negative(1),
     },
   })),
   line: createTextInputStyle((theme) => ({
     innerWrapper: {
-      ...theme.border.gray({width: 1, directions: ['bottom']}),
+      ...theme.border.gray({ width: 1, directions: ["bottom"] }),
     },
   })),
   box: createTextInputStyle((theme) => ({
@@ -116,4 +125,4 @@ export const TextInputStyles = {
       borderRadius: 15,
     },
   })),
-}
+};

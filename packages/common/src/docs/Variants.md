@@ -1,11 +1,13 @@
 #### Usage in applications
 
-> This example puts everything in the same file, but you can divide the variables as you will 
+> This example puts everything in the same file, but you can divide the variables as you will
+
 ---
+
 ```jsx
-import { 
-    createTheme, 
-    VariantProvider, 
+import {
+    createTheme,
+    VariantProvider,
     ButtonComposition // This type defines the parts that compose button
 } from 'codeleap-common'
 import { StyleSheet } from 'react-native'
@@ -41,7 +43,7 @@ const ButtonComponent:ComponentWithVariants<typeof ButtonStyles,typeof theme> = 
     const styles = variantProvider.getStyles(ButtonStyles, variants, responsiveVariants)
 
     return (
-        <button style={styles.wrapper}> 
+        <button style={styles.wrapper}>
             <div style={styles.somePartOfTheComponent}>  </div>
             <span style={styles.inner}>
                 {children}
@@ -52,7 +54,9 @@ const ButtonComponent:ComponentWithVariants<typeof ButtonStyles,typeof theme> = 
 ```
 
 #### Usage when creating default variants (On this repository or web/mobile libraries)
+
 ---
+
 ```jsx
 import { createDefaultVariantFactory } from 'codeleap-common'
 

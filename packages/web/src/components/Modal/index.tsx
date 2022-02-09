@@ -1,30 +1,34 @@
 /** @jsx jsx */
-import { AnyFunction, ComponentVariants, IconPlaceholder, ModalComposition, ModalStyles, useComponentStyle } from '@codeleap/common';
-import { jsx } from '@emotion/react';
-import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import { v4 } from 'uuid';
-import { StylesOf } from '../../types/utility';
-import {Button} from '../Button'
-import {View} from '../View'
-import {Text} from '../Text'
-import { Overlay } from '../Overlay';
+import {
+  AnyFunction,
+  ComponentVariants,
+  IconPlaceholder,
+  ModalComposition,
+  ModalStyles,
+  useComponentStyle,
+} from "@codeleap/common";
+import { jsx } from "@emotion/react";
+import { ReactNode, useEffect, useLayoutEffect, useRef } from "react";
+import ReactDOM from "react-dom";
+import { v4 } from "uuid";
+import { StylesOf } from "../../types/utility";
+import { Button } from "../Button";
+import { View } from "../View";
+import { Text } from "../Text";
+import { Overlay } from "../Overlay";
 
-export * from './styles'
+export * from "./styles";
 
 export type ModalProps = {
-  
   open: boolean;
   title?: React.ReactNode;
   toggle: AnyFunction;
-  styles?: StylesOf<ModalComposition> 
-  accessible?:boolean
-  showClose?: boolean
-  closable?: boolean
-  footer?: ReactNode
-} & ComponentVariants<typeof ModalStyles> 
-
-
+  styles?: StylesOf<ModalComposition>;
+  accessible?: boolean;
+  showClose?: boolean;
+  closable?: boolean;
+  footer?: ReactNode;
+} & ComponentVariants<typeof ModalStyles>;
 
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault();
@@ -33,12 +37,14 @@ function focusModal(event: FocusEvent, id: string) {
     modal.focus();
   }
 }
-export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) => {
-  const { 
+export const ModalContent: React.FC<ModalProps & { id: string }> = (
+  modalProps
+) => {
+  const {
     children,
     closable = true,
     open,
-    title = '',
+    title = "",
     toggle,
     id,
     responsiveVariants,
@@ -46,17 +52,17 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
     styles,
     showClose = true,
     footer,
-    ...props 
-  } = modalProps
-  
-  const variantStyles = useComponentStyle('Modal', {
+    ...props
+  } = modalProps;
+
+  const variantStyles = useComponentStyle("Modal", {
     responsiveVariants,
     variants,
     styles,
-  })
+  });
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       toggle();
     }
   }
@@ -69,82 +75,95 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (modalProps) 
   }, [id]);
 
   return (
-    <View  aria-hidden={!open}  css={variantStyles.wrapper} className={open ? 'visible' : ''}>
-      <Overlay  visible={open} onClick={closable ? toggle : () => {}} css={variantStyles.overlay} />
+    <View
+      aria-hidden={!open}
+      css={variantStyles.wrapper}
+      className={open ? "visible" : ""}
+    >
+      <Overlay
+        visible={open}
+        onClick={closable ? toggle : () => {}}
+        css={variantStyles.overlay}
+      />
       <View
-        component='section'
+        component="section"
         css={{
           ...variantStyles.box,
           // visibility: open ? 'visible' : 'hidden',
         }}
-        className='content'
+        className="content"
         onKeyDown={closeOnEscPress}
         tabIndex={0}
         id={id}
         aria-modal={true}
-        role='dialog'
+        role="dialog"
         aria-describedby={`${id}-title`}
-        aria-label='Close the modal by presing Escape key'
+        aria-label="Close the modal by presing Escape key"
         {...props}
       >
-        {
-          (title || showClose) && 
+        {(title || showClose) && (
+          <View
+            component="header"
+            className="modal-header header"
+            id={`${id}-title`}
+            css={variantStyles.header}
+          >
+            {typeof title === "string" ? <Text text={title} /> : title}
 
-            <View component='header' className='modal-header header' id={`${id}-title`} css={variantStyles.header}>
-          
-              {typeof title === 'string' ? <Text text={title}/> : title}
-            
-              {
-                (showClose && closable) &&
-              <Button rightIcon={'close' as IconPlaceholder} variants={['icon']} onPress={toggle}/>
-              }
-            </View>
-        }
-        
-        <View css={variantStyles.body}>
-          {children}
-        </View>
-        {
-          footer && <View component='footer' css={variantStyles.footer}> 
+            {showClose && closable && (
+              <Button
+                rightIcon={"close" as IconPlaceholder}
+                variants={["icon"]}
+                onPress={toggle}
+              />
+            )}
+          </View>
+        )}
+
+        <View css={variantStyles.body}>{children}</View>
+        {footer && (
+          <View component="footer" css={variantStyles.footer}>
             {footer}
           </View>
-        }
+        )}
       </View>
     </View>
   );
 };
 
-export const Modal: React.FC<ModalProps> = ({accessible, ...props}) => {
+export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
   const modalId = useRef(v4());
 
   useEffect(() => {
-    if (accessible){
-
+    if (accessible) {
       const currentId = modalId.current;
       const appRoot = document.body;
-      appRoot.addEventListener('focusin', (e) => focusModal(e, currentId));
-      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId));
+      appRoot.addEventListener("focusin", (e) => focusModal(e, currentId));
+      return () =>
+        appRoot.removeEventListener("focusin", (e) => focusModal(e, currentId));
     }
   }, []);
 
   useEffect(() => {
-    if (accessible){
-
+    if (accessible) {
       const appRoot = document.body;
-      appRoot.setAttribute('aria-hidden', `${props.open}`);
-      appRoot.setAttribute('tabindex', `${-1}`);
+      appRoot.setAttribute("aria-hidden", `${props.open}`);
+      appRoot.setAttribute("tabindex", `${-1}`);
     }
   }, [props.open]);
 
-  if (accessible){
+  if (accessible) {
     if (props.open) {
-      document.body.style.overflow = 'hidden';
-      return ReactDOM.createPortal(<ModalContent {...props} id={modalId.current} />, document.body);
+      document.body.style.overflow = "hidden";
+      return ReactDOM.createPortal(
+        <ModalContent {...props} id={modalId.current} />,
+        document.body
+      );
     } else {
-      document.body.style.overflow = 'visible';
+      document.body.style.overflow = "visible";
       return null;
     }
   }
 
-  return <ModalContent {...props} id={modalId.current} />
+  return <ModalContent {...props} id={modalId.current} />;
 };

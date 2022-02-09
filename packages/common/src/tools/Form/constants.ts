@@ -1,23 +1,25 @@
-import * as Form from './types';
+import * as Form from "./types";
 
-export const defaultFieldValues:Partial<Record<Form.FormField['type'], any>> = {
-  checkbox: false,
-  text: '',
-  composite: {},
-  file: null,
-  'range-slider': [0, 100],
-  slider: 1,
-}
+export const defaultFieldValues: Partial<Record<Form.FormField["type"], any>> =
+  {
+    checkbox: false,
+    text: "",
+    composite: {},
+    file: null,
+    "range-slider": [0, 100],
+    slider: 1,
+  };
 
-export const changeEventNames:Partial<Record<Form.FormField['type'], string>> = {
-  checkbox: 'onValueChange',
-  'range-slider': 'onValueChange',
-  'slider': 'onValueChange',
-  select: 'onValueChange',
-  radio: 'onValueChange',
-  text: 'onChangeText',
-  file: 'onFileSelect',
-}
+export const changeEventNames: Partial<Record<Form.FormField["type"], string>> =
+  {
+    checkbox: "onValueChange",
+    "range-slider": "onValueChange",
+    slider: "onValueChange",
+    select: "onValueChange",
+    radio: "onValueChange",
+    text: "onChangeText",
+    file: "onFileSelect",
+  };
 
 // const myForm = createForm({
 //     something: {
@@ -27,9 +29,9 @@ export const changeEventNames:Partial<Record<Form.FormField['type'], string>> = 
 //           type: 'checkbox',
 //         },
 //       },
-        
+
 //     },
-  
+
 //     test: {
 //       type: 'radio',
 //       options: [
@@ -43,18 +45,13 @@ export const changeEventNames:Partial<Record<Form.FormField['type'], string>> = 
 //     },
 //   })
 
-  
 // const CP = () => {
 //     const form = useForm(myForm, {
 //       output: 'json',
 //       validateOn: 'blur',
 //     })
-  
-  
-   
-  
+
 //     form.setFieldValue('something', {
 //       other: true,
 //     })
 //   }
-  

@@ -1,88 +1,80 @@
-import { createDefaultVariantFactory } from '@codeleap/common'
+import { createDefaultVariantFactory } from "@codeleap/common";
 
-export type WebSelectParts = 
-    'wrapper' |
-    'label' |
-    'inputWrapper' | 
-    'list' | 
-    'itemWrapper' |
-    'itemWrapper:selected' |
-    'itemText' |
-    'itemText:selected' |
-    'buttonWrapper' |
-    'buttonText' |
-    'buttonIcon'|
-    'error'
+export type WebSelectParts =
+  | "wrapper"
+  | "label"
+  | "inputWrapper"
+  | "list"
+  | "itemWrapper"
+  | "itemWrapper:selected"
+  | "itemText"
+  | "itemText:selected"
+  | "buttonWrapper"
+  | "buttonText"
+  | "buttonIcon"
+  | "error";
 
-export type WebSelectComposition = 
-    `${WebSelectParts}:hover` | 
-    `${WebSelectParts}:open` |
-    `${WebSelectParts}:error` |
-    `${WebSelectParts}:disabled` |
-    WebSelectParts 
+export type WebSelectComposition =
+  | `${WebSelectParts}:hover`
+  | `${WebSelectParts}:open`
+  | `${WebSelectParts}:error`
+  | `${WebSelectParts}:disabled`
+  | WebSelectParts;
 
-const createSelectStyle = createDefaultVariantFactory<WebSelectComposition>()
-
+const createSelectStyle = createDefaultVariantFactory<WebSelectComposition>();
 
 export const WebSelectStyles = {
   default: createSelectStyle((Theme) => ({
     wrapper: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: "flex",
+      flexDirection: "column",
     },
     label: {
       ...Theme.spacing.marginBottom(1),
     },
     inputWrapper: {
-      position: 'relative',
-
+      position: "relative",
     },
-      
+
     list: {
-      position: 'absolute',
+      position: "absolute",
       left: 0,
       right: 0,
-      display: 'flex',
-      top: '110%',
+      display: "flex",
+      top: "110%",
       backgroundColor: Theme.colors.gray,
 
       ...Theme.presets.column,
-      overflowY: 'hidden',
-     
-      transition: 'all 0.5s ease',
+      overflowY: "hidden",
+
+      transition: "all 0.5s ease",
       maxHeight: 0,
       ...Theme.border.create({
         width: 0,
-        color: 'transparent',
+        color: "transparent",
       }),
       borderRadius: Theme.borderRadius.small,
     },
-    'list:open': {
-      maxHeight: '500%',
-      overflowY: 'auto',
+    "list:open": {
+      maxHeight: "500%",
+      overflowY: "auto",
       ...Theme.border.primary(1),
-       
     },
-    itemText: {
-    
-    },
+    itemText: {},
     itemWrapper: {
       ...Theme.spacing.padding(0.5),
-      cursor: 'pointer',
-      display: 'flex',
-      '&:hover': {
-        backgroundColor: '#0002',
+      cursor: "pointer",
+      display: "flex",
+      "&:hover": {
+        backgroundColor: "#0002",
       },
     },
-    'itemText:selected': {
-    },
-    'itemWrapper:selected': {
+    "itemText:selected": {},
+    "itemWrapper:selected": {
       backgroundColor: Theme.colors.primary,
-      '&:hover': {
+      "&:hover": {
         backgroundColor: Theme.colors.primary,
-        
       },
-      
     },
     buttonWrapper: {
       ...Theme.border.primary(1),
@@ -91,13 +83,10 @@ export const WebSelectStyles = {
       ...Theme.spacing.padding(0.5),
       backgroundColor: Theme.colors.gray,
       borderRadius: Theme.borderRadius.small,
-      cursor: 'pointer',
-      display: 'flex',
-        
+      cursor: "pointer",
+      display: "flex",
     },
-    'button:open': {
-       
-    },
+    "button:open": {},
     buttonText: {
       flex: 1,
     },
@@ -105,15 +94,13 @@ export const WebSelectStyles = {
       height: 24,
       width: 24,
       color: Theme.colors.white,
-      transition: 'all 0.2s ease',
+      transition: "all 0.2s ease",
     },
-    'buttonIcon:open': {
-      transform: 'rotate(180deg)',
+    "buttonIcon:open": {
+      transform: "rotate(180deg)",
     },
     error: {
       color: Theme.colors.negative,
     },
   })),
-  
-}
-  
+};

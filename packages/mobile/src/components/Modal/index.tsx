@@ -1,45 +1,50 @@
-import * as React from 'react' 
-import { 
-    View,
-    ViewProps,
-    AnimatedView
-} from '../View'
-import {  Button, ButtonProps } from '../Button'
-import { Scroll } from '../Scroll'
-import { capitalize, ComponentVariants, IconPlaceholder, onUpdate, useComponentStyle, useStyle } from '@codeleap/common'
-import { MobileModalComposition, MobileModalStyles, MobileModalParts } from './styles'
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types/utility'
+import * as React from "react";
+import { View, ViewProps, AnimatedView } from "../View";
+import { Button, ButtonProps } from "../Button";
+import { Scroll } from "../Scroll";
+import {
+  capitalize,
+  ComponentVariants,
+  IconPlaceholder,
+  onUpdate,
+  useComponentStyle,
+  useStyle,
+} from "@codeleap/common";
+import {
+  MobileModalComposition,
+  MobileModalStyles,
+  MobileModalParts,
+} from "./styles";
+import { StyleSheet } from "react-native";
+import { StylesOf } from "../../types/utility";
 
-import { Touchable } from '../Touchable'
-import { Text } from '../Text'
-import { Animated } from '../Animated'
+import { Touchable } from "../Touchable";
+import { Text } from "../Text";
+import { Animated } from "../Animated";
 
+export * from "./styles";
 
-export * from './styles'
-
-export type ModalProps = Omit<ViewProps, 'variants'|'styles'> & {
-  variants?: ComponentVariants<typeof MobileModalStyles>['variants']
-  styles?: StylesOf<MobileModalComposition>
-  dismissOnBackdrop?: boolean
-  buttonProps?: ButtonProps
-  accessible?:boolean
-  showClose?: boolean
-  closable?: boolean
-  footer?: React.ReactNode
+export type ModalProps = Omit<ViewProps, "variants" | "styles"> & {
+  variants?: ComponentVariants<typeof MobileModalStyles>["variants"];
+  styles?: StylesOf<MobileModalComposition>;
+  dismissOnBackdrop?: boolean;
+  buttonProps?: ButtonProps;
+  accessible?: boolean;
+  showClose?: boolean;
+  closable?: boolean;
+  footer?: React.ReactNode;
   title?: React.ReactNode;
-  debugName?: string
-  closeIconName?: IconPlaceholder
-  visible: boolean
-  toggle: () => void
-}
- 
-export const Modal:React.FC<ModalProps> = (modalProps) => {
+  debugName?: string;
+  closeIconName?: IconPlaceholder;
+  visible: boolean;
+  toggle: () => void;
+};
 
-   const {
-    variants = [], 
-    styles = { }, 
-    style, 
+export const Modal: React.FC<ModalProps> = (modalProps) => {
+  const {
+    variants = [],
+    styles = {},
+    style,
     visible,
     showClose,
     closable = true,
@@ -48,96 +53,104 @@ export const Modal:React.FC<ModalProps> = (modalProps) => {
     children,
     toggle,
     dismissOnBackdrop = true,
-    closeIconName = 'close',
+    closeIconName = "close",
     debugName,
     ...props
-    } = modalProps
-  
-  const variantStyles = useComponentStyle('Modal', {
-    variants:  variants as any,
+  } = modalProps;
+
+  const variantStyles = useComponentStyle("Modal", {
+    variants: variants as any,
     transform: StyleSheet.flatten,
-    styles
-  }) as ModalProps['styles']
+    styles,
+  }) as ModalProps["styles"];
 
-
-  function getStyles(key:MobileModalParts){
-    const s =  [
+  function getStyles(key: MobileModalParts) {
+    const s = [
       variantStyles[key],
-     styles[key],
-      visible ?  variantStyles[key + ':visible'] : {},
-      visible ?  styles[key + ':visible'] : {},
-    ]
+      styles[key],
+      visible ? variantStyles[key + ":visible"] : {},
+      visible ? styles[key + ":visible"] : {},
+    ];
 
-    return s
+    return s;
   }
 
   const buttonStyles = React.useMemo(() => {
-    const buttonEntries = {}
+    const buttonEntries = {};
 
-    for(const [key,style] of Object.entries(variantStyles)){
-        if(key.startsWith('closeButton')){
-            buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
-        }
+    for (const [key, style] of Object.entries(variantStyles)) {
+      if (key.startsWith("closeButton")) {
+        buttonEntries[capitalize(key.replace("closeButton", ""), true)] = style;
+      }
     }
-    return buttonEntries
-  }, [variantStyles])
+    return buttonEntries;
+  }, [variantStyles]);
 
   const boxAnimation = {
-    hidden : {
-      ...variantStyles['box:pose'],
-      ...styles['box:pose'],
+    hidden: {
+      ...variantStyles["box:pose"],
+      ...styles["box:pose"],
     },
-    visible : {
-      ...variantStyles['box:pose:visible'],
-      ...styles['box:pose:visible'],
-    }
-  }
+    visible: {
+      ...variantStyles["box:pose:visible"],
+      ...styles["box:pose:visible"],
+    },
+  };
 
   return (
+    <View
+      style={getStyles("wrapper")}
+      pointerEvents={visible ? "auto" : "none"}
+    >
+      <AnimatedView style={getStyles("overlay")} transition={"opacity"} />
+      <Scroll
+        style={getStyles("innerWrapper")}
+        contentContainerStyle={getStyles("innerWrapperScroll")}
+      >
+        {dismissOnBackdrop && (
+          <Touchable
+            debugName={`${debugName} modal backdrop`}
+            activeOpacity={1}
+            onPress={() => toggle()}
+            style={getStyles("touchableBackdrop")}
+          />
+        )}
+        <Animated
+          component="View"
+          config={boxAnimation}
+          pose={visible ? "visible" : "hidden"}
+          style={getStyles("box")}
+        >
+          {(title || showClose) && (
+            <View style={getStyles("header")}>
+              {typeof title === "string" ? (
+                <Text text={title} style={getStyles("title")} />
+              ) : (
+                title
+              )}
 
-      <View style={getStyles('wrapper')} pointerEvents={visible ? 'auto' : 'none'} >
-        <AnimatedView style={getStyles('overlay')} transition={'opacity'}/>
-        <Scroll style={getStyles('innerWrapper')} contentContainerStyle={getStyles('innerWrapperScroll')}>
-           {
-            dismissOnBackdrop &&
-              <Touchable
-                debugName={`${debugName} modal backdrop`}
-                activeOpacity={1}
-                onPress={() =>  toggle()}
-                style={getStyles('touchableBackdrop')}
-              
-              />
-            }
-              <Animated component='View' config={boxAnimation} pose={visible ? 'visible' : 'hidden'}  style={getStyles('box')}>
-                {
-                  (title || showClose) && 
+              {showClose && closable && (
+                <Button
+                  debugName={`${debugName} modal close button`}
+                  icon={closeIconName as IconPlaceholder}
+                  variants={["icon"]}
+                  onPress={toggle}
+                  styles={buttonStyles}
+                />
+              )}
+            </View>
+          )}
 
-                    <View   style={getStyles('header')}>
-                  
-                      {typeof title === 'string' ? <Text text={title} style={getStyles('title')}/> : title}
-                    
-                      {
-                        (showClose && closable) &&
-                          <Button debugName={`${debugName} modal close button`} icon={closeIconName as IconPlaceholder} variants={['icon']} onPress={toggle} styles={buttonStyles}/>
-                      }
-                    </View>
-                }
-            
-                <View style={getStyles('body')}>
-                  {children}
-                </View>
-                {
-                  footer && <View style={getStyles('footer')}> 
-                    {typeof footer === 'string' ? <Text text={footer}/> : footer}
-                  </View>
-                }
-            </Animated>
-          
-        </Scroll>
-      </View>
-  )
-}
+          <View style={getStyles("body")}>{children}</View>
+          {footer && (
+            <View style={getStyles("footer")}>
+              {typeof footer === "string" ? <Text text={footer} /> : footer}
+            </View>
+          )}
+        </Animated>
+      </Scroll>
+    </View>
+  );
+};
 
-
-
-export default Modal
+export default Modal;

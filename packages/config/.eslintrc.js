@@ -117,10 +117,10 @@ const formatting = {
     'declaration',
     { allowArrowFunctions: true },
   ],
+  'no-multiple-empty-lines': ['error', { max: 2, maxBOF: 0, maxEOF: 1 }],
 }
 
 const codeQuality = {
-   
   'global-require': 'off',
   'handle-callback-err': 'warn',
   'callback-return': 'off',
@@ -175,4 +175,3 @@ module.exports = {
     ...typescript,
   },
 }
-

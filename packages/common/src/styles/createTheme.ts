@@ -1,33 +1,34 @@
-import { DefaultColors } from '.'
-import { createBorderHelpers } from './helpers'
+import { DefaultColors } from ".";
+import { createBorderHelpers } from "./helpers";
 
-import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
-import { defaultPresets } from './presets'
-import { spacingFactory } from './Spacing'
-import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
+import { breakpointHooksFactory, buildMediaQueries } from "./MediaQuery";
+import { defaultPresets } from "./presets";
+import { spacingFactory } from "./Spacing";
+import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from "./types";
 
-const defaultColors:Record<DefaultColors, string> = {
-  black: '#000',
-  gray: '#ccc',
-  negative: '#a11',
-  positive: '#ada',
-  primary: '#7695EC',
-  secondary: '#000',
-  white: '#fff',
-}
- 
+const defaultColors: Record<DefaultColors, string> = {
+  black: "#000",
+  gray: "#ccc",
+  negative: "#a11",
+  positive: "#ada",
+  primary: "#7695EC",
+  secondary: "#000",
+  white: "#fff",
+};
+
 const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
-}
-
-
+};
 
 /**
  * [[include:Theme.md]]
  */
-export function createTheme<T extends ThemeValues>(values: T, accessors?: DynamicValueAccessors): EnhancedTheme<T> {
-  const getters = { ...defaultAccessors, ...accessors }
-  const isBrowser = !window?.process
+export function createTheme<T extends ThemeValues>(
+  values: T,
+  accessors?: DynamicValueAccessors
+): EnhancedTheme<T> {
+  const getters = { ...defaultAccessors, ...accessors };
+  const isBrowser = !window?.process;
   return {
     ...values,
     colors: {
@@ -38,8 +39,8 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
     media: buildMediaQueries(values.breakpoints),
     spacing: {
       base: values.spacing,
-      ...spacingFactory(values.spacing, 'padding'),
-      ...spacingFactory(values.spacing, 'margin'),
+      ...spacingFactory(values.spacing, "padding"),
+      ...spacingFactory(values.spacing, "margin"),
     },
     border: createBorderHelpers(values, isBrowser),
     presets: defaultPresets,
@@ -62,5 +63,5 @@ export function createTheme<T extends ThemeValues>(values: T, accessors?: Dynami
       height: size * values.spacing,
     }),
     IsBrowser: isBrowser,
-  }
+  };
 }

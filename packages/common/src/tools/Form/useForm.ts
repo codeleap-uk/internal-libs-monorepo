@@ -3,166 +3,169 @@ import { usePartialState, deepGet, deepSet } from '../../utils';
 import { FunctionType } from '../../types';
 import { useStyle } from '../../styles/StyleProvider';
 
-export * as FormTypes from  './types'
+export * as FormTypes from './types';
 
-const SCOPE = 'useForm'
+const SCOPE = 'useForm';
 
-const shouldLog = (x: FormTypes.FormStep, config:FormTypes.UseFormConfig<any> ) => {
-  return  (config.log || []).includes(x)
-}
+const shouldLog = (
+  x: FormTypes.FormStep,
+  config: FormTypes.UseFormConfig<any>,
+) => {
+  return (config.log || []).includes(x);
+};
 
 export function useForm<
-    Form extends FormTypes.CreateFormReturn<any>, 
-    FieldPaths extends  FormTypes.PathsWithValues<FormTypes.FlattenFields<Form['config']>>,
-    Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<Form['config']>
->(
-  form:Form, 
-  config:FormTypes.UseFormConfig<Values>,
-){
-  
- 
-
-  const [formValues, setFormValues] = usePartialState<Values>(config.initialState || form.defaultValue)
-  const { logger } = useStyle()
+  Form extends FormTypes.CreateFormReturn<any>,
+  FieldPaths extends FormTypes.PathsWithValues<
+    FormTypes.FlattenFields<Form['config']>
+  >,
+  Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<
+    Form['config']
+  >
+>(form: Form, config: FormTypes.UseFormConfig<Values>) {
+  const [formValues, setFormValues] = usePartialState<Values>(
+    config.initialState || form.defaultValue,
+  );
+  const { logger } = useStyle();
   const [fieldErrors, setFieldErrors] = usePartialState(() => {
-    const errors = Object.keys(form.staticFieldProps).map(key => [key, ''])
+    const errors = Object.keys(form.staticFieldProps).map((key) => [key, '']);
 
-    return Object.fromEntries(errors)
-  })
+    return Object.fromEntries(errors);
+  });
   // @ts-ignore
-  function setFieldValue(...args: FieldPaths){
+  function setFieldValue(...args: FieldPaths) {
     // @ts-ignore
-    const val = deepSet(args)
-    
+    const val = deepSet(args);
+
     if (shouldLog('setValue', config)) {
       // @ts-ignore
-      logger.log(`Set ${form.name}/${args[0]} to ${String(args[1])}`, '', SCOPE)
-
+      logger.log(
+        // @ts-ignore
+        `Set ${form.name}/${args[0]} to ${String(args[1])}`,
+        '',
+        SCOPE,
+      );
     }
-    setFormValues(val)
+    setFormValues(val);
   }
 
-  function validateField(field: FieldPaths[0], set = false, val?: any){
+  function validateField(field: FieldPaths[0], set = false, val?: any) {
     // @ts-ignore
-    const { validate } = form.staticFieldProps[field as string]
-  
+    const { validate } = form.staticFieldProps[field as string];
 
-    if (validate){
-      
+    if (validate) {
       // @ts-ignore
-      const result = validate( val !== undefined ?  val :  deepGet(field, formValues), formValues)
-      if (shouldLog('validate', config)){
-        logger.log(`Validation for ${form.name} ->`, result, SCOPE)
+      const result = validate(
+        val !== undefined ? val : deepGet(field, formValues),
+        formValues,
+      );
+      if (shouldLog('validate', config)) {
+        logger.log(`Validation for ${form.name} ->`, result, SCOPE);
       }
 
-      if (set){
+      if (set) {
         setFieldErrors(() => ({
-          [field]: result.valid ? '' :  result.message, 
-        }))
-        
+          [field]: result.valid ? '' : result.message,
+        }));
       }
 
-      return result
+      return result;
     }
 
     return {
       valid: true,
       message: '',
-    }
+    };
   }
 
-  function validateAll(set = false){
-    const errors = {...fieldErrors}
-    for (const [path] of Object.entries(form.staticFieldProps)){
-      const result =  validateField(path)
-      errors[path] = result.valid ? '' : result?.message
+  function validateAll(set = false) {
+    const errors = { ...fieldErrors };
+    for (const [path] of Object.entries(form.staticFieldProps)) {
+      const result = validateField(path);
+      errors[path] = result.valid ? '' : result?.message;
     }
 
-    if (set){
-      setFieldErrors(errors)
-
+    if (set) {
+      setFieldErrors(errors);
     }
-    return Object.values(errors).join('').length === 0
+    return Object.values(errors).join('').length === 0;
   }
- 
-  function register(field: FieldPaths[0]){
+
+  function register(field: FieldPaths[0]) {
     // @ts-ignore
-    const { changeEventName, validate,  ...staticProps} = form.staticFieldProps[field as string]
-    
-    const dynamicProps:any = {
-      value: deepGet(field, formValues),
-    }
+    const { changeEventName, validate, ...staticProps } =
+      form.staticFieldProps[field as string];
 
-    if (changeEventName){
+    const dynamicProps: any = {
+      value: deepGet(field, formValues),
+    };
+
+    if (changeEventName) {
       dynamicProps[changeEventName] = (value) => {
-        if (config.validateOn === 'change'){
-          validateField(field, true, value)
+        if (config.validateOn === 'change') {
+          validateField(field, true, value);
         }
         // @ts-ignore
-        setFieldValue(field, value)
-      }
+        setFieldValue(field, value);
+      };
     }
 
-    if (validate){
-      switch (config.validateOn){
+    if (validate) {
+      switch (config.validateOn) {
         case 'change':
           // dynamicProps.validate = () => validateField(field, true)
-          dynamicProps.validate = fieldErrors[field]
-          break
+          dynamicProps.validate = fieldErrors[field];
+          break;
         case 'blur':
           dynamicProps.onBlur = () => {
-            validateField(field, true)
-          }
-          dynamicProps.validate = fieldErrors[field]
-          break
+            validateField(field, true);
+          };
+          dynamicProps.validate = fieldErrors[field];
+          break;
         case 'submit':
-          dynamicProps.validate = fieldErrors[field]
-          break
+          dynamicProps.validate = fieldErrors[field];
+          break;
       }
-
     }
 
     return {
       ...staticProps,
       ...dynamicProps,
-    }
+    };
   }
 
-  function getTransformedValue():Values{
-    let out = {}
-    switch (config.output){
-      default :
-        out = formValues
-        break
-      
+  function getTransformedValue(): Values {
+    let out = {};
+    switch (config.output) {
+      default:
+        out = formValues;
+        break;
     }
 
-
-    return out as Values
+    return out as Values;
   }
 
-  async function onSubmit(cb: FunctionType<[Values], any>, e?:any){
-    if (e?.preventDefault) e.preventDefault()
+  async function onSubmit(cb: FunctionType<[Values], any>, e?: any) {
+    if (e?.preventDefault) e.preventDefault();
 
-    if (config.validateOn === 'submit'){
-      const valid = validateAll(true)
-      if (!valid) return
+    if (config.validateOn === 'submit') {
+      const valid = validateAll(true);
+      if (!valid) return;
     }
-    
-    await cb(getTransformedValue())
+
+    await cb(getTransformedValue());
   }
 
-  
   return {
     setFieldValue,
     values: formValues as Values,
     register,
     validateAll,
     validateField,
-    onSubmit, 
+    onSubmit,
     fieldErrors,
     getTransformedValue,
     setFormValues,
     isValid: validateAll(),
-  } 
+  };
 }

@@ -1,94 +1,93 @@
-import { includePresets } from '../../presets'
-import { createDefaultVariantFactory } from '../createDefaults'
+import { includePresets } from "../../presets";
+import { createDefaultVariantFactory } from "../createDefaults";
 
-export type MenuComposition = 
-    'wrapper' | 
-    'menuItem' |
-    'menuItem:mobile' |
-    'menuItem:text' |
-    'menuItem:text:mobile' |
-    'menuItem:text:selected' |
-    'sideMenu' |
-    'topMenu' |
-    'horizontalScroll' 
-export type PageRouterComposition = 
-    'content' |
-    'router' |
-    MenuComposition
-const createPageRouterStyle = createDefaultVariantFactory<PageRouterComposition>()
+export type MenuComposition =
+  | "wrapper"
+  | "menuItem"
+  | "menuItem:mobile"
+  | "menuItem:text"
+  | "menuItem:text:mobile"
+  | "menuItem:text:selected"
+  | "sideMenu"
+  | "topMenu"
+  | "horizontalScroll";
+export type PageRouterComposition = "content" | "router" | MenuComposition;
+const createPageRouterStyle =
+  createDefaultVariantFactory<PageRouterComposition>();
 
-const presets = includePresets((styles) => createPageRouterStyle(() => ({ topMenu: styles, sideMenu: styles })))
+const presets = includePresets((styles) =>
+  createPageRouterStyle(() => ({ topMenu: styles, sideMenu: styles }))
+);
 
 export const PageRouterStyles = {
   ...presets,
   default: createPageRouterStyle((Theme) => ({
-    
     menuItem: {
-      alignItems: 'center',
+      alignItems: "center",
       padding: Theme.spacing.value(2.5),
-      flexDirection: 'column',
+      flexDirection: "column",
       borderRadius: Theme.borderRadius.medium,
       borderWidth: 1,
-      borderStyle: 'solid',
+      borderStyle: "solid",
       // ...Theme.debug('red'),
-      borderColor: 'transparent',
+      borderColor: "transparent",
       width: Theme.spacing.value(5),
       height: Theme.spacing.value(5),
       margin: 2,
-      '&:hover': {
+      "&:hover": {
         background: Theme.colors.gray,
       },
     },
-    'menuItem:mobile': {
-      display: 'flex',
+    "menuItem:mobile": {
+      display: "flex",
       ...Theme.presets.center,
-      flexDirection: 'column-reverse',
-      justifyContent: 'space-between',
+      flexDirection: "column-reverse",
+      justifyContent: "space-between",
     },
-    'menuItem:mobile:text': {
+    "menuItem:mobile:text": {
       color: Theme.colors.black,
       padding: Theme.spacing.value(1),
-      textTransform: 'uppercase',
+      textTransform: "uppercase",
     },
-    'menuItem:text': {
-      fontWeight: '500',
+    "menuItem:text": {
+      fontWeight: "500",
       color: Theme.colors.primary,
-      textTransform: 'uppercase',
-      textAlign: 'center',
+      textTransform: "uppercase",
+      textAlign: "center",
     },
-    'menuItem:text:selected': {
-      fontWeight: 'bold',
+    "menuItem:text:selected": {
+      fontWeight: "bold",
       color: Theme.colors.gray,
     },
-      
-    'sideMenu': {
+
+    sideMenu: {
       borderRadius: Theme.borderRadius.medium,
-      boxShadow: '0px 0px 20px rgba(0, 0, 0, 0.16)',
+      boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.16)",
       marginRight: Theme.spacing.value(6),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      height: '100%',
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      height: "100%",
       width: Theme.spacing.value(11),
       flexShrink: 0,
       flexGrow: 0,
-      [Theme.media.down('xlarge')]: {
+      [Theme.media.down("xlarge")]: {
         marginRight: Theme.spacing.value(4),
       },
-      [Theme.media.down('large')]: {
+      [Theme.media.down("large")]: {
         marginRight: Theme.spacing.value(3),
         width: 90,
       },
     },
-    'topMenu': {
-      width: '100%',
+    topMenu: {
+      width: "100%",
       backgroundColor: Theme.colors.white,
       height: 80,
     },
 
-    'horizontalScroll': {
-      display: 'flex',
-      justifyContent: 'space-between',
+    horizontalScroll: {
+      display: "flex",
+      justifyContent: "space-between",
     },
   })),
-}
+};

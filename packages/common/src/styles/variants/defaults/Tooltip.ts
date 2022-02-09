@@ -1,36 +1,34 @@
-import { includePresets } from '../../presets'
-import { createDefaultVariantFactory } from '../createDefaults'
+import { includePresets } from "../../presets";
+import { createDefaultVariantFactory } from "../createDefaults";
 
-export type TooltipComposition = 'wrapper' | 'arrow' | 'bubble';
+export type TooltipComposition = "wrapper" | "arrow" | "bubble";
 
-const createTooltipStyle = createDefaultVariantFactory<TooltipComposition>()
+const createTooltipStyle = createDefaultVariantFactory<TooltipComposition>();
 
-const presets = includePresets((styles) => createTooltipStyle(() => ({ wrapper: styles })))
+const presets = includePresets((styles) =>
+  createTooltipStyle(() => ({ wrapper: styles }))
+);
 
 export const TooltipStyles = {
   ...presets,
-  default: createTooltipStyle((t) =>  ({
+  default: createTooltipStyle((t) => ({
     wrapper: {
-     
-      position: 'relative',
-     
+      position: "relative",
     },
     arrow: {
       content: '""',
-      position: 'absolute',
+      position: "absolute",
       background: t.colors.white,
       height: 10,
       width: 10,
       zIndex: -1,
     },
     bubble: {
-      display: 'flex',
+      display: "flex",
       background: t.colors.white,
       zIndex: 10,
-      position: 'absolute',
+      position: "absolute",
       ...t.spacing.padding(1),
     },
-
   })),
-}
-
+};

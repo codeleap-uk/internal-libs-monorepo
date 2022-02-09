@@ -1,51 +1,51 @@
-import { DeepPartial } from '..'
-import { LogType, SentryProvider } from '../tools/Logger/types'
+import { DeepPartial } from "..";
+import { LogType, SentryProvider } from "../tools/Logger/types";
 
 export type AppSettings = DeepPartial<{
-    AppName:string
-    Description:string
-    Environment: {
-        IsDev:boolean
-        Type: 'production' | 'development'
-    }
-    Application: {
-        IsBrowser:boolean
-    }
-    BaseURL: string
-    Sentry: {
-        enable: boolean,
-        dsn:string
-        provider: SentryProvider
-    }
-    Logger: {
-        Level: LogType,
-        IgnoreWarnings?: string[]
-    }
-    Vars: {
-        GooglePlayURL : string
-        AppStoreURL: string
-        WebsiteURL: string
-        PrivacyPolicy: string
-    },
-    Fetch: {
-        ApiURL: string
-    }
-    Social: {
-        FaceURL: string
-        LinkedinURL: string
-    }
-    ContactINFO: {
-      SupportEMAIL: string, 
-      ContactEMAIL: string,
-      ContactPHONE: string,
-    },
-    
-    ApiCredentials: {
-        GoogleSignin: {
-            WebClientId: string
-        }
-        FacebookSDK: {
-            AppId: string
-        }
-    }
-}>
+  AppName: string;
+  Description: string;
+  Environment: {
+    IsDev: boolean;
+    Type: "production" | "development";
+  };
+  Application: {
+    IsBrowser: boolean;
+  };
+  BaseURL: string;
+  Sentry: {
+    enable: boolean;
+    dsn: string;
+    provider: SentryProvider;
+  };
+  Logger: {
+    Level: LogType;
+    IgnoreWarnings?: string[];
+  };
+  Vars: {
+    GooglePlayURL: string;
+    AppStoreURL: string;
+    WebsiteURL: string;
+    PrivacyPolicy: string;
+  };
+  Fetch: {
+    ApiURL: string;
+  };
+  Social: {
+    FaceURL: string;
+    LinkedinURL: string;
+  };
+  ContactINFO: {
+    SupportEMAIL: string;
+    ContactEMAIL: string;
+    ContactPHONE: string;
+  };
+
+  ApiCredentials: {
+    GoogleSignin: {
+      WebClientId: string;
+    };
+    FacebookSDK: {
+      AppId: string;
+    };
+  };
+}>;
