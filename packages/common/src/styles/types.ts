@@ -49,6 +49,15 @@ export type TypographyStyle = {
   };
 };
 
+type ButtonStyle = {
+  default: {
+    height: number,
+  }
+  small: {
+    height: number,
+  }
+}
+
 export type AppTheme = {
   readonly breakpoints: Record<string, number>;
   readonly spacing: number;
@@ -60,18 +69,20 @@ export type AppTheme = {
   };
 
   readonly borderRadius: {
-    large: number;
-    medium: number;
-    small: number;
-  };
+    large: number
+    medium: number
+    small: number
+  }
+   
+  readonly buttons: ButtonStyle
 
-  readonly icons: Record<string, any>;
+  readonly icons: Record<string, any>
 
-  readonly typography: {
-    fontFamily: string;
-    styles: Record<Fonts, TypographyStyle>;
-    baseFontSize: number;
-  };
+  readonly typography : {
+    fontFamily: string
+    styles: Record<Fonts, TypographyStyle>
+    baseFontSize: number
+  }
 };
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<

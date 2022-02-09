@@ -1,16 +1,16 @@
-import { FunctionType } from "../..";
-import { colors, foregroundColors } from "./constants";
+import { FunctionType } from '../..';
+import { colors, foregroundColors } from './constants';
 
-import * as Sentry from "@sentry/browser";
+import * as Sentry from '@sentry/browser';
 
-export type LogType = "info" | "debug" | "warn" | "error" | "log" | "silent";
+export type LogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'silent';
 
 export type LogFunctionArgs = [
-  description: string,
-  value: any,
-  category: string
-];
-export type ConsoleColor = keyof typeof colors;
+    description?: any,
+    value?:any,
+    category?:string
+]
+export type ConsoleColor = keyof typeof colors
 export type DebugColors = {
   [Property in keyof typeof foregroundColors as `${Lowercase<
     string & Property
@@ -35,5 +35,5 @@ export const SentrySeverityMap: Record<LogType, Sentry.Severity> = {
 
 export type SentryProvider = Pick<
   typeof Sentry,
-  "addBreadcrumb" | "captureException" | "init" | "captureMessage"
+  'addBreadcrumb' | 'captureException' | 'init' | 'captureMessage'
 >;

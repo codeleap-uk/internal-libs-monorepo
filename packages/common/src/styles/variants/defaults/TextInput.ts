@@ -41,7 +41,8 @@ export const TextInputStyles = {
 
       backgroundColor: "transparent",
       flex: 1,
-
+      fontSize: theme.typography.baseFontSize,
+      height: theme.buttons.default.height,
       // ...assignTextStyle('p2')(theme).text,
     },
     placeholder: {
@@ -81,7 +82,7 @@ export const TextInputStyles = {
     },
     icon: {
       height: 20,
-      width: 20,
+      width: 25,
       color: theme.colors.gray,
     },
     leftIcon: {
