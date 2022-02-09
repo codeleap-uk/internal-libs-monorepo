@@ -73,36 +73,40 @@ export function usePartialState<T = any>(initial:T|(() => T)){
 export function useInterval(callback:AnyFunction, interval:number){
   const intervalRef = useRef(null)
   function clear(){
-
     clearInterval(intervalRef.current)
     intervalRef.current = null
-    
   }
-  useEffect(() => {
-    intervalRef.current = setInterval(callback, interval)
-    return clear
-  })
 
+  function start(){
+    intervalRef.current = setInterval(callback, interval)
+  }
+ 
   return {
     clear,
+    start,
     interval: intervalRef.current,
   }
 }
 
-export function useDebounce<T extends unknown>(value:T, debounce:number):T{
+export function useDebounce<T extends unknown>(value:T, debounce:number):[T, () =>void]{
   const [debouncedValue, setDebouncedValue] = useState(value)
 
+  const timeoutRef = useRef(null)
+
+  const reset = () => {
+    if (timeoutRef.current){
+      clearTimeout(timeoutRef.current)
+    }
+  }
   useEffect(() => {
   
-    const timeout = setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setDebouncedValue(value)
     }, debounce)
 
-    return () => {
-      clearTimeout(timeout)
-    }
+    return reset
     
   }, [value])
  
-  return debouncedValue
+  return [debouncedValue, reset]
 }

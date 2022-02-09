@@ -33,7 +33,7 @@ export const Touchable:React.FC<TouchableProps> = forwardRef<NativeTouchable, To
   const {logger} = useStyle()
   const press = () => {
     if(!onPress) throw {message: 'No onPress passed to touchable', touchableProps}
-    logger.log('<Touchable/> pressed', { style, variants }, 'Component')
+    logger.log(`${debugName || '<Touchable/>'}  pressed`, { style, variants }, 'Component')
     onPress && onPress()
   }
   

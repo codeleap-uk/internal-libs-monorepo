@@ -17,10 +17,10 @@ export interface IRequestClient {
 
 
 type MultipartConfig = {
-    keyTransforms?: Record<string, 'file'|'json'>
+    keyTransforms?: Record<string, 'file'|'json'|'image'>
 }
 
-export type Middleware<T> = (current:T) => T|void
+export type Middleware<T> = (current:T) => Promise<T|void>
 
 export type RequestClientConfig<D =any> = AxiosRequestConfig<D> & {
     rejectOnCancel?:boolean

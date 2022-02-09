@@ -23,6 +23,6 @@ export type CustomSelectProps<T> = {
     renderCurrentlySelected?: SelectRenderFN<T>
     styles?: StylesOf<WebSelectComposition>
     disabled?: boolean
-    validate?: FormTypes.ValidatorFunction<any> | string
+    validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
     arrowIconName?: IconPlaceholder
 } & ComponentVariants<typeof WebSelectStyles>

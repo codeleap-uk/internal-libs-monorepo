@@ -9,7 +9,8 @@ type TextInputParts =
   | 'textField' 
   | 'label' 
   | 'innerWrapper' 
-  | 'error';
+  | 'error'
+  | 'placeholder';
 
 export type TextInputComposition = `${TextInputParts}:error` | `${TextInputParts}:focus` | TextInputParts
 
@@ -40,6 +41,9 @@ export const TextInputStyles = {
 
       // ...assignTextStyle('p2')(theme).text,
     },
+    placeholder: {
+      color: theme.colors.gray,
+    },
     wrapper: {
       display: 'flex',
       flexDirection: 'column',
@@ -61,7 +65,7 @@ export const TextInputStyles = {
 
     },
     'innerWrapper:focus': {
-      borderColor: theme.colors.primary,
+      ...theme.border.primary(1),
     },
     'icon:focus': {
       color: theme.colors.primary,
@@ -93,9 +97,7 @@ export const TextInputStyles = {
       }, {}),
     },
     'innerWrapper:error': {
-      ...theme.border.negative({
-        width: 1,
-      }),
+      ...theme.border.negative(1),
     },
   })),
   line: createTextInputStyle((theme) => ({

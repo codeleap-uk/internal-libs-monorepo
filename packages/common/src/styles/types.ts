@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-imports */
-import { DefaultVariants, VariantProvider } from './variants'
+import { DefaultVariants, VariantProvider, CommonVariantObject } from './variants'
 import { Hooks, MediaQueries } from './MediaQuery'
 import { AppSettings } from '../config'
 import { Logger } from '../tools/Logger'
@@ -81,7 +81,7 @@ export type StyleContextProps<Variants extends DefaultVariants, Provider extends
  
 };
 
-export type StyleContextValue<C extends DefaultVariants> = {
+export type StyleContextValue<C extends Readonly<Record<string, CommonVariantObject<any>>>> = {
   Theme: EnhancedTheme<any>;
   provider:VariantProvider<any, any>
   ComponentVariants: C

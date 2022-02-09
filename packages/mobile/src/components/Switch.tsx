@@ -14,7 +14,7 @@ type SwitchProps = NativeSwitchProps & {
     variants?: ComponentVariants<typeof SwitchStyles>['variants']
     label?: ReactNode
     styles?: StylesOf<SwitchComposition> 
-    validate?: FormTypes.ValidatorFunction | string
+    validate?: FormTypes.ValidatorFunctionWithoutForm | string
 } 
 
 export const Switch = forwardRef<NativeSwitch,SwitchProps>((switchProps,ref) => {

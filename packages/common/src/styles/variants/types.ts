@@ -1,17 +1,17 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
-import { CSSProperties, ReactElement } from 'react'
+import {  ReactElement } from 'react'
 import { QueryKey } from '../MediaQuery'
 import { BaseViewProps, BreakpointPlaceholder, EnhancedTheme, IconPlaceholder,  Spacing } from '../types'
-import { DefaultVariants, DEFAULT_VARIANTS } from './defaults'
+import { DEFAULT_VARIANTS } from './defaults'
 import { ComponentVariants, FunctionType, NestedKeys, ReplaceRecursive, StylesOf } from '../../types'
 
-export type PartialComponentStyle<C extends string, S = CSSProperties> = Partial<Record<C, S>>  ;
+export type PartialComponentStyle<C extends string, S = any> = Partial<Record<C, S>>  ;
 
-export type CommonVariantObject<C extends string = string, S = CSSProperties> = Record<string, PartialComponentStyle<C, S> >;
+export type CommonVariantObject<C extends string = string, S = any> = Record<string, PartialComponentStyle<C, S> >;
 
 
-export type DefaultVariantBuilder<CSS = React.CSSProperties> = Record<string, FunctionType<[EnhancedTheme<any>, string], PartialComponentStyle<any, CSS >>>;
+export type DefaultVariantBuilder<CSS = any> = Record<string, FunctionType<[EnhancedTheme<any>, string], PartialComponentStyle<any, CSS >>>;
 export type FromVariantsBuilder<S, T extends DefaultVariantBuilder<S>> = {
   [Property in keyof T]: ReturnType<T[Property]>;
 };
@@ -41,7 +41,7 @@ export type ApplyVariantsArgs = {
 }
 export type CT<StyleType> = [Component: FunctionType<[any], ReactElement|null>, style: CommonVariantObject<string, StyleType>]
 
-export type ComponentStyleMap<CSS = CSSProperties> = Partial<{
+export type ComponentStyleMap<CSS = any> = Partial<{
   [x:string] : CT<CSS>
 }>
 

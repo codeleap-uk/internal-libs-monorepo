@@ -28,25 +28,33 @@ export class RequestClient extends Axios implements IRequestClient {
         Level: 'silent',
       },
     })
-    this.axios.interceptors.request.use((c) => {
+    this.axios.interceptors.request.use(async (c) => {
       let reqConfig = c as RequestClientConfig
 
       if (reqConfig.multipart) {
 
         reqConfig.data = toMultipart(reqConfig)
+        reqConfig.headers = {
+          ...reqConfig?.headers,
+          'Content-Type': 'multipart/form-data',
+        }
       }
 
       if (this.config.requestMiddleware) {
-        reqConfig = this.config.requestMiddleware.reduce((req, middleware) => middleware(req)||req, reqConfig)
+        for (const middleware of this.config.requestMiddleware){
+          reqConfig = await middleware(reqConfig)||reqConfig
+        }
       }
 
       return reqConfig
     })
-    this.axios.interceptors.response.use((axiosResponse) => {
+    this.axios.interceptors.response.use(async (axiosResponse) => {
       let response = { ...axiosResponse }
 
       if (this.config.responseMiddleware) {
-        response = this.config.responseMiddleware.reduce((res, middleware) => middleware(res)||res, response)
+        for (const middleware of this.config.responseMiddleware){
+          response = await middleware(response)||response
+        }
       }
 
       return response
@@ -98,10 +106,11 @@ export class RequestClient extends Axios implements IRequestClient {
 
     this.setInQueue(failedRequest)
 
-    this.logger.error(`${request.method.toUpperCase()} to ${request.url} failed`, err?.response?.data || err, 'Network')
+    this.logger.error(
+      `${request.method.toUpperCase()} to ${request.url} failed with status ${err?.response?.status||''}`, err?.response?.data || err, 'Network')
 
     if (shouldReject) {
-      reject(failedRequest)
+      reject({failedRequest, err})
     } 
 
   }
@@ -140,7 +149,7 @@ export class RequestClient extends Axios implements IRequestClient {
             requestStatus: 'successful',
           })
 
-          this.logger.log(`${method.toUpperCase()} ${this.config.baseURL + request.url} Successful`, response.data, 'Network')
+          this.logger.log(`${method.toUpperCase()} ${this.config.baseURL + request.url} Successful ${response.status}`, response.data, 'Network')
 
           resolve(response)
         }).catch((err) => this.onRequestFailure(err, {...request, method}, reject))
