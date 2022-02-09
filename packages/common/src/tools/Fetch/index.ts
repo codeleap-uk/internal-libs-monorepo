@@ -110,7 +110,7 @@ export class RequestClient extends Axios implements IRequestClient {
       `${request.method.toUpperCase()} to ${request.url} failed with status ${err?.response?.status||''}`, err?.response?.data || err, 'Network')
 
     if (shouldReject) {
-      reject(failedRequest)
+      reject({failedRequest, err})
     } 
 
   }
