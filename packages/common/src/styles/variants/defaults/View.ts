@@ -1,12 +1,12 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type ViewComposition = 'wrapper';
 
-const createViewStyle = createDefaultVariantFactory<ViewComposition>();
+const createViewStyle = createDefaultVariantFactory<ViewComposition>()
 
 const presets = includePresets((styles) => createViewStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const ViewStyles = {
   ...presets,
@@ -15,4 +15,4 @@ export const ViewStyles = {
       display: 'flex',
     },
   })),
-};
+}

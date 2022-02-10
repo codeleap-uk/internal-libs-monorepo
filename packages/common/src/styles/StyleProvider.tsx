@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext } from 'react'
 import {
   AppTheme,
   CommonVariantObject,
@@ -7,20 +7,20 @@ import {
   DEFAULT_VARIANTS,
   FromVariantsBuilder,
   VariantProvider,
-} from '.';
-import { AnyFunction, ComponentVariants, NestedKeys, StylesOf } from '..';
-import { StyleContextProps, StyleContextValue } from './types';
-import { Logger } from '../tools/Logger';
+} from '.'
+import { AnyFunction, ComponentVariants, NestedKeys, StylesOf } from '..'
+import { StyleContextProps, StyleContextValue } from './types'
+import { Logger } from '../tools/Logger'
 export const StyleContext = createContext(
   {} as StyleContextValue<
     DefaultVariants & Record<string, CommonVariantObject<any>>
   >,
-);
+)
 const silentLogger = new Logger({
   Logger: {
     Level: 'silent',
   },
-});
+})
 export const StyleProvider = <
   S extends DefaultVariants,
   V extends VariantProvider<any, AppTheme>
@@ -43,11 +43,11 @@ export const StyleProvider = <
     >
       {children}
     </StyleContext.Provider>
-  );
-};
+  )
+}
 
 export function useStyle() {
-  return useContext(StyleContext);
+  return useContext(StyleContext)
 }
 
 type ComponentNameArg = keyof DEFAULT_VARIANTS;
@@ -69,7 +69,7 @@ export function useComponentStyle<
 ): K extends ComponentNameArg
   ? Record<NestedKeys<DefaultVariants[K]>, any>
   : Record<NestedKeys<FromVariantsBuilder<any, S>>, any> {
-  const { ComponentVariants: CV, provider } = useStyle() || {};
+  const { ComponentVariants: CV, provider } = useStyle() || {}
 
   const styles = props?.transform
     ? Object.fromEntries(
@@ -78,18 +78,18 @@ export function useComponentStyle<
         props.transform(value),
       ]),
     )
-    : props.styles;
-  let name = componentName as string;
+    : props.styles
+  let name = componentName as string
 
   if (componentName.startsWith('u:')) {
-    name = componentName.replace('u:', '');
+    name = componentName.replace('u:', '')
   }
 
-  const v = CV?.[name];
+  const v = CV?.[name]
   if (!v) {
     throw new Error(
       `Could not read context stylesheets for ${name}. Ensure it's being passed to <StyleProvider /> in the variants  prop.`,
-    );
+    )
   }
 
   const stylesheet = provider.getStyles(v, {
@@ -97,7 +97,7 @@ export function useComponentStyle<
     responsiveVariants: props.responsiveVariants || {},
     rootElement: props.rootElement,
     styles,
-  });
+  })
 
-  return stylesheet as any;
+  return stylesheet as any
 }

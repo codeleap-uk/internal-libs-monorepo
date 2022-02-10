@@ -3,14 +3,14 @@ import {
   DefaultVariants,
   VariantProvider,
   CommonVariantObject,
-} from './variants';
-import { Hooks, MediaQueries } from './MediaQuery';
-import { AppSettings } from '../config';
-import { Logger } from '../tools/Logger';
-import { AnyFunction } from '../types/utility';
-import { BorderHelpers } from './helpers';
-import { defaultPresets } from './presets';
-import { Spacings } from './Spacing';
+} from './variants'
+import { Hooks, MediaQueries } from './MediaQuery'
+import { AppSettings } from '../config'
+import { Logger } from '../tools/Logger'
+import { AnyFunction } from '../types/utility'
+import { BorderHelpers } from './helpers'
+import { defaultPresets } from './presets'
+import { Spacings } from './Spacing'
 type AnyProps<T = any> = {
   [x: string]: T;
 };
@@ -49,6 +49,15 @@ export type TypographyStyle = {
   };
 };
 
+type ButtonStyle = {
+  default: {
+    height: number,
+  }
+  small: {
+    height: number,
+  }
+}
+
 export type AppTheme = {
   readonly breakpoints: Record<string, number>;
   readonly spacing: number;
@@ -57,21 +66,23 @@ export type AppTheme = {
   readonly values?: {
     width?: number;
     height?: number;
+    buttons?: ButtonStyle
   };
 
   readonly borderRadius: {
-    large: number;
-    medium: number;
-    small: number;
-  };
+    large: number
+    medium: number
+    small: number
+  }
+   
 
-  readonly icons: Record<string, any>;
+  readonly icons: Record<string, any>
 
-  readonly typography: {
-    fontFamily: string;
-    styles: Record<Fonts, TypographyStyle>;
-    baseFontSize: number;
-  };
+  readonly typography : {
+    fontFamily: string
+    styles: Record<Fonts, TypographyStyle>
+    baseFontSize: number
+  }
 };
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
@@ -118,7 +129,7 @@ export type StyleContextValue<
 
 export type VariantsStylesheet = Record<string, unknown>;
 
-export const accessors = ['screenSize'] as const;
+export const accessors = ['screenSize'] as const
 
 export type Accessor = typeof accessors[number];
 
@@ -135,7 +146,7 @@ export const spacingVariants = [
   'Left',
   'Right',
   '',
-] as const;
+] as const
 
 export type SpacingVariants = typeof spacingVariants[number];
 

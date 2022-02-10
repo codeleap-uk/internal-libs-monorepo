@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { Slider as RNSlider } from '@miblanchard/react-native-slider';
-import { SliderProps as RNSliderProps } from '@miblanchard/react-native-slider/lib/types';
-import { useRef } from 'react';
-import { StyleProp, StyleSheet } from 'react-native';
-import { Text } from './Text';
-import { View, ViewProps } from './View';
+import * as React from 'react'
+import { Slider as RNSlider } from '@miblanchard/react-native-slider'
+import { SliderProps as RNSliderProps } from '@miblanchard/react-native-slider/lib/types'
+import { useRef } from 'react'
+import { StyleProp, StyleSheet } from 'react-native'
+import { Text } from './Text'
+import { View, ViewProps } from './View'
 import {
   ComponentVariants,
   Form,
@@ -12,9 +12,9 @@ import {
   SliderStyles,
   useComponentStyle,
   useStyle,
-} from '@codeleap/common';
-import { InputLabel } from './TextInput';
-import { StylesOf } from '../types/utility';
+} from '@codeleap/common'
+import { InputLabel } from './TextInput'
+import { StylesOf } from '../types/utility'
 
 type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>> & {
   debounce?: number;
@@ -43,26 +43,26 @@ const SliderMark: React.FC<SliderMarkProps> = ({
   styles,
   variantStyles,
 }) => {
-  const { labels = [], showMarks } = sliderProps;
+  const { labels = [], showMarks } = sliderProps
 
-  const l = labels?.[index] || '';
+  const l = labels?.[index] || ''
 
-  const isFirst = index === 0;
-  const isLast = index === labels.length - 1;
+  const isFirst = index === 0
+  const isLast = index === labels.length - 1
 
-  const centerAdjustWord = -(l.length * 2);
+  const centerAdjustWord = -(l.length * 2)
 
-  const markStyles: StyleProp<any> = {};
+  const markStyles: StyleProp<any> = {}
 
-  const labelStyles: StyleProp<any> = {};
+  const labelStyles: StyleProp<any> = {}
 
   if (!isFirst && !isLast) {
-    labelStyles.left = centerAdjustWord;
+    labelStyles.left = centerAdjustWord
   }
 
   if (isLast) {
-    labelStyles.right = -20;
-    markStyles.right = -10;
+    labelStyles.right = -20
+    markStyles.right = -10
   }
   return (
     <>
@@ -76,8 +76,8 @@ const SliderMark: React.FC<SliderMarkProps> = ({
         />
       ) : null}
     </>
-  );
-};
+  )
+}
 
 const ThumbTooltip = ({ children, visible, styles, variantStyles }) => {
   return (
@@ -101,11 +101,11 @@ const ThumbTooltip = ({ children, visible, styles, variantStyles }) => {
       />
       <View style={[variantStyles.tooltipArrow, styles.tooltipArrow]} />
     </View>
-  );
-};
+  )
+}
 
 export const Slider: React.FC<SliderProps> = (sliderProps) => {
-  const [tooltipVisible, setTooltipVisible] = React.useState(false);
+  const [tooltipVisible, setTooltipVisible] = React.useState(false)
 
   const {
     debounce,
@@ -119,38 +119,38 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
     style,
     variants,
     ...props
-  } = sliderProps;
+  } = sliderProps
 
-  const changeDebounce = typeof debounce === 'number' ? debounce : 100;
+  const changeDebounce = typeof debounce === 'number' ? debounce : 100
 
-  const debounceTimeout = useRef(null);
-  const toggleTooltipTimeout = useRef(null);
-  const valueRef = useRef(value);
+  const debounceTimeout = useRef(null)
+  const toggleTooltipTimeout = useRef(null)
+  const valueRef = useRef(value)
 
   const variantStyles = useComponentStyle('Slider', {
     variants,
-  });
+  })
 
   function setValue() {
-    onValueChange(valueRef.current);
+    onValueChange(valueRef.current)
   }
 
   function onChange(val) {
-    let eventValue = val;
+    let eventValue = val
 
     if (Array.isArray(val)) {
-      eventValue = val[0];
+      eventValue = val[0]
     }
 
-    if (eventValue === value) return;
+    if (eventValue === value) return
 
-    valueRef.current = eventValue as number;
+    valueRef.current = eventValue as number
 
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current)
 
     debounceTimeout.current = setTimeout(() => {
-      setValue();
-    }, changeDebounce);
+      setValue()
+    }, changeDebounce)
   }
 
   return (
@@ -159,19 +159,19 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
       <RNSlider
         value={value}
         onSlidingStart={() => {
-          if (toggleTooltipTimeout.current) { clearTimeout(toggleTooltipTimeout.current); }
+          if (toggleTooltipTimeout.current) { clearTimeout(toggleTooltipTimeout.current) }
 
-          setTooltipVisible(true);
+          setTooltipVisible(true)
         }}
         onSlidingComplete={() => {
           toggleTooltipTimeout.current = setTimeout(
             () => setTooltipVisible(false),
             830,
-          );
+          )
         }}
         onValueChange={onChange}
         renderAboveThumbComponent={(idx) => {
-          if (!valueOverThumb || typeof value !== 'number') return null;
+          if (!valueOverThumb || typeof value !== 'number') return null
 
           return (
             <ThumbTooltip
@@ -181,7 +181,7 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
             >
               {formatTooltip ? formatTooltip(value) : value.toString()}
             </ThumbTooltip>
-          );
+          )
         }}
         renderTrackMarkComponent={(idx) => (
           <SliderMark
@@ -209,5 +209,5 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
         {...props}
       />
     </View>
-  );
-};
+  )
+}

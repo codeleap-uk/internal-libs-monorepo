@@ -1,22 +1,22 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
-import { ReactElement } from 'react';
-import { QueryKey } from '../MediaQuery';
+import { ReactElement } from 'react'
+import { QueryKey } from '../MediaQuery'
 import {
   BaseViewProps,
   BreakpointPlaceholder,
   EnhancedTheme,
   IconPlaceholder,
   Spacing,
-} from '../types';
-import { DEFAULT_VARIANTS } from './defaults';
+} from '../types'
+import { DEFAULT_VARIANTS } from './defaults'
 import {
   ComponentVariants,
   FunctionType,
   NestedKeys,
   ReplaceRecursive,
   StylesOf,
-} from '../../types';
+} from '../../types'
 
 export type PartialComponentStyle<C extends string, S = any> = Partial<
   Record<C, S>

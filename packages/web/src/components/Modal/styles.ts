@@ -2,16 +2,16 @@ import {
   createDefaultVariantFactory,
   ModalComposition,
   ModalStyles,
-} from '@codeleap/common';
+} from '@codeleap/common'
 
-const createModalStyle = createDefaultVariantFactory<ModalComposition>();
+const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 
-const transitionDuration = '0.3s';
+const transitionDuration = '0.3s'
 
 export const WebModalStyles = {
   ...ModalStyles,
   default: createModalStyle((theme) => {
-    const defaultStyles = ModalStyles.default(theme);
+    const defaultStyles = ModalStyles.default(theme)
 
     return {
       ...defaultStyles,
@@ -44,6 +44,6 @@ export const WebModalStyles = {
 
         transition: `opacity ${transitionDuration} ease`,
       },
-    };
+    }
   }),
-};
+}

@@ -4,7 +4,7 @@ import {
   EnhancedTheme,
   ResponsiveVariantsProp,
   VariantProp,
-} from '..';
+} from '..'
 
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any;

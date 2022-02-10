@@ -1,14 +1,14 @@
-import { VariableSizeList as List } from 'react-window';
-import { ComponentProps, CSSProperties, ReactElement } from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import { VariableSizeList as List } from 'react-window'
+import { ComponentProps, CSSProperties, ReactElement } from 'react'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import {
   ComponentVariants,
   useComponentStyle,
   ViewComposition,
   ViewStyles,
-} from '@codeleap/common';
-import { StylesOf } from '../types/utility';
-import { CSSObject } from '@emotion/react';
+} from '@codeleap/common'
+import { StylesOf } from '../types/utility'
+import { CSSObject } from '@emotion/react'
 
 export type FlatListRender<T> = (itemProps: {
   item: T;
@@ -45,13 +45,13 @@ export const FlatList = <T extends unknown>(
     getSize,
     renderItem: Item,
     ...viewProps
-  } = flatListProps;
+  } = flatListProps
 
   const variantStyles = useComponentStyle('View', {
     variants,
     responsiveVariants,
     styles,
-  });
+  })
 
   return (
     <AutoSizer>
@@ -71,12 +71,12 @@ export const FlatList = <T extends unknown>(
         </List>
       )}
     </AutoSizer>
-  );
+  )
 
   // return <View {...viewProps}>
   //   {data.map((item, idx) => <Component item={item} idx={idx} key={idx}/>)}
   // </View>
-};
+}
 
 // const rowHeights = new Array(1000)
 //   .fill(true)

@@ -1,19 +1,19 @@
-import React from 'react';
-import { Text } from '../Text';
-import { Icon } from '../Icon';
-import { Link } from '../Link';
+import React from 'react'
+import { Text } from '../Text'
+import { Icon } from '../Icon'
+import { Link } from '../Link'
 import {
   IconPlaceholder,
   MenuComposition,
   StylesOf,
   useStyle,
-} from '@codeleap/common';
-import { url } from '../../lib/utils';
-import { Link as IntlLink } from 'gatsby-plugin-intl';
+} from '@codeleap/common'
+import { url } from '../../lib/utils'
+import { Link as IntlLink } from 'gatsby-plugin-intl'
 
 const RouterLink: React.FC<any> = (props) => (
   <Link component={IntlLink} {...props} />
-);
+)
 
 export type MenuItemProps = {
   data: {
@@ -25,14 +25,14 @@ export type MenuItemProps = {
 };
 
 export const MenuItem: React.FC<MenuItemProps> = (props) => {
-  const { styles } = props;
-  const { title, path, icon } = props.data;
+  const { styles } = props
+  const { title, path, icon } = props.data
 
-  const { pathname } = url();
+  const { pathname } = url()
 
-  const selected = pathname.includes(path);
-  const { Theme } = useStyle();
-  const isMobile = Theme.hooks.down('small');
+  const selected = pathname.includes(path)
+  const { Theme } = useStyle()
+  const isMobile = Theme.hooks.down('small')
 
   if (isMobile) {
     return (
@@ -47,7 +47,7 @@ export const MenuItem: React.FC<MenuItemProps> = (props) => {
         />
         <Icon name={icon} />
       </RouterLink>
-    );
+    )
   }
 
   return (
@@ -62,5 +62,5 @@ export const MenuItem: React.FC<MenuItemProps> = (props) => {
         msg={title}
       />
     </RouterLink>
-  );
-};
+  )
+}

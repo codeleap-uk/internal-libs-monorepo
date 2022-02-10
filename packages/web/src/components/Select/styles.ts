@@ -1,4 +1,4 @@
-import { createDefaultVariantFactory } from '@codeleap/common';
+import { createDefaultVariantFactory } from '@codeleap/common'
 
 export type WebSelectParts =
   | 'wrapper'
@@ -21,7 +21,7 @@ export type WebSelectComposition =
   | `${WebSelectParts}:disabled`
   | WebSelectParts;
 
-const createSelectStyle = createDefaultVariantFactory<WebSelectComposition>();
+const createSelectStyle = createDefaultVariantFactory<WebSelectComposition>()
 
 export const WebSelectStyles = {
   default: createSelectStyle((Theme) => ({
@@ -103,4 +103,4 @@ export const WebSelectStyles = {
       color: Theme.colors.negative,
     },
   })),
-};
+}

@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { forwardRef, useState } from 'react';
+import * as React from 'react'
+import { forwardRef, useState } from 'react'
 import {
   deepEqual,
   onUpdate,
   useComponentStyle,
   usePrevious,
   useStyle,
-} from '@codeleap/common';
+} from '@codeleap/common'
 import {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollView as KBDView,
-} from 'react-native-keyboard-aware-scroll-view';
-import { RefreshControl, ScrollView } from 'react-native';
-import { ViewProps } from './View';
+} from 'react-native-keyboard-aware-scroll-view'
+import { RefreshControl, ScrollView } from 'react-native'
+import { ViewProps } from './View'
 
 export type ScrollProps = KeyboardAwareScrollViewProps &
   ViewProps & {
@@ -27,7 +27,7 @@ const KeyboardAwareScrollView =
       refreshControl?: JSX.Element;
       ref?: ScrollView;
     }
-  >;
+  >
 
 export const Scroll = forwardRef<ScrollView, ScrollProps>(
   (scrollProps, ref) => {
@@ -38,39 +38,39 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       children,
       changeData,
       ...props
-    } = scrollProps;
-    const hasRefresh = !!props.onRefresh;
-    const [refreshing, setRefreshing] = useState(false);
+    } = scrollProps
+    const hasRefresh = !!props.onRefresh
+    const [refreshing, setRefreshing] = useState(false)
 
-    const timer = React.useRef(null);
-    const previousData = usePrevious(changeData);
+    const timer = React.useRef(null)
+    const previousData = usePrevious(changeData)
 
     const onRefresh = () => {
       if (timer.current) {
-        clearTimeout(timer.current);
+        clearTimeout(timer.current)
       }
 
-      setRefreshing(true);
+      setRefreshing(true)
 
-      props.onRefresh();
+      props.onRefresh()
 
       timer.current = setTimeout(() => {
-        setRefreshing(false);
-      }, refreshTimeout);
-    };
+        setRefreshing(false)
+      }, refreshTimeout)
+    }
     onUpdate(() => {
       if (refreshing && !deepEqual(previousData, changeData)) {
-        setRefreshing(false);
+        setRefreshing(false)
         if (timer.current) {
-          clearTimeout(timer.current);
+          clearTimeout(timer.current)
         }
       }
-    }, [refreshing, changeData]);
-    const { Theme } = useStyle();
+    }, [refreshing, changeData])
+    const { Theme } = useStyle()
 
     const variantStyles = useComponentStyle('View', {
       variants,
-    });
+    })
 
     return (
       <KeyboardAwareScrollView
@@ -86,6 +86,6 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       >
         {children}
       </KeyboardAwareScrollView>
-    );
+    )
   },
-);
+)

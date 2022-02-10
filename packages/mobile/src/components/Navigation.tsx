@@ -1,20 +1,20 @@
 // @ts-nocheck
-import * as React from 'react';
-import { RouteConfig } from '@react-navigation/native';
+import * as React from 'react'
+import { RouteConfig } from '@react-navigation/native'
 import {
   createNativeStackNavigator,
   NativeStackScreenProps,
-} from '@react-navigation/native-stack';
+} from '@react-navigation/native-stack'
 import {
   AnyFunction,
   EnhancedTheme,
   IconPlaceholder,
   useStyle,
-} from '@codeleap/common';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Icon } from './Icon';
-import { Paths } from '@codeleap/common/dist/types/pathMapping';
+} from '@codeleap/common'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { Icon } from './Icon'
+import { Paths } from '@codeleap/common/dist/types/pathMapping'
 
 export type AppScenes = {
   [x: string]: {
@@ -28,7 +28,7 @@ export type AppScenes = {
 };
 
 const parseModulePages = (pageModule: string, [pageName, Component]) => {
-  const name = `${pageModule}.${pageName}`;
+  const name = `${pageModule}.${pageName}`
 
   let props = {
     name,
@@ -37,33 +37,33 @@ const parseModulePages = (pageModule: string, [pageName, Component]) => {
       title: pageName,
     },
     component: null,
-  };
+  }
 
   switch (typeof Component) {
     case 'function':
-      props.component = Component;
+      props.component = Component
     case 'object':
       props = {
         ...props,
         ...Component,
-      };
+      }
       if (typeof Component.default === 'function') {
-        props.component = Component.default;
+        props.component = Component.default
       }
 
       if (Component.render) {
         props.component =
           typeof Component.render === 'function'
             ? Component.render
-            : Component?.render?.default;
+            : Component?.render?.default
       }
 
     default:
-      break;
+      break
   }
 
-  return props;
-};
+  return props
+}
 
 type FlattenScenesArgs = {
   scenes: AppScenes;
@@ -71,21 +71,21 @@ type FlattenScenesArgs = {
 };
 const flattenScenes = ({ scenes }: FlattenScenesArgs) => {
   return Object.entries(scenes).reduce((acc, [pageModule, pages]) => {
-    const thisModulePages = {};
+    const thisModulePages = {}
     for (const pageData of Object.entries(pages)) {
-      const parsedData = parseModulePages(pageModule, pageData);
+      const parsedData = parseModulePages(pageModule, pageData)
 
-      thisModulePages[parsedData.name] = parsedData;
+      thisModulePages[parsedData.name] = parsedData
     }
-    return { ...acc, ...thisModulePages };
-  }, {});
-};
+    return { ...acc, ...thisModulePages }
+  }, {})
+}
 
 const Navigators = {
   drawer: createDrawerNavigator(),
   stack: createNativeStackNavigator(),
   tab: createBottomTabNavigator(),
-};
+}
 type NavigationType = keyof typeof Navigators;
 type NavigationProps<T extends NavigationType> = {
   scenes: AppScenes;
@@ -100,31 +100,31 @@ export const Navigation = <
     scenes,
     ...props
   }: P) => {
-  const Navigator: typeof Navigators[T] = Navigators[type];
-  const { Theme } = useStyle();
+  const Navigator: typeof Navigators[T] = Navigators[type]
+  const { Theme } = useStyle()
   const flatScenes = flattenScenes({
     Theme,
     scenes,
-  });
+  })
 
-  const otherProps = props as any;
+  const otherProps = props as any
   // @ts-ignore
   const screenOptions: P['screenOptions'] = ({ route, navigation }) => {
     const propOptions =
       typeof (otherProps?.screenOptions || {}) === 'function'
         ? otherProps.screenOptions({ route, navigation })
-        : otherProps?.screenOptions;
+        : otherProps?.screenOptions
 
     return {
       ...propOptions,
       tabBarIcon: (style) => {
         if (flatScenes?.[route.name]?.icon) {
-          return <Icon name={flatScenes?.[route.name]?.icon} style={style} />;
+          return <Icon name={flatScenes?.[route.name]?.icon} style={style} />
         }
-        return null;
+        return null
       },
-    };
-  };
+    }
+  }
 
   return (
     <Navigator.Navigator {...otherProps} screenOptions={screenOptions}>
@@ -132,8 +132,8 @@ export const Navigation = <
         <Navigator.Screen {...(props as any)} />
       ))}
     </Navigator.Navigator>
-  );
-};
+  )
+}
 export type NavigationScreenProps<
   T extends NativeStackScreenProps<any, any> = NativeStackScreenProps<any, any>
 > = Omit<T, 'navigation'> & {

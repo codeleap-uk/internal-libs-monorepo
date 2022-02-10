@@ -1,6 +1,6 @@
-import { assignTextStyle } from './Text';
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { assignTextStyle } from './Text'
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type SliderComposition =
   | 'wrapper'
@@ -17,10 +17,10 @@ export type SliderComposition =
   | 'tooltipArrow'
   | 'tooltipText';
 
-const createSliderStyle = createDefaultVariantFactory<SliderComposition>();
+const createSliderStyle = createDefaultVariantFactory<SliderComposition>()
 
 const presets = includePresets((styles) => createSliderStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const SliderStyles = {
   ...presets,
@@ -74,4 +74,4 @@ export const SliderStyles = {
       ...assignTextStyle('p3')(theme).text,
     },
   })),
-};
+}

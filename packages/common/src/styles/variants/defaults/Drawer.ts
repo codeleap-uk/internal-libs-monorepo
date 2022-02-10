@@ -1,5 +1,5 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type DrawerComposition =
   | 'wrapper'
@@ -10,10 +10,10 @@ export type DrawerComposition =
   | 'body'
   | 'box';
 
-const createDrawerStyle = createDefaultVariantFactory<DrawerComposition>();
+const createDrawerStyle = createDefaultVariantFactory<DrawerComposition>()
 
 const presets = includePresets((styles) => createDrawerStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const DrawerStyles = {
   ...presets,
@@ -59,4 +59,4 @@ export const DrawerStyles = {
       ...theme.spacing.padding(1),
     },
   })),
-};
+}

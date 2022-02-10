@@ -2,9 +2,9 @@ import {
   ComponentVariants,
   FormTypes,
   IconPlaceholder,
-} from '@codeleap/common';
-import { StylesOf } from '../../types/utility';
-import { WebSelectComposition, WebSelectStyles } from './styles';
+} from '@codeleap/common'
+import { StylesOf } from '../../types/utility'
+import { WebSelectComposition, WebSelectStyles } from './styles'
 
 export type SelectRenderFNProps<T> = FormTypes.Options<T>[number] & {
   styles: StylesOf<WebSelectComposition>;

@@ -1,18 +1,18 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type IconComposition = 'icon';
 
-const createIconStyle = createDefaultVariantFactory<IconComposition>();
+const createIconStyle = createDefaultVariantFactory<IconComposition>()
 
 const presets = includePresets((styles) => createIconStyle(() => ({ icon: styles })),
-);
+)
 
 export const IconStyles = {
   ...presets,
   default: createIconStyle((theme) => ({
     icon: {
-      color: theme.colors.primary,
+      color: theme.colors.white,
     },
   })),
   white: createIconStyle((theme) => ({
@@ -55,4 +55,4 @@ export const IconStyles = {
       ...theme.sized(3),
     },
   })),
-};
+}

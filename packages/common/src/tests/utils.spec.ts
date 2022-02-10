@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import * as Utils from '../utils';
+import { expect } from 'chai'
+import * as Utils from '../utils'
 
 describe('Utils', () => {
   describe('arePropsEqual()', () => {
@@ -14,10 +14,10 @@ describe('Utils', () => {
         {
           check: ['a'],
         },
-      );
+      )
 
-      expect(result).to.eq(true);
-    });
+      expect(result).to.eq(true)
+    })
 
     it('Says props are different', () => {
       const result = Utils.arePropsEqual(
@@ -30,10 +30,10 @@ describe('Utils', () => {
         {
           check: ['a'],
         },
-      );
+      )
 
-      expect(result).to.eq(false);
-    });
+      expect(result).to.eq(false)
+    })
 
     it('Says props are equal while ignoring receivedAt', () => {
       const result = Utils.arePropsEqual(
@@ -51,9 +51,9 @@ describe('Utils', () => {
           check: ['a'],
           excludeKeys: ['receivedAt'],
         },
-      );
+      )
 
-      expect(result).to.eq(true);
-    });
-  });
-});
+      expect(result).to.eq(true)
+    })
+  })
+})

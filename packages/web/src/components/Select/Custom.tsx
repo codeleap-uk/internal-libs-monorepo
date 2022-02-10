@@ -6,18 +6,18 @@ import {
   useBooleanToggle,
   useComponentStyle,
   useValidate,
-} from '@codeleap/common';
-import { useMemo, useRef } from 'react';
-import { InputLabel, FormError } from '../TextInput';
-import { Icon } from '../Icon';
-import { Touchable } from '../Touchable';
-import { View } from '../View';
-import { Text } from '../Text';
-import { useClickOutside } from '../../lib/hooks';
-import { CustomSelectProps } from './types';
-import { WebSelectComposition, WebSelectParts } from './styles';
-import { SelectRenderFNProps } from '.';
-import { v4 } from 'uuid';
+} from '@codeleap/common'
+import { useMemo, useRef } from 'react'
+import { InputLabel, FormError } from '../TextInput'
+import { Icon } from '../Icon'
+import { Touchable } from '../Touchable'
+import { View } from '../View'
+import { Text } from '../Text'
+import { useClickOutside } from '../../lib/hooks'
+import { CustomSelectProps } from './types'
+import { WebSelectComposition, WebSelectParts } from './styles'
+import { SelectRenderFNProps } from '.'
+import { v4 } from 'uuid'
 const SelectItem: React.FC<
   SelectRenderFNProps<any> & { iconName?: string }
 > = ({ styles, iconName, onPress, label, inList }) => {
@@ -38,8 +38,8 @@ const SelectItem: React.FC<
         />
       )}
     </Touchable>
-  );
-};
+  )
+}
 
 const InputWrapper = (props) => {
   const {
@@ -51,7 +51,7 @@ const InputWrapper = (props) => {
     id,
     error,
     ...wrapperProps
-  } = props;
+  } = props
 
   return (
     <View css={styles.wrapper} {...wrapperProps}>
@@ -63,8 +63,8 @@ const InputWrapper = (props) => {
       </View>
       <FormError message={error.message} style={styles.error} />
     </View>
-  );
-};
+  )
+}
 
 export const CustomSelect: React.FC<CustomSelectProps<any>> = <
   T extends string | number = string
@@ -86,47 +86,47 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
     disabled,
     arrowIconName,
     ...props
-  } = selectProps;
+  } = selectProps
 
-  const [isOpen, setOpen] = useBooleanToggle(false);
-  const [isHovering, setHovering] = useBooleanToggle(false);
+  const [isOpen, setOpen] = useBooleanToggle(false)
+  const [isHovering, setHovering] = useBooleanToggle(false)
 
   const optionLabelMap = useMemo(() => {
     return Object.fromEntries(
       options.map(({ label, value }) => [value, label]),
-    );
-  }, [options]);
+    )
+  }, [options])
 
-  const inputId = useRef(v4()).current;
+  const inputId = useRef(v4()).current
 
   useClickOutside(
     () => {
       if (isOpen) {
-        setOpen(false);
+        setOpen(false)
       }
     },
     { customId: inputId, deps: [] },
-  );
+  )
 
   const variantStyles = useComponentStyle('Select', {
     styles,
     variants,
     responsiveVariants,
-  }) as StylesOf<WebSelectComposition>;
+  }) as StylesOf<WebSelectComposition>
 
-  const CurrentContent = renderCurrentlySelected || SelectItem;
-  const Item = renderItem || SelectItem;
+  const CurrentContent = renderCurrentlySelected || SelectItem
+  const Item = renderItem || SelectItem
 
-  const isValueEmpty = value === null || typeof value === 'undefined';
+  const isValueEmpty = value === null || typeof value === 'undefined'
   const currentOption = isValueEmpty
     ? { label: placeholder, value }
-    : { label: optionLabelMap[value], value };
+    : { label: optionLabelMap[value], value }
 
   onUpdate(() => {
-    onDropdownToggle?.(isOpen);
-  }, [isOpen]);
+    onDropdownToggle?.(isOpen)
+  }, [isOpen])
 
-  const { showError, error } = useValidate(value, validate);
+  const { showError, error } = useValidate(value, validate)
 
   function getStyles(key: WebSelectParts, append = {}) {
     return {
@@ -136,7 +136,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
       ...optionalObject(showError, variantStyles[`${key}:error`], {}),
       ...optionalObject(disabled, variantStyles[`${key}:disabled`], {}),
       ...append,
-    };
+    }
   }
 
   return (
@@ -171,8 +171,8 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
           {...item}
           inList
           onPress={() => {
-            setOpen(false);
-            onValueChange(item.value);
+            setOpen(false)
+            onValueChange(item.value)
           }}
           selected={item.value === value}
           key={item.value}
@@ -195,5 +195,5 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
         />
       ))}
     </InputWrapper>
-  );
-};
+  )
+}

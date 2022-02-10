@@ -1,5 +1,5 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type ModalComposition =
   | 'wrapper'
@@ -9,12 +9,12 @@ export type ModalComposition =
   | 'header'
   | 'footer';
 
-const createModalStyle = createDefaultVariantFactory<ModalComposition>();
+const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 
 const presets = includePresets((styles) => createModalStyle(() => ({ wrapper: styles })),
-);
+)
 
-const transitionDuration = '0.3s';
+const transitionDuration = '0.3s'
 
 export const ModalStyles = {
   ...presets,
@@ -65,16 +65,16 @@ export const ModalStyles = {
   })),
   dynamicHandler: createModalStyle(
     (theme, variant) => {
-      const styles = {};
+      const styles = {}
       for (const style of variant.split(';')) {
-        const [shorthand, value] = style.split('-');
-        const property = shorthand === 'w' ? 'width' : 'height';
-        styles[property] = value;
+        const [shorthand, value] = style.split('-')
+        const property = shorthand === 'w' ? 'width' : 'height'
+        styles[property] = value
       }
 
       return {
         box: styles,
-      };
+      }
     },
     { dynamic: true },
   ),
@@ -85,4 +85,4 @@ export const ModalStyles = {
       borderRadius: 0,
     },
   })),
-};
+}

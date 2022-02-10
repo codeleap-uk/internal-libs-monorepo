@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { createTheme, VariantProvider } from '../..';
+import { expect } from 'chai'
+import { createTheme, VariantProvider } from '../..'
 
 const theme = createTheme(
   {
@@ -19,16 +19,16 @@ const theme = createTheme(
   {
     screenSize: () => screenSize,
   },
-);
-const variantProvider = new VariantProvider(theme);
+)
+const variantProvider = new VariantProvider(theme)
 
-const screenSize = [400, 500];
+const screenSize = [400, 500]
 
-const defaultStyles = variantProvider.getDefaultVariants();
+const defaultStyles = variantProvider.getDefaultVariants()
 
 const createButtonVariant = variantProvider.createVariantFactory<
   'text' | 'wrapper' | 'innerWrapper'
->();
+>()
 
 const ButtonStyles = {
   ...defaultStyles.Button,
@@ -47,7 +47,7 @@ const ButtonStyles = {
       ...theme.spacing.margin(3),
     },
   }),
-};
+}
 
 describe('Variants', () => {
   it('should say the color is green', () => {
@@ -55,10 +55,10 @@ describe('Variants', () => {
       ButtonStyles,
       ['outline'],
       'wrapper',
-    );
-    console.log('outline', styles);
-    expect(styles.wrapper.color).to.eq('green');
-  });
+    )
+    console.log('outline', styles)
+    expect(styles.wrapper.color).to.eq('green')
+  })
 
   it('should use fill variant due to screen size', () => {
     const styles = variantProvider.getStyles(
@@ -68,10 +68,10 @@ describe('Variants', () => {
       {
         xs: ['fill'],
       },
-    );
-    console.log('fill', styles);
-    expect(styles.wrapper.color).to.eq('blue');
-  });
+    )
+    console.log('fill', styles)
+    expect(styles.wrapper.color).to.eq('blue')
+  })
 
   it('should work with string', () => {
     const styles = variantProvider.getStyles(
@@ -81,10 +81,10 @@ describe('Variants', () => {
       {
         xs: 'fill',
       },
-    );
-    console.log('fill', styles);
-    expect(styles.wrapper.color).to.eq('blue');
-  });
+    )
+    console.log('fill', styles)
+    expect(styles.wrapper.color).to.eq('blue')
+  })
 
   it('should accept variant from presets', () => {
     const styles = variantProvider.getStyles(
@@ -94,8 +94,8 @@ describe('Variants', () => {
       {
         xs: 'fill',
       },
-    );
-    console.log(styles.wrapper);
-    expect(styles.wrapper.alignItems).to.eq('flex-start');
-  });
-});
+    )
+    console.log(styles.wrapper)
+    expect(styles.wrapper.alignItems).to.eq('flex-start')
+  })
+})

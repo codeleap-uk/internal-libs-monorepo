@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 import {
   ComponentVariants,
   ContentViewStyles,
   useComponentStyle,
   ViewComposition,
-} from '@codeleap/common';
-import { ViewProps, View } from './View';
-import { Text } from './Text';
-import { StylesOf } from '../types/utility';
-import { ActivityIndicator } from './ActivityIndicator';
+} from '@codeleap/common'
+import { ViewProps, View } from './View'
+import { Text } from './Text'
+import { StylesOf } from '../types/utility'
+import { ActivityIndicator } from './ActivityIndicator'
 
 export type ContentViewProps = Omit<
   ViewProps,
@@ -21,36 +21,36 @@ export type ContentViewProps = Omit<
 
 const WrapContent = ({ children, ...props }) => (
   <View {...props}>{children}</View>
-);
+)
 
 export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
   const { children, placeholderMsg, loading, variants, styles, ...props } =
-    rawProps;
+    rawProps
 
   const variantStyle = useComponentStyle('ContentView', {
     variants,
     styles,
-  });
+  })
 
   if (loading) {
     return (
       <WrapContent {...props} style={variantStyle.wrapper}>
         <ActivityIndicator styles={{ wrapper: variantStyle.loader }} />
       </WrapContent>
-    );
+    )
   }
-  const hasChildren = Object.keys(children || {}).length > 0;
+  const hasChildren = Object.keys(children || {}).length > 0
   if (hasChildren) {
     return (
       <WrapContent {...props} style={variantStyle.wrapper}>
         {children}
       </WrapContent>
-    );
+    )
   }
 
   return (
     <WrapContent {...props} style={styles}>
       <Text text={placeholderMsg} />
     </WrapContent>
-  );
-};
+  )
+}

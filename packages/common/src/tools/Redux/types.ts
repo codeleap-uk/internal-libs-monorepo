@@ -1,5 +1,5 @@
-import type { AnyAction, Dispatch, Store } from '@reduxjs/toolkit';
-import { DeepPartial, FunctionType } from '../..';
+import type { AnyAction, Dispatch, Store } from '@reduxjs/toolkit'
+import { DeepPartial, FunctionType } from '../..'
 
 export type Reducers<S> = Record<
   string,

@@ -1,12 +1,12 @@
 /** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react';
+import { CSSObject, jsx } from '@emotion/react'
 import {
   ComponentVariants,
   useComponentStyle,
   useStyle,
   ViewStyles,
   BaseViewProps,
-} from '@codeleap/common';
+} from '@codeleap/common'
 import {
   ComponentPropsWithRef,
   ElementType,
@@ -14,7 +14,7 @@ import {
   ReactElement,
   ReactNode,
   Ref,
-} from 'react';
+} from 'react'
 
 export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
   ComponentVariants<typeof ViewStyles> & {
@@ -38,30 +38,30 @@ export const ViewCP = <T extends ElementType = 'div'>(
     onHover,
     down,
     ...props
-  } = viewProps;
+  } = viewProps
   const variantStyles = useComponentStyle('View', {
     responsiveVariants,
     variants,
-  });
-  const { Theme } = useStyle();
+  })
+  const { Theme } = useStyle()
 
   function handleHover(isMouseOverElement: boolean) {
-    onHover && onHover(isMouseOverElement);
+    onHover && onHover(isMouseOverElement)
   }
   const shouldRenderToPlatform = Theme.hooks.shouldRenderToPlatform({
     is,
     not,
     up,
     down,
-  });
-  if (!shouldRenderToPlatform) return null;
+  })
+  if (!shouldRenderToPlatform) return null
 
   const platformMediaQuery = Theme.media.renderToPlatformQuery({
     is,
     not,
     up,
     down,
-  });
+  })
 
   return (
     <Component
@@ -73,9 +73,9 @@ export const ViewCP = <T extends ElementType = 'div'>(
     >
       {children}
     </Component>
-  );
-};
+  )
+}
 
 export const View = forwardRef(ViewCP) as <T extends ElementType = 'div'>(
   props: ViewProps<T>
-) => ReactElement;
+) => ReactElement

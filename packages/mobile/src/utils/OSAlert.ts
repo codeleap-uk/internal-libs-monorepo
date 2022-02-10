@@ -1,5 +1,5 @@
 /* eslint no-restricted-imports: 'off' */
-import { Alert, AlertButton } from 'react-native';
+import { Alert, AlertButton } from 'react-native'
 
 /**
  * Alert.{function} receives three parameters, the last one being an object:
@@ -26,13 +26,13 @@ type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>;
 
 function ask({ title, body, options = null }: OSAlertArgs) {
   if (!title) {
-    title = 'Quick quetion';
+    title = 'Quick quetion'
   }
   OSAlert({
     title,
     body,
     options,
-  });
+  })
 }
 
 function warn({
@@ -42,13 +42,13 @@ function warn({
   onReject,
 }: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
   if (!title) {
-    title = 'Hang on';
+    title = 'Hang on'
   }
   if (!body) {
-    body = 'Are you sure?';
+    body = 'Are you sure?'
   }
   if (!onReject) {
-    onReject = () => null;
+    onReject = () => null
   }
   OSAlert({
     title,
@@ -64,7 +64,7 @@ function warn({
         onPress: onAccept,
       },
     ],
-  });
+  })
 }
 
 function info({
@@ -73,7 +73,7 @@ function info({
   onDismiss = () => null,
 }: OSAlertArgs & NamedEvents<'onDismiss'>) {
   if (!title) {
-    title = 'FYI';
+    title = 'FYI'
   }
   OSAlert({
     title,
@@ -84,7 +84,7 @@ function info({
         onPress: onDismiss,
       },
     ],
-  });
+  })
 }
 
 function OSError({
@@ -93,10 +93,10 @@ function OSError({
   onDismiss = () => null,
 }: OSAlertArgs & NamedEvents<'onDismiss'>) {
   if (!title) {
-    title = 'Whoops!';
+    title = 'Whoops!'
   }
   if (!body) {
-    body = 'Something went wrong';
+    body = 'Something went wrong'
   }
   OSAlert({
     title,
@@ -107,13 +107,13 @@ function OSError({
         onPress: () => onDismiss(),
       },
     ],
-  });
+  })
 }
 
 function OSAlert(params: OSAlertArgs) {
   Alert.alert(params.title, params.body, params.options, {
     cancelable: false,
-  });
+  })
 }
 
 export default {
@@ -121,4 +121,4 @@ export default {
   warn,
   info,
   error: OSError,
-};
+}

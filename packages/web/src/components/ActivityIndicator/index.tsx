@@ -1,14 +1,14 @@
-import { View } from '../View';
-import { CSSObject, keyframes } from '@emotion/react';
+import { View } from '../View'
+import { CSSObject, keyframes } from '@emotion/react'
 import {
   useComponentStyle,
   ComponentVariants,
   ActivityIndicatorStyles,
   ActivityIndicatorComposition,
-} from '@codeleap/common';
-import { StylesOf } from '../../types/utility';
+} from '@codeleap/common'
+import { StylesOf } from '../../types/utility'
 
-export * from './styles';
+export * from './styles'
 
 const spin = keyframes`
     from {
@@ -17,7 +17,7 @@ const spin = keyframes`
     to{ 
         transform: rotate(360deg);
     }
-`;
+`
 
 export type ActivityIndicatorProps = {
   animating?: boolean;
@@ -37,16 +37,16 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
     responsiveVariants,
     styles,
     ...viewProps
-  } = indicatorProps;
+  } = indicatorProps
 
   const variantStyles = useComponentStyle('ActivityIndicator', {
     styles,
     responsiveVariants,
     variants,
-  });
+  })
 
   if (!animating && hidesWhenStopped) {
-    return null;
+    return null
   }
 
   return (
@@ -61,5 +61,5 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
         }}
       />
     </View>
-  );
-};
+  )
+}

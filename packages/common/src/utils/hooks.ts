@@ -1,57 +1,57 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-restricted-imports */
-import { useEffect, useRef, useState } from 'react';
-import { deepMerge } from './object';
-import { AnyFunction, DeepPartial } from '../types';
+import { useEffect, useRef, useState } from 'react'
+import { deepMerge } from './object'
+import { AnyFunction, DeepPartial } from '../types'
 
 export const onMount = (func: AnyFunction) => {
   useEffect(() => {
-    return func();
-  }, []);
-};
+    return func()
+  }, [])
+}
 
 export const onUpdate = (func: AnyFunction, listeners = []) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    return func();
-  }, listeners);
-};
+    return func()
+  }, listeners)
+}
 
 export const usePrevious = <T>(value: T) => {
-  const ref = useRef<T>();
+  const ref = useRef<T>()
   useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-};
+    ref.current = value
+  })
+  return ref.current
+}
 
 export function useToggle<T extends readonly [any, any], V extends T[0] | T[1]>(
   options: T,
   initial: V,
 ) {
-  const [value, setValue] = useState(initial);
+  const [value, setValue] = useState(initial)
 
   function toggleOrSetValue(newValue?: V) {
-    const v: V = newValue || options[Math.abs(options.indexOf(value) - 1)];
+    const v: V = newValue || options[Math.abs(options.indexOf(value) - 1)]
 
-    setValue(v);
+    setValue(v)
   }
 
-  return [value, toggleOrSetValue] as const;
+  return [value, toggleOrSetValue] as const
 }
 
 export function useBooleanToggle(initial: boolean) {
-  const [v, setV] = useState(initial);
+  const [v, setV] = useState(initial)
 
   function toggleOrSet(value?: boolean) {
     if (typeof value === 'boolean') {
-      setV(value);
+      setV(value)
     } else {
-      setV((previous) => !previous);
+      setV((previous) => !previous)
     }
   }
 
-  return [v, toggleOrSet] as const;
+  return [v, toggleOrSet] as const
 }
 
 type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>;
@@ -59,62 +59,62 @@ type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>;
 export function usePartialState<T = any>(initial: T | (() => T)) {
   type ValueType = T extends AnyFunction ? ReturnType<T> : T;
 
-  const [state, setState] = useState(initial);
+  const [state, setState] = useState(initial)
 
   function setPartial(
     value: DeepPartial<ValueType> | SetPartialStateCallback<ValueType>,
   ) {
     if (typeof value === 'function') {
-      setState((v) => deepMerge(v, value(v as ValueType)));
+      setState((v) => deepMerge(v, value(v as ValueType)))
     } else {
-      setState(deepMerge(state, value));
+      setState(deepMerge(state, value))
     }
   }
 
   return [
     state as ValueType,
     setPartial as React.Dispatch<React.SetStateAction<DeepPartial<ValueType>>>,
-  ] as const;
+  ] as const
 }
 
 export function useInterval(callback: AnyFunction, interval: number) {
-  const intervalRef = useRef(null);
+  const intervalRef = useRef(null)
   function clear() {
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+    clearInterval(intervalRef.current)
+    intervalRef.current = null
   }
 
   function start() {
-    intervalRef.current = setInterval(callback, interval);
+    intervalRef.current = setInterval(callback, interval)
   }
 
   return {
     clear,
     start,
     interval: intervalRef.current,
-  };
+  }
 }
 
 export function useDebounce<T extends unknown>(
   value: T,
   debounce: number,
 ): [T, () => void] {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+  const [debouncedValue, setDebouncedValue] = useState(value)
 
-  const timeoutRef = useRef(null);
+  const timeoutRef = useRef(null)
 
   const reset = () => {
     if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
+      clearTimeout(timeoutRef.current)
     }
-  };
+  }
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
-      setDebouncedValue(value);
-    }, debounce);
+      setDebouncedValue(value)
+    }, debounce)
 
-    return reset;
-  }, [value]);
+    return reset
+  }, [value])
 
-  return [debouncedValue, reset];
+  return [debouncedValue, reset]
 }

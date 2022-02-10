@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react';
+import { CSSObject, jsx } from '@emotion/react'
 import {
   ComponentVariants,
   TooltipComposition,
@@ -7,13 +7,13 @@ import {
   useBooleanToggle,
   useComponentStyle,
   useDebounce,
-} from '@codeleap/common';
-import { ReactNode } from 'react';
-import { View } from './View';
+} from '@codeleap/common'
+import { ReactNode } from 'react'
+import { View } from './View'
 
-import { StylesOf } from '../types/utility';
-import { Touchable } from './Touchable';
-import { useClickOutside } from '../lib/hooks';
+import { StylesOf } from '../types/utility'
+import { Touchable } from './Touchable'
+import { useClickOutside } from '../lib/hooks'
 
 type TooltipPosition = 'left' | 'top' | 'bottom' | 'right';
 
@@ -46,7 +46,7 @@ const arrowPositionStyles = {
     borderBottom: 'none',
     borderRight: 'none',
   },
-};
+}
 
 const tooltipPositionStyles = {
   left: (arrow = 0, visible = false) => ({
@@ -69,7 +69,7 @@ const tooltipPositionStyles = {
     bottom: `calc(100% + ${arrow}px)`,
     transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
   }),
-};
+}
 
 export type TooltipProps = {
   position: TooltipPosition;
@@ -81,15 +81,15 @@ export type TooltipProps = {
 const invert = (pos) => {
   switch (pos) {
     case 'left':
-      return 'right';
+      return 'right'
     case 'right':
-      return 'left';
+      return 'left'
     case 'top':
-      return 'bottom';
+      return 'bottom'
     case 'bottom':
-      return 'top';
+      return 'top'
   }
-};
+}
 
 export const Tooltip: React.FC<TooltipProps> = (props) => {
   const {
@@ -100,18 +100,18 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
     responsiveVariants,
     showOn,
     content,
-  } = props;
+  } = props
 
-  const [isVisible, setVisible] = useBooleanToggle(false);
+  const [isVisible, setVisible] = useBooleanToggle(false)
 
-  const [debouncedVisible] = useDebounce(isVisible, 100);
-  const arrowPos = arrowPositionStyles[invert(position)];
+  const [debouncedVisible] = useDebounce(isVisible, 100)
+  const arrowPos = arrowPositionStyles[invert(position)]
 
   const variantStyles = useComponentStyle('Tooltip', {
     responsiveVariants,
     variants,
     styles,
-  });
+  })
 
   const style = {
     transition: 'transform 0.2s ease',
@@ -123,18 +123,18 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
     },
     ...styles,
     ...tooltipPositionStyles[position](10, debouncedVisible),
-  } as CSSObject;
+  } as CSSObject
 
   const wrapperId = useClickOutside(
     () => {
       if (isVisible) {
-        setVisible(false);
+        setVisible(false)
       }
     },
     {
       deps: [setVisible, isVisible],
     },
-  );
+  )
 
   if (showOn === 'click') {
     return (
@@ -146,7 +146,7 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
         <View css={style}>{content}</View>
         {children}
       </Touchable>
-    );
+    )
   }
 
   return (
@@ -154,5 +154,5 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
       <View css={style}>{content}</View>
       {children}
     </View>
-  );
-};
+  )
+}

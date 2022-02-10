@@ -1,15 +1,15 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react';
+import { jsx } from '@emotion/react'
 import {
   SelectStyles,
   ComponentVariants,
   useComponentStyle,
   StylesOf,
   SelectComposition,
-} from '@codeleap/common';
-import { ComponentPropsWithRef, ReactNode } from 'react';
-import { View, ViewProps } from '../View';
-import { Text } from '../Text';
+} from '@codeleap/common'
+import { ComponentPropsWithRef, ReactNode } from 'react'
+import { View, ViewProps } from '../View'
+import { Text } from '../Text'
 
 type HTMLSelectProps = ComponentPropsWithRef<'select'>;
 type Option = {
@@ -36,16 +36,16 @@ export const NativeSelect = (selectProps: NativeSelectProps) => {
     wrapperProps,
     value,
     ...props
-  } = selectProps;
+  } = selectProps
 
   const variantStyles = useComponentStyle('Select', {
     responsiveVariants,
     variants,
     styles,
-  });
+  })
   function handleChange(e) {
-    props.onChange && props.onChange(e);
-    onValueChange && onValueChange(e.target.value);
+    props.onChange && props.onChange(e)
+    onValueChange && onValueChange(e.target.value)
   }
   return (
     <View css={variantStyles.wrapper} {...wrapperProps}>
@@ -73,5 +73,5 @@ export const NativeSelect = (selectProps: NativeSelectProps) => {
         ))}
       </View>
     </View>
-  );
-};
+  )
+}

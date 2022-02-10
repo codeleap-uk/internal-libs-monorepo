@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   SwitchStyles,
   SwitchComposition,
@@ -8,11 +8,11 @@ import {
   useStyle,
   FormTypes,
   useValidate,
-} from '@codeleap/common';
-import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react';
-import { StyleSheet, Switch as NativeSwitch } from 'react-native';
-import { InputLabel, FormError } from './TextInput';
-import { View } from './View';
+} from '@codeleap/common'
+import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
+import { StyleSheet, Switch as NativeSwitch } from 'react-native'
+import { InputLabel, FormError } from './TextInput'
+import { View } from './View'
 
 type NativeSwitchProps = Omit<
   ComponentPropsWithRef<typeof NativeSwitch>,
@@ -35,12 +35,12 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
       label,
       value,
       ...props
-    } = switchProps;
+    } = switchProps
 
     const variantStyles = useComponentStyle('Switch', {
       variants,
-    });
-    const { error, showError } = useValidate(switchProps.value, validate);
+    })
+    const { error, showError } = useValidate(switchProps.value, validate)
     function getStyles(key: SwitchComposition) {
       return [
         variantStyles[key],
@@ -52,16 +52,16 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
         value ? styles[key + ':on'] : {},
         switchProps.disabled ? variantStyles[key + ':disabled'] : {},
         switchProps.disabled ? styles[key + ':disabled'] : {},
-      ];
+      ]
     }
 
-    const inputStyles = getStyles('input');
+    const inputStyles = getStyles('input')
 
-    const { color, backgroundColor } = StyleSheet.flatten(inputStyles);
-    const { Theme } = useStyle();
+    const { color, backgroundColor } = StyleSheet.flatten(inputStyles)
+    const { Theme } = useStyle()
 
-    const thumbColor = color || Theme.colors.primary;
-    const trackColor = backgroundColor || Theme.colors.gray;
+    const thumbColor = color || Theme.colors.primary
+    const trackColor = backgroundColor || Theme.colors.gray
     return (
       <View style={getStyles('wrapper')}>
         <View style={getStyles('inputWrapper')}>
@@ -76,6 +76,6 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
         </View>
         <FormError message={error.message} style={getStyles('error')} />
       </View>
-    );
+    )
   },
-);
+)

@@ -1,6 +1,6 @@
-import { optionalObject } from '../../../utils';
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { optionalObject } from '../../../utils'
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type AvatarComposition =
   | 'image'
@@ -10,10 +10,10 @@ export type AvatarComposition =
   | 'editing'
   | 'fileInput';
 
-const createAvatarStyle = createDefaultVariantFactory<AvatarComposition>();
+const createAvatarStyle = createDefaultVariantFactory<AvatarComposition>()
 
 const presets = includePresets((styles) => createAvatarStyle(() => ({ general: styles })),
-);
+)
 
 export const AvatarStyles = {
   ...presets,
@@ -221,4 +221,4 @@ export const AvatarStyles = {
       pointerEvents: 'none',
     },
   })),
-};
+}

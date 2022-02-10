@@ -4,24 +4,24 @@ import {
   useComponentStyle,
   useDebounce,
   useStyle,
-} from '@codeleap/common';
+} from '@codeleap/common'
 import React, {
   forwardRef,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { StyleSheet } from 'react-native';
-import { GestureDetector, Gesture } from '../../modules/gestureHandler';
-import { StylesOf } from '../../types/utility';
-import { Animated } from '../Animated';
-import { Button } from '../Button';
-import { View } from '../components';
-import { Text } from '../Text';
-import { MobilePagerStyles, PagerComposition } from './styles';
+} from 'react'
+import { StyleSheet } from 'react-native'
+import { GestureDetector, Gesture } from '../../modules/gestureHandler'
+import { StylesOf } from '../../types/utility'
+import { Animated } from '../Animated'
+import { Button } from '../Button'
+import { View } from '../components'
+import { Text } from '../Text'
+import { MobilePagerStyles, PagerComposition } from './styles'
 
-export * from './styles';
+export * from './styles'
 
 export type PagerProps = {
   variants?: ComponentVariants<typeof MobilePagerStyles>['variants'];
@@ -40,7 +40,7 @@ export type PagerRef = {
 
 const initialGestureState = {
   translationX: 0,
-};
+}
 
 export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   const {
@@ -51,9 +51,9 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
     debug,
     loop,
     onPageChange,
-  } = pagerProps;
+  } = pagerProps
 
-  const [page, setPage] = useState(() => propPage ?? 0);
+  const [page, setPage] = useState(() => propPage ?? 0)
 
   const variantStyles = useComponentStyle<'u:Pager', typeof MobilePagerStyles>(
     'u:Pager',
@@ -62,55 +62,55 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
       transform: StyleSheet.flatten,
       variants,
     },
-  );
-  const { logger } = useStyle();
-  const nChildren = React.Children.count(children);
+  )
+  const { logger } = useStyle()
+  const nChildren = React.Children.count(children)
 
-  const lastPage = nChildren - 1;
+  const lastPage = nChildren - 1
 
   const pagerRef = useRef<PagerRef>({
     forward: (by = 1) => {
       setPage((currentPage) => {
         if (currentPage < lastPage) {
-          return currentPage + by;
+          return currentPage + by
         } else if (loop) {
-          return by - 1;
+          return by - 1
         }
-        return currentPage;
-      });
+        return currentPage
+      })
     },
     back: (by = 1) => {
       setPage((currentPage) => {
         if (currentPage > 0) {
-          return currentPage - by;
+          return currentPage - by
         } else if (loop) {
-          return nChildren - by;
+          return nChildren - by
         }
-        return currentPage;
-      });
+        return currentPage
+      })
     },
     to: (n: number) => {
       if (n >= 0 && n <= lastPage) {
-        setPage(n);
+        setPage(n)
       } else {
         logger.warn(
           'Attempted to go to a page which falls outside range',
           { currentPage: page, attemptedToGoTo: n, pageRange: [0, lastPage] },
           'Component',
-        );
+        )
       }
     },
-  });
+  })
 
   onUpdate(() => {
-    onPageChange?.(page);
-  }, [page]);
+    onPageChange?.(page)
+  }, [page])
   onUpdate(() => {
     if (typeof propPage === 'number') {
-      setPage(propPage);
+      setPage(propPage)
     }
-  }, [propPage]);
-  useImperativeHandle(ref, () => pagerRef.current);
+  }, [propPage])
+  useImperativeHandle(ref, () => pagerRef.current)
 
   // const [gestureEvent,setGestureEvent] = useState(initialGestureState)
 
@@ -123,8 +123,8 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
       current: variantStyles['page:pose:current'],
       next: variantStyles['page:pose:next'],
       previous: variantStyles['page:pose:previous'],
-    };
-  }, [variantStyles]);
+    }
+  }, [variantStyles])
 
   return (
     <>
@@ -156,8 +156,8 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
       </View>
       {/* </GestureDetector> */}
     </>
-  );
-});
+  )
+})
 type PageProps = PagerProps & {
   idx: number;
   lastPage: number;
@@ -174,9 +174,9 @@ const Page: React.FC<PageProps> = (pageProps) => {
     page,
     style,
     pagePoses,
-  } = pageProps;
+  } = pageProps
 
-  if (!React.isValidElement(child)) return null;
+  if (!React.isValidElement(child)) return null
 
   // const isLast = idx === lastPage
   // const isFirst = idx === 0
@@ -213,21 +213,21 @@ const Page: React.FC<PageProps> = (pageProps) => {
   //         {child}
   //     </Animated>
   // }
-  const isCurrent = idx === page;
-  const isNext = idx > page;
-  const [_opacity, setOpacity] = useState(isCurrent ? 1 : 0);
+  const isCurrent = idx === page
+  const isNext = idx > page
+  const [_opacity, setOpacity] = useState(isCurrent ? 1 : 0)
 
-  const [opacity, resetDebounceTimer] = useDebounce(_opacity, 800);
+  const [opacity, resetDebounceTimer] = useDebounce(_opacity, 800)
 
   onUpdate(() => {
     if (isCurrent) {
-      setOpacity(1);
+      setOpacity(1)
     } else {
-      setOpacity(0);
+      setOpacity(0)
     }
 
-    return resetDebounceTimer;
-  }, [idx, page]);
+    return resetDebounceTimer
+  }, [idx, page])
 
   return (
     <Animated
@@ -246,7 +246,7 @@ const Page: React.FC<PageProps> = (pageProps) => {
     >
       {child}
     </Animated>
-  );
+  )
 
   // return <View style={{display:'none'}} key={idx}>{child}</View>
-};
+}

@@ -1,13 +1,13 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react';
+import { jsx } from '@emotion/react'
 import {
   ComponentVariants,
   TextComposition,
   TextStyles,
   useComponentStyle,
-} from '@codeleap/common';
-import { ComponentPropsWithoutRef, ElementType } from 'react';
-import { StylesOf } from '../types/utility';
+} from '@codeleap/common'
+import { ComponentPropsWithoutRef, ElementType } from 'react'
+import { StylesOf } from '../types/utility'
 
 export type TextProps<T extends ElementType> = {
   component?: T;
@@ -25,14 +25,14 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     component = 'p',
     styles,
     ...props
-  } = textProps;
+  } = textProps
   const variantStyles = useComponentStyle('Text', {
     rootElement: 'text',
     responsiveVariants,
     variants,
-  });
+  })
 
-  const Component = component;
+  const Component = component
 
   return (
     <Component
@@ -41,5 +41,5 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     >
       {text || children}
     </Component>
-  );
-};
+  )
+}

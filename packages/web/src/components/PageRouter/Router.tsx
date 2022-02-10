@@ -1,5 +1,5 @@
-import React from 'react';
-import { Router as ReachRouter } from '@reach/router';
+import React from 'react'
+import { Router as ReachRouter } from '@reach/router'
 
 type RouterProps = {
   basePath: string;
@@ -8,12 +8,12 @@ type RouterProps = {
 };
 
 export const Router: React.FC<RouterProps> = (props) => {
-  const { children, style, basePath, defaultPath } = props;
-  const base = `/:language${basePath}`;
+  const { children, style, basePath, defaultPath } = props
+  const base = `/:language${basePath}`
 
   return (
     <React.Fragment>
       <ReachRouter basepath={base}>{children}</ReachRouter>
     </React.Fragment>
-  );
-};
+  )
+}

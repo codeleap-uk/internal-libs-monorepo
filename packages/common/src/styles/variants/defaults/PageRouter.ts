@@ -1,5 +1,5 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type MenuComposition =
   | 'wrapper'
@@ -13,10 +13,10 @@ export type MenuComposition =
   | 'horizontalScroll';
 export type PageRouterComposition = 'content' | 'router' | MenuComposition;
 const createPageRouterStyle =
-  createDefaultVariantFactory<PageRouterComposition>();
+  createDefaultVariantFactory<PageRouterComposition>()
 
 const presets = includePresets((styles) => createPageRouterStyle(() => ({ topMenu: styles, sideMenu: styles })),
-);
+)
 
 export const PageRouterStyles = {
   ...presets,
@@ -89,4 +89,4 @@ export const PageRouterStyles = {
       justifyContent: 'space-between',
     },
   })),
-};
+}

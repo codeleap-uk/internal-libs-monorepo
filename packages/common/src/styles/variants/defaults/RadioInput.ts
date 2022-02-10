@@ -1,5 +1,5 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type RadioInputComposition =
   | 'text'
@@ -13,10 +13,10 @@ export type RadioInputComposition =
   | 'button:mark';
 
 const createRadioInputStyle =
-  createDefaultVariantFactory<RadioInputComposition>();
+  createDefaultVariantFactory<RadioInputComposition>()
 
 const presets = includePresets((styles) => createRadioInputStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const RadioInputStyles = {
   ...presets,
@@ -36,4 +36,4 @@ export const RadioInputStyles = {
       ...theme.spacing.paddingVertical(1),
     },
   })),
-};
+}

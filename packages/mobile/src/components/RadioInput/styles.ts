@@ -1,7 +1,7 @@
 import {
   createDefaultVariantFactory,
   RadioInputStyles,
-} from '@codeleap/common';
+} from '@codeleap/common'
 type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark';
 
 type RadioGroupParts = 'label' | 'wrapper' | 'list';
@@ -12,19 +12,19 @@ export type MobileRadioInputComposition =
   | RadioGroupParts;
 
 const createRadioStyle =
-  createDefaultVariantFactory<MobileRadioInputComposition>();
+  createDefaultVariantFactory<MobileRadioInputComposition>()
 
-const defaultStyles = RadioInputStyles.default;
+const defaultStyles = RadioInputStyles.default
 
 export const MobileRadioInputStyles = {
   ...RadioInputStyles,
   default: createRadioStyle((theme) => {
-    const style = defaultStyles(theme);
+    const style = defaultStyles(theme)
 
-    const itemHeight = theme.typography.baseFontSize * 1.2;
-    const markHeight = itemHeight / 2;
-    const translateX = -(markHeight / 2);
-    const translateY = -(markHeight / 2);
+    const itemHeight = theme.typography.baseFontSize * 1.2
+    const markHeight = itemHeight / 2
+    const translateX = -(markHeight / 2)
+    const translateY = -(markHeight / 2)
     return {
       ...style,
       itemWrapper: {
@@ -54,7 +54,7 @@ export const MobileRadioInputStyles = {
       'buttonMark:checked': {
         opacity: 1,
       },
-    };
+    }
   }),
   square: createRadioStyle(() => ({
     buttonMark: {
@@ -64,4 +64,4 @@ export const MobileRadioInputStyles = {
       borderRadius: 0,
     },
   })),
-};
+}

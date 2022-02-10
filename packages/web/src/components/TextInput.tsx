@@ -7,23 +7,23 @@ import {
   TextInputStyles,
   useBooleanToggle,
   useComponentStyle,
-} from '@codeleap/common';
+} from '@codeleap/common'
 import React, {
   ComponentPropsWithoutRef,
   forwardRef,
   useImperativeHandle,
   useRef,
   useState,
-} from 'react';
-import TextareaAutosize from 'react-autosize-textarea';
-import { Text } from './Text';
-import { View } from './View';
-import { Button } from './Button';
+} from 'react'
+import TextareaAutosize from 'react-autosize-textarea'
+import { Text } from './Text'
+import { View } from './View'
+import { Button } from './Button'
 
 /** @jsx jsx */
-import { jsx } from '@emotion/react';
-import { StylesOf } from '../types/utility';
-import { Icon } from '.';
+import { jsx } from '@emotion/react'
+import { StylesOf } from '../types/utility'
+import { Icon } from '.'
 
 type IconProp = { name: IconPlaceholder; action?: () => void };
 type MergedRef = React.LegacyRef<HTMLInputElement> &
@@ -72,61 +72,61 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       password,
       visibilityToggle,
       ...props
-    } = rawprops;
+    } = rawprops
 
-    const [focused, setFocus] = useState(false);
-    const [editedState, setEdited] = useState(edited);
+    const [focused, setFocus] = useState(false)
+    const [editedState, setEdited] = useState(edited)
     const [error, setError] = useState<ReturnType<FormTypes.ValidatorFunction>>(
       {
         valid: true,
         message: '',
       },
-    );
-    const input = useRef<any>(null);
-    const [textIsVisible, setTextVisible] = useBooleanToggle(false);
+    )
+    const input = useRef<any>(null)
+    const [textIsVisible, setTextVisible] = useBooleanToggle(false)
     const variantStyles = useComponentStyle('TextInput', {
       variants,
       responsiveVariants,
       styles,
-    });
-    const InputElement = multiline ? TextareaAutosize : 'input';
+    })
+    const InputElement = multiline ? TextareaAutosize : 'input'
 
     const handleBlur: TextInputProps['onBlur'] = (e) => {
-      if (!editedState && value) setEdited(true);
-      setFocus(false);
+      if (!editedState && value) setEdited(true)
+      setFocus(false)
 
       if (onBlur) {
-        onBlur(e);
+        onBlur(e)
       }
-    };
+    }
 
     const handleFocus: TextInputProps['onFocus'] = (e) => {
-      setFocus(true);
+      setFocus(true)
       if (onFocus) {
-        onFocus(e);
+        onFocus(e)
       }
-    };
+    }
 
     const handleChange = (event) => {
-      const text = event.target.value;
-      if (onChange) onChange(event);
-      if (onChangeText) onChangeText(text);
-    };
+      const text = event.target.value
+      if (onChange) onChange(event)
+      if (onChangeText) onChangeText(text)
+    }
 
     onUpdate(() => {
       const result =
         typeof validate === 'function'
           ? validate(input?.current?.value)
-          : { message: validate, valid: false };
-      setError(result);
-    }, [value, validate]);
+          : { message: validate, valid: false }
+      setError(result)
+    }, [value, validate])
 
-    useImperativeHandle(inputRef, () => input.current);
+    useImperativeHandle(inputRef, () => input.current)
 
-    const showError = !error.valid && error.message;
-    const inputType = type || password ? 'password' : 'text';
+    const showError = !error.valid && error.message
+    const inputType = type || password ? 'password' : 'text'
 
-    const inputVisibilityType = textIsVisible ? 'text' : 'password';
+    const inputVisibilityType = textIsVisible ? 'text' : 'password'
 
     const leftIconStyle = {
       ...variantStyles.icon,
@@ -135,7 +135,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       ...variantStyles.leftIcon,
       ...(showError ? variantStyles['leftIcon:error'] : {}),
       ...(focused ? variantStyles['leftIcon:focus'] : {}),
-    };
+    }
 
     const rightIconStyle = {
       ...variantStyles.icon,
@@ -144,7 +144,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       ...variantStyles.rightIcon,
       ...(showError ? variantStyles['rightIcon:error'] : {}),
       ...(focused ? variantStyles['rightIcon:focus'] : {}),
-    };
+    }
 
     return (
       <View
@@ -202,9 +202,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           }}
         />
       </View>
-    );
+    )
   },
-);
+)
 
 export const FormError = ({ message, ...props }) => {
   if (['number', 'string', 'undefined'].includes(typeof message)) {
@@ -214,16 +214,16 @@ export const FormError = ({ message, ...props }) => {
         variants={['p2', 'marginTop:1']}
         {...props}
       />
-    );
+    )
   }
-  return message;
-};
+  return message
+}
 export const InputIcon: React.FC<{ style: any } & IconProp> = ({
   name,
   style,
   action,
 }) => {
-  if (!name) return null;
+  if (!name) return null
 
   if (action) {
     return (
@@ -235,20 +235,20 @@ export const InputIcon: React.FC<{ style: any } & IconProp> = ({
         }}
         variants={['icon']}
       />
-    );
+    )
   }
 
-  return <Icon name={name} style={style} />;
-};
+  return <Icon name={name} style={style} />
+}
 export const InputLabel = ({ label, style }) => {
-  if (!label) return null;
+  if (!label) return null
 
   switch (typeof label) {
     case 'string':
-      return <Text css={style} text={label} component={'label'} />;
+      return <Text css={style} text={label} component={'label'} />
     case 'object':
-      return label;
+      return label
     default:
-      return null;
+      return null
   }
-};
+}

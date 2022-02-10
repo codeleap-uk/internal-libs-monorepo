@@ -1,13 +1,13 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type ContentViewComposition = 'placeholder' | 'wrapper' | 'loader';
 
 const createContentViewStyle =
-  createDefaultVariantFactory<ContentViewComposition>();
+  createDefaultVariantFactory<ContentViewComposition>()
 
 const presets = includePresets((styles) => createContentViewStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const ContentViewStyles = {
   ...presets,
@@ -20,4 +20,4 @@ export const ContentViewStyles = {
       alignSelf: 'center',
     },
   })),
-};
+}

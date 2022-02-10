@@ -1,6 +1,6 @@
-import { optionalObject } from '../../../utils';
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { optionalObject } from '../../../utils'
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type OverlayComposition =
   | 'wrapper'
@@ -11,10 +11,10 @@ export type OverlayComposition =
   | 'title'
   | 'closeButton';
 
-const createOverlayStyle = createDefaultVariantFactory<OverlayComposition>();
+const createOverlayStyle = createDefaultVariantFactory<OverlayComposition>()
 
 const presets = includePresets((styles) => createOverlayStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const OverlayStyles = {
   ...presets,
@@ -41,4 +41,4 @@ export const OverlayStyles = {
       ...theme.presets.justifySpaceBetween,
     },
   })),
-};
+}

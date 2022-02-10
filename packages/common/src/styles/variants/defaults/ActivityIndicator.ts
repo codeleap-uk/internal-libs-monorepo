@@ -1,5 +1,5 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type ActivityIndicatorComposition =
   | 'wrapper'
@@ -8,15 +8,15 @@ export type ActivityIndicatorComposition =
   | 'circle';
 
 const createActivityIndicatorStyle =
-  createDefaultVariantFactory<ActivityIndicatorComposition>();
+  createDefaultVariantFactory<ActivityIndicatorComposition>()
 
 const presets = includePresets((styles) => createActivityIndicatorStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const ActivityIndicatorStyles = {
   ...presets,
   default: createActivityIndicatorStyle((theme) => {
-    const size = theme.spacing.base * 1.6;
+    const size = theme.spacing.base * 1.6
 
     return {
       wrapper: {
@@ -37,6 +37,6 @@ export const ActivityIndicatorStyles = {
         ...theme.border.create({ width: size * 0.25, style: 'transparent' }),
         borderTopColor: theme.colors.primary,
       },
-    };
+    }
   }),
-};
+}

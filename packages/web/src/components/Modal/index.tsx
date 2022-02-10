@@ -6,18 +6,18 @@ import {
   ModalComposition,
   ModalStyles,
   useComponentStyle,
-} from '@codeleap/common';
-import { jsx } from '@emotion/react';
-import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import { v4 } from 'uuid';
-import { StylesOf } from '../../types/utility';
-import { Button } from '../Button';
-import { View } from '../View';
-import { Text } from '../Text';
-import { Overlay } from '../Overlay';
+} from '@codeleap/common'
+import { jsx } from '@emotion/react'
+import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+import ReactDOM from 'react-dom'
+import { v4 } from 'uuid'
+import { StylesOf } from '../../types/utility'
+import { Button } from '../Button'
+import { View } from '../View'
+import { Text } from '../Text'
+import { Overlay } from '../Overlay'
 
-export * from './styles';
+export * from './styles'
 
 export type ModalProps = {
   open: boolean;
@@ -31,10 +31,10 @@ export type ModalProps = {
 } & ComponentVariants<typeof ModalStyles>;
 
 function focusModal(event: FocusEvent, id: string) {
-  event.preventDefault();
-  const modal = document.getElementById(id);
+  event.preventDefault()
+  const modal = document.getElementById(id)
   if (modal) {
-    modal.focus();
+    modal.focus()
   }
 }
 export const ModalContent: React.FC<ModalProps & { id: string }> = (
@@ -53,26 +53,26 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     showClose = true,
     footer,
     ...props
-  } = modalProps;
+  } = modalProps
 
   const variantStyles = useComponentStyle('Modal', {
     responsiveVariants,
     variants,
     styles,
-  });
+  })
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Escape') {
-      toggle();
+      toggle()
     }
   }
 
   useLayoutEffect(() => {
-    const modal = document.getElementById(id);
+    const modal = document.getElementById(id)
     if (modal) {
-      modal.focus();
+      modal.focus()
     }
-  }, [id]);
+  }, [id])
 
   return (
     <View
@@ -128,41 +128,41 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
         )}
       </View>
     </View>
-  );
-};
+  )
+}
 
 export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
-  const modalId = useRef(v4());
+  const modalId = useRef(v4())
 
   useEffect(() => {
     if (accessible) {
-      const currentId = modalId.current;
-      const appRoot = document.body;
-      appRoot.addEventListener('focusin', (e) => focusModal(e, currentId));
-      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId));
+      const currentId = modalId.current
+      const appRoot = document.body
+      appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
+      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (accessible) {
-      const appRoot = document.body;
-      appRoot.setAttribute('aria-hidden', `${props.open}`);
-      appRoot.setAttribute('tabindex', `${-1}`);
+      const appRoot = document.body
+      appRoot.setAttribute('aria-hidden', `${props.open}`)
+      appRoot.setAttribute('tabindex', `${-1}`)
     }
-  }, [props.open]);
+  }, [props.open])
 
   if (accessible) {
     if (props.open) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
       return ReactDOM.createPortal(
         <ModalContent {...props} id={modalId.current} />,
         document.body,
-      );
+      )
     } else {
-      document.body.style.overflow = 'visible';
-      return null;
+      document.body.style.overflow = 'visible'
+      return null
     }
   }
 
-  return <ModalContent {...props} id={modalId.current} />;
-};
+  return <ModalContent {...props} id={modalId.current} />
+}

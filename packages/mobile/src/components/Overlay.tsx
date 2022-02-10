@@ -1,19 +1,19 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   ComponentVariants,
   IconPlaceholder,
   OverlayComposition,
   OverlayStyles,
   useComponentStyle,
-} from '@codeleap/common';
-import { ReactNode } from 'react';
-import { InputLabel } from './TextInput';
-import { Button } from './Button';
+} from '@codeleap/common'
+import { ReactNode } from 'react'
+import { InputLabel } from './TextInput'
+import { Button } from './Button'
 
-import { View } from './View';
-import { StylesOf } from '../types/utility';
-import { StyleSheet, ViewProps } from 'react-native';
-import { AnimatedTouchable } from './Touchable';
+import { View } from './View'
+import { StylesOf } from '../types/utility'
+import { StyleSheet, ViewProps } from 'react-native'
+import { AnimatedTouchable } from './Touchable'
 
 export type OverlayProps = ViewProps & {
   title?: ReactNode;
@@ -35,20 +35,20 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
     style,
     variants,
     ...props
-  } = overlayProps;
+  } = overlayProps
 
   const variantStyles = useComponentStyle('Overlay', {
     styles,
     transform: StyleSheet.flatten,
     variants: variants as any,
-  });
+  })
 
   const touchableStyle = [
     variantStyles.wrapper,
     styles.wrapper,
     visible && variantStyles['wrapper:visible'],
     visible && styles['wrapper:visible'],
-  ];
+  ]
 
   return (
     <AnimatedTouchable
@@ -72,5 +72,5 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
         )}
       </View>
     </AnimatedTouchable>
-  );
-};
+  )
+}

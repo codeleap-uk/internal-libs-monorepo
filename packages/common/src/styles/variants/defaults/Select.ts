@@ -1,11 +1,11 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type SelectComposition = 'wrapper';
-const createSelectStyle = createDefaultVariantFactory();
+const createSelectStyle = createDefaultVariantFactory()
 
 const presets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const SelectStyles = {
   ...presets,
@@ -52,4 +52,4 @@ export const SelectStyles = {
       ...theme.spacing.paddingLeft(0),
     },
   })),
-};
+}

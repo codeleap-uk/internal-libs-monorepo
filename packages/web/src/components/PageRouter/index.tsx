@@ -1,18 +1,18 @@
-import { View } from '../View';
-import React, { useMemo } from 'react';
+import { View } from '../View'
+import React, { useMemo } from 'react'
 
-import { Menu } from './Menu';
-import { Router } from './Router';
+import { Menu } from './Menu'
+import { Router } from './Router'
 import {
   ComponentVariants,
   IconPlaceholder,
   PageRouterComposition,
   PageRouterStyles,
   useComponentStyle,
-} from '@codeleap/common';
-import { StylesOf } from '../../types/utility';
-import { Helmet } from 'react-helmet';
-import { url } from '../../lib/utils';
+} from '@codeleap/common'
+import { StylesOf } from '../../types/utility'
+import { Helmet } from 'react-helmet'
+import { url } from '../../lib/utils'
 
 export type RouteProps = {
   title?: string;
@@ -27,9 +27,9 @@ type ContentProps = {
     path: string;
   }[];
 };
-export * from './Router';
-export * from './Menu';
-export * from './MenuItem';
+export * from './Router'
+export * from './Menu'
+export * from './MenuItem'
 
 type RouterPageProps = {
   basePath: string;
@@ -47,45 +47,45 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
     responsiveVariants,
     styles,
     renderContentWrapper,
-  } = props;
-  const pathName = url().pathname;
+  } = props
+  const pathName = url().pathname
 
   const { menuItems, defaultPath } = useMemo(() => {
-    const items = [];
+    const items = []
 
-    let defaultPath = '';
+    let defaultPath = ''
 
     React.Children.forEach(children, (c) => {
       if (React.isValidElement(c) && c.props) {
-        const { title, path, menuIcon } = c.props;
+        const { title, path, menuIcon } = c.props
         if ([title, path, menuIcon].some((i) => !i)) {
-          return;
+          return
         }
-        if (c.props.default) defaultPath = path;
+        if (c.props.default) defaultPath = path
         items.push({
           ...c.props,
           title,
           path: `${basePath}${path}`,
           icon: menuIcon,
-        });
+        })
       }
-    });
+    })
 
     return {
       menuItems: items,
       defaultPath,
-    };
-  }, [children]);
+    }
+  }, [children])
 
   const variantStyles = useComponentStyle('PageRouter', {
     variants,
     responsiveVariants,
     styles,
-  });
+  })
 
-  const currentPage = menuItems.find(({ path }) => pathName.includes(path));
+  const currentPage = menuItems.find(({ path }) => pathName.includes(path))
 
-  const Content = renderContentWrapper;
+  const Content = renderContentWrapper
   return (
     <View css={variantStyles.wrapper}>
       <Helmet>
@@ -119,5 +119,5 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
         </>
       )}
     </View>
-  );
-};
+  )
+}

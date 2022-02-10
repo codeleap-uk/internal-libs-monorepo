@@ -2,7 +2,7 @@ import {
   createDefaultVariantFactory,
   includePresets,
   useComponentStyle,
-} from '@codeleap/common';
+} from '@codeleap/common'
 
 export type PagerComposition =
   | 'page'
@@ -12,10 +12,10 @@ export type PagerComposition =
   | 'page:pose:current'
   | 'wrapper';
 
-const createPagerStyle = createDefaultVariantFactory<PagerComposition>();
+const createPagerStyle = createDefaultVariantFactory<PagerComposition>()
 
 const presets = includePresets((style) => createPagerStyle(() => ({ wrapper: style })),
-);
+)
 
 export const MobilePagerStyles = {
   ...presets,
@@ -24,7 +24,7 @@ export const MobilePagerStyles = {
       duration: 500,
       ease: 'easeInOut',
       useNativeDriver: true,
-    };
+    }
 
     return {
       wrapper: {
@@ -46,7 +46,7 @@ export const MobilePagerStyles = {
         width: '100%',
         height: '100%',
       },
-    };
+    }
   }),
   pageless: createPagerStyle(() => ({})),
-};
+}

@@ -1,5 +1,5 @@
-import { DeepPartial } from '..';
-import { LogType, SentryProvider } from '../tools/Logger/types';
+import { DeepPartial } from '..'
+import { LogType, SentryProvider } from '../tools/Logger/types'
 
 export type AppSettings = DeepPartial<{
   AppName: string;

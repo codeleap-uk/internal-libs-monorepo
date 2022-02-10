@@ -1,48 +1,48 @@
 export function singleLine(text: string) {
-  return text?.replace(/\n/g, ' ');
+  return text?.replace(/\n/g, ' ')
 }
 
 export function stringiparse(string) {
-  return JSON.parse(JSON.stringify(string));
+  return JSON.parse(JSON.stringify(string))
 }
 
 export function capitalize(str: string, reverse = false) {
-  const firstChar = reverse ? str[0].toLowerCase() : str[0].toUpperCase();
-  return firstChar + str.substring(1);
+  const firstChar = reverse ? str[0].toLowerCase() : str[0].toUpperCase()
+  return firstChar + str.substring(1)
 }
 
 export function isUppercase(char: string) {
-  return /[A-Z]|[\u0080-\u024F]/.test(char) && char.toUpperCase() === char;
+  return /[A-Z]|[\u0080-\u024F]/.test(char) && char.toUpperCase() === char
 }
 
 export function isLowercase(char: string) {
-  return !isUppercase(char);
+  return !isUppercase(char)
 }
 
 export function humanizeCamelCase(str: string) {
-  const characters = [];
-  let previousCharacter = '';
+  const characters = []
+  let previousCharacter = ''
   str.split('').forEach((char, idx) => {
     if (idx === 0) {
-      characters.push(char.toUpperCase());
+      characters.push(char.toUpperCase())
     } else {
       if (isUppercase(char) && isLowercase(previousCharacter)) {
-        characters.push(` ${char}`);
+        characters.push(` ${char}`)
       } else {
-        characters.push(char);
+        characters.push(char)
       }
     }
 
-    previousCharacter = char;
-  });
+    previousCharacter = char
+  })
 
-  return characters.join('');
+  return characters.join('')
 }
 
 export function ellipsis(str: string, maxLen: number) {
   if (str.length - 3 > maxLen) {
-    return str.slice(0, maxLen - 3) + '...';
+    return str.slice(0, maxLen - 3) + '...'
   }
 
-  return str;
+  return str
 }

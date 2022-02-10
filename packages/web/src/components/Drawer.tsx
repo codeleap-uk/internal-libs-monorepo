@@ -5,21 +5,21 @@ import {
   DrawerStyles,
   IconPlaceholder,
   useComponentStyle,
-} from '@codeleap/common';
-import { CSSObject } from '@emotion/react';
-import React, { ReactNode } from 'react';
-import { Overlay } from './Overlay';
-import { View } from './View';
-import { Text } from './Text';
-import { Button } from './Button';
-import { StylesOf } from '../types/utility';
+} from '@codeleap/common'
+import { CSSObject } from '@emotion/react'
+import React, { ReactNode } from 'react'
+import { Overlay } from './Overlay'
+import { View } from './View'
+import { Text } from './Text'
+import { Button } from './Button'
+import { StylesOf } from '../types/utility'
 
 const axisMap = {
   top: [-1, 'Y'],
   bottom: [1, 'Y'],
   left: [-1, 'X'],
   right: [1, 'X'],
-} as const;
+} as const
 
 export type DrawerProps = {
   open: boolean;
@@ -37,22 +37,22 @@ export type DrawerProps = {
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],
 ): [string, string, CSSObject] => {
-  const [translateOrient, translateAxis] = axisMap[position];
+  const [translateOrient, translateAxis] = axisMap[position]
 
   const translateValues = {
     X: 0,
     Y: 0,
-  };
+  }
 
-  translateValues[translateAxis] = 100 * translateOrient;
+  translateValues[translateAxis] = 100 * translateOrient
 
-  const css = `translate(${translateValues.X}%, ${translateValues.Y}%)`;
+  const css = `translate(${translateValues.X}%, ${translateValues.Y}%)`
   const positioningKeys =
-    translateAxis === 'X' ? ['top', 'bottom'] : ['left', 'right'];
+    translateAxis === 'X' ? ['top', 'bottom'] : ['left', 'right']
 
-  const positioning = Object.fromEntries(positioningKeys.map((k) => [k, 0]));
-  return [css, translateAxis, positioning];
-};
+  const positioning = Object.fromEntries(positioningKeys.map((k) => [k, 0]))
+  return [css, translateAxis, positioning]
+}
 
 export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
   const {
@@ -69,19 +69,19 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
     responsiveVariants = {},
     styles,
     animationDuration = '0.3s',
-  } = rawProps;
+  } = rawProps
 
   const [hiddenStyle, axis, positioning] =
-    resolveHiddenDrawerPosition(position);
+    resolveHiddenDrawerPosition(position)
 
-  const sizeProperty = axis === 'X' ? 'width' : 'height';
-  const fullProperty = sizeProperty === 'height' ? 'width' : 'height';
+  const sizeProperty = axis === 'X' ? 'width' : 'height'
+  const fullProperty = sizeProperty === 'height' ? 'width' : 'height'
 
   const variantStyles = useComponentStyle('Drawer', {
     styles,
     variants,
     responsiveVariants,
-  });
+  })
   return (
     <View
       css={{
@@ -133,5 +133,5 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
         )}
       </View>
     </View>
-  );
-};
+  )
+}

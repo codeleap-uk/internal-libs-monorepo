@@ -1,5 +1,5 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Logger } from '../Logger';
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { Logger } from '../Logger'
 
 export type FetchFailure =
   | 'NO_RESPONSE'

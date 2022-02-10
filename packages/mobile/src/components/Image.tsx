@@ -1,19 +1,19 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   ComponentVariants,
   ImageStyles,
   MobileInputFile,
   useComponentStyle,
-} from '@codeleap/common';
-import { ComponentPropsWithoutRef } from 'react';
+} from '@codeleap/common'
+import { ComponentPropsWithoutRef } from 'react'
 import {
   Image as NativeImage,
   ImageStyle,
   StyleProp,
   TextStyle,
   ViewStyle,
-} from 'react-native';
-import { FastImage } from '../modules/fastImage';
+} from 'react-native'
+import { FastImage } from '../modules/fastImage'
 
 type NativeImageProps = ComponentPropsWithoutRef<typeof NativeImage>;
 export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
@@ -31,11 +31,11 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
 
 export const Image: React.FC<ImageProps> = (props) => {
   const { variants, style, fast, resizeMode, resizeMethod, ...imageProps } =
-    props;
+    props
 
-  const variantStyles = useComponentStyle('Image', { variants });
+  const variantStyles = useComponentStyle('Image', { variants })
 
-  const styles = [variantStyles.wrapper, style];
+  const styles = [variantStyles.wrapper, style]
 
   if (fast) {
     return (
@@ -44,7 +44,7 @@ export const Image: React.FC<ImageProps> = (props) => {
         resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
         {...imageProps}
       />
-    );
+    )
   }
-  return <NativeImage style={styles} {...(imageProps as any)} />;
-};
+  return <NativeImage style={styles} {...(imageProps as any)} />
+}

@@ -1,18 +1,18 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react';
+import { jsx } from '@emotion/react'
 import {
   useComponentStyle,
   ButtonStyles,
   ComponentVariants,
   ButtonComposition,
-} from '@codeleap/common';
-import React, { ComponentPropsWithRef } from 'react';
-import { StylesOf } from '../types/utility';
-import { Text } from './Text';
-import { Touchable } from './Touchable';
-import { Icon } from './Icon';
-import { ActivityIndicator } from './ActivityIndicator';
-import { IconPlaceholder } from '@codeleap/common';
+} from '@codeleap/common'
+import React, { ComponentPropsWithRef } from 'react'
+import { StylesOf } from '../types/utility'
+import { Text } from './Text'
+import { Touchable } from './Touchable'
+import { Icon } from './Icon'
+import { ActivityIndicator } from './ActivityIndicator'
+import { IconPlaceholder } from '@codeleap/common'
 
 type NativeButtonProps = ComponentPropsWithRef<'button'>;
 
@@ -38,17 +38,17 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     onPress,
     rightIcon,
     ...props
-  } = buttonProps;
+  } = buttonProps
 
   const variantStyles = useComponentStyle('Button', {
     responsiveVariants,
     variants,
     styles,
-  });
+  })
 
   function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
-    props.onClick && props.onClick(e);
-    onPress && onPress(e);
+    props.onClick && props.onClick(e)
+    onPress && onPress(e)
   }
 
   return (
@@ -78,5 +78,5 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
         style={{ ...variantStyles.icon, ...variantStyles.rightIcon }}
       />
     </Touchable>
-  );
-};
+  )
+}

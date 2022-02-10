@@ -1,25 +1,25 @@
-import * as React from 'react';
-import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react';
-import { v4 } from 'uuid';
+import * as React from 'react'
+import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react'
+import { v4 } from 'uuid'
 
-import { Text } from '../Text';
-import { Touchable } from '../Touchable';
+import { Text } from '../Text'
+import { Touchable } from '../Touchable'
 import {
   ComponentVariants,
   StylesOf,
   useComponentStyle,
-} from '@codeleap/common';
-import { View } from '../View';
-import { MobileRadioInputStyles, MobileRadioInputComposition } from './styles';
+} from '@codeleap/common'
+import { View } from '../View'
+import { MobileRadioInputStyles, MobileRadioInputComposition } from './styles'
 
-export * from './styles';
+export * from './styles'
 
 type RadioItem<T extends unknown = any> = {
   value: T;
   label: ReactNode;
 };
 
-const getRadioStyle = (props) => useComponentStyle('RadioInput', props);
+const getRadioStyle = (props) => useComponentStyle('RadioInput', props)
 
 export type RadioButtonProps = Omit<
   ComponentPropsWithoutRef<typeof Touchable>,
@@ -60,8 +60,8 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         item.label
       )}
     </Touchable>
-  );
-};
+  )
+}
 
 export const RadioGroup = <T extends unknown>(
   radioGroupProps: RadioGroupProps<T>,
@@ -74,13 +74,13 @@ export const RadioGroup = <T extends unknown>(
     responsiveVariants,
     variants,
     styles,
-  } = radioGroupProps;
+  } = radioGroupProps
 
   const radioStyle = getRadioStyle({
     responsiveVariants,
     variants,
     styles,
-  });
+  })
   return (
     <View style={radioStyle.wrapper}>
       {typeof label === 'string' ? <Text text={label} /> : label}
@@ -96,5 +96,5 @@ export const RadioGroup = <T extends unknown>(
         ))}
       </View>
     </View>
-  );
-};
+  )
+}

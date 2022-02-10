@@ -1,2 +1,2 @@
-export * from './Global';
-export * from './Settings';
+export * from './Global'
+export * from './Settings'

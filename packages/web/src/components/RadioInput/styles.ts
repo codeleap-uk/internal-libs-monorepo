@@ -2,16 +2,16 @@ import {
   createDefaultVariantFactory,
   RadioInputComposition,
   RadioInputStyles,
-} from '@codeleap/common';
+} from '@codeleap/common'
 
-const createRadioStyle = createDefaultVariantFactory<RadioInputComposition>();
+const createRadioStyle = createDefaultVariantFactory<RadioInputComposition>()
 
-const defaultStyles = RadioInputStyles.default;
+const defaultStyles = RadioInputStyles.default
 
 export const WebRadioInputStyles = {
   ...RadioInputStyles,
   default: createRadioStyle((theme) => {
-    const style = defaultStyles(theme);
+    const style = defaultStyles(theme)
     return {
       ...style,
       itemWrapper: {
@@ -45,7 +45,7 @@ export const WebRadioInputStyles = {
           visibility: 'visible',
         },
       },
-    };
+    }
   }),
   square: createRadioStyle(() => ({
     'button:mark': {
@@ -55,4 +55,4 @@ export const WebRadioInputStyles = {
       borderRadius: '1px',
     },
   })),
-};
+}

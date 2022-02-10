@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { View, ViewProps, AnimatedView } from '../View';
-import { Button, ButtonProps } from '../Button';
-import { Scroll } from '../Scroll';
+import * as React from 'react'
+import { View, ViewProps, AnimatedView } from '../View'
+import { Button, ButtonProps } from '../Button'
+import { Scroll } from '../Scroll'
 import {
   capitalize,
   ComponentVariants,
@@ -9,20 +9,20 @@ import {
   onUpdate,
   useComponentStyle,
   useStyle,
-} from '@codeleap/common';
+} from '@codeleap/common'
 import {
   MobileModalComposition,
   MobileModalStyles,
   MobileModalParts,
-} from './styles';
-import { StyleSheet } from 'react-native';
-import { StylesOf } from '../../types/utility';
+} from './styles'
+import { StyleSheet } from 'react-native'
+import { StylesOf } from '../../types/utility'
 
-import { Touchable } from '../Touchable';
-import { Text } from '../Text';
-import { Animated } from '../Animated';
+import { Touchable } from '../Touchable'
+import { Text } from '../Text'
+import { Animated } from '../Animated'
 
-export * from './styles';
+export * from './styles'
 
 export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   variants?: ComponentVariants<typeof MobileModalStyles>['variants'];
@@ -56,13 +56,13 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeIconName = 'close',
     debugName,
     ...props
-  } = modalProps;
+  } = modalProps
 
   const variantStyles = useComponentStyle('Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
     styles,
-  }) as ModalProps['styles'];
+  }) as ModalProps['styles']
 
   function getStyles(key: MobileModalParts) {
     const s = [
@@ -70,21 +70,21 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       styles[key],
       visible ? variantStyles[key + ':visible'] : {},
       visible ? styles[key + ':visible'] : {},
-    ];
+    ]
 
-    return s;
+    return s
   }
 
   const buttonStyles = React.useMemo(() => {
-    const buttonEntries = {};
+    const buttonEntries = {}
 
     for (const [key, style] of Object.entries(variantStyles)) {
       if (key.startsWith('closeButton')) {
-        buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style;
+        buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
       }
     }
-    return buttonEntries;
-  }, [variantStyles]);
+    return buttonEntries
+  }, [variantStyles])
 
   const boxAnimation = {
     hidden: {
@@ -95,7 +95,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       ...variantStyles['box:pose:visible'],
       ...styles['box:pose:visible'],
     },
-  };
+  }
 
   return (
     <View
@@ -150,7 +150,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         </Animated>
       </Scroll>
     </View>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

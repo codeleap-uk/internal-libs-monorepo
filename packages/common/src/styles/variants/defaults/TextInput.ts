@@ -1,6 +1,7 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
-import { optionalObject } from '../../../utils';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
+import { optionalObject } from '../../../utils'
+import { assignTextStyle } from './Text'
 type TextInputParts =
   | 'wrapper'
   | 'icon'
@@ -18,10 +19,10 @@ export type TextInputComposition =
   | TextInputParts;
 
 const createTextInputStyle =
-  createDefaultVariantFactory<TextInputComposition>();
+  createDefaultVariantFactory<TextInputComposition>()
 
 const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const TextInputStyles = {
   ...presets,
@@ -40,9 +41,9 @@ export const TextInputStyles = {
 
       backgroundColor: 'transparent',
       flex: 1,
-
-      // ...assignTextStyle('p2')(theme).text,
-    },
+      // fontSize: theme.typography.baseFontSize,
+      ...assignTextStyle('p2')(theme).text,
+    }, 
     placeholder: {
       color: theme.colors.gray,
     },
@@ -80,7 +81,7 @@ export const TextInputStyles = {
     },
     icon: {
       height: 20,
-      width: 20,
+      width: 25,
       color: theme.colors.gray,
     },
     leftIcon: {
@@ -124,4 +125,4 @@ export const TextInputStyles = {
       borderRadius: 15,
     },
   })),
-};
+}

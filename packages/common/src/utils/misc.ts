@@ -1,9 +1,9 @@
-import { AppSettings } from '..';
+import { AppSettings } from '..'
 
 export function imagePathToFileObject(imagePath: string | null) {
-  const parts = imagePath ? imagePath.split('.') : '';
+  const parts = imagePath ? imagePath.split('.') : ''
 
-  const ext = imagePath ? parts[parts.length - 1].toLowerCase() : '';
+  const ext = imagePath ? parts[parts.length - 1].toLowerCase() : ''
 
   const fileValue = imagePath
     ? {
@@ -11,9 +11,9 @@ export function imagePathToFileObject(imagePath: string | null) {
       name: 'image_' + imagePath,
       type: `image/${ext}`,
     }
-    : null;
+    : null
 
-  return fileValue;
+  return fileValue
 }
 
 const letterToColorMap = {
@@ -43,19 +43,19 @@ const letterToColorMap = {
   x: '#f28d67',
   y: '#ea82ec',
   z: '#ff8295',
-};
+}
 
 export function matchInitialToColor(anyString?: string) {
-  if (!anyString) return '#999999';
-  return letterToColorMap[anyString.toLowerCase().charAt(0)] || '#999999';
+  if (!anyString) return '#999999'
+  return letterToColorMap[anyString.toLowerCase().charAt(0)] || '#999999'
 }
 
 export function waitFor(ms) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
-      resolve();
-    }, ms);
-  });
+      resolve()
+    }, ms)
+  })
 }
 
 type ParseSourceUrlArg = {
@@ -72,23 +72,23 @@ export function parseSourceUrl(
   args: ParseSourceUrlArg | string,
   Settings?: AppSettings,
 ): string {
-  if (!args) return null;
+  if (!args) return null
 
-  let res = '';
-  let address = '';
+  let res = ''
+  let address = ''
   if (typeof args === 'string') {
-    address = args;
+    address = args
   } else {
-    address = args.source || args.src || '';
+    address = args.source || args.src || ''
   }
 
   if (address && address.startsWith('/media/')) {
-    const tmp = address.substr(1, address.length);
-    res = `${Settings.BaseURL}${tmp}`;
+    const tmp = address.substr(1, address.length)
+    res = `${Settings.BaseURL}${tmp}`
   } else if (address) {
-    res = address;
+    res = address
   } else {
-    res = `https://picsum.photos/600?random=${Math.random() * 100}`;
+    res = `https://picsum.photos/600?random=${Math.random() * 100}`
   }
-  return res;
+  return res
 }

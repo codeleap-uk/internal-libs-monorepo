@@ -1,4 +1,4 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common';
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 type CheckboxParts =
   | 'wrapper'
@@ -14,21 +14,21 @@ export type MobileCheckboxComposition =
   | `${CheckboxParts}:disabled`
   | `${CheckboxParts}:error`;
 const createCheckboxStyle =
-  createDefaultVariantFactory<MobileCheckboxComposition>();
+  createDefaultVariantFactory<MobileCheckboxComposition>()
 
 const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const MobileCheckboxStyles = {
   ...presets,
   default: createCheckboxStyle((theme) => {
-    const size = theme.typography.baseFontSize * 1.2;
+    const size = theme.typography.baseFontSize * 1.2
 
-    const markHeight = size * 0.5;
-    const markWidth = size * 0.25;
+    const markHeight = size * 0.5
+    const markWidth = size * 0.25
 
-    const translateX = -(markWidth / 2);
-    const translateY = -(markHeight / 2);
+    const translateX = -(markWidth / 2)
+    const translateY = -(markHeight / 2)
     return {
       wrapper: {},
       input: {
@@ -67,6 +67,6 @@ export const MobileCheckboxStyles = {
       error: {
         color: theme.colors.negative,
       },
-    };
+    }
   }),
-};
+}

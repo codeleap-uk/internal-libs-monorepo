@@ -1,4 +1,4 @@
-import { AnyFunction, FunctionType } from '../types';
+import { AnyFunction, FunctionType } from '../types'
 
 export const defaultPresets = {
   inline: {
@@ -157,7 +157,7 @@ export const defaultPresets = {
   debYellow: {
     backgroundColor: 'yellow',
   },
-} as const;
+} as const
 
 export type IncludePresetsReturn<T extends AnyFunction> = Record<
   keyof typeof defaultPresets,
@@ -167,11 +167,11 @@ export type IncludePresetsReturn<T extends AnyFunction> = Record<
 export function includePresets<T extends FunctionType<[any], any>>(
   fn: T,
 ): IncludePresetsReturn<T> {
-  const presetsFromTheme = {};
+  const presetsFromTheme = {}
 
   for (const [key, value] of Object.entries(defaultPresets)) {
-    presetsFromTheme[key] = fn(value);
+    presetsFromTheme[key] = fn(value)
   }
 
-  return presetsFromTheme as IncludePresetsReturn<T>;
+  return presetsFromTheme as IncludePresetsReturn<T>
 }

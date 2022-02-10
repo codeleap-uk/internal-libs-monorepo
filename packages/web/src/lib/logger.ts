@@ -1,4 +1,4 @@
-import { Logger } from '@codeleap/common';
+import { Logger } from '@codeleap/common'
 
 export const logger = new Logger({
   Environment: {
@@ -10,4 +10,4 @@ export const logger = new Logger({
   Logger: {
     Level: 'debug',
   },
-});
+})

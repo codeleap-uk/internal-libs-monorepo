@@ -4,7 +4,7 @@ import {
   useComponentStyle,
   useStyle,
   IconStyles,
-} from '@codeleap/common';
+} from '@codeleap/common'
 
 export type IconProps = {
   name: IconPlaceholder;
@@ -22,21 +22,21 @@ export const Icon: React.FC<IconProps> = ({
   responsiveVariants,
   variants,
 }) => {
-  const { Theme, logger } = useStyle();
-  if (!name) return null;
-  const Component = Theme?.icons?.[name];
+  const { Theme, logger } = useStyle()
+  if (!name) return null
+  const Component = Theme?.icons?.[name]
 
   const variantStyles = useComponentStyle('Icon', {
     variants,
     responsiveVariants,
-  });
+  })
   if (!Component) {
     logger.warn(
       'Icon',
       `No icon found in theme for name "${name}"`,
       'Component',
-    );
-    return null;
+    )
+    return null
   }
-  return <Component style={{ ...variantStyles.icon, ...style }} />;
-};
+  return <Component style={{ ...variantStyles.icon, ...style }} />
+}

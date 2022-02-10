@@ -1,21 +1,21 @@
-import * as React from 'react';
+import * as React from 'react'
 import {
   ComponentVariants,
   useComponentStyle,
   StylesOf,
   Form,
   useValidate,
-} from '@codeleap/common';
-import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react';
-import { Switch as NativeCheckbox } from 'react-native';
-import { InputLabel, FormError } from '../TextInput';
-import { View } from '../View';
-import { Touchable } from '../Touchable';
+} from '@codeleap/common'
+import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
+import { Switch as NativeCheckbox } from 'react-native'
+import { InputLabel, FormError } from '../TextInput'
+import { View } from '../View'
+import { Touchable } from '../Touchable'
 import {
   MobileCheckboxStyles as CheckboxStyles,
   MobileCheckboxComposition as CheckboxComposition,
-} from './styles';
-export * from './styles';
+} from './styles'
+export * from './styles'
 
 type NativeCheckboxProps = Omit<
   ComponentPropsWithRef<typeof NativeCheckbox>,
@@ -39,14 +39,14 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
       onValueChange,
       validate,
       ...props
-    } = checkboxProps;
+    } = checkboxProps
 
     const variantStyles = useComponentStyle('Checkbox', {
       // @ts-ignore
       variants,
-    });
+    })
 
-    const { error, showError } = useValidate(value, validate);
+    const { error, showError } = useValidate(value, validate)
 
     function getStyles(key: CheckboxComposition) {
       return [
@@ -59,7 +59,7 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
         showError ? styles[key + ':error'] : {},
         checkboxProps.disabled ? variantStyles[key + ':disabled'] : {},
         checkboxProps.disabled ? styles[key + ':disabled'] : {},
-      ];
+      ]
     }
 
     return (
@@ -75,6 +75,6 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
         </Touchable>
         <FormError message={error.message} style={getStyles('error')} />
       </View>
-    );
+    )
   },
-);
+)

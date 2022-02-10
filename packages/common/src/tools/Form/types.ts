@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
-import { Join, Paths, Prev } from '../../types/pathMapping';
-import * as yup from 'yup';
-import { WebInputFile, MobileInputFile } from '../../types';
-import { AnyObject } from 'yup/lib/object';
+import { ReactNode } from 'react'
+import { Join, Paths, Prev } from '../../types/pathMapping'
+import * as yup from 'yup'
+import { WebInputFile, MobileInputFile } from '../../types'
+import { AnyObject } from 'yup/lib/object'
 type ValidationReturn = { message?: Label; valid?: boolean };
 
 export type ValidatorFunction<T = any, F = any> = (

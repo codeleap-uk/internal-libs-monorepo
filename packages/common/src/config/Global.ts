@@ -1,4 +1,4 @@
-import { AppSettings, EnhancedTheme, Logger, RequestClient } from '..';
+import { AppSettings, EnhancedTheme, Logger, RequestClient } from '..'
 
 export type GlobalVars = {
   Logger: Logger;

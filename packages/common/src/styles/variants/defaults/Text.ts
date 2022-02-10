@@ -1,23 +1,23 @@
-import { Fonts, TypographyStyle } from '../..';
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { Fonts, TypographyStyle } from '../..'
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type TextComposition = 'text';
-const createTextStyle = createDefaultVariantFactory<TextComposition>();
+const createTextStyle = createDefaultVariantFactory<TextComposition>()
 
 const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })),
-);
+)
 function createClampExpression(values: TypographyStyle, baseSize: number) {
-  const { max, min, multiplier, viewport } = values.size;
+  const { max, min, multiplier, viewport } = values.size
   const add =
-    typeof multiplier == 'string' ? multiplier : `${baseSize * multiplier}px`;
-  const s = `max(${min}px, min(calc(${add} + ${viewport}vw), ${max}px))`;
+    typeof multiplier == 'string' ? multiplier : `${baseSize * multiplier}px`
+  const s = `max(${min}px, min(calc(${add} + ${viewport}vw), ${max}px))`
   // const s = `clamp(${min}px, calc(${add} + ${viewport}vw), ${max}px)`
-  return s;
+  return s
 }
 export function assignTextStyle(name: Fonts, add = {}) {
   return createTextStyle((theme) => {
-    const style = theme.typography.styles[name];
+    const style = theme.typography.styles[name]
 
     if (theme.IsBrowser) {
       return {
@@ -27,7 +27,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
           lineHeigth: style.lineHeight,
           ...add,
         },
-      };
+      }
     }
     return {
       text: {
@@ -36,8 +36,8 @@ export function assignTextStyle(name: Fonts, add = {}) {
         // lineHeight: style.lineHeight,
         ...add,
       },
-    };
-  });
+    }
+  })
 }
 
 export const TextStyles = {
@@ -59,4 +59,4 @@ export const TextStyles = {
   p3: assignTextStyle('p3'),
   p4: assignTextStyle('p4'),
   link: assignTextStyle('p1'),
-};
+}

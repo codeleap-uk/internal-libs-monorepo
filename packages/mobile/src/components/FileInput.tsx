@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { DocumentPicker } from '../modules/documentPicker';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
+import { DocumentPicker } from '../modules/documentPicker'
 import {
   ComponentVariants,
   FileInputComposition,
@@ -8,11 +8,11 @@ import {
   MobileInputFile,
   useComponentStyle,
   useStyle,
-} from '@codeleap/common';
-import { StylesOf } from '../types/utility';
-import { Button, ButtonProps } from './Button';
-import { View } from './View';
-import { InputLabel } from './TextInput';
+} from '@codeleap/common'
+import { StylesOf } from '../types/utility'
+import { Button, ButtonProps } from './Button'
+import { View } from './View'
+import { InputLabel } from './TextInput'
 
 export type FileInputRef = {
   openFilePicker: () => void;
@@ -43,39 +43,39 @@ export const FileInput = forwardRef<
     variants,
     options,
     buttonProps,
-  } = fileInputProps;
+  } = fileInputProps
 
-  const [file, setFile] = React.useState(null);
+  const [file, setFile] = React.useState(null)
 
-  const { logger } = useStyle();
+  const { logger } = useStyle()
 
   const openFilePicker = async () => {
     try {
-      let files = await DocumentPicker.pick(options);
+      let files = await DocumentPicker.pick(options)
       if (!Array.isArray(files)) {
-        files = [files];
+        files = [files]
       }
-      setFile(files);
-      onFileSelect(files.map((file) => ({ preview: file, file })));
+      setFile(files)
+      onFileSelect(files.map((file) => ({ preview: file, file })))
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
-        logger.log('User cancelled the picker.', null, 'Component');
+        logger.log('User cancelled the picker.', null, 'Component')
       } else {
-        throw err;
+        throw err
       }
     }
-  };
+  }
 
   const variantStyles = useComponentStyle('FileInput', {
     styles,
     variants,
-  });
+  })
 
   useImperativeHandle(ref, () => ({
     openFilePicker,
-  }));
+  }))
 
-  const filenames = file ? file.map((f) => f.name) : '';
+  const filenames = file ? file.map((f) => f.name) : ''
   if (mode === 'button') {
     return (
       <View style={variantStyles.wrapper}>
@@ -88,8 +88,8 @@ export const FileInput = forwardRef<
           {...buttonProps}
         />
       </View>
-    );
+    )
   }
 
-  return null;
-});
+  return null
+})

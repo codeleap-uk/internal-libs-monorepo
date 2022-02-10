@@ -1,6 +1,6 @@
-import { CSSProperties } from 'react';
-import { ThemeValues } from './types';
-import { capitalize } from '../utils';
+import { CSSProperties } from 'react'
+import { ThemeValues } from './types'
+import { capitalize } from '../utils'
 
 type BorderArgs = {
   width: number | string;
@@ -28,20 +28,20 @@ export function createBorderHelpers<T extends ThemeValues>(
       style = 'solid',
       directions = ['left', 'top', 'bottom', 'right'],
     }) => {
-      const borderStyles = {};
+      const borderStyles = {}
 
       for (const direction of directions) {
-        const property = `border${capitalize(direction)}`;
-        borderStyles[`${property}Color`] = color;
-        borderStyles[`${property}Width`] = width;
+        const property = `border${capitalize(direction)}`
+        borderStyles[`${property}Color`] = color
+        borderStyles[`${property}Width`] = width
         if (browser) {
-          borderStyles[`${property}Style`] = style;
+          borderStyles[`${property}Style`] = style
         }
       }
 
-      return borderStyles;
+      return borderStyles
     },
-  };
+  }
 
   for (const [name, color] of Object.entries(values.colors)) {
     helpers[name] = (args) => {
@@ -49,22 +49,22 @@ export function createBorderHelpers<T extends ThemeValues>(
         return helpers.create({
           width: args,
           color,
-        });
+        })
       } else {
         const {
           width,
           style = 'solid',
           directions = ['left', 'top', 'bottom', 'right'],
-        } = args;
+        } = args
         return helpers.create({
           width,
           style,
           directions,
           color,
-        });
+        })
       }
-    };
+    }
   }
 
-  return helpers as BorderHelpers<T>;
+  return helpers as BorderHelpers<T>
 }

@@ -4,12 +4,12 @@ import {
   GetStylesArgs,
   ComponentStyleMap,
   TypedComponents,
-} from './types';
-import { mapVariants, standardizeVariants, applyVariants } from './utils';
-import { DefaultVariants, DEFAULT_VARIANTS, DEFAULT_STYLES } from './defaults';
-import { AppTheme, EnhancedTheme } from '../types';
-import { AnyFunction, NestedKeys } from '../../types';
-import { mapObject } from '../../utils';
+} from './types'
+import { mapVariants, standardizeVariants, applyVariants } from './utils'
+import { DefaultVariants, DEFAULT_VARIANTS, DEFAULT_STYLES } from './defaults'
+import { AppTheme, EnhancedTheme } from '../types'
+import { AnyFunction, NestedKeys } from '../../types'
+import { mapObject } from '../../utils'
 
 /**
  * [[include:Variants.md]]
@@ -26,8 +26,8 @@ export class VariantProvider<
   theme: Theme;
 
   constructor(theme: Theme, rootStyleFunction?: RootStyler) {
-    this.createStylesheet = rootStyleFunction || (((a) => a) as RootStyler);
-    this.theme = theme;
+    this.createStylesheet = rootStyleFunction || (((a) => a) as RootStyler)
+    this.theme = theme
   }
 
   getDefaultVariants(): DefaultVariants<CSSIn>;
@@ -37,19 +37,19 @@ export class VariantProvider<
   ): DefaultVariants<CSSIn>[ComponentName];
 
   getDefaultVariants(componentName?: keyof DEFAULT_VARIANTS) {
-    const TransformedVariants = {} as DefaultVariants<CSSIn>;
+    const TransformedVariants = {} as DefaultVariants<CSSIn>
 
     if (!componentName) {
       Object.entries(DEFAULT_STYLES).forEach(([component, variantsObject]) => {
         TransformedVariants[component] = mapVariants(
           this.theme,
           variantsObject,
-        );
-      });
+        )
+      })
 
-      return TransformedVariants as DefaultVariants<CSSIn>;
+      return TransformedVariants as DefaultVariants<CSSIn>
     } else {
-      return mapVariants<CSSIn>(this.theme, DEFAULT_STYLES[componentName]);
+      return mapVariants<CSSIn>(this.theme, DEFAULT_STYLES[componentName])
     }
   }
 
@@ -59,8 +59,8 @@ export class VariantProvider<
     const styleMap = mapObject(styles, ([key, value]) => [
       key,
       this.createStylesheet(value),
-    ]);
-    return Object.fromEntries(styleMap) as Record<keyof T, CSSIn>;
+    ])
+    return Object.fromEntries(styleMap) as Record<keyof T, CSSIn>
   }
 
   createVariantFactory<
@@ -69,11 +69,11 @@ export class VariantProvider<
   >() {
     return (variant: ((theme: Theme) => T) | T) => {
       if (typeof variant === 'function') {
-        const themeGetter = variant as (theme: Theme) => T;
-        return themeGetter(this.theme);
+        const themeGetter = variant as (theme: Theme) => T
+        return themeGetter(this.theme)
       }
-      return variant;
-    };
+      return variant
+    }
   }
 
   getStyles<VariantObject extends CommonVariantObject<any, CSSIn>>(
@@ -91,10 +91,10 @@ export class VariantProvider<
         responsiveVariants,
         styles: override,
       },
-    ] = args;
-    const variantList = standardizeVariants(variants);
+    ] = args
+    const variantList = standardizeVariants(variants)
 
-    let computedStyles = {} as Record<string, CSSOut>;
+    let computedStyles = {} as Record<string, CSSOut>
 
     for (const variant of ['default', ...variantList]) {
       computedStyles = applyVariants({
@@ -103,17 +103,17 @@ export class VariantProvider<
         styles,
         theme: this.theme,
         variantName: variant,
-      });
+      })
     }
 
     if (responsiveVariants) {
       for (const breakpoint in responsiveVariants) {
-        const shouldApplyResponsiveVariants = this.theme.hooks.down(breakpoint);
+        const shouldApplyResponsiveVariants = this.theme.hooks.down(breakpoint)
 
         if (shouldApplyResponsiveVariants) {
           const responseVariantList = standardizeVariants(
             responsiveVariants[breakpoint],
-          );
+          )
 
           for (const variant of responseVariantList) {
             computedStyles = applyVariants({
@@ -122,7 +122,7 @@ export class VariantProvider<
               styles,
               theme: this.theme,
               variantName: variant,
-            });
+            })
           }
         }
       }
@@ -133,17 +133,17 @@ export class VariantProvider<
         k,
         this.createStylesheet({ ...v, ...override?.[k] }),
       ]),
-    ) as Record<NestedKeys<VariantObject>, CSSOut>;
-    return appliableStyles;
+    ) as Record<NestedKeys<VariantObject>, CSSOut>
+    return appliableStyles
   }
 
   typeComponents<T extends ComponentStyleMap<CSSIn>>(components: T) {
-    const typed = {};
+    const typed = {}
 
     for (const [name, [render]] of Object.entries(components)) {
-      typed[name] = render;
+      typed[name] = render
     }
 
-    return typed as unknown as TypedComponents<T, Theme>;
+    return typed as unknown as TypedComponents<T, Theme>
   }
 }

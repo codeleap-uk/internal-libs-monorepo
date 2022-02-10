@@ -1,16 +1,16 @@
-import shadeColor from '../../../utils/shadeColor';
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import shadeColor from '../../../utils/shadeColor'
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 type SwitchParts = 'wrapper' | 'label' | 'input' | 'error' | 'inputWrapper';
 export type SwitchComposition =
   | SwitchParts
   | `${SwitchParts}:disabled`
   | `${SwitchParts}:on`;
 
-const createSwitchStyle = createDefaultVariantFactory<SwitchComposition>();
+const createSwitchStyle = createDefaultVariantFactory<SwitchComposition>()
 
 const presets = includePresets((styles) => createSwitchStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const SwitchStyles = {
   ...presets,
@@ -35,4 +35,4 @@ export const SwitchStyles = {
       color: theme.colors.negative,
     },
   })),
-};
+}

@@ -1,17 +1,17 @@
-import React, { ElementType } from 'react';
-import { ViewProps } from '.';
-import { View } from './View';
+import React, { ElementType } from 'react'
+import { ViewProps } from '.'
+import { View } from './View'
 
 export function HorizontalScroll<T extends ElementType = 'div'>(
   props: ViewProps<T>,
 ) {
-  const { children, style, ...otherProps } = props;
+  const { children, style, ...otherProps } = props
 
   return (
     <View {...otherProps} css={[styles.scroll, style]}>
       {children}
     </View>
-  );
+  )
 }
 
 const styles = {
@@ -22,4 +22,4 @@ const styles = {
     },
     whiteSpace: 'nowrap',
   },
-};
+}

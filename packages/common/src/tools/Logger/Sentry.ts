@@ -1,11 +1,11 @@
-import { Breadcrumb } from '@sentry/browser';
-import { AppSettings } from '../../config/Settings';
+import { Breadcrumb } from '@sentry/browser'
+import { AppSettings } from '../../config/Settings'
 import {
   LogFunctionArgs,
   LogType,
   SentrySeverityMap,
   SentryProvider,
-} from './types';
+} from './types'
 
 export class SentryService {
   private sentry: SentryProvider;
@@ -13,19 +13,19 @@ export class SentryService {
   private use: boolean;
 
   constructor(settings: AppSettings) {
-    this.use = settings?.Sentry?.enable;
-    this.sentry = settings?.Sentry?.provider as SentryProvider;
+    this.use = settings?.Sentry?.enable
+    this.sentry = settings?.Sentry?.provider as SentryProvider
     if (this.use) {
       this.sentry.init({
         dsn: settings.Sentry.dsn,
         debug: true,
-      });
+      })
     }
   }
 
   captureBreadcrumb(type: LogType, content: LogFunctionArgs) {
-    if (!this.use) return;
-    const [message, data, category] = content;
+    if (!this.use) return
+    const [message, data, category] = content
 
     const sentryArgs: Breadcrumb = {
       message,
@@ -33,13 +33,13 @@ export class SentryService {
       category,
       level: SentrySeverityMap[type],
       type: '',
-    };
+    }
 
-    this.sentry.addBreadcrumb(sentryArgs);
+    this.sentry.addBreadcrumb(sentryArgs)
   }
 
   sendLog(err?: any) {
-    if (!this.use) return;
-    this.sentry.captureException(err);
+    if (!this.use) return
+    this.sentry.captureException(err)
   }
 }

@@ -1,12 +1,12 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type TooltipComposition = 'wrapper' | 'arrow' | 'bubble';
 
-const createTooltipStyle = createDefaultVariantFactory<TooltipComposition>();
+const createTooltipStyle = createDefaultVariantFactory<TooltipComposition>()
 
 const presets = includePresets((styles) => createTooltipStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const TooltipStyles = {
   ...presets,
@@ -30,4 +30,4 @@ export const TooltipStyles = {
       ...t.spacing.padding(1),
     },
   })),
-};
+}

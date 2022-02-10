@@ -1,4 +1,4 @@
-import * as Form from './types';
+import * as Form from './types'
 
 export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
   {
@@ -8,7 +8,7 @@ export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
     file: null,
     'range-slider': [0, 100],
     slider: 1,
-  };
+  }
 
 export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
   {
@@ -19,7 +19,7 @@ export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
     radio: 'onValueChange',
     text: 'onChangeText',
     file: 'onFileSelect',
-  };
+  }
 
 // const myForm = createForm({
 //     something: {

@@ -4,19 +4,19 @@ import {
   includePresets,
   ModalComposition,
   ModalStyles,
-} from '@codeleap/common';
+} from '@codeleap/common'
 
 export const backgroundTransition = {
   duration: 200,
   ease: 'easeOut',
   useNativeDriver: false,
-};
+}
 
 export const modalTransition = {
   duration: 150,
   ease: 'easeOut',
   useNativeDriver: false,
-};
+}
 
 export type MobileModalParts =
   | 'wrapper'
@@ -36,12 +36,12 @@ export type MobileModalComposition =
   | MobileModalParts
   | `${MobileModalParts}:visible`;
 
-const createModalStyle = createDefaultVariantFactory<MobileModalComposition>();
+const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
 
 const presets = includePresets((style) => createModalStyle(() => ({ wrapper: style })),
-);
+)
 
-const defaultModalStyles = ModalStyles;
+const defaultModalStyles = ModalStyles
 
 export const MobileModalStyles = {
   ...presets,
@@ -52,7 +52,7 @@ export const MobileModalStyles = {
       position: 'absolute',
       width: Theme?.values?.width,
       height: Theme?.values?.height,
-    };
+    }
 
     return {
       wrapper: {
@@ -106,7 +106,7 @@ export const MobileModalStyles = {
       closeButtonWrapper: {
         alignSelf: 'center',
       },
-    };
+    }
   }),
   popup: createModalStyle((Theme) => ({})),
-};
+}

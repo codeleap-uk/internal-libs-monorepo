@@ -1,15 +1,15 @@
-import { View } from '../View';
-import { CenterWrapper } from '../CenterWrapper';
-import { HorizontalScroll } from '../HorizontalScroll';
-import { MenuItem, MenuItemProps } from './MenuItem';
-import { useStyle, MenuComposition } from '@codeleap/common';
-import { StylesOf } from '../../types/utility';
+import { View } from '../View'
+import { CenterWrapper } from '../CenterWrapper'
+import { HorizontalScroll } from '../HorizontalScroll'
+import { MenuItem, MenuItemProps } from './MenuItem'
+import { useStyle, MenuComposition } from '@codeleap/common'
+import { StylesOf } from '../../types/utility'
 
 const TabsWrapper = ({ children, styles }) => {
-  const { Theme } = useStyle();
-  const isMobile = Theme.hooks.down('small');
+  const { Theme } = useStyle()
+  const isMobile = Theme.hooks.down('small')
 
-  const wrapperStyle = isMobile ? styles.topMenu : styles.sideMenu;
+  const wrapperStyle = isMobile ? styles.topMenu : styles.sideMenu
 
   if (isMobile) {
     return (
@@ -22,11 +22,11 @@ const TabsWrapper = ({ children, styles }) => {
           </View>
         </CenterWrapper>
       </View>
-    );
+    )
   }
 
-  return <View css={[wrapperStyle]}>{children}</View>;
-};
+  return <View css={[wrapperStyle]}>{children}</View>
+}
 
 type RouterMenuProps = {
   items: MenuItemProps['data'][];
@@ -40,5 +40,5 @@ export const Menu: React.FC<RouterMenuProps> = ({ items, styles }) => {
         <MenuItem data={data} key={data.path} styles={styles} />
       ))}
     </TabsWrapper>
-  );
-};
+  )
+}

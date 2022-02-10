@@ -1,13 +1,13 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type TouchableComposition = 'wrapper';
 
 const createTouchableStyle =
-  createDefaultVariantFactory<TouchableComposition>();
+  createDefaultVariantFactory<TouchableComposition>()
 
 const presets = includePresets((styles) => createTouchableStyle(() => ({ wrapper: styles })),
-);
+)
 
 export const TouchableStyles = {
   ...presets,
@@ -18,4 +18,4 @@ export const TouchableStyles = {
       justifyContent: 'center',
     },
   })),
-};
+}

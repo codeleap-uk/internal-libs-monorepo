@@ -1,6 +1,6 @@
-import { CancellablePromise, FunctionType } from '../../types';
+import { CancellablePromise, FunctionType } from '../../types'
 
-export const queryStatuses = ['error', 'success', 'idle', 'loading'] as const;
+export const queryStatuses = ['error', 'success', 'idle', 'loading'] as const
 
 export type QueryStatus = typeof queryStatuses[number];
 

@@ -1,13 +1,13 @@
-import { includePresets } from '../../presets';
-import { createDefaultVariantFactory } from '../createDefaults';
+import { includePresets } from '../../presets'
+import { createDefaultVariantFactory } from '../createDefaults'
 
 export type CenterWrapperComposition = 'wrapper' | 'innerWrapper';
 
 const createCenterWrapperStyle =
-  createDefaultVariantFactory<CenterWrapperComposition>();
+  createDefaultVariantFactory<CenterWrapperComposition>()
 
 const presets = includePresets((styles) => createCenterWrapperStyle(() => ({ innerWrapper: styles })),
-);
+)
 
 export const CenterWrapperStyles = {
   ...presets,
@@ -46,4 +46,4 @@ export const CenterWrapperStyles = {
       },
     },
   })),
-};
+}

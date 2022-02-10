@@ -5,9 +5,9 @@ import {
   SmartOmit,
   StylesOf,
   useComponentStyle,
-} from '@codeleap/common';
-import { Touchable, TouchableProps } from './Touchable';
-import { View, ViewProps } from './View';
+} from '@codeleap/common'
+import { Touchable, TouchableProps } from './Touchable'
+import { View, ViewProps } from './View'
 
 export type OverlayProps = {
   visible?: boolean;
@@ -18,15 +18,15 @@ export type OverlayProps = {
 
 export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
   const { visible, responsiveVariants, variants, styles, ...props } =
-    overlayProps;
+    overlayProps
 
   const variantStyles = useComponentStyle('Overlay', {
     variants,
     responsiveVariants,
     styles,
-  });
+  })
 
-  const Component = props.onClick || props.onPress ? Touchable : View;
+  const Component = props.onClick || props.onPress ? Touchable : View
 
   return (
     <Component
@@ -37,5 +37,5 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
       }}
       {...props}
     />
-  );
-};
+  )
+}

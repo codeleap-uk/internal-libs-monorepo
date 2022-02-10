@@ -1,10 +1,10 @@
-import { DefaultColors } from '.';
-import { createBorderHelpers } from './helpers';
+import { DefaultColors } from '.'
+import { createBorderHelpers } from './helpers'
 
-import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery';
-import { defaultPresets } from './presets';
-import { spacingFactory } from './Spacing';
-import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types';
+import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
+import { defaultPresets } from './presets'
+import { spacingFactory } from './Spacing'
+import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
 
 const defaultColors: Record<DefaultColors, string> = {
   black: '#000',
@@ -14,11 +14,11 @@ const defaultColors: Record<DefaultColors, string> = {
   primary: '#7695EC',
   secondary: '#000',
   white: '#fff',
-};
+}
 
 const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
-};
+}
 
 /**
  * [[include:Theme.md]]
@@ -27,8 +27,8 @@ export function createTheme<T extends ThemeValues>(
   values: T,
   accessors?: DynamicValueAccessors,
 ): EnhancedTheme<T> {
-  const getters = { ...defaultAccessors, ...accessors };
-  const isBrowser = !window?.process;
+  const getters = { ...defaultAccessors, ...accessors }
+  const isBrowser = !window?.process
   return {
     ...values,
     colors: {
@@ -63,5 +63,5 @@ export function createTheme<T extends ThemeValues>(
       height: size * values.spacing,
     }),
     IsBrowser: isBrowser,
-  };
+  }
 }
