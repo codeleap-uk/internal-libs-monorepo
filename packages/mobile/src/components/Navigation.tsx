@@ -1,20 +1,18 @@
 // @ts-nocheck
-import * as React from 'react'
-import { RouteConfig } from '@react-navigation/native'
-import {
-  createNativeStackNavigator,
-  NativeStackScreenProps,
-} from '@react-navigation/native-stack'
+import * as React from 'react';
+import { RouteConfig } from '@react-navigation/native';
+import { createStackNavigator, StackScreenProps } from '@react-navigation/stack'
+// import { createNativeStackNavigator as createStackNavigator, NativeStackScreenProps as StackScreenProps } from '@react-navigation/native-stack'
 import {
   AnyFunction,
   EnhancedTheme,
   IconPlaceholder,
   useStyle,
-} from '@codeleap/common'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { Icon } from './Icon'
-import { Paths } from '@codeleap/common/dist/types/pathMapping'
+} from '@codeleap/common';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Icon } from './Icon';
+import { Paths } from '@codeleap/common/dist/types/pathMapping';
 
 export type AppScenes = {
   [x: string]: {
@@ -41,14 +39,14 @@ const parseModulePages = (pageModule: string, [pageName, Component]) => {
 
   switch (typeof Component) {
     case 'function':
-      props.component = Component
+      props.component = Component;
     case 'object':
       props = {
         ...props,
         ...Component,
-      }
+      };
       if (typeof Component.default === 'function') {
-        props.component = Component.default
+        props.component = Component.default;
       }
 
       if (Component.render) {
@@ -83,7 +81,8 @@ const flattenScenes = ({ scenes }: FlattenScenesArgs) => {
 
 const Navigators = {
   drawer: createDrawerNavigator(),
-  stack: createNativeStackNavigator(),
+  stack: createStackNavigator(),
+  // stack: createNativeStackNavigator(),
   tab: createBottomTabNavigator(),
 }
 type NavigationType = keyof typeof Navigators;
@@ -100,8 +99,8 @@ export const Navigation = <
     scenes,
     ...props
   }: P) => {
-  const Navigator: typeof Navigators[T] = Navigators[type]
-  const { Theme } = useStyle()
+  const Navigator: typeof Navigators[T] = Navigators[type];
+  const { Theme } = useStyle();
   const flatScenes = flattenScenes({
     Theme,
     scenes,
@@ -135,7 +134,7 @@ export const Navigation = <
   )
 }
 export type NavigationScreenProps<
-  T extends NativeStackScreenProps<any, any> = NativeStackScreenProps<any, any>
+  T extends StackScreenProps<any, any> = StackScreenProps<any, any>
 > = Omit<T, 'navigation'> & {
   navigation: Omit<T['navigation'], 'navigate'> & {
     navigate: (to: string) => void;

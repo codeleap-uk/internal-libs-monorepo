@@ -109,6 +109,9 @@ export const defaultPresets = {
   justifySpaceBetween: {
     justifyContent: 'space-between',
   },
+  justifySpaceAround: {
+    justifyContent: 'space-around',
+  },
   textRight: {
     textAlign: 'right',
   },

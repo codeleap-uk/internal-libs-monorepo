@@ -5,8 +5,8 @@ import {
   IconStyles,
   useComponentStyle,
   useStyle,
-} from '@codeleap/common'
-import { StyleSheet } from 'react-native'
+} from '@codeleap/common';
+import { StyleSheet } from 'react-native';
 
 export type IconProps = {
   name: IconPlaceholder;
@@ -19,14 +19,14 @@ export type IconProps = {
   variants?: ComponentVariants<typeof IconStyles>['variants'];
 };
 
-export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
-  const { Theme } = useStyle()
+export const Icon: React.FC<IconProps> = ({ name, style, variants, ...otherProps }) => {
+  const { Theme } = useStyle();
 
   if (!name) return null
 
   const Component = Theme?.icons?.[name]
 
-  const { logger } = useStyle()
+  const { logger } = useStyle();
   const variantStyles = useComponentStyle('Icon', {
     variants,
     styles: {
@@ -38,8 +38,8 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
       'Icon',
       `No icon found in theme for name "${name}"`,
       'Component',
-    )
-    return null
+    );
+    return null;
   }
-  return <Component style={variantStyles.icon} />
-}
+  return <Component {...otherProps} style={variantStyles.icon} />;
+};
