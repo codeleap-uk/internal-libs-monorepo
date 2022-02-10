@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 import { optionalObject } from '../../../utils'
-import { assignTextStyle } from './Text'
+
 type TextInputParts =
   | 'wrapper'
   | 'icon'
