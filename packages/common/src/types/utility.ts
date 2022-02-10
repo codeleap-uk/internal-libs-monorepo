@@ -88,3 +88,5 @@ export type ReplaceRecursive<T, Replace, With> = {
 export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 };
+
+export type AsyncReturnType<T extends FunctionType<any, Promise<any>>> = Parameters<ReturnType<T>['then']>[0]
