@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 import { optionalObject } from '../../../utils'
-import { assignTextStyle } from './Text'
+
 type TextInputParts =
   | 'wrapper'
   | 'icon'
@@ -21,8 +21,7 @@ export type TextInputComposition =
 const createTextInputStyle =
   createDefaultVariantFactory<TextInputComposition>()
 
-const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })),
-)
+const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })))
 
 export const TextInputStyles = {
   ...presets,
@@ -41,9 +40,9 @@ export const TextInputStyles = {
 
       backgroundColor: 'transparent',
       flex: 1,
-      // fontSize: theme.typography.baseFontSize,
-      ...assignTextStyle('p2')(theme).text,
-    }, 
+      fontSize: theme.typography.baseFontSize,
+      // ...assignTextStyle('p2')(theme).text,
+    },
     placeholder: {
       color: theme.colors.gray,
     },
@@ -67,10 +66,9 @@ export const TextInputStyles = {
       ...theme.border.gray({
         width: 1,
       }),
+      height: theme.buttons.default.height,
       display: 'flex',
       alignItems: 'center',
-    },
-    'innerWrapper:focus': {
       ...theme.border.primary(1),
     },
     'icon:focus': {

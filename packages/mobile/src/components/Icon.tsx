@@ -19,7 +19,7 @@ export type IconProps = {
   variants?: ComponentVariants<typeof IconStyles>['variants'];
 };
 
-export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
+export const Icon: React.FC<IconProps> = ({ name, style, variants, ...otherProps }) => {
   const { Theme } = useStyle()
 
   if (!name) return null
@@ -41,5 +41,5 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants }) => {
     )
     return null
   }
-  return <Component style={variantStyles.icon} />
+  return <Component {...otherProps} style={variantStyles.icon} />
 }

@@ -25,11 +25,11 @@ export class PermissionManager<
       // @ts-ignore
       this.permissions = {}
 
-      this.logger = options.logger
+      this.logger = options?.logger
 
       for (const [permName, actions] of Object.entries(this.params)){
         const name = permName as keyof T
-        this._permissions[name] = new Permission({...actions, log: this.logger.log || (() => null) }, permName)
+        this._permissions[name] = new Permission({...actions, log: this.logger?.log || (() => null) }, permName)
 
         // @ts-ignore
         this.permissions[(name as string).toUpperCase()] = name 

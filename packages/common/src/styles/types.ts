@@ -74,7 +74,7 @@ export type AppTheme = {
     medium: number
     small: number
   }
-   
+   readonly buttons: ButtonStyle
 
   readonly icons: Record<string, any>
 
