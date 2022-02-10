@@ -21,7 +21,7 @@ export type TextInputComposition =
 const createTextInputStyle =
   createDefaultVariantFactory<TextInputComposition>()
 
-const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })));
+const presets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })))
 
 export const TextInputStyles = {
   ...presets,
@@ -70,6 +70,7 @@ export const TextInputStyles = {
       display: 'flex',
       alignItems: 'center',
       ...theme.border.primary(1),
+    },
     'icon:focus': {
       color: theme.colors.primary,
     },
