@@ -11,6 +11,7 @@ import { AnyFunction } from '../types/utility'
 import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
+import { CSSProperties } from 'react'
 type AnyProps<T = any> = {
   [x: string]: T;
 };

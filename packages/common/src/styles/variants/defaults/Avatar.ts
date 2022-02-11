@@ -7,6 +7,9 @@ export type AvatarComposition =
   | 'text'
   | 'general'
   | 'editImageBubble'
+  | 'textEdit'
+  | 'editImageIcon'
+  | 'wrapper'
   | 'editing'
   | 'fileInput';
 
@@ -44,13 +47,18 @@ export const AvatarStyles = {
       fontSize: 26,
     },
     textEdit: {
-      color: 'white',
-      position: 'absolute',
-      fontWeight: 'bold',
-      textDecoration: 'underline',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
+      ...optionalObject(
+        Theme.IsBrowser,
+        {
+          color: 'white',
+          position: 'absolute',
+          fontWeight: 'bold',
+          textDecoration: 'underline',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }, {},
+      ),
     },
     editImageIcon: {
       ...Theme.presets.center,
@@ -60,18 +68,22 @@ export const AvatarStyles = {
     wrapper: {
       overflow: 'visible',
       position: 'relative',
+      alignItems: 'center',
     },
     fileInput: {
       display: 'none',
     },
     editing: {
       backgroundColor: Theme.colors.black,
-      width: '100%',
-      height: '100%',
-      // borderRadius: '50%',
-      position: 'absolute',
+      opacity: 0.4,
       zIndex: 9,
-      opacity: 0.3,
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: 30,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   })),
   large: createAvatarStyle((Theme) => ({

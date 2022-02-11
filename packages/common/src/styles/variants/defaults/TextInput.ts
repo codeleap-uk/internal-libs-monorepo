@@ -87,6 +87,7 @@ export const TextInputStyles = {
     },
     error: {
       color: theme.colors.negative,
+      ...theme.spacing.marginTop(0.5),
     },
     'icon:error': {
       color: theme.colors.negative,

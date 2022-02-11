@@ -22,7 +22,6 @@ export const ButtonStyles = {
       flexDirection: 'row',
       backgroundColor: theme.colors.primary,
       ...theme.presets.alignCenter,
-      ...theme.spacing.padding(1),
       ...(
         theme.IsBrowser ? 
           {
@@ -48,7 +47,8 @@ export const ButtonStyles = {
       ...theme.spacing.marginRight(1),
     },
     'wrapper:disabled': {
-      opacity: 0.5,
+      backgroundColor: theme.colors.disabled,
+      opacity: 0.9,
     },
   })),
   negative: createButtonStyle((theme) => ({
@@ -61,6 +61,7 @@ export const ButtonStyles = {
     },
    
   })),
+ 
   circle: createButtonStyle((theme) => ({
     wrapper: {
       borderRadius: 100,
