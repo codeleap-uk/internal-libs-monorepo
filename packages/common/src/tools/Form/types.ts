@@ -122,6 +122,10 @@ export type AllFields =
 export type FormField = {
   disabled?: boolean;
   label?: Label;
+  autoCapitalize?: boolean;
+  keyboardType?: string;
+  returnKeyType?: string;
+  textContentType?: string;
   subtitle?: Label;
   debounce?: number;
 } & AllFields;

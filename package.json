@@ -45,7 +45,8 @@
     "dev:packages": "yarn build && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/web/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn build\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules"
+    "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules",
+    "clear:dist": "rm -rf packages/cli/dist packages/common/dist packages/mobile/dist packages/web/dist"
   },
   "devDependencies": {
     "prettier": "^2.5.1",
@@ -64,6 +65,9 @@
       },
       "lint": {
         "outputs": []
+      },
+      "dev:packages": {
+        "cache": false
       },
       "dev:web": {
         "cache": false

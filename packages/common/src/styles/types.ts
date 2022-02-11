@@ -66,7 +66,6 @@ export type AppTheme = {
   readonly values?: {
     width?: number;
     height?: number;
-    buttons?: ButtonStyle
   };
 
   readonly borderRadius: {
@@ -74,7 +73,8 @@ export type AppTheme = {
     medium: number
     small: number
   }
-   readonly buttons: ButtonStyle
+
+  readonly buttons: ButtonStyle
 
   readonly icons: Record<string, any>
 

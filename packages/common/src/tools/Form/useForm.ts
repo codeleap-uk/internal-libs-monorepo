@@ -14,6 +14,8 @@ const shouldLog = (
   return (config.log || []).includes(x)
 }
 
+// TODO is would be helpful if the form could automatically skip to the next field on pressing return
+
 export function useForm<
   Form extends FormTypes.CreateFormReturn<any>,
   FieldPaths extends FormTypes.PathsWithValues<
