@@ -1,6 +1,6 @@
 import { usePartialState, capitalize } from '../../utils'
 import { useReducer, useRef } from 'react'
-import {
+import { 
   QueryState,
   queryStatuses,
   RoutesOf,
@@ -8,7 +8,7 @@ import {
   UseApiReturn,
   UseApiState,
 } from './types'
-
+import { onUpdate } from '../../utils/hooks'
 const getQueryStatusBooleans = (setTo) => Object.fromEntries(
   queryStatuses.map((s) => [`is${capitalize(s)}`, s === setTo]),
 )
@@ -67,10 +67,12 @@ export function useQuery<
 
   function setRouteState(routeName, newState) {
     dispatch({ type: `${routeName}`, payload: newState })
+  }
 
+  onUpdate(() => {
     const newApiState = {
-      hasError: false,
       loading: false,
+      hasError: false,
     }
 
     const queryStateValues = Object.values(queryStates)
@@ -83,12 +85,12 @@ export function useQuery<
       if (!newApiState.loading && isLoading) {
         newApiState.loading = true
       }
-
-      if (newApiState.loading && newApiState.hasError) {
-        break
-      }
     }
-  }
+
+    setApiState(newApiState)
+
+  }, [queryStates])
+
   const initialRoutePromises = Object.fromEntries(
     Object.keys(routes).map((name) => [name, null]),
   )

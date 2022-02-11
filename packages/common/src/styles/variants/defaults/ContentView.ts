@@ -15,9 +15,11 @@ export const ContentViewStyles = {
     wrapper: {
       display: 'flex',
       ...theme.presets.column,
+      ...theme.presets.alignCenter,
     },
     loader: {
       alignSelf: 'center',
+      height: 80,
     },
   })),
 }

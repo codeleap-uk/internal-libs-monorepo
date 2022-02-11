@@ -36,15 +36,20 @@ export const ButtonStyles = {
     text: {
       flex: 1,
       textAlign: 'center',
+
     },
     loader: {
-      ...theme.spacing.marginRight(1),
-    },
-    leftIcon: {
-      ...theme.spacing.marginRight(1),
+      height: 20,
+      width: 20,
     },
     rightIcon: {
-      ...theme.spacing.marginRight(1),
+      height: 20,
+      width: 20,
+    },
+    leftIcon: {
+      height: 20,
+      width: 20,
+      
     },
     'wrapper:disabled': {
       backgroundColor: theme.colors.disabled,

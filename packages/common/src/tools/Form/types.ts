@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Join, Paths, Prev } from '../../types/pathMapping'
 import * as yup from 'yup'
-import { WebInputFile, MobileInputFile } from '../../types'
+import { WebInputFile, MobileInputFile, DeepPartial } from '../../types'
 import { AnyObject } from 'yup/lib/object'
 type ValidationReturn = { message?: Label; valid?: boolean };
 
@@ -173,6 +173,7 @@ export type CreateFormReturn<T extends FieldsMap> = {
   defaultValue: MapValues<T>;
   staticFieldProps: Record<string, any>;
   name: string;
+  numberOfTextFields: number
 };
 
 export type FormStep = 'setValue' | 'validate';
@@ -181,7 +182,7 @@ export type UseFormConfig<T> = {
   validateOn: FormValidateOn;
   output: FormOutput;
   log?: FormStep[];
-  initialState?: T;
+  initialState?: DeepPartial<T>;
 };
 
 export type PathsWithValues<T, D extends number = 10> = [D] extends [never]

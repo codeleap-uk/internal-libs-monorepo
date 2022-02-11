@@ -1,7 +1,8 @@
 import * as FormTypes from './types'
-import { usePartialState, deepGet, deepSet } from '../../utils'
+import { usePartialState, deepGet, deepSet, deepMerge } from '../../utils'
 import { FunctionType } from '../../types'
 import { useStyle } from '../../styles/StyleProvider'
+import { createRef, useCallback, useMemo, useRef } from 'react'
 
 export * as FormTypes from './types'
 
@@ -25,15 +26,20 @@ export function useForm<
     Form['config']
   >
 >(form: Form, config: FormTypes.UseFormConfig<Values>) {
-  const [formValues, setFormValues] = usePartialState<Values>(
-    config.initialState || form.defaultValue,
-  )
-  const { logger } = useStyle()
-  const [fieldErrors, setFieldErrors] = usePartialState(() => {
+
+  const getInitialState = useCallback(() => {
+    return deepMerge(form.defaultValue, config.initialState || {}) as Values
+  }, [form.defaultValue, config.initialState])
+
+  const getInitialErrors = useCallback(() => {
     const errors = Object.keys(form.staticFieldProps).map((key) => [key, ''])
 
     return Object.fromEntries(errors)
-  })
+  }, [form.staticFieldProps])
+
+  const [formValues, setFormValues] = usePartialState<Values>(getInitialState)
+  const { logger } = useStyle()
+  const [fieldErrors, setFieldErrors] = usePartialState(getInitialErrors)
   // @ts-ignore
   function setFieldValue(...args: FieldPaths) {
     // @ts-ignore
@@ -93,9 +99,22 @@ export function useForm<
     return Object.values(errors).join('').length === 0
   }
 
+  const inputRefs = []
+
+  function focusNext(idx:number){
+    if (!(idx < inputRefs.length)) return 
+    const nextRef = inputRefs?.[idx]?.current 
+
+    if (nextRef?.focus){
+      nextRef.focus?.()
+    }
+  }
+  
+  const nRegisteredTextRefs = useRef(0)
+
   function register(field: FieldPaths[0]) {
     // @ts-ignore
-    const { changeEventName, validate, ...staticProps } =
+    const { changeEventName, validate, type, ...staticProps } =
       form.staticFieldProps[field as string]
 
     const dynamicProps: any = {
@@ -109,6 +128,27 @@ export function useForm<
         }
         // @ts-ignore
         setFieldValue(field, value)
+      }
+    }
+
+    if (type === 'text'){
+      const thisRefIdx = nRegisteredTextRefs.current
+      
+      if (nRegisteredTextRefs.current < form.numberOfTextFields){
+        inputRefs.push(createRef())
+
+      }
+    
+      dynamicProps.ref = inputRefs[thisRefIdx]
+
+      dynamicProps.onSubmitEditing = () => {
+        focusNext(thisRefIdx + 1)
+      }
+
+      nRegisteredTextRefs.current += 1
+      if (nRegisteredTextRefs.current === form.numberOfTextFields){
+        
+        nRegisteredTextRefs.current = 0
       }
     }
 
@@ -158,6 +198,15 @@ export function useForm<
     await cb(getTransformedValue())
   }
 
+  function reset(args?: ('values'|'errors')[]){
+    const resetStates = args || ['values', 'errors']
+    if (resetStates.includes('values')){
+      setFormValues(getInitialState())
+    }
+    if (resetStates.includes('errors')){
+      setFieldErrors(getInitialErrors())
+    }
+  }
   return {
     setFieldValue,
     values: formValues as Values,
@@ -168,6 +217,7 @@ export function useForm<
     fieldErrors,
     getTransformedValue,
     setFormValues,
+    reset,
     isValid: validateAll(),
   }
 }

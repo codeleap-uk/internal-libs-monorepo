@@ -40,7 +40,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(
 ) {
   const state = {} as Form.MapValues<T>
   let props = {}
-
+  let numberOfTextFields = 0
   for (const [k, value] of Object.entries(form)) {
     const { defaultValue, label, validate, type, ...fieldConfig } = value
 
@@ -50,7 +50,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(
     const fieldPath = fieldPathParts.join('.')
 
     let fieldValue = null
-
+    if (type === 'text') numberOfTextFields+=1
     if (type === 'composite') {
       const { props: subFieldProps, state } = buildInitialFormState(
         name,
@@ -74,6 +74,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(
       id: `form-${name}:${fieldPath}`,
       label: label || humanizeCamelCase(k),
       changeEventName: changeEventNames[type],
+      type,
       ...fieldConfig,
     }
 
@@ -85,19 +86,20 @@ function buildInitialFormState<T extends Form.FieldsMap>(
     state[key] = fieldValue
   }
 
-  return { state, props }
+  return { state, props, numberOfTextFields }
 }
 
 export function createForm<T extends Form.FieldsMap>(
   name: string,
   formArgs: Form.FormConfig<T>,
 ): Form.CreateFormReturn<T> {
-  const { state, props } = buildInitialFormState(name, formArgs)
+  const { state, props, numberOfTextFields } = buildInitialFormState(name, formArgs)
 
   return {
     config: formArgs as T,
     defaultValue: state,
     staticFieldProps: props,
     name,
+    numberOfTextFields,
   }
 }

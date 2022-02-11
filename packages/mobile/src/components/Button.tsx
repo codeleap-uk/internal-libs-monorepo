@@ -14,6 +14,7 @@ import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
 import { IconPlaceholder } from '@codeleap/common'
 import { StyleSheet, TouchableOpacity } from 'react-native'
+import { View } from './View'
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
   ComponentVariants<typeof ButtonStyles> & {
@@ -54,11 +55,16 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
     return [
       variantStyles[key],
       disabled && variantStyles[key + ':disabled'],
+      styles[key],
     ]
   }
 
   const iconStyle = getStyles('icon')
 
+  const leftIconStyle = StyleSheet.flatten([iconStyle, getStyles('leftIcon')])
+  const rightIconStyle = StyleSheet.flatten([iconStyle, getStyles('rightIcon')])
+
+  const hasText = !!(text || children)
   return (
     <Touchable
       style={getStyles('wrapper')}
@@ -67,11 +73,12 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
       disabled={disabled}
       {...props}
     >
+     
       {loading && <ActivityIndicator style={getStyles('loader')} />}
-      {!loading && <Icon name={icon} style={StyleSheet.flatten([iconStyle, getStyles('leftIcon')])} />}
+      {!loading && <Icon name={icon} style={leftIconStyle} renderEmptySpace={hasText}/>}
       {text ? <Text text={text} style={getStyles('text')} /> : null}
       {children}
-      <Icon name={rightIcon} style={StyleSheet.flatten([iconStyle, getStyles('rightIcon')])} />
+      <Icon name={rightIcon} style={rightIconStyle} renderEmptySpace={hasText} />
     </Touchable>
   )
 })

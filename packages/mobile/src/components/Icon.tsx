@@ -7,6 +7,7 @@ import {
   useStyle,
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
+import { View } from './View'
 
 export type IconProps = {
   name: IconPlaceholder;
@@ -17,22 +18,26 @@ export type IconProps = {
     height?: string | number;
   };
   variants?: ComponentVariants<typeof IconStyles>['variants'];
+  renderEmptySpace?: boolean
 };
 
-export const Icon: React.FC<IconProps> = ({ name, style, variants, ...otherProps }) => {
+export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
   const { Theme } = useStyle()
-
-  if (!name) return null
+  const variantStyles = useComponentStyle('Icon', {
+    variants,
+    transform: StyleSheet.flatten,
+    styles: {
+      icon: style,
+    },
+  })
+ 
+  if (!name) {
+    return renderEmptySpace ? <View style={variantStyles.icon}/> : null
+  }
 
   const Component = Theme?.icons?.[name]
 
   const { logger } = useStyle()
-  const variantStyles = useComponentStyle('Icon', {
-    variants,
-    styles: {
-      icon: StyleSheet.flatten([style]),
-    },
-  })
   if (!Component) {
     logger.warn(
       'Icon',
