@@ -22,7 +22,7 @@ export const ButtonStyles = {
       flexDirection: 'row',
       backgroundColor: theme.colors.primary,
       ...theme.presets.alignCenter,
-      // ...theme.spacing.padding(1),
+      ...theme.spacing.padding(1),
       ...(
         theme.IsBrowser ? 
           {

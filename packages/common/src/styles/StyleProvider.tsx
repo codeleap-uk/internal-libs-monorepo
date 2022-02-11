@@ -9,18 +9,15 @@ import {
   VariantProvider,
 } from '.'
 import { AnyFunction, ComponentVariants, NestedKeys, StylesOf } from '..'
+import { silentLogger } from '../constants'
 import { StyleContextProps, StyleContextValue } from './types'
-import { Logger } from '../tools/Logger'
+
 export const StyleContext = createContext(
   {} as StyleContextValue<
     DefaultVariants & Record<string, CommonVariantObject<any>>
   >,
 )
-const silentLogger = new Logger({
-  Logger: {
-    Level: 'silent',
-  },
-})
+
 export const StyleProvider = <
   S extends DefaultVariants,
   V extends VariantProvider<any, AppTheme>

@@ -1,5 +1,4 @@
 import { FunctionType } from '..'
-import { Logger } from '../tools/Logger'
 
 export function deepMerge(base = {}, changes = {}): any {
   const obj = {
@@ -69,4 +68,53 @@ export function objectPaths(obj) {
 
 export function optionalObject(condition: boolean, ifTrue: any, ifFalse: any) {
   return condition ? ifTrue : ifFalse
+}
+
+type TraverseRecArgs = {path:string, value: any, depth: number, key: string, type: string, primitive: boolean}
+
+type TraverseCallback = (args?: TraverseRecArgs) => {stop?: boolean } | void
+
+export function traverse(obj:any, callback:TraverseCallback, args?: TraverseRecArgs){
+  const _args:TraverseRecArgs = {
+    depth: 0,
+    key: '',
+    path: '',
+    value: obj,
+    type: typeof obj,
+    primitive: true,
+    ...args,
+  }
+  
+  const isPrimitive = ['string', 'number', 'boolean'].includes(typeof obj)
+
+  if (isPrimitive){
+    callback(_args)
+  } else {
+    for (const [key, value] of Object.entries(obj)){
+      const cmd = callback({
+        ..._args,
+        key,
+        value,
+        path: key,
+        type: typeof value,
+        primitive: ['string', 'number', 'boolean'].includes(typeof value),
+      })
+
+      if (cmd){
+        if (cmd.stop){
+          break
+        }
+
+      }
+      traverse(value, callback, {
+        depth: _args.depth + 1,
+        key,
+        path: `${_args.path}.${_args.key}`,
+        type: typeof value,
+        value,
+        primitive: ['string', 'number', 'boolean'].includes(typeof value),
+      })
+    
+    }
+  }
 }

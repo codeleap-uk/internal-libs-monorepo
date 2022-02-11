@@ -49,32 +49,25 @@ export type TypographyStyle = {
   };
 };
 
-type ButtonStyle = {
-  default: {
-    height: number,
-  }
-  small: {
-    height: number,
-  }
-}
+
+type FreeThemeColors = AnyProps<string | AnyProps<string>>
 
 export type AppTheme = {
   readonly breakpoints: Record<string, number>;
   readonly spacing: number;
-  readonly colors: Partial<Record<DefaultColors, string>> & AnyProps<string>;
+  readonly colors: Partial<Record<DefaultColors, string>> & FreeThemeColors;
 
   readonly values?: {
     width?: number;
     height?: number;
-    buttons?: ButtonStyle
-  };
-
+  } & AnyProps<any>;
+  
   readonly borderRadius: {
     large: number
     medium: number
     small: number
   }
-   readonly buttons: ButtonStyle
+
 
   readonly icons: Record<string, any>
 

@@ -7,8 +7,11 @@ import {
   LogToTerminal,
   LogFunctionArgs,
   LogType,
+  LoggerMiddleware,
 } from './types'
 import { makeLogger } from './utils'
+
+export * as LoggerTypes from './types'
 
 function initializeDebugLoggers(logToTerminal: LogToTerminal) {
   const logFunctions = []
@@ -33,9 +36,11 @@ export class Logger {
 
   sentry: SentryService;
 
-  constructor(settings: AppSettings) {
-    this.settings = settings
+  middleware:LoggerMiddleware[] = []
 
+  constructor(settings: AppSettings, middleware?: LoggerMiddleware[]) {
+    this.settings = settings
+    this.middleware = middleware || []
     this.debug = initializeDebugLoggers(this.logToTerminal)
     this.sentry = new SentryService(settings)
   }
@@ -79,9 +84,10 @@ export class Logger {
 
     if (this.settings.Environment.IsDev) {
       Logger.coloredLog(...logArgs)
+      this.middleware.forEach(m => m(...logArgs))
     } else {
       this.sentry.captureBreadcrumb(logType, args)
-
+      this.middleware.forEach(m => m(...logArgs))
       if (['error', 'warn'].includes(logType)) {
         this.sentry.sendLog()
       }

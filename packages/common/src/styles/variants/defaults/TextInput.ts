@@ -40,8 +40,6 @@ export const TextInputStyles = {
 
       backgroundColor: 'transparent',
       flex: 1,
-      fontSize: theme.typography.baseFontSize,
-      // ...assignTextStyle('p2')(theme).text,
     },
     placeholder: {
       color: theme.colors.gray,
@@ -66,7 +64,6 @@ export const TextInputStyles = {
       ...theme.border.gray({
         width: 1,
       }),
-      height: theme.buttons.default.height,
       display: 'flex',
       alignItems: 'center',
       ...theme.border.primary(1),

@@ -49,10 +49,11 @@ export type ResponsiveVariantsProp<
 export type GetStylesArgs<
   VariantObject extends CommonVariantObject,
   Theme extends EnhancedTheme<any>,
-  Root
+  Root,
 > = [
   styles: VariantObject,
   options: {
+    debugName?: string
     variants: VariantProp<VariantObject>;
     rootElement?: Root;
     responsiveVariants?: ResponsiveVariantsProp<Theme, VariantObject>;

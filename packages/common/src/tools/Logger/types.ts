@@ -37,3 +37,5 @@ export type SentryProvider = Pick<
   typeof Sentry,
   'addBreadcrumb' | 'captureException' | 'init' | 'captureMessage'
 >;
+
+export type LoggerMiddleware = FunctionType<LogToTerminalArgs, any>
