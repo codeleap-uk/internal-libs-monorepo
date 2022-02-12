@@ -89,7 +89,7 @@ export const MobileModalStyles = {
       'box:pose': {
         opacity: 0,
         scale: 0.8,
-        y: Theme.values.height * 0.15,
+        // y: Theme.values.height * 0.15,
         transition: modalTransition,
       },
       'box:pose:visible': {
