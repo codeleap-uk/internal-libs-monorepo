@@ -86,7 +86,12 @@ export class Logger {
       Logger.coloredLog(...logArgs)
       this.middleware.forEach(m => m(...logArgs))
     } else {
-      this.sentry.captureBreadcrumb(logType, args)
+      try {
+        // NOTE: For some reason, sentry throws here sometimes
+        this.sentry.captureBreadcrumb(logType, args)
+      } catch (e){
+
+      }
       this.middleware.forEach(m => m(...logArgs))
       if (['error', 'warn'].includes(logType)) {
         this.sentry.sendLog()

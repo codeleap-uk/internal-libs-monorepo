@@ -35,7 +35,8 @@ export interface IPermissionManager<T extends PermissionActionRecord> {
     get(name: keyof T, options?: CheckOptions): Promise<PermissionState>
 }
 
-export type PermissionSubscriber<T> = FunctionType<[keyof T, PermissionState], any>
+export type ChangeListener<T> = FunctionType<[keyof T, PermissionState], any>
+export type PermissionSubscriber = FunctionType<[PermissionState], any>
 
 export type PermissionArray<T> = ([name: keyof T, options: CheckOptions])[] | (keyof T)[]
 

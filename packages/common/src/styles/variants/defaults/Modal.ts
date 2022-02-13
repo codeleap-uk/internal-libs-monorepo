@@ -83,6 +83,7 @@ export const ModalStyles = {
       flex: 1,
       width: '100%',
       borderRadius: 0,
+      height: theme.values.height,
     },
   })),
 }

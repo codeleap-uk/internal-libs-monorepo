@@ -13,7 +13,6 @@ import React, {
   useState,
 } from 'react'
 import { StyleSheet } from 'react-native'
-import { GestureDetector, Gesture } from '../../modules/gestureHandler'
 import { StylesOf } from '../../types/utility'
 import { Animated } from '../Animated'
 import { Button } from '../Button'
@@ -38,9 +37,6 @@ export type PagerRef = {
   to(index?: number): void;
 };
 
-const initialGestureState = {
-  translationX: 0,
-}
 
 export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   const {
@@ -105,18 +101,14 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   onUpdate(() => {
     onPageChange?.(page)
   }, [page])
+
   onUpdate(() => {
     if (typeof propPage === 'number') {
       setPage(propPage)
     }
   }, [propPage])
+  
   useImperativeHandle(ref, () => pagerRef.current)
-
-  // const [gestureEvent,setGestureEvent] = useState(initialGestureState)
-
-  // const gestureValue = useDebounce(gestureEvent, 200)
-
-  // const gesture = Gesture.Pan().onUpdate((e) => setGestureEvent(e)).onEnd(() => setGestureEvent(initialGestureState))
 
   const pagePoses = useMemo(() => {
     return {
@@ -127,35 +119,32 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   }, [variantStyles])
 
   return (
-    <>
-      {/* <GestureDetector gesture={gesture}> */}
-      <View style={variantStyles.wrapper}>
-        {React.Children.map(children, (child, idx) => (
-          <Page
-            {...pagerProps}
-            idx={idx}
-            lastPage={lastPage}
-            pagePoses={pagePoses}
-            style={[variantStyles.page]}
-            page={page}
-          >
-            {child}
-          </Page>
-        ))}
+    <View style={variantStyles.wrapper}>
+      {React.Children.map(children, (child, idx) => (
+        <Page
+          {...pagerProps}
+          idx={idx}
+          lastPage={lastPage}
+          pagePoses={pagePoses}
+          style={[variantStyles.page]}
+          page={page}
+        >
+          {child}
+        </Page>
+      ))}
 
-        {debug && (
-          <View
-            variants={['absolute']}
-            style={{ bottom: 0, left: 0, right: 0 }}
-          >
-            <Button text='previous' onPress={pagerRef.current.back} />
-            <Text text={page.toString()} />
-            <Button text='next' onPress={pagerRef.current.forward} />
-          </View>
-        )}
-      </View>
-      {/* </GestureDetector> */}
-    </>
+      {debug && (
+        <View
+          variants={['absolute']}
+          style={{ bottom: 0, left: 0, right: 0 }}
+        >
+          <Button text='previous' onPress={pagerRef.current.back} />
+          <Text text={page.toString()} />
+          <Button text='next' onPress={pagerRef.current.forward} />
+        </View>
+      )}
+    </View>
+
   )
 })
 type PageProps = PagerProps & {

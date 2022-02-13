@@ -11,8 +11,8 @@ import {
 export function createSlice<
   S extends any,
   N extends string,
-  R extends Reducers<S>,
-  AR extends AsyncReducers<S>
+  R extends Reducers<S> = Reducers<S>,
+  AR extends AsyncReducers<S> = AsyncReducers<S>
 >(args: CreateSliceArgs<S, N, R, AR>): Slice<S, N, R, AR> {
   const { initialState, name, reducers, asyncReducers } = args
   const reducerCases = []
@@ -44,7 +44,7 @@ export function createSlice<
         const currentState = store.getState()[name]
         const actionResult = await action(currentState, setState, args)
 
-        return actionResult || store.getState()[name]
+        return actionResult !== undefined ? actionResult :  store.getState()[name]
       }
     }
     return actions
