@@ -38,7 +38,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closeIconName?: IconPlaceholder;
   visible: boolean;
   toggle?: () => void;
-  scroll: boolean;
+  scroll?: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {

@@ -92,6 +92,9 @@ export const TextInputStyles = {
     'icon:error': {
       color: theme.colors.negative,
     },
+    'label:error': {
+      color: theme.colors.negative,
+    },
     'textField:error': {
       ...optionalObject(
         theme.IsBrowser,

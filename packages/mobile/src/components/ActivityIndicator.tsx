@@ -19,17 +19,21 @@ export type ActivityIndicatorProps = ComponentPropsWithoutRef<
 
 export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {
-    const { variants = [], style, ...props } = activityIndicatorProps
+    const { variants = [], style, styles: propStyles, ...props } = activityIndicatorProps
 
     const variantStyles = useComponentStyle('ActivityIndicator', {
       variants,
+      transform: StyleSheet.flatten,
+      styles: propStyles,
     })
 
     const { Theme } = useStyle()
 
+    const color = variantStyles.wrapper?.color || Theme.colors.gray
+    const size = variantStyles.wrapper?.height || variantStyles.wrapper?.width || 'large'
+    
     const styles = StyleSheet.flatten([variantStyles.wrapper, style])
-    const color = styles?.color || Theme.colors.gray
-    const size = styles?.height || styles?.width || 'large'
+    
     return (
       <Indicator
         size={size}

@@ -78,10 +78,15 @@ export class Logger {
         args[1],
       )
     } else {
+      const logDescription = 
+        [typeof args?.[0], typeof args?.[2]]
+          .every(t => t === 'string') ? `${args?.[2]||''} - ${args?.[0]||''}` : args?.[0] || ''
       // eslint-disable-next-line no-console
       console[logType](
         useColor,
-        `[${logType.toUpperCase()}] ${args?.[2]} - ${args?.[0]}`,
+        `[${logType.toUpperCase()}] 
+          ${logDescription}
+        `,
         args[1],
         colors.Reset,
       )

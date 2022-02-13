@@ -9,6 +9,7 @@ import { ViewProps, View } from './View'
 import { Text } from './Text'
 import { StylesOf } from '../types/utility'
 import { ActivityIndicator } from './ActivityIndicator'
+import { StyleSheet } from 'react-native'
 
 export type ContentViewProps = Omit<
   ViewProps,
@@ -29,6 +30,7 @@ export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
 
   const variantStyle = useComponentStyle('ContentView', {
     variants,
+    transform: StyleSheet.flatten,
     styles,
   })
 

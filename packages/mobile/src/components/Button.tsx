@@ -14,7 +14,7 @@ import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
 import { IconPlaceholder } from '@codeleap/common'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import { View } from './View'
+
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
   ComponentVariants<typeof ButtonStyles> & {
@@ -28,7 +28,6 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
 export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {
   const {
     variants = [],
-    responsiveVariants = {},
     children,
     icon,
     text,
@@ -47,7 +46,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
     styles,
   })
 
-  function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
+  function handlePress() {
     onPress && onPress()
   }
 
@@ -56,6 +55,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
       variantStyles[key],
       disabled && variantStyles[key + ':disabled'],
       styles[key],
+      disabled && styles[key + ':disabled'],
     ]
   }
 
