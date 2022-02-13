@@ -20,6 +20,7 @@ export type AppSettings = DeepPartial<{
   };
   Logger: {
     Level: LogType;
+    DeviceIdentifier?: string;
     IgnoreWarnings?: string[];
   };
   Vars: {

@@ -15,9 +15,10 @@ type Style = {
   height?: string | number;
 }
 export type IconProps = {
-  name: IconPlaceholder;
+  name: IconPlaceholder
   style?: any
-  variants?: ComponentVariants<typeof IconStyles>['variants'];
+  size?: number
+  variants?: ComponentVariants<typeof IconStyles>['variants']
   renderEmptySpace?: boolean
 };
 

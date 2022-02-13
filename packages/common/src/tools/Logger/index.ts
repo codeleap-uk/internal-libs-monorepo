@@ -60,7 +60,7 @@ export class Logger {
   }
 
   static coloredLog: LogToTerminal = (...logArgs) => {
-    const [logType, args, color] = logArgs
+    const [logType, args, color, deviceIdentifier] = logArgs
     let cl = logColors[logType]
     let useColor = colors[cl]
 
@@ -73,10 +73,8 @@ export class Logger {
 
     if (useCSS) {
       // eslint-disable-next-line no-console
-      console[logType](
-        `[${logType.toUpperCase()}] ${args?.[2]} - ${args?.[0]}`,
-        args[1],
-      )
+      const logStr = `[${logType.toUpperCase()}]${deviceIdentifier} ${args?.[2]} - ${args?.[0]}`
+      console[logType](logStr, args[1])
     } else {
       const logDescription = 
         [typeof args?.[0], typeof args?.[2]]
@@ -84,7 +82,7 @@ export class Logger {
       // eslint-disable-next-line no-console
       console[logType](
         useColor,
-        `[${logType.toUpperCase()}] 
+        `[${logType.toUpperCase()}]${deviceIdentifier} 
           ${logDescription}
         `,
         args[1],
@@ -94,7 +92,7 @@ export class Logger {
   };
 
   private logToTerminal: LogToTerminal = (...logArgs) => {
-    const [logType, args] = logArgs
+    const [logType, args, color] = logArgs
     if (this.settings.Logger.Level === 'silent') return
     const shouldLog =
       logLevels.indexOf(logType) >=
@@ -102,7 +100,9 @@ export class Logger {
     if (!shouldLog) return
 
     if (this.settings.Environment.IsDev) {
-      Logger.coloredLog(...logArgs)
+      const deviceId = this.settings.Logger?.DeviceIdentifier ?
+        `[${this.settings.Logger.DeviceIdentifier}]` : ''
+      Logger.coloredLog(logType, args, color, deviceId)
       this.middleware.forEach(m => m(...logArgs))
     } else {
       try {
