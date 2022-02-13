@@ -4,6 +4,7 @@ import {
   includePresets,
   ModalComposition,
   ModalStyles,
+  assignTextStyle,
 } from '@codeleap/common'
 
 export const backgroundTransition = {
@@ -81,7 +82,7 @@ export const MobileModalStyles = {
         width: '80%',
         backgroundColor: Theme.colors.white,
         borderRadius: Theme.borderRadius.medium,
-        ...Theme.spacing.padding(1),
+        ...Theme.spacing.padding(2),
       },
       touchableBackdrop: {
         ...fullSize,
@@ -103,6 +104,12 @@ export const MobileModalStyles = {
       },
       closeButtonWrapper: {
         alignSelf: 'center',
+      },
+      title: {
+        ...Theme.presets.textCenter,
+        ...assignTextStyle('h3')(Theme).text,
+        ...Theme.spacing.paddingBottom(1),
+        flex: 1,
       },
     }
   }),

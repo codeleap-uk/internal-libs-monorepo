@@ -1,3 +1,4 @@
+import { assignTextStyle } from './Text'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
@@ -36,13 +37,13 @@ export const ModalStyles = {
       background: 'white',
       alignSelf: 'center',
       flexDirection: 'column',
+      ...theme.spacing.padding(2),
     },
     overlay: {
       zIndex: -1,
       transition: `opacity ${transitionDuration} ease`,
     },
     body: {
-      ...theme.spacing.padding(1),
       flexDirection: 'column',
       flex: 1,
       overflowY: 'auto',
@@ -51,11 +52,13 @@ export const ModalStyles = {
       background: 'transparent',
       color: theme.colors.primary,
       ...theme.presets.justifySpaceBetween,
-      ...theme.spacing.padding(1),
     },
     footer: {
       background: 'transparent',
-      ...theme.spacing.padding(1),
+    },
+    title: {
+      ...assignTextStyle('h3')(theme).text,
+      ...theme.spacing.marginBottom(1),
     },
   })),
   roundish: createModalStyle((theme) => ({
