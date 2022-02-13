@@ -21,24 +21,33 @@ const presets = includePresets((styles) => createAvatarStyle(() => ({ general: s
 export const AvatarStyles = {
   ...presets,
   default: createAvatarStyle((Theme) => ({
+    general: {
+      ...Theme.presets.center,
+      ...Theme.semiCircle(140),
+      overflow: 'hidden',
+      display: 'flex',
+      ...(Theme.IsBrowser
+        ? {
+          [Theme.media.is('small')]: {
+            ...Theme.semiCircle(70),
+          }}
+        : {}),
+
+    },
     image: {
       // backgroundColor: Theme.colors.light,
       ...Theme.presets.center,
-      ...Theme.semiCircle(140),
       position: 'relative',
-      overflow: 'visible',
       ...(Theme.IsBrowser
         ? {
           objectFit: 'cover',
           '&:hover': {
             cursor: 'pointer',
-          },
-          [Theme.media.is('small')]: {
-            ...Theme.semiCircle(70),
-          },
-        }
+          }}
         : {}),
       opacity: 1,
+      flex: 1,
+      width: '100%',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -47,10 +56,10 @@ export const AvatarStyles = {
       fontSize: 26,
     },
     textEdit: {
+      color: 'white',
       ...optionalObject(
         Theme.IsBrowser,
         {
-          color: 'white',
           position: 'absolute',
           fontWeight: 'bold',
           textDecoration: 'underline',
@@ -66,7 +75,7 @@ export const AvatarStyles = {
       height: 150,
     },
     wrapper: {
-      overflow: 'visible',
+      overflow: 'hidden',
       position: 'relative',
       alignItems: 'center',
     },
@@ -87,7 +96,7 @@ export const AvatarStyles = {
     },
   })),
   large: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.semiCircle(200),
       ...optionalObject(
         Theme.IsBrowser,
@@ -105,7 +114,7 @@ export const AvatarStyles = {
     },
   })),
   medium: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.semiCircle(100),
       ...optionalObject(
         Theme.IsBrowser,
@@ -123,7 +132,7 @@ export const AvatarStyles = {
     },
   })),
   banner: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.semiCircle(60),
       ...optionalObject(
         Theme.IsBrowser,
@@ -143,7 +152,7 @@ export const AvatarStyles = {
     },
   })),
   small: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.semiCircle(40),
       ...optionalObject(
         Theme.IsBrowser,
@@ -163,7 +172,7 @@ export const AvatarStyles = {
     },
   })),
   verySmall: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.semiCircle(16),
       ...optionalObject(
         Theme.IsBrowser,
@@ -182,7 +191,7 @@ export const AvatarStyles = {
     },
   })),
   largeCircle: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.circle(100),
       ...optionalObject(
         Theme.IsBrowser,
@@ -196,7 +205,7 @@ export const AvatarStyles = {
     },
   })),
   midCircle: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.circle(40),
       ...optionalObject(
         Theme.IsBrowser,
@@ -210,7 +219,7 @@ export const AvatarStyles = {
     },
   })),
   smallCircle: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       ...Theme.circle(30),
       ...optionalObject(
         Theme.IsBrowser,
@@ -224,7 +233,7 @@ export const AvatarStyles = {
     },
   })),
   borders: createAvatarStyle((Theme) => ({
-    image: {
+    general: {
       border: Theme.border.black(1),
     },
   })),
