@@ -16,9 +16,11 @@ export class SentryService {
     this.use = settings?.Sentry?.enable
     this.sentry = settings?.Sentry?.provider as SentryProvider
     if (this.use) {
+      const isDebug = settings?.Sentry?.debug || false
+      if (isDebug) console.log('> > > Initializing Sentry', settings.Sentry)
       this.sentry.init({
         dsn: settings.Sentry.dsn,
-        debug: true,
+        debug: isDebug,
       })
     }
   }

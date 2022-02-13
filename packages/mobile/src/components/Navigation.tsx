@@ -11,6 +11,7 @@ import {
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Icon } from './Icon'
+import { View } from './View'
 
 export type AppScenes = {
   [x: string]: {
@@ -117,7 +118,13 @@ export const Navigation = <
       ...propOptions,
       tabBarIcon: (style) => {
         if (flatScenes?.[route.name]?.icon) {
-          return <Icon name={flatScenes?.[route.name]?.icon} style={style} />
+          return (
+            <Icon
+              name={flatScenes?.[route.name]?.icon}
+              style={style}
+              size={style?.size}
+            />
+          )
         }
         return null
       },

@@ -17,6 +17,7 @@ export type IconProps = {
     width?: string | number;
     height?: string | number;
   };
+  size: number;
   variants?: ComponentVariants<typeof IconStyles>['variants'];
   renderEmptySpace?: boolean
 };

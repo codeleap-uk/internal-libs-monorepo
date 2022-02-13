@@ -15,7 +15,7 @@ export type ViewProps = ComponentPropsWithoutRef<typeof NativeView> &
     component?: any;
   } & BaseViewProps;
 
-export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
+export const View: React.FC<ViewProps> = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],

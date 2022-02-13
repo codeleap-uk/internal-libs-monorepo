@@ -16,6 +16,7 @@ export type AppSettings = DeepPartial<{
     enable: boolean;
     dsn: string;
     provider: SentryProvider;
+    debug?: boolean;
   };
   Logger: {
     Level: LogType;
