@@ -30,5 +30,5 @@ export const Animated = <T extends CP, CFG = any>({
 }: AnimatedProps<T, CFG>) => {
   const Component = useRef(PosedComponents[component](config)).current
 
-  return <Component {...props} />
+  return <Component withParent={false} {...props} />
 }

@@ -37,7 +37,8 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   debugName?: string;
   closeIconName?: IconPlaceholder;
   visible: boolean;
-  toggle: () => void;
+  toggle?: () => void;
+  scroll: boolean;
 };
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
@@ -55,6 +56,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     dismissOnBackdrop = true,
     closeIconName = 'close',
     debugName,
+    scroll = true,
     ...props
   } = modalProps
 
@@ -106,6 +108,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       <Scroll
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
+        scrollEnabled={scroll}
       >
         {dismissOnBackdrop && (
           <Touchable

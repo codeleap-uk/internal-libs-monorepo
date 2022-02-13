@@ -30,8 +30,7 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
 };
 
 export const Image: React.FC<ImageProps> = (props) => {
-  const { variants, style, fast, resizeMode, resizeMethod, ...imageProps } =
-    props
+  const { variants, style, fast = true, resizeMode = 'contain', ...imageProps } = props
 
   const variantStyles = useComponentStyle('Image', { variants })
 
@@ -46,5 +45,5 @@ export const Image: React.FC<ImageProps> = (props) => {
       />
     )
   }
-  return <NativeImage style={styles} {...(imageProps as any)} />
+  return <NativeImage style={styles} resizeMode={resizeMode} {...(imageProps as any)} />
 }

@@ -13,13 +13,27 @@ import { makeLogger } from './utils'
 
 export * as LoggerTypes from './types'
 
-function initializeDebugLoggers(logToTerminal: LogToTerminal) {
+function initializeDebugLoggers(logToTerminal: LogToTerminal, settings: AppSettings) {
   const logFunctions = []
   for (const logConfig of Object.keys(foregroundColors)) {
     logFunctions.push([
       logConfig.toLowerCase(),
       makeLogger(logConfig as DebugColor, logToTerminal),
     ])
+  }
+  // ignores some warnings to make shit less annoying
+  if (settings?.Environment?.Type !== 'production' && settings?.Logger?.IgnoreWarnings?.length) {
+    const newConsole = (args, oldConsole) => {
+      const shouldIgnore = typeof args[0] === 'string' &&
+        settings.Logger.IgnoreWarnings.some(ignoredWarning => args.join(' ').includes(ignoredWarning))
+      if (shouldIgnore) return
+      else return oldConsole.apply(console, args)
+    }
+    const consoles = ['log', 'warn', 'error']
+    consoles.forEach(t => {
+      const tmp = console[t]
+      console[t] = (...args) => newConsole(args, tmp)
+    })
   }
   return Object.fromEntries(logFunctions) as DebugColors
 }
@@ -41,7 +55,7 @@ export class Logger {
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[]) {
     this.settings = settings
     this.middleware = middleware || []
-    this.debug = initializeDebugLoggers(this.logToTerminal)
+    this.debug = initializeDebugLoggers(this.logToTerminal, settings)
     this.sentry = new SentryService(settings)
   }
 
