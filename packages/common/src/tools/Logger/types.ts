@@ -1,5 +1,6 @@
 import { FunctionType } from '../..'
 import { colors, foregroundColors } from './constants'
+import { AppSettings } from '../../config/Settings'
 
 import * as Sentry from '@sentry/browser'
 
@@ -20,7 +21,8 @@ export type DebugColor = keyof DebugColors;
 export type LogToTerminalArgs = [
   logType: LogType,
   args: LogFunctionArgs,
-  color?: keyof DebugColors
+  color?: keyof DebugColors,
+  deviceIdentifier?: string
 ];
 export type LogToTerminal = FunctionType<LogToTerminalArgs, void>;
 

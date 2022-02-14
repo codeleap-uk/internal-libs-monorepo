@@ -36,20 +36,10 @@ export const ButtonStyles = {
     text: {
       flex: 1,
       textAlign: 'center',
-
     },
     loader: {
       height: 20,
       width: 20,
-    },
-    rightIcon: {
-      height: 20,
-      width: 20,
-    },
-    leftIcon: {
-      height: 20,
-      width: 20,
-      
     },
     'wrapper:disabled': {
       backgroundColor: theme.colors.disabled,
@@ -82,6 +72,10 @@ export const ButtonStyles = {
   })),
   icon: createButtonStyle((theme) => ({
     wrapper: {
+      backgroundColor: 'transparent',
+      aspectRatio: 1,
+      display: 'flex',
+      ...theme.presets.center,
       ...theme.spacing.padding(0),
       ...optionalObject(theme.IsBrowser,
         {'&:hover': {
@@ -98,6 +92,9 @@ export const ButtonStyles = {
     },
     icon: {
       ...theme.spacing.margin(0),
+      ...theme.presets.center,
+      height: null,
+      width: null,
     },
     leftIcon: {
       ...theme.spacing.marginRight(0),

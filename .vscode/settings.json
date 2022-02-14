@@ -23,5 +23,14 @@
         "cmd": "yarn build"
       }
     ]
+  },
+  "todohighlight.keywords": ["TODO", "NOTE", "NOTES", "FIXME", "HACK", "DISCUSS", "WTF"],
+    "todohighlight.defaultStyle": {
+      "color": "red",
+      "border": "2px solid #aaa",
+      "backgroundColor": "#faea00",
+      "fontWeight": "bold",
+      "borderRadius": "3px",
+    },
   }
 }

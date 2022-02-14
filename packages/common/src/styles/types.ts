@@ -54,7 +54,7 @@ export type TypographyStyle = {
 type FreeThemeColors = AnyProps<string | AnyProps<string>>
 
 export type AppTheme = {
-  readonly breakpoints: Record<string, number>;
+  readonly breakpoints?: Record<string, number>;
   readonly spacing: number;
   readonly colors: Partial<Record<DefaultColors, string>> & FreeThemeColors;
 

@@ -14,6 +14,7 @@ import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
 import { IconPlaceholder } from '@codeleap/common'
 import { StyleSheet, TouchableOpacity } from 'react-native'
+import { Logger } from '@codeleap/common'
 
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
@@ -63,7 +64,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
 
   const leftIconStyle = StyleSheet.flatten([iconStyle, getStyles('leftIcon')])
   const rightIconStyle = StyleSheet.flatten([iconStyle, getStyles('rightIcon')])
-
+  console.log({iconStyle, rightIconStyle, leftIconStyle})
   const hasText = !!(text || children)
   return (
     <Touchable
