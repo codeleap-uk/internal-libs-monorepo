@@ -1,11 +1,12 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import { DocumentPicker } from '../modules/documentPicker'
+import React, { forwardRef, useImperativeHandle } from 'react'
+import { DocumentPicker, ImageCropPicker } from '../modules/documentPicker'
 import {
   ComponentVariants,
   FileInputComposition,
   FileInputStyles,
   IconPlaceholder,
   MobileInputFile,
+  parseFilePathData,
   useComponentStyle,
   useStyle,
 } from '@codeleap/common'
@@ -13,6 +14,9 @@ import { StylesOf } from '../types/utility'
 import { Button, ButtonProps } from './Button'
 import { View } from './View'
 import { InputLabel } from './TextInput'
+import OSAlert from '../utils/OSAlert'
+import { Options } from 'react-native-image-crop-picker'
+import { DocumentPickerOptions } from '../modules/types/documentPicker'
 
 export type FileInputRef = {
   openFilePicker: () => void;
@@ -25,10 +29,37 @@ export type FileInputProps = {
   mode: 'hidden' | 'button';
   variants?: ComponentVariants<typeof FileInputStyles>['variants'];
   onFileSelect(files: MobileInputFile[]): void;
-  options?: DocumentPicker.DocumentPickerOptions;
+  options?: DocumentPickerOptions<any>;
   buttonProps?: ButtonProps;
   ref?: FileInputRef;
+  placeholder?: string
+  type?: 'image' | 'anyFile'
+  alertProps?: Parameters<typeof OSAlert.ask>[0]
+  pickerOptions?: Partial<Options>
 };
+
+const pickerDefaults = {
+  width: 300,
+  height: 400,
+  cropping: true,
+}
+
+function parsePickerData(data:any):MobileInputFile {
+
+  const filePathData = parseFilePathData(data.path)
+  const d:MobileInputFile['file'] = {
+    name: filePathData.name,
+    size: data.size,
+    type: data.mime,
+    uri: data.path,
+    fileCopyUri: data.path,
+  }
+  
+  return {
+    file: d,
+    preview: d,
+  }
+}
 
 export const FileInput = forwardRef<
   FileInputRef,
@@ -42,6 +73,10 @@ export const FileInput = forwardRef<
     label,
     variants,
     options,
+    type = 'image',
+    alertProps,
+    placeholder = 'Select a file',
+    pickerOptions,
     buttonProps,
   } = fileInputProps
 
@@ -49,7 +84,7 @@ export const FileInput = forwardRef<
 
   const { logger } = useStyle()
 
-  const openFilePicker = async () => {
+  async function openFileSystem(){
     try {
       let files = await DocumentPicker.pick(options)
       if (!Array.isArray(files)) {
@@ -64,6 +99,54 @@ export const FileInput = forwardRef<
         throw err
       }
     }
+  }
+
+  const mergedOptions  = {
+    ...pickerDefaults,
+    ...pickerOptions,
+  } as Options
+  
+  const handlePickerResolution = data => {
+    onFileSelect(mergedOptions.multiple ? data.map(parsePickerData)  : [
+      parsePickerData(data),
+    ])
+  }
+
+  const openFilePicker = async () => {
+    
+    if (type === 'image'){
+      OSAlert.ask({
+        title: 'Change Image',
+        body: 'Do you want to take a new picture or select an existing one?',
+        ...alertProps,
+        options: [
+          {
+            text: 'Cancel',
+            onPress: () => {},
+            ...alertProps?.options[0],
+          },
+          {
+            text: alertProps?.options?.[0]?.text || 'Camera',
+            onPress: () => {
+              ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
+            },
+            ...alertProps?.options[1],
+          },
+          {
+            text: 'Library',
+            onPress: () => {
+              ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
+        
+            },
+            ...alertProps?.options[2],
+          },
+         
+        ],
+      })
+    } else {
+      openFileSystem()
+    }
+   
   }
 
   const variantStyles = useComponentStyle('FileInput', {
@@ -82,7 +165,7 @@ export const FileInput = forwardRef<
         <InputLabel label={label} style={variantStyles.label} />
         <Button
           onPress={() => openFilePicker()}
-          text={filenames}
+          text={filenames || placeholder}
           icon={iconName || ('fileInputButton' as IconPlaceholder)}
           variants={filenames ? '' : 'icon'}
           {...buttonProps}

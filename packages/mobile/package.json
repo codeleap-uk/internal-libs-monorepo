@@ -26,7 +26,8 @@
     "react": "*",
     "react-native": "*",
     "react-native-fast-image": "^8.5.11",
-    "react-native-gesture-handler": "^2.2.0"
+    "react-native-gesture-handler": "^2.2.0",
+    "react-native-image-crop-picker": "*"
   },
   "dependencies": {
     "@miblanchard/react-native-slider": "^2.1.0",
