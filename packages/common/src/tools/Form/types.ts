@@ -30,6 +30,7 @@ export type FormOutput = 'json' | 'multipart' | 'mixed';
 export type CommonSliderTypes = {
   min?: number;
   max?: number;
+  labels?: string[];
 };
 
 export type InputValueTypes = {
@@ -60,7 +61,7 @@ export type SliderField = {
   type: 'slider';
   defaultValue: number;
   validate?: Validator<number>;
-  labels?: string[];
+  
 } & CommonSliderTypes;
 
 export type RangeSliderField = {
