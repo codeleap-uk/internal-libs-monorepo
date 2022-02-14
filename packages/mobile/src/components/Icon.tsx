@@ -18,6 +18,7 @@ export type IconProps = {
   name: IconPlaceholder
   style?: any
   size?: number
+  color?: string
   variants?: ComponentVariants<typeof IconStyles>['variants']
   renderEmptySpace?: boolean
 };

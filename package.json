@@ -35,14 +35,16 @@
     ]
   },
   "scripts": {
-    "build": "turbo run build",
+    "build": "turbo run build -vvv",
     "dev": "turbo run dev --parallel",
     "dev:mobile": "turbo run dev:mobile --parallel",
     "dev:web": "turbo run dev:web --parallel",
     "dev:ios": "turbo run dev:ios --parallel",
     "dev:android": "turbo run dev:android --parallel",
     "dev:cli": "turbo run dev:cli",
-    "dev:packages": "yarn build --parallel --no-cache && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/web/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn build --parallel\"",
+    "dev:packages": "yarn build --parallel && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/web/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn build --parallel\"",
+    "dev:yarn-run-build": "yarn --cwd ./packages/mobile build & yarn --cwd ./packages/common build",
+    "dev:packages-yarn": "yarn dev:yarn-run-build && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn dev:yarn-run-build\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules",

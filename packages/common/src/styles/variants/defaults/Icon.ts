@@ -12,7 +12,7 @@ export const IconStyles = {
   ...presets,
   default: createIconStyle((theme) => ({
     icon: {
-      color: theme.colors.white,
+      color: theme.colors.primary,
     },
   })),
   white: createIconStyle((theme) => ({
