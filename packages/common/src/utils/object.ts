@@ -66,55 +66,65 @@ export function objectPaths(obj) {
   return paths
 }
 
+export function isValuePrimitive(a:any){
+  return  ['string', 'number', 'boolean'].includes(typeof a)
+}
+
 export function optionalObject(condition: boolean, ifTrue: any, ifFalse: any) {
   return condition ? ifTrue : ifFalse
 }
 
-type TraverseRecArgs = {path:string, value: any, depth: number, key: string, type: string, primitive: boolean}
+type TraverseRecArgs = {path:string[], value: any, depth: number, key: string, type: string, primitive: boolean}
 
 type TraverseCallback = (args?: TraverseRecArgs) => {stop?: boolean } | void
 
-export function traverse(obj:any, callback:TraverseCallback, args?: TraverseRecArgs){
-  const _args:TraverseRecArgs = {
+
+export function traverse(obj = {}, callback:TraverseCallback, args?: TraverseRecArgs){
+  const isPrimitive = isValuePrimitive(obj)
+
+  const info = {
+    path: [],
     depth: 0,
     key: '',
-    path: '',
-    value: obj,
     type: typeof obj,
-    primitive: true,
+    value: obj,
+    primitive: isPrimitive,
     ...args,
   }
-  
-  const isPrimitive = ['string', 'number', 'boolean'].includes(typeof obj)
+ 
 
   if (isPrimitive){
-    callback(_args)
+    callback({
+      ...info,
+      depth: info.depth,
+      
+    })
   } else {
-    for (const [key, value] of Object.entries(obj)){
-      const cmd = callback({
-        ..._args,
-        key,
-        value,
-        path: key,
-        type: typeof value,
-        primitive: ['string', 'number', 'boolean'].includes(typeof value),
-      })
+    for (const [key, value] of Object.entries(obj||{})){
+      const isPrimitive = isValuePrimitive(value)
 
-      if (cmd){
-        if (cmd.stop){
-          break
-        }
+      if (!isPrimitive){
 
+        callback({
+          ...info,
+          key,
+          value,
+          type: typeof value,
+          primitive: isPrimitive,
+          path: [...info.path, key],
+        })
       }
+      
+     
       traverse(value, callback, {
-        depth: _args.depth + 1,
+        ...info,
         key,
-        path: `${_args.path}.${_args.key}`,
-        type: typeof value,
         value,
-        primitive: ['string', 'number', 'boolean'].includes(typeof value),
+        type: typeof value,
+        primitive: isValuePrimitive(value),
+        path: [...info.path, key],
+        depth: info.depth + 1,
       })
-    
     }
   }
 }

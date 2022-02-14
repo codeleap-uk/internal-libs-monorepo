@@ -1,4 +1,5 @@
 import { AppSettings } from '../../config/Settings'
+import { Analytics } from './Analytics'
 import { foregroundColors, colors, logColors } from './constants'
 import { SentryService } from './Sentry'
 import {
@@ -12,6 +13,7 @@ import {
 import { makeLogger } from './utils'
 
 export * as LoggerTypes from './types'
+export * as LoggerAnalytics from './Analytics'
 
 function initializeDebugLoggers(logToTerminal: LogToTerminal, settings: AppSettings) {
   const logFunctions = []
@@ -40,6 +42,15 @@ function initializeDebugLoggers(logToTerminal: LogToTerminal, settings: AppSetti
 
 const logLevels: LogType[] = ['debug', 'info', 'log', 'warn', 'error']
 
+const emptyFunction = () => {}
+
+const hollowAnalytics = new Analytics({
+  init: emptyFunction,
+  onEvent: emptyFunction,
+  onInteraction: emptyFunction,
+  prepareData: () => ({}), 
+}, {})
+
 /**
  * [[include:Logger.md]]
  */
@@ -51,12 +62,25 @@ export class Logger {
   sentry: SentryService;
 
   middleware:LoggerMiddleware[] = []
+  
 
-  constructor(settings: AppSettings, middleware?: LoggerMiddleware[]) {
+  constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
     this.middleware = middleware || []
     this.debug = initializeDebugLoggers(this.logToTerminal, settings)
     this.sentry = new SentryService(settings)
+
+    if (!analytics) {
+      this.analytics = hollowAnalytics
+    }
+
+    this.analytics.onError((err) => {
+      this.logToTerminal('error', [
+        'Error on analytics event',
+        err,
+        'Internal',
+      ])
+    })
   }
 
   static coloredLog: LogToTerminal = (...logArgs) => {

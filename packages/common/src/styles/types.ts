@@ -69,6 +69,7 @@ export type AppTheme = {
     small: number
   }
 
+  readonly presets : Record<string, any>
 
   readonly icons: Record<string, any>
 
@@ -89,7 +90,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
     Spacings<'padding'>;
   hooks: Hooks<keyof T['breakpoints'], boolean>;
   media: MediaQueries<keyof T['breakpoints'], string>;
-  presets: typeof defaultPresets;
+  presets: typeof defaultPresets & T['presets'] ;
   border: BorderHelpers<T>;
   colors: Record<DefaultColors, string> & T['colors'];
   readonly circle: (size: number) => any;

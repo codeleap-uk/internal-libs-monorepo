@@ -38,10 +38,12 @@ export type ComponentWithVariants<
 
 export type DeepPartial<T> = Partial<{
   [Property in keyof T]: T[Property] extends Record<string, any>
-    ? T[Property] extends null
+    ? T[Property] extends null|RegExp
       ? any
       : DeepPartial<T[Property]>
-    : Partial<T[Property]>;
+    : T[Property] extends null|RegExp
+      ? any
+      : Partial<T[Property]>;
 }>;
 
 type PrependNextNum<A extends Array<unknown>> = A['length'] extends infer T

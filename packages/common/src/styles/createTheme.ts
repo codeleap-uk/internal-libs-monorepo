@@ -43,7 +43,10 @@ export function createTheme<T extends ThemeValues>(
       ...spacingFactory(values.spacing, 'margin'),
     },
     border: createBorderHelpers(values, isBrowser),
-    presets: defaultPresets,
+    presets: {
+      ...defaultPresets,
+      ...values.presets,
+    },
     semiCircle: (side) => ({
       width: side,
       height: side,

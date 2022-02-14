@@ -1,4 +1,4 @@
-import { DeepPartial } from '..'
+import { DeepPartial, Matcher } from '..'
 import { LogType, SentryProvider } from '../tools/Logger/types'
 
 export type AppSettings = DeepPartial<{
@@ -21,6 +21,10 @@ export type AppSettings = DeepPartial<{
   Logger: {
     Level: LogType;
     IgnoreWarnings?: string[];
+    Obfuscate: {
+      keys: Matcher<'key'>[]
+      values: Matcher<'value'>[]
+    }
   };
   Vars: {
     GooglePlayURL: string;
