@@ -119,7 +119,7 @@ export function useDebounce<T extends unknown>(
   return [debouncedValue, reset]
 }
 
-function useScript(src: string) {
+export function useScript(src: string) {
   const [status, setStatus] = useState(src ? 'loading' : 'idle')
 
   useEffect(

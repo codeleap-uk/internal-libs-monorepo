@@ -10,27 +10,25 @@ import {
   useValidate,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { Text } from './Text'
-import { View, ViewProps  } from './View'
-import { Button } from './Button'
-import { StylesOf } from '../types/utility'
-import { Icon } from './Icon'
+import { Text } from '../Text'
+import { View } from '../View'
+import { Button } from '../Button'
+import { StylesOf } from '../../types/utility'
+import { Icon } from '../Icon'
 import { NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData } from 'react-native'
-import { Touchable, TouchableProps } from './Touchable'
+import { FormError, InputIcon, InputLabel } from '../TextInput'
 
 type IconProp = { name: IconPlaceholder, action?: () => void }
 
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
 
-export type TextInputProps =
+export type SelectInputProps =
   ComponentVariants<typeof TextInputStyles> &
   Omit<NativeProps, 'value'> &
   {
     multiline?: boolean;
     onChangeText?: (text: string) => void;
     disabled?: boolean;
-    edited?: boolean;
-    type?: string;
     label?: React.ReactNode
 
     leftIcon?: IconProp
@@ -38,20 +36,14 @@ export type TextInputProps =
     styles?: StylesOf<TextInputComposition>
     validate?: FormTypes.ValidatorFunctionWithoutForm | string
     value?: string
-    password?: boolean
     visibilityToggle?: boolean
-    touchableWrapper?: boolean
-    innerWrapperProps?: TouchableProps | ViewProps
   };
 
-export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, inputRef) => {
+export const SelectInput = forwardRef<NativeTextInput, any>((rawprops, inputRef) => {
   const {
     onChange,
-    type,
     value,
     onChangeText,
-    disabled,
-    edited,
     onFocus,
     onBlur,
     multiline,
@@ -61,40 +53,21 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     rightIcon,
     styles,
     validate,
-    password,
     visibilityToggle,
-    touchableWrapper,
-    innerWrapperProps,
+
     ...props
   } = rawprops
 
   const [isFocused, setFocus] = useState(false)
-  const [editedState, setEdited] = useState(edited)
 
   const input = useRef<any>(null)
-  const [textIsVisible, setTextVisible] = useBooleanToggle(false)
+
   const variantStyles = useComponentStyle('TextInput', {
     variants,
     styles,
   })
-  const InputElement = NativeTextInput
 
-  const handleBlur: TextInputProps['onBlur'] = (e) => {
-    if (!editedState && value) setEdited(true)
-    setFocus(false)
-
-    if (onBlur) {
-      onBlur(e)
-    }
-  }
-
-  const handleFocus: TextInputProps['onFocus'] = (e) => {
-    setFocus(true)
-    if (onFocus) {
-      onFocus(e)
-    }
-  }
-
+ 
   const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
     const text = event.nativeEvent.text
 
@@ -135,16 +108,14 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     return requestedStyles
   }
 
-  const InnerWrapper = touchableWrapper ? Touchable : View
-
   return (
     <View
       style={getStyles('wrapper')}
     >
       <InputLabel label={label} style={getStyles('label')} />
-      <InnerWrapper style={getStyles('innerWrapper')} {...innerWrapperProps}>
+      <View style={getStyles('innerWrapper')}>
         <InputIcon {...leftIcon} style={leftIconStyle} />
-        <InputElement
+        {/* <InputElement
           ref={input}
           secureTextEntry={password && !textIsVisible}
           onChange={handleChange}
@@ -155,49 +126,15 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           placeholderTextColor={StyleSheet.flatten(getStyles('placeholder'))?.color}
           {...props}
           style={getStyles('textField')}
-        />
-        {
-          visibilityToggle ?
-            <InputIcon name={
-              (textIsVisible ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder
-            } action={() => setTextVisible()} style={rightIconStyle} />
-            :
-            <InputIcon {...rightIcon} style={rightIconStyle} />
-        }
-      </InnerWrapper>
+        /> */}
+        
+          
+        <InputIcon {...rightIcon} style={rightIconStyle} />
+        
+      </View>
       <FormError message={error.message} style={{
         ...variantStyles.error,
       }} />
     </View>
   )
 })
-
-export const FormError = ({ message, ...props }) => {
-  if (['number', 'string', 'undefined'].includes(typeof message)) {
-    return <Text text={`${message || ' '}`} variants={['p2', 'marginTop:1']} {...props} />
-  }
-  return message
-}
-
-export const InputIcon: React.FC<{ style: any } & IconProp> = ({ name, style, action }) => {
-  if (!name) return null
-  if (action) {
-    return <Button icon={name} onPress={() => action()} styles={{
-      icon: style,
-    }} variants={['icon']} />
-  }
-  return <Icon name={name} style={style} />
-}
-
-export const InputLabel = ({ label, style }) => {
-  if (!label) return null
-
-  switch (typeof label) {
-    case 'string':
-      return <Text style={style} text={label} />
-    case 'object':
-      return label
-    default:
-      return null
-  }
-}

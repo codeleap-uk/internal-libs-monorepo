@@ -31,7 +31,7 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
     title,
     children,
     visible,
-    styles,
+    styles = {},
     style,
     variants,
     ...props

@@ -19,6 +19,7 @@ export type IconProps = {
   style?: any
   variants?: ComponentVariants<typeof IconStyles>['variants'];
   renderEmptySpace?: boolean
+  size?: number
 };
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {

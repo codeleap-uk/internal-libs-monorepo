@@ -28,6 +28,7 @@ export const OverlayStyles = {
       position: theme.IsBrowser ? 'fixed' : 'absolute',
       backgroundColor: theme.colors.black,
       ...optionalObject(theme.IsBrowser, { visibility: 'hidden' }, {}),
+      opacity: 0,
     },
     'wrapper:visible': {
       opacity: 0.5,

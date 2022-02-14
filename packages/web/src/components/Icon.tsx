@@ -23,13 +23,16 @@ export const Icon: React.FC<IconProps> = ({
   variants,
 }) => {
   const { Theme, logger } = useStyle()
-  if (!name) return null
   const Component = Theme?.icons?.[name]
-
+  
   const variantStyles = useComponentStyle('Icon', {
     variants,
     responsiveVariants,
   })
+
+  if (!name) return null
+  
+  
   if (!Component) {
     logger.warn(
       'Icon',
