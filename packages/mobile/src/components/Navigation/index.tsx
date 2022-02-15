@@ -16,7 +16,7 @@ export const Navigation = <T extends NavigatorType>({type, scenes,  ...props}: N
 
   return <NavigationComponent.Navigator {...(props as any)}>
     {
-      Object.entries(scenes).map(([name, content]) => {
+      Object.entries(scenes).map(([name, content], idx) => {
         const isFunction = TypeGuards.isFunction(content)
 
         let screenProps = {
@@ -42,6 +42,7 @@ export const Navigation = <T extends NavigatorType>({type, scenes,  ...props}: N
         return (
           // @ts-ignore
           <NavigationComponent.Screen 
+            key={idx}
             {...screenProps}
                 
           />

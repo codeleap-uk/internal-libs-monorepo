@@ -83,37 +83,55 @@ export class Logger {
     })
   }
 
-  static coloredLog: LogToTerminal = (...logArgs) => {
-    const [logType, args, color, deviceIdentifier] = logArgs
-    let cl = logColors[logType]
-    let useColor = colors[cl]
+  // static coloredLog: LogToTerminal = (...logArgs) => {
+  //   const [logType, args, color, deviceIdentifier] = logArgs
+  //   let cl = logColors[logType]
+  //   let useColor = colors[cl]
 
-    if (color) {
-      cl = color as keyof typeof foregroundColors
-      useColor = colors[color]
+  //   if (color) {
+  //     cl = color as keyof typeof foregroundColors
+  //     useColor = colors[color]
+  //   }
+
+  //   const useCSS = typeof window !== 'undefined'
+
+  //   if (useCSS) {
+  //     // eslint-disable-next-line no-console
+  //     const logStr = `[${logType.toUpperCase()}]${deviceIdentifier} ${args?.[2]} - ${args?.[0]}`
+  //     console[logType](logStr, args[1])
+  //   } else {
+  //     const logDescription = 
+  //       [typeof args?.[0], typeof args?.[2]]
+  //         .every(t => t === 'string') ? `${args?.[2]||''} - ${args?.[0]||''}` : args?.[0] || ''
+  //     // eslint-disable-next-line no-console
+  //     console[logType](
+  //       useColor,
+  //       `[${logType.toUpperCase()}]${deviceIdentifier} 
+  //         ${logDescription}
+  //       `,
+  //       args[1],
+  //       colors.Reset,
+  //     )
+  //   }
+  // };
+
+  static coloredLog:LogToTerminal = (...logArgs) => {
+    const [logType, content,  _ig_color, deviceId] = logArgs
+
+    const [descriptionOrValue, value, category]  = content
+    
+    const nArgs = logArgs[1].length
+    let logContent = logArgs[1]
+    
+    if (nArgs === 3){
+      logContent = [
+        `${category} -> ${descriptionOrValue}`,
+        value,
+      ]
     }
 
-    const useCSS = typeof window !== 'undefined'
-
-    if (useCSS) {
-      // eslint-disable-next-line no-console
-      const logStr = `[${logType.toUpperCase()}]${deviceIdentifier} ${args?.[2]} - ${args?.[0]}`
-      console[logType](logStr, args[1])
-    } else {
-      const logDescription = 
-        [typeof args?.[0], typeof args?.[2]]
-          .every(t => t === 'string') ? `${args?.[2]||''} - ${args?.[0]||''}` : args?.[0] || ''
-      // eslint-disable-next-line no-console
-      console[logType](
-        useColor,
-        `[${logType.toUpperCase()}]${deviceIdentifier} 
-          ${logDescription}
-        `,
-        args[1],
-        colors.Reset,
-      )
-    }
-  };
+    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `[DEVICE : ${deviceId}]` : ''} - `, ...logContent)
+  }
 
   private logToTerminal: LogToTerminal = (...logArgs) => {
     const [logType, args, color] = logArgs
@@ -124,9 +142,12 @@ export class Logger {
     if (!shouldLog) return
 
     if (this.settings.Environment.IsDev) {
+
       const deviceId = this.settings.Logger?.DeviceIdentifier ?
         `[${this.settings.Logger.DeviceIdentifier}]` : ''
+
       Logger.coloredLog(logType, args, color, deviceId)
+
       this.middleware.forEach(m => m(...logArgs))
     } else {
       try {

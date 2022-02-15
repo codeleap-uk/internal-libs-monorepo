@@ -5,8 +5,7 @@ export type IconComposition = 'icon';
 
 const createIconStyle = createDefaultVariantFactory<IconComposition>()
 
-const presets = includePresets((styles) => createIconStyle(() => ({ icon: styles })),
-)
+const presets = includePresets((styles) => createIconStyle(() => ({ icon: styles })))
 
 export const IconStyles = {
   ...presets,

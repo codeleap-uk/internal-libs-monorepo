@@ -39,14 +39,14 @@ export type MobileModalComposition =
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
 
-const presets = includePresets((style) => createModalStyle(() => ({ wrapper: style })),
+const presets = includePresets((style) => createModalStyle(() => ({ body: style })),
 )
 
 const defaultModalStyles = ModalStyles
 
 export const MobileModalStyles = {
-  ...presets,
   ...defaultModalStyles,
+  ...presets,
   default: createModalStyle((Theme) => {
     const fullSize = {
       ...Theme.presets.whole,

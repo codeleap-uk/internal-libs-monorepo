@@ -31,6 +31,7 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
     styles: {
       icon: style,
     },
+    rootElement: 'icon',
   })
  
   if (!name) {
@@ -42,8 +43,8 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
   const { logger } = useStyle()
   if (!Component) {
     logger.warn(
-      'Icon',
-      `No icon found in theme for name "${name}"`,
+      `Icon: No icon found in theme for name "${name}".`,
+      { props: { style, name, variants, variantStyles }},
       'Component',
     )
     return null

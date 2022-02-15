@@ -64,7 +64,6 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
 
   const leftIconStyle = StyleSheet.flatten([iconStyle, getStyles('leftIcon')])
   const rightIconStyle = StyleSheet.flatten([iconStyle, getStyles('rightIcon')])
-  console.log({iconStyle, rightIconStyle, leftIconStyle})
   const hasText = !!(text || children)
   return (
     <Touchable
