@@ -35,7 +35,7 @@
     ]
   },
   "scripts": {
-    "build": "turbo run build -vvv",
+    "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "dev:mobile": "turbo run dev:mobile --parallel",
     "dev:web": "turbo run dev:web --parallel",

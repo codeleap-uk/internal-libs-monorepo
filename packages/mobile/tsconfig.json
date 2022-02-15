@@ -20,7 +20,11 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@react-navigation/*": ["../../apps/mobile/node_modules/@react-navigation/*"] 
+    // }
   },
   "include": [
     "src/**/*.ts",
@@ -38,5 +42,6 @@
     ],
     "out": "docs",
     "name": "CodeLeap web lib"
-  }
+  },
+  
 }

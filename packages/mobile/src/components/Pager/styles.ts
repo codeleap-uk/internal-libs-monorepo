@@ -1,7 +1,6 @@
 import {
   createDefaultVariantFactory,
   includePresets,
-  useComponentStyle,
 } from '@codeleap/common'
 
 export type PagerComposition =
