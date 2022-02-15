@@ -18,22 +18,32 @@ function createClampExpression(values: TypographyStyle, baseSize: number) {
 export function assignTextStyle(name: Fonts, add = {}) {
   return createTextStyle((theme) => {
     const style = theme.typography.styles[name]
-
+    const fontFamily = style?.fontFamily || theme?.typography?.fontFamily
+    const fontWeight = style.weigth.toString()
     if (theme.IsBrowser) {
       return {
         text: {
-          fontWeight: style.weigth.toString(),
+          fontFamily,
+          fontWeight,
           fontSize: createClampExpression(style, theme.typography.baseFontSize),
-          lineHeigth: style.lineHeight,
+          lineHeight: style.lineHeight,
+          color: style?.color,
           ...add,
         },
       }
     }
+    const fontSize = style.sizeMultiplier * theme.typography.baseFontSize
+    const lineHeight = style.lineHeightMultiplier ? fontSize * style.lineHeightMultiplier : null
+    console.log('name', name)
+    const color = style?.color ||
+      name.startsWith('h') ? theme?.typography?.hColor : theme?.typography?.pColor
     return {
       text: {
-        fontWeight: style.weigth.toString(),
-        fontSize: style.size.multiplier * theme.typography.baseFontSize,
-        // lineHeight: style.lineHeight,
+        fontWeight,
+        color,
+        fontFamily,
+        lineHeight,
+        fontSize,
         ...add,
       },
     }

@@ -142,8 +142,9 @@ export class RequestClient extends Axios implements IRequestClient {
     )
 
     this.setInQueue(failedRequest)
-
-    this.logger.error(
+    console.log('request failed', {request})
+    const logName = request?.silent ? 'warn' : 'error'
+    this.logger[logName](
       `${request.method.toUpperCase()} to ${request.url} failed with status ${
         err?.response?.status || ''
       }`,

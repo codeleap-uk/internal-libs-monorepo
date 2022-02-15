@@ -12,13 +12,14 @@ import {
   KeyboardAwareFlatList as KBDView,
 } from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, FlatList } from 'react-native'
-import { ViewProps } from './View'
+import { View, ViewProps } from './View'
 
 export type FlatListProps = KeyboardAwareFlatListProps<any> &
   ViewProps & {
     onRefresh?: () => void;
     refreshTimeout?: number;
     changeData?: any;
+    separators?: boolean;
   };
 
 const KeyboardAwareFlatList =
@@ -71,11 +72,22 @@ export const List = forwardRef<FlatList, FlatListProps>(
       variants,
     })
 
+    const renderSeparator = () => {
+      return (
+        <View variants={['separator']}></View>
+      )
+    }
+
+    const separatorProp = props.separators
+    const isEmpty = !props.data || !props.data.length
+    const separator = !isEmpty && separatorProp == true && renderSeparator
+
     return (
       <KeyboardAwareFlatList
-        style={[Theme.presets.full]}
-        contentContainerStyle={[variantStyles.wrapper, style]}
+        style={[Theme.presets.full, style]}
+        contentContainerStyle={[variantStyles.wrapper]}
         ref={ref as unknown as FlatList}
+        ItemSeparatorComponent={separator}
         {...props}
         refreshControl={
           hasRefresh && (

@@ -40,9 +40,13 @@ export type Fonts =
   | 'p4';
 
 export type TypographyStyle = {
-  lineHeight: number;
+  lineHeight?: number;
   weigth: number;
-  size: {
+  color?: string;
+  fontFamily?: string;
+  sizeMultiplier?: number,
+  lineHeightMultiplier?: number,
+  size?: {
     multiplier: number;
     viewport: number;
     max: number;
@@ -77,6 +81,8 @@ export type AppTheme = {
     fontFamily: string
     styles: Record<Fonts, TypographyStyle>
     baseFontSize: number
+    pColor: string
+    hColor: string
   }
 };
 

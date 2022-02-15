@@ -3,6 +3,8 @@ import { LogType, SentryProvider } from '../tools/Logger/types'
 
 export type AppSettings = DeepPartial<{
   AppName: string;
+  CompanyName: string;
+  CompanySuffix: string;
   Description: string;
   Environment: {
     IsDev: boolean;
@@ -43,6 +45,8 @@ export type AppSettings = DeepPartial<{
     LinkedinURL: string;
   };
   ContactINFO: {
+    Website: string;
+    TermsAndPrivacy: string;
     SupportEMAIL: string;
     ContactEMAIL: string;
     ContactPHONE: string;

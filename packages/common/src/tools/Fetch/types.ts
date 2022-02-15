@@ -33,4 +33,5 @@ export type RequestClientConfig<D = any> = AxiosRequestConfig<D> & {
   requestMiddleware?: Middleware<RequestClientConfig>[];
   responseMiddleware?: Middleware<AxiosResponse>[];
   logger?: Logger;
+  silent?: boolean;
 };

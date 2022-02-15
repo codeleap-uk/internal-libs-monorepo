@@ -5,6 +5,8 @@ import {
   ComponentVariants,
   ButtonComposition,
   ButtonParts,
+  IconPlaceholder,
+  Logger,
 } from '@codeleap/common'
 import { forwardRef } from 'react'
 import { StylesOf } from '../types/utility'
@@ -12,9 +14,7 @@ import { Text } from './Text'
 import { Touchable, TouchableProps } from './Touchable'
 import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
-import { IconPlaceholder } from '@codeleap/common'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import { Logger } from '@codeleap/common'
 
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
@@ -24,6 +24,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     icon?: IconPlaceholder;
     styles?: StylesOf<ButtonComposition>;
     loading?: boolean;
+    debugName?: string;
   };
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {
@@ -37,6 +38,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
     onPress,
     disabled,
     rightIcon,
+    debugName,
     ...props
   } = buttonProps
 
@@ -64,6 +66,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
 
   const leftIconStyle = StyleSheet.flatten([iconStyle, getStyles('leftIcon')])
   const rightIconStyle = StyleSheet.flatten([iconStyle, getStyles('rightIcon')])
+  
   const hasText = !!(text || children)
   return (
     <Touchable
@@ -71,7 +74,9 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
       onPress={handlePress}
       ref={ref}
       disabled={disabled}
+      debugComponent={'Button'}
       {...props}
+      debugName={debugName || text || icon || 'Some button'}
     >
      
       {loading && <ActivityIndicator style={getStyles('loader')} />}
