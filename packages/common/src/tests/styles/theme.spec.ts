@@ -10,7 +10,11 @@ const themeConfig: AppTheme = {
   },
   spacing: 10,
   baseFontSize: 16,
-  borderRadius: 10,
+  borderRadius: {
+    large: 10,
+    small: 10,
+    medium: 10,
+  },
   icons: {},
   fontFamily: 'Arial, sans-serif',
 }

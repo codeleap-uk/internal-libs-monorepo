@@ -61,9 +61,9 @@ export function parseFailedRequest(err, request, instanceConfig) {
 
 const multipartDefaults: Exclude<RequestClientConfig['multipart'], boolean> = {
   keyTransforms: {
-    image: 'image',
     data: 'json',
-    file: 'file',
+    image: 'image',
+    file: 'image',
     files: 'image',
   },
 }
@@ -106,6 +106,6 @@ export function toMultipart(request: RequestClientConfig) {
 
     form.append(key, value as Blob)
   }
-
+  console.log(form)
   return form
 }

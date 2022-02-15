@@ -57,7 +57,7 @@ function parsePickerData(data:any):MobileInputFile {
   
   return {
     file: d,
-    preview: d,
+    preview: data.path,
   }
 }
 
@@ -91,7 +91,7 @@ export const FileInput = forwardRef<
         files = [files]
       }
       setFile(files)
-      onFileSelect(files.map((file) => ({ preview: file, file })))
+      onFileSelect(files.map((file) => ({ preview: file.uri, file })))
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         logger.log('User cancelled the picker.', null, 'Component')

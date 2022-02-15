@@ -2,7 +2,8 @@ import * as FormTypes from './types'
 import { usePartialState, deepGet, deepSet, deepMerge } from '../../utils'
 import { FunctionType } from '../../types'
 import { useStyle } from '../../styles/StyleProvider'
-import { createRef, useCallback, useMemo, useRef } from 'react'
+import { createRef, useCallback, useRef } from 'react'
+import { toMultipart } from '../Fetch/utils'
 
 export * as FormTypes from './types'
 
@@ -14,6 +15,7 @@ const shouldLog = (
 ) => {
   return (config.log || []).includes(x)
 }
+
 
 // TODO is would be helpful if the form could automatically skip to the next field on pressing return
 
@@ -179,12 +181,41 @@ export function useForm<
   function getTransformedValue(): Values {
     let out = {}
     switch (config.output) {
+      case 'multipart':
+        let shouldSetNewFileValue = true
+        const multipartData = Object.entries(formValues).reduce((acc, [key, value]) => {
+          let newValue = {...acc}
+          
+          if (form.staticFieldProps[key]?.type === 'file'){
+            if (shouldSetNewFileValue){
+              newValue = {
+                ...newValue,
+                files: value.preview,
+              }
+              shouldSetNewFileValue = false
+            }
+          } else {
+            return {
+              ...newValue,
+              data: {
+                ...newValue.data,
+                [key]: value,
+              },
+            }
+          }
+        }, {files: null, data: {}})
+
+        out = toMultipart({
+          multipart: true,
+          data: multipartData,
+        })
+        break
       default:
         out = formValues
         break
     }
 
-    return out as Values
+    return out as any
   }
 
   async function onSubmit(cb: FunctionType<[Values], any>, e?: any) {

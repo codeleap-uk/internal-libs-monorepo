@@ -1,6 +1,7 @@
 import { expect } from 'chai'
-import { RequestClient } from '../..'
+import { RequestClient } from '../../tools/Fetch/RequestClient'
 
+// global.FormData = URLSearchParams
 const api = new RequestClient({
   baseURL: 'https://randomuser.me',
   rejectOnCancel: true,
@@ -20,12 +21,14 @@ describe('RequestClient', () => {
         console.log(response.statusText)
         done()
       })
-      .catch((err) => {
-        expect(err.errorReason).to.eq('REQUEST_ABORTED')
-        done()
+      .catch(({failedRequest}) => {
+        console.log('aaaaaaaaaa', failedRequest)
+        expect(failedRequest.errorReason).to.eq('REQUEST_ABORTED')
+        done() 
       })
 
     req.abort()
+
   })
 
   it('Blocks repeated request', (done) => {
@@ -34,12 +37,27 @@ describe('RequestClient', () => {
 
     req2
       .then((res) => {
-        console.log('then', res)
+        console.log('then', res.data)
         done()
       })
       .catch((err) => {
         expect(err.errorReason).to.eq('ALREADY_IN_PROGRESS')
         done()
       })
+  })
+
+  it('makes a multipart request', (done) => {
+    api.post('https://dev.codeleap.co.uk/profiles/create/', {data: {
+
+    }, files: null}, {
+      baseURL: '',
+      multipart: true,
+    }).then((a) => {
+      console.log(a)
+    }).catch(a => {
+      console.log(a)
+    })
+
+    
   })
 })

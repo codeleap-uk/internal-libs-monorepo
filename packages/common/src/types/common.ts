@@ -15,5 +15,5 @@ export type MobileFile = {
 
 export type MobileInputFile = {
   file: MobileFile;
-  preview: MobileFile;
+  preview: string;
 };
