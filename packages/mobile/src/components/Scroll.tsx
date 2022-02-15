@@ -11,7 +11,7 @@ import {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollView as KBDView,
 } from 'react-native-keyboard-aware-scroll-view'
-import { RefreshControl, ScrollView } from 'react-native'
+import { RefreshControl, ScrollView, ScrollViewProps } from 'react-native'
 import { ViewProps } from './View'
 
 export type ScrollProps = KeyboardAwareScrollViewProps &
@@ -26,7 +26,7 @@ const KeyboardAwareScrollView =
     ViewProps & {
       refreshControl?: JSX.Element;
       ref?: ScrollView;
-    }
+    } & ScrollViewProps
   >
 
 export const Scroll = forwardRef<ScrollView, ScrollProps>(
@@ -74,8 +74,8 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
 
     return (
       <KeyboardAwareScrollView
-        style={[Theme.presets.full]}
-        contentContainerStyle={[variantStyles.wrapper, style]}
+        style={[Theme.presets.full, style]}
+        contentContainerStyle={[variantStyles.wrapper]}
         ref={ref as unknown as ScrollView}
         {...props}
         refreshControl={

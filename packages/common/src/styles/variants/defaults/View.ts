@@ -11,8 +11,16 @@ const presets = includePresets((styles) => createViewStyle(() => ({ wrapper: sty
 export const ViewStyles = {
   ...presets,
   default: createViewStyle((t) => ({
+    // wrapper: {
+    //   display: 'flex',
+    // },
+  })),
+  separator: createViewStyle((t) => ({
     wrapper: {
-      display: 'flex',
+      width: '100%',
+      height: t.values.pixel,
+      backgroundColor: t.colors.borders,
+      marginLeft: t.spacing.value(3),
     },
   })),
 }

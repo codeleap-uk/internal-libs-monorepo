@@ -1,6 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 import { optionalObject } from '../../../utils'
+import { assignTextStyle } from './Text'
 
 type TextInputParts =
   | 'wrapper'
@@ -37,12 +38,12 @@ export const TextInputStyles = {
           ...theme.spacing.padding(0),
           ...theme.spacing.paddingHorizontal(1),
         }),
-
+      ...assignTextStyle('p1')(theme).text,
       backgroundColor: 'transparent',
       flex: 1,
     },
     placeholder: {
-      color: theme.colors.gray,
+      color: theme.colors.lightGrey,
     },
     wrapper: {
       display: 'flex',
@@ -73,11 +74,12 @@ export const TextInputStyles = {
     },
     label: {
       ...theme.spacing.marginBottom(1),
+      ...assignTextStyle('h5')(theme).text,
     },
     icon: {
       height: 20,
-      width: 25,
-      color: theme.colors.gray,
+      width: 20,
+      color: theme.colors.primary,
     },
     leftIcon: {
       ...theme.spacing.marginRight(1),

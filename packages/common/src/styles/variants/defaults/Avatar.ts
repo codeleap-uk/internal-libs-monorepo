@@ -54,6 +54,7 @@ export const AvatarStyles = {
     },
     text: {
       fontSize: 26,
+      color: Theme.typography.hColor,
     },
     textEdit: {
       color: 'white',

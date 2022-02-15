@@ -20,6 +20,7 @@ export type TouchableProps = Omit<
   component?: any;
   ref?: React.Ref<NativeTouchable>;
   debugName?: string;
+  debugComponent?: string;
   onPress?: AnyFunction;
 } & BaseViewProps;
 
@@ -33,7 +34,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     onPress,
     style,
     debugName,
-
+    debugComponent,
     ...props
   } = touchableProps
 
@@ -45,9 +46,9 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   const press = () => {
     if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
     logger.log(
-      `${debugName || '<Touchable/>'}  pressed`,
-      { style, variants },
-      'Component',
+      `<${debugComponent || 'Touchable'}/>  pressed`,
+      { debugName, style, variants },
+      'User interaction',
     )
     onPress && onPress()
   }
