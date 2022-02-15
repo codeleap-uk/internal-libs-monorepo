@@ -15,7 +15,7 @@ import {
   parseFailedRequest,
   toMultipart,
 } from './utils'
-export * from 'axios'
+export * from 'axios' 
 export * from './types'
 /**
  * [[include:RequestClient.md]]
@@ -76,6 +76,13 @@ export class RequestClient extends Axios implements IRequestClient {
   setInQueue(req: RequestQueueItem) {
     const requestId = getRequestId(req, this.config)
     this.queue[requestId] = { ...this.queue[requestId], ...req }
+  }
+
+  setConfig(to:Partial<RequestClientConfig>){
+    this.axios = axios.create({
+      ...this.config,
+      ...to,
+    })
   }
 
   removeFromQueue(req: RequestQueueItem) {

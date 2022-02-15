@@ -17,6 +17,7 @@ export type RequestQueueItem = AxiosRequestConfig & {
 export interface IRequestClient {
   queue: Record<string, RequestQueueItem>;
   setInQueue(req: RequestQueueItem): void;
+  setConfig(config:Partial<RequestClientConfig>):void
 }
 
 type MultipartConfig = {

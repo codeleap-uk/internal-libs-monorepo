@@ -35,6 +35,8 @@ export type AppSettings = DeepPartial<{
   };
   Fetch: {
     ApiURL: string;
+    ProductionURL: string
+    DevelopmentURL: string
   };
   Social: {
     FaceURL: string;

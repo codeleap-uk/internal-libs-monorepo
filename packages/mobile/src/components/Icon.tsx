@@ -8,12 +8,7 @@ import {
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 import { View } from './View'
-type Style = {
-  color?: string;
-  size?: string | number;
-  width?: string | number;
-  height?: string | number;
-}
+
 export type IconProps = {
   name: IconPlaceholder
   style?: any
