@@ -96,7 +96,10 @@ export function toMultipart(request: RequestClientConfig) {
             name: `image_${rawValue}`,
             type: `image/${parseFilePathData(rawValue).extension}`,
           }
+        } else if (rawValue instanceof File) {
+          value = rawValue
         } else {
+
           value = null
         }
         break
@@ -106,6 +109,5 @@ export function toMultipart(request: RequestClientConfig) {
 
     form.append(key, value as Blob)
   }
-  console.log(form)
   return form
 }

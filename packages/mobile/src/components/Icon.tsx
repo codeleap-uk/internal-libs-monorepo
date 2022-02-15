@@ -19,7 +19,8 @@ export type IconProps = {
 };
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
-  const { Theme } = useStyle()
+  const { Theme, logger } = useStyle()
+  
   const variantStyles = useComponentStyle('Icon', {
     variants,
     transform: StyleSheet.flatten,
@@ -35,7 +36,6 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
 
   const Component = Theme?.icons?.[name]
 
-  const { logger } = useStyle()
   if (!Component) {
     logger.warn(
       `Icon: No icon found in theme for name "${name}".`,

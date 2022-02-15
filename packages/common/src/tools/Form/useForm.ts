@@ -40,7 +40,7 @@ export function useForm<
   }, [form.staticFieldProps])
 
   const [formValues, setFormValues] = usePartialState<Values>(getInitialState)
-  const { logger } = useStyle()
+  const { logger, Theme } = useStyle()
   const [fieldErrors, setFieldErrors] = usePartialState(getInitialErrors)
   // @ts-ignore
   function setFieldValue(...args: FieldPaths) {
@@ -190,12 +190,12 @@ export function useForm<
             if (shouldSetNewFileValue){
               newValue = {
                 ...newValue,
-                files: value.preview,
+                files: (Theme.IsBrowser ? value?.[0]?.file : value?.[0]?.preview) || null,
               }
               shouldSetNewFileValue = false
             }
           } else {
-            return {
+            newValue = {
               ...newValue,
               data: {
                 ...newValue.data,
@@ -203,6 +203,7 @@ export function useForm<
               },
             }
           }
+          return newValue
         }, {files: null, data: {}})
 
         out = toMultipart({

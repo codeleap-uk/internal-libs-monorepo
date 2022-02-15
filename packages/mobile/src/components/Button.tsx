@@ -6,7 +6,6 @@ import {
   ButtonComposition,
   ButtonParts,
   IconPlaceholder,
-  Logger,
 } from '@codeleap/common'
 import { forwardRef } from 'react'
 import { StylesOf } from '../types/utility'
@@ -24,6 +23,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     icon?: IconPlaceholder;
     styles?: StylesOf<ButtonComposition>;
     loading?: boolean;
+    debounce?: number
     debugName?: string;
   };
 
@@ -39,8 +39,10 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
     disabled,
     rightIcon,
     debugName,
+    debounce = 600,
     ...props
   } = buttonProps
+  const [pressed, setPressed] = React.useState(false)
 
 
   const variantStyles = useComponentStyle('Button', {
@@ -50,7 +52,13 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
   })
 
   function handlePress() {
-    onPress && onPress()
+    if (!pressed){
+      setPressed(true) 
+
+      setTimeout(() => setPressed(false), debounce)
+      
+      onPress && onPress()
+    }
   }
 
   function getStyles(key: ButtonParts) {

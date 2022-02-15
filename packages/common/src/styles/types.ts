@@ -73,7 +73,7 @@ export type AppTheme = {
     small: number
   }
 
-  readonly presets : Record<string, any>
+  readonly presets ?: Record<string, any>
 
   readonly icons: Record<string, any>
 
