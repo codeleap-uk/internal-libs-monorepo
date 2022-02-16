@@ -88,7 +88,7 @@ export class Logger {
   //   let cl = logColors[logType]
   //   let useColor = colors[cl]
 
-  //   if (color) {
+  //   if (color) { 
   //     cl = color as keyof typeof foregroundColors
   //     useColor = colors[color]
   //   }

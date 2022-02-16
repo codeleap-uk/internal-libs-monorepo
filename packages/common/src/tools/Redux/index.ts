@@ -81,23 +81,12 @@ export function createRedux<
   const middlewares = [
     ...middleware,
   ]
-  // @ts-ignore
-  // const IS_DEVELOPMENT = __DEV__
-
-  // if (IS_DEVELOPMENT) {
-  // // eslint-disable-next-line @typescript-eslint/no-var-requires
-  //   const reduxDebugger = require('redux-flipper').default
-  //   middlewares.push(reduxDebugger({}))
-  // }
-
   const store = createStore(
     combineReducers(reducers),
     rootInitialState,
     compose(
       applyMiddleware(...middlewares),
       ...(xArgs || []),
-      // @ts-ignore
-      // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     ),
   
    
