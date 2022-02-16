@@ -1,5 +1,5 @@
 import { deepMerge } from '../../utils'
-import { combineReducers, createStore, Store } from '@reduxjs/toolkit'
+import { combineReducers, createStore, Store, applyMiddleware } from '@reduxjs/toolkit'
 import {
   Reducers,
   AsyncReducers,
@@ -78,9 +78,21 @@ export function createRedux<
     actionBuilders[name] = buildActions
   }
 
+  const middlewares = []
+
+  // @ts-ignore
+  const IS_DEVELOPMENT = __DEV__
+
+  if (IS_DEVELOPMENT) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const reduxDebugger = require('redux-flipper').default
+    middlewares.push(reduxDebugger({}))
+  }
+
   const store = createStore(
     combineReducers(reducers),
     rootInitialState,
+    applyMiddleware(...middlewares),
     // @ts-ignore
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   ) as CreateReduxReturn<T>['store']
