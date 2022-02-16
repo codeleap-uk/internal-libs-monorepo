@@ -5,6 +5,8 @@ import {
   ButtonStyles,
   ComponentVariants,
   ButtonComposition,
+  ButtonParts,
+  optionalObject,
 } from '@codeleap/common'
 import React, { ComponentPropsWithRef } from 'react'
 import { StylesOf } from '../types/utility'
@@ -36,6 +38,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     loading,
     styles,
     onPress,
+    disabled,
     rightIcon,
     ...props
   } = buttonProps
@@ -51,31 +54,40 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     onPress && onPress(e)
   }
 
+  function getStyles(key:ButtonParts){
+    return {
+      ...variantStyles[key],
+      ...optionalObject(disabled, variantStyles[key + ':disabled'], {}),
+    }
+  } 
+  const iconStyle = getStyles('icon')
+
+  
   return (
     <Touchable
-      css={variantStyles.wrapper}
+      css={getStyles('wrapper')}
       component='button'
       onClick={handlePress}
       {...props}
     >
-      {loading && <ActivityIndicator css={variantStyles.loader} />}
+      {loading && <ActivityIndicator css={getStyles('loader')} />}
       {!loading && (
         <Icon
           name={icon}
-          style={{ ...variantStyles.icon, ...variantStyles.leftIcon }}
+          style={{ ...iconStyle, ...getStyles('leftIcon') }}
         />
       )}
       {children || (
         <Text
           text={text}
           styles={{
-            text: variantStyles.text,
+            text: getStyles('text'),
           }}
         />
       )}
       <Icon
         name={rightIcon}
-        style={{ ...variantStyles.icon, ...variantStyles.rightIcon }}
+        style={{ ...iconStyle, ...getStyles('rightIcon') }}
       />
     </Touchable>
   )
