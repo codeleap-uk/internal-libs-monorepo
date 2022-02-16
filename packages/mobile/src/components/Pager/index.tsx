@@ -16,7 +16,7 @@ import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 import { Animated } from '../Animated'
 import { Button } from '../Button'
-import { View } from '../components'
+import { View } from '../View'
 import { Text } from '../Text'
 import { MobilePagerStyles, PagerComposition } from './styles'
 

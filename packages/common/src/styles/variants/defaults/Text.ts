@@ -20,6 +20,10 @@ export function assignTextStyle(name: Fonts, add = {}) {
     const style = theme.typography.styles[name]
     const fontFamily = style?.fontFamily || theme?.typography?.fontFamily
     const fontWeight = style.weigth.toString()
+
+    const color = style?.color ||
+      name.startsWith('h') ? theme?.typography?.hColor : theme?.typography?.pColor
+
     if (theme.IsBrowser) {
       return {
         text: {
@@ -27,16 +31,15 @@ export function assignTextStyle(name: Fonts, add = {}) {
           fontWeight,
           fontSize: createClampExpression(style, theme.typography.baseFontSize),
           lineHeight: style.lineHeight,
-          color: style?.color,
+          color,
           ...add,
         },
       }
     }
     const fontSize = style.sizeMultiplier * theme.typography.baseFontSize
     const lineHeight = style.lineHeightMultiplier ? fontSize * style.lineHeightMultiplier : null
-    console.log('name', name)
-    const color = style?.color ||
-      name.startsWith('h') ? theme?.typography?.hColor : theme?.typography?.pColor
+    // console.log('name', name)
+   
     return {
       text: {
         fontWeight,

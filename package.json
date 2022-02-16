@@ -31,7 +31,8 @@
       "**/@sentry/react-native",
       "**/@sentry/browser",
       "**/@react-navigation*/**",
-      "**/@react-navigation/routers"
+      "**/@react-navigation/routers",
+      "**/redux-flipper"
     ]
   },
   "scripts": {

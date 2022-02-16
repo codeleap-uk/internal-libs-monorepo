@@ -1,5 +1,5 @@
 import { deepMerge } from '../../utils'
-import { combineReducers, createStore, Store, applyMiddleware } from '@reduxjs/toolkit'
+import { combineReducers, createStore, Store, applyMiddleware, compose } from '@reduxjs/toolkit'
 import {
   Reducers,
   AsyncReducers,
@@ -65,7 +65,7 @@ export function createSlice<
 
 export function createRedux<
   T extends Record<string, Slice<any, any, any, any>>
->(slices: T): CreateReduxReturn<T> {
+>(slices: T, middleware = [], ...xArgs: any[]): CreateReduxReturn<T> {
   const reducers = {} as Record<string, T[string]['reducer']>
   const rootInitialState = {} as { [x: string]: T[string]['initialState'] }
   const actionBuilders = {} as Record<string, T[string]['buildActions']>
@@ -77,24 +77,30 @@ export function createRedux<
     rootInitialState[name] = initialState
     actionBuilders[name] = buildActions
   }
-
-  const middlewares = []
-
+  
+  const middlewares = [
+    ...middleware,
+  ]
   // @ts-ignore
-  const IS_DEVELOPMENT = __DEV__
+  // const IS_DEVELOPMENT = __DEV__
 
-  if (IS_DEVELOPMENT) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const reduxDebugger = require('redux-flipper').default
-    middlewares.push(reduxDebugger({}))
-  }
+  // if (IS_DEVELOPMENT) {
+  // // eslint-disable-next-line @typescript-eslint/no-var-requires
+  //   const reduxDebugger = require('redux-flipper').default
+  //   middlewares.push(reduxDebugger({}))
+  // }
 
   const store = createStore(
     combineReducers(reducers),
     rootInitialState,
-    applyMiddleware(...middlewares),
-    // @ts-ignore
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    compose(
+      applyMiddleware(...middlewares),
+      ...(xArgs || []),
+      // @ts-ignore
+      // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+    ),
+  
+   
   ) as CreateReduxReturn<T>['store']
 
   const actions = Object.fromEntries(
