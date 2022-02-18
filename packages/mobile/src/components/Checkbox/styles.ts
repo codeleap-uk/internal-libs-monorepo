@@ -59,7 +59,7 @@ export const MobileCheckboxStyles = {
         position: 'relative',
         width: size,
         height: size,
-        ...theme.border.gray(1),
+        ...theme.border.neutral(1),
       },
       'checkmarkWrapper:checked': {
         backgroundColor: theme.colors.primary,

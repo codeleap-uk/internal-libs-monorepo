@@ -3,7 +3,7 @@ import { jsx } from '@emotion/react'
 import {
   SelectStyles,
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   StylesOf,
   SelectComposition,
 } from '@codeleap/common'
@@ -38,7 +38,7 @@ export const NativeSelect = (selectProps: NativeSelectProps) => {
     ...props
   } = selectProps
 
-  const variantStyles = useComponentStyle('Select', {
+  const variantStyles = useDefaultComponentStyle('Select', {
     responsiveVariants,
     variants,
     styles,

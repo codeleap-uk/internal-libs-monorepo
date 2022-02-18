@@ -5,7 +5,7 @@ import {
   IconPlaceholder,
   ModalComposition,
   ModalStyles,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { jsx } from '@emotion/react'
 import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
@@ -55,7 +55,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     ...props
   } = modalProps
 
-  const variantStyles = useComponentStyle('Modal', {
+  const variantStyles = useDefaultComponentStyle('Modal', {
     responsiveVariants,
     variants,
     styles,

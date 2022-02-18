@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { standardizeVariants, useStyle } from '@codeleap/common'
+import { standardizeVariants, useCodeleapContext } from '@codeleap/common'
 import { ElementType } from 'react'
 import { TextProps } from './Text'
 import { scrollToElem } from '../lib/utils/pollyfils/scroll'
@@ -18,7 +18,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
   )
 
   const Component = isExternal ? 'a' : component
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
   function handleClick(event: React.MouseEvent) {
     logger.log('Link pressed', { to, text: linkProps.text }, 'Component')
     if (to) {

@@ -2,7 +2,7 @@ import React from 'react'
 import {
   ComponentVariants,
   ContentViewStyles,
-  useComponentStyle,
+  useDefaultComponentStyle,
   ViewComposition,
 } from '@codeleap/common'
 import { ViewProps, View } from './View'
@@ -28,7 +28,7 @@ export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
   const { children, placeholderMsg, loading, variants, styles, ...props } =
     rawProps
 
-  const variantStyle = useComponentStyle('ContentView', {
+  const variantStyle = useDefaultComponentStyle('ContentView', {
     variants,
     transform: StyleSheet.flatten,
     styles,

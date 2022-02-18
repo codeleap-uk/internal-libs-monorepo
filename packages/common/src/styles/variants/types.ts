@@ -17,10 +17,12 @@ import {
   ReplaceRecursive,
   StylesOf,
 } from '../../types'
+import { AppTheme } from '..'
 
 export type PartialComponentStyle<C extends string, S = any> = Partial<
   Record<C, S>
 >;
+export type ThemeColorScheme<T extends AppTheme> = Omit<EnhancedTheme<T>, 'colors'> & {colors: T['colors'][keyof T['colors']]}  
 
 export type CommonVariantObject<C extends string = string, S = any> = Record<
   string,
@@ -60,7 +62,8 @@ export type GetStylesArgs<
     styles?: NestedKeys<VariantObject> extends string
       ? StylesOf<NestedKeys<VariantObject>>
       : any;
-  }
+  },
+  useTheme?: string
 ];
 export type ApplyVariantsArgs = {
   variantName: string;
@@ -71,7 +74,8 @@ export type ApplyVariantsArgs = {
 };
 export type CT<StyleType> = [
   Component: FunctionType<[any], ReactElement | null>,
-  style: CommonVariantObject<string, StyleType>
+  style: DefaultVariantBuilder<StyleType>
+  // style: FunctionType<[any], CommonVariantObject<string, StyleType>>;
 ];
 
 export type ComponentStyleMap<CSS = any> = Partial<{

@@ -1,9 +1,9 @@
-import {  IconPlaceholder, useBooleanToggle, getNestedStylesByKey, useComponentStyle } from '@codeleap/common'
+import {  IconPlaceholder, useBooleanToggle, getNestedStylesByKey, useDefaultComponentStyle, TypeGuards } from '@codeleap/common'
 import React, { useMemo } from 'react'
 import { Modal, StyleSheet } from 'react-native'
 import { Button } from '../Button'
 import { Scroll } from '../Scroll'
-import { Text } from '../Text'
+
 import {  InputLabel, TextInput } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { AnimatedView, View } from '../View'
@@ -21,7 +21,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     variants,
     renderItem,
     closeOnSelect = true,
-    scroll = true,
+    scroll = false,
     showClose = true,
     showLabelOnModal = true,
     placeholder = 'Select',
@@ -36,7 +36,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
   const [isModalVisible, setModalVisibility] = useBooleanToggle(false)
 
-  const variantStyles = useComponentStyle<'u:MobileSelect', typeof MobileSelectStyles>('u:MobileSelect', {
+  const variantStyles = useDefaultComponentStyle<'u:MobileSelect', typeof MobileSelectStyles>('u:MobileSelect', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,
@@ -64,9 +64,12 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     }
   }
 
-  const selectedLabel = useMemo(() => {
+  const selectedLabel:string = useMemo(() => {
     const current = options.find(o => o.value === value)
-    return current?.label ?? placeholder
+
+    const display = current?.label ?? placeholder
+
+    return TypeGuards.isString(display) ? display : ''
   }, [value, placeholder, options])
 
   return <> 
@@ -82,7 +85,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       innerWrapperProps={{
         onPress: close,
       }}
-      label={label}
+      label={label} 
       styles={inputStyles}
       style={style}
       {...props}
@@ -142,7 +145,6 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
             {
               options.map((item, idx) => {
                 const isSelected = value === item.value
-
                 if (renderItem) {
                   return renderItem({
                     ...item,
@@ -157,7 +159,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                   variantStyles.modalItem, 
                   isSelected && variantStyles['modalItem:selected'],
                 ]} onPress={() => select(item.value)}>
-                  <Text text={item.label} style={variantStyles.modalItemText}/>
+                  <InputLabel label={item.label} style={[variantStyles.modalItemText,   isSelected && variantStyles['modalItemText:selected']]}/>
                 </Touchable>
               })
             }

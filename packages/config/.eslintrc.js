@@ -21,6 +21,7 @@ const formatting = {
     'error',
     'always',
   ],
+  'prefer-rest-params': 'off',
   'brace-style': [
     'error',
     '1tbs',

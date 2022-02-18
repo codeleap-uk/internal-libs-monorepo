@@ -17,14 +17,14 @@ export const TooltipStyles = {
     arrow: {
       content: '""',
       position: 'absolute',
-      background: t.colors.white,
+      background: t.colors.backgroundSecondary,
       height: 10,
       width: 10,
       zIndex: -1,
     },
     bubble: {
       display: 'flex',
-      background: t.colors.white,
+      background: t.colors.backgroundSecondary,
       zIndex: 10,
       position: 'absolute',
       ...t.spacing.padding(1),

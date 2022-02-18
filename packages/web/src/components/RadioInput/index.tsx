@@ -8,7 +8,7 @@ import {
   RadioInputComposition,
   RadioInputStyles,
   StylesOf,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
 export { WebRadioInputStyles } from './styles'
@@ -18,7 +18,7 @@ type RadioItem<T extends unknown = any> = {
   label: ReactNode;
 };
 
-const getRadioStyle = (props) => useComponentStyle('RadioInput', props)
+const getRadioStyle = (props) => useDefaultComponentStyle('RadioInput', props)
 
 export type RadioButtonProps = Omit<
   ComponentPropsWithoutRef<'input'>,

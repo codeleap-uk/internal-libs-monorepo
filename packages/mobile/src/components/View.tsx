@@ -3,7 +3,7 @@ import * as Animatable from 'react-native-animatable'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import {
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   ViewStyles,
   BaseViewProps,
 } from '@codeleap/common'
@@ -26,7 +26,7 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView, ViewProps>((view
     ...props
   } = viewProps
 
-  const variantStyles = useComponentStyle('View', {
+  const variantStyles = useDefaultComponentStyle('View', {
     responsiveVariants,
     variants,
   })

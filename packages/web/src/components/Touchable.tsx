@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { AnyFunction, useStyle } from '@codeleap/common'
+import { AnyFunction, useCodeleapContext } from '@codeleap/common'
 import { jsx, CSSObject } from '@emotion/react'
 
 import React, { ComponentPropsWithRef, ElementType } from 'react'
@@ -27,7 +27,7 @@ export const Touchable = <T extends ElementType = typeof View>(
     ...props
   } = touchableProps
 
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
 
   const handleClick = (event: React.MouseEvent<T>) => {
     if (disabled) return

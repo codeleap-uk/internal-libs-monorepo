@@ -5,7 +5,7 @@ import {
   TooltipComposition,
   TooltipStyles,
   useBooleanToggle,
-  useComponentStyle,
+  useDefaultComponentStyle,
   useDebounce,
 } from '@codeleap/common'
 import { ReactNode } from 'react'
@@ -107,7 +107,7 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
   const [debouncedVisible] = useDebounce(isVisible, 100)
   const arrowPos = arrowPositionStyles[invert(position)]
 
-  const variantStyles = useComponentStyle('Tooltip', {
+  const variantStyles = useDefaultComponentStyle('Tooltip', {
     responsiveVariants,
     variants,
     styles,

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import {
-  useComponentStyle,
+  useDefaultComponentStyle,
   ButtonStyles,
   ComponentVariants,
   ButtonComposition,
@@ -43,7 +43,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     ...props
   } = buttonProps
 
-  const variantStyles = useComponentStyle('Button', {
+  const variantStyles = useDefaultComponentStyle('Button', {
     responsiveVariants,
     variants,
     styles,

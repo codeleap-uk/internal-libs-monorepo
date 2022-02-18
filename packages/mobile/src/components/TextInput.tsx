@@ -6,7 +6,7 @@ import {
   TextInputComposition,
   TextInputStyles,
   useBooleanToggle,
-  useComponentStyle,
+  useDefaultComponentStyle,
   useValidate,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, forwardRef, useImperativeHandle, useRef, useState } from 'react'
@@ -73,7 +73,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
 
   const input = useRef<any>(null)
   const [textIsVisible, setTextVisible] = useBooleanToggle(false)
-  const variantStyles = useComponentStyle('TextInput', {
+  const variantStyles = useDefaultComponentStyle('TextInput', {
     variants,
     styles,
   })

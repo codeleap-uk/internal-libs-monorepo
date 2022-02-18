@@ -2,10 +2,10 @@ import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import {
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   BaseViewProps,
   ViewStyles,
-  useStyle,
+  useCodeleapContext,
   AnyFunction,
 } from '@codeleap/common'
 import { View } from './View'
@@ -38,11 +38,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     ...props
   } = touchableProps
 
-  const variantStyles = useComponentStyle('View', {
+  const variantStyles = useDefaultComponentStyle('View', {
     variants,
   })
 
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
   const press = () => {
     if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
     logger.log(

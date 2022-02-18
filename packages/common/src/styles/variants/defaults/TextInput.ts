@@ -112,17 +112,17 @@ export const TextInputStyles = {
   })),
   line: createTextInputStyle((theme) => ({
     innerWrapper: {
-      ...theme.border.gray({ width: 1, directions: ['bottom'] }),
+      ...theme.border.neutral({ width: 1, directions: ['bottom'] }),
     },
   })),
   box: createTextInputStyle((theme) => ({
     innerWrapper: {
-      ...theme.border.gray(1),
+      ...theme.border.neutral(1),
     },
   })),
   pill: createTextInputStyle((theme) => ({
     innerWrapper: {
-      ...theme.border.gray(1),
+      ...theme.border.neutral(1),
       borderRadius: 15,
     },
   })),

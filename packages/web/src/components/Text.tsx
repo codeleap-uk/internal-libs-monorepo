@@ -4,7 +4,7 @@ import {
   ComponentVariants,
   TextComposition,
   TextStyles,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { StylesOf } from '../types/utility'
@@ -26,7 +26,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     styles,
     ...props
   } = textProps
-  const variantStyles = useComponentStyle('Text', {
+  const variantStyles = useDefaultComponentStyle('Text', {
     rootElement: 'text',
     responsiveVariants,
     variants,

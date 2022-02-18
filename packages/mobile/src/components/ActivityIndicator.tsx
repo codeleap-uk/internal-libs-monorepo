@@ -4,9 +4,9 @@ import { ActivityIndicator as Indicator, StyleSheet } from 'react-native'
 import {
   ActivityIndicatorComposition,
   ActivityIndicatorStyles,
-  useComponentStyle,
+  useDefaultComponentStyle,
   ComponentVariants,
-  useStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import { StylesOf } from '../types/utility'
 
@@ -21,13 +21,13 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {
     const { variants = [], style, styles: propStyles, ...props } = activityIndicatorProps
 
-    const variantStyles = useComponentStyle('ActivityIndicator', {
+    const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
       variants,
       transform: StyleSheet.flatten,
       styles: propStyles,
     })
 
-    const { Theme } = useStyle()
+    const { Theme } = useCodeleapContext()
 
     const color = variantStyles.wrapper?.color || Theme.colors.gray
     const size = variantStyles.wrapper?.height || variantStyles.wrapper?.width || 'large'

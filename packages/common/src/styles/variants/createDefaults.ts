@@ -1,6 +1,8 @@
 import { PartialComponentStyle } from './types'
-import { EnhancedTheme } from '../types'
+
 import { FunctionType } from '../../types'
+import { ThemeColorScheme } from '.'
+import { AppTheme } from '..'
 
 type CreateVariantOptions = {
   dynamic?: boolean;
@@ -14,17 +16,17 @@ export function createDefaultVariantFactory<
   VT = PartialComponentStyle<Composition, any>
 >() {
   function createVariant(
-    builder: FunctionType<[EnhancedTheme, string], VT>,
+    builder: FunctionType<[ThemeColorScheme<AppTheme>, string], VT>,
     options = defaultOptions,
   ) {
     if (options.dynamic) {
       return (() => builder) as unknown as (
-        theme: EnhancedTheme,
+        theme: ThemeColorScheme<AppTheme>,
         variant?: string
       ) => VT 
     }
 
-    return (theme: EnhancedTheme, variant?: string) => builder(theme, variant)
+    return builder
   }
 
   return createVariant

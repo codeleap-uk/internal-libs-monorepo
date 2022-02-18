@@ -1,20 +1,9 @@
-import { DefaultColors } from '.'
 import { createBorderHelpers } from './helpers'
 
 import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
 import { defaultPresets } from './presets'
 import { spacingFactory } from './Spacing'
 import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
-
-const defaultColors: Record<DefaultColors, string> = {
-  black: '#000',
-  gray: '#ccc',
-  negative: '#a11',
-  positive: '#ada',
-  primary: '#7695EC',
-  secondary: '#000',
-  white: '#fff',
-}
 
 const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
@@ -29,12 +18,25 @@ export function createTheme<T extends ThemeValues>(
 ): EnhancedTheme<T> {
   const getters = { ...defaultAccessors, ...accessors }
   const isBrowser = !window?.process
+
+  const initialTheme = values.initialTheme || Object.keys(values.colors)?.[0]
+
+  if (!initialTheme || !values.colors[initialTheme]){
+    throw new Error(`
+      Could not load initial theme colors. make sure all keys of Theme.colors have a corresponding color set like:
+      ...
+      colors: {
+        light: {
+          // your colors here
+        }
+      }
+      ...
+      And that your initialTheme is correctly writen (if specified)  
+    `)
+  }
   return {
     ...values,
-    colors: {
-      ...defaultColors,
-      ...values.colors,
-    },
+    theme: initialTheme,
     hooks: breakpointHooksFactory(values.breakpoints, getters.screenSize),
     media: buildMediaQueries(values.breakpoints),
     spacing: {
@@ -42,7 +44,7 @@ export function createTheme<T extends ThemeValues>(
       ...spacingFactory(values.spacing, 'padding'),
       ...spacingFactory(values.spacing, 'margin'),
     },
-    border: createBorderHelpers(values, isBrowser),
+    border: createBorderHelpers(values, isBrowser, initialTheme),
     presets: {
       ...defaultPresets,
       ...values.presets,

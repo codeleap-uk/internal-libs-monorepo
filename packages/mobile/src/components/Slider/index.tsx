@@ -7,7 +7,7 @@ import { useRef } from 'react'
 import { StyleSheet } from 'react-native'
 import { View } from '../View'
 import {
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { InputLabel } from '../TextInput'
 import { SliderProps } from './types'
@@ -36,7 +36,7 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
   const toggleTooltipTimeout = useRef(null)
   const valueRef = useRef(value)
   
-  const variantStyles = useComponentStyle('Slider', {
+  const variantStyles = useDefaultComponentStyle('Slider', {
     variants,
   })
   

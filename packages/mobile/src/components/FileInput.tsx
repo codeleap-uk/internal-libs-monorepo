@@ -7,8 +7,8 @@ import {
   IconPlaceholder,
   MobileInputFile,
   parseFilePathData,
-  useComponentStyle,
-  useStyle,
+  useDefaultComponentStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import { StylesOf } from '../types/utility'
 import { Button, ButtonProps } from './Button'
@@ -82,7 +82,7 @@ export const FileInput = forwardRef<
 
   const [file, setFile] = React.useState(null)
 
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
 
   async function openFileSystem(){
     try {
@@ -149,7 +149,7 @@ export const FileInput = forwardRef<
    
   }
 
-  const variantStyles = useComponentStyle('FileInput', {
+  const variantStyles = useDefaultComponentStyle('FileInput', {
     styles,
     variants,
   })

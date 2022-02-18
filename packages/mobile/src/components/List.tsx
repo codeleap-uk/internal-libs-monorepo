@@ -3,9 +3,9 @@ import { forwardRef, useState } from 'react'
 import {
   deepEqual,
   onUpdate,
-  useComponentStyle,
+  useDefaultComponentStyle,
   usePrevious,
-  useStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import {
   KeyboardAwareFlatListProps,
@@ -66,9 +66,9 @@ export const List = forwardRef<FlatList, FlatListProps>(
         }
       }
     }, [refreshing, changeData])
-    const { Theme } = useStyle()
+    const { Theme } = useCodeleapContext()
 
-    const variantStyles = useComponentStyle('View', {
+    const variantStyles = useDefaultComponentStyle('View', {
       variants,
     })
 

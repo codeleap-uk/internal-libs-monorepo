@@ -80,7 +80,7 @@ export const MobileModalStyles = {
       },
       box: {
         width: '80%',
-        backgroundColor: Theme.colors.white,
+        backgroundColor: Theme.colors.background,
         borderRadius: Theme.borderRadius.medium,
         ...Theme.spacing.padding(2),
       },
@@ -104,6 +104,7 @@ export const MobileModalStyles = {
       },
       closeButtonWrapper: {
         alignSelf: 'center',
+        ...Theme.spacing.marginLeft('auto'),
       },
       title: {
         ...Theme.presets.textCenter,

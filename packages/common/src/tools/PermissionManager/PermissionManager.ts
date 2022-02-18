@@ -49,7 +49,7 @@ export class PermissionManager<
       return this._permissions as unknown as Record<keyof T, PermissionTypes.PermissionState>
     }
 
-    private async check(name: keyof T, options?: PermissionTypes.CheckOptions): Promise<PermissionState>{
+    private async check(name: keyof T, options?: PermissionTypes.CheckOptions): Promise<PermissionTypes.PermissionState>{
       const previousStatus = this._permissions[name].status
 
       await this._permissions[name].check(options)
@@ -58,7 +58,7 @@ export class PermissionManager<
         this.permSubscribers[name].forEach(sub => sub(this._permissions[name]))
         this.subscribers.forEach(sub => sub(name, this._permissions[name]))
       }
-      return this._permissions[name] as unknown as PermissionState
+      return this._permissions[name] 
     }
 
 
@@ -105,7 +105,7 @@ export class PermissionManager<
         state[p] = {...values}
       }
 
-      return state as Record<keyof T, PermissionState>
+      return state as Record<keyof T, PermissionTypes.PermissionState>
     }
 
     async update(){

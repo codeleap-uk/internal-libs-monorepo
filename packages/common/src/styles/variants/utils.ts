@@ -15,8 +15,9 @@ export function mapVariants<
   const thisComponentVariants = {} as FromVariantsBuilder<S, T>
 
   for (const [variantName, variantBuilder] of Object.entries(variantsObject)) {
-    thisComponentVariants[variantName as keyof T] = variantBuilder(
-      theme,
+    // @ts-ignore
+    thisComponentVariants[variantName as keyof T] = (t) => variantBuilder(
+      t,
       variantName,
     ) as ReturnType<T[keyof T]>
   }
@@ -48,6 +49,7 @@ export function applyVariants({
       if (Number.isNaN(arg)) {
         arg = multiplier
       }
+
       return deepMerge(computedStyles, {
         [rootElement]: {
           ...theme.spacing[spacingFunction](arg),
@@ -62,6 +64,6 @@ export function applyVariants({
 
     return computedStyles
   } else {
-    return deepMerge(computedStyles, styles[variantName])
+    return deepMerge(computedStyles, styles[variantName](theme))
   }
 }

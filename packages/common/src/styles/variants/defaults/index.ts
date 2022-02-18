@@ -18,7 +18,7 @@ import { ActivityIndicatorStyles } from './ActivityIndicator'
 import { SelectStyles } from './Select'
 import { TooltipStyles } from './Tooltip'
 import { CenterWrapperStyles } from './CenterWrapper'
-import { PageRouterStyles } from './PageRouter'
+import { RouterPageStyles } from './RouterPage'
 import { AvatarStyles } from './Avatar'
 import { SwitchStyles } from './Switch'
 import { IconStyles } from './Icon'
@@ -45,7 +45,7 @@ export const DEFAULT_STYLES = {
   Tooltip: TooltipStyles,
   CenterWrapper: CenterWrapperStyles,
   Avatar: AvatarStyles,
-  PageRouter: PageRouterStyles,
+  PageRouter: RouterPageStyles,
   Switch: SwitchStyles,
   Navigation: {},
 } as const
@@ -53,10 +53,7 @@ export const DEFAULT_STYLES = {
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
 
 export type DefaultVariants<S = CSSProperties> = {
-  [Property in keyof DEFAULT_VARIANTS]: FromVariantsBuilder<
-    S,
-    DEFAULT_VARIANTS[Property]
-  >;
+  [Property in keyof DEFAULT_VARIANTS]: DEFAULT_VARIANTS[Property]
 };
 
 export * from './Button'
@@ -76,7 +73,7 @@ export * from './Drawer'
 export * from './Select'
 export * from './Tooltip'
 export * from './CenterWrapper'
-export * from './PageRouter'
+export * from './RouterPage'
 export * from './Avatar'
 export * from './Switch'
 export * from './Icon'

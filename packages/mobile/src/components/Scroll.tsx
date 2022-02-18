@@ -3,15 +3,15 @@ import { forwardRef, useState } from 'react'
 import {
   deepEqual,
   onUpdate,
-  useComponentStyle,
+  useDefaultComponentStyle,
   usePrevious,
-  useStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollView as KBDView,
 } from 'react-native-keyboard-aware-scroll-view'
-import { RefreshControl, ScrollView, ScrollViewProps } from 'react-native'
+import { RefreshControl, ScrollView, ScrollViewProps, ViewStyle } from 'react-native'
 import { ViewProps } from './View'
 
 export type ScrollProps = KeyboardAwareScrollViewProps &
@@ -19,6 +19,7 @@ export type ScrollProps = KeyboardAwareScrollViewProps &
     onRefresh?: () => void;
     refreshTimeout?: number;
     changeData?: any;
+    styles?: ViewStyle
   };
 
 const KeyboardAwareScrollView =
@@ -26,6 +27,7 @@ const KeyboardAwareScrollView =
     ViewProps & {
       refreshControl?: JSX.Element;
       ref?: ScrollView;
+     
     } & ScrollViewProps
   >
 
@@ -37,6 +39,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       refreshTimeout = 3000,
       children,
       changeData,
+      styles,
       ...props
     } = scrollProps
     const hasRefresh = !!props.onRefresh
@@ -66,10 +69,14 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         }
       }
     }, [refreshing, changeData])
-    const { Theme } = useStyle()
+    const { Theme } = useCodeleapContext()
 
-    const variantStyles = useComponentStyle('View', {
+    const variantStyles = useDefaultComponentStyle('View', {
       variants,
+      styles: {
+        wrapper: styles,
+      },
+      rootElement: 'wrapper',
     })
 
     return (

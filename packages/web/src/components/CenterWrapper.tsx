@@ -3,7 +3,7 @@ import { View } from './View'
 import { StylesOf } from '../types/utility'
 import {
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   CenterWrapperComposition,
   CenterWrapperStyles,
 } from '@codeleap/common'
@@ -21,7 +21,7 @@ export const CenterWrapper: React.FC<CenterWrapperProps> = (props) => {
     responsiveVariants,
   } = props
 
-  const variantStyles = useComponentStyle('CenterWrapper', {
+  const variantStyles = useDefaultComponentStyle('CenterWrapper', {
     variants,
     styles,
     responsiveVariants,

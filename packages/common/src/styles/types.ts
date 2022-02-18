@@ -11,7 +11,7 @@ import { AnyFunction } from '../types/utility'
 import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
-import { CSSProperties } from 'react'
+
 type AnyProps<T = any> = {
   [x: string]: T;
 };
@@ -21,11 +21,20 @@ export type BreakpointPlaceholder = '__BREAKPOINT__';
 export type DefaultColors =
   | 'primary'
   | 'secondary'
+  | 'background'
+  | 'backgroundSecondary'
+  | 'text'
+  | 'icon'
+  | 'border'
   | 'positive'
   | 'negative'
-  | 'white'
+  | 'placeholder'
+  | 'disabled'
+  | 'neutral'
+  | 'textH'
+  | 'textP'
   | 'black'
-  | 'gray';
+  | 'white'
 
 export type Fonts =
   | 'h1'
@@ -55,12 +64,12 @@ export type TypographyStyle = {
 };
 
 
-type FreeThemeColors = AnyProps<string | AnyProps<string>>
+type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
 
 export type AppTheme = {
   readonly breakpoints?: Record<string, number>;
   readonly spacing: number;
-  readonly colors: Partial<Record<DefaultColors, string>> & FreeThemeColors;
+  readonly colors: FreeThemeColors;
 
   readonly values?: {
     width?: number;
@@ -76,7 +85,7 @@ export type AppTheme = {
   readonly presets ?: Record<string, any>
 
   readonly icons: Record<string, any>
-
+  readonly initialTheme: string;
   readonly typography : {
     fontFamily: string
     styles: Record<Fonts, TypographyStyle>
@@ -98,12 +107,12 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   media: MediaQueries<keyof T['breakpoints'], string>;
   presets: typeof defaultPresets & T['presets'] ;
   border: BorderHelpers<T>;
-  colors: Record<DefaultColors, string> & T['colors'];
   readonly circle: (size: number) => any;
 
   readonly semiCircle: (side: number) => any;
   readonly sized: (multiplier: number) => Record<'height' | 'width', number>;
   IsBrowser: boolean;
+  theme: keyof T['colors']
 };
 export type ThemeValues = AppTheme;
 
@@ -114,18 +123,21 @@ export type StyleContextProps<
   variantProvider: Provider;
   variants: Variants;
   children?: React.ReactNode;
-  logger?: Logger;
+  logger?: Logger; 
   settings: AppSettings;
+   
 };
 
 export type StyleContextValue<
   C extends Readonly<Record<string, CommonVariantObject<any>>>
 > = {
   Theme: EnhancedTheme<any>;
+  currentTheme: string|number
   provider: VariantProvider<any, any>;
   ComponentVariants: C;
   logger: Logger;
   Settings: AppSettings;
+  
 };
 
 export type VariantsStylesheet = Record<string, unknown>;

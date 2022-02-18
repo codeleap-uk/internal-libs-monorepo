@@ -3,8 +3,8 @@ import { jsx } from '@emotion/react'
 import {
   ComponentVariants,
   StylesOf,
-  useComponentStyle,
-  useStyle,
+  useDefaultComponentStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import { ComponentPropsWithRef } from 'react'
 import { View } from '../View'
@@ -39,13 +39,13 @@ export const Checkbox = (checkboxProps: CheckboxProps) => {
     onValueChange && onValueChange(e.target.checked)
   }
 
-  const variantStyles = useComponentStyle('Checkbox', {
+  const variantStyles = useDefaultComponentStyle('Checkbox', {
     responsiveVariants,
     variants,
     styles,
   } as any) as StylesOf<WebCheckboxComposition>
 
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
   logger.log('Checkbox Style', variantStyles, 'Style')
 
   return (

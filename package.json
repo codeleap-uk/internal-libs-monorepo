@@ -40,6 +40,7 @@
     "dev": "turbo run dev --parallel",
     "dev:mobile": "turbo run dev:mobile --parallel",
     "dev:web": "turbo run dev:web --parallel",
+    "dev:docs": "turbo run dev:docs --parallel",
     "dev:ios": "turbo run dev:ios --parallel",
     "dev:android": "turbo run dev:android --parallel",
     "dev:cli": "turbo run dev:cli",
@@ -81,6 +82,9 @@
         "cache": false
       },
       "dev:web": {
+        "cache": false
+      },
+      "dev:docs": {
         "cache": false
       },
       "dev:ios": {
