@@ -1,7 +1,7 @@
 import { View } from '../View'
 import { CSSObject, keyframes } from '@emotion/react'
 import {
-  useComponentStyle,
+  useDefaultComponentStyle,
   ComponentVariants,
   ActivityIndicatorStyles,
   ActivityIndicatorComposition,
@@ -39,7 +39,7 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
     ...viewProps
   } = indicatorProps
 
-  const variantStyles = useComponentStyle('ActivityIndicator', {
+  const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
     styles,
     responsiveVariants,
     variants,

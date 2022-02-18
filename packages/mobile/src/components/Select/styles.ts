@@ -1,5 +1,5 @@
 import { assignTextStyle, ButtonParts, createDefaultVariantFactory, TextInputComposition } from '@codeleap/common'
-
+import { MobileModalStyles } from '../Modal'
 type ModalParts = 
   'Box' |
   'Wrapper' |
@@ -9,6 +9,7 @@ type ModalParts =
   'Item' |
   'ItemText' |
   'Item:selected' |
+  'ItemText:selected' |
   'LabelText' |
   `CloseButton${Capitalize<ButtonParts>}`
 
@@ -27,13 +28,15 @@ const createSelectStyle = createDefaultVariantFactory<MobileSelectComposition>()
 export const MobileSelectStyles = {
   default: createSelectStyle((theme) => ({
     modalBox: {
-      backgroundColor: theme.colors.white,
+      // ...MobileModalStyles.default(theme).box,
+      backgroundColor: theme.colors.background,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       zIndex: 1,
       elevation: 5,
     },
     modalWrapper: {
+      // ...MobileModalStyles.default(theme).wrapper,
       flex: 1,
       alignItems: 'stretch',
       justifyContent: 'flex-end',
@@ -43,16 +46,18 @@ export const MobileSelectStyles = {
       ...theme.spacing.paddingHorizontal(2),
       color: theme.colors.text,
     },
-    'modalItem:selected': {
+    'modalItemText:selected': {
       color: theme.colors.primary,
     },
     modalList: {
       ...theme.spacing.marginVertical(0.6),
     },
     backdrop: {
+      // ...MobileModalStyles.default(theme).overlay,
       zIndex: 10,
       flex: 1,
-      backgroundColor: '#000',
+   
+      backgroundColor: theme.colors.black,
     },
     'backdrop:hidden': {
       opacity: 0,

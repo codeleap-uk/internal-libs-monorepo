@@ -7,8 +7,8 @@ import {
   ComponentVariants,
   IconPlaceholder,
   onUpdate,
-  useComponentStyle,
-  useStyle,
+  useDefaultComponentStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import {
   MobileModalComposition,
@@ -59,7 +59,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     ...props
   } = modalProps
 
-  const variantStyles = useComponentStyle('Modal', {
+  const variantStyles = useDefaultComponentStyle('Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
     styles,

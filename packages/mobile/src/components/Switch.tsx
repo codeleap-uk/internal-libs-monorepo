@@ -3,9 +3,9 @@ import {
   SwitchStyles,
   SwitchComposition,
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   StylesOf,
-  useStyle,
+  useCodeleapContext,
   FormTypes,
   useValidate,
 } from '@codeleap/common'
@@ -25,6 +25,7 @@ type SwitchProps = NativeSwitchProps & {
   validate?: FormTypes.ValidatorFunctionWithoutForm | string;
 };
 
+
 export const Switch = forwardRef<NativeSwitch, SwitchProps>(
   (switchProps, ref) => {
     const {
@@ -37,7 +38,7 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
       ...props
     } = switchProps
 
-    const variantStyles = useComponentStyle('Switch', {
+    const variantStyles = useDefaultComponentStyle('Switch', {
       variants,
     })
     const { error, showError } = useValidate(switchProps.value, validate)
@@ -58,7 +59,7 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
     const inputStyles = getStyles('input')
 
     const { color, backgroundColor } = StyleSheet.flatten(inputStyles)
-    const { Theme } = useStyle()
+    const { Theme } = useCodeleapContext()
 
     const thumbColor = color || Theme.colors.primary
     const trackColor = backgroundColor || Theme.colors.gray
@@ -78,4 +79,4 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
       </View>
     )
   },
-)
+) as React.FC<SwitchProps>

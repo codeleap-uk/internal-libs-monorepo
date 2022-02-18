@@ -2,8 +2,8 @@
 import { CSSObject, jsx } from '@emotion/react'
 import {
   ComponentVariants,
-  useComponentStyle,
-  useStyle,
+  useDefaultComponentStyle,
+  useCodeleapContext,
   ViewStyles,
   BaseViewProps,
 } from '@codeleap/common'
@@ -36,14 +36,16 @@ export const ViewCP = <T extends ElementType = 'div'>(
     not,
     up,
     onHover,
+    styles,
     down,
     ...props
   } = viewProps
-  const variantStyles = useComponentStyle('View', {
+  const variantStyles = useDefaultComponentStyle('View', {
     responsiveVariants,
     variants,
+    styles,
   })
-  const { Theme } = useStyle()
+  const { Theme } = useCodeleapContext()
 
   function handleHover(isMouseOverElement: boolean) {
     onHover && onHover(isMouseOverElement)

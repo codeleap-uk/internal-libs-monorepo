@@ -19,9 +19,9 @@ export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element;
   
 export type CustomSelectProps<T> = {
     value: T;
-    placeholder?: string;
-    label?: string;
-    options?: {label:string, value:T}[];
+    placeholder?: FormTypes.Label;
+    label?: FormTypes.Label;
+    options?: FormTypes.Options<T>;
     onDropdownToggle?: (isOpen?: boolean) => void;
     onValueChange?: (value: T) => void;
     renderItem?: SelectRenderFN<T>;

@@ -4,7 +4,7 @@ import {
   OverlayStyles,
   SmartOmit,
   StylesOf,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { Touchable, TouchableProps } from './Touchable'
 import { View, ViewProps } from './View'
@@ -20,7 +20,7 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
   const { visible, responsiveVariants, variants, styles, ...props } =
     overlayProps
 
-  const variantStyles = useComponentStyle('Overlay', {
+  const variantStyles = useDefaultComponentStyle('Overlay', {
     variants,
     responsiveVariants,
     styles,

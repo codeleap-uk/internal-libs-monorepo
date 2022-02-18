@@ -3,7 +3,7 @@ import { ComponentProps, CSSProperties, ReactElement } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import {
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   ViewComposition,
   ViewStyles,
 } from '@codeleap/common'
@@ -47,7 +47,7 @@ export const FlatList = <T extends unknown>(
     ...viewProps
   } = flatListProps
 
-  const variantStyles = useComponentStyle('View', {
+  const variantStyles = useDefaultComponentStyle('View', {
     variants,
     responsiveVariants,
     styles,

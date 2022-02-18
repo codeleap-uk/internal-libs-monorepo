@@ -11,7 +11,7 @@ export const IconStyles = {
   ...presets,
   default: createIconStyle((theme) => ({
     icon: {
-      color: theme.colors.primary,
+      color: theme.colors.icon,
     },
   })),
   white: createIconStyle((theme) => ({
@@ -19,11 +19,7 @@ export const IconStyles = {
       color: theme.colors.white,
     },
   })),
-  black: createIconStyle((theme) => ({
-    icon: {
-      color: theme.colors.black,
-    },
-  })),
+
   primary: createIconStyle((theme) => ({
     icon: {
       color: theme.colors.primary,

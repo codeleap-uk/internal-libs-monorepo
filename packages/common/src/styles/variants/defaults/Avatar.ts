@@ -235,7 +235,7 @@ export const AvatarStyles = {
   })),
   borders: createAvatarStyle((Theme) => ({
     general: {
-      border: Theme.border.black(1),
+      border: Theme.border.neutral(1),
     },
   })),
   disabled: createAvatarStyle((Theme) => ({

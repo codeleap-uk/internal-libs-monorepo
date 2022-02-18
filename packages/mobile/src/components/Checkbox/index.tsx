@@ -1,7 +1,7 @@
 import * as React from 'react'
 import {
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   StylesOf,
   Form,
   useValidate,
@@ -41,7 +41,7 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
       ...props
     } = checkboxProps
 
-    const variantStyles = useComponentStyle('Checkbox', {
+    const variantStyles = useDefaultComponentStyle('Checkbox', {
       // @ts-ignore
       variants,
     })

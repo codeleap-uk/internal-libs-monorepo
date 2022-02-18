@@ -4,7 +4,7 @@ import {
   DrawerComposition,
   DrawerStyles,
   IconPlaceholder,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
 import React, { ReactNode } from 'react'
@@ -77,7 +77,7 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
   const sizeProperty = axis === 'X' ? 'width' : 'height'
   const fullProperty = sizeProperty === 'height' ? 'width' : 'height'
 
-  const variantStyles = useComponentStyle('Drawer', {
+  const variantStyles = useDefaultComponentStyle('Drawer', {
     styles,
     variants,
     responsiveVariants,

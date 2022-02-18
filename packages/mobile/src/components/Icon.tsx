@@ -3,8 +3,8 @@ import {
   ComponentVariants,
   IconPlaceholder,
   IconStyles,
-  useComponentStyle,
-  useStyle,
+  useDefaultComponentStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 import { View } from './View'
@@ -19,9 +19,9 @@ export type IconProps = {
 };
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
-  const { Theme, logger } = useStyle()
+  const { Theme, logger } = useCodeleapContext()
   
-  const variantStyles = useComponentStyle('Icon', {
+  const variantStyles = useDefaultComponentStyle('Icon', {
     variants,
     transform: StyleSheet.flatten,
     styles: {

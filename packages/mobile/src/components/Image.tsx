@@ -3,7 +3,7 @@ import {
   ComponentVariants,
   ImageStyles,
   MobileInputFile,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef } from 'react'
 import {
@@ -32,7 +32,7 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
 export const Image: React.FC<ImageProps> = (props) => {
   const { variants, style, fast = true, resizeMode = 'contain', ...imageProps } = props
 
-  const variantStyles = useComponentStyle('Image', { variants })
+  const variantStyles = useDefaultComponentStyle('Image', { variants })
 
   const styles = [variantStyles.wrapper, style]
 

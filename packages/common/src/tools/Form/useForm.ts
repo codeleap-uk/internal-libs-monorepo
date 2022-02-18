@@ -1,7 +1,7 @@
 import * as FormTypes from './types'
 import { usePartialState, deepGet, deepSet, deepMerge } from '../../utils'
 import { FunctionType } from '../../types'
-import { useStyle } from '../../styles/StyleProvider'
+import { useCodeleapContext } from '../../styles/StyleProvider'
 import { createRef, useCallback, useRef } from 'react'
 import { toMultipart } from '../Fetch/utils'
 
@@ -40,7 +40,7 @@ export function useForm<
   }, [form.staticFieldProps])
 
   const [formValues, setFormValues] = usePartialState<Values>(getInitialState)
-  const { logger, Theme } = useStyle()
+  const { logger, Theme } = useCodeleapContext()
   const [fieldErrors, setFieldErrors] = usePartialState(getInitialErrors)
   // @ts-ignore
   function setFieldValue(...args: FieldPaths) {

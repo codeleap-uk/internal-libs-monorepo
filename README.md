@@ -30,12 +30,12 @@ Add them to packages/web/src/components. The structure of components is as follo
 import { jsx } from '@emotion/react' // This lets you pass the css prop for styling
 
 import {
-    useComponentStyle,
+    useDefaultComponentStyle,
     ButtonStyles,
     ComponentVariants,
     ButtonComposition,
     IconPlaceholder,
-    useStyle
+    useCodeleapContext
 } from '@codeleap/common'; // Import styling hooks and component typings for variants
 
 import React, { ComponentPropsWithRef } from 'react' // More typings
@@ -81,7 +81,7 @@ export const Button:React.FC<ButtonProps> = (buttonProps) => {
   } = buttonProps
 
   // This aggregates the variants and style overrides passed to the component
-  const variantStyles = useComponentStyle('Button', {
+  const variantStyles = useDefaultComponentStyle('Button', {
     responsiveVariants,
     variants,
     styles,

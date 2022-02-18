@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import {
   ComponentVariants,
-  useComponentStyle,
+  useDefaultComponentStyle,
   BaseViewProps,
   TextStyles,
 } from '@codeleap/common'
@@ -16,7 +16,7 @@ export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const { variants = [], text, style, ...props } = textProps
 
-  const variantStyles = useComponentStyle('Text', {
+  const variantStyles = useDefaultComponentStyle('Text', {
     variants,
     rootElement: 'text',
   })

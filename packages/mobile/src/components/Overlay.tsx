@@ -4,7 +4,7 @@ import {
   IconPlaceholder,
   OverlayComposition,
   OverlayStyles,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import { ReactNode } from 'react'
 import { InputLabel } from './TextInput'
@@ -37,11 +37,11 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
     ...props
   } = overlayProps
 
-  const variantStyles = useComponentStyle('Overlay', {
+  const variantStyles = useDefaultComponentStyle('Overlay', {
     styles,
     transform: StyleSheet.flatten,
     variants: variants as any,
-  })
+  }) as StylesOf<OverlayComposition>
 
   const touchableStyle = [
     variantStyles.wrapper,

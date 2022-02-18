@@ -1,19 +1,14 @@
 import {
   ComponentVariants,
   IconPlaceholder,
-  useComponentStyle,
-  useStyle,
+  useDefaultComponentStyle,
+  useCodeleapContext,
   IconStyles,
 } from '@codeleap/common'
 
 export type IconProps = {
   name: IconPlaceholder;
-  style?: {
-    color: string;
-    size?: string | number;
-    width?: string | number;
-    height?: string | number;
-  };
+  style?: any;
 } & ComponentVariants<typeof IconStyles>;
 
 export const Icon: React.FC<IconProps> = ({
@@ -22,10 +17,10 @@ export const Icon: React.FC<IconProps> = ({
   responsiveVariants,
   variants,
 }) => {
-  const { Theme, logger } = useStyle()
+  const { Theme, logger } = useCodeleapContext()
   const Component = Theme?.icons?.[name]
   
-  const variantStyles = useComponentStyle('Icon', {
+  const variantStyles = useDefaultComponentStyle('Icon', {
     variants,
     responsiveVariants,
   })

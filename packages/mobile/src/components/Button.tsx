@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {
-  useComponentStyle,
+  useDefaultComponentStyle,
   ButtonStyles,
   ComponentVariants,
   ButtonComposition,
@@ -45,7 +45,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
   const [pressed, setPressed] = React.useState(false)
 
 
-  const variantStyles = useComponentStyle('Button', {
+  const variantStyles = useDefaultComponentStyle('Button', {
     variants,
     transform: StyleSheet.flatten,
     styles,

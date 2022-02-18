@@ -1,9 +1,9 @@
 import {
   ComponentVariants,
   onUpdate,
-  useComponentStyle,
+  useDefaultComponentStyle,
   useDebounce,
-  useStyle,
+  useCodeleapContext,
 } from '@codeleap/common'
 import React, {
   forwardRef,
@@ -51,7 +51,7 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
 
   const [page, setPage] = useState(() => propPage ?? 0)
 
-  const variantStyles = useComponentStyle<'u:Pager', typeof MobilePagerStyles>(
+  const variantStyles = useDefaultComponentStyle<'u:Pager', typeof MobilePagerStyles>(
     'u:Pager',
     {
       styles,
@@ -59,7 +59,7 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
       variants,
     },
   )
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
   const nChildren = React.Children.count(children)
 
   const lastPage = nChildren - 1

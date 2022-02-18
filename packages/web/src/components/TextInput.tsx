@@ -6,7 +6,7 @@ import {
   TextInputComposition,
   TextInputStyles,
   useBooleanToggle,
-  useComponentStyle,
+  useDefaultComponentStyle,
 } from '@codeleap/common'
 import React, {
   ComponentPropsWithoutRef,
@@ -84,7 +84,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
     )
     const input = useRef<any>(null)
     const [textIsVisible, setTextVisible] = useBooleanToggle(false)
-    const variantStyles = useComponentStyle('TextInput', {
+    const variantStyles = useDefaultComponentStyle('TextInput', {
       variants,
       responsiveVariants,
       styles,

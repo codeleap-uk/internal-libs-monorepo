@@ -10,7 +10,7 @@ type BorderArgs = {
 };
 
 export type BorderHelpers<T extends ThemeValues> = {
-  [Property in keyof T['colors']]: (
+  [Property in keyof T['colors'][keyof T['colors']]]: (
     args: Omit<BorderArgs, 'color'> | number
   ) => any;
 } & {
@@ -20,6 +20,7 @@ export type BorderHelpers<T extends ThemeValues> = {
 export function createBorderHelpers<T extends ThemeValues>(
   values: T,
   browser: boolean,
+  theme: string,
 ): BorderHelpers<T> {
   const helpers = {
     create: ({
@@ -42,8 +43,9 @@ export function createBorderHelpers<T extends ThemeValues>(
       return borderStyles
     },
   }
+  const allColors = Object.entries(values.colors[theme])
 
-  for (const [name, color] of Object.entries(values.colors)) {
+  for (const [name, color] of allColors) {
     helpers[name] = (args) => {
       if (typeof args === 'number') {
         return helpers.create({

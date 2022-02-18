@@ -22,7 +22,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
     const fontWeight = style.weigth.toString()
 
     const color = style?.color ||
-      name.startsWith('h') ? theme?.typography?.hColor : theme?.typography?.pColor
+      name.startsWith('h') ? theme?.colors.textH : theme?.colors.textP
 
     if (theme.IsBrowser) {
       return {

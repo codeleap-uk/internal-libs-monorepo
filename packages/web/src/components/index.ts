@@ -18,6 +18,6 @@ export * from './Tooltip'
 export * from './Slider'
 export * from './Select'
 
-export * from './PageRouter'
+export * from './RouterPage'
 export * from './CenterWrapper'
 export * from './HorizontalScroll'

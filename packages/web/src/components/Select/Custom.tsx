@@ -4,7 +4,7 @@ import {
   optionalObject,
   StylesOf,
   useBooleanToggle,
-  useComponentStyle,
+  useDefaultComponentStyle,
   useValidate,
 } from '@codeleap/common'
 import { useMemo, useRef } from 'react'
@@ -108,7 +108,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
     { customId: inputId, deps: [] },
   )
 
-  const variantStyles = useComponentStyle('Select', {
+  const variantStyles = useDefaultComponentStyle('Select', {
     styles,
     variants,
     responsiveVariants,

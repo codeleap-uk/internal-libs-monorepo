@@ -1,8 +1,8 @@
-import { useStyle } from '@codeleap/common'
+import { useCodeleapContext } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 
 export function useLogStyles() {
-  const { logger } = useStyle()
+  const { logger } = useCodeleapContext()
 
   return (name, styles) => {
     logger.debug.blue(

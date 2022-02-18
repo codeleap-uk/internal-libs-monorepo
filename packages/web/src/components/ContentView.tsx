@@ -2,7 +2,7 @@ import React from 'react'
 import {
   ComponentVariants,
   ContentViewStyles,
-  useComponentStyle,
+  useDefaultComponentStyle,
   ViewComposition,
 } from '@codeleap/common'
 import { ActivityIndicator } from '.'
@@ -34,7 +34,7 @@ export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
     ...props
   } = rawProps
 
-  const variantStyle = useComponentStyle('ContentView', {
+  const variantStyle = useDefaultComponentStyle('ContentView', {
     variants,
     responsiveVariants,
     styles,
