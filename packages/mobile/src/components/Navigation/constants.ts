@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createBottomTabNavigator, createDrawerNavigator, createStackNavigator } from '../../modules/reactNavigation'
 
 export const Navigators = {
