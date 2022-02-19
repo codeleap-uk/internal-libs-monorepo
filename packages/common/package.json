@@ -36,6 +36,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1",
     "@sentry/browser": "^6.16.1",
-    "deep-equal": "^2.0.5"
+    "deep-equal": "^2.0.5",
+    "react-use": "^17.3.2"
   }
 }
