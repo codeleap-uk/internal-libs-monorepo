@@ -37,4 +37,4 @@ const styles = variantProvider.createComponentStyle({
     flex: 1,
     ...Theme.spacing.margin(1),
   },
-})
+}, true)
