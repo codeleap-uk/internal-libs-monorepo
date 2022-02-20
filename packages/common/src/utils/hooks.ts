@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from 'react'
 import { deepMerge } from './object'
 import { AnyFunction, DeepPartial } from '../types'
 
+export {
+  useState,
+  useRef,
+}
+
 export const onMount = (func: AnyFunction) => {
   useEffect(() => {
     return func()
