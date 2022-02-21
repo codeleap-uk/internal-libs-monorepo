@@ -26,11 +26,12 @@ export const Navigation = <T extends NavigatorType>({type, scenes,  ...props}: N
         } else {
           screenProps.component = content?.component?.default || content?.component  || content?.default
           const nameParts = name.split('.')
+          const title = content?.title || content?.component?.title || nameParts[nameParts.length - 1] || name.replace('.', '')
 
           screenProps = {
             ...screenProps,
             options: (optionProps) => ({
-              title: nameParts[nameParts.length - 1] || name.replace('.', ''),
+              title,
               tabBarIcon: (style) => <Icon name={content?.icon} style={style}/>, 
               ...(TypeGuards.isFunction(content.options) ? content.options(optionProps)  : content.options), 
             }),
@@ -42,7 +43,6 @@ export const Navigation = <T extends NavigatorType>({type, scenes,  ...props}: N
           <NavigationComponent.Screen 
             key={idx}
             {...screenProps}
-                
           />
         )
       })

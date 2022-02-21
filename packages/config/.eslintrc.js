@@ -118,10 +118,24 @@ const formatting = {
     'declaration',
     { allowArrowFunctions: true },
   ],
-  'no-multiple-empty-lines': ['error', { max: 2, maxBOF: 0, maxEOF: 1 }],
+  'no-multiple-empty-lines': ['warn', { max: 1, maxBOF: 0, maxEOF: 1 }],
   semi: ['error', 'never'],
   'semi-spacing': 'error',
   'semi-style': 'error',
+  'space-before-blocks': 'warn',
+  'space-in-brackets': 'warn',
+  'object-curly-spacing': ['warn', 'always', { 'objectsInObjects': false, 'arraysInObjects': true }],
+  'no-trailing-spaces': 'warn',
+  'no-whitespace-before-property': 'error',
+  // 'space-before-function-paren': ['error', 'never'],
+  'space-before-function-paren': ['warn', {
+    'anonymous': 'always',
+    'named': 'never',
+    'asyncArrow': 'always',
+  }],
+  'space-in-parens': ['warn', 'never'],
+  'space-infix-ops': 'warn',
+  'no-spaced-func': 'error',
 }
 
 const codeQuality = {
