@@ -82,11 +82,15 @@ export const ModalStyles = {
     { dynamic: true },
   ),
   fullscreen: createModalStyle((theme) => ({
+    innerWrapper: {
+      backgroundColor: theme.colors.background,
+    },
     box: {
       flex: 1,
       width: '100%',
       borderRadius: 0,
       height: theme.values.height,
+      ...theme.presets.center,
     },
   })),
 }
