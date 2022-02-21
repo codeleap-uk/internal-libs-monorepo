@@ -9,7 +9,7 @@ export const AppViewStyles = {
   default: createViewStyle((theme) => ({
     ...defaultStyles.default,
     wrapper: {
-      ...defaultStyles.default.wrapper,
+      ...defaultStyles.default(theme).wrapper,
       display: 'flex',
       flexDirection: 'row',
     },

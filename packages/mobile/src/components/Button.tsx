@@ -21,10 +21,10 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     text?: string;
     rightIcon?: IconPlaceholder;
     icon?: IconPlaceholder;
-    styles?: StylesOf<ButtonComposition>;
+    styles?: StylesOf<ButtonComposition>; 
     loading?: boolean;
     debounce?: number
-    debugName?: string;
+    debugName?: string; // NOTE this should not be optional
   };
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {
@@ -38,7 +38,6 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
     onPress,
     disabled,
     rightIcon,
-    debugName,
     debounce = 600,
     ...props
   } = buttonProps
@@ -84,7 +83,6 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
       disabled={disabled}
       debugComponent={'Button'}
       {...props}
-      debugName={debugName || text || icon || 'Some button'}
     >
      
       {loading && <ActivityIndicator style={getStyles('loader')} />}

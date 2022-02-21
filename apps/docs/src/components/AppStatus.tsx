@@ -1,27 +1,24 @@
-import { React, Theme, View, Icon, ActivityIndicator, Modal, variantProvider, Image, logger } from '@/app'
-import { AppStatus, TAppStatus, useAppSelector } from '@/redux'
+import { React, Theme, Icon, ActivityIndicator, Modal, variantProvider, Overlay, View } from '@/app'
+import { AppStatus, useAppSelector } from '@/redux'
 import { onUpdate } from '@codeleap/common'
-import { AppIcon } from '@/app/assets/icons'
 import { Logo } from '@/components'
-import splash from '@/images/splash.png'
 
-
-const backdropStatuses = ['splash', 'blank']
+const renderStatus = {
+  idle: () => <Icon name='checkmark' variants={['large', 'primary']} />,
+  done: () => <Icon name='checkmark' variants={['large', 'primary']} />,
+  loading: () =>  <ActivityIndicator  />,
+}
 
 export const AppStatusOverlay: React.FC = () => {
   const { status } = useAppSelector((store) => store.AppStatus)
-  // const status = 'loading'
-
-  // logger.log('render', status, 'AppStatusOverlay')
-
-  const backdropVisible = backdropStatuses.includes(status)
 
   onUpdate(() => {
+
     let timeout = null
     if (status === 'done') {
       timeout = setTimeout(() => {
         AppStatus.set('idle')
-      }, 3000)
+      }, 2000)
     }
     return () => {
       if (timeout) {
@@ -29,73 +26,35 @@ export const AppStatusOverlay: React.FC = () => {
       }
     }
   }, [status])
+ 
+  const visible = status !== 'idle'
 
-
-  const pose = backdropVisible ? 'init' : 'hide'
-  const pointerEvents = backdropVisible ? 'auto' : 'none'
-
-  const renderSplash = () => {
-    return <Logo/>
-  }
-
-  const renderDone = () => {
-    return <Icon name='checkmark' size={30} />
-  }
-
-  const renderLoading = () => {
-    return <ActivityIndicator size={'small'} color={Theme.colors.primary} />
-  }
-
-  const renderContentModal = ({ visible, content, variants = 'appStatusIndicator' }) => {
-    return (
-      <Modal visible={visible} variants={variants} scroll={false}>
-        {content()}
-      </Modal>
-    )
-  }
 
   return (
     <>
-      {/* <Animated
-        component='View'
-        pose={pose}
-        config={animationConfig}
-        style={styles.image}
-        pointerEvents={pointerEvents}
-      >
-        <Image source={splash} style={styles.image} resizeMode={'cover'}/>
-      </Animated> */}
-      {/* NOTE All items must be rendered in separate modals so they are rendered correctly */}
-      {renderContentModal({ visible: status === 'splash', content: renderSplash, variants: 'appStatusOverlay' })}
-      {renderContentModal({ visible: status === 'done', content: renderDone })}
-      {renderContentModal({ visible: status === 'loading', content: renderLoading })}
+      <Overlay visible={visible}  /> 
+      <View css={[styles.wrapper, {transform: `scale(${visible ? 1 : 0})`}]}>
+        {renderStatus[status]()}
+      </View>
     </>
   )
 }
 
-const transition = {
-  duration: 500,
-}
+// const transition = {
+//   duration: 500,
+// }
 
-const animationConfig =  {
-  init: {
-    opacity: 1,
-    transition,
-  },
-  hide: {
-    opacity: 0,
-    transition,
-  },
-}
 
 const styles = variantProvider.createComponentStyle({
   wrapper: {
-    position: 'relative',
-    ...Theme.presets.full,
-    ...Theme.presets.center,
-  },
-  image: {
     ...Theme.presets.absolute,
     ...Theme.presets.whole,
+    ...Theme.presets.justifyCenter,
+    ...Theme.presets.alignCenter,
+    pointerEvents: 'none',
+    transition: 'transform 0.3s ease',
+  },
+  icon: {
+
   },
 }, true)

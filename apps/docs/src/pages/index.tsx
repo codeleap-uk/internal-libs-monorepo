@@ -1,5 +1,5 @@
 import { React,   Button, Modal, Text, LocalStorageKeys } from '@/app'
-import { AppStatusOverlay } from '@/components'
+import { AppStatusOverlay, Page } from '@/components'
 import {  AppStatus, Session, useAppSelector } from '@/redux'
 import { onMount, onUpdate, useComponentStyle } from '@codeleap/common'
 import {
@@ -11,29 +11,10 @@ import {
 } from '@/app'
 
 export const Overlays = () => {
-  const {isModalOpen} = useAppSelector(store => ({ isModalOpen: store.AppStatus.modals}))
-
   return <>
 
 
     <AppStatusOverlay />
-  
-    <Modal
-      open={isModalOpen.test}
-      showClose
-      title={'hello'}
-      toggle={() => AppStatus.setModal('test')}
-      // debugName='Home'
-    >
-      <Text variants={['center']} text='Some text' />
-      <Text variants={['center']} text='Some text' />
-      <Text variants={['center']} text='Some text' />
-      <Text variants={['center']} text='Some text' />
-      <Text variants={['center']} text='Some text' />
-      <Text variants={['center']} text='Some text' />
-      
-      <Button text='Do something' onPress={() => AppStatus.setModal('test')} />
-    </Modal>
     {/* <DebugModal/> */}
   </>
 }
@@ -79,7 +60,10 @@ const ListItem = ({ item, depth = 2, styles }) => {
           `marginLeft:${depth}` as any,
           'paddingVertical:2',
           'justifySpaceBetween',
+          'flex',
+         
         ]}
+       
       >
         <Text text={item.name} variants={['h3']} />
         {item.links.map((i) => (
@@ -91,7 +75,7 @@ const ListItem = ({ item, depth = 2, styles }) => {
   return (
     <Link
       to={item.url}
-      variants={['alignCenter', 'padding:2', 'marginVertical:2']}
+      variants={['alignCenter', 'padding:2', 'flex', 'marginVertical:1']}
       css={styles.link}
     >
       <View variants={['column']}>
@@ -117,7 +101,6 @@ const componentStyle = variantProvider.createComponentStyle((theme) => ({
     gridTemplateColumns: 'repeat(2, 1fr)',
     minHeight: '100vh',
     width: '100vw',
-    backgroundColor: theme.colors.background,
     flexDirection: 'column',
   },
 }), false)
@@ -134,9 +117,6 @@ const IndexPage: React.FC = () => {
       Session.setMode(data === 'true')
     }
 
-    setTimeout(() => {
-      variantProvider.setColorScheme(variantProvider.theme.theme === 'dark' ? 'light' : 'dark')
-    }, 2000)
   })
 
   onUpdate(() => {
@@ -147,14 +127,18 @@ const IndexPage: React.FC = () => {
 
 
   return (
-    <View styles={{ wrapper: styles.wrapper }} title='Template'>
-      {links.map((l) => (
-        <ListItem item={l} key={l.name} styles={styles}/>
-      ))}
-      <Button text={variantProvider.theme.theme} onPress={() => {
-        variantProvider.setColorScheme(variantProvider.theme.theme === 'dark' ? 'light' : 'dark')
-      }}/>
-    </View>
+    <Page>
+    
+      <View styles={{ wrapper: styles.wrapper }} title='Template'>
+     
+        {links.map((l) => (
+          <ListItem item={l} key={l.name} styles={styles}/>
+        ))}
+        <Button text={variantProvider.theme.theme} onPress={() => {
+          variantProvider.setColorScheme(variantProvider.theme.theme === 'dark' ? 'light' : 'dark')
+        }}/>
+      </View>
+    </Page>
   )
 }
 

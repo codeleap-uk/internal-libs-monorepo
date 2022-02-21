@@ -13,6 +13,7 @@ export const WebActivityIndicatorStyles = {
   ...ActivityIndicatorStyles,
   default: createActivityIndicatorStyle((theme) => {
     const defaults = getDefault(theme)
+
     return defaults
   }),
 }

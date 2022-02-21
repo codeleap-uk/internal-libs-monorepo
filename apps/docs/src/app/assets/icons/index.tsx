@@ -13,7 +13,7 @@ export const iconImages = {
   //   user: VectorIcon('user', FeatherIcons),
   home: ReactIcons.MdHome,
   // key: VectorIcon('key', FeatherIcons),
-  // checkmark: VectorIcon('check', FeatherIcons),
+  checkmark: ReactIcons.MdCheck,
   loading: ReactIcons.VscLoading,
   arrowForward: ReactIcons.IoArrowForward,
   arrowBack: ReactIcons.IoArrowBack,
@@ -48,7 +48,7 @@ export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) =
 
   if (typeof path === 'function') {
     const Component = path
-    return <Component {...props} style={styles} />
+    return <Component style={styles}/>
   }
 
   const appliedStyles = {

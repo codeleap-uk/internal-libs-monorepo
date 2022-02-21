@@ -13,30 +13,59 @@ const createActivityIndicatorStyle =
 const presets = includePresets((styles) => createActivityIndicatorStyle(() => ({ wrapper: styles })),
 )
 
+
+export const getActivityIndicatorBaseStyles = (size:number) => {
+  const sizes = {
+    height: size,
+    width: size,
+    borderWidth: size  * 0.25,
+  }
+
+  return {
+    wrapper: {
+      position: 'relative',
+      ...sizes,
+    } as any,
+    circle: {
+      borderRadius: 100,
+      position: 'absolute',
+      borderStyle: 'solid',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+    } as any,
+    backCircle: {
+      
+      // borderColor: theme.colors.primary,
+      minWidth: '100%',
+      opacity: 0.5, 
+    } as any,
+    frontCircle: {
+      position: 'absolute',
+      borderColor: 'transparent',
+      // borderTopColor: theme.colors.primary,
+    } as any,
+  }
+}
+
 export const ActivityIndicatorStyles = {
   ...presets,
   default: createActivityIndicatorStyle((theme) => {
-    const size = theme.spacing.base * 1.6
+    const baseStyles = getActivityIndicatorBaseStyles(35)
 
     return {
-      wrapper: {
-        position: 'relative',
-        height: size,
-        width: size,
-      },
-      circle: {
-        borderRadius: 100,
-        position: 'absolute',
-        ...theme.presets.whole,
-      },
+      ...baseStyles,
       backCircle: {
-        ...theme.border.primary(size * 0.25),
-        opacity: 0.5,
+        ...baseStyles.backCircle,
+        borderColor: theme.colors.primary,
       },
       frontCircle: {
-        ...theme.border.create({ width: size * 0.25, style: 'transparent' }),
+        ...baseStyles.frontCircle,
         borderTopColor: theme.colors.primary,
       },
     }
+
+    
   }),
 }

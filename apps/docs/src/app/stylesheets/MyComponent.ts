@@ -1,12 +1,11 @@
-import { createDefaultVariantFactory, mapVariants } from '@codeleap/common'
-import { variantProvider } from '../theme'
+import { createDefaultVariantFactory } from '@codeleap/common'
 
 export type MyComponentComposition = 'wrapper' | 'text'
 
 const createMyComponentStyle  = createDefaultVariantFactory<MyComponentComposition>()
 
-export const _MyComponentStyle = {
-  default: createMyComponentStyle((theme) => ({
+export const MyComponentStyle = {
+  default: createMyComponentStyle(() => ({
     wrapper: {
       backgroundColor: 'red',
     },
@@ -14,10 +13,10 @@ export const _MyComponentStyle = {
       color: 'white',
     },
   })),
-  abc: createMyComponentStyle((theme) => ({
+  abc: createMyComponentStyle(() => ({
     wrapper: {
       backgroundColor: 'blue',
     },
   })),
 }
-export const MyComponentStyle = mapVariants(variantProvider.theme, _MyComponentStyle)
+

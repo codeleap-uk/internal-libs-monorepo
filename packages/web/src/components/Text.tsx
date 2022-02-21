@@ -30,14 +30,17 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     rootElement: 'text',
     responsiveVariants,
     variants,
+    styles,
   })
 
   const Component = component
 
+
+  const a = {...variantStyles.text, ...props.style}
   return (
     <Component
+      css={a}
       {...props}
-      css={{ ...variantStyles.text, ...props.style, ...styles?.text }}
     >
       {text || children}
     </Component>

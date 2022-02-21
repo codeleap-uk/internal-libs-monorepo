@@ -39,6 +39,7 @@ export const TextInputStyles = {
           ...theme.spacing.paddingHorizontal(1),
         }),
       ...assignTextStyle('p1')(theme).text,
+      minWidth: 1,
       backgroundColor: 'transparent',
       flex: 1,
     },

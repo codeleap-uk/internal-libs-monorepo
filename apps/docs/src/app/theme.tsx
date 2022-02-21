@@ -10,11 +10,11 @@ const getWindowDimensions = () => {
   }
 }
 
-const themeObj = {
+const themeObj:AppTheme = {
   colors: {
     light: {
       primary: '#7695EC',
-      icon: '#7695EC',
+      icon: '#fff',
       border: '#7695EC',
       disabled: '#a4aabc',
       text: '#000000',
@@ -26,16 +26,18 @@ const themeObj = {
       negative: '#a11',
       positive: '#ada',
       secondary: '#000',
-
+      black: '#000',
       borders: '#ccc',      
       placeholder: '#ccc',
       neutral: '#ccc',
       white: '#fff',
       green: 'green',
+      textH: '#333',
+      textP: '#555',
     },
     dark: {
       primary: '#7695EC',
-      icon: '#7695EC',
+      icon: '#fff',
       border: '#7695EC',
       disabled: '#a4aabc',
       text: '#fff',
@@ -44,18 +46,32 @@ const themeObj = {
       gray: '#333',
       neutral: '#777777bb',
       lightGrey: '#ccc',
+      black: '#000',
       veryLightGrey: '#f7f7f7',
-      negative: '#11aa3c',
+      negative: '#a11',
       positive: '#ada',
       secondary: '#000',
       borders: '#ccc',      
       placeholder: '#ccc',
       white: '#fff',
       green: 'green',
+      textH: '#fff',
+      textP: '#fff',
     },
- 
   },
-  breakpoints: {},
+  breakpoints: {
+    zero: 0,
+    tinyest: 290,
+    tiny: 350,
+    smallish: 420,
+    small: 600,
+    mid: 900,
+    largeish: 1050,
+    large: 1200,
+    xlarge: 1400,
+    xxlarge: 1800,
+    huge: 2559,
+  },
   spacing: 8,
   borderRadius: {
     large: 15,
@@ -89,7 +105,7 @@ const themeObj = {
     navBarHeight: 100,
     buttons: {
       small: { 
-        height: 40,
+        height: 20,
       },
       default: {
         height: 35,
@@ -97,6 +113,11 @@ const themeObj = {
       large: {
         height: 60,
       },
+    },
+    zIndex: {
+      header: 2,
+      footer: 1,
+      
     },
   },
   initialTheme: localStorage.getItem('codeleap.theme') || 'light',

@@ -1,4 +1,4 @@
-import { VariableSizeList as List } from 'react-window'
+import { VariableSizeList as VirtualList } from 'react-window'
 import { ComponentProps, CSSProperties, ReactElement } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import {
@@ -10,20 +10,20 @@ import {
 import { StylesOf } from '../types/utility'
 import { CSSObject } from '@emotion/react'
 
-export type FlatListRender<T> = (itemProps: {
+export type ListRender<T> = (itemProps: {
   item: T;
   index: number;
   style: CSSProperties;
 }) => ReactElement;
 
-export type FlatListProps<T> = {
+export type ListProps<T> = {
   styles?: StylesOf<ViewComposition>;
   css?: CSSObject;
   data: T[];
   getSize: (i: T, idx: number) => number;
-  renderItem: FlatListRender<T>;
+  renderItem: ListRender<T>;
 } & Omit<
-  ComponentProps<typeof List>,
+  ComponentProps<typeof VirtualList>,
   | 'itemCount'
   | 'itemSize'
   | 'itemData'
@@ -34,8 +34,8 @@ export type FlatListProps<T> = {
 > &
   ComponentVariants<typeof ViewStyles>;
 
-export const FlatList = <T extends unknown>(
-  flatListProps: FlatListProps<T>,
+export const List = <T extends unknown>(
+  ListProps: ListProps<T>,
 ) => {
   const {
     variants,
@@ -45,7 +45,7 @@ export const FlatList = <T extends unknown>(
     getSize,
     renderItem: Item,
     ...viewProps
-  } = flatListProps
+  } = ListProps
 
   const variantStyles = useDefaultComponentStyle('View', {
     variants,
@@ -56,7 +56,7 @@ export const FlatList = <T extends unknown>(
   return (
     <AutoSizer>
       {({ height, width }) => (
-        <List
+        <VirtualList
           height={height}
           width={width}
           itemCount={data.length}
@@ -68,7 +68,7 @@ export const FlatList = <T extends unknown>(
           {({ style, index }) => (
             <Item item={data[index]} style={style} index={index} />
           )}
-        </List>
+        </VirtualList>
       )}
     </AutoSizer>
   )

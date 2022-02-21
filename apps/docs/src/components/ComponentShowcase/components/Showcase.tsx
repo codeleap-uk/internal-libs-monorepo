@@ -64,7 +64,7 @@ const VariantSelector: React.FC<VariantSelectorProps> = ({
             <Button
               text={beautifyName(variant)}
               onPress={() => toggle(variant)}
-              // variants={[selected ?  'gray']}
+              variants={[selected ? 'default' : 'outline', 'small']}
               key={variant}
             />
           ))

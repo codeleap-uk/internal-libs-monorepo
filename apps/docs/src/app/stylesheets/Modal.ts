@@ -1,10 +1,10 @@
-import { mapVariants, ModalComposition, ModalStyles } from '@codeleap/common'
-
+import { mapVariants, ModalComposition } from '@codeleap/common'
+import { WebModalStyles} from '@codeleap/web'
 import { variantProvider } from '../theme'
 
 const createModalStyle =
   variantProvider.createVariantFactory<ModalComposition>()
-const defaultStyles = ModalStyles
+const defaultStyles = WebModalStyles
 
 export const AppModalStyles = {
   ...defaultStyles,

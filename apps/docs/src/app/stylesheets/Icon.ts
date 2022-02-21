@@ -10,15 +10,14 @@ export const AppIconStyles = {
   default: createIconStyle((theme) => ({
     ...defaultStyles.default,
     icon: {
-      ...defaultStyles.default.icon,
-      color: theme.typography.color,
+      ...defaultStyles.default(theme).icon,
     },
   })),
 
   large: createIconStyle((theme) => ({
     ...defaultStyles.default,
     icon: {
-      ...defaultStyles.default.icon,
+      ...defaultStyles.default(theme).icon,
       ...theme.sized(10),
     },
   })),

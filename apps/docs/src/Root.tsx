@@ -4,6 +4,8 @@ import { onMount, StyleProvider } from '@codeleap/common'
 import { Provider as ReduxProvider } from 'react-redux'
 import { logger, Settings, variantProvider, variants } from './app'
 import { store } from './redux'
+import { Global } from '@emotion/react'
+import { globalStyle } from './app/stylesheets/Global'
 
 
 function init() {
@@ -28,8 +30,9 @@ const Root = ({children}) => {
   })
 
   return (
-    // <GestureHandlerRootView style={{ flex: 1 }}>
+
     <ReduxProvider store={store}>
+      <Global styles={globalStyle}/>
       <StyleProvider
         variants={variants}
         settings={Settings}
@@ -39,7 +42,7 @@ const Root = ({children}) => {
         {children}
       </StyleProvider>
     </ReduxProvider>
-    // </GestureHandlerRootView>
+
   )
 }
 

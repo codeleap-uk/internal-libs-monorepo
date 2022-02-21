@@ -1,5 +1,5 @@
 import * as allComponents from '../showCases'
-import { View, Button, Theme, Link, React, Image, TextInput } from '@/app'
+import { View, Button, Scroll, Link, React, Image, TextInput } from '@/app'
 import { useMemo, useState } from 'react'
 import { useCodeleapContext } from '@codeleap/common'
 
@@ -20,13 +20,15 @@ export const ComponentList: React.FC<{
   return (
     <View
       variants={['column', 'padding:1']}
-      css={{ maxWidth: '20%' }}
+      css={{
+        maxWidth: '20%',
+      }}
     >
       <Link
         css={{ maxWidth: '80%', height: 'auto', alignSelf: 'center' }}
         to='/'
       >
-        <Image source='logo_white.webp' />
+        <Image source='codeleap_logo_white.png' type='static' />
       </Link>
       <TextInput
         placeholder='Search'
@@ -43,7 +45,7 @@ export const ComponentList: React.FC<{
         value={search}
         variants={['marginVertical:2']}
       />
-      <View variants={['column', 'scrollY']}>
+      <Scroll variants={['column']}>
         {list.map((name) => (
           <Button
             text={name}
@@ -57,7 +59,7 @@ export const ComponentList: React.FC<{
             ]}
           />
         ))}
-      </View>
+      </Scroll>
     </View>
   )
 }

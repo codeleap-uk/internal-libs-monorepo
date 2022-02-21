@@ -20,13 +20,14 @@ import { Overlay } from '../Overlay'
 export * from './styles'
 
 export type ModalProps = {
-  open: boolean;
+  visible: boolean;
   title?: React.ReactNode;
   toggle: AnyFunction;
   styles?: StylesOf<ModalComposition>;
   accessible?: boolean;
   showClose?: boolean;
   closable?: boolean;
+  scroll?: boolean
   footer?: ReactNode;
 } & ComponentVariants<typeof ModalStyles>;
 
@@ -43,7 +44,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
   const {
     children,
     closable = true,
-    open,
+    visible,
     title = '',
     toggle,
     id,
@@ -76,12 +77,12 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   return (
     <View
-      aria-hidden={!open}
+      aria-hidden={!visible}
       css={variantStyles.wrapper}
-      className={open ? 'visible' : ''}
+      className={visible ? 'visible' : ''}
     >
       <Overlay
-        visible={open}
+        visible={visible}
         onClick={closable ? toggle : () => {}}
         css={variantStyles.overlay}
       />
@@ -89,7 +90,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
         component='section'
         css={{
           ...variantStyles.box,
-          // visibility: open ? 'visible' : 'hidden',
+          // visibility: visible ? 'visible' : 'hidden',
         }}
         className='content'
         onKeyDown={closeOnEscPress}
@@ -146,13 +147,13 @@ export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
   useEffect(() => {
     if (accessible) {
       const appRoot = document.body
-      appRoot.setAttribute('aria-hidden', `${props.open}`)
+      appRoot.setAttribute('aria-hidden', `${props.visible}`)
       appRoot.setAttribute('tabindex', `${-1}`)
     }
-  }, [props.open])
+  }, [props.visible])
 
   if (accessible) {
-    if (props.open) {
+    if (props.visible) {
       document.body.style.overflow = 'hidden'
       return ReactDOM.createPortal(
         <ModalContent {...props} id={modalId.current} />,

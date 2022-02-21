@@ -8,7 +8,6 @@ import {
   useCodeleapContext,
   AnyFunction,
 } from '@codeleap/common'
-import { View } from './View'
 import { TouchableOpacity as NativeTouchable } from 'react-native'
 
 import { createAnimatableComponent } from 'react-native-animatable'

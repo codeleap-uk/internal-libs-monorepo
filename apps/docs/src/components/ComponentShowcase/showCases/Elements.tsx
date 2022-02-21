@@ -130,7 +130,7 @@ const AvatarShowcase = {
 
     return (
       <Avatar
-        profile={{ avatar: file, firstName: 'Joao' }}
+        profile={{ avatar: null, firstName: 'Joao' }}
         variants={variants}
         onChange={imageChange}
       />

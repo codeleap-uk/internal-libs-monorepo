@@ -7,11 +7,19 @@ const defaultStyles = variantProvider.getDefaultVariants('Text')
 export const AppTextStyles = {
   ...defaultStyles,
   default: createTextStyle((theme) => ({
-    ...defaultStyles.default,
+    ...defaultStyles.default(theme),
     text: {
       ...defaultStyles.default(theme).text,
-      color: theme.colors.text,
+    
       textDecoration: 'none',
+    },
+  })),
+  white: createTextStyle((theme ) => ({
+    ...defaultStyles.default(theme),
+    text: {
+      ...defaultStyles.default(theme).text,
+    
+      color: theme.colors.white,
     },
   })),
   primary: createTextStyle((theme) => ({
@@ -42,8 +50,12 @@ export const AppTextStyles = {
     },
   })),
   link: createTextStyle((theme) => ({
+    ...defaultStyles.default(theme),
     text: {
-     
+      ...defaultStyles.default(theme).text,
+      color: theme.colors.white,
+      textDecoration: 'none',
     },
   })),
+ 
 }

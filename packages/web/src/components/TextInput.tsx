@@ -230,9 +230,7 @@ export const InputIcon: React.FC<{ style: any } & IconProp> = ({
       <Button
         icon={name}
         onPress={() => action()}
-        styles={{
-          icon: style,
-        }}
+        css={style}
         variants={['icon']}
       />
     )

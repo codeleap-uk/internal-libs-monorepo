@@ -164,6 +164,7 @@ module.exports = {
     '@typescript-eslint',
   ],
   globals: {
+    logger: true,
     warn: true,
     log: true,
     deb: true,

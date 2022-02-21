@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Showcase } from '..'
 import { ComponentList } from '../components/ComponentList'
 import { showcasePropsMap } from '../data'
-
+import {Page}  from '../../Page'
 const defaultComponent = Object.keys(allComponents)[0]
 
 export const ComponentShowcase: React.FC = () => {
@@ -12,20 +12,26 @@ export const ComponentShowcase: React.FC = () => {
   const { currentTheme, Theme } = useCodeleapContext()
 
   return (
-    <View variants={['full']}>
-      <ComponentList onSelect={setComponent} current={selectedComponent} />
-      <View
-        variants={['flex']}
-        css={{
-          maxWidth: '80%',
-        }}
-      >
-        {/* <Showcase
-          {...showcasePropsMap[selectedComponent]}
-          name={selectedComponent}
-        /> */}
-        <Button text={Theme.colors[currentTheme].background} onPress={() => variantProvider.setColorScheme(currentTheme === 'dark' ? 'light' : 'dark')}/>
+    <Page header={false} footer={false} styles={{innerWrapper: styles.innerWrapper}}>
+      <View >
+        <ComponentList onSelect={setComponent} current={selectedComponent} />
+        <View
+          variants={['flex']}
+          css={{
+            maxWidth: '80%',
+          }}
+        >
+          <Showcase
+            {...showcasePropsMap[selectedComponent]}
+            name={selectedComponent}
+          />
+        </View>
       </View>
-    </View>
+    </Page>
   )
 }
+const styles = variantProvider.createComponentStyle({
+  innerWrapper: {
+    maxHeight: '100vh',
+  },
+}, true)

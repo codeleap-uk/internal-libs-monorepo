@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react'
+import { jsx } from '@emotion/react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
@@ -15,12 +15,14 @@ import {
   ReactNode,
   Ref,
 } from 'react'
+import { cx, css } from '@emotion/css'
 
 export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
   ComponentVariants<typeof ViewStyles> & {
     component?: T;
     children?: ReactNode;
     css?: any;
+    scroll?: boolean
   } & BaseViewProps;
 
 export const ViewCP = <T extends ElementType = 'div'>(
@@ -38,6 +40,8 @@ export const ViewCP = <T extends ElementType = 'div'>(
     onHover,
     styles,
     down,
+    css: cssProp,
+    scroll = false,
     ...props
   } = viewProps
   const variantStyles = useDefaultComponentStyle('View', {
@@ -67,7 +71,8 @@ export const ViewCP = <T extends ElementType = 'div'>(
 
   return (
     <Component
-      css={[variantStyles.wrapper, platformMediaQuery]}
+      // className={cx(css([variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]), cssProp)}
+      css={[variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]}
       ref={ref}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}

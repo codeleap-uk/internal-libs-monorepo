@@ -57,7 +57,7 @@ const ModalShowcase = {
       <Fragment>
         <Button text='Open modal' onPress={() => toggle()} />
         <Modal
-          open={isOpen}
+          visible={isOpen}
           toggle={toggle}
           variants={[
             ...variants,

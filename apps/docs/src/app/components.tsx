@@ -18,17 +18,10 @@ import { AppTooltipStyles } from './stylesheets/Tooltip'
 import { AppRouterPageStyles } from './stylesheets/RouterPage'
 import { AppDrawerStyles } from './stylesheets/Drawer'
 import { AppOverlayStyles } from './stylesheets/Overlay'
+import { AppCenterWrapperStyles } from './stylesheets/CenterWrapper'
 
 const defaultStyles = variantProvider.getDefaultVariants()
 
-// const mobileCheckbox = mapVariants(
-//   variantProvider.theme,
-//   Components.MobileCheckboxStyles,
-// )
-// const mobileRadioInput = mapVariants(
-//   variantProvider.theme,
-//   Components.MobileRadioInputStyles,
-// )
 
 export const variants = {
   ...defaultStyles,
@@ -54,18 +47,18 @@ const components = variantProvider.typeComponents({
   // Switch: [Components.Switch, defaultStyles.Switch],
   Checkbox: [Components.Checkbox, defaultStyles.Checkbox],
   RadioInput: [Components.RadioGroup, defaultStyles.RadioInput],
-  // Navigation: [Components.Navigation, {}],
   ContentView: [Components.ContentView, defaultStyles.ContentView],
   Select: [Components.Select, AppSelectStyles],
   Slider: [Components.Slider, defaultStyles.Slider],
   FileInput: [Components.FileInput, defaultStyles.FileInput],
   Image: [Image, defaultStyles.Image],
-  // Scroll: [Components.Scroll, defaultStyles.View],
-  // List: [Components.List, defaultStyles.View],
+  Scroll: [Components.Scroll, defaultStyles.View],
+  List: [Components.List, defaultStyles.View],
   ActivityIndicator: [
     Components.ActivityIndicator,
     defaultStyles.ActivityIndicator,
   ],
+  CenterWrapper: [Components.CenterWrapper, AppCenterWrapperStyles],
   Button: [Components.Button, AppButtonStyle],
   Modal: [Components.Modal, AppModalStyles],
   Link: [Link, AppTextStyles],

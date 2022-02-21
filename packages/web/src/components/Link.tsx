@@ -12,7 +12,7 @@ export type LinkProps<T extends ElementType> = TextProps<T> & {
 };
 
 export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
-  const { variants, to, openNewTab, component = 'a', ...props } = linkProps
+  const {  to, openNewTab, component = 'a', ...props } = linkProps
 
   const isExternal = ['http', 'tel', 'mailto'].some((start) => to.startsWith(start),
   )
@@ -33,10 +33,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
       }
     }
   }
-
-  const passedVariants = standardizeVariants(
-    variants || [],
-  ) as TextProps<T>['variants']
+  
 
   const linkPropOverride = {
     [isExternal ? 'href' : 'to']: to,
@@ -47,8 +44,6 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
       component={Component}
       {...props}
       {...linkPropOverride}
-      text={props.text}
-      variants={[...passedVariants]}
       onClick={handleClick}
     />
   )

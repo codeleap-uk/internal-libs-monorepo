@@ -8,6 +8,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { store } from '@/redux'
 import 'react-toastify/dist/ReactToastify.css'
 import Root from '@/Root'
+import { Overlays } from '@/pages'
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -15,6 +16,7 @@ export const wrapRootElement = ({ element }) => {
 
   return (
     <Root>
+      <Overlays/>
       {element}
     </Root>
   )

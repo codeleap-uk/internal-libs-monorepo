@@ -21,6 +21,7 @@ type CommonProps = {
   alt?: string;
   objectFit?: Exclude<CSSProperties['objectFit'], CSSProperties['objectFit'][]>;
   styles?: StylesOf<ImageComposition>;
+  style?:any
 } & ComponentVariants<typeof ImageStyles>;
 
 type StaticImageProps = {
@@ -106,6 +107,7 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
     responsiveVariants,
     styles,
     objectFit,
+    style,
     ...props
   } = imageProps
 
@@ -118,9 +120,10 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
   if (type === 'static'){
     return (
       <StaticImage 
+        source={source}
         {...props}
         objectFit={objectFit}
-        css={variantStyles.wrapper}
+        css={[variantStyles.wrapper, style]}
       />
     )
   } else {
@@ -129,7 +132,7 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
         {...props}
         style={{ objectFit }}
         src={source}
-        css={variantStyles.wrapper}
+        css={[variantStyles.wrapper, style]}
       />
     )
   }

@@ -96,7 +96,8 @@ export class RequestClient implements IRequestClient {
     
       this.setInQueue(failedRequest)
     
-      this.logger.error(
+      const logName = request?.silent ? 'warn' : 'error' // NOTE some individual requests should not throw an error
+      this.logger[logName](
         `${request.method.toUpperCase()} to ${request.url} failed with status ${
           err?.response?.status || ''
         }`,
