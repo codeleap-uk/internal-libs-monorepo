@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { deepMerge } from './object'
 import { AnyFunction, DeepPartial } from '../types'
 
+export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
   useState,
   useRef,
