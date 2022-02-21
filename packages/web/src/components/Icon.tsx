@@ -19,15 +19,14 @@ export const Icon: React.FC<IconProps> = ({
 }) => {
   const { Theme, logger } = useCodeleapContext()
   const Component = Theme?.icons?.[name]
-  
+
   const variantStyles = useDefaultComponentStyle('Icon', {
     variants,
     responsiveVariants,
   })
 
   if (!name) return null
-  
-  
+
   if (!Component) {
     logger.warn(
       'Icon',

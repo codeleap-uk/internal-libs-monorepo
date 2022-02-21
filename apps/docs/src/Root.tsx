@@ -5,19 +5,16 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { logger, Settings, variantProvider, variants } from './app'
 import { store } from './redux'
 
-
 function init() {
   logger.log('Initialising app...', '', 'App lifecycle')
-  
 
   logger.analytics.event('App Initialized', { confidential: 'Cacetinho' })
 
 }
 
-
 init()
 
-const Root = ({children}) => {
+const Root = ({ children }) => {
 
   onMount(() => {
     const unsubscribe = variantProvider.onColorSchemeChange(t => {

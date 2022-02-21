@@ -30,8 +30,8 @@ type ModalName = keyof TAppStatus['modals']
 export const appStatusSlice = createSlice({
   name: 'AppStatus',
   initialState,
-  reducers: { 
-    setModal(state, modal: [ModalName, boolean] | ModalName ){
+  reducers: {
+    setModal(state, modal: [ModalName, boolean] | ModalName) {
       const [name, value] = Array.isArray(modal) ? modal  : [modal, !state.modals[modal]]
       return {
         modals: {
@@ -39,17 +39,17 @@ export const appStatusSlice = createSlice({
         },
       }
     },
-    setState(state, to:TAppStatus['currentState']){
+    setState(state, to:TAppStatus['currentState']) {
       return {
         currentState: to,
       }
     },
-    setReady(state, to:boolean){
+    setReady(state, to:boolean) {
       return {
         ready: to,
       }
     },
-    setNetwork(state, to:Partial<TAppStatus['network']>){
+    setNetwork(state, to:Partial<TAppStatus['network']>) {
 
       return {
         network: {
@@ -61,7 +61,7 @@ export const appStatusSlice = createSlice({
   },
   asyncReducers: {
     async set(state, setState, status: TAppStatus['status']) {
-      logger.log('set()', { state, status}, 'redux/AppStatus')
+      logger.log('set()', { state, status }, 'redux/AppStatus')
       // HACK this attempts to fix getting stuck on the splash screen when fast refreshing
       if (state.currentState == 'unknown' && Settings.Environment.IsDev) {
         setState({ status: 'idle', currentState: 'active' })

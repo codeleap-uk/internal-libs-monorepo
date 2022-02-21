@@ -4,7 +4,6 @@ import { api, logger } from '@/app'
 
 import { Profile, TSession } from '@/redux'
 
-
 const FBErrorProps = ['name', 'namespace', 'code', 'message'] as const
 export type FirebaseError = Partial<
   Record<typeof FBErrorProps[number], string>
@@ -37,14 +36,14 @@ const SCOPE = 'Authentication'
 export const CredentialProviders = {
   'google': {
     provider: firebase.auth.GoogleAuthProvider,
-    getErrorMessage(error){
+    getErrorMessage(error) {
 
     },
   },
   'facebook': {
     provider: firebase.auth.FacebookAuthProvider,
-    getErrorMessage(reason){
-      if (reason?.code?.includes('auth/account-exists-with-different-credential')){
+    getErrorMessage(reason) {
+      if (reason?.code?.includes('auth/account-exists-with-different-credential')) {
         return 'An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.'
       }
 
@@ -150,7 +149,6 @@ export async function tryLogin(
             SCOPE,
           )
 
-      
         }
       }
 
@@ -189,7 +187,7 @@ export async function trySignup({ data, provider }: TrySignupArgs) {
   }
 
   const id = user.uid
-  
+
   try {
     const { data: profile } = await api.post(
       `profiles/create/`,
@@ -204,24 +202,24 @@ export async function trySignup({ data, provider }: TrySignupArgs) {
   }
 }
 
-export async function sendVerificationEmail(){
+export async function sendVerificationEmail() {
   auth().currentUser.sendEmailVerification()
 }
 
-export async function updateProfile(currentProfile:Profile, newProfile:Partial<Profile>){
+export async function updateProfile(currentProfile:Profile, newProfile:Partial<Profile>) {
 
-  const {data: updatedProfile }= await api.patch(
-    `profiles/${currentProfile.id}/`, 
-    {data: {...currentProfile, ...newProfile}, files: newProfile?.avatar}, 
+  const { data: updatedProfile } = await api.patch(
+    `profiles/${currentProfile.id}/`,
+    { data: { ...currentProfile, ...newProfile }, files: newProfile?.avatar },
     { multipart: true },
   )
 
-  if (currentProfile.email !== updatedProfile.email){
+  if (currentProfile.email !== updatedProfile.email) {
     await auth().currentUser.updateEmail(updatedProfile.email)
     await auth().currentUser.sendEmailVerification()
 
   }
-  if (updatedProfile.password){
+  if (updatedProfile.password) {
     auth().currentUser.updatePassword(updatedProfile.password)
   }
 
@@ -229,7 +227,7 @@ export async function updateProfile(currentProfile:Profile, newProfile:Partial<P
 
 }
 
-export async function sendPasswordReset(email:string){
+export async function sendPasswordReset(email:string) {
   await auth().sendPasswordResetEmail(email)
 }
 export async function logout() {

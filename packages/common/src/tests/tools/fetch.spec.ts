@@ -21,10 +21,10 @@ describe('RequestClient', () => {
         console.log(response.statusText)
         done()
       })
-      .catch(({failedRequest}) => {
+      .catch(({ failedRequest }) => {
         console.log('aaaaaaaaaa', failedRequest)
         expect(failedRequest.errorReason).to.eq('REQUEST_ABORTED')
-        done() 
+        done()
       })
 
     req.abort()
@@ -47,9 +47,9 @@ describe('RequestClient', () => {
   })
 
   it('makes a multipart request', (done) => {
-    api.post('https://dev.codeleap.co.uk/profiles/create/', {data: {
+    api.post('https://dev.codeleap.co.uk/profiles/create/', { data: {
 
-    }, files: null}, {
+    }, files: null }, {
       baseURL: '',
       multipart: true,
     }).then((a) => {
@@ -58,6 +58,5 @@ describe('RequestClient', () => {
       console.log(a)
     })
 
-    
   })
 })

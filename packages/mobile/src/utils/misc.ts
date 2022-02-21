@@ -8,7 +8,7 @@ export const stringToFile = (str: string): MobileInputFile => {
     }
   }
   const fileData = parseFilePathData(str)
-  
+
   const data: MobileInputFile['file'] = {
     name: fileData.name,
     type: 'image/' + fileData.extension,
@@ -16,7 +16,7 @@ export const stringToFile = (str: string): MobileInputFile => {
     uri: str,
     fileCopyUri: str,
   }
-  
+
   return {
     file: data,
     preview: data.uri,

@@ -5,7 +5,6 @@ import { AppIcon } from '@/app/assets/icons'
 import { Logo } from '@/components'
 import splash from '@/images/splash.png'
 
-
 const backdropStatuses = ['splash', 'blank']
 
 export const AppStatusOverlay: React.FC = () => {
@@ -29,7 +28,6 @@ export const AppStatusOverlay: React.FC = () => {
       }
     }
   }, [status])
-
 
   const pose = backdropVisible ? 'init' : 'hide'
   const pointerEvents = backdropVisible ? 'auto' : 'none'

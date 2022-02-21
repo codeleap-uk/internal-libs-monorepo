@@ -3,11 +3,10 @@ import { Logo } from '@/components'
 
 export function Header(props) {
   const { title, variants } = props
-  
 
   let content = (
     <View variants={['row', 'marginLeft:2', 'fullWidth', 'alignCenter']}>
-      <Text variants={[`p1`, 'primary']} text={title}/> 
+      <Text variants={[`p1`, 'primary']} text={title}/>
     </View>
   )
   if (variants?.includes('logo')) {

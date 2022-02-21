@@ -3,7 +3,6 @@ import { Settings } from './Settings'
 // import crashlytics from '@react-native-firebase/crashlytics'
 import { AppAnalytics } from '../services/analytics'
 
-
 const middlewares:LoggerTypes.LoggerMiddleware[] = [
   // async (type, args) => {
   //   if (type === 'error' && Settings?.Environment?.Type !== 'development'){

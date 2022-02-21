@@ -1,9 +1,9 @@
 import { Settings } from '../app/Settings'
-import {LoggerAnalytics} from '@codeleap/common'
+import { LoggerAnalytics } from '@codeleap/common'
 // import analytics from '@react-native-firebase/analytics'
 import moment from 'moment'
 import { store } from '@/redux'
-import { firebase, profileFromUser} from './authentication'
+import { firebase, profileFromUser } from './authentication'
 
 export const AppAnalytics = new LoggerAnalytics.Analytics({
   init: () => {
@@ -18,7 +18,7 @@ export const AppAnalytics = new LoggerAnalytics.Analytics({
   },
   prepareData: () => {
     const extraData = {
-      permissions: 'given', 
+      permissions: 'given',
     }
     // const storeState = store ?  store.getState() : null
     // if (storeState?.Session?.isLoggedIn){

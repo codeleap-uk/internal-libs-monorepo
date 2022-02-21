@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Session, useAppSelector } from '@/redux'
 import { Button, Image, Scroll, List, Text, Theme, variantProvider, View, logger, Settings } from '@/app'
 
-
 import { Avatar } from '@/components'
 
 const menuButtons = [
@@ -45,7 +44,7 @@ export default function ViewProfile({ navigation }) {
         text={name}
         // onPress={() => run(navigation)}
         variants={['list', index === 0 ? 'list:first' : 'list']}
-      /> 
+      />
     )
   }
 

@@ -7,14 +7,14 @@ import { Scroll } from '../Scroll'
 import {  InputLabel, TextInput } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { AnimatedView, View } from '../View'
-import { MobileSelectStyles } from './styles' 
+import { MobileSelectStyles } from './styles'
 import { CustomSelectProps } from './types'
 
 export const Select = <T extends string|number = string>(selectProps:CustomSelectProps<T>) => {
   const {
     value,
     onValueChange,
-    label, 
+    label,
     styles = {},
     options,
     style,
@@ -44,22 +44,22 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
   })
 
   const inputStyles = useMemo(
-    () => getNestedStylesByKey('input', variantStyles), 
+    () => getNestedStylesByKey('input', variantStyles),
     [variantStyles],
   )
 
   const closeButtonStyles = useMemo(
-    () => getNestedStylesByKey('modalCloseButton', variantStyles), 
+    () => getNestedStylesByKey('modalCloseButton', variantStyles),
     [variantStyles],
   )
-  
+
   const ListComponent = scroll ? Scroll : View
-  
+
   const close = () => setModalVisibility()
   const select = (value) => {
-    
+
     onValueChange(value)
-    if (closeOnSelect){
+    if (closeOnSelect) {
       close()
     }
   }
@@ -72,9 +72,9 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     return TypeGuards.isString(display) ? display : ''
   }, [value, placeholder, options])
 
-  return <> 
-    <TextInput 
-      
+  return <>
+    <TextInput
+
       caretHidden
       value={selectedLabel}
       rightIcon={{
@@ -85,13 +85,13 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       innerWrapperProps={{
         onPress: close,
       }}
-      label={label} 
+      label={label}
       styles={inputStyles}
       style={style}
       {...props}
     />
     <AnimatedView pointerEvents={'none'} transition='opacity' style={[
-      {      
+      {
         position: 'absolute',
         top: 0,
         right: 0,
@@ -99,9 +99,9 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
         bottom: 0,
       },
       variantStyles.backdrop,
-      isModalVisible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden'],  
+      isModalVisible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden'],
     ]} />
-    
+
     <Modal
       animationType='slide'
       transparent={true}
@@ -109,10 +109,10 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       onRequestClose={() => {
         setModalVisibility()
       }}
-      pointerEvents={isModalVisible ? 'auto': 'none'}
+      pointerEvents={isModalVisible ? 'auto' : 'none'}
     >
-      <Touchable       
-        onPress={close} 
+      <Touchable
+        onPress={close}
         style={{
           position: 'absolute',
           top: 0,
@@ -122,7 +122,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
         }}
       />
       <View style={variantStyles.modalWrapper}>
-       
+
         <View style={variantStyles.modalBox}>
           {
             (showClose || showLabelOnModal || header) && (
@@ -130,9 +130,9 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                 {
                   header ? header :  <>
                     {showLabelOnModal && <InputLabel label={modalLabel || label} style={variantStyles.modalLabelText}/>}
-                    {showClose && <Button 
-                      icon={modalCloseIconName as IconPlaceholder} 
-                      onPress={close} 
+                    {showClose && <Button
+                      icon={modalCloseIconName as IconPlaceholder}
+                      onPress={close}
                       styles={closeButtonStyles}
                       {...closeButtonProps}
                     />}
@@ -151,12 +151,12 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                     selected: isSelected,
                     onPress: close,
                     styles: variantStyles,
-                
-                  }) 
+
+                  })
                 }
 
                 return <Touchable key={idx} style={[
-                  variantStyles.modalItem, 
+                  variantStyles.modalItem,
                   isSelected && variantStyles['modalItem:selected'],
                 ]} onPress={() => select(item.value)}>
                   <InputLabel label={item.label} style={[variantStyles.modalItemText,   isSelected && variantStyles['modalItemText:selected']]}/>
@@ -164,18 +164,17 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
               })
             }
           </ListComponent>
-       
+
           {
             footer && <View style={variantStyles.modalFooter}>
               {footer}
             </View>
-          } 
+          }
         </View>
       </View>
     </Modal>
   </>
 }
-
 
 export * from './styles'
 export * from './types'

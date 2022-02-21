@@ -3,7 +3,6 @@ import { React, Pager, View, variantProvider, Theme, Scroll } from '@/app'
 import { useRef, useState } from 'react'
 import pages from './pages'
 
-
 export const OnboardingWrapper: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0)
 
@@ -61,7 +60,6 @@ export const OnboardingWrapper: React.FC = () => {
   )
 }
 
-
 const styles = variantProvider.createComponentStyle({
   pager: {
   },
@@ -86,7 +84,7 @@ const styles = variantProvider.createComponentStyle({
   dotsWrapper: {
     backgroundColor: `#ffffffcc`,
     position: 'absolute',
- 
+
     bottom: 0,
     left: 0,
     right: 0,

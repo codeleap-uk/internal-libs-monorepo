@@ -123,7 +123,6 @@ const formatting = {
   'semi-spacing': 'error',
   'semi-style': 'error',
   'space-before-blocks': 'warn',
-  'space-in-brackets': 'warn',
   'object-curly-spacing': ['warn', 'always', { 'objectsInObjects': false, 'arraysInObjects': true }],
   'no-trailing-spaces': 'warn',
   'no-whitespace-before-property': 'error',

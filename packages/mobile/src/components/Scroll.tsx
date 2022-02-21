@@ -27,7 +27,7 @@ const KeyboardAwareScrollView =
     ViewProps & {
       refreshControl?: JSX.Element;
       ref?: ScrollView;
-     
+
     } & ScrollViewProps
   >
 

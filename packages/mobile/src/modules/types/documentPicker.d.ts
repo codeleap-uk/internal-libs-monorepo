@@ -75,7 +75,7 @@ export declare type NativeModuleErrorShape = Error & {
     };
 export declare function isCancel(err: unknown): boolean;
 export declare function isInProgress(err: unknown): boolean;
-    
+
 export type DocumentPicker = {
         isCancel: typeof isCancel;
         releaseSecureAccess: typeof releaseSecureAccess;

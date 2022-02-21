@@ -55,7 +55,6 @@ const AboutPage = (props) => {
   }
 
   const renderFooter = () => {
-   
 
     return (
       <View style={[styles.itemWrapper, styles.lastItem]}>

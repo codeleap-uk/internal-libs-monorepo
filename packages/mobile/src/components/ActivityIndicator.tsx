@@ -31,9 +31,9 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
 
     const color = variantStyles.wrapper?.color || Theme.colors.gray
     const size = variantStyles.wrapper?.height || variantStyles.wrapper?.width || 'large'
-    
+
     const styles = StyleSheet.flatten([variantStyles.wrapper, style])
-    
+
     return (
       <Indicator
         size={size}

@@ -16,7 +16,7 @@ export type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>
     style?: ViewProps['style'];
     tooltipVisibilityWindow?: number
 };
-  
+
 export type SliderMarkProps = {
     sliderProps: SliderProps;
     index: number;

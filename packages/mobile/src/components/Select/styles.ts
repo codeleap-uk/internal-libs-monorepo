@@ -1,6 +1,6 @@
 import { assignTextStyle, ButtonParts, createDefaultVariantFactory, TextInputComposition } from '@codeleap/common'
 import { MobileModalStyles } from '../Modal'
-type ModalParts = 
+type ModalParts =
   'Box' |
   'Wrapper' |
   'Header' |
@@ -13,12 +13,12 @@ type ModalParts =
   'LabelText' |
   `CloseButton${Capitalize<ButtonParts>}`
 
-type InputParts = `input${Capitalize<TextInputComposition>}` 
+type InputParts = `input${Capitalize<TextInputComposition>}`
 
-export type MobileSelectParts = InputParts 
-| `backdrop` 
-| `backdrop:visible` 
-| `backdrop:hidden` 
+export type MobileSelectParts = InputParts
+| `backdrop`
+| `backdrop:visible`
+| `backdrop:hidden`
 | `modal${ModalParts}`
 
 export type MobileSelectComposition = MobileSelectParts
@@ -56,7 +56,7 @@ export const MobileSelectStyles = {
       // ...MobileModalStyles.default(theme).overlay,
       zIndex: 10,
       flex: 1,
-   
+
       backgroundColor: theme.colors.black,
     },
     'backdrop:hidden': {

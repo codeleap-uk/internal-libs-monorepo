@@ -3,7 +3,7 @@ import { createDefaultVariantFactory } from '../createDefaults'
 
 export type MenuComposition =
   | 'wrapper'
-  | 'menuItem' 
+  | 'menuItem'
   | 'menuItem:mobile'
   | 'menuItem:text'
   | 'menuItem:text:mobile'

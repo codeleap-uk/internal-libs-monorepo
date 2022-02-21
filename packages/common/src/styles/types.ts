@@ -63,7 +63,6 @@ export type TypographyStyle = {
   };
 };
 
-
 type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
 
 export type AppTheme = {
@@ -75,7 +74,7 @@ export type AppTheme = {
     width?: number;
     height?: number;
   } & AnyProps<any>;
-  
+
   readonly borderRadius: {
     large: number
     medium: number
@@ -123,9 +122,9 @@ export type StyleContextProps<
   variantProvider: Provider;
   variants: Variants;
   children?: React.ReactNode;
-  logger?: Logger; 
+  logger?: Logger;
   settings: AppSettings;
-   
+
 };
 
 export type StyleContextValue<
@@ -137,7 +136,7 @@ export type StyleContextValue<
   ComponentVariants: C;
   logger: Logger;
   Settings: AppSettings;
-  
+
 };
 
 export type VariantsStylesheet = Record<string, unknown>;

@@ -4,7 +4,7 @@ import { FunctionType, AnyFunction } from '../../types'
 
 export type AnalyticsObject = {
     name: string
-    type: 'interaction' | 'event' 
+    type: 'interaction' | 'event'
     data: any
 }
 
@@ -14,21 +14,20 @@ type IAnalyticsArgs = {
     error?: (err:any) => any
 } & Record<`on${Capitalize<AnalyticsObject['type']>}`, FunctionType<[AnalyticsObject], void> >
 
-export class Analytics{
+export class Analytics {
 
-  
-  constructor(private callers:IAnalyticsArgs, private settings: AppSettings){
+  constructor(private callers:IAnalyticsArgs, private settings: AppSettings) {
     this.callers.init()
 
   }
 
-  private prepare(){
+  private prepare() {
     const data = this.callers.prepareData()
 
     return data
   }
-  
-  obfuscate(data){
+
+  obfuscate(data) {
     return obfuscate({
       object: data,
       keys: this?.settings?.Logger?.Obfuscate?.keys || [],
@@ -36,20 +35,20 @@ export class Analytics{
     })
   }
 
-  event(name: string, data = {}){
+  event(name: string, data = {}) {
     this.handle(name, data, 'event', this.callers.onEvent)
   }
 
-  interaction(name: string, data = {}){
+  interaction(name: string, data = {}) {
     this.handle(name, data, 'interaction', this.callers.onInteraction)
 
   }
 
-  onError(cb){
+  onError(cb) {
     this.callers.error = cb
   }
 
-  private handle(name: string, data: any, type: AnalyticsObject['type'], fn: AnyFunction){
+  private handle(name: string, data: any, type: AnalyticsObject['type'], fn: AnyFunction) {
     try {
 
       const obfuscated = this.obfuscate({
@@ -62,10 +61,9 @@ export class Analytics{
         type,
         data: obfuscated,
       })
-    } catch (e){
+    } catch (e) {
       this.callers.error(e)
     }
   }
-
 
 }

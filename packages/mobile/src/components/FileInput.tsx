@@ -54,7 +54,7 @@ function parsePickerData(data:any):MobileInputFile {
     uri: data.path,
     fileCopyUri: data.path,
   }
-  
+
   return {
     file: d,
     preview: data.path,
@@ -84,7 +84,7 @@ export const FileInput = forwardRef<
 
   const { logger } = useCodeleapContext()
 
-  async function openFileSystem(){
+  async function openFileSystem() {
     try {
       let files = await DocumentPicker.pick(options)
       if (!Array.isArray(files)) {
@@ -105,7 +105,7 @@ export const FileInput = forwardRef<
     ...pickerDefaults,
     ...pickerOptions,
   } as Options
-  
+
   const handlePickerResolution = data => {
     onFileSelect(mergedOptions.multiple ? data.map(parsePickerData)  : [
       parsePickerData(data),
@@ -113,8 +113,8 @@ export const FileInput = forwardRef<
   }
 
   const openFilePicker = async () => {
-    
-    if (type === 'image'){
+
+    if (type === 'image') {
       OSAlert.ask({
         title: 'Change Image',
         body: 'Do you want to take a new picture or select an existing one?',
@@ -136,17 +136,17 @@ export const FileInput = forwardRef<
             text: 'Library',
             onPress: () => {
               ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
-        
+
             },
             ...alertProps?.options[2],
           },
-         
+
         ],
       })
     } else {
       openFileSystem()
     }
-   
+
   }
 
   const variantStyles = useDefaultComponentStyle('FileInput', {

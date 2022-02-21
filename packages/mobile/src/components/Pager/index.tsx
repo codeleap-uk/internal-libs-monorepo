@@ -37,7 +37,6 @@ export type PagerRef = {
   to(index?: number): void;
 };
 
-
 export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   const {
     children,
@@ -107,7 +106,7 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
       setPage(propPage)
     }
   }, [propPage])
-  
+
   useImperativeHandle(ref, () => pagerRef.current)
 
   const pagePoses = useMemo(() => {

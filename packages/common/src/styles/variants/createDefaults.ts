@@ -23,7 +23,7 @@ export function createDefaultVariantFactory<
       return (() => builder) as unknown as (
         theme: ThemeColorScheme<AppTheme>,
         variant?: string
-      ) => VT 
+      ) => VT
     }
 
     return builder
