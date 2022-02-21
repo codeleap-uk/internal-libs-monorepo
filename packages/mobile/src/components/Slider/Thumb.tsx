@@ -26,4 +26,4 @@ export const ThumbTooltip = ({ children, visible, styles, variantStyles }) => {
     </View>
   )
 }
-  
+

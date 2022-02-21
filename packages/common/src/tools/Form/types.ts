@@ -61,7 +61,7 @@ export type SliderField = {
   type: 'slider';
   defaultValue: number;
   validate?: Validator<number>;
-  
+
 } & CommonSliderTypes;
 
 export type RangeSliderField = {

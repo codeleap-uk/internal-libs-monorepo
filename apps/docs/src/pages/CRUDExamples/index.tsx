@@ -9,17 +9,16 @@ import {  useState } from 'react'
 import { editPostForm, postForm } from './forms'
 import { useAppSelector } from '@/redux'
 
-
 export const CrudExample:React.FC = () => {
   const { queries, data } = usePostsApi()
   const { getPosts, addPost, deletePost, editPost } = queries
   const [isChanged, setIsChanged] = useState(false)
   const [editID, setEditID] = useState(null)
   const [isModalOpen, setModal] = useBooleanToggle(false)
-  const {first_name, last_name} = useAppSelector(store => store.Session.profile)
-  
+  const { first_name, last_name } = useAppSelector(store => store.Session.profile)
+
   const username = `${first_name} ${last_name}`
-  
+
   const fetch = async () => {
     await getPosts.send(20)
   }
@@ -27,7 +26,7 @@ export const CrudExample:React.FC = () => {
   onMount(() => {
     fetch()
   })
-  
+
   onUpdate(() => {
     if (isChanged) {
       fetch()
@@ -45,7 +44,7 @@ export const CrudExample:React.FC = () => {
     validateOn: 'change',
   })
 
-  const createPost = async () => {  
+  const createPost = async () => {
     await addPost.send({
       username,
       ...form.values,
@@ -79,7 +78,6 @@ export const CrudExample:React.FC = () => {
     })
     setEditID(data.id)
   }
-  
 
   return (
     // <Scroll onRefresh={fetch}>
@@ -93,22 +91,22 @@ export const CrudExample:React.FC = () => {
         <TextInput {...form.register('content')} multiline numberOfLines={50}/>
         <Button onPress={createPost}  text={'Submit'}  loading={addPost.isLoading}/>
       </View>
-  
+
       <ContentView variants={['column', 'marginTop:2']} placeholderMsg='' loading={getPosts.isLoading}>
         {
           data.map((p) => {
             const editable = username === p.username
-  
-            return <PostCard 
-              key={p.id} 
-              remove={editable ? removePost : null} 
-              edit={editable ? (() => openEdit(p)) : null} 
+
+            return <PostCard
+              key={p.id}
+              remove={editable ? removePost : null}
+              edit={editable ? (() => openEdit(p)) : null}
               post={p}
             />
           })
-        }   
+        }
       </ContentView>
-  
+
       <Modal
         visible={isModalOpen}
         showClose
@@ -117,16 +115,16 @@ export const CrudExample:React.FC = () => {
         debugName='CRUD'
       >
         <ContentView placeholderMsg='' loading={editPost.isLoading}>
-  
+
           <View variants={['marginTop:3']}>
             <TextInput {...editForm.register('title')} />
-            <TextInput {...editForm.register('content')} multiline numberOfLines={50} styles={{innerWrapper: {height: 100}}}/>
+            <TextInput {...editForm.register('content')} multiline numberOfLines={50} styles={{ innerWrapper: { height: 100 }}}/>
             <Button onPress={modifyPost} variants={['marginHorizontal:auto', 'gray']} text={'Edit'}/>
           </View>
         </ContentView>
       </Modal>
     </View>
-    // </Scroll> 
+    // </Scroll>
   )
 }
 

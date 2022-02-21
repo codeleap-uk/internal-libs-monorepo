@@ -54,15 +54,14 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     onPress && onPress(e)
   }
 
-  function getStyles(key:ButtonParts){
+  function getStyles(key:ButtonParts) {
     return {
       ...variantStyles[key],
       ...optionalObject(disabled, variantStyles[key + ':disabled'], {}),
     }
-  } 
+  }
   const iconStyle = getStyles('icon')
 
-  
   return (
     <Touchable
       css={getStyles('wrapper')}

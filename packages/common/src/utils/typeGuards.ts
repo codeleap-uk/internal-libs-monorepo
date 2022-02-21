@@ -1,22 +1,22 @@
 import { AnyFunction } from '..'
 
-export function isNumber(x): x is number{
+export function isNumber(x): x is number {
   return typeof x === 'number'
 }
 
-export function isString(x): x is string{
+export function isString(x): x is string {
   return typeof x === 'string'
 }
-export function isObject(x): x is object{
+export function isObject(x): x is object {
   return typeof x === 'object'
 }
-export function isBoolean(x): x is boolean{
+export function isBoolean(x): x is boolean {
   return typeof x === 'boolean'
 }
-export function isFunction(x): x is (AnyFunction|(new (...args) => any)){
+export function isFunction(x): x is (AnyFunction|(new (...args) => any)) {
   return typeof x === 'function'
 }
-export function isArray(x): x is any[]{
+export function isArray(x): x is any[] {
   return Array.isArray(x)
 }
 

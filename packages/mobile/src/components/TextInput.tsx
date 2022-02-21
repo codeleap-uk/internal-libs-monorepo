@@ -102,9 +102,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     if (onChangeText) onChangeText(text)
   }
 
-  useImperativeHandle(inputRef, () => ({...input.current, focus: () => {
+  useImperativeHandle(inputRef, () => ({ ...input.current, focus: () => {
     input.current?.focus?.()
-  }, isTextInput: true}))
+  }, isTextInput: true }))
 
   const { showError, error } = useValidate(value, validate)
 

@@ -8,15 +8,15 @@ import { StylesOf } from '../../types/utility'
 import { ButtonProps } from '../Button'
 import { TextInputProps } from '../TextInput'
 import { MobileSelectComposition, MobileSelectStyles } from './styles'
-  
+
 export type SelectRenderFNProps<T> = FormTypes.Options<T>[number] & {
   styles: StylesOf<MobileSelectComposition>;
   onPress: () => void;
   selected?: boolean;
 };
-  
+
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element;
-  
+
 export type CustomSelectProps<T> = {
     value: T;
     placeholder?: FormTypes.Label;
@@ -38,4 +38,4 @@ export type CustomSelectProps<T> = {
     modalLabel?: string
     closeButtonProps?: Partial<ButtonProps>
   } & ComponentVariants<typeof MobileSelectStyles> & TextInputProps;
-  
+

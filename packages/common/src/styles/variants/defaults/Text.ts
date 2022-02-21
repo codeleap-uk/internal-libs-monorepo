@@ -39,7 +39,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
     const fontSize = style.sizeMultiplier * theme.typography.baseFontSize
     const lineHeight = style.lineHeightMultiplier ? fontSize * style.lineHeightMultiplier : null
     // console.log('name', name)
-   
+
     return {
       text: {
         fontWeight,

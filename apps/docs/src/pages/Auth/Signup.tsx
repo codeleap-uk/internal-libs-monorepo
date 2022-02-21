@@ -50,7 +50,7 @@ const fakeFirst = `${faker.name.firstName()}`
 const fakeLast = `${faker.name.lastName()}`
 
 const initialState = {
-  email: devEnv? fakeEmail : '',
+  email: devEnv ? fakeEmail : '',
   password: devEnv ? 'pppppp' : '',
   repeatPassword: devEnv ? 'pppppp' : '',
   avatar: devEnv ? [null] : [null],
@@ -65,9 +65,8 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
     validateOn: 'blur',
   })
 
-
   const [usingProvider, setProvider] = useState<Providers|'email'>(route?.params?.provider || 'email')
-  async function onSubmit(){
+  async function onSubmit() {
     logger.log('Sign up', form.values, 'Sign up')
     AppStatus.set('loading')
     try {
@@ -77,8 +76,8 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
           avatar: form.values?.avatar?.[0]?.preview,
         },
         provider: usingProvider,
-      }) 
-      if (status === 'success'){
+      })
+      if (status === 'success') {
 
         AppStatus.set('splash')
         setTimeout(() => {
@@ -91,19 +90,19 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
           body: 'An error has ocurred',
         })
       }
-    } catch (e){ 
+    } catch (e) {
       logger.log('Signup faield', e, 'Authentication')
       AppStatus.set('idle')
       OSAlert.error({
         title: 'Error signing up',
-        body: e.code ?  e.message : '', 
+        body: e.code ?  e.message : '',
       })
     }
   }
 
-  async function setFormValues({avatar, ...profile}: Profile){
+  async function setFormValues({ avatar, ...profile }: Profile) {
     const result = await Session.autoLogin()
-    if (result === 'error'){
+    if (result === 'error') {
       setProvider('facebook')
       form.setFormValues({
         ...profile,
@@ -112,7 +111,7 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
   }
 
   const inputVariants = ['marginTop:1']
-  
+
   return (
     <Scroll variants={['paddingHorizontal:2', 'paddingVertical:4']}>
       <Avatar
@@ -147,10 +146,10 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
         variants={['marginVertical:1']}
         disabled={!form.isValid}
       />
-      <Text text='Or Signup With' variants={['alignSelfCenter', 'marginHorizontal:auto', 'marginVertical:2']}/> 
-      <View variants={['row',  'justifyCenter']}> 
-        <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({withProvider: 'facebook'}).then(setFormValues)}/>
-        <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({withProvider: 'google'}).then(setFormValues)}/>
+      <Text text='Or Signup With' variants={['alignSelfCenter', 'marginHorizontal:auto', 'marginVertical:2']}/>
+      <View variants={['row',  'justifyCenter']}>
+        <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'facebook' }).then(setFormValues)}/>
+        <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'google' }).then(setFormValues)}/>
       </View>
       <Button
         text={'Already a user?'}

@@ -67,7 +67,7 @@ const testForm = createForm('Test', {
     type: 'range-slider',
     defaultValue: [0, 2],
     labels: ['Small', 'Medium', 'Large'],
-  }, 
+  },
   file: {
     type: 'file',
   },
@@ -175,10 +175,10 @@ export const Home: React.FC = () => {
         iconName='image'
       />
 
-      <Select 
+      <Select
         {...form.register('select')}
         placeholder='Select a value'
-        scroll={false} 
+        scroll={false}
       />
       <Button
         text={'Pick File'}

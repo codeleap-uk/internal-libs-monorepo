@@ -54,7 +54,7 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
         data: form.values,
       })
 
-      if (result === 'success'){
+      if (result === 'success') {
         Session.loginSuccess()
       }
     } catch (e) {}
@@ -64,25 +64,24 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
   async function socialLogin(provider) {
     let user = null
     try {
-      const firebaseUser = await trySocialLogin({withProvider: provider})
+      const firebaseUser = await trySocialLogin({ withProvider: provider })
 
       user = profileFromUser(firebaseUser.user)
-    } catch (e){
+    } catch (e) {
     }
 
-    if (user){
+    if (user) {
       let shouldGoToSignup = true
-      
+
       const result = await Session.autoLogin()
-      
+
       shouldGoToSignup = result === 'error'
-      
-      if (shouldGoToSignup){
+
+      if (shouldGoToSignup) {
         navigation.navigate('Signup', { user, provider })
       }
-    } 
-    
-    
+    }
+
   }
 
   return (
@@ -105,18 +104,18 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
         />
         <View variants={['row', 'justifyCenter', 'marginVertical:1']}>
 
-          <Button 
+          <Button
             icon='google'
             onPress={() => socialLogin('google')}
             variants={['icon:primary']}
-            
+
           />
 
-          <Button 
+          <Button
             icon='facebook'
             onPress={() => socialLogin('facebook')}
             variants={['icon:primary']}
-            
+
           />
 
         </View>

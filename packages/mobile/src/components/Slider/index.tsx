@@ -14,7 +14,7 @@ import { SliderProps } from './types'
 
 export const Slider: React.FC<SliderProps> = (sliderProps) => {
   const [tooltipVisible, setTooltipVisible] = React.useState(false)
-  
+
   const {
     debounce,
     onValueChange,
@@ -29,39 +29,39 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
     variants,
     ...props
   } = sliderProps
-  
+
   const changeDebounce = typeof debounce === 'number' ? debounce : 100
-  
+
   const debounceTimeout = useRef(null)
   const toggleTooltipTimeout = useRef(null)
   const valueRef = useRef(value)
-  
+
   const variantStyles = useDefaultComponentStyle('Slider', {
     variants,
   })
-  
+
   function setValue() {
     onValueChange(valueRef.current)
   }
-  
+
   function onChange(val) {
     let eventValue = val
-  
+
     if (Array.isArray(val) && typeof value === 'number') {
       eventValue = val[0]
     }
-  
+
     if (eventValue === value) return
-  
+
     valueRef.current = eventValue as number
-  
+
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current)
-  
+
     debounceTimeout.current = setTimeout(() => {
       setValue()
     }, changeDebounce)
   }
-  
+
   return (
     <View style={[variantStyles.wrapper, style]}>
       <InputLabel label={label} style={[variantStyles.label, styles.label]} />
@@ -69,7 +69,7 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
         value={value}
         onSlidingStart={() => {
           if (toggleTooltipTimeout.current) { clearTimeout(toggleTooltipTimeout.current) }
-  
+
           setTooltipVisible(true)
         }}
         onSlidingComplete={() => {
@@ -120,4 +120,4 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
     </View>
   )
 }
-  
+

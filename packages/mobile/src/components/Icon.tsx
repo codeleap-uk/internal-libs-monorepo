@@ -20,7 +20,7 @@ export type IconProps = {
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()
-  
+
   const variantStyles = useDefaultComponentStyle('Icon', {
     variants,
     transform: StyleSheet.flatten,
@@ -29,7 +29,7 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
     },
     rootElement: 'icon',
   })
- 
+
   if (!name) {
     return renderEmptySpace ? <View style={variantStyles.icon}/> : null
   }

@@ -8,15 +8,15 @@ const text = {
 }
 
 export const NetworkStatusModal:React.FC = () => {
-  const {network} = useAppSelector(store => ({
+  const { network } = useAppSelector(store => ({
     network: store.AppStatus.network,
   }))
 
   const [showUntilDissmiss, toggleShowUntilDismiss] = useBooleanToggle(false)
 
   onUpdate(() => {
-    if (network){
-      if (!network.isValid && !showUntilDissmiss){
+    if (network) {
+      if (!network.isValid && !showUntilDissmiss) {
         toggleShowUntilDismiss()
       }
 
@@ -30,8 +30,8 @@ export const NetworkStatusModal:React.FC = () => {
   const onDismiss = () => toggleShowUntilDismiss()
 
   return <>
-    <Modal 
-      visible={modalToRender === 'offline' && showUntilDissmiss} 
+    <Modal
+      visible={modalToRender === 'offline' && showUntilDissmiss}
       toggle={onDismiss}
       dismissOnBackdrop={false}
       showClose={false}
@@ -42,8 +42,8 @@ export const NetworkStatusModal:React.FC = () => {
 
       <Text text={text.offline} />
     </Modal>
-    <Modal 
-      visible={modalToRender === 'online' && showUntilDissmiss} 
+    <Modal
+      visible={modalToRender === 'online' && showUntilDissmiss}
       toggle={onDismiss}
       variants={['alignCenter']}
       title={'Connection Restored'}
@@ -54,7 +54,7 @@ export const NetworkStatusModal:React.FC = () => {
 
       <Button text={'Dismiss'} onPress={onDismiss} variants={['marginTop:3']}/>
     </Modal>
-   
+
   </>
 }
 

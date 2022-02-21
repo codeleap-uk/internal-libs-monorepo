@@ -3,11 +3,10 @@ import { AppPermissions, PermissionName, Permissions, TPermissions, useAppSelect
 import { onUpdate } from '@codeleap/common'
 import {  ModalProps } from '@codeleap/web'
 
-
-const defaultState:TPermissions['modalData'] = { 
+const defaultState:TPermissions['modalData'] = {
   permissionId: null,
-  description: [], 
-  imageOrIcon: null, 
+  description: [],
+  imageOrIcon: null,
   title: '',
   learnMore: {
     text: '',
@@ -18,30 +17,29 @@ const defaultState:TPermissions['modalData'] = {
 
 const requiredPermissions:PermissionName[] = ['camera', 'record_audio']
 
-async function askRequiredPermissions(){
-  
-  for (const permissionId of requiredPermissions){
+async function askRequiredPermissions() {
+
+  for (const permissionId of requiredPermissions) {
     const hasOpenedModal =  await Permissions.setModalToPermission(permissionId)
-    
-    if (hasOpenedModal){
+
+    if (hasOpenedModal) {
       break
     }
   }
 
-  
 }
 
 export const PermissionModal:React.FC = () => {
 
   const {
     permissions,
-    appStatus,      
+    appStatus,
   } = useAppSelector(store => ({
     permissions: store.Permissions,
     appStatus: store.AppStatus,
-  })) 
-    
-  const { 
+  }))
+
+  const {
     permissionId,
     description,
     imageOrIcon,
@@ -49,21 +47,21 @@ export const PermissionModal:React.FC = () => {
     settingsText,
     onButtonPress,
     ...modalProps
-  } = {...defaultState, ...permissions.modalData }
+  } = { ...defaultState, ...permissions.modalData }
 
   const toggle = () => Permissions.setModalToPermission(null)
 
   onUpdate(() => {
-    if (permissionId){
+    if (permissionId) {
 
-      const unsubscribe = AppPermissions.onPermissionChange(permissionId, ( {status}) => {
-        
-        switch (status){
+      const unsubscribe = AppPermissions.onPermissionChange(permissionId, ({ status }) => {
+
+        switch (status) {
           case 'granted':
             toggle()
             break
         }
-        
+
       })
       return unsubscribe
     } else {
@@ -71,15 +69,15 @@ export const PermissionModal:React.FC = () => {
     }
   }, [permissionId])
 
-  onUpdate(() => {  
+  onUpdate(() => {
     AppPermissions.update()
   }, [appStatus.currentState])
 
   const handlePress = () => {
-    if (typeof onButtonPress === 'function'){
+    if (typeof onButtonPress === 'function') {
       onButtonPress()
     } else {
-      switch (onButtonPress){
+      switch (onButtonPress) {
         case 'askForPermission':
           AppPermissions.get(permissionId, {
             askOnDenied: true,
@@ -94,39 +92,39 @@ export const PermissionModal:React.FC = () => {
   }
 
   if (!appStatus.ready) return null
-  
+
   return (
-    <Modal 
-      visible={!!permissions.modalData} 
-      // toggle={toggle} 
+    <Modal
+      visible={!!permissions.modalData}
+      // toggle={toggle}
       title={title}
       // variants={['center']}
       // dismissOnBackdrop={false}
       {...modalProps}
     >
       {
-        typeof imageOrIcon === 'string' ? 
+        typeof imageOrIcon === 'string' ?
           <Icon name={imageOrIcon} style={styles.icon}/>
-          : 
+          :
           <Image source={imageOrIcon} style={styles.image}/>
       }
       <View variants={['center', 'marginVertical:1']}>
         {
-          description.map( (text, idx) => <Text text={text} key={idx} variants={['textCenter', 'marginBottom:1']}/>)
+          description.map((text, idx) => <Text text={text} key={idx} variants={['textCenter', 'marginBottom:1']}/>)
         }
       </View>
       <Button text={settingsText} onPress={handlePress} />
     </Modal>)
-  
+
 }
 
 const styles = variantProvider.createComponentStyle({
   icon: {
     height: 80,
     width: 80,
-  }, 
+  },
   image: {
     height: 120,
     width: 120,
-  },  
+  },
 }, true)

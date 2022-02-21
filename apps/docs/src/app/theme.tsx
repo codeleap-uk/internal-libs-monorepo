@@ -27,7 +27,7 @@ const themeObj = {
       positive: '#ada',
       secondary: '#000',
 
-      borders: '#ccc',      
+      borders: '#ccc',
       placeholder: '#ccc',
       neutral: '#ccc',
       white: '#fff',
@@ -48,12 +48,12 @@ const themeObj = {
       negative: '#11aa3c',
       positive: '#ada',
       secondary: '#000',
-      borders: '#ccc',      
+      borders: '#ccc',
       placeholder: '#ccc',
       white: '#fff',
       green: 'green',
     },
- 
+
   },
   breakpoints: {},
   spacing: 8,
@@ -84,11 +84,11 @@ const themeObj = {
   },
   values: {
     ...getWindowDimensions(),
-  
+
     headerHeight: 48,
     navBarHeight: 100,
     buttons: {
-      small: { 
+      small: {
         height: 40,
       },
       default: {
@@ -118,6 +118,5 @@ export const variantProvider = new VariantProvider<
   StyleGetter,
   typeof themeObj
 >(appTheme, styleGetter)
-
 
 export const Theme = variantProvider.theme

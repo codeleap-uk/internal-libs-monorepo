@@ -18,7 +18,7 @@ export const iconImages = {
   arrowForward: ReactIcons.IoArrowForward,
   arrowBack: ReactIcons.IoArrowBack,
   // selectArrow: VectorIcon('select-arrows', EntypoIcons),
- 
+
   // 'input-visiblity:visible': VectorIcon('eye', FeatherIcons),
   // 'input-visiblity:hidden': VectorIcon('eye-off', FeatherIcons),
   image: ReactIcons.MdImage,
@@ -38,7 +38,7 @@ export const iconImages = {
 
 export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) => {
 
-  const {size, width, height, color, ...otherStyles} = style
+  const { size, width, height, color, ...otherStyles } = style
   const styles = {
     ...otherStyles,
     height: size || height,
@@ -59,8 +59,7 @@ export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) =
     color: styles.color || null,
   }
 
-
-  if (log){ 
+  if (log) {
     logger.log('Icon style for ' + name, appliedStyles, 'Component style')
   }
   return <Image objectFit={'contain'} source={path} style={appliedStyles} type='dynamic'/>

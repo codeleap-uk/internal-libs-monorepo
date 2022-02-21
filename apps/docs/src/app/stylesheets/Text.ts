@@ -43,7 +43,7 @@ export const AppTextStyles = {
   })),
   link: createTextStyle((theme) => ({
     text: {
-     
+
     },
   })),
 }

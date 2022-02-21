@@ -92,13 +92,13 @@ export function parseSourceUrl(
     res = `https://picsum.photos/600?random=${Math.random() * 100}`
   }
   return res
-} 
+}
 
-export function getNestedStylesByKey<T extends StylesOf<any>>(match:string, variantStyles: T){
+export function getNestedStylesByKey<T extends StylesOf<any>>(match:string, variantStyles: T) {
   const styles = {}
 
-  for (const [key, value] of Object.entries(variantStyles)){
-    if (key.startsWith(match)){
+  for (const [key, value] of Object.entries(variantStyles)) {
+    if (key.startsWith(match)) {
       const partName = capitalize(key.replace(match, ''), true)
       styles[partName] = value
     }

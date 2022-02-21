@@ -9,21 +9,20 @@ const ext = [
 
 ]
 
-if (Settings.Environment.IsDev && window.__REDUX_DEVTOOLS_EXTENSION__){
+if (Settings.Environment.IsDev && window.__REDUX_DEVTOOLS_EXTENSION__) {
   ext.push(window.__REDUX_DEVTOOLS_EXTENSION__())
 }
 
 console.log(ext)
 export const {
   store,
-  actions: { Posts, AppStatus, Session},
+  actions: { Posts, AppStatus, Session },
 } = createRedux({
   Posts: postsSlice,
   AppStatus: appStatusSlice,
   Session: sessionSlice,
 
 }, [], ...ext)
-
 
 export type RootState = ReturnType<typeof store.getState>;
 export * from './Posts'

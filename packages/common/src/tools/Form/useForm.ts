@@ -16,7 +16,6 @@ const shouldLog = (
   return (config.log || []).includes(x)
 }
 
-
 // TODO is would be helpful if the form could automatically skip to the next field on pressing return
 
 export function useForm<
@@ -103,15 +102,15 @@ export function useForm<
 
   const inputRefs = []
 
-  function focusNext(idx:number){
-    if (!(idx < inputRefs.length)) return 
-    const nextRef = inputRefs?.[idx]?.current 
+  function focusNext(idx:number) {
+    if (!(idx < inputRefs.length)) return
+    const nextRef = inputRefs?.[idx]?.current
 
-    if (nextRef?.focus){
+    if (nextRef?.focus) {
       nextRef.focus?.()
     }
   }
-  
+
   const nRegisteredTextRefs = useRef(0)
 
   function register(field: FieldPaths[0]) {
@@ -133,14 +132,14 @@ export function useForm<
       }
     }
 
-    if (type === 'text'){
+    if (type === 'text') {
       const thisRefIdx = nRegisteredTextRefs.current
-      
-      if (nRegisteredTextRefs.current < form.numberOfTextFields){
+
+      if (nRegisteredTextRefs.current < form.numberOfTextFields) {
         inputRefs.push(createRef())
 
       }
-    
+
       dynamicProps.ref = inputRefs[thisRefIdx]
 
       dynamicProps.onSubmitEditing = () => {
@@ -148,8 +147,8 @@ export function useForm<
       }
 
       nRegisteredTextRefs.current += 1
-      if (nRegisteredTextRefs.current === form.numberOfTextFields){
-        
+      if (nRegisteredTextRefs.current === form.numberOfTextFields) {
+
         nRegisteredTextRefs.current = 0
       }
     }
@@ -184,10 +183,10 @@ export function useForm<
       case 'multipart':
         let shouldSetNewFileValue = true
         const multipartData = Object.entries(formValues).reduce((acc, [key, value]) => {
-          let newValue = {...acc}
-          
-          if (form.staticFieldProps[key]?.type === 'file'){
-            if (shouldSetNewFileValue){
+          let newValue = { ...acc }
+
+          if (form.staticFieldProps[key]?.type === 'file') {
+            if (shouldSetNewFileValue) {
               newValue = {
                 ...newValue,
                 files: (Theme.IsBrowser ? value?.[0]?.file : value?.[0]?.preview) || null,
@@ -204,7 +203,7 @@ export function useForm<
             }
           }
           return newValue
-        }, {files: null, data: {}})
+        }, { files: null, data: {}})
 
         out = toMultipart({
           multipart: true,
@@ -230,12 +229,12 @@ export function useForm<
     await cb(getTransformedValue())
   }
 
-  function reset(args?: ('values'|'errors')[]){
+  function reset(args?: ('values'|'errors')[]) {
     const resetStates = args || ['values', 'errors']
-    if (resetStates.includes('values')){
+    if (resetStates.includes('values')) {
       setFormValues(getInitialState())
     }
-    if (resetStates.includes('errors')){
+    if (resetStates.includes('errors')) {
       setFieldErrors(getInitialErrors())
     }
   }

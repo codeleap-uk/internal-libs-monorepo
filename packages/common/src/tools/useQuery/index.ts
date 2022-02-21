@@ -1,6 +1,6 @@
 import { usePartialState, capitalize } from '../../utils'
 import { useReducer, useRef } from 'react'
-import { 
+import {
   QueryState,
   queryStatuses,
   RoutesOf,

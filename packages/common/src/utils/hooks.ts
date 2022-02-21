@@ -5,6 +5,10 @@ import { deepMerge } from './object'
 import { AnyFunction, DeepPartial } from '../types'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
+export {
+  useState,
+  useRef,
+}
 
 export const onMount = (func: AnyFunction) => {
   useEffect(() => {

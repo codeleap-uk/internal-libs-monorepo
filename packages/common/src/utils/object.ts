@@ -66,7 +66,7 @@ export function objectPaths(obj) {
   return paths
 }
 
-export function isValuePrimitive(a:any){
+export function isValuePrimitive(a:any) {
   return  ['string', 'number', 'boolean'].includes(typeof a)
 }
 
@@ -78,8 +78,7 @@ type TraverseRecArgs = {path:string[], value: any, depth: number, key: string, t
 
 type TraverseCallback = (args?: TraverseRecArgs) => {stop?: boolean } | void
 
-
-export function traverse(obj = {}, callback:TraverseCallback, args?: TraverseRecArgs){
+export function traverse(obj = {}, callback:TraverseCallback, args?: TraverseRecArgs) {
   const isPrimitive = isValuePrimitive(obj)
 
   const info = {
@@ -91,19 +90,18 @@ export function traverse(obj = {}, callback:TraverseCallback, args?: TraverseRec
     primitive: isPrimitive,
     ...args,
   }
- 
 
-  if (isPrimitive){
+  if (isPrimitive) {
     callback({
       ...info,
       depth: info.depth,
-      
+
     })
   } else {
-    for (const [key, value] of Object.entries(obj||{})){
+    for (const [key, value] of Object.entries(obj || {})) {
       const isPrimitive = isValuePrimitive(value)
 
-      if (!isPrimitive){
+      if (!isPrimitive) {
 
         callback({
           ...info,
@@ -114,8 +112,7 @@ export function traverse(obj = {}, callback:TraverseCallback, args?: TraverseRec
           path: [...info.path, key],
         })
       }
-      
-     
+
       traverse(value, callback, {
         ...info,
         key,

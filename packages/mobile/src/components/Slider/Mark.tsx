@@ -10,22 +10,22 @@ export const SliderMark: React.FC<SliderMarkProps> = ({
   variantStyles,
 }) => {
   const { labels = [], showMarks } = sliderProps
-  
+
   const l = labels?.[index] || ''
-  
+
   const isFirst = index === 0
   const isLast = index === labels.length - 1
-  
+
   const centerAdjustWord = -(l.length * 2)
-  
+
   const markStyles: StyleProp<any> = {}
-  
+
   const labelStyles: StyleProp<any> = {}
-  
+
   if (!isFirst && !isLast) {
     labelStyles.left = centerAdjustWord
   }
-  
+
   if (isLast) {
     labelStyles.right = -20
     markStyles.right = -10

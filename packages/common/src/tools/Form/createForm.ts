@@ -50,7 +50,7 @@ function buildInitialFormState<T extends Form.FieldsMap>(
     const fieldPath = fieldPathParts.join('.')
 
     let fieldValue = null
-    if (type === 'text') numberOfTextFields+=1
+    if (type === 'text') numberOfTextFields += 1
     if (type === 'composite') {
       const { props: subFieldProps, state } = buildInitialFormState(
         name,

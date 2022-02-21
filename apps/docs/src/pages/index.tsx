@@ -11,13 +11,12 @@ import {
 } from '@/app'
 
 export const Overlays = () => {
-  const {isModalOpen} = useAppSelector(store => ({ isModalOpen: store.AppStatus.modals}))
+  const { isModalOpen } = useAppSelector(store => ({ isModalOpen: store.AppStatus.modals }))
 
   return <>
 
-
     <AppStatusOverlay />
-  
+
     <Modal
       open={isModalOpen.test}
       showClose
@@ -31,7 +30,7 @@ export const Overlays = () => {
       <Text variants={['center']} text='Some text' />
       <Text variants={['center']} text='Some text' />
       <Text variants={['center']} text='Some text' />
-      
+
       <Button text='Do something' onPress={() => AppStatus.setModal('test')} />
     </Modal>
     {/* <DebugModal/> */}
@@ -69,7 +68,6 @@ const links = [
 ]
 
 const ListItem = ({ item, depth = 2, styles }) => {
- 
 
   if (item.links) {
     return (
@@ -124,13 +122,13 @@ const componentStyle = variantProvider.createComponentStyle((theme) => ({
 
 const IndexPage: React.FC = () => {
   const { isLoggedIn } = useAppSelector((store) => store.Session)
-  
+
   onMount(() => {
     Session.setMounted()
     Session.autoLogin()
 
     const data = localStorage.getItem(LocalStorageKeys.SESSION_IS_DEV)
-    if (data){
+    if (data) {
       Session.setMode(data === 'true')
     }
 
@@ -144,7 +142,6 @@ const IndexPage: React.FC = () => {
   }, [isLoggedIn])
 
   const styles = useComponentStyle(componentStyle)
-
 
   return (
     <View styles={{ wrapper: styles.wrapper }} title='Template'>

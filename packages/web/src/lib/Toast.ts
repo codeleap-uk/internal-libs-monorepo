@@ -1,14 +1,14 @@
 import { toast } from 'react-toastify'
 
-function info({title}) {
+function info({ title }) {
   toast.info(title)
 }
 
-function success({title}) {
+function success({ title }) {
   toast.success(title)
 }
 
-function error({title}) {
+function error({ title }) {
   toast.error(title)
 }
 

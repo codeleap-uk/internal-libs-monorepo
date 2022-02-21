@@ -25,7 +25,6 @@ type SwitchProps = NativeSwitchProps & {
   validate?: FormTypes.ValidatorFunctionWithoutForm | string;
 };
 
-
 export const Switch = forwardRef<NativeSwitch, SwitchProps>(
   (switchProps, ref) => {
     const {

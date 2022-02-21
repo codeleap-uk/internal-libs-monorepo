@@ -18,7 +18,7 @@ export function Logo(props: LogoProps) {
   const [numberOfPresses, setPresses] = useState(0)
 
   onUpdate(() => {
-    if (numberOfPresses === 10){
+    if (numberOfPresses === 10) {
       Session.setMode().then(() => {
         setPresses(0)
       })
@@ -31,7 +31,7 @@ export function Logo(props: LogoProps) {
     style={[styles.image, props?.style]}
   />
 
-  if (props.switchServerOnPress && __DEV__){
+  if (props.switchServerOnPress && __DEV__) {
     return <Touchable onPress={() => setPresses(n => n + 1) }>
       {image}
     </Touchable>

@@ -30,7 +30,7 @@ export const DEFAULT_STYLES = {
   ContentView: ContentViewStyles,
   FileInput: FileInputStyles,
   Modal: ModalStyles,
-  Overlay: OverlayStyles, 
+  Overlay: OverlayStyles,
   RadioInput: RadioInputStyles,
   Slider: SliderStyles,
   Text: TextStyles,

@@ -22,7 +22,7 @@ import { AppTheme } from '..'
 export type PartialComponentStyle<C extends string, S = any> = Partial<
   Record<C, S>
 >;
-export type ThemeColorScheme<T extends AppTheme> = Omit<EnhancedTheme<T>, 'colors'> & {colors: T['colors'][keyof T['colors']]}  
+export type ThemeColorScheme<T extends AppTheme> = Omit<EnhancedTheme<T>, 'colors'> & {colors: T['colors'][keyof T['colors']]}
 
 export type CommonVariantObject<C extends string = string, S = any> = Record<
   string,

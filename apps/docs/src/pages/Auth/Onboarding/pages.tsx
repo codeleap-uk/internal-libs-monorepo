@@ -1,7 +1,6 @@
 import { Text, View, React, Button, Image, Icon, AppIcon, variantProvider } from '@/app'
 import { Session } from '@/redux'
 
-
 type PageProps = {
   next(): void;
   previous(): void;
@@ -160,13 +159,11 @@ const Finish: React.FC<PageProps> = () => {
   )
 }
 
-
 const styles = variantProvider.createComponentStyle({
   emoji: {
     fontSize: 60,
   },
 })
-
 
 export default {
   Welcome,

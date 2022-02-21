@@ -48,7 +48,7 @@ const hollowAnalytics = new Analytics({
   init: emptyFunction,
   onEvent: emptyFunction,
   onInteraction: emptyFunction,
-  prepareData: () => ({}), 
+  prepareData: () => ({}),
 }, {})
 
 /**
@@ -62,7 +62,6 @@ export class Logger {
   sentry: SentryService;
 
   middleware:LoggerMiddleware[] = []
-  
 
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
@@ -88,7 +87,7 @@ export class Logger {
   //   let cl = logColors[logType]
   //   let useColor = colors[cl]
 
-  //   if (color) { 
+  //   if (color) {
   //     cl = color as keyof typeof foregroundColors
   //     useColor = colors[color]
   //   }
@@ -100,13 +99,13 @@ export class Logger {
   //     const logStr = `[${logType.toUpperCase()}]${deviceIdentifier} ${args?.[2]} - ${args?.[0]}`
   //     console[logType](logStr, args[1])
   //   } else {
-  //     const logDescription = 
+  //     const logDescription =
   //       [typeof args?.[0], typeof args?.[2]]
   //         .every(t => t === 'string') ? `${args?.[2]||''} - ${args?.[0]||''}` : args?.[0] || ''
   //     // eslint-disable-next-line no-console
   //     console[logType](
   //       useColor,
-  //       `[${logType.toUpperCase()}]${deviceIdentifier} 
+  //       `[${logType.toUpperCase()}]${deviceIdentifier}
   //         ${logDescription}
   //       `,
   //       args[1],
@@ -119,11 +118,11 @@ export class Logger {
     const [logType, content,  _ig_color, deviceId] = logArgs
 
     const [descriptionOrValue, value, category]  = content
-    
+
     const nArgs = logArgs[1].length
     let logContent = logArgs[1]
-    
-    if (nArgs === 3){
+
+    if (nArgs === 3) {
       logContent = [
         `${category} -> ${descriptionOrValue}`,
         value,
@@ -153,7 +152,7 @@ export class Logger {
       try {
         // NOTE: For some reason, sentry throws here sometimes
         this.sentry.captureBreadcrumb(logType, args)
-      } catch (e){
+      } catch (e) {
 
       }
       this.middleware.forEach(m => m(...logArgs))

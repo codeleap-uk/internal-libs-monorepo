@@ -15,7 +15,6 @@ export const ComponentList: React.FC<{
     return Object.keys(allComponents).filter((name) => name.toLowerCase().includes(search.toLowerCase()),
     )
   }, [search])
- 
 
   return (
     <View

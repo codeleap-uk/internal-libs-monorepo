@@ -28,10 +28,10 @@ type StaticImageProps = {
 }
 type DynamicImageProps = {
   type?: 'dynamic'
-  
+
 }
 
-type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps 
+type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
 
 // export const Image: React.FC<ImageProps> = (imgProps) => {
 //   const {
@@ -43,7 +43,6 @@ type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
 //     ...props
 //   } = imgProps
 
-
 //   if (!props.alt) {
 //     logger.log('missing alt property in img', { source }, 'Component')
 //   }
@@ -54,7 +53,6 @@ type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
 //     !props.img &&
 //     !req &&
 //     dynamicAssetPrefixes.filter((i) => source?.startsWith(i)).length < 1
-
 
 //   if (isStatic) {
 //     const image = getImage(fileNode)
@@ -115,9 +113,9 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
     styles,
   })
 
-  if (type === 'static'){
+  if (type === 'static') {
     return (
-      <StaticImage 
+      <StaticImage
         {...props}
         objectFit={objectFit}
         css={variantStyles.wrapper}
@@ -134,7 +132,6 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
     )
   }
 }
-
 
 const query = graphql`
   query {

@@ -3,7 +3,6 @@ import { SceneNavigationProps } from '../Scenes'
 import { FSBackground, Logo } from '@/components'
 import rocketImage from '@/images/rocket.jpeg'
 
-
 export const Auth: React.FC<SceneNavigationProps> = ({ navigation }) => {
 
   return (
@@ -14,12 +13,12 @@ export const Auth: React.FC<SceneNavigationProps> = ({ navigation }) => {
         <View>
           <Button
             variants={['marginTop:2']}
-            onPress={() => navigation.reset({ index: 0, routes: [{name: 'Login'}]})}
+            onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Login' }] })}
             text='Log in'
           />
           <Button
             variants={['marginTop:2']}
-            onPress={() => navigation.reset({ index: 0, routes: [{name: 'Signup'}]})}
+            onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Signup' }] })}
             text='Sign up'
           />
         </View>
