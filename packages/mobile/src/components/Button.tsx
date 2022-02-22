@@ -17,13 +17,13 @@ import { StyleSheet, TouchableOpacity } from 'react-native'
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
   ComponentVariants<typeof ButtonStyles> & {
-    text?: string;
-    rightIcon?: IconPlaceholder;
-    icon?: IconPlaceholder;
-    styles?: StylesOf<ButtonComposition>;
-    loading?: boolean;
+    text?: string
+    rightIcon?: IconPlaceholder
+    icon?: IconPlaceholder
+    styles?: StylesOf<ButtonComposition>
+    loading?: boolean
     debounce?: number
-    debugName?: string; // NOTE this should not be optional
+    debugName?: string // NOTE this should not be optional
   };
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {
