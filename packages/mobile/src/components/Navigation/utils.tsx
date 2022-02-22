@@ -2,12 +2,14 @@ import React  from 'react'
 import { Navigation } from './Navigation'
 
 export function createAppNavigation(Scenes:any) {
+
+  console.log('Creating app navigation', { Scenes }, 'PACKAGES')
+
   const AllScenes = Object.entries<any>(Scenes).reduce((allScenes, [moduleName, content]) =>  {
 
     const subScenes = []
 
     for (const [name, sceneContent] of Object.entries(content.scenes)) {
-
       subScenes.push(
         [`${moduleName}.${name}`, sceneContent],
       )
@@ -41,6 +43,7 @@ export function createAppNavigation(Scenes:any) {
           }}
           {...navigationProps}
         />
+        // console.log('SCENES_RESULT create', { _ig_scenes, exclude, type, navigationProps, otherProps })
 
         return [S, {
           ...otherProps,
@@ -48,6 +51,8 @@ export function createAppNavigation(Scenes:any) {
         }]
       }),
   )
+
+  // console.log('SCENES_RESULT', SCENES_RESULT)
 
   return SCENES_RESULT
 }

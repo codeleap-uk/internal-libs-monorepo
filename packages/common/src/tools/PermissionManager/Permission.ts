@@ -20,7 +20,7 @@ export class Permission implements PermissionTypes.IPermission {
       this.actions.log(`Request for permission ${this.name} returned`, newState, SCOPE)
       this.status = newState
 
-      if (newState === 'never_ask_again') {
+      if (newState === 'blocked') {
         this.shouldAsk = false
       }
     }
@@ -49,7 +49,7 @@ export class Permission implements PermissionTypes.IPermission {
           }
           break
       }
-    }
+    } 
 
     get isGranted() {
       return this.status === 'granted'
@@ -63,7 +63,17 @@ export class Permission implements PermissionTypes.IPermission {
       return this.status === 'pending'
     }
 
-    get isNever_ask_again() {
-      return this.status === 'never_ask_again'
+    get isBlocked() {
+      return this.status === 'blocked'
+    }
+    
+    get isUnavailable(){
+      return this.status === 'unavailable'
+      
+    }
+    
+    get isLimited(){
+      return this.status === 'limited'
+
     }
 }

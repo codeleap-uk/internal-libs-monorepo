@@ -10,7 +10,13 @@ import { Navigators } from './constants'
 export const Navigation = <T extends NavigatorType>({ type, scenes,  ...props }: NavigationProps<T>) => {
   const NavigationComponent = Navigators[type] as TNavigators[T]
 
-  return <NavigationComponent.Navigator {...(props as any)}>
+  const defaultProps = {}
+  if (type === 'Tab') {
+    defaultProps.screenOptions = { headerShown: false }
+  }
+  // console.log('render Navigation', { type, scenes, props, defaultProps })
+
+  return <NavigationComponent.Navigator {...(props as any)} {...defaultProps}>
     {
       Object.entries(scenes).map(([name, content], idx) => {
         const isFunction = TypeGuards.isFunction(content)
@@ -21,19 +27,22 @@ export const Navigation = <T extends NavigatorType>({ type, scenes,  ...props }:
 
         if (isFunction) {
           screenProps.component = content
+          // console.log('Render NavigationScreen', { scenes, screenProps, content, isFunction }, 'PACKAGES')
         } else {
           screenProps.component = content?.component?.default || content?.component  || content?.default
           const nameParts = name.split('.')
-          const title = content?.title || content?.component?.title || nameParts[nameParts.length - 1] || name.replace('.', '')
+          const title = content?.title || nameParts[nameParts.length - 1] || name.replace('.', '')
 
           screenProps = {
             ...screenProps,
             options: (optionProps) => ({
               title,
               tabBarIcon: (style) => <Icon name={content?.icon} style={style}/>,
+              tabBarIconFocused: content?.iconFocused ? (style) => <Icon name={content?.iconFocused} style={style}/> : null,
               ...(TypeGuards.isFunction(content.options) ? content.options(optionProps)  : content.options),
             }),
           }
+          // console.log('Render NavigationScreen loop', { scenes, screenProps, content, title, isFunction, props }, 'PACKAGES')
         }
 
         return (
