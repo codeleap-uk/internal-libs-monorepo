@@ -1,7 +1,7 @@
 import { Logger } from '../Logger'
 import { FunctionType } from '../../types/utility'
 
-export const permissionStatuses = ['granted', 'denied', 'pending', 'never_ask_again'] as const
+export const permissionStatuses = ['unavailable', 'pending', 'denied', 'limited', 'granted', 'blocked'] as const
 export type PermissionStatus = typeof permissionStatuses[number]
 
 export type PermissionState = {
