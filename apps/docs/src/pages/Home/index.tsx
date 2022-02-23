@@ -92,8 +92,8 @@ export const Home: React.FC = () => {
   return (
     <>
       {/* <Scroll onRefresh={onRefresh} refreshTimeout={1000} changeData={texts} variants={['padding:2', 'paddingTop:5']}> */}
-      <Button text='Modal' onPress={() => AppStatus.setModal('test')} />
-      <Button text='Crashlytics' onPress={() => {
+      <Button text='Modal' debugName={'Modal'} onPress={() => AppStatus.setModal('test')} />
+      <Button text='Crashlytics' debugName={'Crashlytics'} onPress={() => {
         logger.error('Bad things happened', new Error('Whoops'), 'Test')
       }} />
       <TextInput rightIcon={{ name: 'apple' }} {...form.register('text')} />
@@ -137,6 +137,7 @@ export const Home: React.FC = () => {
         <Touchable
           variants={['center', 'justifyCenter', 'alignCenter']}
           onPress={() => console.log(`touch`)}
+          debugName={'Touchable working'}
         >
           <Text variants={['center']} text='Touchable working'></Text>
           <Text variants={['center']} text='Touchable working'></Text>
@@ -156,6 +157,7 @@ export const Home: React.FC = () => {
             AppStatus.set('done')
           }, 2000)
         }}
+        debugName={'Test button'}
       />
 
       <ContentView placeholderMsg='Test placeholder...' loading>
@@ -182,6 +184,7 @@ export const Home: React.FC = () => {
       />
       <Button
         text={'Pick File'}
+        debugName={'Pick File'}
         onPress={() => fileInputRef.current.openFilePicker()}
       />
 

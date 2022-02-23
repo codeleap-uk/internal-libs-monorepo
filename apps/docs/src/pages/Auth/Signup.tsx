@@ -124,6 +124,7 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
           id: null,
         }}
         onChange={(images) => form.setFieldValue('avatar', images)}
+        debugName={'Set avatar in Signup'}
       />
       <TextInput variants={inputVariants} {...form.register('email')} leftIcon={{ name: 'mail' }} />
       <TextInput variants={inputVariants} {...form.register('first_name')} />
@@ -145,16 +146,20 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
         text='Submit'
         variants={['marginVertical:1']}
         disabled={!form.isValid}
+        debugName={'Submit signup'}
       />
       <Text text='Or Signup With' variants={['alignSelfCenter', 'marginHorizontal:auto', 'marginVertical:2']}/>
       <View variants={['row',  'justifyCenter']}>
-        <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'facebook' }).then(setFormValues)}/>
-        <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'google' }).then(setFormValues)}/>
+        <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'facebook' }).then(setFormValues)}
+          debugName={'Try login with Facebook'}/>
+        <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'google' }).then(setFormValues)}
+          debugName={'Try login with Google'}/>
       </View>
       <Button
         text={'Already a user?'}
         variants={['text']}
         onPress={() => navigation.navigate('Login')}
+        debugName={'Go to Login page'}
       />
     </Scroll>
   )

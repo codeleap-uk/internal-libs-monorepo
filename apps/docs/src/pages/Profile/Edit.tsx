@@ -94,6 +94,7 @@ export default function EditProfile({ navigation }) {
           id: null,
         }}
         onChange={(image) => form.setFieldValue('avatar', image)}
+        debugName={'Change profile avatar'}
       />
       <View>
         <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} />
@@ -117,6 +118,7 @@ export default function EditProfile({ navigation }) {
           disabled={!form.isValid}
           text={'Save Changes'}
           onPress={onSubmit}
+          debugName={'Save changes'}
         />
       </View>
     </>

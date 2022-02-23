@@ -12,6 +12,7 @@ import {
 
 export const Overlays = () => {
   const { isModalOpen } = useAppSelector(store => ({ isModalOpen: store.AppStatus.modals }))
+  const buttonText = 'Do something'
 
   return <>
 
@@ -31,7 +32,7 @@ export const Overlays = () => {
       <Text variants={['center']} text='Some text' />
       <Text variants={['center']} text='Some text' />
 
-      <Button text='Do something' onPress={() => AppStatus.setModal('test')} />
+      <Button text={buttonText} onPress={() => AppStatus.setModal('test')} debugName={buttonText}/>
     </Modal>
     {/* <DebugModal/> */}
   </>

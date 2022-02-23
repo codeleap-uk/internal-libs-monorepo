@@ -34,7 +34,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closable?: boolean;
   footer?: React.ReactNode;
   title?: React.ReactNode;
-  debugName?: string;
+  debugName: string;
   closeIconName?: IconPlaceholder;
   visible: boolean;
   toggle?: () => void;

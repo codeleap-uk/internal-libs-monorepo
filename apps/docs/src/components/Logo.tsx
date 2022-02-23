@@ -32,7 +32,8 @@ export function Logo(props: LogoProps) {
   />
 
   if (props.switchServerOnPress && __DEV__) {
-    return <Touchable onPress={() => setPresses(n => n + 1) }>
+    return <Touchable onPress={() => setPresses(n => n + 1) }
+      debugName={'Click on Logo'}>
       {image}
     </Touchable>
   }

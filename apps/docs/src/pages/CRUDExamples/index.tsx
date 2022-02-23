@@ -89,7 +89,7 @@ export const CrudExample:React.FC = () => {
         <Text variants={['h4', 'marginBottom:2']} text={'Create a post'}/>
         <TextInput {...form.register('title')}/>
         <TextInput {...form.register('content')} multiline numberOfLines={50}/>
-        <Button onPress={createPost}  text={'Submit'}  loading={addPost.isLoading}/>
+        <Button onPress={createPost} text={'Submit'} loading={addPost.isLoading} debugName={'Create post'}/>
       </View>
 
       <ContentView variants={['column', 'marginTop:2']} placeholderMsg='' loading={getPosts.isLoading}>
@@ -119,7 +119,7 @@ export const CrudExample:React.FC = () => {
           <View variants={['marginTop:3']}>
             <TextInput {...editForm.register('title')} />
             <TextInput {...editForm.register('content')} multiline numberOfLines={50} styles={{ innerWrapper: { height: 100 }}}/>
-            <Button onPress={modifyPost} variants={['marginHorizontal:auto', 'gray']} text={'Edit'}/>
+            <Button onPress={modifyPost} variants={['marginHorizontal:auto', 'gray']} text={'Edit'} debugName={'Edit post'}/>
           </View>
         </ContentView>
       </Modal>

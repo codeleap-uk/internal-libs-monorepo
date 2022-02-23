@@ -120,6 +120,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
           left: 0,
           bottom: 0,
         }}
+        debugName={`Close modal`}
       />
       <View style={variantStyles.modalWrapper}>
 
@@ -134,6 +135,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                       icon={modalCloseIconName as IconPlaceholder}
                       onPress={close}
                       styles={closeButtonStyles}
+                      debugName={'Close modal'}
                       {...closeButtonProps}
                     />}
                   </>
@@ -158,7 +160,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                 return <Touchable key={idx} style={[
                   variantStyles.modalItem,
                   isSelected && variantStyles['modalItem:selected'],
-                ]} onPress={() => select(item.value)}>
+                ]} onPress={() => select(item.value)} debugName={`Select ${item.value}`}>
                   <InputLabel label={item.label} style={[variantStyles.modalItemText,   isSelected && variantStyles['modalItemText:selected']]}/>
                 </Touchable>
               })

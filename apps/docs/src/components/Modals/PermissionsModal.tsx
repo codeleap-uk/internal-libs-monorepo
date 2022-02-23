@@ -113,7 +113,7 @@ export const PermissionModal:React.FC = () => {
           description.map((text, idx) => <Text text={text} key={idx} variants={['textCenter', 'marginBottom:1']}/>)
         }
       </View>
-      <Button text={settingsText} onPress={handlePress} />
+      <Button text={settingsText} onPress={handlePress} debugName={settingsText} />
     </Modal>)
 
 }

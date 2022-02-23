@@ -25,7 +25,8 @@ const OnboardingPage = (onboardingPageProps) => {
   return (
     <View {...props} variants={[...pageVariants, ...variants]}>
       {children}
-      {next && <Button variants={'marginTop:2'} text={'Next'} onPress={next} />}
+      {next && <Button variants={'marginTop:2'} text={'Next'}
+        debugName={'Next Onboarding page'} onPress={next} />}
     </View>
   )
 }
@@ -154,6 +155,7 @@ const Finish: React.FC<PageProps> = () => {
         onPress={() => {
           Session.loginSuccess()
         }}
+        debugName={'Go to app'}
       />
     </OnboardingPage>
   )

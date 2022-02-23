@@ -52,7 +52,8 @@ export const NetworkStatusModal:React.FC = () => {
 
       <Text text={text.online} />
 
-      <Button text={'Dismiss'} onPress={onDismiss} variants={['marginTop:3']}/>
+      <Button text={'Dismiss'} onPress={onDismiss} variants={['marginTop:3']}
+        debugName={'Dismiss Network Status Modal'}/>
     </Modal>
 
   </>

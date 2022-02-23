@@ -14,11 +14,12 @@ export const DebugModal:React.FC = () => {
   return <>
     <Modal visible={isModalOpen} toggle={toggle}>
       <Text text={`Using ${isDevelopment ? 'development' : 'production'} server -> ${api.axios.defaults.baseURL}`} />
-      <Button text={'Switch server'} onPress={() => {
-        Session.setMode()
-      }} />
+      <Button text={'Switch server'}
+        debugName={`Switch server`} onPress={() => {
+          Session.setMode()
+        }} />
     </Modal>
-    <Button  icon='bug' onPress={toggle} styles={toggleButtonStyle} variants={['circle']}/>
+    <Button icon='bug' onPress={toggle} debugName={`set AppStatus debug`} styles={toggleButtonStyle} variants={['circle']}/>
   </>
 }
 

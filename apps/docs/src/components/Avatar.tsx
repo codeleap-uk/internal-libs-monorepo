@@ -18,10 +18,11 @@ type AvatarProps = {
   styles?: StylesOf<AvatarComposition>;
   profile: TSession['profile'];
   onChange?: (files: WebInputFile[]) => void;
+  debugName: string
 } & ComponentVariants<typeof AvatarStyles>;
 
 export const Avatar: React.FC<AvatarProps> = (props) => {
-  const { variants, responsiveVariants, styles } = props
+  const { variants, responsiveVariants, styles, debugName } = props
 
   const input = useRef<FileInputRef>(null)
   const [editImage, setEditImage] = useState(false)
@@ -99,6 +100,7 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
       disabled={disabled}
       onPress={onPress}
       onHover={canEdit && onHoverImage}
+      debugName={debugName}
     >
       <View style={[variantStyles.wrapper]}>
         <View style={[
