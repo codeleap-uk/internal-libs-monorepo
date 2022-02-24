@@ -17,7 +17,7 @@ export type AnyRecord = any;
 
 export type CreateSliceArgs<
   S extends AnyRecord,
-  N  = '',
+  N = '',
   R extends Reducers<S> = Reducers<S>,
   AR extends AsyncReducers<S> = AsyncReducers<S>
 > = {

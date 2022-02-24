@@ -67,7 +67,7 @@ export function objectPaths(obj) {
 }
 
 export function isValuePrimitive(a:any) {
-  return  ['string', 'number', 'boolean'].includes(typeof a)
+  return ['string', 'number', 'boolean'].includes(typeof a)
 }
 
 export function optionalObject(condition: boolean, ifTrue: any, ifFalse: any) {

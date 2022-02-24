@@ -17,7 +17,7 @@ export class PermissionManager<
     private params: T
 
     public permissions: {
-      [Property in keyof T as Uppercase<string & Property>]  : Property
+      [Property in keyof T as Uppercase<string & Property>] : Property
     }
 
     logger: Logger
@@ -61,7 +61,7 @@ export class PermissionManager<
       return this._permissions[name]
     }
 
-    getMany:I['getMany'] =  async (perms, options) => {
+    getMany:I['getMany'] = async (perms, options) => {
 
       const results = []
 

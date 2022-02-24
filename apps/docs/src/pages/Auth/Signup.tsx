@@ -95,7 +95,7 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
       AppStatus.set('idle')
       OSAlert.error({
         title: 'Error signing up',
-        body: e.code ?  e.message : '',
+        body: e.code ? e.message : '',
       })
     }
   }
@@ -151,7 +151,7 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
         debugName={'Submit signup'}
       />
       <Text text='Or Signup With' variants={['alignSelfCenter', 'marginHorizontal:auto', 'marginVertical:2']}/>
-      <View variants={['row',  'justifyCenter']}>
+      <View variants={['row', 'justifyCenter']}>
         <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'facebook' }).then(setFormValues)}
           debugName={'Try login with Facebook'}/>
         <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'google' }).then(setFormValues)}

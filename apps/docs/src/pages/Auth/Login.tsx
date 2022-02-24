@@ -12,7 +12,7 @@ import { createForm, useForm } from '@codeleap/common'
 import { Scroll } from '@codeleap/web'
 import { SceneNavigationProps } from '../Scenes'
 import { Logo } from '@/components'
-import { profileFromUser,  trySocialLogin } from '@/services'
+import { profileFromUser, trySocialLogin } from '@/services'
 
 const devEnv = Settings.Environment.IsDev
 

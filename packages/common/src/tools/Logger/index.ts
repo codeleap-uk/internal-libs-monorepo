@@ -85,9 +85,9 @@ export class Logger {
   }
 
   static coloredLog:LogToTerminal = (...logArgs) => {
-    const [logType, content,  _ig_color, deviceId] = logArgs
+    const [logType, content, _ig_color, deviceId] = logArgs
 
-    const [descriptionOrValue, value, category]  = content
+    const [descriptionOrValue, value, category] = content
 
     const nArgs = logArgs[1].length
     let logContent = logArgs[1]

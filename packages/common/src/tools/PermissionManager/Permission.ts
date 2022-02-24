@@ -1,7 +1,7 @@
 import { AnyFunction } from '../../types/utility'
 import * as PermissionTypes from './types'
 
-const SCOPE  = 'Permissions'
+const SCOPE = 'Permissions'
 
 export class Permission implements PermissionTypes.IPermission {
     status: PermissionTypes.PermissionStatus;
@@ -9,7 +9,7 @@ export class Permission implements PermissionTypes.IPermission {
     shouldAsk: boolean;
 
     constructor(private actions:PermissionTypes.PermissionActions & {log?: AnyFunction}, public name = '') {
-      this.actions  = actions
+      this.actions = actions
       this.shouldAsk = true
       this.status = 'pending'
 

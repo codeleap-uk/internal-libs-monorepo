@@ -44,7 +44,7 @@ export function createSlice<
         const currentState = store.getState()[name]
         const actionResult = await action(currentState, setState, args)
 
-        return actionResult !== undefined ? actionResult :  store.getState()[name]
+        return actionResult !== undefined ? actionResult : store.getState()[name]
       }
     }
     return actions

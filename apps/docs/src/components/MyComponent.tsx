@@ -1,4 +1,4 @@
-import { React, Text,  View } from '@/app'
+import { React, Text, View } from '@/app'
 import { ComponentVariants, StylesOf, useDefaultComponentStyle } from '@codeleap/common'
 
 import { MyComponentComposition, _MyComponentStyle } from '../app/stylesheets/MyComponent'

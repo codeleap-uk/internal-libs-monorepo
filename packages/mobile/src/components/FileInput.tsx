@@ -101,13 +101,13 @@ export const FileInput = forwardRef<
     }
   }
 
-  const mergedOptions  = {
+  const mergedOptions = {
     ...pickerDefaults,
     ...pickerOptions,
   } as Options
 
   const handlePickerResolution = data => {
-    onFileSelect(mergedOptions.multiple ? data.map(parsePickerData)  : [
+    onFileSelect(mergedOptions.multiple ? data.map(parsePickerData) : [
       parsePickerData(data),
     ])
   }

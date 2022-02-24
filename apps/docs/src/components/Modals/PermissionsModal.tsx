@@ -1,7 +1,7 @@
 import { React, Button, Icon, Image, Modal, Text, variantProvider, Theme, View } from '@/app'
 import { AppPermissions, PermissionName, Permissions, TPermissions, useAppSelector } from '@/redux'
 import { onUpdate } from '@codeleap/common'
-import {  ModalProps } from '@codeleap/web'
+import { ModalProps } from '@codeleap/web'
 
 const defaultState:TPermissions['modalData'] = {
   permissionId: null,
@@ -20,7 +20,7 @@ const requiredPermissions:PermissionName[] = ['camera', 'record_audio']
 async function askRequiredPermissions() {
 
   for (const permissionId of requiredPermissions) {
-    const hasOpenedModal =  await Permissions.setModalToPermission(permissionId)
+    const hasOpenedModal = await Permissions.setModalToPermission(permissionId)
 
     if (hasOpenedModal) {
       break

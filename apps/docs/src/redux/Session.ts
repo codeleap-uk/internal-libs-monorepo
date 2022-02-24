@@ -95,7 +95,7 @@ export const sessionSlice = createSlice({
       localStorage.setItem(LocalStorageKeys.SESSION_IS_DEV, `${newValue}`)
 
       api.setConfig({
-        baseURL: newValue ?  Settings.Fetch.DevelopmentURL :  Settings.Fetch.ProductionURL,
+        baseURL: newValue ? Settings.Fetch.DevelopmentURL : Settings.Fetch.ProductionURL,
       })
 
       setState({

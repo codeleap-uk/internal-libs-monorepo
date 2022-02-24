@@ -12,7 +12,7 @@ const modals = {
 export type TAppStatus = {
   status: 'loading' | 'done' | 'idle' | 'splash' | 'blank';
   ready: boolean;
-  modals:  Record<keyof typeof modals, any>
+  modals: Record<keyof typeof modals, any>
   currentState: AppStateStatus
   network: null | (NetInfoState & { isValid: boolean })
 };
@@ -32,7 +32,7 @@ export const appStatusSlice = createSlice({
   initialState,
   reducers: {
     setModal(state, modal: [ModalName, boolean] | ModalName) {
-      const [name, value] = Array.isArray(modal) ? modal  : [modal, !state.modals[modal]]
+      const [name, value] = Array.isArray(modal) ? modal : [modal, !state.modals[modal]]
       return {
         modals: {
           [name]: value,

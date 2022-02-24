@@ -14,7 +14,7 @@ export type PropTypes = {
 export type SceneComponent<K extends NavigatorType> = PropTypes[K]['Screen']['component']
 export type SceneOptions<K extends NavigatorType> =
     { icon?: IconPlaceholder; default?:SceneComponent<K> } & PropTypes[K]['Screen']
-export type Scene<K extends NavigatorType> =  SceneComponent<K>  | SceneOptions<K>
+export type Scene<K extends NavigatorType> = SceneComponent<K> | SceneOptions<K>
 
 export type Scenes<K extends NavigatorType> = {
     [x:string] : Scene<K>

@@ -1,4 +1,4 @@
-import { React,  Modal, Icon, Text, Button } from '@/app'
+import { React, Modal, Icon, Text, Button } from '@/app'
 import { useAppSelector } from '@/redux'
 import { onUpdate, useBooleanToggle } from '@codeleap/common'
 
@@ -25,7 +25,7 @@ export const NetworkStatusModal:React.FC = () => {
 
   if (!network) return null
 
-  const modalToRender =  network.isValid ? 'online' : 'offline'
+  const modalToRender = network.isValid ? 'online' : 'offline'
 
   const onDismiss = () => toggleShowUntilDismiss()
 

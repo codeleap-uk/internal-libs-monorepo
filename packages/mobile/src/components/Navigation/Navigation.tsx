@@ -7,7 +7,7 @@ import { Icon } from '../Icon'
 import { NavigationProps, NavigatorType, PropTypes, TNavigators } from './types'
 import { Navigators } from './constants'
 
-export const Navigation = <T extends NavigatorType>({ type, scenes,  ...props }: NavigationProps<T>) => {
+export const Navigation = <T extends NavigatorType>({ type, scenes, ...props }: NavigationProps<T>) => {
   const NavigationComponent = Navigators[type] as TNavigators[T]
 
   const defaultProps = {}
@@ -29,7 +29,7 @@ export const Navigation = <T extends NavigatorType>({ type, scenes,  ...props }:
           screenProps.component = content
           // console.log('Render NavigationScreen', { scenes, screenProps, content, isFunction }, 'PACKAGES')
         } else {
-          screenProps.component = content?.component?.default || content?.component  || content?.default
+          screenProps.component = content?.component?.default || content?.component || content?.default
           const nameParts = name.split('.')
           const title = content?.title || nameParts[nameParts.length - 1] || name.replace('.', '')
 
@@ -39,7 +39,7 @@ export const Navigation = <T extends NavigatorType>({ type, scenes,  ...props }:
               title,
               tabBarIcon: (style) => <Icon name={content?.icon} style={style}/>,
               tabBarIconFocused: content?.iconFocused ? (style) => <Icon name={content?.iconFocused} style={style}/> : null,
-              ...(TypeGuards.isFunction(content.options) ? content.options(optionProps)  : content.options),
+              ...(TypeGuards.isFunction(content.options) ? content.options(optionProps) : content.options),
             }),
           }
           // console.log('Render NavigationScreen loop', { scenes, screenProps, content, title, isFunction, props }, 'PACKAGES')

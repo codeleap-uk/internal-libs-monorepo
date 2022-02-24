@@ -11,7 +11,7 @@ import {
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { Text } from './Text'
-import { View, ViewProps  } from './View'
+import { View, ViewProps } from './View'
 import { Button } from './Button'
 import { StylesOf } from '../types/utility'
 import { Icon } from './Icon'

@@ -5,7 +5,7 @@ import { onMount, onUpdate, useForm, useBooleanToggle } from '@codeleap/common'
 import { usePostsApi } from './apis/posts'
 import { PostCard } from './components/PostCard'
 // import { Scroll } from '@codeleap/mobile'
-import {  useState } from 'react'
+import { useState } from 'react'
 import { editPostForm, postForm } from './forms'
 import { useAppSelector } from '@/redux'
 

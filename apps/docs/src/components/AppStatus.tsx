@@ -75,7 +75,7 @@ const transition = {
   duration: 500,
 }
 
-const animationConfig =  {
+const animationConfig = {
   init: {
     opacity: 1,
     transition,

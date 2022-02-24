@@ -1,6 +1,6 @@
 // @ts-ignore
-import  DP from 'react-native-document-picker'
-import * as  DocumentPickerTypes from './types/documentPicker'
+import DP from 'react-native-document-picker'
+import * as DocumentPickerTypes from './types/documentPicker'
 
 export const DocumentPicker = DP as DocumentPickerTypes.DocumentPicker
 

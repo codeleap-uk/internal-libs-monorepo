@@ -3,7 +3,7 @@ import { variantProvider } from '../theme'
 
 export type MyComponentComposition = 'wrapper' | 'text'
 
-const createMyComponentStyle  = createDefaultVariantFactory<MyComponentComposition>()
+const createMyComponentStyle = createDefaultVariantFactory<MyComponentComposition>()
 
 export const _MyComponentStyle = {
   default: createMyComponentStyle((theme) => ({

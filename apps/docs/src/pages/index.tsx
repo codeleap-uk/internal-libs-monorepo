@@ -1,6 +1,6 @@
-import { React,   Button, Modal, Text, LocalStorageKeys } from '@/app'
+import { React, Button, Modal, Text, LocalStorageKeys } from '@/app'
 import { AppStatusOverlay } from '@/components'
-import {  AppStatus, Session, useAppSelector } from '@/redux'
+import { AppStatus, Session, useAppSelector } from '@/redux'
 import { onMount, onUpdate, useComponentStyle } from '@codeleap/common'
 import {
   View,
@@ -96,7 +96,7 @@ const ListItem = ({ item, depth = 2, styles }) => {
     >
       <View variants={['column']}>
         <Text text={item.name} variants={['h3']} />
-        <Text text={item.description}  />
+        <Text text={item.description} />
       </View>
       <Button
         variants={['circle', 'marginLeft:auto']}

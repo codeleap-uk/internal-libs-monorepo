@@ -9,7 +9,7 @@ import {
   FromVariantsBuilder,
   VariantProvider,
 } from '.'
-import { AnyFunction, ComponentVariants, FunctionType, NestedKeys,  StylesOf } from '..'
+import { AnyFunction, ComponentVariants, FunctionType, NestedKeys, StylesOf } from '..'
 import { silentLogger } from '../constants'
 import { onMount } from '../utils'
 import { StyleContextProps, StyleContextValue } from './types'
@@ -64,7 +64,7 @@ type ComponentNameArg = keyof DEFAULT_VARIANTS;
 type useDefaultComponentStyleProps<
   ComponentName extends ComponentNameArg,
   C extends CommonVariantObject<any> = DefaultVariants[ComponentName],
-  Comp  extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
+  Comp extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
 > = ComponentVariants<C> & {
   rootElement?: Comp;
   styles?: StylesOf<Comp>;

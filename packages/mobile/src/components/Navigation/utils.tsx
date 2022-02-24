@@ -1,11 +1,11 @@
-import React  from 'react'
+import React from 'react'
 import { Navigation } from './Navigation'
 
 export function createAppNavigation(Scenes:any) {
 
   console.log('Creating app navigation', { Scenes }, 'PACKAGES')
 
-  const AllScenes = Object.entries<any>(Scenes).reduce((allScenes, [moduleName, content]) =>  {
+  const AllScenes = Object.entries<any>(Scenes).reduce((allScenes, [moduleName, content]) => {
 
     const subScenes = []
 
@@ -25,7 +25,7 @@ export function createAppNavigation(Scenes:any) {
 
   const SCENES_RESULT = Object.fromEntries(
     Object.entries<any>(Scenes)
-      .map(([S, { _ig_scenes, exclude, type, navigationProps,  ...otherProps }]) => {
+      .map(([S, { _ig_scenes, exclude, type, navigationProps, ...otherProps }]) => {
         let filterScenes = null
 
         if (exclude) {

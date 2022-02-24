@@ -1,10 +1,10 @@
-import {  IconPlaceholder, useBooleanToggle, getNestedStylesByKey, useDefaultComponentStyle, TypeGuards } from '@codeleap/common'
+import { IconPlaceholder, useBooleanToggle, getNestedStylesByKey, useDefaultComponentStyle, TypeGuards } from '@codeleap/common'
 import React, { useMemo } from 'react'
 import { Modal, StyleSheet } from 'react-native'
 import { Button } from '../Button'
 import { Scroll } from '../Scroll'
 
-import {  InputLabel, TextInput } from '../TextInput'
+import { InputLabel, TextInput } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { AnimatedView, View } from '../View'
 import { MobileSelectStyles } from './styles'
@@ -131,7 +131,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
             (showClose || showLabelOnModal || header) && (
               <View style={variantStyles.modalHeader}>
                 {
-                  header ? header :  <>
+                  header ? header : <>
                     {showLabelOnModal && <InputLabel label={modalLabel || label} style={variantStyles.modalLabelText}/>}
                     {showClose && <Button
                       icon={modalCloseIconName as IconPlaceholder}
@@ -163,7 +163,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                   variantStyles.modalItem,
                   isSelected && variantStyles['modalItem:selected'],
                 ]} onPress={() => select(item.value)} debugName={`Select ${item.value}`}>
-                  <InputLabel label={item.label} style={[variantStyles.modalItemText,   isSelected && variantStyles['modalItemText:selected']]}/>
+                  <InputLabel label={item.label} style={[variantStyles.modalItemText, isSelected && variantStyles['modalItemText:selected']]}/>
                 </Touchable>
               })
             }
