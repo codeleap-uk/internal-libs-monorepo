@@ -135,6 +135,7 @@ const formatting = {
   'space-in-parens': ['warn', 'never'],
   'space-infix-ops': 'warn',
   'no-spaced-func': 'error',
+  'no-multi-spaces': 'warn',
 }
 
 const codeQuality = {

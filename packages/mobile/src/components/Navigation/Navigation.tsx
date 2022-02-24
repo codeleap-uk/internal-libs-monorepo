@@ -38,6 +38,7 @@ export const Navigation = <T extends NavigatorType>({ type, scenes,  ...props }:
             options: (optionProps) => ({
               title,
               tabBarIcon: (style) => <Icon name={content?.icon} style={style}/>,
+              tabBarIconFocused: content?.iconFocused ? (style) => <Icon name={content?.iconFocused} style={style}/> : null,
               ...(TypeGuards.isFunction(content.options) ? content.options(optionProps)  : content.options),
             }),
           }
