@@ -5,6 +5,7 @@ import {
   IconStyles,
   useDefaultComponentStyle,
   useCodeleapContext,
+  arePropsEqual,
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 import { View } from './View'
@@ -18,7 +19,7 @@ export type IconProps = {
   size?: number
 };
 
-export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
+export const IconComponent: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle('Icon', {
@@ -46,3 +47,12 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
   }
   return <Component {...otherProps} style={variantStyles.icon} />
 }
+
+function areEqual(prevProps, nextProps) {
+  const check = ['name', 'style', 'variants', 'renderEmptySpace']
+  const res = arePropsEqual(prevProps, nextProps, { check })
+  return res
+}
+
+export const Icon = React.memo(IconComponent, areEqual)
+

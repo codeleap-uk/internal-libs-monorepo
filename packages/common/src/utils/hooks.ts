@@ -8,6 +8,7 @@ export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
   useState,
   useRef,
+  useEffect,
 }
 
 export const onMount = (func: AnyFunction) => {
