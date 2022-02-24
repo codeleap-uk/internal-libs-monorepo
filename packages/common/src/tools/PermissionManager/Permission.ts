@@ -49,7 +49,7 @@ export class Permission implements PermissionTypes.IPermission {
           }
           break
       }
-    } 
+    }
 
     get isGranted() {
       return this.status === 'granted'
@@ -66,13 +66,13 @@ export class Permission implements PermissionTypes.IPermission {
     get isBlocked() {
       return this.status === 'blocked'
     }
-    
-    get isUnavailable(){
+
+    get isUnavailable() {
       return this.status === 'unavailable'
-      
+
     }
-    
-    get isLimited(){
+
+    get isLimited() {
       return this.status === 'limited'
 
     }

@@ -94,21 +94,24 @@ export default function EditProfile({ navigation }) {
           id: null,
         }}
         onChange={(image) => form.setFieldValue('avatar', image)}
+        debugName={'Change profile avatar'}
       />
       <View>
-        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} />
+        <TextInput {...form.register('email')} debugName={'Profile email input'} leftIcon={{ name: 'mail' }} />
 
-        <TextInput {...form.register('first_name')} />
-        <TextInput {...form.register('last_name')} />
+        <TextInput {...form.register('first_name')} debugName={'Profile first name input'} />
+        <TextInput {...form.register('last_name')} debugName={'Profile last name input'} />
 
         <TextInput
           {...form.register('password')}
           leftIcon={{ name: 'key' }}
+          debugName={'Profile password input'}
           visibilityToggle
         />
 
         <TextInput
           {...form.register('repeatPassword')}
+          debugName={'Profile repeat password input'}
           leftIcon={{ name: 'key' }}
           visibilityToggle
         />
@@ -117,6 +120,7 @@ export default function EditProfile({ navigation }) {
           disabled={!form.isValid}
           text={'Save Changes'}
           onPress={onSubmit}
+          debugName={'Save changes'}
         />
       </View>
     </>

@@ -124,20 +124,23 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
           id: null,
         }}
         onChange={(images) => form.setFieldValue('avatar', images)}
+        debugName={'Set avatar in Signup'}
       />
-      <TextInput variants={inputVariants} {...form.register('email')} leftIcon={{ name: 'mail' }} />
-      <TextInput variants={inputVariants} {...form.register('first_name')} />
-      <TextInput variants={inputVariants} {...form.register('last_name')} />
+      <TextInput variants={inputVariants} {...form.register('email')} debugName={'Email signup input'} leftIcon={{ name: 'mail' }} />
+      <TextInput variants={inputVariants} {...form.register('first_name')} debugName={'First name signup input'} />
+      <TextInput variants={inputVariants} {...form.register('last_name')} debugName={'Last name signup input'} />
       <TextInput
         {...form.register('password')}
         variants={inputVariants}
         leftIcon={{ name: 'key' }}
+        debugName={'Password signup input'}
         visibilityToggle
       />
       <TextInput
         {...form.register('repeatPassword')}
         variants={inputVariants}
         leftIcon={{ name: 'key' }}
+        debugName={'Repeat password signup input'}
         visibilityToggle
       />
       <Button
@@ -145,16 +148,20 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
         text='Submit'
         variants={['marginVertical:1']}
         disabled={!form.isValid}
+        debugName={'Submit signup'}
       />
       <Text text='Or Signup With' variants={['alignSelfCenter', 'marginHorizontal:auto', 'marginVertical:2']}/>
       <View variants={['row',  'justifyCenter']}>
-        <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'facebook' }).then(setFormValues)}/>
-        <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'google' }).then(setFormValues)}/>
+        <Button icon='facebook' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'facebook' }).then(setFormValues)}
+          debugName={'Try login with Facebook'}/>
+        <Button icon='google' variants={['icon:primary']} onPress={() => tryLogin({ withProvider: 'google' }).then(setFormValues)}
+          debugName={'Try login with Google'}/>
       </View>
       <Button
         text={'Already a user?'}
         variants={['text']}
         onPress={() => navigation.navigate('Login')}
+        debugName={'Go to Login page'}
       />
     </Scroll>
   )

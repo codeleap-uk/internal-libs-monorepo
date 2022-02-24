@@ -52,6 +52,7 @@ export const PropController = ({
                   onChangeText={setValue}
                   value={value}
                   label={label}
+                  debugName={label}
                   variants={['pill', 'white']}
                 />
               )

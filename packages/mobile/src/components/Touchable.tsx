@@ -19,7 +19,7 @@ export type TouchableProps = Omit<
   variants?: ComponentVariants<typeof ViewStyles>['variants'];
   component?: any;
   ref?: React.Ref<NativeTouchable>;
-  debugName?: string;
+  debugName: string;
   debugComponent?: string;
   onPress?: AnyFunction;
 } & BaseViewProps;

@@ -48,7 +48,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   ...props
 }) => {
   return (
-    <Touchable onPress={select} style={style.itemWrapper}>
+    <Touchable onPress={select} style={style.itemWrapper} debugName={'Change radioButton value'}>
       <View style={[style.button, checked && style['button:checked']]}>
         <View
           style={[style.buttonMark, checked && style['buttonMark:checked']]}
@@ -87,6 +87,7 @@ export const RadioGroup = <T extends unknown>(
       <View style={radioStyle.listWrapper}>
         {options?.map((item, idx) => (
           <RadioButton
+            debugName={'RadioButton'}
             item={item}
             key={idx}
             style={radioStyle}

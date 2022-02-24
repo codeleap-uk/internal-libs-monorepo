@@ -23,7 +23,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     styles?: StylesOf<ButtonComposition>
     loading?: boolean
     debounce?: number
-    debugName?: string // NOTE this should not be optional
+    debugName: string // NOTE this should not be optional
   };
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {

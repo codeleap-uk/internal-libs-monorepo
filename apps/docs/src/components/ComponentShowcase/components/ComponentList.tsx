@@ -40,6 +40,7 @@ export const ComponentList: React.FC<{
         }
         onChangeText={setSearch}
         value={search}
+        debugName={'Search Component input'}
         variants={['marginVertical:2']}
       />
       <View variants={['column', 'scrollY']}>

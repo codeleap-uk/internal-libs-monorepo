@@ -15,11 +15,13 @@ export const Auth: React.FC<SceneNavigationProps> = ({ navigation }) => {
             variants={['marginTop:2']}
             onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Login' }] })}
             text='Log in'
+            debugName={'Go to Login page'}
           />
           <Button
             variants={['marginTop:2']}
             onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Signup' }] })}
             text='Sign up'
+            debugName={'Go to Sign up page'}
           />
         </View>
       </View>

@@ -90,7 +90,7 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
         <Logo variants={['black']} switchServerOnPress/>
       </View>
       <View>
-        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} />
+        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} debugName={'Login Email input'} />
         <TextInput
           {...form.register('password')}
           leftIcon={{ name: 'key' }}
@@ -100,6 +100,7 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
           variants={['marginVertical:2']}
           onPress={() => onSubmit()}
           text='Sign in'
+          debugName={'Sign in'}
           disabled={!form.isValid}
         />
         <View variants={['row', 'justifyCenter', 'marginVertical:1']}>
@@ -108,14 +109,14 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
             icon='google'
             onPress={() => socialLogin('google')}
             variants={['icon:primary']}
-
+            debugName={'Social login with Google'}
           />
 
           <Button
             icon='facebook'
             onPress={() => socialLogin('facebook')}
             variants={['icon:primary']}
-
+            debugName={'Social login with Facebook'}
           />
 
         </View>
@@ -123,11 +124,13 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
           text={"Don't have an account?"}
           variants={['text', 'marginVertical:2', 'small']}
           onPress={() => navigation.navigate('Signup')}
+          debugName={'Go to sign up page'}
         />
         <Button
           text={'Forgot Password?'}
           variants={['text', 'small']}
           onPress={() => navigation.navigate('ForgotPassword')}
+          debugName={'Go to Forgot Password page'}
         />
       </View>
     </Scroll>
