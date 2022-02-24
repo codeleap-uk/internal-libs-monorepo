@@ -1,3 +1,4 @@
+import callsites from 'callsites'
 import { AppSettings } from '../../config/Settings'
 import { Analytics } from './Analytics'
 import { foregroundColors, colors, logColors } from './constants'
@@ -80,39 +81,8 @@ export class Logger {
         'Internal',
       ])
     })
+
   }
-
-  // static coloredLog: LogToTerminal = (...logArgs) => {
-  //   const [logType, args, color, deviceIdentifier] = logArgs
-  //   let cl = logColors[logType]
-  //   let useColor = colors[cl]
-
-  //   if (color) {
-  //     cl = color as keyof typeof foregroundColors
-  //     useColor = colors[color]
-  //   }
-
-  //   const useCSS = typeof window !== 'undefined'
-
-  //   if (useCSS) {
-  //     // eslint-disable-next-line no-console
-  //     const logStr = `[${logType.toUpperCase()}]${deviceIdentifier} ${args?.[2]} - ${args?.[0]}`
-  //     console[logType](logStr, args[1])
-  //   } else {
-  //     const logDescription =
-  //       [typeof args?.[0], typeof args?.[2]]
-  //         .every(t => t === 'string') ? `${args?.[2]||''} - ${args?.[0]||''}` : args?.[0] || ''
-  //     // eslint-disable-next-line no-console
-  //     console[logType](
-  //       useColor,
-  //       `[${logType.toUpperCase()}]${deviceIdentifier}
-  //         ${logDescription}
-  //       `,
-  //       args[1],
-  //       colors.Reset,
-  //     )
-  //   }
-  // };
 
   static coloredLog:LogToTerminal = (...logArgs) => {
     const [logType, content,  _ig_color, deviceId] = logArgs
@@ -168,6 +138,7 @@ export class Logger {
 
   error(...args: LogFunctionArgs) {
     this.logToTerminal('error', args)
+    console.log(callsites())
   }
 
   warn(...args: LogFunctionArgs) {
@@ -178,3 +149,4 @@ export class Logger {
     this.logToTerminal('log', args)
   }
 }
+

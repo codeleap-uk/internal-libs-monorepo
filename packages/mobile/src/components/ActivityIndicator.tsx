@@ -29,10 +29,9 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
 
     const { Theme } = useCodeleapContext()
 
-    const color = variantStyles.wrapper?.color || Theme.colors.gray
-    const size = variantStyles.wrapper?.height || variantStyles.wrapper?.width || 'large'
-
     const styles = StyleSheet.flatten([variantStyles.wrapper, style])
+    const color = styles?.color || Theme.colors.gray
+    const size = styles?.height || styles?.width || 'large'
 
     return (
       <Indicator
