@@ -66,6 +66,7 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
                 variants={['icon']}
                 icon={'close' as IconPlaceholder}
                 style={variantStyles.closeButton}
+                debugName={'Close icon'}
               />
             )}
           </View>

@@ -90,7 +90,7 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
         <Logo variants={['black']} switchServerOnPress/>
       </View>
       <View>
-        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} />
+        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} debugName={'Login Email input'} />
         <TextInput
           {...form.register('password')}
           leftIcon={{ name: 'key' }}

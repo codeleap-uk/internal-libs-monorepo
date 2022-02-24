@@ -98,6 +98,7 @@ export const PermissionModal:React.FC = () => {
       visible={!!permissions.modalData}
       // toggle={toggle}
       title={title}
+      debugName={'Permissions modal'}
       // variants={['center']}
       // dismissOnBackdrop={false}
       {...modalProps}

@@ -83,9 +83,11 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       editable={false}
       touchableWrapper
       innerWrapperProps={{
+        debugName: 'Select',
         onPress: close,
       }}
       label={label}
+      debugName={'Select input'}
       styles={inputStyles}
       style={style}
       {...props}

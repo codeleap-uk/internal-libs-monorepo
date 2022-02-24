@@ -12,7 +12,7 @@ export const DebugModal:React.FC = () => {
   const toggle = () => AppStatus.setModal('debug')
 
   return <>
-    <Modal visible={isModalOpen} toggle={toggle}>
+    <Modal visible={isModalOpen} toggle={toggle} debugName={'Debug modal'}>
       <Text text={`Using ${isDevelopment ? 'development' : 'production'} server -> ${api.axios.defaults.baseURL}`} />
       <Button text={'Switch server'}
         debugName={`Switch server`} onPress={() => {

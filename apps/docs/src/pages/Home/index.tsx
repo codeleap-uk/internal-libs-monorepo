@@ -96,7 +96,7 @@ export const Home: React.FC = () => {
       <Button text='Crashlytics' debugName={'Crashlytics'} onPress={() => {
         logger.error('Bad things happened', new Error('Whoops'), 'Test')
       }} />
-      <TextInput rightIcon={{ name: 'apple' }} {...form.register('text')} />
+      <TextInput rightIcon={{ name: 'apple' }} {...form.register('text')} debugName={'Text example input'} />
 
       <Image
         fast

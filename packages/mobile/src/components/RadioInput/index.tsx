@@ -87,6 +87,7 @@ export const RadioGroup = <T extends unknown>(
       <View style={radioStyle.listWrapper}>
         {options?.map((item, idx) => (
           <RadioButton
+            debugName={'RadioButton'}
             item={item}
             key={idx}
             style={radioStyle}

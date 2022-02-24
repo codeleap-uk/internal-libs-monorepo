@@ -22,6 +22,7 @@ export const Overlays = () => {
       open={isModalOpen.test}
       showClose
       title={'hello'}
+      debugName={'Test modal'}
       toggle={() => AppStatus.setModal('test')}
       // debugName='Home'
     >

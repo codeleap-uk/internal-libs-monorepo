@@ -166,6 +166,7 @@ export const FileInput = forwardRef<
         <Button
           onPress={() => openFilePicker()}
           text={filenames || placeholder}
+          debugName={'Open file picker'}
           icon={iconName || ('fileInputButton' as IconPlaceholder)}
           variants={filenames ? '' : 'icon'}
           {...buttonProps}

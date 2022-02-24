@@ -68,7 +68,7 @@ export const ForgotPassword: React.FC<SceneNavigationProps> = () => {
           text={`Forgot password`}
           variants={['h3', 'marginBottom:6', 'textCenter']}
         />
-        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} />
+        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} debugName={'ForgotPassword Email input'} />
         <Button
           variants={['marginTop:2']}
           onPress={() => onSubmit()}

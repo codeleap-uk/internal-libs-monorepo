@@ -46,7 +46,7 @@ export const AppStatusOverlay: React.FC = () => {
 
   const renderContentModal = ({ visible, content, variants = 'appStatusIndicator' }) => {
     return (
-      <Modal visible={visible} variants={variants} scroll={false}>
+      <Modal visible={visible} variants={variants} scroll={false} debugName={'AppStatus modal'}>
         {content()}
       </Modal>
     )

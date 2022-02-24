@@ -72,6 +72,7 @@ const TextInputShowcase = {
             name: controlValues.rightIcon,
           }}
           label={'SOMEBODY ONCE TOLD ME'}
+          debugName={'Showcase example TextInput'}
         />
       </Fragment>
     )

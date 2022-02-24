@@ -126,19 +126,21 @@ export const Signup: React.FC<SceneNavigationProps> = ({ navigation, route }) =>
         onChange={(images) => form.setFieldValue('avatar', images)}
         debugName={'Set avatar in Signup'}
       />
-      <TextInput variants={inputVariants} {...form.register('email')} leftIcon={{ name: 'mail' }} />
-      <TextInput variants={inputVariants} {...form.register('first_name')} />
-      <TextInput variants={inputVariants} {...form.register('last_name')} />
+      <TextInput variants={inputVariants} {...form.register('email')} debugName={'Email signup input'} leftIcon={{ name: 'mail' }} />
+      <TextInput variants={inputVariants} {...form.register('first_name')} debugName={'First name signup input'} />
+      <TextInput variants={inputVariants} {...form.register('last_name')} debugName={'Last name signup input'} />
       <TextInput
         {...form.register('password')}
         variants={inputVariants}
         leftIcon={{ name: 'key' }}
+        debugName={'Password signup input'}
         visibilityToggle
       />
       <TextInput
         {...form.register('repeatPassword')}
         variants={inputVariants}
         leftIcon={{ name: 'key' }}
+        debugName={'Repeat password signup input'}
         visibilityToggle
       />
       <Button

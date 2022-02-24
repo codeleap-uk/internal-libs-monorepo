@@ -32,7 +32,7 @@ export type TextInputProps =
     edited?: boolean;
     type?: string;
     label?: React.ReactNode
-
+    debugName: string
     leftIcon?: IconProp
     rightIcon?: IconProp
     styles?: StylesOf<TextInputComposition>
@@ -65,6 +65,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     visibilityToggle,
     touchableWrapper,
     innerWrapperProps,
+    debugName,
     ...props
   } = rawprops
 
@@ -142,7 +143,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       style={getStyles('wrapper')}
     >
       <InputLabel label={label} style={getStyles('label')} />
-      <InnerWrapper style={getStyles('innerWrapper')} {...innerWrapperProps}>
+      <InnerWrapper debugName={debugName} style={getStyles('innerWrapper')} {...innerWrapperProps}>
         <InputIcon {...leftIcon} style={leftIconStyle} />
         <InputElement
           ref={input}
@@ -182,7 +183,7 @@ export const FormError = ({ message, ...props }) => {
 export const InputIcon: React.FC<{ style: any } & IconProp> = ({ name, style, action }) => {
   if (!name) return null
   if (action) {
-    return <Button icon={name} onPress={() => action()} styles={{
+    return <Button icon={name} debugName={`${name} icon button`} onPress={() => action()} styles={{
       icon: style,
     }} variants={['icon']} />
   }

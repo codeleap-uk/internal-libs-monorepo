@@ -137,9 +137,9 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
           variants={['absolute']}
           style={{ bottom: 0, left: 0, right: 0 }}
         >
-          <Button text='previous' onPress={pagerRef.current.back} />
+          <Button text='previous' debugName='Previous Pager' onPress={pagerRef.current.back} />
           <Text text={page.toString()} />
-          <Button text='next' onPress={pagerRef.current.forward} />
+          <Button text='next' debugName='Next Pager' onPress={pagerRef.current.forward} />
         </View>
       )}
     </View>

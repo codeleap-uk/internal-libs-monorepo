@@ -37,6 +37,7 @@ export const NetworkStatusModal:React.FC = () => {
       showClose={false}
       variants={['alignCenter']}
       title={'No network connection'}
+      debugName={'Offline modal'}
     >
       <Icon name='network-off' variants={['primary', 'large', 'marginVertical:3']}/>
 
@@ -47,6 +48,7 @@ export const NetworkStatusModal:React.FC = () => {
       toggle={onDismiss}
       variants={['alignCenter']}
       title={'Connection Restored'}
+      debugName={'Online modal'}
     >
       <Icon name='network-on' variants={['primary', 'large', 'marginVertical:3']}/>
 

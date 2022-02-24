@@ -87,8 +87,8 @@ export const CrudExample:React.FC = () => {
       </View>
       <View variants={['column']} style={styles.newPost}>
         <Text variants={['h4', 'marginBottom:2']} text={'Create a post'}/>
-        <TextInput {...form.register('title')}/>
-        <TextInput {...form.register('content')} multiline numberOfLines={50}/>
+        <TextInput {...form.register('title')} debugName={'Post title input'}/>
+        <TextInput {...form.register('content')} debugName={'Post content input'} multiline numberOfLines={50}/>
         <Button onPress={createPost} text={'Submit'} loading={addPost.isLoading} debugName={'Create post'}/>
       </View>
 
@@ -111,14 +111,16 @@ export const CrudExample:React.FC = () => {
         visible={isModalOpen}
         showClose
         title={'Edit a Post'}
+        debugName={'Edit post modal'}
         toggle={setModal}
         debugName='CRUD'
       >
         <ContentView placeholderMsg='' loading={editPost.isLoading}>
 
           <View variants={['marginTop:3']}>
-            <TextInput {...editForm.register('title')} />
-            <TextInput {...editForm.register('content')} multiline numberOfLines={50} styles={{ innerWrapper: { height: 100 }}}/>
+            <TextInput {...editForm.register('title')} debugName={'Edit Post title input'} />
+            <TextInput {...editForm.register('content')} debugName={'Edit Post content input'}
+              multiline numberOfLines={50} styles={{ innerWrapper: { height: 100 }}}/>
             <Button onPress={modifyPost} variants={['marginHorizontal:auto', 'gray']} text={'Edit'} debugName={'Edit post'}/>
           </View>
         </ContentView>

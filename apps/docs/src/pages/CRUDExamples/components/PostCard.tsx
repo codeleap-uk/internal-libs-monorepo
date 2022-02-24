@@ -34,7 +34,7 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
         <View variants={['row', 'justifySpaceBetween']}>
           {
             remove &&
-            <Touchable onPress={() => remove(id)}>
+            <Touchable onPress={() => remove(id)} debugName={'Remove post'}>
               <Icon name={'close'} style={{ size: 28 }} />
             </Touchable>
           }
@@ -51,7 +51,7 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
           <Text text={content} variants={['p1', 'marginTop:1']} />
           {
             edit &&
-          <Touchable onPress={() => edit()}>
+          <Touchable onPress={() => edit()} debugName={'Edit post'}>
             <Icon name={'edit'} style={{ size: 25 }} />
           </Touchable>
           }
