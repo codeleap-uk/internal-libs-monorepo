@@ -107,7 +107,7 @@ export const Login: React.FC<SceneNavigationProps> = ({ navigation }) => {
 
           <Button
             icon='google'
-            onPress={() => socialLogin('google')}      
+            onPress={() => socialLogin('google')}
             variants={['icon:primary']}
             debugName={'Social login with Google'}
           />
