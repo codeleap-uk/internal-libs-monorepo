@@ -4,11 +4,11 @@ import { CustomSelectProps } from './types'
 
 export type SelectProps<T extends string | number = string> =
   | ({
-      type?: 'native';
+      type?: 'native'
     } & NativeSelectProps)
   | ({
-      type?: never;
-    } & CustomSelectProps<T>);
+      type?: never
+    } & CustomSelectProps<T>)
 
 export * from './types'
 export * from './styles'

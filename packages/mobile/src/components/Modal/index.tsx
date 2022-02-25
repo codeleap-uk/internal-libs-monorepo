@@ -25,21 +25,21 @@ import { Animated } from '../Animated'
 export * from './styles'
 
 export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
-  variants?: ComponentVariants<typeof MobileModalStyles>['variants'];
-  styles?: StylesOf<MobileModalComposition>;
-  dismissOnBackdrop?: boolean;
-  buttonProps?: ButtonProps;
-  accessible?: boolean;
-  showClose?: boolean;
-  closable?: boolean;
-  footer?: React.ReactNode;
-  title?: React.ReactNode;
-  debugName?: string;
-  closeIconName?: IconPlaceholder;
-  visible: boolean;
-  toggle?: () => void;
-  scroll?: boolean;
-};
+  variants?: ComponentVariants<typeof MobileModalStyles>['variants']
+  styles?: StylesOf<MobileModalComposition>
+  dismissOnBackdrop?: boolean
+  buttonProps?: ButtonProps
+  accessible?: boolean
+  showClose?: boolean
+  closable?: boolean
+  footer?: React.ReactNode
+  title?: React.ReactNode
+  debugName?: string
+  closeIconName?: IconPlaceholder
+  visible: boolean
+  toggle?: () => void
+  scroll?: boolean
+}
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
   const {

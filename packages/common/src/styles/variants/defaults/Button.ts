@@ -5,7 +5,7 @@ import { optionalObject } from '../../../utils'
 
 export type ButtonStates = 'disabled'
 export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader'
-export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts;
+export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
 

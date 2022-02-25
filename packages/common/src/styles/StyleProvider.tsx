@@ -60,16 +60,16 @@ export function useCodeleapContext() {
   return useContext(StyleContext)
 }
 
-type ComponentNameArg = keyof DEFAULT_VARIANTS;
+type ComponentNameArg = keyof DEFAULT_VARIANTS
 type useDefaultComponentStyleProps<
   ComponentName extends ComponentNameArg,
   C extends CommonVariantObject<any> = DefaultVariants[ComponentName],
   Comp extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
 > = ComponentVariants<C> & {
-  rootElement?: Comp;
-  styles?: StylesOf<Comp>;
-  transform?: AnyFunction;
-};
+  rootElement?: Comp
+  styles?: StylesOf<Comp>
+  transform?: AnyFunction
+}
 
 type x = DefaultVariants['Slider']['absolute']
 export function useDefaultComponentStyle<

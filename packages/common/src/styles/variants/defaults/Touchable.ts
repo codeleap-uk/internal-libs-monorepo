@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type TouchableComposition = 'wrapper';
+export type TouchableComposition = 'wrapper'
 
 const createTouchableStyle =
   createDefaultVariantFactory<TouchableComposition>()

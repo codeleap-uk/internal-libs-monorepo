@@ -8,8 +8,8 @@ import { stopPropagation } from '../lib/utils/stopPropagation'
 import { Text } from './Text'
 
 export type LinkProps<T extends ElementType> = TextProps<T> & {
-  openNewTab?: boolean;
-};
+  openNewTab?: boolean
+}
 
 export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
   const { variants, to, openNewTab, component = 'a', ...props } = linkProps

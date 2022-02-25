@@ -19,24 +19,24 @@ import { Options } from 'react-native-image-crop-picker'
 import { DocumentPickerOptions } from '../modules/types/documentPicker'
 
 export type FileInputRef = {
-  openFilePicker: () => void;
-};
+  openFilePicker: () => void
+}
 
 export type FileInputProps = {
-  label?: string;
-  iconName?: IconPlaceholder;
-  styles?: StylesOf<FileInputComposition>;
-  mode: 'hidden' | 'button';
-  variants?: ComponentVariants<typeof FileInputStyles>['variants'];
-  onFileSelect(files: MobileInputFile[]): void;
-  options?: DocumentPickerOptions<any>;
-  buttonProps?: ButtonProps;
-  ref?: FileInputRef;
+  label?: string
+  iconName?: IconPlaceholder
+  styles?: StylesOf<FileInputComposition>
+  mode: 'hidden' | 'button'
+  variants?: ComponentVariants<typeof FileInputStyles>['variants']
+  onFileSelect(files: MobileInputFile[]): void
+  options?: DocumentPickerOptions<any>
+  buttonProps?: ButtonProps
+  ref?: FileInputRef
   placeholder?: string
   type?: 'image' | 'anyFile'
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
-};
+}
 
 const pickerDefaults = {
   width: 300,

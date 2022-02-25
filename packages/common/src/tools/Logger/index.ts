@@ -56,11 +56,11 @@ const hollowAnalytics = new Analytics({
  * [[include:Logger.md]]
  */
 export class Logger {
-  settings: AppSettings;
+  settings: AppSettings
 
-  debug: DebugColors;
+  debug: DebugColors
 
-  sentry: SentryService;
+  sentry: SentryService
 
   middleware:LoggerMiddleware[] = []
 
@@ -130,7 +130,7 @@ export class Logger {
         this.sentry.sendLog()
       }
     }
-  };
+  }
 
   info(...args: LogFunctionArgs) {
     this.logToTerminal('info', args)

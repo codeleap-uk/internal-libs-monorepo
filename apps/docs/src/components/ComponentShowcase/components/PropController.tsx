@@ -3,10 +3,10 @@ import { Checkbox, RadioInput, Text, TextInput, View } from '@/app'
 import { beautifyName } from '../utils/variant'
 
 type PropControllerProps = {
-  values: Record<string, any>;
-  onChange(p: string, v: any): void;
-  controls: Record<string, any>;
-};
+  values: Record<string, any>
+  onChange(p: string, v: any): void
+  controls: Record<string, any>
+}
 
 export const PropController = ({
   values,

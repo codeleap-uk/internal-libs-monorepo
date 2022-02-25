@@ -14,16 +14,16 @@ import { Alert, AlertButton } from 'react-native'
  * @property {function} run callback function to run on press
  */
 
-type NativeAlertArgs = Parameters<typeof Alert.alert>;
+type NativeAlertArgs = Parameters<typeof Alert.alert>
 
 type OSAlertArgs = {
-  title: NativeAlertArgs['0'];
-  body?: NativeAlertArgs['1'];
-  options?: NativeAlertArgs['2'];
-};
-type AlertEvent = AlertButton['onPress'];
+  title: NativeAlertArgs['0']
+  body?: NativeAlertArgs['1']
+  options?: NativeAlertArgs['2']
+}
+type AlertEvent = AlertButton['onPress']
 type OSAlertType = 'info' | 'error' | 'warn' | 'ask'
-type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>;
+type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
 const currentAlerts = {
 

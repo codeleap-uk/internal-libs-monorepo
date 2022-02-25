@@ -17,28 +17,28 @@ import { RouterPageComposition, RouterPageStyles } from './styles'
 export * from './styles'
 
 export type RouteProps = {
-  title?: string;
-  path?: string;
-  menuIcon?: IconPlaceholder;
-};
+  title?: string
+  path?: string
+  menuIcon?: IconPlaceholder
+}
 type ContentProps = {
-  styles: StylesOf<RouterPageComposition>;
+  styles: StylesOf<RouterPageComposition>
   menuItems: {
-    icon: string;
-    title: string;
-    path: string;
-  }[];
-};
+    icon: string
+    title: string
+    path: string
+  }[]
+}
 export * from './Router'
 export * from './Menu'
 export * from './MenuItem'
 
 type RouterPageProps = {
-  basePath: string;
-  styles?: StylesOf<RouterPageComposition>;
-  title?: string;
-  renderContentWrapper?: React.FC<ContentProps>;
-} & ComponentVariants<typeof RouterPageStyles>;
+  basePath: string
+  styles?: StylesOf<RouterPageComposition>
+  title?: string
+  renderContentWrapper?: React.FC<ContentProps>
+} & ComponentVariants<typeof RouterPageStyles>
 
 export const RouterPage: React.FC<RouterPageProps> = (props) => {
   const {

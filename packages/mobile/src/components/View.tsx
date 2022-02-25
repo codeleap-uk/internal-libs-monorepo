@@ -11,9 +11,9 @@ import { View as NativeView, ViewStyle } from 'react-native'
 
 export type ViewProps = ComponentPropsWithoutRef<typeof NativeView> &
   ComponentVariants<typeof ViewStyles> & {
-    ref?: any;
-    component?: any;
-  } & BaseViewProps;
+    ref?: any
+    component?: any
+  } & BaseViewProps
 
 export const View: React.FC<ViewProps> = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   const {

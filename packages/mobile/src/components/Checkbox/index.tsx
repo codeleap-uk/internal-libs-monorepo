@@ -20,13 +20,13 @@ export * from './styles'
 type NativeCheckboxProps = Omit<
   ComponentPropsWithRef<typeof NativeCheckbox>,
   'thumbColor' | 'trackColor'
->;
+>
 type CheckboxProps = NativeCheckboxProps & {
-  variants?: ComponentVariants<typeof CheckboxStyles>['variants'];
-  label?: ReactNode;
-  styles?: StylesOf<CheckboxComposition>;
-  validate?: Form.ValidatorFunctionWithoutForm | string;
-};
+  variants?: ComponentVariants<typeof CheckboxStyles>['variants']
+  label?: ReactNode
+  styles?: StylesOf<CheckboxComposition>
+  validate?: Form.ValidatorFunctionWithoutForm | string
+}
 
 export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
   (checkboxProps, ref) => {

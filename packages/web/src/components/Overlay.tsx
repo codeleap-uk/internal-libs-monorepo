@@ -10,11 +10,11 @@ import { Touchable, TouchableProps } from './Touchable'
 import { View, ViewProps } from './View'
 
 export type OverlayProps = {
-  visible?: boolean;
-  styles?: StylesOf<OverlayComposition>;
-  onPress?: TouchableProps<'div'>['onClick'];
+  visible?: boolean
+  styles?: StylesOf<OverlayComposition>
+  onPress?: TouchableProps<'div'>['onClick']
 } & ComponentVariants<typeof OverlayStyles> &
-  Partial<SmartOmit<ViewProps<'div'>, 'variants' | 'responsiveVariants'>>;
+  Partial<SmartOmit<ViewProps<'div'>, 'variants' | 'responsiveVariants'>>
 
 export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
   const { visible, responsiveVariants, variants, styles, ...props } =

@@ -9,8 +9,8 @@ export type MenuComposition =
   | 'menuItem:text:selected'
   | 'sideMenu'
   | 'topMenu'
-  | 'horizontalScroll';
-export type RouterPageComposition = 'content' | 'router' | MenuComposition;
+  | 'horizontalScroll'
+export type RouterPageComposition = 'content' | 'router' | MenuComposition
 const createRouterPageStyle =
   createDefaultVariantFactory<RouterPageComposition>()
 

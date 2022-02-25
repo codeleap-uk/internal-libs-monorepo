@@ -9,7 +9,7 @@ export type OverlayComposition =
   | 'wrapper:visible:pose'
   | 'header'
   | 'title'
-  | 'closeButton';
+  | 'closeButton'
 
 const createOverlayStyle = createDefaultVariantFactory<OverlayComposition>()
 

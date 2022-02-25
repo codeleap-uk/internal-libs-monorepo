@@ -15,9 +15,9 @@ import { MobileRadioInputStyles, MobileRadioInputComposition } from './styles'
 export * from './styles'
 
 type RadioItem<T extends unknown = any> = {
-  value: T;
-  label: ReactNode;
-};
+  value: T
+  label: ReactNode
+}
 
 const getRadioStyle = (props) => useDefaultComponentStyle('RadioInput', props)
 
@@ -25,20 +25,20 @@ export type RadioButtonProps = Omit<
   ComponentPropsWithoutRef<typeof Touchable>,
   'style'
 > & {
-  item: RadioItem;
-  select: () => void;
-  style: StylesOf<MobileRadioInputComposition>;
-  checked: boolean;
-  defaultValue?: number;
-};
+  item: RadioItem
+  select: () => void
+  style: StylesOf<MobileRadioInputComposition>
+  checked: boolean
+  defaultValue?: number
+}
 
 export type RadioGroupProps<T> = {
-  options: RadioItem<T>[];
-  value: T;
-  onValueChange(value: T): void;
-  label: ReactNode;
-  styles?: StylesOf<MobileRadioInputComposition>;
-} & ComponentVariants<typeof MobileRadioInputStyles>;
+  options: RadioItem<T>[]
+  value: T
+  onValueChange(value: T): void
+  label: ReactNode
+  styles?: StylesOf<MobileRadioInputComposition>
+} & ComponentVariants<typeof MobileRadioInputStyles>
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
   item,

@@ -17,12 +17,12 @@ const RouterLink: React.FC<any> = (props) => (
 
 export type MenuItemProps = {
   data: {
-    icon: IconPlaceholder;
-    title: string;
-    path: string;
-  };
-  styles: StylesOf<MenuComposition>;
-};
+    icon: IconPlaceholder
+    title: string
+    path: string
+  }
+  styles: StylesOf<MenuComposition>
+}
 
 export const MenuItem: React.FC<MenuItemProps> = (props) => {
   const { styles } = props

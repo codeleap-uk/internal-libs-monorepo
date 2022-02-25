@@ -10,11 +10,11 @@ import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { StylesOf } from '../types/utility'
 
 export type TextProps<T extends ElementType> = {
-  component?: T;
-  text?: string;
-  styles?: StylesOf<TextComposition>;
+  component?: T
+  text?: string
+  styles?: StylesOf<TextComposition>
 } & ComponentPropsWithoutRef<T> &
-  ComponentVariants<typeof TextStyles>;
+  ComponentVariants<typeof TextStyles>
 
 export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   const {

@@ -6,20 +6,20 @@ import { AppStatus } from './index'
 const DEB_CAT = 'Session'
 
 export type Profile = {
-  id: string;
-  avatar: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  password?: string;
-};
+  id: string
+  avatar: string
+  first_name: string
+  last_name: string
+  email: string
+  password?: string
+}
 
 export type TSession = {
-  isLoggedIn: boolean;
-  profile: Profile;
-  appMounted: boolean,
+  isLoggedIn: boolean
+  profile: Profile
+  appMounted: boolean
   isDevelopment: boolean
-};
+}
 
 const initialState: TSession = {
   isLoggedIn: false,

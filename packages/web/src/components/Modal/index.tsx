@@ -20,15 +20,15 @@ import { Overlay } from '../Overlay'
 export * from './styles'
 
 export type ModalProps = {
-  open: boolean;
-  title?: React.ReactNode;
-  toggle: AnyFunction;
-  styles?: StylesOf<ModalComposition>;
-  accessible?: boolean;
-  showClose?: boolean;
-  closable?: boolean;
-  footer?: ReactNode;
-} & ComponentVariants<typeof ModalStyles>;
+  open: boolean
+  title?: React.ReactNode
+  toggle: AnyFunction
+  styles?: StylesOf<ModalComposition>
+  accessible?: boolean
+  showClose?: boolean
+  closable?: boolean
+  footer?: ReactNode
+} & ComponentVariants<typeof ModalStyles>
 
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()

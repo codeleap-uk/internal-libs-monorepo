@@ -10,12 +10,12 @@ const modals = {
 }
 
 export type TAppStatus = {
-  status: 'loading' | 'done' | 'idle' | 'splash' | 'blank';
-  ready: boolean;
+  status: 'loading' | 'done' | 'idle' | 'splash' | 'blank'
+  ready: boolean
   modals: Record<keyof typeof modals, any>
   currentState: AppStateStatus
   network: null | (NetInfoState & { isValid: boolean })
-};
+}
 
 const initialState: TAppStatus = {
   status: 'blank',

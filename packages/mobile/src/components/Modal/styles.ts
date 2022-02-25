@@ -31,11 +31,11 @@ export type MobileModalParts =
   | 'touchableBackdrop'
   | 'box:pose'
   | 'title'
-  | `closeButton${Capitalize<ButtonComposition>}`;
+  | `closeButton${Capitalize<ButtonComposition>}`
 
 export type MobileModalComposition =
   | MobileModalParts
-  | `${MobileModalParts}:visible`;
+  | `${MobileModalParts}:visible`
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
 

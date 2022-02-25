@@ -5,10 +5,10 @@ import { LogFunctionArgs } from '../tools/Logger/types'
 export const deepEqual = equals
 
 type ArePropsEqualOptions<MergedObject> = {
-  check: (keyof MergedObject)[];
-  debug?: boolean;
-  excludeKeys?: string[];
-};
+  check: (keyof MergedObject)[]
+  debug?: boolean
+  excludeKeys?: string[]
+}
 
 export function arePropsEqual<A, B>(
   previous: A,

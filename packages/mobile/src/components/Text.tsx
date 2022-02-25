@@ -9,9 +9,9 @@ import {
 import { Text as NativeText } from 'react-native'
 
 export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
-  text?: string;
-  variants?: ComponentVariants<typeof TextStyles>['variants'];
-} & BaseViewProps;
+  text?: string
+  variants?: ComponentVariants<typeof TextStyles>['variants']
+} & BaseViewProps
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const { variants = [], text, style, ...props } = textProps

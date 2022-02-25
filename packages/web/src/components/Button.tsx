@@ -16,17 +16,17 @@ import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
 import { IconPlaceholder } from '@codeleap/common'
 
-type NativeButtonProps = ComponentPropsWithRef<'button'>;
+type NativeButtonProps = ComponentPropsWithRef<'button'>
 
 export type ButtonProps = NativeButtonProps &
   ComponentVariants<typeof ButtonStyles> & {
-    text?: string;
-    rightIcon?: IconPlaceholder;
-    icon?: IconPlaceholder;
-    onPress?: NativeButtonProps['onClick'];
-    styles?: StylesOf<ButtonComposition>;
-    loading?: boolean;
-  };
+    text?: string
+    rightIcon?: IconPlaceholder
+    icon?: IconPlaceholder
+    onPress?: NativeButtonProps['onClick']
+    styles?: StylesOf<ButtonComposition>
+    loading?: boolean
+  }
 
 export const Button: React.FC<ButtonProps> = (buttonProps) => {
   const {

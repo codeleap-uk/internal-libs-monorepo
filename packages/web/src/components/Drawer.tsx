@@ -22,17 +22,17 @@ const axisMap = {
 } as const
 
 export type DrawerProps = {
-  open: boolean;
-  toggle: AnyFunction;
-  darkenBackground?: boolean;
-  size: string | number;
-  showCloseButton?: boolean;
-  title?: ReactNode;
-  footer?: ReactNode;
-  position?: keyof typeof axisMap;
-  styles?: StylesOf<DrawerComposition>;
-  animationDuration?: string;
-} & ComponentVariants<typeof DrawerStyles>;
+  open: boolean
+  toggle: AnyFunction
+  darkenBackground?: boolean
+  size: string | number
+  showCloseButton?: boolean
+  title?: ReactNode
+  footer?: ReactNode
+  position?: keyof typeof axisMap
+  styles?: StylesOf<DrawerComposition>
+  animationDuration?: string
+} & ComponentVariants<typeof DrawerStyles>
 
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],

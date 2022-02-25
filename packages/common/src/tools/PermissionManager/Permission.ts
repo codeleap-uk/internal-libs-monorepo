@@ -4,9 +4,9 @@ import * as PermissionTypes from './types'
 const SCOPE = 'Permissions'
 
 export class Permission implements PermissionTypes.IPermission {
-    status: PermissionTypes.PermissionStatus;
+    status: PermissionTypes.PermissionStatus
 
-    shouldAsk: boolean;
+    shouldAsk: boolean
 
     constructor(private actions:PermissionTypes.PermissionActions & {log?: AnyFunction}, public name = '') {
       this.actions = actions

@@ -5,8 +5,8 @@ import { ThemeColorScheme } from '.'
 import { AppTheme } from '..'
 
 type CreateVariantOptions = {
-  dynamic?: boolean;
-};
+  dynamic?: boolean
+}
 const defaultOptions: CreateVariantOptions = {
   dynamic: false,
 }

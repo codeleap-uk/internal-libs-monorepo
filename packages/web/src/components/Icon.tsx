@@ -7,9 +7,9 @@ import {
 } from '@codeleap/common'
 
 export type IconProps = {
-  name: IconPlaceholder;
-  style?: any;
-} & ComponentVariants<typeof IconStyles>;
+  name: IconPlaceholder
+  style?: any
+} & ComponentVariants<typeof IconStyles>
 
 export const Icon: React.FC<IconProps> = ({
   name,

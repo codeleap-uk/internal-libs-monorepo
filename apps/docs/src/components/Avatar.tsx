@@ -15,11 +15,11 @@ import {
 import { TSession } from '@/redux'
 
 type AvatarProps = {
-  styles?: StylesOf<AvatarComposition>;
-  profile: TSession['profile'];
-  onChange?: (files: WebInputFile[]) => void;
+  styles?: StylesOf<AvatarComposition>
+  profile: TSession['profile']
+  onChange?: (files: WebInputFile[]) => void
   debugName: string
-} & ComponentVariants<typeof AvatarStyles>;
+} & ComponentVariants<typeof AvatarStyles>
 
 export const Avatar: React.FC<AvatarProps> = (props) => {
   const { variants, responsiveVariants, styles, debugName } = props

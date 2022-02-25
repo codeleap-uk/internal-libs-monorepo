@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type ViewComposition = 'wrapper';
+export type ViewComposition = 'wrapper'
 
 const createViewStyle = createDefaultVariantFactory<ViewComposition>()
 

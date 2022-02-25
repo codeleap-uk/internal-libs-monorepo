@@ -22,28 +22,28 @@ import { beautifyName, filterVariant } from '../utils/variant'
 import { PropController } from './PropController'
 import { stateFromControls } from '../utils/controls'
 
-type WithCSSObject<C extends string = string> = CommonVariantObject<C, any>;
+type WithCSSObject<C extends string = string> = CommonVariantObject<C, any>
 
 export type ShowcaseProps<T extends WithCSSObject> = {
-  styleSheet: T;
+  styleSheet: T
   render: FunctionType<
     [
       ComponentVariants<T, typeof variantProvider.theme, (keyof T)[]> & {
-        controlValues: any;
+        controlValues: any
       }
     ],
     ReactElement
-  >;
-  name: string;
-  filter?: boolean;
-  controls?: any;
-};
+  >
+  name: string
+  filter?: boolean
+  controls?: any
+}
 
 type VariantSelectorProps = {
-  data: Record<string, boolean>;
-  toggle: (variant: string) => void;
-  reset: AnyFunction;
-};
+  data: Record<string, boolean>
+  toggle: (variant: string) => void
+  reset: AnyFunction
+}
 
 const VariantSelector: React.FC<VariantSelectorProps> = ({
   data,

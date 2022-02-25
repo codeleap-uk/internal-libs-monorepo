@@ -21,32 +21,32 @@ import { AppTheme } from '..'
 
 export type PartialComponentStyle<C extends string, S = any> = Partial<
   Record<C, S>
->;
+>
 export type ThemeColorScheme<T extends AppTheme> = Omit<EnhancedTheme<T>, 'colors'> & {colors: T['colors'][keyof T['colors']]}
 
 export type CommonVariantObject<C extends string = string, S = any> = Record<
   string,
   PartialComponentStyle<C, S>
->;
+>
 
 export type DefaultVariantBuilder<CSS = any> = Record<
   string,
   FunctionType<[EnhancedTheme<any>, string], PartialComponentStyle<any, CSS>>
->;
+>
 export type FromVariantsBuilder<S, T extends DefaultVariantBuilder<S>> = {
   [Property in keyof T]: ReturnType<T[Property]>;
-};
+}
 
 export type VariantProp<T = CommonVariantObject> =
   | string
-  | (keyof T | Spacing | `d:${string}`)[];
+  | (keyof T | Spacing | `d:${string}`)[]
 export type ResponsiveVariantsProp<
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
   Styles = CommonVariantObject<any>,
   VP = VariantProp<Styles>
 > = Partial<{
   [Property in keyof Theme['breakpoints']]: VP;
-}>;
+}>
 
 export type GetStylesArgs<
   VariantObject extends CommonVariantObject,
@@ -56,43 +56,43 @@ export type GetStylesArgs<
   styles: VariantObject,
   options: {
     debugName?: string
-    variants: VariantProp<VariantObject>;
-    rootElement?: Root;
-    responsiveVariants?: ResponsiveVariantsProp<Theme, VariantObject>;
+    variants: VariantProp<VariantObject>
+    rootElement?: Root
+    responsiveVariants?: ResponsiveVariantsProp<Theme, VariantObject>
     styles?: NestedKeys<VariantObject> extends string
       ? StylesOf<NestedKeys<VariantObject>>
-      : any;
+      : any
   },
   useTheme?: string
-];
+]
 export type ApplyVariantsArgs = {
-  variantName: string;
-  styles: any;
-  computedStyles: any;
-  rootElement: any;
-  theme: EnhancedTheme<any>;
-};
+  variantName: string
+  styles: any
+  computedStyles: any
+  rootElement: any
+  theme: EnhancedTheme<any>
+}
 export type CT<StyleType> = [
   Component: FunctionType<[any], ReactElement | null>,
   style: DefaultVariantBuilder<StyleType>
   // style: FunctionType<[any], CommonVariantObject<string, StyleType>>;
-];
+]
 
 export type ComponentStyleMap<CSS = any> = Partial<{
-  [x: string]: CT<CSS>;
-}>;
+  [x: string]: CT<CSS>
+}>
 
 // ReplaceRecursive<MergedProps, IconPlaceholder, keyof Theme['icons']>
 
 type ReplaceWithIcons<
   Props,
   Theme extends EnhancedTheme<any>
-> = ReplaceRecursive<Props, IconPlaceholder, keyof Theme['icons']>;
+> = ReplaceRecursive<Props, IconPlaceholder, keyof Theme['icons']>
 
 type ReplaceWithBreakpoints<
   Props,
   Theme extends EnhancedTheme<any>
-> = ReplaceRecursive<Props, BreakpointPlaceholder, keyof Theme['breakpoints']>;
+> = ReplaceRecursive<Props, BreakpointPlaceholder, keyof Theme['breakpoints']>
 
 export type ReplaceProps<
   T extends CT<any>,
@@ -103,10 +103,10 @@ export type ReplaceProps<
   MergedProps = Omit<Props, 'responsiveVariants' | 'variants'> & NewProps
 > = React.FC<
   ReplaceWithBreakpoints<ReplaceWithIcons<MergedProps & EX, Theme>, Theme>
->;
+>
 type ViewPlatformProps = Partial<
   BaseViewProps & Record<QueryKey, BreakpointPlaceholder>
->;
+>
 
 export type TypedComponents<
   T extends ComponentStyleMap = ComponentStyleMap,
@@ -134,4 +134,4 @@ export type TypedComponents<
         ViewPlatformProps,
         ComponentVariants<T[Property][1], Theme>
       >;
-};
+}

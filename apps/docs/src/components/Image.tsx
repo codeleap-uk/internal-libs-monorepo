@@ -16,12 +16,12 @@ import { CSSProperties } from 'react'
 // const dynamicAssetPrefixes = ['http', 'https', 'blob']
 
 type CommonProps = {
-  source: string;
-  css?: any;
-  alt?: string;
-  objectFit?: Exclude<CSSProperties['objectFit'], CSSProperties['objectFit'][]>;
-  styles?: StylesOf<ImageComposition>;
-} & ComponentVariants<typeof ImageStyles>;
+  source: string
+  css?: any
+  alt?: string
+  objectFit?: Exclude<CSSProperties['objectFit'], CSSProperties['objectFit'][]>
+  styles?: StylesOf<ImageComposition>
+} & ComponentVariants<typeof ImageStyles>
 
 type StaticImageProps = {
     type?: 'static'

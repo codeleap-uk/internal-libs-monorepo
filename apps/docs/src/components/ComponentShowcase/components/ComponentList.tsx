@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react'
 import { useCodeleapContext } from '@codeleap/common'
 
 export const ComponentList: React.FC<{
-  onSelect: (name: string) => void;
-  current: string;
+  onSelect: (name: string) => void
+  current: string
 }> = ({ onSelect, current }) => {
   const [search, setSearch] = useState('')
 

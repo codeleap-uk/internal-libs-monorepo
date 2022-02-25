@@ -60,15 +60,15 @@ export function waitFor(ms) {
 }
 
 type ParseSourceUrlArg = {
-  source?: string;
-  src?: string;
-};
+  source?: string
+  src?: string
+}
 
-export function parseSourceUrl(args: string, Settings?: AppSettings): string;
+export function parseSourceUrl(args: string, Settings?: AppSettings): string
 export function parseSourceUrl(
   args: ParseSourceUrlArg,
   Settings?: AppSettings
-): string;
+): string
 export function parseSourceUrl(
   args: ParseSourceUrlArg | string,
   Settings?: AppSettings,

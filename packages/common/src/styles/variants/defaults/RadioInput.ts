@@ -10,7 +10,7 @@ export type RadioInputComposition =
   | 'itemWrapper'
   | 'wrapper'
   | 'listWrapper'
-  | 'button:mark';
+  | 'button:mark'
 
 const createRadioInputStyle =
   createDefaultVariantFactory<RadioInputComposition>()

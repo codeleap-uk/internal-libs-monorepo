@@ -18,10 +18,10 @@ import {
 
 export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
   ComponentVariants<typeof ViewStyles> & {
-    component?: T;
-    children?: ReactNode;
-    css?: any;
-  } & BaseViewProps;
+    component?: T
+    children?: ReactNode
+    css?: any
+  } & BaseViewProps
 
 export const ViewCP = <T extends ElementType = 'div'>(
   viewProps: ViewProps<T>,

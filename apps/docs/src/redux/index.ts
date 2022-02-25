@@ -24,7 +24,7 @@ export const {
 
 }, [], ...ext)
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>
 export * from './Posts'
 export * from './AppStatus'
 export * from './Session'

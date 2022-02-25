@@ -7,7 +7,7 @@ import { Profile, TSession } from '@/redux'
 const FBErrorProps = ['name', 'namespace', 'code', 'message'] as const
 export type FirebaseError = Partial<
   Record<typeof FBErrorProps[number], string>
->;
+>
 
 export {
   firebase,
@@ -52,27 +52,27 @@ export const CredentialProviders = {
   },
 }
 
-export type Providers = keyof typeof CredentialProviders;
+export type Providers = keyof typeof CredentialProviders
 
 export const authProvidersList = Object.keys(
   CredentialProviders,
 ) as Providers[]
 
 export type TrySocialLoginArgs = {
-  withProvider?: Providers;
-};
+  withProvider?: Providers
+}
 
 export type EmailCredential = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
 export type TryLoginArgs =
   | TrySocialLoginArgs
   | {
-      withProvider?: 'email';
-      data?: EmailCredential;
-    };
+      withProvider?: 'email'
+      data?: EmailCredential
+    }
 
 export async function trySocialLogin({ withProvider }: TrySocialLoginArgs) {
   const socialCredential = new CredentialProviders[withProvider].provider()
@@ -158,9 +158,9 @@ export async function tryLogin(
 }
 
 export type TrySignupArgs = {
-  data: Omit<TSession['profile'], 'id'>;
-  provider?: Providers | 'email';
-};
+  data: Omit<TSession['profile'], 'id'>
+  provider?: Providers | 'email'
+}
 
 export async function trySignup({ data, provider }: TrySignupArgs) {
   const currentUser = auth().currentUser

@@ -4,7 +4,7 @@ export type WebCheckboxComposition =
   | 'label'
   | 'input'
   | 'checkmark'
-  | 'checkmarkWrapper';
+  | 'checkmarkWrapper'
 
 const createCheckboxStyle =
   createDefaultVariantFactory<WebCheckboxComposition>()

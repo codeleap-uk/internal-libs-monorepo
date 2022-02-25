@@ -18,7 +18,7 @@ import { Icon } from './Icon'
 import { NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData } from 'react-native'
 import { Touchable, TouchableProps } from './Touchable'
 
-type IconProp = { name: IconPlaceholder, action?: () => void }
+type IconProp = { name: IconPlaceholder; action?: () => void }
 
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
 
@@ -26,11 +26,11 @@ export type TextInputProps =
   ComponentVariants<typeof TextInputStyles> &
   Omit<NativeProps, 'value'> &
   {
-    multiline?: boolean;
-    onChangeText?: (text: string) => void;
-    disabled?: boolean;
-    edited?: boolean;
-    type?: string;
+    multiline?: boolean
+    onChangeText?: (text: string) => void
+    disabled?: boolean
+    edited?: boolean
+    type?: string
     label?: React.ReactNode
     debugName: string
     leftIcon?: IconProp
@@ -42,7 +42,7 @@ export type TextInputProps =
     visibilityToggle?: boolean
     touchableWrapper?: boolean
     innerWrapperProps?: TouchableProps | ViewProps
-  };
+  }
 
 export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, inputRef) => {
   const {

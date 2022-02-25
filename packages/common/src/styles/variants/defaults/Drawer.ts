@@ -8,7 +8,7 @@ export type DrawerComposition =
   | 'footer'
   | 'headerCloseButton'
   | 'body'
-  | 'box';
+  | 'box'
 
 const createDrawerStyle = createDefaultVariantFactory<DrawerComposition>()
 

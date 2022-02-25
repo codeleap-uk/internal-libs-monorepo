@@ -74,7 +74,7 @@ export function optionalObject(condition: boolean, ifTrue: any, ifFalse: any) {
   return condition ? ifTrue : ifFalse
 }
 
-type TraverseRecArgs = {path:string[], value: any, depth: number, key: string, type: string, primitive: boolean}
+type TraverseRecArgs = {path:string[]; value: any; depth: number; key: string; type: string; primitive: boolean}
 
 type TraverseCallback = (args?: TraverseRecArgs) => {stop?: boolean } | void
 

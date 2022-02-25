@@ -3,19 +3,19 @@ import { ThemeValues } from './types'
 import { capitalize } from '../utils'
 
 type BorderArgs = {
-  width: number | string;
-  style?: CSSProperties['borderStyle'];
-  color?: string;
-  directions?: ('left' | 'top' | 'right' | 'bottom')[];
-};
+  width: number | string
+  style?: CSSProperties['borderStyle']
+  color?: string
+  directions?: ('left' | 'top' | 'right' | 'bottom')[]
+}
 
 export type BorderHelpers<T extends ThemeValues> = {
   [Property in keyof T['colors'][keyof T['colors']]]: (
     args: Omit<BorderArgs, 'color'> | number
   ) => any;
 } & {
-  create: (args: BorderArgs) => any;
-};
+  create: (args: BorderArgs) => any
+}
 
 export function createBorderHelpers<T extends ThemeValues>(
   values: T,

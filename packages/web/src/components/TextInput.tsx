@@ -25,30 +25,30 @@ import { jsx } from '@emotion/react'
 import { StylesOf } from '../types/utility'
 import { Icon } from '.'
 
-type IconProp = { name: IconPlaceholder; action?: () => void };
+type IconProp = { name: IconPlaceholder; action?: () => void }
 type MergedRef = React.LegacyRef<HTMLInputElement> &
-  React.Ref<HTMLTextAreaElement>;
+  React.Ref<HTMLTextAreaElement>
 
 type NativeProps = ComponentPropsWithoutRef<'input'> &
-  ComponentPropsWithoutRef<'textarea'>;
+  ComponentPropsWithoutRef<'textarea'>
 
 export type TextInputProps = ComponentVariants<typeof TextInputStyles> &
   Omit<NativeProps, 'value'> & {
-    multiline?: boolean;
-    onChangeText?: (text: string) => void;
-    disabled?: boolean;
-    edited?: boolean;
-    type?: string;
-    label?: React.ReactNode;
-    ref?: MergedRef;
-    leftIcon?: IconProp;
-    rightIcon?: IconProp;
-    styles?: StylesOf<TextInputComposition>;
-    validate?: FormTypes.ValidatorFunctionWithoutForm | string;
-    value?: string;
-    password?: boolean;
-    visibilityToggle?: boolean;
-  };
+    multiline?: boolean
+    onChangeText?: (text: string) => void
+    disabled?: boolean
+    edited?: boolean
+    type?: string
+    label?: React.ReactNode
+    ref?: MergedRef
+    leftIcon?: IconProp
+    rightIcon?: IconProp
+    styles?: StylesOf<TextInputComposition>
+    validate?: FormTypes.ValidatorFunctionWithoutForm | string
+    value?: string
+    password?: boolean
+    visibilityToggle?: boolean
+  }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (rawprops, inputRef) => {

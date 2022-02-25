@@ -21,4 +21,4 @@ export type ShowcasePropsMap = Partial<
       'name'
     >;
   } & Record<'Avatar', ShowcaseProps<any>>
->;
+>

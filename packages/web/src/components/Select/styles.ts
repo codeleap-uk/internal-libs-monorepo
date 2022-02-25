@@ -12,14 +12,14 @@ export type WebSelectParts =
   | 'buttonWrapper'
   | 'buttonText'
   | 'buttonIcon'
-  | 'error';
+  | 'error'
 
 export type WebSelectComposition =
   | `${WebSelectParts}:hover`
   | `${WebSelectParts}:open`
   | `${WebSelectParts}:error`
   | `${WebSelectParts}:disabled`
-  | WebSelectParts;
+  | WebSelectParts
 
 const createSelectStyle = createDefaultVariantFactory<WebSelectComposition>()
 

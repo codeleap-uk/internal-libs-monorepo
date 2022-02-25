@@ -2,8 +2,8 @@ import { FunctionType } from '@codeleap/common'
 import { createSpinner, Options } from 'nanospinner'
 
 type SpinWhileNotCompletedOpts = Options & {
-  name: string;
-};
+  name: string
+}
 
 export async function spinWhileNotCompleted(
   operation: FunctionType<[], Promise<any>>,

@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type TooltipComposition = 'wrapper' | 'arrow' | 'bubble';
+export type TooltipComposition = 'wrapper' | 'arrow' | 'bubble'
 
 const createTooltipStyle = createDefaultVariantFactory<TooltipComposition>()
 

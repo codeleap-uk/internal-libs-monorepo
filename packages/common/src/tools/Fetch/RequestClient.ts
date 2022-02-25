@@ -7,13 +7,13 @@ import { IRequestClient, RequestClientConfig } from './types'
 import { getRequestId, parseFailedRequest, toMultipart } from './utils'
 
 export class RequestClient implements IRequestClient {
-    queue: IRequestClient['queue'];
+    queue: IRequestClient['queue']
 
-    config: RequestClientConfig;
+    config: RequestClientConfig
 
-    axios: AxiosInstance;
+    axios: AxiosInstance
 
-    logger: Logger;
+    logger: Logger
 
     constructor({ logger, ...config }:RequestClientConfig) {
       this.config = config

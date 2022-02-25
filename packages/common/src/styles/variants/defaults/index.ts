@@ -50,11 +50,11 @@ export const DEFAULT_STYLES = {
   Navigation: {},
 } as const
 
-export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES;
+export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES
 
 export type DefaultVariants<S = CSSProperties> = {
   [Property in keyof DEFAULT_VARIANTS]: DEFAULT_VARIANTS[Property]
-};
+}
 
 export * from './Button'
 export * from './View'

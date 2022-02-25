@@ -2,7 +2,7 @@ import { Fonts, TypographyStyle } from '../..'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type TextComposition = 'text';
+export type TextComposition = 'text'
 const createTextStyle = createDefaultVariantFactory<TextComposition>()
 
 const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })),

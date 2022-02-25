@@ -6,12 +6,12 @@ import React, {
 import { WebInputFile } from '@codeleap/common'
 
 export type FileInputRef = {
-  openFilePicker: () => void;
-};
+  openFilePicker: () => void
+}
 
 type FileInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
-  onFileSelect(files: WebInputFile[]): void;
-};
+  onFileSelect(files: WebInputFile[]): void
+}
 
 export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(
   (inputProps, ref) => {

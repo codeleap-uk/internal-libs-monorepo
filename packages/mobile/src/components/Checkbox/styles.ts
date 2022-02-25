@@ -6,13 +6,13 @@ type CheckboxParts =
   | 'input'
   | 'checkmark'
   | 'checkmarkWrapper'
-  | 'error';
+  | 'error'
 
 export type MobileCheckboxComposition =
   | CheckboxParts
   | `${CheckboxParts}:checked`
   | `${CheckboxParts}:disabled`
-  | `${CheckboxParts}:error`;
+  | `${CheckboxParts}:error`
 const createCheckboxStyle =
   createDefaultVariantFactory<MobileCheckboxComposition>()
 

@@ -20,11 +20,11 @@ const spin = keyframes`
 `
 
 export type ActivityIndicatorProps = {
-  animating?: boolean;
-  hidesWhenStopped?: boolean;
-  styles?: StylesOf<ActivityIndicatorComposition>;
-  css?: CSSObject;
-} & ComponentVariants<typeof ActivityIndicatorStyles>;
+  animating?: boolean
+  hidesWhenStopped?: boolean
+  styles?: StylesOf<ActivityIndicatorComposition>
+  css?: CSSObject
+} & ComponentVariants<typeof ActivityIndicatorStyles>
 
 export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
   indicatorProps,

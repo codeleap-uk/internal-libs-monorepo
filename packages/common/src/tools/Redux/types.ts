@@ -4,7 +4,7 @@ import { DeepPartial, FunctionType } from '../..'
 export type Reducers<S> = Record<
   string,
   FunctionType<[S, any], DeepPartial<S>>
->;
+>
 
 export type AsyncReducers<S> = Record<
   string,
@@ -12,8 +12,8 @@ export type AsyncReducers<S> = Record<
     [S, FunctionType<[DeepPartial<S>], void>, any],
     Promise<unknown | void>
   >
->;
-export type AnyRecord = any;
+>
+export type AnyRecord = any
 
 export type CreateSliceArgs<
   S extends AnyRecord,
@@ -21,11 +21,11 @@ export type CreateSliceArgs<
   R extends Reducers<S> = Reducers<S>,
   AR extends AsyncReducers<S> = AsyncReducers<S>
 > = {
-  name: N;
-  initialState: S;
-  reducers: R;
-  asyncReducers: AR;
-};
+  name: N
+  initialState: S
+  reducers: R
+  asyncReducers: AR
+}
 
 export type BuildActions<
   S extends AnyRecord,
@@ -43,7 +43,7 @@ export type BuildActions<
   ) => Promise<any>
     ? (...a: A) => ReturnType<AR[Property]>
     : () => ReturnType<AR[Property]>;
-};
+}
 
 export type Slice<
   S extends AnyRecord,
@@ -51,15 +51,15 @@ export type Slice<
   R extends Reducers<S>,
   AR extends AsyncReducers<S>
 > = {
-  buildActions: BuildActions<S, R, AR>;
-  name: N;
-  initialState: S;
+  buildActions: BuildActions<S, R, AR>
+  name: N
+  initialState: S
   reducer: (state: S, action: { type: string; payload: DeepPartial<S> }) => S;
-};
+}
 
 export interface EnhancedStore<S = any> extends Store {
-  getState(): S;
-  dispatch: Dispatch<AnyAction>;
+  getState(): S
+  dispatch: Dispatch<AnyAction>
 }
 
 export type CreateReduxReturn<
@@ -68,27 +68,27 @@ export type CreateReduxReturn<
     [Property in keyof T]: T[Property]['initialState'];
   }
 > = {
-  store: EnhancedStore<RootState>;
+  store: EnhancedStore<RootState>
   actions: {
     [Property in keyof T]: ReturnType<T[Property]['buildActions']>;
-  };
-};
+  }
+}
 
 type Post = {
-  id: number;
-  username: string;
-  created_datetime: string;
-  title: string;
-  content: string;
-};
+  id: number
+  username: string
+  created_datetime: string
+  title: string
+  content: string
+}
 
 type PostState = {
-  posts: Post[];
-  loading: boolean;
+  posts: Post[]
+  loading: boolean
   error: {
-    message: string;
-  } | null;
-};
+    message: string
+  } | null
+}
 
 // const initialState:PostState = {
 //     posts: [],

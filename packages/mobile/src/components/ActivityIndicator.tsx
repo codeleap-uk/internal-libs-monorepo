@@ -13,9 +13,9 @@ import { StylesOf } from '../types/utility'
 export type ActivityIndicatorProps = ComponentPropsWithoutRef<
   typeof Indicator
 > & {
-  variants?: ComponentVariants<typeof ActivityIndicatorStyles>['variants'];
-  styles?: StylesOf<ActivityIndicatorComposition>;
-};
+  variants?: ComponentVariants<typeof ActivityIndicatorStyles>['variants']
+  styles?: StylesOf<ActivityIndicatorComposition>
+}
 
 export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {

@@ -13,14 +13,14 @@ import {
   WebCheckboxComposition,
   WebCheckboxStyles as CheckboxStyles,
 } from './styles'
-type NativeCheckboxProps = ComponentPropsWithRef<'input'>;
+type NativeCheckboxProps = ComponentPropsWithRef<'input'>
 export * from './styles'
 export type CheckboxProps = NativeCheckboxProps & {
-  checked?: boolean;
-  onValueChange?: (checked: boolean) => any;
-  label?: React.ReactNode;
-  styles?: StylesOf<WebCheckboxComposition>;
-} & ComponentVariants<typeof CheckboxStyles>;
+  checked?: boolean
+  onValueChange?: (checked: boolean) => any
+  label?: React.ReactNode
+  styles?: StylesOf<WebCheckboxComposition>
+} & ComponentVariants<typeof CheckboxStyles>
 
 export const Checkbox = (checkboxProps: CheckboxProps) => {
   const {

@@ -112,7 +112,7 @@ const styleGetter = (
   return style
 }
 
-type StyleGetter = typeof styleGetter;
+type StyleGetter = typeof styleGetter
 
 export const variantProvider = new VariantProvider<
   StyleGetter,

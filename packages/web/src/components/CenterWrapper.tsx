@@ -9,8 +9,8 @@ import {
 } from '@codeleap/common'
 
 export type CenterWrapperProps = {
-  styles?: StylesOf<CenterWrapperComposition>;
-} & ComponentVariants<typeof CenterWrapperStyles>;
+  styles?: StylesOf<CenterWrapperComposition>
+} & ComponentVariants<typeof CenterWrapperStyles>
 
 export const CenterWrapper: React.FC<CenterWrapperProps> = (props) => {
   const {

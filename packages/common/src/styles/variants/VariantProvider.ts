@@ -36,9 +36,9 @@ export class VariantProvider<
   CSSIn = Parameters<RootStyler>[0],
   CSSOut = ReturnType<RootStyler>
 > {
-  createStylesheet: RootStyler;
+  createStylesheet: RootStyler
 
-  theme: Theme;
+  theme: Theme
 
   // @ts-ignore
   colorSchemeListeners:FunctionType<[Theme], any>[] = []

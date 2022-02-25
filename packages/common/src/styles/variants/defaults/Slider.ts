@@ -15,7 +15,7 @@ export type SliderComposition =
   | 'trackLabels'
   | 'mark'
   | 'tooltipArrow'
-  | 'tooltipText';
+  | 'tooltipText'
 
 const createSliderStyle = createDefaultVariantFactory<SliderComposition>()
 

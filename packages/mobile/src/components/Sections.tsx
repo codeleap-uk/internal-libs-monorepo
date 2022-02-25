@@ -16,17 +16,17 @@ import { View, ViewProps } from './View'
 
 export type SectionListProps = KeyboardAwareSectionListProps<any> &
   ViewProps & {
-    onRefresh?: () => void;
-    refreshTimeout?: number;
-    changeData?: any;
-    separators?: boolean;
-  };
+    onRefresh?: () => void
+    refreshTimeout?: number
+    changeData?: any
+    separators?: boolean
+  }
 
 const KeyboardAwareSectionList =
   KBDView as unknown as React.ForwardRefExoticComponent<
     ViewProps & {
-      refreshControl?: JSX.Element;
-      ref?: SectionList;
+      refreshControl?: JSX.Element
+      ref?: SectionList
     }
   >
 

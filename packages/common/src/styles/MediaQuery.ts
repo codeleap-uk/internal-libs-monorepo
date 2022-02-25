@@ -1,23 +1,23 @@
 /* eslint-disable no-unused-vars */
 import { AppTheme } from '.'
 import { FunctionType } from '..'
-export type QueryKey = 'up' | 'down' | 'is' | 'not';
+export type QueryKey = 'up' | 'down' | 'is' | 'not'
 
-type ThemeBreakpoints = AppTheme['breakpoints'];
-type Breakpoint = keyof ThemeBreakpoints | number;
+type ThemeBreakpoints = AppTheme['breakpoints']
+type Breakpoint = keyof ThemeBreakpoints | number
 
 export type BreakpointHooks<B, R> = Record<
   QueryKey,
   FunctionType<[test: B], R>
->;
+>
 
 export type MediaQueries<B, R> = BreakpointHooks<B, R> & {
-  renderToPlatformQuery: (props: Record<QueryKey, B>) => any;
-};
+  renderToPlatformQuery: (props: Record<QueryKey, B>) => any
+}
 
 export type Hooks<B, R> = BreakpointHooks<B, R> & {
-  shouldRenderToPlatform: (props: Record<QueryKey, B>) => boolean;
-};
+  shouldRenderToPlatform: (props: Record<QueryKey, B>) => boolean
+}
 
 export function buildMediaQueries<T extends ThemeBreakpoints>(
   breakpoints: T,

@@ -22,13 +22,13 @@ export type Prev = [
   19,
   20,
   ...0[]
-];
+]
 
 export type Join<K, P> = K extends string | number
   ? P extends string | number
     ? `${K}${'' extends P ? '' : '.'}${P}`
     : never
-  : never;
+  : never
 
 export type Paths<T, D extends number = 10> = [D] extends [never]
   ? never
@@ -38,4 +38,4 @@ export type Paths<T, D extends number = 10> = [D] extends [never]
         ? `${K}` | Join<K, Paths<T[K], Prev[D]>>
         : never;
     }[keyof T]
-  : '';
+  : ''

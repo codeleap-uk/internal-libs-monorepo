@@ -2,10 +2,10 @@ import { Text, View, React, Button, Image, Icon, AppIcon, variantProvider } from
 import { Session } from '@/redux'
 
 type PageProps = {
-  next(): void;
-  previous(): void;
-  goto(page: number): void;
-};
+  next(): void
+  previous(): void
+  goto(page: number): void
+}
 
 const TextList = ({ texts }) => (
   <View variants={['marginVertical:1']}>

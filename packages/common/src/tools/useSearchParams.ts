@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-type UseSearchParamsReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>];
+type UseSearchParamsReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>]
 
 export function useSearchParams<
   T extends Record<string, string> = Record<string, string>

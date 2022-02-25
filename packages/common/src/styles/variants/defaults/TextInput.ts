@@ -12,12 +12,12 @@ type TextInputParts =
   | 'label'
   | 'innerWrapper'
   | 'error'
-  | 'placeholder';
+  | 'placeholder'
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
   | `${TextInputParts}:focus`
-  | TextInputParts;
+  | TextInputParts
 
 const createTextInputStyle =
   createDefaultVariantFactory<TextInputComposition>()

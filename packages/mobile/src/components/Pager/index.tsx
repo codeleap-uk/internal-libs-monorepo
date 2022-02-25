@@ -23,19 +23,19 @@ import { MobilePagerStyles, PagerComposition } from './styles'
 export * from './styles'
 
 export type PagerProps = {
-  variants?: ComponentVariants<typeof MobilePagerStyles>['variants'];
-  styles?: StylesOf<PagerComposition>;
-  page?: number;
-  loop?: boolean;
-  debug?: boolean;
-  onPageChange?: (page: number) => void;
-};
+  variants?: ComponentVariants<typeof MobilePagerStyles>['variants']
+  styles?: StylesOf<PagerComposition>
+  page?: number
+  loop?: boolean
+  debug?: boolean
+  onPageChange?: (page: number) => void
+}
 
 export type PagerRef = {
-  forward(by?: number): void;
-  back(by?: number): void;
-  to(index?: number): void;
-};
+  forward(by?: number): void
+  back(by?: number): void
+  to(index?: number): void
+}
 
 export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   const {
@@ -147,12 +147,12 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
   )
 })
 type PageProps = PagerProps & {
-  idx: number;
-  lastPage: number;
-  page: number;
-  pagePoses: any;
-  style: any;
-};
+  idx: number
+  lastPage: number
+  page: number
+  pagePoses: any
+  style: any
+}
 const Page: React.FC<PageProps> = (pageProps) => {
   const {
     children: child,

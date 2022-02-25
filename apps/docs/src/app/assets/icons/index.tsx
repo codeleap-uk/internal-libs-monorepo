@@ -67,9 +67,9 @@ export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) =
 
 type IconsType = {
   [Property in keyof typeof iconImages]: React.FC;
-};
+}
 
-export type AppIcon = keyof IconsType;
+export type AppIcon = keyof IconsType
 
 export const Icons = Object.fromEntries(
   Object.entries(iconImages).map(([iconName, iconPath]) => {

@@ -17,7 +17,7 @@ export type IconProps = {
   variants?: ComponentVariants<typeof IconStyles>['variants']
   renderEmptySpace?: boolean
   size?: number
-};
+}
 
 export const IconComponent: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()

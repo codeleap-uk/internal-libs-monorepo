@@ -11,17 +11,17 @@ import { StylesOf } from '../types/utility'
 import { CSSObject } from '@emotion/react'
 
 export type FlatListRender<T> = (itemProps: {
-  item: T;
-  index: number;
-  style: CSSProperties;
-}) => ReactElement;
+  item: T
+  index: number
+  style: CSSProperties
+}) => ReactElement
 
 export type FlatListProps<T> = {
-  styles?: StylesOf<ViewComposition>;
-  css?: CSSObject;
-  data: T[];
-  getSize: (i: T, idx: number) => number;
-  renderItem: FlatListRender<T>;
+  styles?: StylesOf<ViewComposition>
+  css?: CSSObject
+  data: T[]
+  getSize: (i: T, idx: number) => number
+  renderItem: FlatListRender<T>
 } & Omit<
   ComponentProps<typeof List>,
   | 'itemCount'
@@ -32,7 +32,7 @@ export type FlatListProps<T> = {
   | 'height'
   | 'children'
 > &
-  ComponentVariants<typeof ViewStyles>;
+  ComponentVariants<typeof ViewStyles>
 
 export const FlatList = <T extends unknown>(
   flatListProps: FlatListProps<T>,
