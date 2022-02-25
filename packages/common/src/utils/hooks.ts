@@ -1,14 +1,32 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-restricted-imports */
-import { useEffect, useRef, useState } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  useImperativeHandle,
+  useMemo,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useDebugValue,
+  useReducer,
+} from 'react'
 import { deepMerge } from './object'
 import { AnyFunction, DeepPartial } from '../types'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
-  useState,
-  useRef,
   useEffect,
+  useRef,
+  useState,
+  useImperativeHandle,
+  useMemo,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useDebugValue,
+  useReducer,
 }
 
 export const onMount = (func: AnyFunction) => {
