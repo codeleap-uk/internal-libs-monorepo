@@ -81,13 +81,4 @@ export const ModalStyles = {
     },
     { dynamic: true },
   ),
-  fullscreen: createModalStyle((theme) => ({
-    box: {
-      flex: 1,
-      borderRadius: 0,
-      width: theme.values.width,
-      height: theme.values.height,
-      ...theme.presets.center,
-    },
-  })),
 }

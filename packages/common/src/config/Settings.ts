@@ -9,6 +9,7 @@ export type AppSettings = DeepPartial<{
   Environment: {
     IsDev: boolean;
     Type: 'production' | 'development';
+    InitTime: any;
   };
   Application: {
     IsBrowser: boolean;

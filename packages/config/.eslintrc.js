@@ -152,7 +152,18 @@ const typescript = {
   '@typescript-eslint/ban-ts-comment': 'off',
   '@typescript-eslint/ban-types': 'off',
   '@typescript-eslint/no-empty-function': 'off',
-
+  '@typescript-eslint/semi': ['error', 'never'],
+  '@typescript-eslint/member-delimiter-style': ['warn', {
+    'multiline': {
+      'delimiter': 'none',
+      'requireLast': true,
+    },
+    'singleline': {
+      'delimiter': 'semi',
+      'requireLast': false,
+    },
+    'multilineDetection': 'brackets',
+  }],
 }
 
 module.exports = {

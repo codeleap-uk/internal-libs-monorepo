@@ -121,11 +121,6 @@ export const FileInput = forwardRef<
         ...alertProps,
         options: [
           {
-            text: 'Cancel',
-            onPress: () => {},
-            ...alertProps?.options[0],
-          },
-          {
             text: alertProps?.options?.[0]?.text || 'Camera',
             onPress: () => {
               ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
@@ -136,9 +131,14 @@ export const FileInput = forwardRef<
             text: 'Library',
             onPress: () => {
               ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
-
             },
             ...alertProps?.options[2],
+          },
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => {},
+            ...alertProps?.options[0],
           },
 
         ],

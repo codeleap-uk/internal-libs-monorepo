@@ -106,3 +106,15 @@ export function getNestedStylesByKey<T extends StylesOf<any>>(match:string, vari
 
   return styles
 }
+
+export function hasFastRefreshed(Settings: AppSettings) {
+  if (Settings?.Environment?.InitTime) {
+    const timeFromStartup = (new Date()).getTime() - Settings.Environment.InitTime.getTime()
+    // It usually takes less than a seconds (~300ms) from app launch to running this, so if's been more than that we've probably fast refreshed
+    const fastRefreshed = Settings.Environment.IsDev && timeFromStartup > 1000
+    return fastRefreshed
+  } else {
+    console.log('hasFreshRefreshed() => Missing datetime from settings, please include to make this work')
+    return undefined
+  }
+}
