@@ -108,7 +108,7 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
         </Content>
       ) : (
         <>
-          {currentPage.showMenu ?  <Menu items={menuItems} styles={variantStyles} /> : null}
+          {currentPage.showMenu ? <Menu items={menuItems} styles={variantStyles} /> : null}
           <View css={variantStyles.content}>
             <Router
               defaultPath={defaultPath}

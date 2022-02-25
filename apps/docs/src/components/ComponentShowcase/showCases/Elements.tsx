@@ -193,18 +193,6 @@ const RouterPageShowCase = {
       <RouterPage
         basePath='/components'
         title='Components'
-        renderContentWrapper={({ children, menuItems, styles }) => (
-          <View variants={['fullWidth']} css={styles.content}>
-            <View variants={['column', 'padding:1']}>
-              <Text text={'Your custom content here'} />
-              <Menu styles={styles} items={menuItems} />
-            </View>
-            <View variants={['column']}>
-              <Text text={'Or here'} />
-              {children}
-            </View>
-          </View>
-        )}
       >
         {/* <SomePage  menuIcon='refresh' title='Root' path='/'/>  */}
         <SomePage menuIcon='search' title='Search' path='/' />

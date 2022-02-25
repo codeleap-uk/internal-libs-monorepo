@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Showcase } from '..'
 import { ComponentList } from '../components/ComponentList'
 import { showcasePropsMap } from '../data'
-import {Page}  from '../../Page'
+import { Page } from '../../Page'
 const defaultComponent = Object.keys(allComponents)[0]
 
 export const ComponentShowcase: React.FC = () => {
@@ -12,7 +12,7 @@ export const ComponentShowcase: React.FC = () => {
   const { currentTheme, Theme } = useCodeleapContext()
 
   return (
-    <Page header={false} footer={false} styles={{innerWrapper: styles.innerWrapper}}>
+    <Page header={false} footer={false} styles={{ innerWrapper: styles.innerWrapper }}>
       <View >
         <ComponentList onSelect={setComponent} current={selectedComponent} />
         <View

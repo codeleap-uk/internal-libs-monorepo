@@ -13,7 +13,7 @@ export const Router: React.FC<RouterProps> = (props) => {
 
   return (
     <React.Fragment>
-      <ReachRouter basepath={base}>{children}</ReachRouter>
+      <ReachRouter basepath={base} style={style}>{children}</ReachRouter>
     </React.Fragment>
   )
 }

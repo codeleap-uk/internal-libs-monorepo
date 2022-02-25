@@ -19,16 +19,16 @@ import { AppRouterPageStyles } from './stylesheets/RouterPage'
 import { AppDrawerStyles } from './stylesheets/Drawer'
 import { AppOverlayStyles } from './stylesheets/Overlay'
 import { AppCenterWrapperStyles } from './stylesheets/CenterWrapper'
+import { AppRadioInputStyles } from './stylesheets/RadioInput'
 
 const defaultStyles = variantProvider.getDefaultVariants()
-
 
 export const variants = {
   ...defaultStyles,
   View: AppViewStyles,
   Text: AppTextStyles,
   TextInput: AppTextInputStyles,
-
+  RadioInput: AppRadioInputStyles,
   Modal: AppModalStyles,
   Button: AppButtonStyle,
   Icon: AppIconStyles,

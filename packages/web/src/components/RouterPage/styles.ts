@@ -13,7 +13,8 @@ export type MenuComposition =
   | 'menuItem:text:selected'
   | 'sideMenu'
   | 'topMenu'
-  | 'horizontalScroll';
+  | 'horizontalScroll'
+  | 'router';
 export type RouterPageComposition = 'content' | 'router' | MenuComposition;
 const createRouterPageStyle =
   createDefaultVariantFactory<RouterPageComposition>()
@@ -80,6 +81,9 @@ export const RouterPageStyles = {
         marginRight: Theme.spacing.value(3),
         width: 90,
       },
+    },
+    router: {
+      width: '100%',
     },
     topMenu: {
       width: '100%',
