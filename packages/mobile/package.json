@@ -1,8 +1,8 @@
 {
   "name": "@codeleap/mobile",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "main": "src/index.ts",
-  "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
+  "repository": "https://github.com/codeleap-uk/internal-libs-monorepo/tree/master/packages/mobile",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
   "devDependencies": {
