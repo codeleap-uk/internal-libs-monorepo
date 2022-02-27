@@ -15,7 +15,7 @@ import { StylesOf } from '../types/utility'
 import { Touchable } from './Touchable'
 import { useClickOutside } from '../lib/hooks'
 
-type TooltipPosition = 'left' | 'top' | 'bottom' | 'right';
+type TooltipPosition = 'left' | 'top' | 'bottom' | 'right'
 
 const arrowPositionStyles = {
   left: {
@@ -72,11 +72,11 @@ const tooltipPositionStyles = {
 }
 
 export type TooltipProps = {
-  position: TooltipPosition;
-  styles?: StylesOf<TooltipComposition>;
-  showOn?: 'click' | 'hover';
-  content?: string | ReactNode;
-} & ComponentVariants<typeof TooltipStyles>;
+  position: TooltipPosition
+  styles?: StylesOf<TooltipComposition>
+  showOn?: 'click' | 'hover'
+  content?: string | ReactNode
+} & ComponentVariants<typeof TooltipStyles>
 
 const invert = (pos) => {
   switch (pos) {

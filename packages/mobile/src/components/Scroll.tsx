@@ -16,18 +16,18 @@ import { ViewProps } from './View'
 
 export type ScrollProps = KeyboardAwareScrollViewProps &
   ViewProps & {
-    onRefresh?: () => void;
-    refreshTimeout?: number;
-    changeData?: any;
+    onRefresh?: () => void
+    refreshTimeout?: number
+    changeData?: any
     styles?: ViewStyle
-  };
+  }
 
 const KeyboardAwareScrollView =
   KBDView as unknown as React.ForwardRefExoticComponent<
     ViewProps & {
-      refreshControl?: JSX.Element;
-      ref?: ScrollView;
-     
+      refreshControl?: JSX.Element
+      ref?: ScrollView
+
     } & ScrollViewProps
   >
 

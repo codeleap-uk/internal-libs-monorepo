@@ -5,14 +5,14 @@ import { optionalObject } from '../../../utils'
 
 export type ButtonStates = 'disabled'
 export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader'
-export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts;
+export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
 
 const presets = includePresets((styles) => createButtonStyle(() => ({ wrapper: styles })))
 
 export const ButtonStyles = {
-  ...presets, 
+  ...presets,
   default: createButtonStyle((theme) => ({
     wrapper: {
       cursor: 'pointer',
@@ -23,7 +23,7 @@ export const ButtonStyles = {
       backgroundColor: theme.colors.primary,
       ...theme.presets.alignCenter,
       ...(
-        theme.IsBrowser ? 
+        theme.IsBrowser ?
           {
             '&:hover': {
               backgroundColor: shadeColor(theme.colors.primary, -30),
@@ -49,14 +49,14 @@ export const ButtonStyles = {
   negative: createButtonStyle((theme) => ({
     wrapper: {
       backgroundColor: theme.colors.negative,
-   
+
       '&:hover': {
         backgroundColor: shadeColor(theme.colors.negative, -30),
       },
     },
-   
+
   })),
- 
+
   circle: createButtonStyle((theme) => ({
     wrapper: {
       borderRadius: 100,
@@ -78,10 +78,10 @@ export const ButtonStyles = {
       ...theme.presets.center,
       ...theme.spacing.padding(0),
       ...optionalObject(theme.IsBrowser,
-        {'&:hover': {
+        { '&:hover': {
           backgroundColor: 'transparent',
         }}
-        , {} ),
+        , {}),
     },
     text: {
       flex: 1,

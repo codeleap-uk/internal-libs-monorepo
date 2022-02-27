@@ -1,6 +1,6 @@
 import { FunctionType } from '..'
 
-type GetterFunction<T> = FunctionType<[T, number], string | number> | keyof T;
+type GetterFunction<T> = FunctionType<[T, number], string | number> | keyof T
 export function objectFromArray<T, Getter extends GetterFunction<T>>(
   arr: T[],
   keyAccessor?: Getter,

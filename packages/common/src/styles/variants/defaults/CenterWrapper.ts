@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type CenterWrapperComposition = 'wrapper' | 'innerWrapper';
+export type CenterWrapperComposition = 'wrapper' | 'innerWrapper'
 
 const createCenterWrapperStyle =
   createDefaultVariantFactory<CenterWrapperComposition>()

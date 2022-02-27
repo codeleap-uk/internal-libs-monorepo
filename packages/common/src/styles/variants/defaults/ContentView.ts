@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type ContentViewComposition = 'placeholder' | 'wrapper' | 'loader';
+export type ContentViewComposition = 'placeholder' | 'wrapper' | 'loader'
 
 const createContentViewStyle =
   createDefaultVariantFactory<ContentViewComposition>()

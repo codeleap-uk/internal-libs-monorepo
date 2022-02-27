@@ -13,7 +13,7 @@ declare module 'react-native-image-crop-picker' {
         | 'LowQuality'
         | 'MediumQuality'
         | 'HighestQuality'
-        | 'Passthrough';
+        | 'Passthrough'
 
     /**
      * iOS smart album types
@@ -46,7 +46,7 @@ declare module 'react-native-image-crop-picker' {
         | 'LivePhotos'
         /** >= iOS 11 */
         | 'Animated'
-        | 'LongExposure';
+        | 'LongExposure'
 
     export interface CommonOptions {
         /**
@@ -54,7 +54,7 @@ declare module 'react-native-image-crop-picker' {
          *
          * @default false
          */
-        multiple?: boolean;
+        multiple?: boolean
 
         /**
          * Min number of files to select when using `multiple` option.
@@ -62,7 +62,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default 1
          */
-        minFiles?: number;
+        minFiles?: number
 
         /**
          * Max number of files to select when using `multiple` option.
@@ -70,7 +70,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default 5
          */
-        maxFiles?: number;
+        maxFiles?: number
 
         /**
          * Promise will resolve/reject once ViewController completion block is called.
@@ -78,7 +78,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default true
          */
-        waitAnimationEnd?: boolean;
+        waitAnimationEnd?: boolean
 
         /**
          * List of smart albums to choose from.
@@ -86,7 +86,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default ['UserLibrary', 'PhotoStream', 'Panoramas', 'Videos', 'Bursts']
          */
-        smartAlbums?: SmartAlbums[];
+        smartAlbums?: SmartAlbums[]
 
         /**
          * Whether to default to the front camera when opened. Please note that not all
@@ -95,21 +95,21 @@ declare module 'react-native-image-crop-picker' {
          *
          * @default false
          */
-        useFrontCamera?: boolean;
+        useFrontCamera?: boolean
 
         /**
          * Text displayed while photo is loading in picker.
          *
          * @default 'Processing assets...'
          */
-        loadingLabelText?: string;
+        loadingLabelText?: string
 
         /**
          * Whether to show the number of selected assets.
          *
          * @default true
          */
-        showsSelectedCount?: boolean;
+        showsSelectedCount?: boolean
 
         /**
          * Applies a sort order on the creation date on how media is displayed within the
@@ -118,7 +118,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default 'none'
          */
-        sortOrder?: 'none' | 'asc' | 'desc';
+        sortOrder?: 'none' | 'asc' | 'desc'
 
         /**
          * Whether to display bottom controls.
@@ -126,7 +126,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default false
          */
-        hideBottomControls?: boolean;
+        hideBottomControls?: boolean
 
         /**
          * When set to false, does not write temporary files for the selected images. This is useful
@@ -136,21 +136,21 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default true
          */
-        writeTempFile?: boolean;
+        writeTempFile?: boolean
     }
 
     type ImageOptions = CommonOptions & {
-        mediaType: 'photo';
+        mediaType: 'photo'
 
         /**
          * Width of result image when used with `cropping` option.
          */
-        width?: number;
+        width?: number
 
         /**
          * Height of result image when used with `cropping` option.
          */
-        height?: number;
+        height?: number
 
         /**
          * When set to true, the image file content will be available as a base64-encoded string in
@@ -159,35 +159,35 @@ declare module 'react-native-image-crop-picker' {
          *
          * @default false
          */
-        includeBase64?: boolean;
+        includeBase64?: boolean
 
         /**
          * Include image exif data in the response.
          *
          * @default false
          */
-        includeExif?: boolean;
+        includeExif?: boolean
 
         /**
          * Whether to convert photos to JPG. This will also convert any Live Photo into its JPG representation.
          *
          * @default false
          */
-        forceJpg?: boolean;
+        forceJpg?: boolean
 
         /**
          * Enable or disable cropping.
          *
          * @default false
          */
-        cropping?: boolean;
+        cropping?: boolean
 
         /**
          * When set to true, the image will always fill the mask space.
          *
          * @default true
          */
-        avoidEmptySpaceAroundImage?: boolean;
+        avoidEmptySpaceAroundImage?: boolean
 
         /**
          * When cropping image, determines ActiveWidget color.
@@ -195,7 +195,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default '#424242'
          */
-        cropperActiveWidgetColor?: string;
+        cropperActiveWidgetColor?: string
 
         /**
          * When cropping image, determines the color of StatusBar.
@@ -203,7 +203,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default '#424242'
          */
-        cropperStatusBarColor?: string;
+        cropperStatusBarColor?: string
 
         /**
          * When cropping image, determines the color of Toolbar.
@@ -211,7 +211,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default '#424242'
          */
-        cropperToolbarColor?: string;
+        cropperToolbarColor?: string
 
         /**
          * When cropping image, determines the color of Toolbar text and buttons.
@@ -219,14 +219,14 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default 'darker orange'
          */
-        cropperToolbarWidgetColor?: string;
+        cropperToolbarWidgetColor?: string
 
         /**
          * When cropping image, determines the title of Toolbar.
          *
          * @default 'Edit Photo'
          */
-        cropperToolbarTitle?: string;
+        cropperToolbarTitle?: string
 
         /**
          * Enables user to apply custom rectangle area for cropping.
@@ -234,33 +234,33 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default false
          */
-        freeStyleCropEnabled?: boolean;
+        freeStyleCropEnabled?: boolean
 
         /**
          * cropperTintColor
          */
-        cropperTintColor?: string;
+        cropperTintColor?: string
 
         /**
          * Enable or disable circular cropping mask.
          *
          * @default false
          */
-        cropperCircleOverlay?: boolean;
+        cropperCircleOverlay?: boolean
 
         /**
          * Cancel button text.
          *
          * @default 'Cancel'
          */
-        cropperCancelText?: string;
+        cropperCancelText?: string
 
         /**
          * Choose button text.
          *
          * @default 'Choose'
          */
-        cropperChooseText?: string;
+        cropperChooseText?: string
 
          /**
          * Enable or disable cropper rotate buttons.
@@ -276,7 +276,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default true
          */
-        showCropGuidelines?: boolean;
+        showCropGuidelines?: boolean
 
         /**
          * Whether to show the square crop frame during cropping
@@ -284,7 +284,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default true
          */
-        showCropFrame?: boolean;
+        showCropFrame?: boolean
 
         /**
          * Whether to enable rotating the image by hand gesture.
@@ -292,7 +292,7 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default false
          */
-        enableRotationGesture?: boolean;
+        enableRotationGesture?: boolean
 
         /**
          * When cropping image, disables the color setters for cropping library.
@@ -300,21 +300,21 @@ declare module 'react-native-image-crop-picker' {
          * @platform Android only
          * @default false
          */
-        disableCropperColorSetters?: boolean;
+        disableCropperColorSetters?: boolean
 
         /**
          * Compress image with maximum width.
          *
          * @default null
          */
-        compressImageMaxWidth?: number;
+        compressImageMaxWidth?: number
 
         /**
          * Compress image with maximum height.
          *
          * @default null
          */
-        compressImageMaxHeight?: number;
+        compressImageMaxHeight?: number
 
         /**
          * Compress image with quality (from 0 to 1, where 1 is best quality). On iOS, values larger
@@ -323,18 +323,18 @@ declare module 'react-native-image-crop-picker' {
          *
          * @default Android: 1, iOS: 0.8
          */
-        compressImageQuality?: number;
+        compressImageQuality?: number
     }
 
     type CropperOptions = ImageOptions & {
         /**
          * Selected image location
          */
-        path: string;
+        path: string
     }
 
     type VideoOptions = CommonOptions & {
-        mediaType: 'video';
+        mediaType: 'video'
 
         /**
          * Choose which preset will be used for video compression.
@@ -342,106 +342,106 @@ declare module 'react-native-image-crop-picker' {
          * @platform iOS only
          * @default 'MediumQuality'
          */
-        compressVideoPreset?: CompressVideoPresets;
-    };
+        compressVideoPreset?: CompressVideoPresets
+    }
 
     type AnyOptions = Omit<ImageOptions, 'mediaType'> & Omit<VideoOptions, 'mediaType'> & {
-        mediaType?: 'any';
-    };
+        mediaType?: 'any'
+    }
 
-    export type Options = AnyOptions | VideoOptions | ImageOptions;
+    export type Options = AnyOptions | VideoOptions | ImageOptions
 
     interface ImageVideoCommon {
         /**
          * Selected image location. This is null when the `writeTempFile` option is set to `false`.
          */
-        path: string;
+        path: string
 
         /**
          * Selected image size in bytes.
          */
-        size: number;
+        size: number
 
         /**
          * Selected image/video width.
          */
-        width: number;
+        width: number
 
         /**
          * Selected image/video height.
          */
-        height: number;
+        height: number
 
         /**
          * Selected image MIME type (image/jpeg, image/png, etc).
          */
-        mime: string;
+        mime: string
 
         /**
          * Extracted exif data from image. Response format is platform specific.
          */
-        exif?: null | object;
+        exif?: null | object
 
         /**
          * Selected image's localidentifier, used for PHAsset searching.
          *
          * @platform iOS only
          */
-        localIdentifier?: string;
+        localIdentifier?: string
 
         /**
          * Selected image's source path, do not have write access.
          *
          * @platform iOS only
          */
-        sourceURL?: string;
+        sourceURL?: string
 
         /**
          * Selected image/video's filename.
          *
          * @platform iOS only
          */
-        filename?: string;
+        filename?: string
 
         /**
          * UNIX timestamp when image was created.
          *
          * @platform iOS only
          */
-        creationDate?: string;
+        creationDate?: string
 
         /**
          * UNIX timestamp when image was last modified.
          */
-        modificationDate?: string;
+        modificationDate?: string
     }
 
     export interface Image extends ImageVideoCommon {
         /**
          * Optional base64 selected file representation.
          */
-        data?: string | null;
+        data?: string | null
 
         /**
          * Cropped image rectangle (width, height, x, y).
          */
-        cropRect?: CropRect | null;
+        cropRect?: CropRect | null
     }
 
     export interface Video extends ImageVideoCommon {
         /**
          * Video duration in milliseconds
          */
-        duration: number | null;
+        duration: number | null
     }
 
-    export type ImageOrVideo = Image | Video;
+    export type ImageOrVideo = Image | Video
 
     export interface CropRect {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
+        x: number
+        y: number
+        width: number
+        height: number
     }
 
     type PickerErrorCodeCommon =
@@ -449,13 +449,13 @@ declare module 'react-native-image-crop-picker' {
         | 'E_NO_IMAGE_DATA_FOUND'
         | 'E_NO_LIBRARY_PERMISSION'
         | 'E_NO_CAMERA_PERMISSION'
-        | 'E_ERROR_WHILE_CLEANING_FILES';
+        | 'E_ERROR_WHILE_CLEANING_FILES'
 
     type PickerErrorCodeIOS =
         | 'E_PICKER_CANNOT_RUN_CAMERA_ON_SIMULATOR'
         | 'E_CROPPER_IMAGE_NOT_FOUND'
         | 'E_CANNOT_SAVE_IMAGE'
-        | 'E_CANNOT_PROCESS_VIDEO';
+        | 'E_CANNOT_PROCESS_VIDEO'
 
     type PickerErrorCodeAndroid =
         | 'E_ACTIVITY_DOES_NOT_EXIST'
@@ -463,31 +463,31 @@ declare module 'react-native-image-crop-picker' {
         | 'E_FAILED_TO_SHOW_PICKER'
         | 'E_FAILED_TO_OPEN_CAMERA'
         | 'E_CAMERA_IS_NOT_AVAILABLE'
-        | 'E_CANNOT_LAUNCH_CAMERA';
+        | 'E_CANNOT_LAUNCH_CAMERA'
 
-    export type PickerErrorCode = PickerErrorCodeCommon | PickerErrorCodeIOS | PickerErrorCodeAndroid;
+    export type PickerErrorCode = PickerErrorCodeCommon | PickerErrorCodeIOS | PickerErrorCodeAndroid
 
     /** Change return type based on `multiple` property. */
-    export type PossibleArray<O, T> = O extends { multiple: true; } ? T[] : T;
+    export type PossibleArray<O, T> = O extends { multiple: true } ? T[] : T
 
     /** Isolate return type based on `mediaType` property. */
     type MediaType<O> =
-        O extends { mediaType: 'photo'; } ? Image :
-        O extends { mediaType: 'video'; } ? Video :
-        ImageOrVideo;
+        O extends { mediaType: 'photo' } ? Image :
+        O extends { mediaType: 'video' } ? Video :
+        ImageOrVideo
 
-    export function openPicker<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>;
-    export function openCamera<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>;
-    export function openCropper(options: CropperOptions): Promise<Image>;
-    export function clean(): Promise<void>;
-    export function cleanSingle(path: string): Promise<void>;
+    export function openPicker<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>
+    export function openCamera<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>
+    export function openCropper(options: CropperOptions): Promise<Image>
+    export function clean(): Promise<void>
+    export function cleanSingle(path: string): Promise<void>
 
     export interface ImageCropPicker {
-        openPicker<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>;
-        openCamera<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>;
-        openCropper(options: CropperOptions): Promise<Image>;
-        clean(): Promise<void>;
-        cleanSingle(path: string): Promise<void>;
+        openPicker<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>
+        openCamera<O extends Options>(options: O): Promise<PossibleArray<O, MediaType<O>>>
+        openCropper(options: CropperOptions): Promise<Image>
+        clean(): Promise<void>
+        cleanSingle(path: string): Promise<void>
     }
 
     const ImageCropPicker: ImageCropPicker

@@ -3,15 +3,15 @@ import { createDefaultVariantFactory } from '../createDefaults'
 
 export type MenuComposition =
   | 'wrapper'
-  | 'menuItem' 
+  | 'menuItem'
   | 'menuItem:mobile'
   | 'menuItem:text'
   | 'menuItem:text:mobile'
   | 'menuItem:text:selected'
   | 'sideMenu'
   | 'topMenu'
-  | 'horizontalScroll';
-export type RouterPageComposition = 'content' | 'router' | MenuComposition;
+  | 'horizontalScroll'
+export type RouterPageComposition = 'content' | 'router' | MenuComposition
 const createRouterPageStyle =
   createDefaultVariantFactory<RouterPageComposition>()
 

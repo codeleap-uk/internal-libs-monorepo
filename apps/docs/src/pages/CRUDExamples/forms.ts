@@ -21,7 +21,7 @@ export const postForm = createForm('post', {
       .max(500, 'Maximum of 500 characters'),
   },
 })
-  
+
 export const editPostForm = createForm('editPost', {
   title: {
     type: 'text',

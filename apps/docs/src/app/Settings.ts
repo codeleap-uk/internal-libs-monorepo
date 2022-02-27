@@ -3,7 +3,6 @@ import Obfuscate from './Obfuscate'
 import * as Sentry from '@sentry/browser'
 const ENV = process.env.NODE_ENV as AppSettings['Environment']['Type']
 
-
 export const Settings: AppSettings = {
   AppName: 'CodeLeap Web Template',
   CompanyName: 'Example Ltd.',

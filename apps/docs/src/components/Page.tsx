@@ -7,13 +7,13 @@ import { Helmet } from 'react-helmet'
 import { useComponentStyle } from '@codeleap/common'
 
 type PageProps = CenterWrapperProps & {
-  center?: boolean;
-  withRouter?: boolean;
-  basePath?: string;
-  title?: string;
+  center?: boolean
+  withRouter?: boolean
+  basePath?: string
+  title?: string
   header?:boolean
   footer?:boolean
-};
+}
 
 export const Page: React.FC<PageProps> = (props) => {
   const {
@@ -22,8 +22,9 @@ export const Page: React.FC<PageProps> = (props) => {
     basePath,
     title,
     header = true,
-    footer= true,
+    footer = true,
     withRouter,
+    styles: styleOverride,
     ...centerWrapperProps
   } = props
 
@@ -37,7 +38,7 @@ export const Page: React.FC<PageProps> = (props) => {
 
   const styles = useComponentStyle(componentStyles)
   return (
-    <View variants={['column']} css={[styles.wrapper]}>
+    <View variants={['column']} css={[styles.wrapper, styleOverride?.wrapper]}>
       {!withRouter && <Helmet>{title && <title>{title}</title>}</Helmet>}
       {header && <Header />}
       {center ? (

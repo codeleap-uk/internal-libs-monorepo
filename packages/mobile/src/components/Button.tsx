@@ -15,17 +15,16 @@ import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 
-
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
   ComponentVariants<typeof ButtonStyles> & {
-    text?: string;
-    rightIcon?: IconPlaceholder;
-    icon?: IconPlaceholder;
-    styles?: StylesOf<ButtonComposition>; 
-    loading?: boolean;
+    text?: string
+    rightIcon?: IconPlaceholder
+    icon?: IconPlaceholder
+    styles?: StylesOf<ButtonComposition>
+    loading?: boolean
     debounce?: number
-    debugName?: string; // NOTE this should not be optional
-  };
+    debugName: string
+  }
 
 export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {
   const {
@@ -43,7 +42,6 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
   } = buttonProps
   const [pressed, setPressed] = React.useState(false)
 
-
   const variantStyles = useDefaultComponentStyle('Button', {
     variants,
     transform: StyleSheet.flatten,
@@ -51,11 +49,11 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
   })
 
   function handlePress() {
-    if (!pressed){
-      setPressed(true) 
+    if (!pressed) {
+      setPressed(true)
 
       setTimeout(() => setPressed(false), debounce)
-      
+
       onPress && onPress()
     }
   }
@@ -73,7 +71,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
 
   const leftIconStyle = StyleSheet.flatten([iconStyle, getStyles('leftIcon')])
   const rightIconStyle = StyleSheet.flatten([iconStyle, getStyles('rightIcon')])
-  
+
   const hasText = !!(text || children)
   return (
     <Touchable
@@ -84,7 +82,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
       debugComponent={'Button'}
       {...props}
     >
-     
+
       {loading && <ActivityIndicator style={getStyles('loader')} />}
       {!loading && <Icon name={icon} style={leftIconStyle} renderEmptySpace={hasText}/>}
       {text ? <Text text={text} style={getStyles('text')} /> : null}

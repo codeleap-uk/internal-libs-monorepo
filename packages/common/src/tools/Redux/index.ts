@@ -44,7 +44,7 @@ export function createSlice<
         const currentState = store.getState()[name]
         const actionResult = await action(currentState, setState, args)
 
-        return actionResult !== undefined ? actionResult :  store.getState()[name]
+        return actionResult !== undefined ? actionResult : store.getState()[name]
       }
     }
     return actions
@@ -77,7 +77,7 @@ export function createRedux<
     rootInitialState[name] = initialState
     actionBuilders[name] = buildActions
   }
-  
+
   const middlewares = [
     ...middleware,
   ]
@@ -88,8 +88,7 @@ export function createRedux<
       applyMiddleware(...middlewares),
       ...(xArgs || []),
     ),
-  
-   
+
   ) as CreateReduxReturn<T>['store']
 
   const actions = Object.fromEntries(

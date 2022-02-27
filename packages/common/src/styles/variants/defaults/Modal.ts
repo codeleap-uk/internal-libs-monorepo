@@ -8,7 +8,7 @@ export type ModalComposition =
   | 'box'
   | 'body'
   | 'header'
-  | 'footer';
+  | 'footer'
 
 const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 
@@ -81,12 +81,4 @@ export const ModalStyles = {
     },
     { dynamic: true },
   ),
-  fullscreen: createModalStyle((theme) => ({
-    box: {
-      flex: 1,
-      width: '100%',
-      borderRadius: 0,
-      height: theme.values.height,
-    },
-  })),
 }

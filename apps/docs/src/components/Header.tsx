@@ -22,7 +22,7 @@ import { FaBars } from 'react-icons/fa'
 import { useAppSelector } from '@/redux'
 import { useBooleanToggle, useComponentStyle } from '@codeleap/common'
 
-type HeaderProps = any;
+type HeaderProps = any
 
 const buttons = [
   { text: 'HOME', to: '/' },
@@ -65,7 +65,6 @@ function NavButtons(props) {
       return <NavButton key={idx} button={button} {...props} />
     })}
 
-
     {isLoggedIn ? (
       <Tooltip content={<ProfileTooltip />} position='bottom'>
         {/* <Avatar profile={profile} variants={['verySmall']} /> */}
@@ -82,14 +81,13 @@ function NavButtons(props) {
         />
       </React.Fragment>
     )}
-  
+
   </React.Fragment>
-    
-  
+
 }
 
 function MobileDropdown() {
-  
+
   const [isOpen, toggleOpen] = useBooleanToggle(false)
 
   const styles = useComponentStyle(componentStyles)
@@ -108,11 +106,11 @@ function MobileDropdown() {
         toggle={() => toggleOpen()}
         position={'top'}
         size={450}
-        styles={{ box: { backgroundColor: '#1f1f1f' } }}
+        styles={{ box: { backgroundColor: '#1f1f1f' }}}
       >
         <CenterWrapper
           variants={['flex', 'fullHeight', 'column']}
-          styles={{ wrapper: { flex: 1 } }}
+          styles={{ wrapper: { flex: 1 }}}
         >
           <View>
             <Touchable
@@ -210,7 +208,7 @@ export const Header: React.FC<HeaderProps> = (headerProps) => {
           </View>
           <View down={'mid'} variants={['marginLeft:auto']}>
             <View css={styles.navButtonsMobile}>
-              <MobileDropdown  />
+              <MobileDropdown />
             </View>
           </View>
         </CenterWrapper>

@@ -20,13 +20,13 @@ export * from './styles'
 type NativeCheckboxProps = Omit<
   ComponentPropsWithRef<typeof NativeCheckbox>,
   'thumbColor' | 'trackColor'
->;
+>
 type CheckboxProps = NativeCheckboxProps & {
-  variants?: ComponentVariants<typeof CheckboxStyles>['variants'];
-  label?: ReactNode;
-  styles?: StylesOf<CheckboxComposition>;
-  validate?: Form.ValidatorFunctionWithoutForm | string;
-};
+  variants?: ComponentVariants<typeof CheckboxStyles>['variants']
+  label?: ReactNode
+  styles?: StylesOf<CheckboxComposition>
+  validate?: Form.ValidatorFunctionWithoutForm | string
+}
 
 export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
   (checkboxProps, ref) => {
@@ -65,6 +65,7 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
     return (
       <View style={getStyles('wrapper')} {...props}>
         <Touchable
+          debugName={`Set checkbox value to ${!value}`}
           style={getStyles('input')}
           onPress={() => onValueChange(!value)}
         >

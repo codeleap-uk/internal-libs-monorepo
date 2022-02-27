@@ -5,7 +5,7 @@ export type ActivityIndicatorComposition =
   | 'wrapper'
   | 'backCircle'
   | 'frontCircle'
-  | 'circle';
+  | 'circle'
 
 const createActivityIndicatorStyle =
   createDefaultVariantFactory<ActivityIndicatorComposition>()

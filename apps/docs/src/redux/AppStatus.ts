@@ -9,12 +9,11 @@ const modals = {
 }
 
 export type TAppStatus = {
-  status: 'loading' | 'done' | 'idle' ;
-  ready: boolean;
-  modals:  Record<keyof typeof modals, any>
- 
-  
-};
+  status: 'loading' | 'done' | 'idle'
+  ready: boolean
+  modals: Record<keyof typeof modals, any>
+
+}
 
 const initialState: TAppStatus = {
   status: 'idle',
@@ -28,26 +27,26 @@ type ModalName = keyof TAppStatus['modals']
 export const appStatusSlice = createSlice({
   name: 'AppStatus',
   initialState,
-  reducers: { 
-    setModal(state, modal: [ModalName, boolean] | ModalName ){
-      const [name, value] = Array.isArray(modal) ? modal  : [modal, !state.modals[modal]]
+  reducers: {
+    setModal(state, modal: [ModalName, boolean] | ModalName) {
+      const [name, value] = Array.isArray(modal) ? modal : [modal, !state.modals[modal]]
       return {
         modals: {
           [name]: value,
         },
       }
     },
-   
-    setReady(state, to:boolean){
+
+    setReady(state, to:boolean) {
       return {
         ready: to,
       }
     },
-    
+
   },
   asyncReducers: {
     async set(state, setState, status: TAppStatus['status']) {
-      
+
       setState({ status })
 
     },

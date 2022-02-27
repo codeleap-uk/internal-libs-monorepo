@@ -16,23 +16,23 @@ import { CSSProperties } from 'react'
 // const dynamicAssetPrefixes = ['http', 'https', 'blob']
 
 type CommonProps = {
-  source: string;
-  css?: any;
-  alt?: string;
-  objectFit?: Exclude<CSSProperties['objectFit'], CSSProperties['objectFit'][]>;
-  styles?: StylesOf<ImageComposition>;
+  source: string
+  css?: any
+  alt?: string
+  objectFit?: Exclude<CSSProperties['objectFit'], CSSProperties['objectFit'][]>
+  styles?: StylesOf<ImageComposition>
   style?:any
-} & ComponentVariants<typeof ImageStyles>;
+} & ComponentVariants<typeof ImageStyles>
 
 type StaticImageProps = {
     type?: 'static'
 }
 type DynamicImageProps = {
   type?: 'dynamic'
-  
+
 }
 
-type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps 
+type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
 
 // export const Image: React.FC<ImageProps> = (imgProps) => {
 //   const {
@@ -44,7 +44,6 @@ type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
 //     ...props
 //   } = imgProps
 
-
 //   if (!props.alt) {
 //     logger.log('missing alt property in img', { source }, 'Component')
 //   }
@@ -55,7 +54,6 @@ type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
 //     !props.img &&
 //     !req &&
 //     dynamicAssetPrefixes.filter((i) => source?.startsWith(i)).length < 1
-
 
 //   if (isStatic) {
 //     const image = getImage(fileNode)
@@ -117,9 +115,9 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
     styles,
   })
 
-  if (type === 'static'){
+  if (type === 'static') {
     return (
-      <StaticImage 
+      <StaticImage
         source={source}
         {...props}
         objectFit={objectFit}
@@ -137,7 +135,6 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
     )
   }
 }
-
 
 const query = graphql`
   query {

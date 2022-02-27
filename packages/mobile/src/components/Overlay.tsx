@@ -16,14 +16,14 @@ import { StyleSheet, ViewProps } from 'react-native'
 import { AnimatedTouchable } from './Touchable'
 
 export type OverlayProps = ViewProps & {
-  title?: ReactNode;
-  visible?: boolean;
-  showClose?: boolean;
-  variants?: ComponentVariants<typeof OverlayStyles>;
-  styles?: StylesOf<OverlayComposition>;
-  style?: any;
-  onPress?: () => void;
-} & React.ComponentPropsWithoutRef<typeof AnimatedTouchable>;
+  title?: ReactNode
+  visible?: boolean
+  showClose?: boolean
+  variants?: ComponentVariants<typeof OverlayStyles>
+  styles?: StylesOf<OverlayComposition>
+  style?: any
+  onPress?: () => void
+} & React.ComponentPropsWithoutRef<typeof AnimatedTouchable>
 
 export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
   const {
@@ -66,6 +66,7 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
                 variants={['icon']}
                 icon={'close' as IconPlaceholder}
                 style={variantStyles.closeButton}
+                debugName={'Close icon'}
               />
             )}
           </View>

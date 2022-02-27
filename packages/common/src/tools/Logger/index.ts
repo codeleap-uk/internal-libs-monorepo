@@ -1,3 +1,4 @@
+import callsites from 'callsites'
 import { AppSettings } from '../../config/Settings'
 import { Analytics } from './Analytics'
 import { foregroundColors, colors, logColors } from './constants'
@@ -48,21 +49,20 @@ const hollowAnalytics = new Analytics({
   init: emptyFunction,
   onEvent: emptyFunction,
   onInteraction: emptyFunction,
-  prepareData: () => ({}), 
+  prepareData: () => ({}),
 }, {})
 
 /**
  * [[include:Logger.md]]
  */
 export class Logger {
-  settings: AppSettings;
+  settings: AppSettings
 
-  debug: DebugColors;
+  debug: DebugColors
 
-  sentry: SentryService;
+  sentry: SentryService
 
   middleware:LoggerMiddleware[] = []
-  
 
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
@@ -81,49 +81,18 @@ export class Logger {
         'Internal',
       ])
     })
+
   }
 
-  // static coloredLog: LogToTerminal = (...logArgs) => {
-  //   const [logType, args, color, deviceIdentifier] = logArgs
-  //   let cl = logColors[logType]
-  //   let useColor = colors[cl]
-
-  //   if (color) { 
-  //     cl = color as keyof typeof foregroundColors
-  //     useColor = colors[color]
-  //   }
-
-  //   const useCSS = typeof window !== 'undefined'
-
-  //   if (useCSS) {
-  //     // eslint-disable-next-line no-console
-  //     const logStr = `[${logType.toUpperCase()}]${deviceIdentifier} ${args?.[2]} - ${args?.[0]}`
-  //     console[logType](logStr, args[1])
-  //   } else {
-  //     const logDescription = 
-  //       [typeof args?.[0], typeof args?.[2]]
-  //         .every(t => t === 'string') ? `${args?.[2]||''} - ${args?.[0]||''}` : args?.[0] || ''
-  //     // eslint-disable-next-line no-console
-  //     console[logType](
-  //       useColor,
-  //       `[${logType.toUpperCase()}]${deviceIdentifier} 
-  //         ${logDescription}
-  //       `,
-  //       args[1],
-  //       colors.Reset,
-  //     )
-  //   }
-  // };
-
   static coloredLog:LogToTerminal = (...logArgs) => {
-    const [logType, content,  _ig_color, deviceId] = logArgs
+    const [logType, content, _ig_color, deviceId] = logArgs
 
-    const [descriptionOrValue, value, category]  = content
-    
+    const [descriptionOrValue, value, category] = content
+
     const nArgs = logArgs[1].length
     let logContent = logArgs[1]
-    
-    if (nArgs === 3){
+
+    if (nArgs === 3) {
       logContent = [
         `${category} -> ${descriptionOrValue}`,
         value,
@@ -153,7 +122,7 @@ export class Logger {
       try {
         // NOTE: For some reason, sentry throws here sometimes
         this.sentry.captureBreadcrumb(logType, args)
-      } catch (e){
+      } catch (e) {
 
       }
       this.middleware.forEach(m => m(...logArgs))
@@ -161,7 +130,7 @@ export class Logger {
         this.sentry.sendLog()
       }
     }
-  };
+  }
 
   info(...args: LogFunctionArgs) {
     this.logToTerminal('info', args)
@@ -169,6 +138,7 @@ export class Logger {
 
   error(...args: LogFunctionArgs) {
     this.logToTerminal('error', args)
+    console.log(callsites())
   }
 
   warn(...args: LogFunctionArgs) {
@@ -179,3 +149,4 @@ export class Logger {
     this.logToTerminal('log', args)
   }
 }
+

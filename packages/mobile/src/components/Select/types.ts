@@ -8,24 +8,24 @@ import { StylesOf } from '../../types/utility'
 import { ButtonProps } from '../Button'
 import { TextInputProps } from '../TextInput'
 import { MobileSelectComposition, MobileSelectStyles } from './styles'
-  
+
 export type SelectRenderFNProps<T> = FormTypes.Options<T>[number] & {
-  styles: StylesOf<MobileSelectComposition>;
-  onPress: () => void;
-  selected?: boolean;
-};
-  
-export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element;
-  
+  styles: StylesOf<MobileSelectComposition>
+  onPress: () => void
+  selected?: boolean
+}
+
+export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
+
 export type CustomSelectProps<T> = {
-    value: T;
-    placeholder?: FormTypes.Label;
-    label?: FormTypes.Label;
-    options?: FormTypes.Options<T>;
-    onDropdownToggle?: (isOpen?: boolean) => void;
-    onValueChange?: (value: T) => void;
-    renderItem?: SelectRenderFN<T>;
-    styles?: StylesOf<MobileSelectComposition>;
+    value: T
+    placeholder?: FormTypes.Label
+    label?: FormTypes.Label
+    options?: FormTypes.Options<T>
+    onDropdownToggle?: (isOpen?: boolean) => void
+    onValueChange?: (value: T) => void
+    renderItem?: SelectRenderFN<T>
+    styles?: StylesOf<MobileSelectComposition>
     style?: any
     arrowIconName?: IconPlaceholder
     scroll?: boolean
@@ -37,5 +37,5 @@ export type CustomSelectProps<T> = {
     showClose?: boolean
     modalLabel?: string
     closeButtonProps?: Partial<ButtonProps>
-  } & ComponentVariants<typeof MobileSelectStyles> & TextInputProps;
-  
+  } & ComponentVariants<typeof MobileSelectStyles> & TextInputProps
+

@@ -11,14 +11,14 @@ import {
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { Text } from './Text'
-import { View, ViewProps  } from './View'
+import { View, ViewProps } from './View'
 import { Button } from './Button'
 import { StylesOf } from '../types/utility'
 import { Icon } from './Icon'
 import { NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData } from 'react-native'
 import { Touchable, TouchableProps } from './Touchable'
 
-type IconProp = { name: IconPlaceholder, action?: () => void }
+type IconProp = { name: IconPlaceholder; action?: () => void }
 
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
 
@@ -26,13 +26,13 @@ export type TextInputProps =
   ComponentVariants<typeof TextInputStyles> &
   Omit<NativeProps, 'value'> &
   {
-    multiline?: boolean;
-    onChangeText?: (text: string) => void;
-    disabled?: boolean;
-    edited?: boolean;
-    type?: string;
+    multiline?: boolean
+    onChangeText?: (text: string) => void
+    disabled?: boolean
+    edited?: boolean
+    type?: string
     label?: React.ReactNode
-
+    debugName: string
     leftIcon?: IconProp
     rightIcon?: IconProp
     styles?: StylesOf<TextInputComposition>
@@ -42,7 +42,7 @@ export type TextInputProps =
     visibilityToggle?: boolean
     touchableWrapper?: boolean
     innerWrapperProps?: TouchableProps | ViewProps
-  };
+  }
 
 export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, inputRef) => {
   const {
@@ -65,6 +65,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     visibilityToggle,
     touchableWrapper,
     innerWrapperProps,
+    debugName,
     ...props
   } = rawprops
 
@@ -102,9 +103,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     if (onChangeText) onChangeText(text)
   }
 
-  useImperativeHandle(inputRef, () => ({...input.current, focus: () => {
+  useImperativeHandle(inputRef, () => ({ ...input.current, focus: () => {
     input.current?.focus?.()
-  }, isTextInput: true}))
+  }, isTextInput: true }))
 
   const { showError, error } = useValidate(value, validate)
 
@@ -142,7 +143,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       style={getStyles('wrapper')}
     >
       <InputLabel label={label} style={getStyles('label')} />
-      <InnerWrapper style={getStyles('innerWrapper')} {...innerWrapperProps}>
+      <InnerWrapper debugName={debugName} style={getStyles('innerWrapper')} {...innerWrapperProps}>
         <InputIcon {...leftIcon} style={leftIconStyle} />
         <InputElement
           ref={input}
@@ -182,7 +183,7 @@ export const FormError = ({ message, ...props }) => {
 export const InputIcon: React.FC<{ style: any } & IconProp> = ({ name, style, action }) => {
   if (!name) return null
   if (action) {
-    return <Button icon={name} onPress={() => action()} styles={{
+    return <Button icon={name} debugName={`${name} icon button`} onPress={() => action()} styles={{
       icon: style,
     }} variants={['icon']} />
   }

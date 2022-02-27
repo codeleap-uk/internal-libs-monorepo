@@ -6,7 +6,7 @@ import { Logo } from '@/components'
 const renderStatus = {
   idle: () => <Icon name='checkmark' variants={['large', 'primary']} />,
   done: () => <Icon name='checkmark' variants={['large', 'primary']} />,
-  loading: () =>  <ActivityIndicator  />,
+  loading: () => <ActivityIndicator />,
 }
 
 export const AppStatusOverlay: React.FC = () => {
@@ -26,14 +26,13 @@ export const AppStatusOverlay: React.FC = () => {
       }
     }
   }, [status])
- 
-  const visible = status !== 'idle'
 
+  const visible = status !== 'idle'
 
   return (
     <>
-      <Overlay visible={visible}  /> 
-      <View css={[styles.wrapper, {transform: `scale(${visible ? 1 : 0})`}]}>
+      <Overlay visible={visible} />
+      <View css={[styles.wrapper, { transform: `scale(${visible ? 1 : 0})` }]}>
         {renderStatus[status]()}
       </View>
     </>
@@ -43,7 +42,6 @@ export const AppStatusOverlay: React.FC = () => {
 // const transition = {
 //   duration: 500,
 // }
-
 
 const styles = variantProvider.createComponentStyle({
   wrapper: {

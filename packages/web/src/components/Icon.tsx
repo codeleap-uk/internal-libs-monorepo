@@ -11,15 +11,13 @@ import { View } from './View'
 export type IconProps = {
   name: IconPlaceholder
   style?: any
-  color?: string
-  variants?: ComponentVariants<typeof IconStyles>['variants']
   renderEmptySpace?: boolean
-  size?: number
-};
+} & ComponentVariants<typeof IconStyles>
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()
-  
+  const Component = Theme?.icons?.[name]
+
   const variantStyles = useDefaultComponentStyle('Icon', {
     variants,
     styles: {
@@ -27,12 +25,10 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
     },
     rootElement: 'icon',
   })
- 
+
   if (!name) {
     return renderEmptySpace ? <View style={variantStyles.icon}/> : null
   }
-
-  const Component = Theme?.icons?.[name]
 
   if (!Component) {
     logger.warn(
@@ -42,5 +38,5 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
     )
     return null
   }
-  return <Component {...otherProps} style={variantStyles.icon} />
+  return <Component {...otherProps} style={variantStyles.icon}/>
 }

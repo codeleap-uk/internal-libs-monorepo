@@ -13,10 +13,10 @@ import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
 
 type AnyProps<T = any> = {
-  [x: string]: T;
-};
-export type IconPlaceholder = '__ICON__';
-export type BreakpointPlaceholder = '__BREAKPOINT__';
+  [x: string]: T
+}
+export type IconPlaceholder = '__ICON__'
+export type BreakpointPlaceholder = '__BREAKPOINT__'
 
 export type DefaultColors =
   | 'primary'
@@ -46,36 +46,35 @@ export type Fonts =
   | 'p1'
   | 'p2'
   | 'p3'
-  | 'p4';
+  | 'p4'
 
 export type TypographyStyle = {
-  lineHeight?: number;
-  weigth: number;
-  color?: string;
-  fontFamily?: string;
-  sizeMultiplier?: number,
-  lineHeightMultiplier?: number,
+  lineHeight?: number
+  weigth: number
+  color?: string
+  fontFamily?: string
+  sizeMultiplier?: number
+  lineHeightMultiplier?: number
   size?: {
-    multiplier: number;
-    viewport: number;
-    max: number;
-    min: number;
-  };
-};
-
+    multiplier: number
+    viewport: number
+    max: number
+    min: number
+  }
+}
 
 type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
 
 export type AppTheme = {
-  readonly breakpoints?: Record<string, number>;
-  readonly spacing: number;
-  readonly colors: FreeThemeColors;
+  readonly breakpoints?: Record<string, number>
+  readonly spacing: number
+  readonly colors: FreeThemeColors
 
   readonly values?: {
-    width?: number;
-    height?: number;
-  } & AnyProps<any>;
-  
+    width?: number
+    height?: number
+  } & AnyProps<any>
+
   readonly borderRadius: {
     large: number
     medium: number
@@ -85,7 +84,7 @@ export type AppTheme = {
   readonly presets ?: Record<string, any>
 
   readonly icons: Record<string, any>
-  readonly initialTheme: string;
+  readonly initialTheme: string
   readonly typography : {
     fontFamily: string
     styles: Record<Fonts, TypographyStyle>
@@ -93,62 +92,62 @@ export type AppTheme = {
     pColor: string
     hColor: string
   }
-};
+}
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   T,
   'spacing'
 > & {
   spacing: {
-    base: number;
+    base: number
   } & Spacings<'margin'> &
-    Spacings<'padding'>;
-  hooks: Hooks<keyof T['breakpoints'], boolean>;
-  media: MediaQueries<keyof T['breakpoints'], string>;
-  presets: typeof defaultPresets & T['presets'] ;
-  border: BorderHelpers<T>;
-  readonly circle: (size: number) => any;
+    Spacings<'padding'>
+  hooks: Hooks<keyof T['breakpoints'], boolean>
+  media: MediaQueries<keyof T['breakpoints'], string>
+  presets: typeof defaultPresets & T['presets']
+  border: BorderHelpers<T>
+  readonly circle: (size: number) => any
 
-  readonly semiCircle: (side: number) => any;
-  readonly sized: (multiplier: number) => Record<'height' | 'width', number>;
-  IsBrowser: boolean;
+  readonly semiCircle: (side: number) => any
+  readonly sized: (multiplier: number) => Record<'height' | 'width', number>
+  IsBrowser: boolean
   theme: keyof T['colors']
-};
-export type ThemeValues = AppTheme;
+}
+export type ThemeValues = AppTheme
 
 export type StyleContextProps<
   Variants extends DefaultVariants,
   Provider extends VariantProvider<any, any>
 > = {
-  variantProvider: Provider;
-  variants: Variants;
-  children?: React.ReactNode;
-  logger?: Logger; 
-  settings: AppSettings;
-   
-};
+  variantProvider: Provider
+  variants: Variants
+  children?: React.ReactNode
+  logger?: Logger
+  settings: AppSettings
+
+}
 
 export type StyleContextValue<
   C extends Readonly<Record<string, CommonVariantObject<any>>>
 > = {
-  Theme: EnhancedTheme<any>;
+  Theme: EnhancedTheme<any>
   currentTheme: string|number
-  provider: VariantProvider<any, any>;
-  ComponentVariants: C;
-  logger: Logger;
-  Settings: AppSettings;
-  
-};
+  provider: VariantProvider<any, any>
+  ComponentVariants: C
+  logger: Logger
+  Settings: AppSettings
 
-export type VariantsStylesheet = Record<string, unknown>;
+}
+
+export type VariantsStylesheet = Record<string, unknown>
 
 export const accessors = ['screenSize'] as const
 
-export type Accessor = typeof accessors[number];
+export type Accessor = typeof accessors[number]
 
 export interface DynamicValueAccessors
   extends Partial<Record<Accessor, AnyFunction>> {
-  screenSize?: () => number[];
+  screenSize?: () => number[]
 }
 
 export const spacingVariants = [
@@ -161,7 +160,7 @@ export const spacingVariants = [
   '',
 ] as const
 
-export type SpacingVariants = typeof spacingVariants[number];
+export type SpacingVariants = typeof spacingVariants[number]
 
 export type SpacingMultiplier =
   | '1'
@@ -176,17 +175,17 @@ export type SpacingMultiplier =
   | '10'
   | '11'
   | '12'
-  | 'auto';
+  | 'auto'
 
 export type Spacing =
   | `padding${SpacingVariants}:${SpacingMultiplier}`
-  | `margin${SpacingVariants}:${SpacingMultiplier}`;
+  | `margin${SpacingVariants}:${SpacingMultiplier}`
 
 export type BaseViewProps = {
-  css?: any;
-  is?: string;
-  not?: string;
-  up?: string;
-  down?: string;
-  onHover?: (isHovering: boolean) => void;
-};
+  css?: any
+  is?: string
+  not?: string
+  up?: string
+  down?: string
+  onHover?: (isHovering: boolean) => void
+}

@@ -8,8 +8,8 @@ import { stopPropagation } from '../lib/utils/stopPropagation'
 import { Text } from './Text'
 
 export type LinkProps<T extends ElementType> = TextProps<T> & {
-  openNewTab?: boolean;
-};
+  openNewTab?: boolean
+}
 
 export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
   const {  to, openNewTab, component = 'a', ...props } = linkProps
@@ -29,7 +29,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
         scrollToElem(to)
       }
       if (openNewTab) {
-        window.open(to, '_blank')
+        window?.open?.(to, '_blank')
       }
     }
   }

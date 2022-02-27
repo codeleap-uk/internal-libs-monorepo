@@ -64,6 +64,7 @@ const ModalShowcase = {
             `d:w-${controlValues.width};h-${controlValues.height}`,
           ]}
           showClose={controlValues.showClose}
+          debugName={'Overlay modal'}
           title={controlValues.title}
         >
           <Text text='Hi' />

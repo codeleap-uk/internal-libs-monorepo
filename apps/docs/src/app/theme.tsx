@@ -27,13 +27,14 @@ const themeObj:AppTheme = {
       positive: '#ada',
       secondary: '#000',
       black: '#000',
-      borders: '#ccc',      
+      borders: '#ccc',
       placeholder: '#ccc',
       neutral: '#ccc',
       white: '#fff',
       green: 'green',
       textH: '#333',
       textP: '#555',
+      grayFade: '#5552',
     },
     dark: {
       primary: '#7695EC',
@@ -51,12 +52,13 @@ const themeObj:AppTheme = {
       negative: '#a11',
       positive: '#ada',
       secondary: '#000',
-      borders: '#ccc',      
+      borders: '#ccc',
       placeholder: '#ccc',
       white: '#fff',
       green: 'green',
       textH: '#fff',
       textP: '#fff',
+      grayFade: '#5552',
     },
   },
   breakpoints: {
@@ -100,11 +102,11 @@ const themeObj:AppTheme = {
   },
   values: {
     ...getWindowDimensions(),
-  
+
     headerHeight: 48,
     navBarHeight: 100,
     buttons: {
-      small: { 
+      small: {
         height: 20,
       },
       default: {
@@ -117,10 +119,10 @@ const themeObj:AppTheme = {
     zIndex: {
       header: 2,
       footer: 1,
-      
+
     },
   },
-  initialTheme: localStorage.getItem('codeleap.theme') || 'light',
+  initialTheme: window?.localStorage?.getItem('codeleap.theme') || 'light',
 } as const
 
 const appTheme = createTheme(themeObj, {
@@ -133,12 +135,11 @@ const styleGetter = (
   return style
 }
 
-type StyleGetter = typeof styleGetter;
+type StyleGetter = typeof styleGetter
 
 export const variantProvider = new VariantProvider<
   StyleGetter,
   typeof themeObj
 >(appTheme, styleGetter)
-
 
 export const Theme = variantProvider.theme

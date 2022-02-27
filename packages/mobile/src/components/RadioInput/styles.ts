@@ -2,14 +2,14 @@ import {
   createDefaultVariantFactory,
   RadioInputStyles,
 } from '@codeleap/common'
-type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark';
+type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark'
 
-type RadioGroupParts = 'label' | 'wrapper' | 'list';
+type RadioGroupParts = 'label' | 'wrapper' | 'list'
 
 export type MobileRadioInputComposition =
   | `${RadioParts}:checked`
   | RadioParts
-  | RadioGroupParts;
+  | RadioGroupParts
 
 const createRadioStyle =
   createDefaultVariantFactory<MobileRadioInputComposition>()

@@ -1,6 +1,6 @@
-import { React,   Button, Modal, Text, LocalStorageKeys } from '@/app'
+import { React, Button, Modal, Text, LocalStorageKeys } from '@/app'
 import { AppStatusOverlay, Page } from '@/components'
-import {  AppStatus, Session, useAppSelector } from '@/redux'
+import { AppStatus, Session, useAppSelector } from '@/redux'
 import { onMount, onUpdate, useComponentStyle } from '@codeleap/common'
 import {
   View,
@@ -12,7 +12,6 @@ import {
 
 export const Overlays = () => {
   return <>
-
 
     <AppStatusOverlay />
     {/* <DebugModal/> */}
@@ -50,7 +49,6 @@ const links = [
 ]
 
 const ListItem = ({ item, depth = 2, styles }) => {
- 
 
   if (item.links) {
     return (
@@ -61,9 +59,9 @@ const ListItem = ({ item, depth = 2, styles }) => {
           'paddingVertical:2',
           'justifySpaceBetween',
           'flex',
-         
+
         ]}
-       
+
       >
         <Text text={item.name} variants={['h3']} />
         {item.links.map((i) => (
@@ -80,7 +78,7 @@ const ListItem = ({ item, depth = 2, styles }) => {
     >
       <View variants={['column']}>
         <Text text={item.name} variants={['h3']} />
-        <Text text={item.description}  />
+        <Text text={item.description} />
       </View>
       <Button
         variants={['circle', 'marginLeft:auto']}
@@ -107,13 +105,13 @@ const componentStyle = variantProvider.createComponentStyle((theme) => ({
 
 const IndexPage: React.FC = () => {
   const { isLoggedIn } = useAppSelector((store) => store.Session)
-  
+
   onMount(() => {
     Session.setMounted()
     Session.autoLogin()
 
     const data = localStorage.getItem(LocalStorageKeys.SESSION_IS_DEV)
-    if (data){
+    if (data) {
       Session.setMode(data === 'true')
     }
 
@@ -125,12 +123,11 @@ const IndexPage: React.FC = () => {
 
   const styles = useComponentStyle(componentStyle)
 
-
   return (
     <Page>
-    
+
       <View styles={{ wrapper: styles.wrapper }} title='Template'>
-     
+
         {links.map((l) => (
           <ListItem item={l} key={l.name} styles={styles}/>
         ))}

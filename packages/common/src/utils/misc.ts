@@ -60,15 +60,15 @@ export function waitFor(ms) {
 }
 
 type ParseSourceUrlArg = {
-  source?: string;
-  src?: string;
-};
+  source?: string
+  src?: string
+}
 
-export function parseSourceUrl(args: string, Settings?: AppSettings): string;
+export function parseSourceUrl(args: string, Settings?: AppSettings): string
 export function parseSourceUrl(
   args: ParseSourceUrlArg,
   Settings?: AppSettings
-): string;
+): string
 export function parseSourceUrl(
   args: ParseSourceUrlArg | string,
   Settings?: AppSettings,
@@ -92,17 +92,29 @@ export function parseSourceUrl(
     res = `https://picsum.photos/600?random=${Math.random() * 100}`
   }
   return res
-} 
+}
 
-export function getNestedStylesByKey<T extends StylesOf<any>>(match:string, variantStyles: T){
+export function getNestedStylesByKey<T extends StylesOf<any>>(match:string, variantStyles: T) {
   const styles = {}
 
-  for (const [key, value] of Object.entries(variantStyles)){
-    if (key.startsWith(match)){
+  for (const [key, value] of Object.entries(variantStyles)) {
+    if (key.startsWith(match)) {
       const partName = capitalize(key.replace(match, ''), true)
       styles[partName] = value
     }
   }
 
   return styles
+}
+
+export function hasFastRefreshed(Settings: AppSettings) {
+  if (Settings?.Environment?.InitTime) {
+    const timeFromStartup = (new Date()).getTime() - Settings.Environment.InitTime.getTime()
+    // It usually takes less than a seconds (~300ms) from app launch to running this, so if's been more than that we've probably fast refreshed
+    const fastRefreshed = Settings.Environment.IsDev && timeFromStartup > 1000
+    return fastRefreshed
+  } else {
+    console.log('hasFreshRefreshed() => Missing datetime from settings, please include to make this work')
+    return undefined
+  }
 }

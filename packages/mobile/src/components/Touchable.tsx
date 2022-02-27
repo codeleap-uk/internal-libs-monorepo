@@ -15,13 +15,13 @@ export type TouchableProps = Omit<
   ComponentPropsWithoutRef<typeof NativeTouchable>,
   'onPress'
 > & {
-  variants?: ComponentVariants<typeof ViewStyles>['variants'];
-  component?: any;
-  ref?: React.Ref<NativeTouchable>;
-  debugName?: string;
-  debugComponent?: string;
-  onPress?: AnyFunction;
-} & BaseViewProps;
+  variants?: ComponentVariants<typeof ViewStyles>['variants']
+  component?: any
+  ref?: React.Ref<NativeTouchable>
+  debugName: string
+  debugComponent?: string
+  onPress?: AnyFunction
+} & BaseViewProps
 
 export const Touchable: React.FC<TouchableProps> = forwardRef<
   NativeTouchable,

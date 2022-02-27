@@ -17,14 +17,13 @@ import { View } from './View'
 type NativeSwitchProps = Omit<
   ComponentPropsWithRef<typeof NativeSwitch>,
   'thumbColor' | 'trackColor'
->;
+>
 type SwitchProps = NativeSwitchProps & {
-  variants?: ComponentVariants<typeof SwitchStyles>['variants'];
-  label?: ReactNode;
-  styles?: StylesOf<SwitchComposition>;
-  validate?: FormTypes.ValidatorFunctionWithoutForm | string;
-};
-
+  variants?: ComponentVariants<typeof SwitchStyles>['variants']
+  label?: ReactNode
+  styles?: StylesOf<SwitchComposition>
+  validate?: FormTypes.ValidatorFunctionWithoutForm | string
+}
 
 export const Switch = forwardRef<NativeSwitch, SwitchProps>(
   (switchProps, ref) => {

@@ -10,15 +10,15 @@ export const AppTextStyles = {
     ...defaultStyles.default(theme),
     text: {
       ...defaultStyles.default(theme).text,
-    
+
       textDecoration: 'none',
     },
   })),
-  white: createTextStyle((theme ) => ({
+  white: createTextStyle((theme) => ({
     ...defaultStyles.default(theme),
     text: {
       ...defaultStyles.default(theme).text,
-    
+
       color: theme.colors.white,
     },
   })),
@@ -57,5 +57,5 @@ export const AppTextStyles = {
       textDecoration: 'none',
     },
   })),
- 
+
 }

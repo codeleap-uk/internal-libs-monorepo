@@ -1,6 +1,7 @@
 // native smooth scrolling for Chrome, Firefox & Opera
 // @see: https://caniuse.com/#feat=css-scroll-behavior
 const nativeSmoothScrollTo = (elem) => {
+  if (!window) return
   window.scroll({
     behavior: 'smooth',
     left: 0,
@@ -10,6 +11,7 @@ const nativeSmoothScrollTo = (elem) => {
 
 // polyfilled smooth scrolling for IE, Edge & Safari
 const smoothScrollTo = (to, duration) => {
+  if (!document) return
   const element = document.scrollingElement || document.documentElement,
     start = element.scrollTop,
     change = to - start,
@@ -42,11 +44,12 @@ const smoothScrollTo = (to, duration) => {
 }
 
 // detect support for the behavior property in ScrollOptions
-const supportsNativeSmoothScroll =
-  'scrollBehavior' in document.documentElement.style
 
 // smooth scrolling stub
 export const scrollToElem = (elemSelector) => {
+  if (!document) return
+  const supportsNativeSmoothScroll =
+    'scrollBehavior' in document.documentElement.style || {}
   if (!elemSelector) {
     return
   }

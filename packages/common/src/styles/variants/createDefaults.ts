@@ -5,8 +5,8 @@ import { ThemeColorScheme } from '.'
 import { AppTheme } from '..'
 
 type CreateVariantOptions = {
-  dynamic?: boolean;
-};
+  dynamic?: boolean
+}
 const defaultOptions: CreateVariantOptions = {
   dynamic: false,
 }
@@ -23,7 +23,7 @@ export function createDefaultVariantFactory<
       return (() => builder) as unknown as (
         theme: ThemeColorScheme<AppTheme>,
         variant?: string
-      ) => VT 
+      ) => VT
     }
 
     return builder

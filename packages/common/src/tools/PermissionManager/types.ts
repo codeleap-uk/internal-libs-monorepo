@@ -1,7 +1,7 @@
 import { Logger } from '../Logger'
 import { FunctionType } from '../../types/utility'
 
-export const permissionStatuses = ['granted', 'denied', 'pending', 'never_ask_again'] as const
+export const permissionStatuses = ['unavailable', 'pending', 'denied', 'limited', 'granted', 'blocked'] as const
 export type PermissionStatus = typeof permissionStatuses[number]
 
 export type PermissionState = {
@@ -11,24 +11,23 @@ export type PermissionState = {
 } & Record<`is${Capitalize<PermissionStatus>}`, boolean>
 
 export type CheckOptions = {
-    askOnPending?:boolean 
+    askOnPending?:boolean
     askOnDenied?:boolean
     ask?: boolean
-    
+
 }
 
 export type IPermission = {
     ask():Promise<void>
     check(options?:CheckOptions):Promise<void>
-    
+
 } & PermissionState
 
 export type PermFunction = FunctionType<[], Promise<PermissionStatus>>
 
 export type PermissionActions = Record<'onAsk'|'onCheck', PermFunction> & { init?: 'check' | PermissionState }
 
-
-export type PermissionActionRecord = {[x:string] : PermissionActions} 
+export type PermissionActionRecord = {[x:string] : PermissionActions}
 
 export interface IPermissionManager<T extends PermissionActionRecord> {
     getMany(perms: PermissionArray<T>, options?: CheckOptions): Promise<PermissionState[]>

@@ -18,7 +18,7 @@ export function useWindowSize() {
   return size
 }
 
-type UseClickOutsideOpts = { customId?: string; deps: any[] };
+type UseClickOutsideOpts = { customId?: string; deps: any[] }
 export function useClickOutside(
   callback: AnyFunction,
   { customId, deps = [] }: UseClickOutsideOpts,

@@ -2,62 +2,63 @@ import { DeepPartial, Matcher } from '..'
 import { LogType, SentryProvider } from '../tools/Logger/types'
 
 export type AppSettings = DeepPartial<{
-  AppName: string;
-  CompanyName: string;
-  CompanySuffix: string;
-  Description: string;
+  AppName: string
+  CompanyName: string
+  CompanySuffix: string
+  Description: string
   Environment: {
-    IsDev: boolean;
-    Type: 'production' | 'development';
-  };
+    IsDev: boolean
+    Type: 'production' | 'development'
+    InitTime: any
+  }
   Application: {
-    IsBrowser: boolean;
-  };
-  BaseURL: string;
+    IsBrowser: boolean
+  }
+  BaseURL: string
   Sentry: {
-    enable: boolean;
-    dsn: string;
-    provider: SentryProvider;
-    debug?: boolean;
-  };
+    enable: boolean
+    dsn: string
+    provider: SentryProvider
+    debug?: boolean
+  }
   Logger: {
-    Level: LogType;
-    DeviceIdentifier?: string;
-    IgnoreWarnings?: string[];
+    Level: LogType
+    DeviceIdentifier?: string
+    IgnoreWarnings?: string[]
     Obfuscate: {
       keys: Matcher<'key'>[]
       values: Matcher<'value'>[]
     }
-  };
+  }
   Vars: {
-    GooglePlayURL: string;
-    AppStoreURL: string;
-    WebsiteURL: string;
-    PrivacyPolicy: string;
-  };
+    GooglePlayURL: string
+    AppStoreURL: string
+    WebsiteURL: string
+    PrivacyPolicy: string
+  }
   Fetch: {
-    ApiURL: string;
+    ApiURL: string
     ProductionURL: string
     DevelopmentURL: string
-  };
+  }
   Social: {
-    FaceURL: string;
-    LinkedinURL: string;
-  };
+    FaceURL: string
+    LinkedinURL: string
+  }
   ContactINFO: {
-    Website: string;
-    TermsAndPrivacy: string;
-    SupportEMAIL: string;
-    ContactEMAIL: string;
-    ContactPHONE: string;
-  };
+    Website: string
+    TermsAndPrivacy: string
+    SupportEMAIL: string
+    ContactEMAIL: string
+    ContactPHONE: string
+  }
 
   ApiCredentials: {
     GoogleSignin: {
-      WebClientId: string;
-    };
+      WebClientId: string
+    }
     FacebookSDK: {
-      AppId: string;
-    };
-  };
-}>;
+      AppId: string
+    }
+  }
+}>

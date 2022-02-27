@@ -13,15 +13,15 @@ const PosedComponents = Object.fromEntries(
   Object.entries(Components).map(([key, Render]) => [key, posed(Render)]),
 )
 
-type AnimatedComponents = typeof Components;
-type CP = keyof AnimatedComponents;
+type AnimatedComponents = typeof Components
+type CP = keyof AnimatedComponents
 
 type AnimatedProps<T extends CP, CFG = Record<string, any>> = {
-  component: T;
-  config: CFG;
-  pose: keyof CFG;
-  initialPose?: keyof CFG;
-} & Omit<Parameters<AnimatedComponents[T]>[0], 'component'>;
+  component: T
+  config: CFG
+  pose: keyof CFG
+  initialPose?: keyof CFG
+} & Omit<Parameters<AnimatedComponents[T]>[0], 'component'>
 
 export const Animated = <T extends CP, CFG = any>({
   config,

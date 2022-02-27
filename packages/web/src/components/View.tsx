@@ -15,15 +15,14 @@ import {
   ReactNode,
   Ref,
 } from 'react'
-import { cx, css } from '@emotion/css'
 
 export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
   ComponentVariants<typeof ViewStyles> & {
-    component?: T;
-    children?: ReactNode;
-    css?: any;
+    component?: T
+    children?: ReactNode
+    css?: any
     scroll?: boolean
-  } & BaseViewProps;
+  } & BaseViewProps
 
 export const ViewCP = <T extends ElementType = 'div'>(
   viewProps: ViewProps<T>,
@@ -72,7 +71,7 @@ export const ViewCP = <T extends ElementType = 'div'>(
   return (
     <Component
       // className={cx(css([variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]), cssProp)}
-      css={[variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]}
+      css={[variantStyles.wrapper, scroll && { overflowY: 'scroll' }, platformMediaQuery]}
       ref={ref}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}

@@ -8,9 +8,9 @@ import {
 } from './types'
 
 export class SentryService {
-  private sentry: SentryProvider;
+  private sentry: SentryProvider
 
-  private use: boolean;
+  private use: boolean
 
   constructor(settings: AppSettings) {
     this.use = settings?.Sentry?.enable

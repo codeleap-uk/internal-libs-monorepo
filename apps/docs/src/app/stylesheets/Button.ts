@@ -16,7 +16,7 @@ const defaultVariant = createButtonVariant((theme) => ({
   icon: {
     ...defaultStyle.default(theme).icon,
     size: 22,
-    
+
   },
   loader: {
     ...defaultStyle.default(theme).loader,
@@ -81,15 +81,31 @@ export const AppButtonStyle = {
     ...defaultVariant(theme),
     wrapper: {
       ...defaultVariant(theme).wrapper,
-      backgroundColor: theme.colors.background,
+      backgroundColor: 'transparent',
+
       borderRadius: 0,
       width: '100%',
-     
+      '&:hover': {
+        backgroundColor: theme.colors.grayFade,
+
+      },
     },
     text: {
       ...defaultVariant(theme).text,
-      ...defaultStyle.default(theme).text,
+      color: theme.colors.textH,
       textAlign: 'center',
+    },
+  })),
+  'list:selected': createButtonVariant((theme) => ({
+    wrapper: {
+      backgroundColor: theme.colors.primary,
+      '&:hover': {
+        backgroundColor: theme.colors.primary,
+
+      },
+    },
+    text: {
+      color: theme.colors.white,
     },
   })),
   outline: createButtonVariant((theme) => ({
@@ -105,7 +121,7 @@ export const AppButtonStyle = {
     text: {
       ...defaultVariant(theme).text,
       color: theme.colors.primary,
-      
+
     },
   })),
   'list:first': createButtonVariant((theme) => ({
@@ -116,15 +132,7 @@ export const AppButtonStyle = {
       borderTopColor: theme.colors.borders,
     },
   })),
-  'list:selected': createButtonVariant((theme) => ({
-    wrapper: {
-      ...defaultStyle.default(theme).wrapper,
-      backgroundColor: theme.colors.primary,
-    },
-    text: {
-      color: theme.colors.white,
-    },
-  })),
+
   gray: createButtonVariant((theme) => ({
     wrapper: {
       ...defaultStyle.default(theme).wrapper,
@@ -147,9 +155,8 @@ export const AppButtonStyle = {
     },
   })),
   small: createButtonVariant((theme) => ({
-    ...defaultVariant(theme),
-    wrapper: {
 
+    wrapper: {
       height: 'auto',
       minHeight: theme.values.buttons.small.height,
     },

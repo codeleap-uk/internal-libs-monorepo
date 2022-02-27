@@ -13,9 +13,9 @@ import { StylesOf } from '../types/utility'
 export type ActivityIndicatorProps = ComponentPropsWithoutRef<
   typeof Indicator
 > & {
-  variants?: ComponentVariants<typeof ActivityIndicatorStyles>['variants'];
-  styles?: StylesOf<ActivityIndicatorComposition>;
-};
+  variants?: ComponentVariants<typeof ActivityIndicatorStyles>['variants']
+  styles?: StylesOf<ActivityIndicatorComposition>
+}
 
 export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {
@@ -29,11 +29,10 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
 
     const { Theme } = useCodeleapContext()
 
-    const color = variantStyles.wrapper?.color || Theme.colors.gray
-    const size = variantStyles.wrapper?.height || variantStyles.wrapper?.width || 'large'
-    
     const styles = StyleSheet.flatten([variantStyles.wrapper, style])
-    
+    const color = styles?.color || Theme.colors.gray
+    const size = styles?.height || styles?.width || 'large'
+
     return (
       <Indicator
         size={size}

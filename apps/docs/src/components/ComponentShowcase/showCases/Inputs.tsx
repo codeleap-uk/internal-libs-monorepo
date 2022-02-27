@@ -72,6 +72,7 @@ const TextInputShowcase = {
             name: controlValues.rightIcon,
           }}
           label={'SOMEBODY ONCE TOLD ME'}
+          debugName={'Showcase example TextInput'}
         />
       </Fragment>
     )
@@ -90,7 +91,7 @@ const RadioInputShowcase = {
       { label: 'Option 2', value: 2 },
     ]
     const [value, setValue] = useState(options[0].value)
-    console.log(options)
+
     return (
       <RadioInput
         label='Select one'

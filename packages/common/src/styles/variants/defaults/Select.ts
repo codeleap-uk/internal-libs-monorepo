@@ -1,7 +1,7 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type SelectComposition = 'wrapper';
+export type SelectComposition = 'wrapper'
 const createSelectStyle = createDefaultVariantFactory()
 
 const presets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })),

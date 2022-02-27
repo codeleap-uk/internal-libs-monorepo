@@ -15,13 +15,14 @@ import {
 import { TSession } from '@/redux'
 
 type AvatarProps = {
-  styles?: StylesOf<AvatarComposition>;
-  profile: TSession['profile'];
-  onChange?: (files: WebInputFile[]) => void;
-} & ComponentVariants<typeof AvatarStyles>;
+  styles?: StylesOf<AvatarComposition>
+  profile: TSession['profile']
+  onChange?: (files: WebInputFile[]) => void
+  debugName: string
+} & ComponentVariants<typeof AvatarStyles>
 
 export const Avatar: React.FC<AvatarProps> = (props) => {
-  const { 
+  const {
     variants,
     responsiveVariants,
     styles,
@@ -37,12 +38,11 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
     responsiveVariants,
     styles,
   })
-  function handleFileChange(files:WebInputFile[]){
+  function handleFileChange(files:WebInputFile[]) {
     onChange(files)
   }
 
-
-  if (!profile){
+  if (!profile) {
     return <View>
       <Icon name='user' variants={['large']}/>
     </View>
@@ -51,18 +51,18 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
   const AvatarImage = () => {
     const hasAvatar = !!profile.avatar
 
-    if (hasAvatar){
+    if (hasAvatar) {
 
     } else {
       const backgroundColor = matchInitialToColor(profile.first_name[0])
 
-      return <View css={{backgroundColor}}>
-        <Text variants={['h1']} text={`${profile.first_name[0]} ${profile.last_name[0]||''}`}/>
+      return <View css={{ backgroundColor }}>
+        <Text variants={['h1']} text={`${profile.first_name[0]} ${profile.last_name[0] || ''}`}/>
       </View>
     }
 
   }
-  if (onChange){
+  if (onChange) {
     return <Touchable>
       <FileInput onFileSelect={handleFileChange} ref={input} />
       <AvatarImage />

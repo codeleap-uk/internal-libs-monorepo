@@ -146,7 +146,7 @@ const ToastShowcase = {
         <Button
           onPress={() => {
             Toast.info(
-              {title: 'This invitation is not valid for the current email address'},
+              { title: 'This invitation is not valid for the current email address' },
             )
           }}
           text='Information'
@@ -155,7 +155,7 @@ const ToastShowcase = {
         <Button
           onPress={() => {
             Toast.success(
-              {title: 'This invitation has been sent successfully to your email address' },
+              { title: 'This invitation has been sent successfully to your email address' },
             )
           }}
           text='Success'
@@ -164,7 +164,7 @@ const ToastShowcase = {
         <Button
           onPress={() => {
             Toast.error(
-              {title: 'There was an error sending the invite. Please try again later' },
+              { title: 'There was an error sending the invite. Please try again later' },
             )
           }}
           text='Error'

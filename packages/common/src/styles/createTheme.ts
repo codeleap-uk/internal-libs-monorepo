@@ -21,7 +21,7 @@ export function createTheme<T extends ThemeValues>(
 
   const initialTheme = values.initialTheme || Object.keys(values.colors)?.[0]
 
-  if (!initialTheme || !values.colors[initialTheme]){
+  if (!initialTheme || !values.colors[initialTheme]) {
     throw new Error(`
       Could not load initial theme colors. make sure all keys of Theme.colors have a corresponding color set like:
       ...

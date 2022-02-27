@@ -14,9 +14,9 @@ import { View } from '../View'
 export { WebRadioInputStyles } from './styles'
 
 type RadioItem<T extends unknown = any> = {
-  value: T;
-  label: ReactNode;
-};
+  value: T
+  label: ReactNode
+}
 
 const getRadioStyle = (props) => useDefaultComponentStyle('RadioInput', props)
 
@@ -24,18 +24,18 @@ export type RadioButtonProps = Omit<
   ComponentPropsWithoutRef<'input'>,
   'style'
 > & {
-  item: RadioItem;
-  select: () => void;
-  style: StylesOf<RadioInputComposition>;
-};
+  item: RadioItem
+  select: () => void
+  style: StylesOf<RadioInputComposition>
+}
 
 export type RadioGroupProps<T> = {
-  options: RadioItem<T>[];
-  value: T;
-  onValueChange(value: T): void;
-  label: ReactNode;
-  styles?: StylesOf<RadioInputComposition>;
-} & ComponentVariants<typeof RadioInputStyles>;
+  options: RadioItem<T>[]
+  value: T
+  onValueChange(value: T): void
+  label: ReactNode
+  styles?: StylesOf<RadioInputComposition>
+} & ComponentVariants<typeof RadioInputStyles>
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
   item,

@@ -2,7 +2,6 @@ import { Text, Theme, View, React, Icon, Touchable, variantProvider } from '@/ap
 import { Post } from '@/redux'
 import moment from 'moment'
 
-
 type PostCardProps = {
   post: Post
   style?: any
@@ -20,7 +19,7 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
   } = post
 
   const date = moment(created_datetime).format('Do of MMM YY')
-  
+
   return (
     <View
       variants={['column', 'fullWidth']}
@@ -30,24 +29,24 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
         <View variants={['row', 'justifySpaceBetween']}>
           {
             remove &&
-            <Touchable onPress={() => remove(id)}>
+            <Touchable onPress={() => remove(id)} debugName={'Delete post'}>
               <Icon name={'close'} style={{ size: 28 }} />
             </Touchable>
           }
         </View>
-  
+
         <View variants={['row', 'justifySpaceBetween', 'marginBottom:1']}>
           <Text text={`@${username}`} variants={['h4', 'primary']} />
           <Text text={`${date}`} variants={['p2']} />
         </View>
-        
+
         <Text text={title} variants={['h3']} />
-  
+
         <View variants={['row', 'justifySpaceBetween']}>
           <Text text={content} variants={['p1', 'marginTop:1']} />
           {
             edit &&
-          <Touchable onPress={() => edit()}>
+          <Touchable onPress={() => edit()} debugName={'Edit post'}>
             <Icon name={'edit'} style={{ size: 25 }} />
           </Touchable>
           }

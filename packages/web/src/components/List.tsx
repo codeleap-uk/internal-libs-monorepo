@@ -11,17 +11,17 @@ import { StylesOf } from '../types/utility'
 import { CSSObject } from '@emotion/react'
 
 export type ListRender<T> = (itemProps: {
-  item: T;
-  index: number;
-  style: CSSProperties;
-}) => ReactElement;
+  item: T
+  index: number
+  style: CSSProperties
+}) => ReactElement
 
 export type ListProps<T> = {
-  styles?: StylesOf<ViewComposition>;
-  css?: CSSObject;
-  data: T[];
-  getSize: (i: T, idx: number) => number;
-  renderItem: ListRender<T>;
+  styles?: StylesOf<ViewComposition>
+  css?: CSSObject
+  data: T[]
+  getSize: (i: T, idx: number) => number
+  renderItem: ListRender<T>
 } & Omit<
   ComponentProps<typeof VirtualList>,
   | 'itemCount'
@@ -32,10 +32,10 @@ export type ListProps<T> = {
   | 'height'
   | 'children'
 > &
-  ComponentVariants<typeof ViewStyles>;
+  ComponentVariants<typeof ViewStyles>
 
 export const List = <T extends unknown>(
-  ListProps: ListProps<T>,
+  listProps: ListProps<T>,
 ) => {
   const {
     variants,
@@ -45,7 +45,7 @@ export const List = <T extends unknown>(
     getSize,
     renderItem: Item,
     ...viewProps
-  } = ListProps
+  } = listProps
 
   const variantStyles = useDefaultComponentStyle('View', {
     variants,

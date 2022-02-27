@@ -12,12 +12,12 @@ type TextInputParts =
   | 'label'
   | 'innerWrapper'
   | 'error'
-  | 'placeholder';
+  | 'placeholder'
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
   | `${TextInputParts}:focus`
-  | TextInputParts;
+  | TextInputParts
 
 const createTextInputStyle =
   createDefaultVariantFactory<TextInputComposition>()
@@ -63,12 +63,9 @@ export const TextInputStyles = {
       ...theme.spacing.paddingVertical(0.5),
       ...theme.spacing.paddingHorizontal(1),
       ...theme.presets.row,
-      ...theme.border.gray({
-        width: 1,
-      }),
+      ...theme.border.neutral(1),
       display: 'flex',
       alignItems: 'center',
-      ...theme.border.primary(1),
     },
     'icon:focus': {
       color: theme.colors.primary,
@@ -78,15 +75,16 @@ export const TextInputStyles = {
       ...assignTextStyle('h5')(theme).text,
     },
     icon: {
-      height: 20,
-      width: 20,
-      color: theme.colors.primary,
+      size: 20,
+      color: theme.colors.neutral,
     },
     leftIcon: {
       ...theme.spacing.marginRight(1),
+      size: 20,
     },
     rightIcon: {
       ...theme.spacing.marginLeft(1),
+      size: 20,
     },
     error: {
       color: theme.colors.negative,
@@ -109,6 +107,9 @@ export const TextInputStyles = {
     },
     'innerWrapper:error': {
       ...theme.border.negative(1),
+    },
+    'innerWrapper:focus': {
+      ...theme.border.primary(1),
     },
   })),
   line: createTextInputStyle((theme) => ({

@@ -1,4 +1,6 @@
 import * as React from 'react'
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import { Image } from '@/app'
 import { logger } from '../../logger'
 import * as ReactIcons from 'react-icons/all'
@@ -13,12 +15,13 @@ export const iconImages = {
   //   user: VectorIcon('user', FeatherIcons),
   home: ReactIcons.MdHome,
   // key: VectorIcon('key', FeatherIcons),
+  search: ReactIcons.MdSearch,
   checkmark: ReactIcons.MdCheck,
   loading: ReactIcons.VscLoading,
   arrowForward: ReactIcons.IoArrowForward,
   arrowBack: ReactIcons.IoArrowBack,
   // selectArrow: VectorIcon('select-arrows', EntypoIcons),
- 
+
   // 'input-visiblity:visible': VectorIcon('eye', FeatherIcons),
   // 'input-visiblity:hidden': VectorIcon('eye-off', FeatherIcons),
   image: ReactIcons.MdImage,
@@ -38,17 +41,20 @@ export const iconImages = {
 
 export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) => {
 
-  const {size, width, height, color, ...otherStyles} = style
+  const { size, width, height, color, ...otherStyles } = style
   const styles = {
-    ...otherStyles,
+    // ...otherStyles,
     height: size || height,
     width: size || width,
     color: color,
   }
 
   if (typeof path === 'function') {
+    if (log) {
+      logger.log('Icon style for ' + name, otherStyles, 'Component style')
+    }
     const Component = path
-    return <Component style={styles}/>
+    return <Component css={ styles} />
   }
 
   const appliedStyles = {
@@ -59,8 +65,7 @@ export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) =
     color: styles.color || null,
   }
 
-
-  if (log){ 
+  if (log) {
     logger.log('Icon style for ' + name, appliedStyles, 'Component style')
   }
   return <Image objectFit={'contain'} source={path} style={appliedStyles} type='dynamic'/>
@@ -68,12 +73,12 @@ export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) =
 
 type IconsType = {
   [Property in keyof typeof iconImages]: React.FC;
-};
+}
 
-export type AppIcon = keyof IconsType;
+export type AppIcon = keyof IconsType
 
 export const Icons = Object.fromEntries(
   Object.entries(iconImages).map(([iconName, iconPath]) => {
-    return [iconName, (props) => <RenderIcon path={iconPath} name={iconName} {...props} />]
+    return [iconName, (props) => <RenderIcon path={iconPath} name={iconName} log={['close', 'search'].includes(iconName)} {...props} />]
   }),
 ) as IconsType

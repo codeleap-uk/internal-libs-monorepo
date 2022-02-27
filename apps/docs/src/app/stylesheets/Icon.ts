@@ -4,7 +4,6 @@ import { variantProvider } from '../theme'
 const createIconStyle = variantProvider.createVariantFactory<IconComposition>()
 const defaultStyles = variantProvider.getDefaultVariants('Icon')
 
-
 export const AppIconStyles = {
   ...defaultStyles,
   default: createIconStyle((theme) => ({

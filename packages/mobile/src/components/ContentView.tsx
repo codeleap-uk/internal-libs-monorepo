@@ -15,10 +15,10 @@ export type ContentViewProps = Omit<
   ViewProps,
   'variants' | 'responsiveVariants'
 > & {
-  placeholderMsg: string;
-  loading?: boolean;
-  styles?: StylesOf<ViewComposition>;
-} & ComponentVariants<typeof ContentViewStyles>;
+  placeholderMsg: string
+  loading?: boolean
+  styles?: StylesOf<ViewComposition>
+} & ComponentVariants<typeof ContentViewStyles>
 
 const WrapContent = ({ children, ...props }) => (
   <View {...props}>{children}</View>

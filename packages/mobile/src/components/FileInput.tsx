@@ -19,24 +19,24 @@ import { Options } from 'react-native-image-crop-picker'
 import { DocumentPickerOptions } from '../modules/types/documentPicker'
 
 export type FileInputRef = {
-  openFilePicker: () => void;
-};
+  openFilePicker: () => void
+}
 
 export type FileInputProps = {
-  label?: string;
-  iconName?: IconPlaceholder;
-  styles?: StylesOf<FileInputComposition>;
-  mode: 'hidden' | 'button';
-  variants?: ComponentVariants<typeof FileInputStyles>['variants'];
-  onFileSelect(files: MobileInputFile[]): void;
-  options?: DocumentPickerOptions<any>;
-  buttonProps?: ButtonProps;
-  ref?: FileInputRef;
+  label?: string
+  iconName?: IconPlaceholder
+  styles?: StylesOf<FileInputComposition>
+  mode: 'hidden' | 'button'
+  variants?: ComponentVariants<typeof FileInputStyles>['variants']
+  onFileSelect(files: MobileInputFile[]): void
+  options?: DocumentPickerOptions<any>
+  buttonProps?: ButtonProps
+  ref?: FileInputRef
   placeholder?: string
   type?: 'image' | 'anyFile'
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
-};
+}
 
 const pickerDefaults = {
   width: 300,
@@ -54,7 +54,7 @@ function parsePickerData(data:any):MobileInputFile {
     uri: data.path,
     fileCopyUri: data.path,
   }
-  
+
   return {
     file: d,
     preview: data.path,
@@ -84,7 +84,7 @@ export const FileInput = forwardRef<
 
   const { logger } = useCodeleapContext()
 
-  async function openFileSystem(){
+  async function openFileSystem() {
     try {
       let files = await DocumentPicker.pick(options)
       if (!Array.isArray(files)) {
@@ -101,30 +101,25 @@ export const FileInput = forwardRef<
     }
   }
 
-  const mergedOptions  = {
+  const mergedOptions = {
     ...pickerDefaults,
     ...pickerOptions,
   } as Options
-  
+
   const handlePickerResolution = data => {
-    onFileSelect(mergedOptions.multiple ? data.map(parsePickerData)  : [
+    onFileSelect(mergedOptions.multiple ? data.map(parsePickerData) : [
       parsePickerData(data),
     ])
   }
 
   const openFilePicker = async () => {
-    
-    if (type === 'image'){
+
+    if (type === 'image') {
       OSAlert.ask({
         title: 'Change Image',
         body: 'Do you want to take a new picture or select an existing one?',
         ...alertProps,
         options: [
-          {
-            text: 'Cancel',
-            onPress: () => {},
-            ...alertProps?.options[0],
-          },
           {
             text: alertProps?.options?.[0]?.text || 'Camera',
             onPress: () => {
@@ -136,17 +131,22 @@ export const FileInput = forwardRef<
             text: 'Library',
             onPress: () => {
               ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
-        
             },
             ...alertProps?.options[2],
           },
-         
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => {},
+            ...alertProps?.options[0],
+          },
+
         ],
       })
     } else {
       openFileSystem()
     }
-   
+
   }
 
   const variantStyles = useDefaultComponentStyle('FileInput', {
@@ -166,6 +166,7 @@ export const FileInput = forwardRef<
         <Button
           onPress={() => openFilePicker()}
           text={filenames || placeholder}
+          debugName={'Open file picker'}
           icon={iconName || ('fileInputButton' as IconPlaceholder)}
           variants={filenames ? '' : 'icon'}
           {...buttonProps}

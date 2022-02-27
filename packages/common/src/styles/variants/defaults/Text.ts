@@ -2,7 +2,7 @@ import { Fonts, TypographyStyle } from '../..'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 
-export type TextComposition = 'text';
+export type TextComposition = 'text'
 const createTextStyle = createDefaultVariantFactory<TextComposition>()
 
 const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })),
@@ -39,7 +39,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
     const fontSize = style.sizeMultiplier * theme.typography.baseFontSize
     const lineHeight = style.lineHeightMultiplier ? fontSize * style.lineHeightMultiplier : null
     // console.log('name', name)
-   
+
     return {
       text: {
         fontWeight,

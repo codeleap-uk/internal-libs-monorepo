@@ -29,9 +29,9 @@ const TabsWrapper = ({ children, styles }) => {
 }
 
 type RouterMenuProps = {
-  items: MenuItemProps['data'][];
-  styles?: StylesOf<MenuComposition>;
-};
+  items: MenuItemProps['data'][]
+  styles?: StylesOf<MenuComposition>
+}
 
 export const Menu: React.FC<RouterMenuProps> = ({ items, styles }) => {
   return (

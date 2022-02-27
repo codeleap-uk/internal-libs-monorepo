@@ -11,7 +11,7 @@ export type AvatarComposition =
   | 'editImageIcon'
   | 'wrapper'
   | 'editing'
-  | 'fileInput';
+  | 'fileInput'
 
 const createAvatarStyle = createDefaultVariantFactory<AvatarComposition>()
 

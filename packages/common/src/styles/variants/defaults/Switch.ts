@@ -1,11 +1,11 @@
 import shadeColor from '../../../utils/shadeColor'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
-type SwitchParts = 'wrapper' | 'label' | 'input' | 'error' | 'inputWrapper';
+type SwitchParts = 'wrapper' | 'label' | 'input' | 'error' | 'inputWrapper'
 export type SwitchComposition =
   | SwitchParts
   | `${SwitchParts}:disabled`
-  | `${SwitchParts}:on`;
+  | `${SwitchParts}:on`
 
 const createSwitchStyle = createDefaultVariantFactory<SwitchComposition>()
 

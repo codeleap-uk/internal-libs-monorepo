@@ -14,8 +14,8 @@ export type MenuComposition =
   | 'sideMenu'
   | 'topMenu'
   | 'horizontalScroll'
-  | 'router';
-export type RouterPageComposition = 'content' | 'router' | MenuComposition;
+  | 'router'
+export type RouterPageComposition = 'content' | 'router' | MenuComposition
 const createRouterPageStyle =
   createDefaultVariantFactory<RouterPageComposition>()
 

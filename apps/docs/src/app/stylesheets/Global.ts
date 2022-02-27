@@ -13,15 +13,15 @@ export const globalStyle = css`
     background-color: ${Theme.colors.b};
     overflow-x: hidden;
   }
-
+  */
   ::-webkit-scrollbar {
     width: 5px;
   }
   ::-webkit-scrollbar-track-piece {
-    background-color: ${Theme.colors.black};
+    background-color: ${Theme.colors.light.grayFade};
   }
   ::-webkit-scrollbar-thumb:vertical {
-    background-color: ${Theme.colors.white};
+    background-color: ${Theme.colors.light.grayFade};
     border-radius: 18px;
-  } */
+  } 
 `

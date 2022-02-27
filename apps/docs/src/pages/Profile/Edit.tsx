@@ -2,8 +2,8 @@ import * as yup from 'yup'
 import * as React from 'react'
 
 import { Session, useAppSelector } from '@/redux'
-import { Button, 
-  // Scroll, 
+import { Button,
+  // Scroll,
   TextInput, View } from '@/app'
 import { Avatar } from '@/components'
 import {
@@ -11,7 +11,6 @@ import {
   useForm,
 } from '@codeleap/common'
 import { Toast } from '@codeleap/web'
-
 
 const editProfileForm = createForm('editProfileForm', {
   email: {
@@ -47,7 +46,6 @@ const editProfileForm = createForm('editProfileForm', {
   },
 })
 
-
 export default function EditProfile({ navigation }) {
   const { profile } = useAppSelector((store) => store.Session)
 
@@ -56,12 +54,11 @@ export default function EditProfile({ navigation }) {
     validateOn: 'submit',
     initialState: {
       ...profile,
-      avatar: [{preview: profile.avatar}],
+      avatar: [{ preview: profile.avatar }],
       repeatPassword: '',
       password: '',
     },
   })
-
 
   function onSubmit() {
     form.onSubmit(async (values) => {
@@ -71,10 +68,10 @@ export default function EditProfile({ navigation }) {
         ...form.values,
         avatar: form?.values?.avatar?.[0]?.file.uri,
       })
-      
+
       navigation.navigate('Profile.View')
-      
-      if (hasEmailChanged){
+
+      if (hasEmailChanged) {
         Toast.info({
           title: 'Please confirm your new email address',
         })
@@ -84,7 +81,7 @@ export default function EditProfile({ navigation }) {
           title: 'Changes Saved',
         })
       }
-      
+
     })
   }
   return (
@@ -97,21 +94,24 @@ export default function EditProfile({ navigation }) {
           id: null,
         }}
         onChange={(image) => form.setFieldValue('avatar', image)}
+        debugName={'Change profile avatar'}
       />
       <View>
-        <TextInput {...form.register('email')} leftIcon={{ name: 'mail' }} />
+        <TextInput {...form.register('email')} debugName={'Profile email input'} leftIcon={{ name: 'mail' }} />
 
-        <TextInput {...form.register('first_name')} />
-        <TextInput {...form.register('last_name')} />
+        <TextInput {...form.register('first_name')} debugName={'Profile first name input'} />
+        <TextInput {...form.register('last_name')} debugName={'Profile last name input'} />
 
         <TextInput
           {...form.register('password')}
           leftIcon={{ name: 'key' }}
+          debugName={'Profile password input'}
           visibilityToggle
         />
 
         <TextInput
           {...form.register('repeatPassword')}
+          debugName={'Profile repeat password input'}
           leftIcon={{ name: 'key' }}
           visibilityToggle
         />
@@ -120,9 +120,10 @@ export default function EditProfile({ navigation }) {
           disabled={!form.isValid}
           text={'Save Changes'}
           onPress={onSubmit}
+          debugName={'Save changes'}
         />
       </View>
     </>
-    // </Scroll> 
+    // </Scroll>
   )
 }

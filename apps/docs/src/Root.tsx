@@ -7,23 +7,23 @@ import { store } from './redux'
 import { Global } from '@emotion/react'
 import { globalStyle } from './app/stylesheets/Global'
 
-
 function init() {
   logger.log('Initialising app...', '', 'App lifecycle')
-  
 
   logger.analytics.event('App Initialized', { confidential: 'Cacetinho' })
 
 }
 
-
 init()
 
-const Root = ({children}) => {
+const Root = ({ children }) => {
 
   onMount(() => {
     const unsubscribe = variantProvider.onColorSchemeChange(t => {
-      localStorage.setItem('codeleap.theme', t.theme)
+      if (window) {
+        localStorage.setItem('codeleap.theme', t.theme)
+
+      }
     })
 
     return unsubscribe

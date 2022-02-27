@@ -17,15 +17,14 @@ import { ThemeColorScheme } from '.'
 import { createBorderHelpers } from '../helpers'
 const SCOPE = 'Styles'
 
-type GetThemeWithColorSchemeReturn<T extends EnhancedTheme> = Omit<T, 'colors'> & { colors: T['colors'][keyof T['colors']]} 
+type GetThemeWithColorSchemeReturn<T extends EnhancedTheme> = Omit<T, 'colors'> & { colors: T['colors'][keyof T['colors']]}
 
-function getThemeWithColorScheme<T extends EnhancedTheme>(theme:T, scheme: keyof T['colors']):GetThemeWithColorSchemeReturn<T>{
+function getThemeWithColorScheme<T extends EnhancedTheme>(theme:T, scheme: keyof T['colors']):GetThemeWithColorSchemeReturn<T> {
   return {
     ...theme,
     colors: theme.colors[scheme as string],
   } as unknown as GetThemeWithColorSchemeReturn<T>
 }
-
 
 /**
  * [[include:Variants.md]]
@@ -37,9 +36,9 @@ export class VariantProvider<
   CSSIn = Parameters<RootStyler>[0],
   CSSOut = ReturnType<RootStyler>
 > {
-  createStylesheet: RootStyler;
+  createStylesheet: RootStyler
 
-  theme: Theme;
+  theme: Theme
 
   // @ts-ignore
   colorSchemeListeners:FunctionType<[Theme], any>[] = []
@@ -69,20 +68,20 @@ export class VariantProvider<
             this.withColorScheme(),
             variantsObject,
           )
-         
+
         })
-          
+
         return TransformedVariants as DefaultVariants<CSSIn>
       } else {
-     
+
         return mapVariants<CSSIn>(this.withColorScheme(), DEFAULT_STYLES[componentName])
       }
-    } catch (e){
-      throw new Error(`Error on getDefaultVariants ${componentName||'AllComponents'} ${e}`)
+    } catch (e) {
+      throw new Error(`Error on getDefaultVariants ${componentName || 'AllComponents'} ${e}`)
     }
   }
 
-  withColorScheme(scheme?: string){
+  withColorScheme(scheme?: string) {
     // @ts-ignore
     return getThemeWithColorScheme(this.theme, scheme || this.theme.theme)
   }
@@ -94,7 +93,7 @@ export class VariantProvider<
   createComponentStyle<T extends Record<string, CSSIn> = Record<string, CSSIn>>(
     styles: T, staticStyles?: true, useTheme?: keyof AT['colors'],
   ):T
-  
+
   createComponentStyle<T extends Record<string, CSSIn> = Record<string, CSSIn>>(
     styles: FunctionType<[Theme], T>, staticStyles?: true, useTheme?: keyof AT['colors'],
   ):T
@@ -105,11 +104,10 @@ export class VariantProvider<
     try {
 
       const isFunction = TypeGuards.isFunction(styles)
-      if (staticStyles){
+      if (staticStyles) {
         // @ts-ignore
         const styleObject = isFunction ? styles(this.withColorScheme(useTheme)) : styles
 
-        
         const styleMap = mapObject(styleObject, ([key, value]) => [
           key,
           this.createStylesheet(value),
@@ -117,16 +115,16 @@ export class VariantProvider<
         return Object.fromEntries(styleMap) as Record<keyof T, CSSIn>
 
       } else {
-        if (!isFunction){
+        if (!isFunction) {
           throw new Error(`
             createComponentStyle was called with a non function styles argument and staticStyles set to false.
             Either use a function as the styles argument, or enable staticStyles to get rid of this error.
           `)
         }
-        
+
         return styles
       }
-    } catch (e){
+    } catch (e) {
       this.logger.error('createComponentStyle', {
         arguments,
         e,
@@ -142,15 +140,15 @@ export class VariantProvider<
       try {
 
         if (TypeGuards.isFunction(variant)) {
-          const themeGetter = variant 
-       
+          const themeGetter = variant
+
           return themeGetter
         }
         return variant
-      } catch (e){
+      } catch (e) {
         this.logger.error(`Error on variant factory for ${name}`, e, SCOPE)
       }
-    } 
+    }
   }
 
   getStyles<VariantObject extends CommonVariantObject<any, CSSIn>>(
@@ -173,7 +171,6 @@ export class VariantProvider<
     ] = args
     const variantList = standardizeVariants(variants)
     try {
-    
 
       let computedStyles = {} as Record<string, CSSOut>
       for (const variant of ['default', ...variantList]) {
@@ -202,7 +199,7 @@ export class VariantProvider<
                 rootElement,
                 styles,
                 // @ts-ignore
-                theme: this.withColorScheme( useTheme),
+                theme: this.withColorScheme(useTheme),
                 variantName: variant,
               })
             }
@@ -217,7 +214,7 @@ export class VariantProvider<
         ]),
       ) as Record<NestedKeys<VariantObject>, CSSOut>
       return appliableStyles
-    } catch (e){
+    } catch (e) {
       this.logger.error(`Error on getStyles for Component ${debugName} \n${variantList.join('\n')}\n` + debugName, e, SCOPE)
       return {}
     }
@@ -233,7 +230,7 @@ export class VariantProvider<
     return typed as unknown as TypedComponents<T, Theme>
   }
 
-  setColorScheme(to: keyof AT['colors']){
+  setColorScheme(to: keyof AT['colors']) {
     this.theme.theme = to
     // @ts-ignore
     this.theme.border = createBorderHelpers(this.theme, this.theme.IsBrowser, to)
@@ -241,7 +238,7 @@ export class VariantProvider<
     this.colorSchemeListeners.forEach(l => l(this.theme))
   }
 
-  onColorSchemeChange(callback:FunctionType<[Theme], any>){
+  onColorSchemeChange(callback:FunctionType<[Theme], any>) {
     const newLen = this.colorSchemeListeners.push(callback)
 
     return () => {

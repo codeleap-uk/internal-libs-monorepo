@@ -1,4 +1,5 @@
 /* eslint no-restricted-imports: 'off' */
+/* eslint prefer-const: 'off' */
 import { Alert, AlertButton } from 'react-native'
 
 /**
@@ -13,16 +14,44 @@ import { Alert, AlertButton } from 'react-native'
  * @property {function} run callback function to run on press
  */
 
-type NativeAlertArgs = Parameters<typeof Alert.alert>;
+type NativeAlertArgs = Parameters<typeof Alert.alert>
 
 type OSAlertArgs = {
-  title: NativeAlertArgs['0'];
-  body?: NativeAlertArgs['1'];
-  options?: NativeAlertArgs['2'];
-};
-type AlertEvent = AlertButton['onPress'];
+  title: NativeAlertArgs['0']
+  body?: NativeAlertArgs['1']
+  options?: NativeAlertArgs['2']
+}
+type AlertEvent = AlertButton['onPress']
+type OSAlertType = 'info' | 'error' | 'warn' | 'ask'
+type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
-type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>;
+const currentAlerts = {
+
+}
+
+function generateAlertID(from:OSAlertArgs & {type: OSAlertType}) {
+  return [
+    from.type,
+    from.title,
+    from.body,
+  ].join('-')
+}
+
+function shouldShowAlert(args:OSAlertArgs, type: OSAlertType) {
+  const alertId = generateAlertID({ ...args, type })
+
+  if (!Object.keys(currentAlerts).includes(alertId)) {
+    currentAlerts[alertId] = true
+
+    return alertId
+  }
+
+  return ''
+}
+
+function popAlert(id:string) {
+  delete currentAlerts[id]
+}
 
 function ask({ title, body, options = null }: OSAlertArgs) {
   if (!title) {
@@ -35,12 +64,17 @@ function ask({ title, body, options = null }: OSAlertArgs) {
   })
 }
 
-function warn({
-  title,
-  body,
-  onAccept,
-  onReject,
-}: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
+function warn(args: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
+  const id = shouldShowAlert(args, 'warn')
+
+  if (!id) return
+  let {
+    title,
+    body,
+    onAccept,
+    onReject,
+  } = args
+
   if (!title) {
     title = 'Hang on'
   }
@@ -56,22 +90,33 @@ function warn({
     options: [
       {
         text: 'Cancel',
-        onPress: onReject,
+        onPress: () => {
+          popAlert(id)
+          onReject()
+        },
       },
       {
         text: 'OK',
         style: 'destructive',
-        onPress: onAccept,
+        onPress: () => {
+          popAlert(id)
+          onAccept?.()
+        },
       },
     ],
   })
 }
 
-function info({
-  title,
-  body,
-  onDismiss = () => null,
-}: OSAlertArgs & NamedEvents<'onDismiss'>) {
+function info(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
+  const id = shouldShowAlert(args, 'info')
+
+  if (!id) return
+  let {
+    title,
+    body,
+    onDismiss = () => null,
+  } = args
+
   if (!title) {
     title = 'FYI'
   }
@@ -81,17 +126,25 @@ function info({
     options: [
       {
         text: 'OK',
-        onPress: onDismiss,
+        onPress: () => {
+          popAlert(id)
+          onDismiss?.()
+        },
       },
     ],
   })
 }
 
-function OSError({
-  title,
-  body,
-  onDismiss = () => null,
-}: OSAlertArgs & NamedEvents<'onDismiss'>) {
+function OSError(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
+  const id = shouldShowAlert(args, 'error')
+
+  if (!id) return
+
+  let {
+    title,
+    body,
+  } = args
+
   if (!title) {
     title = 'Whoops!'
   }
@@ -104,7 +157,10 @@ function OSError({
     options: [
       {
         text: 'OK',
-        onPress: () => onDismiss(),
+        onPress: () => {
+          popAlert(id)
+          args?.onDismiss?.()
+        },
       },
     ],
   })

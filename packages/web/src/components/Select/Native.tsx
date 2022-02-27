@@ -11,19 +11,19 @@ import { ComponentPropsWithRef, ReactNode } from 'react'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
 
-type HTMLSelectProps = ComponentPropsWithRef<'select'>;
+type HTMLSelectProps = ComponentPropsWithRef<'select'>
 type Option = {
-  label: string;
-  value: string | number;
-};
+  label: string
+  value: string | number
+}
 
 export type NativeSelectProps = HTMLSelectProps & {
-  options: Array<Option>;
-  styles?: StylesOf<SelectComposition>;
-  label?: string | ReactNode;
-  wrapperProps?: ViewProps<'div'>;
-  onValueChange?: (value: string | number) => void;
-} & ComponentVariants<typeof SelectStyles>;
+  options: Array<Option>
+  styles?: StylesOf<SelectComposition>
+  label?: string | ReactNode
+  wrapperProps?: ViewProps<'div'>
+  onValueChange?: (value: string | number) => void
+} & ComponentVariants<typeof SelectStyles>
 
 export const NativeSelect = (selectProps: NativeSelectProps) => {
   const {

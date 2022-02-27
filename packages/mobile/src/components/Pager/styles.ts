@@ -9,7 +9,7 @@ export type PagerComposition =
   | 'page:pose:previous'
   | 'page:pose:next'
   | 'page:pose:current'
-  | 'wrapper';
+  | 'wrapper'
 
 const createPagerStyle = createDefaultVariantFactory<PagerComposition>()
 

@@ -165,7 +165,7 @@ export const defaultPresets = {
 export type IncludePresetsReturn<T extends AnyFunction> = Record<
   keyof typeof defaultPresets,
   ReturnType<T>
->;
+>
 
 export function includePresets<T extends FunctionType<[any], any>>(
   fn: T,

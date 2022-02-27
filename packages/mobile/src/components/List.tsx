@@ -16,17 +16,17 @@ import { View, ViewProps } from './View'
 
 export type FlatListProps = KeyboardAwareFlatListProps<any> &
   ViewProps & {
-    onRefresh?: () => void;
-    refreshTimeout?: number;
-    changeData?: any;
-    separators?: boolean;
-  };
+    onRefresh?: () => void
+    refreshTimeout?: number
+    changeData?: any
+    separators?: boolean
+  }
 
 const KeyboardAwareFlatList =
   KBDView as unknown as React.ForwardRefExoticComponent<
     ViewProps & {
-      refreshControl?: JSX.Element;
-      ref?: FlatList;
+      refreshControl?: JSX.Element
+      ref?: FlatList
     }
   >
 

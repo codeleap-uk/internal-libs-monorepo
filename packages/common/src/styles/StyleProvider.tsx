@@ -9,9 +9,9 @@ import {
   FromVariantsBuilder,
   VariantProvider,
 } from '.'
-import { AnyFunction, ComponentVariants, FunctionType, NestedKeys,  StylesOf } from '..'
+import { AnyFunction, ComponentVariants, FunctionType, NestedKeys, StylesOf } from '..'
 import { silentLogger } from '../constants'
-import {onMount} from '../utils'
+import { onMount } from '../utils'
 import { StyleContextProps, StyleContextValue } from './types'
 
 export const StyleContext = createContext(
@@ -36,10 +36,9 @@ export const StyleProvider = <
     const unsubscribe = variantProvider.onColorSchemeChange((t) => {
       setTheme(t.theme as string)
     })
-  
+
     return unsubscribe
   })
-
 
   return (
     <StyleContext.Provider
@@ -61,18 +60,17 @@ export function useCodeleapContext() {
   return useContext(StyleContext)
 }
 
-type ComponentNameArg = keyof DEFAULT_VARIANTS;
+type ComponentNameArg = keyof DEFAULT_VARIANTS
 type useDefaultComponentStyleProps<
   ComponentName extends ComponentNameArg,
   C extends CommonVariantObject<any> = DefaultVariants[ComponentName],
-  Comp  extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
+  Comp extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
 > = ComponentVariants<C> & {
-  rootElement?: Comp;
-  styles?: StylesOf<Comp>;
-  transform?: AnyFunction;
-};
+  rootElement?: Comp
+  styles?: StylesOf<Comp>
+  transform?: AnyFunction
+}
 
-type x = DefaultVariants['Slider']['absolute']
 export function useDefaultComponentStyle<
   K extends ComponentNameArg | `u:${string}`,
   S extends DefaultVariantBuilder<any>
@@ -94,7 +92,7 @@ export function useDefaultComponentStyle<
       )
       : props.styles
     let name = componentName as string
-    
+
     if (componentName.startsWith('u:')) {
       name = componentName.replace('u:', '')
     }
@@ -105,7 +103,7 @@ export function useDefaultComponentStyle<
         `Could not read context stylesheets for ${name}. Ensure it's being passed to <StyleProvider /> in the variants  prop.`,
       )
     }
-    
+
     const stylesheet = provider.getStyles(v, {
       // @ts-ignore
       variants: props.variants || [],
@@ -114,19 +112,18 @@ export function useDefaultComponentStyle<
       rootElement: props.rootElement,
       styles,
     }, currentTheme as string)
-    
     return stylesheet as any
-  } catch (e){
+  } catch (e) {
     throw new Error('useDefaultComponentStyle with args ' + arguments + e)
   }
 }
 
-export function useComponentStyle<T extends FunctionType<[EnhancedTheme<any>], any>>(styler:T):ReturnType<T>{
-  const {currentTheme, provider} = useCodeleapContext()
+export function useComponentStyle<T extends FunctionType<[EnhancedTheme<any>], any>>(styler:T):ReturnType<T> {
+  const { currentTheme, provider } = useCodeleapContext()
   try {
 
     return styler(provider.withColorScheme(currentTheme as string))
-  } catch (e){
+  } catch (e) {
     throw new Error(`useComponentStyle with args ${arguments} ${e}`)
   }
 }

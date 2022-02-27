@@ -7,12 +7,12 @@ import { stopPropagation } from '../lib/utils/stopPropagation'
 import { View } from './View'
 
 export type TouchableProps<T extends ElementType> = ComponentPropsWithRef<T> & {
-  css?: CSSObject;
-  component?: T;
-  disabled?: boolean;
-  propagate?: boolean;
-  onPress?: AnyFunction;
-};
+  css?: CSSObject
+  component?: T
+  disabled?: boolean
+  propagate?: boolean
+  onPress?: AnyFunction
+}
 
 export const Touchable = <T extends ElementType = typeof View>(
   touchableProps: TouchableProps<T>,

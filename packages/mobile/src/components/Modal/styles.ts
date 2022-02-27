@@ -31,11 +31,11 @@ export type MobileModalParts =
   | 'touchableBackdrop'
   | 'box:pose'
   | 'title'
-  | `closeButton${Capitalize<ButtonComposition>}`;
+  | `closeButton${Capitalize<ButtonComposition>}`
 
 export type MobileModalComposition =
   | MobileModalParts
-  | `${MobileModalParts}:visible`;
+  | `${MobileModalParts}:visible`
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
 
@@ -114,5 +114,20 @@ export const MobileModalStyles = {
       },
     }
   }),
-  popup: createModalStyle((Theme) => ({})),
+  popup: createModalStyle((theme) => ({})),
+  fullscreen: createModalStyle((theme) => ({
+    overlay: {
+      backgroundColor: theme.colors.background,
+    },
+    'overlay:visible': {
+      opacity: 1,
+    },
+    box: {
+      flex: 1,
+      borderRadius: 0,
+      width: theme.values.width,
+      height: theme.values.height,
+      ...theme.presets.center,
+    },
+  })),
 }

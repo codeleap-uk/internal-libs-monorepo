@@ -89,7 +89,8 @@ const FlatListShowcase = {
 
 const TouchableShowcase = {
   render: () => {
-    return <Touchable onPress={() => alert('Good job')}>Touch me</Touchable>
+    return <Touchable onPress={() => alert('Good job')}
+      debugName={'Touchable showcase'}>Touch me</Touchable>
   },
 
   styleSheet: variants.Touchable,
