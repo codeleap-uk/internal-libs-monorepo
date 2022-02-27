@@ -18,7 +18,10 @@ const Root = ({ children }) => {
 
   onMount(() => {
     const unsubscribe = variantProvider.onColorSchemeChange(t => {
-      localStorage.setItem('codeleap.theme', t.theme)
+      if (window) {
+        localStorage.setItem('codeleap.theme', t.theme)
+
+      }
     })
 
     return unsubscribe

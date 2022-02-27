@@ -3185,7 +3185,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@mdx-js/mdx@^1.6.22":
+"@mdx-js/mdx@^1.6.22", "@mdx-js/mdx@v1":
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-1.6.22.tgz#8a723157bf90e78f17dc0f27995398e6c731f1ba"
   integrity sha512-AMxuLxPz2j5/6TpF/XSdKpQP1NlG0z11dFOlq+2IP/lSgl11GY8ji6S/rgsViN/L0BDvHvUMruRb7ub+24LUYA==
@@ -3210,7 +3210,7 @@
     unist-builder "2.0.3"
     unist-util-visit "2.0.3"
 
-"@mdx-js/react@^1.6.22":
+"@mdx-js/react@^1.6.22", "@mdx-js/react@v1":
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/react/-/react-1.6.22.tgz#ae09b4744fddc74714ee9f9d6f17a66e77c43573"
   integrity sha512-TDoPum4SHdfPiGSAaRBw7ECyI8VaHpK8GJugbJIJuqyh6kzw9ZLJZW3HGL3NNrJGxcAixUvqROm+YuQOo5eXtg==
@@ -4290,7 +4290,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17.0.38", "@types/react@^17.0.39":
+"@types/react@*", "@types/react@^17", "@types/react@^17.0.38", "@types/react@^17.0.39":
   version "17.0.39"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.39.tgz#d0f4cde092502a6db00a1cded6e6bf2abb7633ce"
   integrity sha512-UVavlfAxDd/AgAacMa60Azl7ygyQNRwC/DsHZmKgNvPmRR5p70AJ5Q9EAmL2NWOJmeV+vVUI4IAP7GZrN8h8Ug==
@@ -10522,6 +10522,27 @@ gatsby-core-utils@^3.7.0:
     tmp "^0.2.1"
     xdg-basedir "^4.0.0"
 
+gatsby-core-utils@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/gatsby-core-utils/-/gatsby-core-utils-3.8.1.tgz#52ffe98966ca2f7f013f62fc0a67242cbfb38f6e"
+  integrity sha512-VuIRLVcgxi0leKT1fZvoNhjHn2DKIHdm8f0EqtDwIxeIVZLgtxBksVikZoAqRPhsSExC0YajGFJVBaV9fPADTg==
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    ci-info "2.0.0"
+    configstore "^5.0.1"
+    fastq "^1.13.0"
+    file-type "^16.5.3"
+    fs-extra "^10.0.0"
+    got "^11.8.3"
+    import-from "^4.0.0"
+    lmdb "^2.1.7"
+    lock "^1.1.0"
+    node-object-hash "^2.3.10"
+    proper-lockfile "^4.1.2"
+    resolve-from "^5.0.0"
+    tmp "^0.2.1"
+    xdg-basedir "^4.0.0"
+
 gatsby-graphiql-explorer@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/gatsby-graphiql-explorer/-/gatsby-graphiql-explorer-2.7.0.tgz#83eadb46098fffef66eecea1c1394df593969ee8"
@@ -10638,6 +10659,50 @@ gatsby-plugin-mdx@^3.4.0:
     eval "^0.1.4"
     fs-extra "^10.0.0"
     gatsby-core-utils "^3.7.0"
+    gray-matter "^4.0.2"
+    json5 "^2.1.3"
+    loader-utils "^1.4.0"
+    lodash "^4.17.21"
+    mdast-util-to-string "^1.1.0"
+    mdast-util-toc "^3.1.0"
+    mime "^2.4.6"
+    mkdirp "^1.0.4"
+    p-queue "^6.6.2"
+    pretty-bytes "^5.3.0"
+    remark "^10.0.1"
+    remark-retext "^3.1.3"
+    retext-english "^3.0.4"
+    slugify "^1.4.4"
+    static-site-generator-webpack-plugin "^3.4.2"
+    style-to-object "^0.3.0"
+    underscore.string "^3.3.5"
+    unified "^8.4.2"
+    unist-util-map "^1.0.5"
+    unist-util-remove "^1.0.3"
+    unist-util-visit "^1.4.1"
+
+gatsby-plugin-mdx@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-mdx/-/gatsby-plugin-mdx-3.8.1.tgz#7c200368a32833ed9e49f4a329c4df6e5aaee6a0"
+  integrity sha512-2f2ZBDoTZzZZ1rh+eNFpMxEPEonSln7nygfq8/f/NuWtwM28SovJvFsoLzxYoXMIJyiE0BxE1TjiCg00S8sLmg==
+  dependencies:
+    "@babel/core" "^7.15.5"
+    "@babel/generator" "^7.15.4"
+    "@babel/helper-plugin-utils" "^7.14.0"
+    "@babel/plugin-proposal-object-rest-spread" "^7.14.7"
+    "@babel/preset-env" "^7.15.4"
+    "@babel/preset-react" "^7.14.0"
+    "@babel/runtime" "^7.15.4"
+    "@babel/types" "^7.15.4"
+    camelcase-css "^2.0.1"
+    change-case "^3.1.0"
+    core-js "^3.17.2"
+    dataloader "^1.4.0"
+    debug "^4.3.1"
+    escape-string-regexp "^1.0.5"
+    eval "^0.1.4"
+    fs-extra "^10.0.0"
+    gatsby-core-utils "^3.8.1"
     gray-matter "^4.0.2"
     json5 "^2.1.3"
     loader-utils "^1.4.0"
@@ -12228,6 +12293,11 @@ import-from@3.0.0:
   dependencies:
     resolve-from "^5.0.0"
 
+import-from@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/import-from/-/import-from-4.0.0.tgz#2710b8d66817d232e16f4166e319248d3d5492e2"
+  integrity sha512-P9J71vT5nLlDeV8FHs5nNxaLbrpfAV5cF5srvbZfpwpcJoM/xZR3hiv+q+SAnuSmuGbXMWud063iIMx/V/EWZQ==
+
 import-lazy@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/import-lazy/-/import-lazy-2.1.0.tgz#05698e3d45c88e8d7e9d92cb0584e77f096f3e43"
@@ -13673,6 +13743,17 @@ lmdb-store@^1.6.11:
     node-gyp-build "^4.2.3"
     ordered-binary "^1.0.0"
     weak-lru-cache "^1.0.0"
+
+lmdb@^2.1.7:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/lmdb/-/lmdb-2.2.3.tgz#713ffa515c31e042808abf364b4aa0feaeaf6360"
+  integrity sha512-+OiHQpw22mBBxocb/9vcVNETqf0k5vgHA2r+KX7eCf8j5tSV50ZIv388iY1mnnrERIUhs2sjKQbZhPg7z4HyPQ==
+  dependencies:
+    msgpackr "^1.5.4"
+    nan "^2.14.2"
+    node-gyp-build "^4.2.3"
+    ordered-binary "^1.2.4"
+    weak-lru-cache "^1.2.2"
 
 load-bmfont@^1.3.1, load-bmfont@^1.4.0:
   version "1.4.1"
@@ -15399,7 +15480,7 @@ msgpackr-extract@^1.0.14:
     nan "^2.14.2"
     node-gyp-build "^4.2.3"
 
-msgpackr@^1.5.0:
+msgpackr@^1.5.0, msgpackr@^1.5.4:
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/msgpackr/-/msgpackr-1.5.4.tgz#2b6ea6cb7d79c0ad98fc76c68163c48eda50cf0d"
   integrity sha512-Z7w5Jg+2Q9z9gJxeM68d7tSuWZZGnFIRhZnyqcZCa/1dKkhOCNvR1TUV3zzJ3+vj78vlwKRzUgVDlW4jiSOeDA==
@@ -16229,7 +16310,7 @@ ora@^5.4.1:
     strip-ansi "^6.0.0"
     wcwidth "^1.0.1"
 
-ordered-binary@^1.0.0:
+ordered-binary@^1.0.0, ordered-binary@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/ordered-binary/-/ordered-binary-1.2.4.tgz#51d3a03af078a0bdba6c7bc8f4fedd1f5d45d83e"
   integrity sha512-A/csN0d3n+igxBPfUrjbV5GC69LWj2pjZzAAeeHXLukQ4+fytfP4T1Lg0ju7MSPSwq7KtHkGaiwO8URZN5IpLg==
@@ -22363,7 +22444,7 @@ wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
-weak-lru-cache@^1.0.0:
+weak-lru-cache@^1.0.0, weak-lru-cache@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/weak-lru-cache/-/weak-lru-cache-1.2.2.tgz#fdbb6741f36bae9540d12f480ce8254060dccd19"
   integrity sha512-DEAoo25RfSYMuTGc9vPJzZcZullwIqRDSI9LOy+fkCJPi6hykCnfKaXTuPBDuXAUcqHXyOgFtHNp/kB2FjYHbw==

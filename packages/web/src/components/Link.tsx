@@ -29,7 +29,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
         scrollToElem(to)
       }
       if (openNewTab) {
-        window.open(to, '_blank')
+        window?.open?.(to, '_blank')
       }
     }
   }

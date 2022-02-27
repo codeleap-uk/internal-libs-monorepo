@@ -29,7 +29,7 @@ module.exports = {
     },
     `gatsby-plugin-tsconfig-paths`,
     'gatsby-plugin-emotion',
-    'gatsby-plugin-image', 
+    'gatsby-plugin-image',
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-sitemap',
     {
@@ -38,8 +38,25 @@ module.exports = {
         icon: 'src/images/codeleap_logo_white.png',
       },
     },
-    'gatsby-plugin-mdx',
     'gatsby-transformer-remark',
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        decks: [],
+        defaultLayouts: {
+          default: require.resolve('./src/components/DocLayout.tsx'),
+        },
+        extensions: ['.mdx', '.md'],
+      },
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'articles',
+        path: `${__dirname}/src/articles`,
+        ignore: ['**/.tsx*'],
+      },
+    },
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     {

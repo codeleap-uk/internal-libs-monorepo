@@ -99,7 +99,7 @@ const themeObj = {
       },
     },
   },
-  initialTheme: localStorage.getItem('codeleap.theme') || 'light',
+  initialTheme: window?.localStorage?.getItem('codeleap.theme') || 'light',
 } as const
 
 const appTheme = createTheme(themeObj, {
