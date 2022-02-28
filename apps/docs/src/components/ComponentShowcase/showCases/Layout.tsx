@@ -10,6 +10,7 @@ import {
   Button,
   api,
   Touchable,
+  List,
 } from '@/app'
 import { useAppSelector } from '@/redux'
 
@@ -67,7 +68,7 @@ const ContentViewShowcase = {
 }
 const FlatListShowcase = {
   render: () => {
-    const { posts, loading } = useAppSelector((store) => store.Posts)
+    const { posts, loading, error } = useAppSelector((store) => store.Posts)
 
     onMount(() => {
       Posts.getData()
@@ -76,15 +77,15 @@ const FlatListShowcase = {
     return (
       <ContentView
         variants={['column', 'alignStart', 'full']}
-        placeholderMsg='adsad'
+        placeholderMsg={error?.message || 'Fetching data...'}
         loading={loading}
       >
-        <FlatList data={posts} getSize={() => 100} renderItem={PostCard} />
+        <List data={posts} getSize={(item) => 130} renderItem={({ item, style }) => <PostCard post={item} style={style}/>} />
       </ContentView>
     )
   },
 
-  styleSheet: variants.FlatList,
+  styleSheet: {},
 }
 
 const TouchableShowcase = {

@@ -1,4 +1,4 @@
-import { React, Button, Modal, Text, LocalStorageKeys } from '@/app'
+import { Button, Text, LocalStorageKeys, React } from '@/app'
 import { AppStatusOverlay, Page } from '@/components'
 import { AppStatus, Session, useAppSelector } from '@/redux'
 import { onMount, onUpdate, useComponentStyle } from '@codeleap/common'
@@ -55,12 +55,14 @@ const ListItem = ({ item, depth = 2, styles }) => {
       <View
         variants={[
           'column',
-          `marginLeft:${depth}` as any,
           'paddingVertical:2',
           'justifySpaceBetween',
+          `marginLeft:${depth}` as any,
           'flex',
-
         ]}
+        responsiveVariants={{
+          small: [`marginLeft:0`],
+        }}
 
       >
         <Text text={item.name} variants={['h3']} />
@@ -76,8 +78,8 @@ const ListItem = ({ item, depth = 2, styles }) => {
       variants={['alignCenter', 'padding:2', 'flex', 'marginVertical:1']}
       css={styles.link}
     >
-      <View variants={['column']}>
-        <Text text={item.name} variants={['h3']} />
+      <View variants={['column', 'marginVertical:2']}>
+        <Text text={item.name} variants={['h3', 'marginBottom:2']} />
         <Text text={item.description} />
       </View>
       <Button
@@ -97,9 +99,14 @@ const componentStyle = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
-    minHeight: '100vh',
+    minHeight: '80vh',
+    ...theme.spacing.paddingVertical(8),
+    ...theme.spacing.marginBottom(9),
     width: '100vw',
     flexDirection: 'column',
+    [theme.media.down('small')]: {
+      gridTemplateColumns: 'repeat(1, 1fr)',
+    },
   },
 }), false)
 
@@ -131,9 +138,7 @@ const IndexPage: React.FC = () => {
         {links.map((l) => (
           <ListItem item={l} key={l.name} styles={styles}/>
         ))}
-        <Button text={variantProvider.theme.theme} onPress={() => {
-          variantProvider.setColorScheme(variantProvider.theme.theme === 'dark' ? 'light' : 'dark')
-        }}/>
+
       </View>
     </Page>
   )

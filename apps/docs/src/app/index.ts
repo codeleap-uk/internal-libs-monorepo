@@ -1,5 +1,3 @@
-import {useState, useRef} from 'react'
-import * as React from 'react'
 export * from './Settings'
 export * from './components'
 export * from './logger'
@@ -9,6 +7,7 @@ export * from './api'
 export type { AppIcon } from './assets/icons'
 import * as AppComponents from '../components'
 import LibComponents from './components'
+import React from 'react'
 
 export const allComponents = {
   ...LibComponents,
@@ -46,4 +45,6 @@ export const {
 
 } = allComponents
 
-export { React, useState, useRef  }
+export {
+  React,
+}

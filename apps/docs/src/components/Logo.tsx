@@ -1,5 +1,5 @@
 import { Theme, Image, React, variantProvider, Touchable, Settings } from '@/app'
-import { onUpdate, useState } from '@codeleap/common'
+import { onUpdate, useCodeleapContext, useState } from '@codeleap/common'
 import { Session } from '@/redux'
 
 type LogoProps = {
@@ -9,7 +9,10 @@ type LogoProps = {
 }
 
 export function Logo(props: LogoProps) {
-  const source = props.variants?.includes('black') ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
+
+  const { currentTheme } = useCodeleapContext()
+
+  const source = (props.variants?.includes('black') || currentTheme === 'light') ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
 
   const [numberOfPresses, setPresses] = useState(0)
 

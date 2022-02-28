@@ -14,3 +14,6 @@ const middlewares:LoggerTypes.LoggerMiddleware[] = [
 ]
 
 export const logger = new Logger(Settings, middlewares, AppAnalytics)
+
+// @ts-ignore
+global.logger = logger

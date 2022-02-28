@@ -24,19 +24,21 @@ const initialState: PostState = {
 }
 
 export const postsSlice = createSlice({
-  name: 'posts',
+  name: 'Posts',
   initialState,
   reducers: {},
   asyncReducers: {
     getData: async (state, setState) => {
       setState({ loading: true })
       api
-        .get('/')
+        .get('careers/')
         .then(({ data }) => {
           setState({ loading: false, posts: data.results })
         })
-        .catch(() => {
+        .catch((e) => {
+          logger.error('Error fetching posts', e, 'API')
           setState({
+            loading: false,
             error: {
               message: 'Error fetching data',
             },

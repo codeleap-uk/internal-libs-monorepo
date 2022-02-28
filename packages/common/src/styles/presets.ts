@@ -17,6 +17,9 @@ export const defaultPresets = {
   absolute: {
     position: 'absolute',
   },
+  relative: {
+    position: 'relative',
+  },
   fixed: {
     position: 'fixed',
   },

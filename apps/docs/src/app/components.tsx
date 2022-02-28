@@ -20,6 +20,7 @@ import { AppDrawerStyles } from './stylesheets/Drawer'
 import { AppOverlayStyles } from './stylesheets/Overlay'
 import { AppCenterWrapperStyles } from './stylesheets/CenterWrapper'
 import { AppRadioInputStyles } from './stylesheets/RadioInput'
+import { AppCheckboxStyle } from './stylesheets/Checkbox'
 
 const defaultStyles = variantProvider.getDefaultVariants()
 
@@ -36,6 +37,8 @@ export const variants = {
   MobileSelect: AppSelectStyles,
   MyComponent: MyComponentStyle,
   RouterPage: AppRouterPageStyles,
+  Checkbox: AppCheckboxStyle,
+  Select: AppSelectStyles,
 }
 
 const components = variantProvider.typeComponents({

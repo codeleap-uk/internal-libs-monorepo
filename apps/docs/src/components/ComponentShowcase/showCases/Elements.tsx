@@ -13,7 +13,6 @@ import {
   Avatar,
   Tooltip,
   RouterPage,
-  Menu,
 } from '@/app'
 import { allIcons, iconOptions } from './shared'
 import { AvatarStyles } from '@/app/stylesheets/Avatar'
@@ -70,7 +69,7 @@ const ButtonShowcase = {
 const IconShowcase = {
   render: ({ controlValues }) => {
     return (
-      <View css={{ zIndex: 10 }}>
+      <View css={{ zIndex: 10, flexWrap: 'wrap' }}>
         {Object.entries(allIcons).map(([name, value]) => (
           <Tooltip
             position='bottom'
@@ -100,8 +99,8 @@ const IconShowcase = {
     )
   },
   controls: {
-    color: variantProvider.theme.colors.primary,
-    size: '24',
+    color: variantProvider.theme.colors.light.primary,
+    size: '24px',
   },
   styleSheet: variants.Icon,
 }
@@ -115,28 +114,34 @@ const TextShowcase = {
 }
 const ImageShowcase = {
   render: ({ variants }) => {
-    return <Image source='icon.png' variants={variants} />
+    return <Image source='codeleap_logo_white.png' variants={variants} />
   },
   styleSheet: variants.Image,
 }
 
 const AvatarShowcase = {
-  render: ({ variants }) => {
+  render: ({ variants, controlValues }) => {
     const [file, setFile] = useState(null)
 
     function imageChange(args) {
-      setFile(args.preview)
+      setFile(args?.preview || null)
     }
+
+    const [first_name, last_name] = (controlValues?.name?.split(' ') || ['', ''])
 
     return (
       <Avatar
-        profile={{ avatar: null, firstName: 'Joao' }}
+        profile={controlValues.hasProfile ? { avatar: file, first_name, last_name } : null}
         variants={variants}
         onChange={imageChange}
       />
     )
   },
   styleSheet: AvatarStyles,
+  controls: {
+    name: 'John Doe',
+    hasProfile: true,
+  },
 }
 
 const ToastShowcase = {

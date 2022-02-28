@@ -57,5 +57,11 @@ export const AppTextStyles = {
       textDecoration: 'none',
     },
   })),
+  underlined: createTextStyle((theme) => ({
+    ...defaultStyles.default(theme),
+    text: {
+      textDecoration: 'underline',
+    },
+  })),
 
 }

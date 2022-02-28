@@ -163,6 +163,7 @@ export const spacingVariants = [
 export type SpacingVariants = typeof spacingVariants[number]
 
 export type SpacingMultiplier =
+  | '0'
   | '1'
   | '2'
   | '3'
@@ -180,6 +181,7 @@ export type SpacingMultiplier =
 export type Spacing =
   | `padding${SpacingVariants}:${SpacingMultiplier}`
   | `margin${SpacingVariants}:${SpacingMultiplier}`
+  | `gap:${SpacingMultiplier}`
 
 export type BaseViewProps = {
   css?: any

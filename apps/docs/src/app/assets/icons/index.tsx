@@ -21,9 +21,8 @@ export const iconImages = {
   arrowForward: ReactIcons.IoArrowForward,
   arrowBack: ReactIcons.IoArrowBack,
   // selectArrow: VectorIcon('select-arrows', EntypoIcons),
-
-  // 'input-visiblity:visible': VectorIcon('eye', FeatherIcons),
-  // 'input-visiblity:hidden': VectorIcon('eye-off', FeatherIcons),
+  'input-visiblity:visible': ReactIcons.IoMdEye,
+  'input-visiblity:hidden': ReactIcons.IoMdEyeOff,
   image: ReactIcons.MdImage,
   close: ReactIcons.MdClose,
   // cloud: VectorIcon('cloud', FeatherIcons),
@@ -35,7 +34,11 @@ export const iconImages = {
   // 'network-on': VectorIcon('wifi-check', MaterialCommunityIcons),
   // 'network-off': VectorIcon('wifi-off', MaterialCommunityIcons),
   // 'bug': VectorIcon('bug', MaterialCommunityIcons),
+  darkMode: ReactIcons.MdDarkMode,
+  lightMode: ReactIcons.MdLightMode,
   edit: ReactIcons.MdEdit,
+  menu: ReactIcons.MdMenu,
+  user: ReactIcons.FaUser,
   // 'notifications': VectorIcon('notifications', Ionicons),
 }
 

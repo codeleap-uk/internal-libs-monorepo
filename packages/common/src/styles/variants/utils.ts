@@ -43,7 +43,7 @@ export function applyVariants({
   variantName,
 }: ApplyVariantsArgs) {
   if (!styles[variantName]) {
-    if (variantName.startsWith('padding') || variantName.startsWith('margin')) {
+    if (variantName.startsWith('padding') || variantName.startsWith('margin') || variantName.startsWith('gap')) {
       const [spacingFunction, multiplier] = variantName.split(':')
       let arg: number | string = Number(multiplier)
       if (Number.isNaN(arg)) {

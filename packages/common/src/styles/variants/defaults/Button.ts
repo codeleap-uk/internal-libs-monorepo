@@ -95,6 +95,7 @@ export const ButtonStyles = {
       ...theme.presets.center,
       height: null,
       width: null,
+      color: theme.colors.icon,
     },
     leftIcon: {
       ...theme.spacing.marginRight(0),

@@ -9,15 +9,15 @@
     ],
     "nohoist": [
       "**/react-native",
+      "**/*react-native*",
+      "**/*react-native*/**",
       "**/react-native/**",
       "**/@react-native-firebase/**",
       "**/@react-native-firebase/auth",
       "**/@react-native-firebase/auth/**",
       "**/@react-native-firebase/app",
       "**/@react-native-firebase/app/**",
-      "**/*react-native*",
-      "**/react",
-      "**/*react-native*/**",
+      "mobile-template/react",
       "**/react-native-image-crop-picker/**",
       "**/react-native-image-crop-picker",
       "**/@react-navigation/bottom-tabs",
@@ -49,7 +49,7 @@
     "dev:packages-yarn": "yarn dev:yarn-run-build && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn dev:yarn-run-build\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules",
+    "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules apps/docs/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules",
     "clear:dist": "rm -rf packages/cli/dist packages/common/dist packages/mobile/dist packages/web/dist"
   },
   "devDependencies": {

@@ -44,6 +44,7 @@ export const WebModalStyles = {
 
         transition: `opacity ${transitionDuration} ease`,
       },
+
     }
   }),
 }

@@ -5,6 +5,7 @@ import {
   IconPlaceholder,
   ModalComposition,
   ModalStyles,
+  onUpdate,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { jsx } from '@emotion/react'
@@ -61,6 +62,15 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     variants,
     styles,
   })
+
+  onUpdate(() => {
+    if (visible) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+
+    }
+  }, [visible])
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Escape') {

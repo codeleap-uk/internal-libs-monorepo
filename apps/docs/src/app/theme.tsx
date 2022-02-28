@@ -2,6 +2,7 @@ import { AppTheme, createTheme, VariantProvider } from '@codeleap/common'
 import { textStyles } from './textStyles'
 import { CSSObject } from '@emotion/css'
 import { Icons } from './assets/icons'
+import { useWindowSize } from '@codeleap/web'
 
 const getWindowDimensions = () => {
   return {
@@ -14,11 +15,11 @@ const themeObj:AppTheme = {
   colors: {
     light: {
       primary: '#7695EC',
-      icon: '#fff',
+      icon: '#000',
       border: '#7695EC',
       disabled: '#a4aabc',
       text: '#000000',
-      background: '#fff',
+      background: '#ffffff',
       backgroundSecondary: '#fff',
       gray: '#333',
       lightGrey: '#ccc',
@@ -29,7 +30,7 @@ const themeObj:AppTheme = {
       black: '#000',
       borders: '#ccc',
       placeholder: '#ccc',
-      neutral: '#ccc',
+      neutral: '#5f5f5f',
       white: '#fff',
       green: 'green',
       textH: '#333',
@@ -42,7 +43,7 @@ const themeObj:AppTheme = {
       border: '#7695EC',
       disabled: '#a4aabc',
       text: '#fff',
-      background: '#222',
+      background: '#222222',
       backgroundSecondary: '#303030',
       gray: '#333',
       neutral: '#777777bb',
@@ -126,7 +127,7 @@ const themeObj:AppTheme = {
 } as const
 
 const appTheme = createTheme(themeObj, {
-  screenSize: () => Object.values(getWindowDimensions()),
+  screenSize: useWindowSize,
 })
 
 const styleGetter = (

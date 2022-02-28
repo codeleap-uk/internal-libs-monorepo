@@ -43,6 +43,7 @@ export function createTheme<T extends ThemeValues>(
       base: values.spacing,
       ...spacingFactory(values.spacing, 'padding'),
       ...spacingFactory(values.spacing, 'margin'),
+      ...spacingFactory(values.spacing, 'gap'),
     },
     border: createBorderHelpers(values, isBrowser, initialTheme),
     presets: {

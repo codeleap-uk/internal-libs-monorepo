@@ -35,15 +35,13 @@ const FileInputShowcase = {
           onPress={() => fileInputRef.current.openFilePicker()}
         />
         {images.map((url, idx) => (
-          <Image source={url} key={idx} css={{ height: 100, width: 100 }} />
+          <Image source={url} key={idx} css={{ height: 100, width: 100 }} type='dynamic' />
         ))}
       </Fragment>
     )
   },
   styleSheet: variants.FileInput,
-  controls: {
-    icon: iconOptions,
-  },
+
 }
 const TextInputShowcase = {
   render: ({ variants, controlValues }) => {
@@ -117,9 +115,6 @@ const CheckboxShowcase = {
     )
   },
   styleSheet: variants.Checkbox,
-  controls: {
-    icon: iconOptions,
-  },
 }
 
 const SelectShowcase = {

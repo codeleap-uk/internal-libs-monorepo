@@ -15,6 +15,7 @@ const defaultVariant = createButtonVariant((theme) => ({
   },
   icon: {
     ...defaultStyle.default(theme).icon,
+    color: theme.colors.white,
     size: 22,
 
   },
@@ -35,14 +36,18 @@ export const AppButtonStyle = {
     ...defaultVariant(theme),
     wrapper: {
       ...defaultVariant(theme).wrapper,
-      backgroundColor: theme.colors.gray,
+      backgroundColor: theme.colors.neutral,
     },
   })),
   text: createButtonVariant((theme) => ({
     ...defaultStyle.default(theme),
     wrapper: {
       ...defaultStyle.default(theme).wrapper,
+
       backgroundColor: 'rgba(0,0,0,0)',
+      '&:hover': {
+        backgroundColor: 'rgba(0,0,0,0)',
+      },
     },
     text: {
       color: theme.typography.pColor,

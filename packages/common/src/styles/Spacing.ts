@@ -21,6 +21,13 @@ export function spacingFactory<T extends string>(
     `${property}${v}`,
     (n: number | string) => {
       const value = typeof n === 'string' ? n : base * n
+
+      if (property === 'gap') {
+        return {
+          gap: value,
+        }
+      }
+
       switch (v) {
         case 'Horizontal':
           return {

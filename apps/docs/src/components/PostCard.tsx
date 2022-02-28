@@ -1,5 +1,6 @@
 import { Text, Theme, View, React, Icon, Touchable, variantProvider } from '@/app'
 import { Post } from '@/redux'
+import { useComponentStyle } from '@codeleap/common'
 import moment from 'moment'
 
 type PostCardProps = {
@@ -19,11 +20,12 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
   } = post
 
   const date = moment(created_datetime).format('Do of MMM YY')
+  const styles = useComponentStyle(componentStyles)
 
   return (
     <View
       variants={['column', 'fullWidth']}
-      style={[style, styles.wrapper]}
+      css={style}
     >
       <View style={styles.innerWrapper}>
         <View variants={['row', 'justifySpaceBetween']}>
@@ -57,15 +59,14 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
 
 export default PostCard
 
-const styles = variantProvider.createComponentStyle({
-  wrapper: {
-  },
+const componentStyles = variantProvider.createComponentStyle((theme) => ({
   innerWrapper: {
-    marginHorizontal: Theme.spacing.value(2),
-    marginBottom: Theme.spacing.value(2),
-    padding: Theme.spacing.value(2),
-    borderRadius: Theme.borderRadius.medium,
-    backgroundColor: Theme.colors.white,
-    ...Theme.presets.elevated,
+    marginHorizontal: theme.spacing.value(2),
+    marginBottom: theme.spacing.value(2),
+    padding: theme.spacing.value(2),
+    borderRadius: theme.borderRadius.medium,
+    backgroundColor: theme.colors.backgroundSecondary,
+    ...theme.presets.elevated,
+    ...theme.presets.column,
   },
-})
+}))

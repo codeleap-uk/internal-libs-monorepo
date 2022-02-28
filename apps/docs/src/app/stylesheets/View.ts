@@ -15,4 +15,15 @@ export const AppViewStyles = {
     },
   })),
 
+  separator: createViewStyle((theme) => ({
+    ...defaultStyles.default(theme),
+    wrapper: {
+      ...defaultStyles.default(theme).wrapper,
+      ...theme.border.border({
+        width: 2,
+        directions: ['top'],
+      }),
+    },
+  })),
+
 }
