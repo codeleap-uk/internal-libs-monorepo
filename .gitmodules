@@ -2,6 +2,3 @@
 [submodule "apps/mobile"]
 	path = apps/mobile
 	url = ../mobile-template.git
-[submodule "apps/web"]
-	path = apps/web
-	url = ../new-web-template.git
