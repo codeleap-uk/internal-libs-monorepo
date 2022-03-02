@@ -1,0 +1,54 @@
+---
+path: 'styling'
+title: 'Styling Basics'
+date: '2022-02-22'
+category: 'Concepts'
+module: 'concepts'
+---
+
+At Codeleap, we use a styling system which aims to provide a fast development experience without compromising quality or flexibility. The base of this system is the concept of *variants*.
+
+Variants can be described as a set of styles for a component's *composition* (it's internal components). For instance, a simple Button component can be broken down into it's Wrapper, Text, and Icon. These three elements make up the Button's composition. 
+
+A *variant* of such a Button will modify one or more of the composition's elements, resulting in a different style which can be applied to the Button by referencing it's name in the variants prop.
+
+```javascript
+const ButtonStyles = {
+    default: {
+        text: {
+            color: 'red'
+        },
+        wrapper: {
+            backgroundColor: 'white',
+        }
+    },
+    dark: {
+        wrapper: {
+            backgroundColor: 'black',
+        },
+    }
+}
+```
+
+In the above example, de `default` variant is defined with a `red` color for the text, and `white` for the wrapper (effectively the background).
+
+The `dark` variant modifies the background to be `black`.
+
+When we render our Button component without specifying any variants, like so:
+
+```jsx
+<Button text='Default'/>
+```
+
+This is the result:
+
+<button style={{backgroundColor: 'white', color:'red'}}>Default</button>
+
+But once the `dark` variant is applied: 
+
+```jsx
+<Button text='Dark' variants={['dark']} />
+```
+<button style={{backgroundColor: 'black', color:'red'}}>Dark</button>
+
+Notice only the background has changed. That's because every variant inherits de default variant's style.

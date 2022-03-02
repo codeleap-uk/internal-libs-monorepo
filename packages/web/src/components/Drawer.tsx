@@ -4,6 +4,7 @@ import {
   DrawerComposition,
   DrawerStyles,
   IconPlaceholder,
+  onUpdate,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
@@ -70,6 +71,14 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
     styles,
     animationDuration = '0.3s',
   } = rawProps
+
+  onUpdate(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }, [open])
 
   const [hiddenStyle, axis, positioning] =
     resolveHiddenDrawerPosition(position)

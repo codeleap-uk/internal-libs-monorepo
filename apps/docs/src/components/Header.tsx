@@ -5,39 +5,36 @@ import { onUpdate, useBooleanToggle, useCodeleapContext, useComponentStyle } fro
 import { AppStatus, useAppSelector } from '@/redux'
 import { Avatar } from './Avatar'
 import { AuthModal } from './AuthModal'
-import { useNavigate } from '@reach/router'
 import { navigate } from 'gatsby'
+
 const navItems = [
   {
-    name: 'Components',
-    url: '/components',
+    name: 'Common',
+    url: '/common/introduction',
   },
   {
-    name: 'CRUD Example',
-    url: '/crudexample',
+    name: 'Web',
+    url: '/web/introduction',
   },
   {
-    name: 'About',
-    url: '/about',
+    name: 'Mobile',
+    url: '/mobile/introduction',
+  },
+  {
+    name: 'CLI',
+    url: '/cli/introduction',
   },
 ]
 
-const NavButton = (buttonProps) => {
-  const { url, text, ...props } = buttonProps
-
-  return <Link to={url} {...props}>
-    <Button
-      text={text}
-      onPress={() => {}}
-      variants={['neutral']}
-      responsiveVariants={{
-        small: ['list'],
-      }}
-    />
-  </Link>
+const ViewWrapper = ({ styles, children }) => {
+  return <View css={styles.wrapper}>
+    <View css={styles.innerWrapper}>
+      {children}
+    </View>
+  </View>
 }
 
-export const Header = () => {
+export const Header = ({ center = true, children = null }) => {
   const { currentTheme } = useCodeleapContext()
   const { isLoggedIn, profile } = useAppSelector(store => store.Session)
   const styles = useComponentStyle(componentStyles)
@@ -67,12 +64,16 @@ export const Header = () => {
   }, [drawerOpen, isMobile])
 
   const NavComponent = isMobile ? Drawer : View
+  const WrapperComponent = center ? CenterWrapper : ViewWrapper
 
   return <>
-    <CenterWrapper styles={{ innerWrapper: styles.wrapper, wrapper: styles.floatingHeader }}>
+    <WrapperComponent styles={{ innerWrapper: styles.wrapper, wrapper: styles.floatingHeader }}>
       <Link to={'/'} css={styles.logoWrapper}>
         <Logo variants={currentTheme === 'dark' ? 'white' : 'black'} style={styles.logo}/>
       </Link>
+
+      {children}
+
       <NavComponent styles={{
         box: styles.nav,
 
@@ -132,7 +133,7 @@ export const Header = () => {
           />
         )
       }
-    </CenterWrapper>
+    </WrapperComponent>
     <AuthModal/>
   </>
 }
@@ -140,9 +141,10 @@ export const Header = () => {
 const componentStyles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     ...theme.presets.row,
+    ...theme.presets.justifySpaceBetween,
     ...theme.presets.alignCenter,
     ...theme.spacing.padding(1),
-
+    ...theme.presets.flex,
   },
   logo: {
     width: 140,

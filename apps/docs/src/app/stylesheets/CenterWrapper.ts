@@ -13,4 +13,7 @@ export const AppCenterWrapperStyles = {
       ...defaultStyles.default(theme).wrapper,
     },
   })),
+  noCenter: createCenterWrapperStyle((theme) => ({
+
+  })),
 }

@@ -39,6 +39,7 @@ export const variants = {
   RouterPage: AppRouterPageStyles,
   CenterWrapper: AppCenterWrapperStyles,
   Checkbox: AppCheckboxStyle,
+  Drawer: AppDrawerStyles,
   Select: AppSelectStyles,
 }
 

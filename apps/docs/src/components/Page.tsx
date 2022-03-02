@@ -43,7 +43,7 @@ export const Page: React.FC<PageProps> = (props) => {
   return (
     <View variants={['column']} css={[styles.wrapper, !center && centerWrapperProps?.styles?.wrapper]} className={className}>
       {!withRouter && <Helmet>{title && <title>{title} {appendNameToTitle ? ` | ${Settings.AppName}` : ''}</title>}</Helmet>}
-      {header && <Header />}
+      {header && <Header center={center}/>}
       {center ? (
         <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>
       ) : (

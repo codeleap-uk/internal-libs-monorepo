@@ -1,4 +1,5 @@
 import { ButtonComposition, getActivityIndicatorBaseStyles } from '@codeleap/common'
+import { Theme } from '..'
 import { variantProvider } from '../theme'
 
 const defaultStyle = variantProvider.getDefaultVariants('Button')
@@ -118,6 +119,22 @@ export const AppButtonStyle = {
       textAlign: 'center',
     },
   })),
+  icon: createButtonVariant((theme) => ({
+    ...defaultStyle.icon(theme),
+    icon: {
+      ...defaultStyle.icon(theme).icon,
+      color: theme.colors.textH,
+    },
+    wrapper: {
+      ...defaultVariant(theme).wrapper,
+      ...defaultStyle.icon(theme).wrapper,
+      ...theme.spacing.padding(1),
+      '&:hover': {
+        backgroundColor: theme.colors.grayFade,
+      },
+
+    },
+  })),
   'list:selected': createButtonVariant((theme) => ({
     wrapper: {
       backgroundColor: theme.colors.primary,
@@ -144,14 +161,6 @@ export const AppButtonStyle = {
       ...defaultVariant(theme).text,
       color: theme.colors.primary,
 
-    },
-  })),
-  'list:first': createButtonVariant((theme) => ({
-    wrapper: {
-      backgroundColor: theme.colors.background,
-      borderRadius: 0,
-      borderTopWidth: theme.values.pixel,
-      borderTopColor: theme.colors.borders,
     },
   })),
 
@@ -199,6 +208,30 @@ export const AppButtonStyle = {
       '&:hover': {
         color: theme.colors.primary,
       },
+    },
+  })),
+  categoryButton: createButtonVariant((theme) => ({
+    // ...defaultVariant(theme),
+    wrapper: {
+      // ...defaultVariant(theme).wrapper,
+      backgroundColor: 'transparent',
+      transition: 'background-color 0.2s ease',
+      borderRadius: 0,
+      ...theme.presets.alignSelfStretch,
+      '&:hover': {
+        backgroundColor: Theme.colors[theme.theme == 'light' ? 'dark' : 'light'].background + '22',
+      },
+    },
+    text: {
+      ...defaultVariant(theme).text,
+      color: theme.colors.textH,
+      textTransform: 'capitalize',
+
+    },
+    rightIcon: {
+      ...defaultVariant(theme).rightIcon,
+      color: theme.colors.textH,
+      transition: 'transform 0.2s ease',
     },
   })),
 }

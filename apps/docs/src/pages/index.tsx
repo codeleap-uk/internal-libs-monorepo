@@ -20,24 +20,34 @@ export const Overlays = () => {
 
 const links = [
   {
-    url: '/components',
-    name: 'Playground',
+    url: '/concepts/index',
+    name: 'Fundamentals',
     description:
-      'Playground for testing components',
+      'Fundamental design principles and motivation for creating this framework, along with platform agnostic environment setup',
   },
   {
-    name: 'Explore',
+    name: 'Modules',
     links: [
       {
-        url: '/crudexample',
-        name: 'Crud Example',
+        url: '/common/introduction',
+        name: '@codeleap/common',
         description:
-          'Example CRUD',
+          'The library that provides APIs for building portable and modular code on both platforms',
       },
       {
-        url: '/docs/styling',
-        name: 'About',
-        description: 'Introduction to variants and composing styles',
+        url: '/web/introduction',
+        name: '@codeleap/web',
+        description: 'Components and hooks for building awesome websites',
+      },
+      {
+        url: '/mobile/introduction',
+        name: '@codeleap/mobile',
+        description: 'Components and utilities for creating bleeding edge iOS and Android apps',
+      },
+      {
+        url: '/cli/introduction',
+        name: '@codeleap/cli',
+        description: 'Tools for organized and efficient project management',
       },
     ],
   },

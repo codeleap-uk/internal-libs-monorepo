@@ -17,8 +17,10 @@ import {
   MdLightMode,
   MdEdit,
   MdMenu,
+  MdKeyboardArrowLeft,
   MdCheck,
   MdAdd,
+  MdContentCopy,
 } from 'react-icons/md'
 import {
   FaGoogle,
@@ -50,6 +52,7 @@ export const iconImages = {
   'input-visiblity:visible': IoMdEye,
   'input-visiblity:hidden': IoMdEyeOff,
   image: MdImage,
+  chevronLeft: MdKeyboardArrowLeft,
   close: MdClose,
   add: MdAdd,
   darkMode: MdDarkMode,
@@ -57,7 +60,7 @@ export const iconImages = {
   edit: MdEdit,
   menu: MdMenu,
   user: FaUser,
-
+  copy: MdContentCopy,
 }
 
 export const RenderIcon = ({ path, name = '', style = {}, log }:any) => {

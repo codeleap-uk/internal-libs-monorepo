@@ -38,6 +38,7 @@ exports.createPages = async ({ graphql, actions }) => {
             frontmatter {
               path
               title
+              module
    
             }
           }
@@ -48,10 +49,11 @@ exports.createPages = async ({ graphql, actions }) => {
   if (data) {
     data.allMdx.edges.forEach(({ node }) => {
       createPage({
-        path: `/docs/${node.frontmatter.path}`,
+        path: `/${node.frontmatter.module}/${node.frontmatter.path}`,
         component: node.fileAbsolutePath,
         context: {
           pagePath: node.frontmatter.path,
+          module: node.frontmatter.module,
         },
       })
     })

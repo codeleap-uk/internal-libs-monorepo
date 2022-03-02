@@ -7,17 +7,32 @@ export const globalStyle = css`
     box-sizing: border-box;
   }
   /* #___gatsby,
-  #gatsby-focus-wrapper {
-    height: 100vh;
-    min-height: 100vh;
-    background-color: ${Theme.colors.b};
-    overflow-x: hidden;
-  }
+    #gatsby-focus-wrapper {
+      height: 100vh;
+      min-height: 100vh;
+      background-color: ${Theme.colors.b};
+      overflow-x: hidden;
+    }
   */
   ::-webkit-scrollbar {
     width: 5px;
   }
   
+  .code_style {
+    align-self: stretch;
+    padding: 20px;
+    border-radius: 5px;
+    position: relative;
+  }
+
+  .code_copy_btn {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+  }
+
+  .code_style:hover > .code_copy_btn{
+    opacity: 1;
+  }
   
 `
 

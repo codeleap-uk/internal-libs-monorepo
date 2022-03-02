@@ -19,7 +19,7 @@ const themeObj = {
       border: '#7695EC',
       disabled: '#a4aabc',
       text: '#000000',
-      background: '#f5f5f5',
+      background: '#ffffff',
       backgroundSecondary: '#fff',
       gray: '#333',
       lightGrey: '#ccc',
@@ -104,7 +104,7 @@ const themeObj = {
   values: {
     ...getWindowDimensions(),
 
-    headerHeight: 48,
+    headerHeight: 56,
     navBarHeight: 100,
     buttons: {
       small: {

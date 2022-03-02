@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/browser'
 const ENV = process.env.NODE_ENV as AppSettings['Environment']['Type']
 
 export const Settings: AppSettings = {
-  AppName: 'Codeleap',
+  AppName: 'Codeleap Docs',
   CompanyName: 'Example Ltd.',
   Description: 'This is a template',
   Environment: {

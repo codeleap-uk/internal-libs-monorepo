@@ -65,7 +65,7 @@ export const textStyles = {
       max: 20,
       min: 16,
       viewport: 1,
-      multiplier: 0.1,
+      multiplier: 0.2,
     },
     weigth: 400,
   },

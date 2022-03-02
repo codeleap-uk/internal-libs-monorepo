@@ -77,8 +77,17 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
       </Touchable>
     </>
   } else {
-    return <Button onPress={() => onPress?.()} variants={['icon']} css={variantStyles.general}>
-      <AvatarImage />
-    </Button>
+
+    if (!!profile) {
+      return <Touchable onPress={() => onPress?.()} css={{ cursor: 'pointer' }}>
+        <AvatarImage />
+
+      </Touchable>
+    } else {
+      return <Button onPress={() => onPress?.()} variants={['icon']} css={variantStyles.general}>
+        <AvatarImage />
+      </Button>
+
+    }
   }
 }
