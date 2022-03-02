@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /** @jsx jsx */
-import {jsx} from '@emotion/react'
+import { jsx } from '@emotion/react'
 import { View, Image, Text, CenterWrapper, Link, Theme } from '@/app'
 
 import { variantProvider } from '@/app/theme'
@@ -11,8 +11,9 @@ import { FaFacebookSquare, FaLinkedin } from 'react-icons/fa'
 
 import { format } from 'date-fns'
 import { useComponentStyle } from '@codeleap/common'
+import { Logo } from './Logo'
 
-type FooterProps = any;
+type FooterProps = any
 
 const linksA = [
   { text: 'HOME', to: '/#' },
@@ -29,7 +30,7 @@ const linksB = [
 ]
 
 function renderLinkCol(arr) {
-  
+
   const links = arr.map(({ to, text }, index) => {
     return (
       <Link
@@ -45,7 +46,7 @@ function renderLinkCol(arr) {
 }
 
 function Menu() {
-  
+
   return (
     <View>
       <View css={styles.footerLinkWrapper}>
@@ -57,7 +58,7 @@ function Menu() {
 }
 
 function Disclaimers() {
-  
+
   return (
     <View css={styles.disclaimersWrapper}>
       <Text css={styles.regDetailsText}>Visit us in Camden, London, UK.</Text>
@@ -82,7 +83,7 @@ function Disclaimers() {
 
 function Contact() {
   const year = format(new Date(), 'yyyy')
-  
+
   return (
     <View css={styles.contactWrapper}>
       <Link
@@ -102,7 +103,7 @@ function Contact() {
 }
 
 function SocialMedia() {
-  
+
   return (
     <View css={styles.socialMediaWrapper}>
       <Link
@@ -124,16 +125,12 @@ function SocialMedia() {
 }
 
 export const Footer: React.FC<FooterProps> = () => {
-  
+
   return (
     <View css={styles.wrapper}>
       <CenterWrapper>
         <View css={styles.innerWrapper}>
-          <Image
-            source='codeleap_logo_white.png'
-            alt='CodeLeap'
-            css={styles.logoImage}
-          />
+          <Logo style={styles.logoImage} variants={['white']}/>
           <View up={'mid'} variants={['column', 'flex']}>
             <View css={styles.innerWrapperRow}>
               <Menu />
@@ -160,7 +157,8 @@ export const Footer: React.FC<FooterProps> = () => {
 
 const styles = variantProvider.createComponentStyle({
   wrapper: {
-    zIndex: Theme.values.zIndex.footer,
+    position: 'relative',
+    zIndex: 1,
     display: 'flex',
     color: '#bd1738',
     backgroundColor: Theme.colors.light.primary,
@@ -260,8 +258,9 @@ const styles = variantProvider.createComponentStyle({
     color: Theme.colors.light.white,
   },
   logoImage: {
-    width: 150,
+    width: 200,
     marginBottom: Theme.spacing.value(3),
+    alignSelf: 'flex-start',
   },
   mobileDisclaimers: {
     flex: 1,

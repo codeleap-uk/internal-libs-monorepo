@@ -37,6 +37,7 @@ export const variants = {
   MobileSelect: AppSelectStyles,
   MyComponent: MyComponentStyle,
   RouterPage: AppRouterPageStyles,
+  CenterWrapper: AppCenterWrapperStyles,
   Checkbox: AppCheckboxStyle,
   Select: AppSelectStyles,
 }

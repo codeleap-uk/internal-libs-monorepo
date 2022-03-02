@@ -1,33 +1,50 @@
-import { ButtonComposition } from '@codeleap/common'
+import { ButtonComposition, getActivityIndicatorBaseStyles } from '@codeleap/common'
 import { variantProvider } from '../theme'
 
 const defaultStyle = variantProvider.getDefaultVariants('Button')
 const createButtonVariant =
   variantProvider.createVariantFactory<ButtonComposition>()
 
-const defaultVariant = createButtonVariant((theme) => ({
-  ...defaultStyle.default(theme),
-  ...defaultStyle.pill(theme),
-  wrapper: {
-    ...defaultStyle.default(theme).wrapper,
-    ...defaultStyle.pill(theme).wrapper,
-    height: theme.values.buttons.default.height,
-  },
-  icon: {
-    ...defaultStyle.default(theme).icon,
-    color: theme.colors.white,
-    size: 22,
+const defaultVariant = createButtonVariant((theme) => {
 
-  },
-  loader: {
-    ...defaultStyle.default(theme).loader,
+  const loaderStyle = getActivityIndicatorBaseStyles(theme.values.buttons.default.height * 0.6)
+  return {
+    ...defaultStyle.default(theme),
+    ...defaultStyle.pill(theme),
+    wrapper: {
+      ...defaultStyle.default(theme).wrapper,
+      ...defaultStyle.pill(theme).wrapper,
+      height: theme.values.buttons.default.height,
+      justifyContent: 'center',
+    },
+    icon: {
+      ...defaultStyle.default(theme).icon,
+      color: theme.colors.white,
+      size: 22,
 
-  },
-  text: {
-    ...defaultStyle.default(theme).text,
-    color: theme.colors.white,
-  },
-}))
+    },
+    loaderWrapper: {
+      ...loaderStyle.wrapper,
+    },
+    loaderCircle: {
+      ...loaderStyle.circle,
+    },
+    loaderFrontCircle: {
+      ...defaultStyle.default(theme).loaderFrontCircle,
+      ...loaderStyle.frontCircle,
+      borderTopColor: theme.colors.white,
+    },
+    loaderBackCircle: {
+      ...defaultStyle.default(theme).loaderBackCircle,
+      ...loaderStyle.backCircle,
+      borderColor: theme.colors.white,
+    },
+    text: {
+      ...defaultStyle.default(theme).text,
+      color: theme.colors.white,
+    },
+  }
+})
 
 export const AppButtonStyle = {
   ...defaultStyle,
@@ -169,6 +186,19 @@ export const AppButtonStyle = {
   large: createButtonVariant((theme) => ({
     wrapper: {
       height: theme.values.buttons.large.height,
+    },
+  })),
+  link: createButtonVariant((theme) => ({
+    wrapper: {
+      padding: 0,
+      height: 'auto',
+    },
+    text: {
+      color: theme.colors.textH,
+      textDecoration: 'underline',
+      '&:hover': {
+        color: theme.colors.primary,
+      },
     },
   })),
 }

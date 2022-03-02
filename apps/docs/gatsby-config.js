@@ -4,15 +4,15 @@ module.exports = {
     title: 'Codeleap web template',
   },
   plugins: [
-    {
-      resolve: `gatsby-plugin-intl`,
-      options: {
-        path: `${__dirname}/src/app/intl`,
-        languages: [`en`],
-        defaultLanguage: `en`,
-        redirect: true,
-      },
-    },
+    // {
+    //   resolve: `gatsby-plugin-intl`,
+    //   options: {
+    //     path: `${__dirname}/src/app/intl`,
+    //     languages: [`en`],
+    //     defaultLanguage: `en`,
+    //     redirect: true,
+    //   },
+    // },
     {
       resolve: 'gatsby-plugin-firebase',
       options: {
@@ -42,7 +42,6 @@ module.exports = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        decks: [],
         defaultLayouts: {
           default: require.resolve('./src/components/DocLayout.tsx'),
         },

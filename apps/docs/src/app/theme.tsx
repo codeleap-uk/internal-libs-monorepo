@@ -11,7 +11,7 @@ const getWindowDimensions = () => {
   }
 }
 
-const themeObj:AppTheme = {
+const themeObj = {
   colors: {
     light: {
       primary: '#7695EC',
@@ -19,7 +19,7 @@ const themeObj:AppTheme = {
       border: '#7695EC',
       disabled: '#a4aabc',
       text: '#000000',
-      background: '#ffffff',
+      background: '#f5f5f5',
       backgroundSecondary: '#fff',
       gray: '#333',
       lightGrey: '#ccc',
@@ -120,6 +120,7 @@ const themeObj:AppTheme = {
     zIndex: {
       header: 2,
       footer: 1,
+      appStatusOverlay: 6,
 
     },
   },

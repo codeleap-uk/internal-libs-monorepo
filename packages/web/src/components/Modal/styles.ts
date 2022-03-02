@@ -1,4 +1,5 @@
 import {
+  assignTextStyle,
   createDefaultVariantFactory,
   ModalComposition,
   ModalStyles,
@@ -45,6 +46,31 @@ export const WebModalStyles = {
         transition: `opacity ${transitionDuration} ease`,
       },
 
+      title: {
+        ...assignTextStyle('h3')(theme).text,
+        ...theme.spacing.marginBottom(1),
+      },
+
+    }
+  }),
+  OSAlert: createModalStyle((theme) => {
+    const defaults = ModalStyles.default(theme)
+    return {
+      ...defaults,
+      body: {
+        ...defaults.body,
+        ...theme.presets.column,
+        ...theme.presets.alignCenter,
+        ...theme.presets.justifyCenter,
+        ...theme.spacing.padding(2),
+      },
+      footer: {
+        ...defaults.footer,
+        ...theme.presets.row,
+        ...theme.presets.justifyEnd,
+        ...theme.spacing.padding(1),
+        ...theme.spacing.gap(2),
+      },
     }
   }),
 }

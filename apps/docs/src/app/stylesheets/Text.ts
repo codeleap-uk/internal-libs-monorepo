@@ -53,14 +53,19 @@ export const AppTextStyles = {
     ...defaultStyles.default(theme),
     text: {
       ...defaultStyles.default(theme).text,
-      color: theme.colors.white,
-      textDecoration: 'none',
+
+      '&:hover': {
+        color: theme.colors.primary,
+      },
     },
   })),
   underlined: createTextStyle((theme) => ({
     ...defaultStyles.default(theme),
     text: {
       textDecoration: 'underline',
+      '&:hover': {
+        color: theme.colors.primary,
+      },
     },
   })),
 

@@ -6,4 +6,10 @@ const defaultStyles = variantProvider.getDefaultVariants('Icon')
 
 export const AppIconStyles = {
   ...defaultStyles,
+  large: createIconStyle(() => ({
+    icon: {
+      width: 50,
+      height: 50,
+    },
+  })),
 }

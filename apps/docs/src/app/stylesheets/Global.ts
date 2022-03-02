@@ -17,11 +17,31 @@ export const globalStyle = css`
   ::-webkit-scrollbar {
     width: 5px;
   }
+  
+  
+`
+
+export const globalStyleDark = css`
+  ${globalStyle}
+
   ::-webkit-scrollbar-track-piece {
-    background-color: ${Theme.colors.light.grayFade};
+    background-color:  ${Theme.colors.dark.background};
   }
+
   ::-webkit-scrollbar-thumb:vertical {
-    background-color: ${Theme.colors.light.grayFade};
+    background-color: ${Theme.colors.dark.primary};
+    border-radius: 18px;
+  } 
+`
+export const globalStyleLight = css`
+  ${globalStyle}
+
+  ::-webkit-scrollbar-track-piece {
+    background-color: ${Theme.colors.light.background};
+  }
+  
+  ::-webkit-scrollbar-thumb:vertical {
+    background-color: ${Theme.colors.light.primary};
     border-radius: 18px;
   } 
 `

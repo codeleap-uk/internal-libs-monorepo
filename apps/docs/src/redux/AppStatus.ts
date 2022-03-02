@@ -6,6 +6,7 @@ const modals = {
   test: false,
   network: false,
   debug: false,
+  auth: false,
 }
 
 export type TAppStatus = {

@@ -1,5 +1,5 @@
-import { View, variantProvider, RouterPage, CenterWrapper } from '@/app'
-import { CenterWrapperProps, url } from '@codeleap/web'
+import { View, variantProvider, RouterPage, CenterWrapper, Settings } from '@/app'
+import { CenterWrapperProps } from '@codeleap/web'
 
 import { Footer } from './Footer'
 import { Header } from './Header'
@@ -13,6 +13,8 @@ type PageProps = CenterWrapperProps & {
   title?: string
   header?:boolean
   footer?:boolean
+  appendNameToTitle?: boolean
+  className?: string
 }
 
 export const Page: React.FC<PageProps> = (props) => {
@@ -21,10 +23,11 @@ export const Page: React.FC<PageProps> = (props) => {
     center = true,
     basePath,
     title,
+    appendNameToTitle = true,
     header = true,
     footer = true,
     withRouter,
-    styles: styleOverride,
+    className,
     ...centerWrapperProps
   } = props
 
@@ -38,8 +41,8 @@ export const Page: React.FC<PageProps> = (props) => {
 
   const styles = useComponentStyle(componentStyles)
   return (
-    <View variants={['column']} css={[styles.wrapper, styleOverride?.wrapper]}>
-      {!withRouter && <Helmet>{title && <title>{title}</title>}</Helmet>}
+    <View variants={['column']} css={[styles.wrapper, !center && centerWrapperProps?.styles?.wrapper]} className={className}>
+      {!withRouter && <Helmet>{title && <title>{title} {appendNameToTitle ? ` | ${Settings.AppName}` : ''}</title>}</Helmet>}
       {header && <Header />}
       {center ? (
         <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>

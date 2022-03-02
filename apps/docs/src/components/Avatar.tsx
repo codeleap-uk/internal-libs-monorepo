@@ -1,15 +1,15 @@
 /* eslint no-restricted-imports: 'off' */
 
-import { useState, useRef } from 'react'
-import { React, View, Text, Touchable, Image, Button, FileInput, Theme, logger, Icon } from '@/app'
+import { useRef } from 'react'
+import { React, View, Text, Touchable, Image, Button, FileInput, Icon } from '@/app'
 import { FileInputRef } from '@codeleap/web'
-import { variantProvider } from '@/app'
 import { AvatarStyles } from '../app/stylesheets/Avatar'
 import {
   AvatarComposition,
   ComponentVariants,
   matchInitialToColor,
   StylesOf,
+  useDefaultComponentStyle,
   WebInputFile,
 } from '@codeleap/common'
 import { TSession } from '@/redux'
@@ -19,7 +19,7 @@ type AvatarProps = {
   profile: TSession['profile']
   onChange?: (files: WebInputFile) => void
   debugName: string
-  onPress: () => any
+  onPress?: () => any
 } & ComponentVariants<typeof AvatarStyles>
 
 export const Avatar: React.FC<AvatarProps> = (props) => {
@@ -33,9 +33,8 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
   } = props
 
   const input = useRef<FileInputRef>(null)
-  const [editImage, setEditImage] = useState(false)
 
-  const variantStyles = variantProvider.getStyles<any>(AvatarStyles, {
+  const variantStyles = useDefaultComponentStyle('Avatar', {
     variants,
     responsiveVariants,
     styles,
@@ -51,25 +50,34 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
     const hasAvatar = !!profile?.avatar
 
     if (hasAvatar) {
-      return <Image source={profile.avatar} type='dynamic'/>
+      return <Image source={profile.avatar} type='dynamic' css={variantStyles.image}/>
     } else {
 
       const backgroundColor = matchInitialToColor(profile.first_name[0])
 
-      return <View css={{ backgroundColor }}>
-        <Text variants={['h1']} text={`${profile.first_name?.[0]} ${profile?.last_name?.[0] || ''}`}/>
+      return <View css={[variantStyles.general, { backgroundColor }]}>
+        <Text css={variantStyles.text} text={`${profile.first_name?.[0]} ${profile?.last_name?.[0] || ''}`}/>
       </View>
     }
 
   }
 
   if (onChange) {
-    return <Touchable onPress={() => input.current.openFilePicker()}>
-      <FileInput onFileSelect={handleFileChange} ref={input} />
-      <AvatarImage />
-    </Touchable>
+    return <>
+      <FileInput onFileSelect={handleFileChange} ref={input}/>
+      <Touchable onPress={() => input.current.openFilePicker()}
+        css={[variantStyles.wrapper,
+          variantStyles.general,
+          { cursor: 'pointer' }]}
+      >
+        <View css={[variantStyles.editing]}>
+          <Icon name='edit' />
+        </View>
+        <AvatarImage />
+      </Touchable>
+    </>
   } else {
-    return <Button onPress={() => onPress?.()} variants={['icon']}>
+    return <Button onPress={() => onPress?.()} variants={['icon']} css={variantStyles.general}>
       <AvatarImage />
     </Button>
   }

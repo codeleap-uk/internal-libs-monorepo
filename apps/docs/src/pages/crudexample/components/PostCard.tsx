@@ -1,5 +1,6 @@
-import { Text, Theme, View, React, Icon, Touchable, variantProvider } from '@/app'
+import { Text, Theme, View, React, Icon, Touchable, variantProvider, Button } from '@/app'
 import { Post } from '@/redux'
+import { useComponentStyle } from '@codeleap/common'
 import moment from 'moment'
 
 const defaultStyle = {
@@ -24,19 +25,24 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
   } = post
 
   const date = moment(created_datetime).format('Do of MMM YY')
+  const styles = useComponentStyle(componentStyles)
 
   return (
     <View
       variants={['column', 'fullWidth']}
-      style={[style, styles.wrapper]}
+      css={[style, styles.wrapper]}
     >
-      <View style={styles.innerWrapper}>
-        <View variants={['row', 'justifySpaceBetween']}>
+      <View css={styles.innerWrapper}>
+        <View variants={['justifyEnd', 'alignCenter', 'marginBottom:2']}>
+          <Text text={title} variants={['h3', 'marginRight:auto']} />
+          {
+            edit &&
+          <Button icon={'edit'} onPress={() => edit()} debugName={'Edit post'} variants={['icon']}/>
+
+          }
           {
             remove &&
-            <Touchable onPress={() => remove(id)} debugName={'Remove post'}>
-              <Icon name={'close'} style={{ size: 28 }} />
-            </Touchable>
+          <Button icon={'close'} onPress={() => remove(id)} debugName={'Remove post'} variants={['icon', 'marginLeft:3']} />
           }
         </View>
 
@@ -45,16 +51,9 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
           <Text text={`${date}`} variants={['p2']} />
         </View>
 
-        <Text text={title} variants={['h3']} />
-
         <View variants={['row', 'justifySpaceBetween']}>
           <Text text={content} variants={['p1', 'marginTop:1']} />
-          {
-            edit &&
-          <Touchable onPress={() => edit()} debugName={'Edit post'}>
-            <Icon name={'edit'} style={{ size: 25 }} />
-          </Touchable>
-          }
+
         </View>
       </View>
     </View>)
@@ -62,15 +61,16 @@ export const PostCard:React.FC<PostCardProps> = ({ post, style, remove, edit }) 
 
 export default PostCard
 
-const styles = variantProvider.createComponentStyle({
+const componentStyles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
   },
   innerWrapper: {
-    marginHorizontal: Theme.spacing.value(2),
-    marginBottom: Theme.spacing.value(2),
-    padding: Theme.spacing.value(2),
-    borderRadius: Theme.borderRadius.medium,
-    backgroundColor: Theme.colors.white,
-    ...Theme.presets.elevated,
+    ...theme.presets.column,
+
+    marginBottom: theme.spacing.value(2),
+    padding: theme.spacing.value(2),
+    borderRadius: theme.borderRadius.medium,
+    backgroundColor: theme.colors.backgroundSecondary,
+    ...theme.presets.elevated,
   },
-})
+}))

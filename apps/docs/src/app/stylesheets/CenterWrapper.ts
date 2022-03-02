@@ -8,6 +8,9 @@ const defaultStyles = variantProvider.getDefaultVariants('CenterWrapper')
 export const AppCenterWrapperStyles = {
   ...defaultStyles,
   default: createCenterWrapperStyle((theme) => ({
-    ...defaultStyles.default,
+    ...defaultStyles.default(theme),
+    wrapper: {
+      ...defaultStyles.default(theme).wrapper,
+    },
   })),
 }

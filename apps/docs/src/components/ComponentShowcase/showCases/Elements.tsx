@@ -69,7 +69,7 @@ const ButtonShowcase = {
 const IconShowcase = {
   render: ({ controlValues }) => {
     return (
-      <View css={{ zIndex: 10, flexWrap: 'wrap' }}>
+      <View css={[{ zIndex: 10, flexWrap: 'wrap' }]}>
         {Object.entries(allIcons).map(([name, value]) => (
           <Tooltip
             position='bottom'
@@ -209,36 +209,6 @@ const RouterPageShowCase = {
   styleSheet: {},
 }
 
-const FirebaseShowcase = {
-  render: () => {
-    const { profile, isLoggedIn } = useAppSelector((store) => store.Session)
-
-    return (
-      <View variants={['column']}>
-        {isLoggedIn ? (
-          <React.Fragment>
-            <Avatar profile={profile} />
-            <Text text={`Hello ${profile?.first_name}`} />
-            <Button
-              text='Logout'
-              onPress={() => Session.logout()}
-              variants={['negative']}
-            />
-          </React.Fragment>
-        ) : (
-          <Button
-            text='Login'
-            onPress={() => Session.login({
-              withProvider: 'google',
-            })
-            }
-          />
-        )}
-      </View>
-    )
-  },
-  styleSheet: {},
-}
 export {
   TextShowcase as Text,
   IconShowcase as Icon,
@@ -248,5 +218,4 @@ export {
   AvatarShowcase as Avatar,
   ToastShowcase as Toast,
   RouterPageShowCase as RouterPage,
-  FirebaseShowcase as Firebase,
 }

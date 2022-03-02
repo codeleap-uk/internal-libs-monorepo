@@ -1,76 +1,82 @@
-import { Button, Modal, variantProvider, View } from '@/app'
+import { Modal, variantProvider, View } from '@/app'
 import { ModalProps } from '@codeleap/web'
-import { capitalize, useComponentStyle, useState } from '@codeleap/common'
+import { capitalize, onUpdate, useToggle } from '@codeleap/common'
 import { LoginForm } from './Login'
 import { SignupForm } from './Signup'
-import { Logo } from '../Logo'
+import { AppStatus, useAppSelector } from '@/redux'
 
-type AuthModalProps = ModalProps
-
-const options = [
-  'login',
-  'signup',
-]
+type AuthModalProps = {}
 
 export const AuthModal:React.FC<AuthModalProps> = (props) => {
   const {
-
     ...modalProps
   } = props
 
-  const [currentForm, setForm] = useState('login')
-  const styles = useComponentStyle(componentStyles)
+  const [currentForm, toggleForm] = useToggle(['login', 'signup'], 'login')
 
-  return <Modal {...modalProps} variants={['roundish']} styles={{ box: styles.modalBox }} scroll={false}>
-    <View variants={['row', 'relative', 'sticky']} css={styles.header}>
-      {
-        options.map((o) => (
-          <Button
-            text={capitalize(o)}
-            onPress={() => setForm(o)}
-            variants={['text', 'flex']}
-            styles={{ text: o === currentForm ? styles.tabButtonTextSelected : {}}}
-          />
-        ))
+  function getFormWrapperStyle(form) {
+    const isCurrent = currentForm === form
+    if (isCurrent) {
+      return {
+        opacity: 1,
+        visibility: 'visible',
+        transitionDelay: '0.2s',
       }
-      <View css={{
-        ...styles.tabSlider,
-        transform: `translateX(${currentForm === 'login' ? '0%' : '100%'})`,
-      }}/>
-    </View>
-    <View variants={['flex', 'column', 'padding:3']}>
+    }
+    return {
+      opacity: 0,
+      visibility: 'hidden',
+    }
+  }
 
-      {
-        currentForm === 'login' ? <LoginForm /> : <SignupForm />
-      }
+  const isOpen = useAppSelector(store => store.AppStatus.modals.auth)
+
+  return <Modal
+    title={capitalize(currentForm)}
+    visible={isOpen}
+    toggle={() => AppStatus.setModal('auth')}
+    variants={['roundish']}
+    styles={modalStyles}
+    scroll={false}
+    {...modalProps}
+  >
+
+    <View css={[styles.formWrapper, getFormWrapperStyle('login')]}>
+      <LoginForm onFormSwitch={() => toggleForm()} onAuthSuccess={() => AppStatus.setModal('auth')}/>
+
     </View>
+    <View css={[styles.formWrapper, getFormWrapperStyle('signup')]}>
+      <SignupForm onFormSwitch={() => toggleForm()} onAuthSuccess={() => AppStatus.setModal('auth')}/>
+
+    </View>
+
   </Modal>
 }
 
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
-  tabSlider: {
-    backgroundColor: theme.colors.primary,
-    height: '3px',
-    width: '50%',
-    transition: 'transform 0.3s ease',
-    ...theme.presets.absolute,
-    bottom: 0,
-  },
-  tabButtonTextSelected: {
-    color: theme.colors.textH,
-  },
-  modalBox: {
+const modalStyles = variantProvider.createComponentStyle<ModalProps['styles']>((theme) => ({
+  box: {
     height: '94vh',
     overflow: 'hidden',
+    width: '80vw',
 
+    maxWidth: '600px',
   },
-  logo: {
-    width: '50%',
+  body: {
+    alignItems: 'center',
+    position: 'relative',
   },
-  header: {
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: theme.colors.background,
+}), true)
+
+const styles = variantProvider.createComponentStyle((theme) => ({
+  formWrapper: {
+    // ...theme.presets.flex,
+    ...theme.presets.column,
+    transition: 'opacity 0.2s ease',
+    position: 'absolute',
+    ...theme.presets.whole,
+    ...theme.presets.justifyCenter,
+    ...theme.spacing.paddingHorizontal(10),
+    ...theme.spacing.paddingVertical(1),
+    ...theme.spacing.gap(1.5),
   },
-}))
+}), true)

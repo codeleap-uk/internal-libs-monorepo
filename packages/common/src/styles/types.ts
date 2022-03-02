@@ -11,6 +11,7 @@ import { AnyFunction } from '../types/utility'
 import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
+import { SpacingFunction } from '.'
 
 type AnyProps<T = any> = {
   [x: string]: T
@@ -100,6 +101,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
 > & {
   spacing: {
     base: number
+    gap: SpacingFunction
   } & Spacings<'margin'> &
     Spacings<'padding'>
   hooks: Hooks<keyof T['breakpoints'], boolean>

@@ -1,58 +1,50 @@
-import { React, Theme, Icon, ActivityIndicator, Modal, variantProvider, Overlay, View } from '@/app'
+import { React, Theme, Icon, ActivityIndicator, variantProvider, Overlay, View } from '@/app'
 import { AppStatus, useAppSelector } from '@/redux'
 import { onUpdate } from '@codeleap/common'
-import { Logo } from '@/components'
-
-const renderStatus = {
-  idle: () => <Icon name='checkmark' variants={['large', 'primary']} />,
-  done: () => <Icon name='checkmark' variants={['large', 'primary']} />,
-  loading: () => <ActivityIndicator />,
-}
 
 export const AppStatusOverlay: React.FC = () => {
   const { status } = useAppSelector((store) => store.AppStatus)
 
   onUpdate(() => {
 
-    let timeout = null
     if (status === 'done') {
-      timeout = setTimeout(() => {
+      setTimeout(() => {
         AppStatus.set('idle')
       }, 2000)
     }
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout)
-      }
-    }
+
   }, [status])
 
-  const visible = status !== 'idle'
-
+  const visibilityStyle = (appStatus) => {
+    const isStatusVisible = status === appStatus
+    return ({
+      transform: `scale(${ isStatusVisible ? 1 : 0})`,
+      transition: 'transform 0.3s ease',
+      // visibility: isStatusVisible ? 'visible' : 'hidden',
+    })
+  }
   return (
     <>
-      <Overlay visible={visible} />
-      <View css={[styles.wrapper, { transform: `scale(${visible ? 1 : 0})` }]}>
-        {renderStatus[status]()}
+      <Overlay visible={status !== 'idle'} styles={{ wrapper: { zIndex: Theme.values.zIndex.appStatusOverlay }}}/>
+      <View css={[styles.wrapper]}>
+        <Icon name='checkmark' variants={['large', 'primary']} style={visibilityStyle('done')}/>
+        <ActivityIndicator styles={{ wrapper: visibilityStyle('loading') }}/>
       </View>
     </>
   )
 }
 
-// const transition = {
-//   duration: 500,
-// }
-
-const styles = variantProvider.createComponentStyle({
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     ...Theme.presets.absolute,
     ...Theme.presets.whole,
     ...Theme.presets.justifyCenter,
     ...Theme.presets.alignCenter,
+    zIndex: theme.values.zIndex.appStatusOverlay,
     pointerEvents: 'none',
     transition: 'transform 0.3s ease',
   },
   icon: {
 
   },
-}, true)
+}), true)

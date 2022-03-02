@@ -9,7 +9,7 @@ import { beautifyName } from '../utils/variant'
 const handleAppStatus = () => {
   AppStatus.set('loading')
   setTimeout(() => {
-    AppStatus.set('done')
+    AppStatus.set('idle')
   }, 2000)
 }
 

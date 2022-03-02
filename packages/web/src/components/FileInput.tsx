@@ -41,7 +41,7 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(
     return (
       <input
         type={'file'}
-        css={{ visibility: 'hidden' }}
+        css={{ visibility: 'hidden', width: 0, height: 0, opacity: 0, display: 'none' }}
         {...props}
         ref={inputRef}
         onChange={handleChange}

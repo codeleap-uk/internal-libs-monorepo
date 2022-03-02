@@ -27,7 +27,11 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
   })
 
   if (!name) {
-    return renderEmptySpace ? <View style={variantStyles.icon}/> : null
+    const iconStyle = variantStyles.icon
+    return renderEmptySpace ? <View css={{
+      height: iconStyle.size ?? iconStyle.height,
+      width: iconStyle.size ?? iconStyle.width,
+    }}/> : null
   }
 
   if (!Component) {

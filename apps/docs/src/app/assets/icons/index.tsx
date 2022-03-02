@@ -1,52 +1,70 @@
 import * as React from 'react'
 /** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
+import { jsx } from '@emotion/react'
 import { Image } from '@/app'
 import { logger } from '../../logger'
-import * as ReactIcons from 'react-icons/all'
+import {
+  VscLoading,
+} from 'react-icons/vsc'
+import {
+  MdKeyboardArrowDown,
+  MdArchive,
+  MdHome,
+  MdSearch,
+  MdImage,
+  MdClose,
+  MdDarkMode,
+  MdLightMode,
+  MdEdit,
+  MdMenu,
+  MdCheck,
+  MdAdd,
+} from 'react-icons/md'
+import {
+  FaGoogle,
+  FaFacebook,
+  FaApple,
+  FaUser,
+} from 'react-icons/fa'
+import {
+  IoArrowForward,
+  IoArrowBack,
+} from 'react-icons/io5'
+import {
+  IoMdEye,
+  IoMdEyeOff,
+} from 'react-icons/io'
 
 export const iconImages = {
-  arrowDownWhite: ReactIcons.MdKeyboardArrowDown,
-  archive: ReactIcons.MdArchive,
-  google: ReactIcons.FaGoogle,
-  facebook: ReactIcons.FaFacebook,
-  apple: ReactIcons.FaApple,
-  // mail: VectorIcon('mail', FeatherIcons),
-  //   user: VectorIcon('user', FeatherIcons),
-  home: ReactIcons.MdHome,
-  // key: VectorIcon('key', FeatherIcons),
-  search: ReactIcons.MdSearch,
-  checkmark: ReactIcons.MdCheck,
-  loading: ReactIcons.VscLoading,
-  arrowForward: ReactIcons.IoArrowForward,
-  arrowBack: ReactIcons.IoArrowBack,
-  // selectArrow: VectorIcon('select-arrows', EntypoIcons),
-  'input-visiblity:visible': ReactIcons.IoMdEye,
-  'input-visiblity:hidden': ReactIcons.IoMdEyeOff,
-  image: ReactIcons.MdImage,
-  close: ReactIcons.MdClose,
-  // cloud: VectorIcon('cloud', FeatherIcons),
-  // bell: VectorIcon('bell', FeatherIcons),
-  // hamburger: VectorIcon('menu', FeatherIcons),
-  // components: VectorIcon('layers', FeatherIcons),
-  // playground: VectorIcon('react', MaterialCommunityIcons),
-  // back: VectorIcon('chevron-left', Octicons),
-  // 'network-on': VectorIcon('wifi-check', MaterialCommunityIcons),
-  // 'network-off': VectorIcon('wifi-off', MaterialCommunityIcons),
-  // 'bug': VectorIcon('bug', MaterialCommunityIcons),
-  darkMode: ReactIcons.MdDarkMode,
-  lightMode: ReactIcons.MdLightMode,
-  edit: ReactIcons.MdEdit,
-  menu: ReactIcons.MdMenu,
-  user: ReactIcons.FaUser,
-  // 'notifications': VectorIcon('notifications', Ionicons),
+  arrowDownWhite: MdKeyboardArrowDown,
+  archive: MdArchive,
+  google: FaGoogle,
+  facebook: FaFacebook,
+  apple: FaApple,
+  home: MdHome,
+  search: MdSearch,
+  checkmark: MdCheck,
+  loading: VscLoading,
+  arrowForward: IoArrowForward,
+  arrowBack: IoArrowBack,
+  'input-visiblity:visible': IoMdEye,
+  'input-visiblity:hidden': IoMdEyeOff,
+  image: MdImage,
+  close: MdClose,
+  add: MdAdd,
+  darkMode: MdDarkMode,
+  lightMode: MdLightMode,
+  edit: MdEdit,
+  menu: MdMenu,
+  user: FaUser,
+
 }
 
-export const RenderIcon = ({ path, name = '', style = {}, log, ...props }:any) => {
+export const RenderIcon = ({ path, name = '', style = {}, log }:any) => {
 
   const { size, width, height, color, ...otherStyles } = style
   const styles = {
-    // ...otherStyles,
+    ...otherStyles,
     height: size || height,
     width: size || width,
     color: color,
@@ -82,6 +100,6 @@ export type AppIcon = keyof IconsType
 
 export const Icons = Object.fromEntries(
   Object.entries(iconImages).map(([iconName, iconPath]) => {
-    return [iconName, (props) => <RenderIcon path={iconPath} name={iconName} log={['close', 'search'].includes(iconName)} {...props} />]
+    return [iconName, (props) => <RenderIcon path={iconPath} name={iconName} log={[].includes(iconName)} {...props} />]
   }),
 ) as IconsType

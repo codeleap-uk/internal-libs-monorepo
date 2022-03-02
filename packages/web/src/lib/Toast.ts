@@ -1,15 +1,19 @@
 import { toast } from 'react-toastify'
 
-function info({ title }) {
-  toast.info(title)
+type ToastArgs = {
+  title:string
+} &Parameters<typeof toast.info>[1]
+
+function info({ title, ...others }:ToastArgs) {
+  toast.info(title, others)
 }
 
-function success({ title }) {
-  toast.success(title)
+function success({ title, ...others }:ToastArgs) {
+  toast.success(title, others)
 }
 
-function error({ title }) {
-  toast.error(title)
+function error({ title, ...others }:ToastArgs) {
+  toast.error(title, others)
 }
 
 export default {

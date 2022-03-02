@@ -91,11 +91,17 @@ export const defaultPresets = {
   alignCenter: {
     alignItems: 'center',
   },
+  alignStretch: {
+    alignItems: 'stretch',
+  },
   alignSelfCenter: {
     alignSelf: 'center',
   },
   alignSelfStart: {
     alignSelf: 'flex-start',
+  },
+  alignSelfStretch: {
+    alignSelf: 'stretch',
   },
   alignSelfEnd: {
     alignSelf: 'flex-end',

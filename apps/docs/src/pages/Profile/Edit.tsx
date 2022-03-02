@@ -1,16 +1,22 @@
 import * as yup from 'yup'
 import * as React from 'react'
 
-import { Session, useAppSelector } from '@/redux'
+import { AppStatus, Session, useAppSelector } from '@/redux'
 import { Button,
+  Modal,
   // Scroll,
-  TextInput, View } from '@/app'
-import { Avatar } from '@/components'
+  TextInput, View, OSAlert, Text } from '@/app'
+import { Avatar, Page, RequiresAuth } from '@/components'
 import {
   createForm,
+  onUpdate,
+  useBooleanToggle,
   useForm,
+  useRef,
+  useState,
 } from '@codeleap/common'
-import { Toast } from '@codeleap/web'
+import { ModalProps, Toast } from '@codeleap/web'
+import { navigate } from 'gatsby'
 
 const editProfileForm = createForm('editProfileForm', {
   email: {
@@ -29,33 +35,31 @@ const editProfileForm = createForm('editProfileForm', {
     type: 'text',
     password: true,
   },
-  repeatPassword: {
-    type: 'text',
-    password: true,
-    validate: (repeatPassword, { password }) => {
-      const isValid = repeatPassword === password
-
-      return {
-        valid: isValid,
-        message: isValid ? '' : "Passwords don't match",
-      }
-    },
-  },
   avatar: {
     type: 'file',
   },
 })
 
-export default function EditProfile({ navigation }) {
+const modalProps:Record<string, Partial<ModalProps >> = {
+  auth: {
+    title: '',
+  },
+  confirmResetPassword: {
+    title: 'Password Reset',
+  },
+}
+
+function EditProfile() {
   const { profile } = useAppSelector((store) => store.Session)
+  const [isModalVisible, toggleModal] = useBooleanToggle(false)
+  const [currentModal, setModal] = useState(null)
 
   const form = useForm(editProfileForm, {
     output: 'json',
     validateOn: 'submit',
     initialState: {
       ...profile,
-      avatar: [{ preview: profile.avatar }],
-      repeatPassword: '',
+      avatar: [{ preview: profile?.avatar }],
       password: '',
     },
   })
@@ -64,15 +68,18 @@ export default function EditProfile({ navigation }) {
     form.onSubmit(async (values) => {
       const hasEmailChanged = values.email !== profile.email
 
-      await Session.editProfile({
+      const response = await Session.editProfile({
         ...form.values,
-        avatar: form?.values?.avatar?.[0]?.file.uri,
+        avatar: form.values.avatar[0]?.file || null,
       })
 
-      navigation.navigate('Profile.View')
+      if (response.needsAuth) {
+        toggleModal()
+        return
+      }
 
       if (hasEmailChanged) {
-        Toast.info({
+        OSAlert.info({
           title: 'Please confirm your new email address',
         })
 
@@ -84,46 +91,96 @@ export default function EditProfile({ navigation }) {
 
     })
   }
+
+  const reauthenticate = () => {
+
+    const data = {
+      email: profile?.email,
+      password: form.values.password,
+    }
+
+    Session.reauthenticate(data).then(() => {
+      onSubmit()
+      toggleModal()
+    }).catch(() => {
+      toggleModal()
+      OSAlert.error({ title: 'Error', body: 'Could not authenticate. Please check your credentials.' })
+    })
+  }
+
+  function onPasswordReset() {
+    OSAlert.ask({
+      title: 'Password Reset',
+      body: 'Do you want to reset your password? You will be emailed instructions to proceed',
+      options: [
+        {
+          onPress: () => Session.resetPassword().then(() => {
+            Toast.info({ title: 'Check your email for instructions on how to reset your password' })
+          }),
+          text: 'Reset',
+        },
+        {
+          onPress: () => null,
+          text: 'Cancel',
+        },
+
+      ],
+    })
+  }
+
   return (
-    // <Scroll variants={['padding:2']}>
-    <>
-      <Avatar
-        profile={{
-          ...form.values,
-          avatar: form.values?.avatar?.[0]?.preview,
-          id: null,
-        }}
-        onChange={(image) => form.setFieldValue('avatar', image)}
-        debugName={'Change profile avatar'}
-      />
-      <View>
-        <TextInput {...form.register('email')} debugName={'Profile email input'} leftIcon={{ name: 'mail' }} />
 
-        <TextInput {...form.register('first_name')} debugName={'Profile first name input'} />
-        <TextInput {...form.register('last_name')} debugName={'Profile last name input'} />
+    <View variants={['column', 'flex']}>
 
-        <TextInput
-          {...form.register('password')}
-          leftIcon={{ name: 'key' }}
-          debugName={'Profile password input'}
-          visibilityToggle
+      <View variants={['gap:4']} responsiveVariants={{ small: ['column'] }}>
+
+        <Avatar
+          profile={{
+            ...form.values,
+            avatar: form.values?.avatar?.[0]?.preview,
+            id: null,
+          }}
+          onChange={(image) => form.setFieldValue('avatar', [image])}
+          debugName={'Change profile avatar'}
+          variants={['alignSelfCenter']}
+
         />
+        <View variants={['column', 'gap:2', 'flex']}>
 
-        <TextInput
-          {...form.register('repeatPassword')}
-          debugName={'Profile repeat password input'}
-          leftIcon={{ name: 'key' }}
-          visibilityToggle
-        />
+          <TextInput {...form.register('first_name')} debugName={'Profile first name input'} />
+          <TextInput {...form.register('last_name')} debugName={'Profile last name input'} />
+          <TextInput
+            {...form.register('email')}
+            debugName={'Profile email input'}
+            leftIcon={{ name: 'mail' }}
+          />
 
-        <Button
-          disabled={!form.isValid}
-          text={'Save Changes'}
-          onPress={onSubmit}
-          debugName={'Save changes'}
-        />
+          <Button variants={['neutral', 'alignSelfCenter']} text={'Reset password'} onPress={onPasswordReset}/>
+
+          <Text text={'Changes are saved automatically'} variants={['textCenter']}/>
+          <Button variants={['alignSelfCenter']} text={'Save changes'} onPress={onSubmit}/>
+        </View>
       </View>
-    </>
-    // </Scroll>
+      <Modal
+        visible={isModalVisible}
+        toggle={toggleModal}
+        title='Authentication required'
+      >
+        <Text text='Please re-enter your password to update your email address' />
+        <TextInput {...form.register('password')} label='Password' />
+        <Button text={'Continue'} onPress={reauthenticate} disabled={form.fieldErrors.password}/>
+        <Button text={'Cancel'} onPress={toggleModal}/>
+      </Modal>
+    </View>
   )
+}
+
+export default function EditProfilePage() {
+
+  return <Page title={'Edit Profile'} footer={false} styles={{ wrapper: { flex: 1 }}}>
+    <RequiresAuth onUnauthorized={() => navigate('/')}>
+      <EditProfile />
+    </RequiresAuth>
+
+  </Page>
 }

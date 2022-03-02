@@ -1,14 +1,14 @@
 /** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
   ModalComposition,
-  ModalStyles,
   onUpdate,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import { jsx } from '@emotion/react'
 import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
@@ -17,7 +17,7 @@ import { Button } from '../Button'
 import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
-
+import { WebModalStyles as ModalStyles } from './styles'
 export * from './styles'
 
 export type ModalProps = {
@@ -30,6 +30,7 @@ export type ModalProps = {
   closable?: boolean
   scroll?: boolean
   footer?: ReactNode
+  debugName?: string
 } & ComponentVariants<typeof ModalStyles>
 
 function focusModal(event: FocusEvent, id: string) {
@@ -57,7 +58,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     ...props
   } = modalProps
 
-  const variantStyles = useDefaultComponentStyle('Modal', {
+  const variantStyles = useDefaultComponentStyle('u:Modal', {
     responsiveVariants,
     variants,
     styles,
@@ -119,13 +120,14 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
             id={`${id}-title`}
             css={variantStyles.header}
           >
-            {typeof title === 'string' ? <Text text={title} /> : title}
+            {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
 
             {showClose && closable && (
               <Button
                 rightIcon={'close' as IconPlaceholder}
                 variants={['icon']}
                 onPress={toggle}
+                css={variantStyles.closeButton}
               />
             )}
           </View>

@@ -2,9 +2,10 @@ import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 import shadeColor from '../../../utils/shadeColor'
 import { optionalObject } from '../../../utils'
+import { ActivityIndicatorComposition } from '.'
 
 export type ButtonStates = 'disabled'
-export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader'
+export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader' | `loader${Capitalize<ActivityIndicatorComposition>}`
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
@@ -41,9 +42,20 @@ export const ButtonStyles = {
       height: 20,
       width: 20,
     },
+
+    loaderFrontCircle: {
+      borderTopColor: theme.colors.white,
+    },
     'wrapper:disabled': {
       backgroundColor: theme.colors.disabled,
       opacity: 0.9,
+      cursor: 'auto',
+      ...optionalObject(theme.IsBrowser, {
+        '&:hover': {
+          backgroundColor: theme.colors.disabled,
+        },
+      }, {}),
+
     },
   })),
   negative: createButtonStyle((theme) => ({

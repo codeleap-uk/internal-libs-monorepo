@@ -14,7 +14,7 @@ function getDefaultValue(field: Partial<Form.FormField>) {
   }
 }
 
-function getValidator(validate: Form.Validator<any>): Form.ValidatorFunction {
+export function getValidator(validate: Form.Validator<any>): Form.ValidatorFunction {
   if (!validate) return undefined
 
   if (typeof validate === 'function') {

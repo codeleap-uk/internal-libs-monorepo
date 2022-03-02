@@ -2,6 +2,7 @@ import { LocalStorageKeys, logger, api, Settings } from '../app'
 import * as Auth from '../services/authentication'
 import { createSlice, TypeGuards } from '@codeleap/common'
 import { AppStatus } from './index'
+import { Toast } from '@codeleap/web'
 
 const DEB_CAT = 'Session'
 
@@ -47,13 +48,8 @@ export const sessionSlice = createSlice({
   },
   asyncReducers: {
     async loginSuccess(state, setState) {
-      AppStatus.set('splash')
-      setTimeout(() => {
-        setState({ isLoggedIn: true })
-        setTimeout(() => {
-          AppStatus.set('idle')
-        }, 1000)
-      }, 1000)
+
+      setState({ isLoggedIn: true })
     },
     async login(
       state,
@@ -70,8 +66,6 @@ export const sessionSlice = createSlice({
         return 'error'
       }
 
-      AppStatus.set('blank')
-
       const profile = await Auth.loadOwnProfile()
 
       const newSession: Partial<TSession> = {
@@ -82,7 +76,18 @@ export const sessionSlice = createSlice({
 
       setState(newSession)
 
+      AppStatus.set('idle')
       return !!profile ? 'success' : 'error'
+    },
+    async resetPassword() {
+      try {
+        await Auth.sendPasswordReset()
+        logger.log('Reset password email sent')
+        AppStatus.set('idle')
+      } catch (error) {
+        AppStatus.set('idle')
+        Toast.error({ title: 'Error' })
+      }
     },
     async logout(state, setState) {
       await Auth.logout()
@@ -101,30 +106,31 @@ export const sessionSlice = createSlice({
       setState({
         isDevelopment: newValue,
       })
-      // OSAlert.info({
-      //   title: 'Now using ' + (newValue ? 'development' : 'production') + ' server',
-      // })
     },
-    // To be called onAuthStateChange with firebase
-    async autoLogin(state, setState) {
+    async autoLogin(state, setState, silent = true) {
+
       try {
+        !silent && AppStatus.set('loading')
         const profile = await Auth.loadOwnProfile()
+
         if (profile?.id) {
           setState({
             profile,
             isLoggedIn: !!profile,
           })
           logger.log('autoLogin success', { state, profile }, DEB_CAT)
-          setTimeout(() => {
-            AppStatus.set('idle')
-          }, 1000)
+
         } else {
           throw 'User does not have a profile'
         }
+
+        !silent && AppStatus.set('idle')
         return 'success'
       } catch (e) {
+
         logger.log('autoLogin failed', e, DEB_CAT)
-        AppStatus.set('idle')
+
+        !silent && AppStatus.set('idle')
         return 'error'
       }
     },
@@ -140,8 +146,36 @@ export const sessionSlice = createSlice({
 
       return 'success'
     },
+    async reauthenticate(state, setState, payload: Auth.EmailCredential) {
+      return await Auth.reauthenticateCredentials(payload)
+    },
     async editProfile(state, setState, payload: Partial<Profile>) {
-      const updatedProfile = await Auth.updateProfile(state.profile, payload)
+      AppStatus.set('loading')
+      let updatedProfile = null
+
+      if (state.profile.email !== payload.email) {
+        try {
+          await Auth.updateEmail(payload.email)
+          logger.log('Email set successfully', payload.email, DEB_CAT)
+
+          updatedProfile = await Auth.saveProfile(state.profile, payload)
+          AppStatus.set('idle')
+        } catch (error) {
+          AppStatus.set('idle')
+          const retryLoginErr = 'auth/requires-recent-login'
+
+          if (error.code.startsWith(retryLoginErr)) {
+            return { needsAuth: true }
+          } else {
+            logger.error('Error updating profile', error, 'Session')
+            Toast.error({ title: 'There was an error' })
+            return
+          }
+        }
+      } else {
+        updatedProfile = await Auth.saveProfile(state.profile, payload)
+        AppStatus.set('idle')
+      }
 
       logger.log('Editing profile', {
         current: state.profile,
@@ -149,10 +183,7 @@ export const sessionSlice = createSlice({
         apiResponse: updatedProfile,
       }, 'Authentication')
 
-      setState({
-        profile: updatedProfile,
-      })
-
+      setState({ profile: updatedProfile })
     },
   },
 

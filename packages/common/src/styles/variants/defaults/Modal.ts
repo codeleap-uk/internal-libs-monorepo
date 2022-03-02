@@ -9,6 +9,8 @@ export type ModalComposition =
   | 'body'
   | 'header'
   | 'footer'
+  | 'title'
+  | 'closeButton'
 
 const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 

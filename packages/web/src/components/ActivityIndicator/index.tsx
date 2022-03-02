@@ -38,19 +38,15 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
     styles,
     ...viewProps
   } = indicatorProps
-
+  console.log(`ACTIVITY`, styles)
   const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
     styles,
     responsiveVariants,
     variants,
   })
 
-  if (!animating && hidesWhenStopped) {
-    return null
-  }
-
   return (
-    <View {...viewProps} css={variantStyles.wrapper}>
+    <View {...viewProps} css={[variantStyles.wrapper, (!animating && hidesWhenStopped) && { visibility: 'hidden' }]}>
       <View css={{ ...variantStyles.circle, ...variantStyles.backCircle }} />
       <View
         css={{

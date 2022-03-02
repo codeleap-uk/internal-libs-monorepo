@@ -2,13 +2,23 @@ import { React, Button, CenterWrapper, variantProvider, View, Tooltip, Theme, Dr
 import { Logo } from './Logo'
 import { Link } from './Link'
 import { onUpdate, useBooleanToggle, useCodeleapContext, useComponentStyle } from '@codeleap/common'
-import { useAppSelector } from '@/redux'
+import { AppStatus, useAppSelector } from '@/redux'
 import { Avatar } from './Avatar'
 import { AuthModal } from './AuthModal'
+import { useNavigate } from '@reach/router'
+import { navigate } from 'gatsby'
 const navItems = [
   {
     name: 'Components',
     url: '/components',
+  },
+  {
+    name: 'CRUD Example',
+    url: '/crudexample',
+  },
+  {
+    name: 'About',
+    url: '/about',
   },
 ]
 
@@ -31,20 +41,24 @@ export const Header = () => {
   const { currentTheme } = useCodeleapContext()
   const { isLoggedIn, profile } = useAppSelector(store => store.Session)
   const styles = useComponentStyle(componentStyles)
-  const [drawerOpen, toggleDrawer] = useBooleanToggle(false)
-  const [authModalVisible, toggleAuthModal] = useBooleanToggle(false)
+  const [drawerOpen, setDrawer] = useBooleanToggle(false)
 
   const toggleTheme = () => {
     variantProvider.setColorScheme(currentTheme == 'dark' ? 'light' : 'dark')
   }
   const isMobile = Theme.hooks.down('small')
 
-  onUpdate(() => {
+  const toggleDrawer = () => {
     if (drawerOpen) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflow = 'auto'
     } else {
-      document.body.style.overflow = 'visible'
+      document.body.style.overflow = 'hidden'
     }
+
+    setDrawer()
+  }
+
+  onUpdate(() => {
 
     if (!isMobile && drawerOpen) {
       toggleDrawer()
@@ -71,8 +85,16 @@ export const Header = () => {
             />
           </Link>
         }
+        <View variants={['gap:2', 'padding:1']} responsiveVariants={{ small: ['column'] }}>
+
+          {
+            navItems.map(i => (
+              <Link key={i.url} text={i.name} to={i.url} css={styles.navLink} />
+            ))
+          }
+        </View>
         <Button
-          variants={['icon', 'marginLeft:auto', 'marginRight:1']}
+          variants={['icon', 'marginRight:1']}
 
           responsiveVariants={{
 
@@ -82,21 +104,23 @@ export const Header = () => {
           onPress={toggleTheme}
           icon={currentTheme === 'dark' ? 'darkMode' : 'lightMode'}
         />
-
-        {
-          navItems.map(i => (
-            <Link key={i.url} text={i.name} to={i.url} css={styles.navLink}/>
-          ))
-        }
-
         {
           isMobile && <View variants={['separator', 'marginVertical:3']} />
         }
 
-        <Avatar profile={profile} debugName={'Header Avatar'} onPress={() => {
+        <Avatar
+          profile={profile}
+          variants={['small', 'alignSelfCenter']}
+          debugName={'Header Avatar'}
+          onPress={() => {
+            if (isLoggedIn) {
+              navigate('/profile')
+            } else {
+              AppStatus.setModal('auth')
 
-          toggleAuthModal()
-        }}/>
+            }
+          }}
+        />
 
       </NavComponent>
       {
@@ -109,7 +133,7 @@ export const Header = () => {
         )
       }
     </CenterWrapper>
-    <AuthModal visible={authModalVisible} toggle={toggleAuthModal}/>
+    <AuthModal/>
   </>
 }
 
@@ -118,7 +142,6 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     ...theme.presets.row,
     ...theme.presets.alignCenter,
     ...theme.spacing.padding(1),
-    zIndex: theme.values.zIndex.header,
 
   },
   logo: {
@@ -129,6 +152,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
 
   },
   logoWrapper: {
+    marginRight: 'auto',
     [theme.media.down('small')]: {
       display: 'flex',
       ...theme.presets.justifyCenter,
@@ -136,6 +160,8 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
   },
   floatingHeader: {
     position: 'sticky',
+    zIndex: theme.values.zIndex.header,
+
     top: 0,
     left: 0,
     right: 0,
@@ -144,10 +170,11 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
 
   },
   nav: {
-    flex: 1,
+
     ...theme.presets.row,
     ...theme.presets.alignCenter,
     gap: theme.spacing.value(2),
+
     [theme.media.down('small')]: {
       ...theme.presets.column,
       backgroundColor: theme.colors.background,
@@ -159,8 +186,10 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
 
   },
   navLink: {
+
     [theme.media.down('small')]: {
       ...theme.presets.textCenter,
+      textDecoration: 'none',
     },
   },
   themeSwitch: {

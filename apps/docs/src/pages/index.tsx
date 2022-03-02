@@ -21,28 +21,23 @@ export const Overlays = () => {
 const links = [
   {
     url: '/components',
-    name: 'Components',
+    name: 'Playground',
     description:
-      'Playground for the components included in the libraries and this template',
+      'Playground for testing components',
   },
   {
-    name: 'Examples',
+    name: 'Explore',
     links: [
       {
-        url: '/examples/redux',
-        name: 'Redux',
+        url: '/crudexample',
+        name: 'Crud Example',
         description:
-          'Sample redux usage with the abstractions from our library',
+          'Example CRUD',
       },
       {
-        url: '/examples/crud',
-        name: 'CRUD',
-        description: 'How to use the query hook to fetch and send data',
-      },
-      {
-        url: '/examples/form',
-        name: 'Form',
-        description: 'A simple form made with our custom form hook',
+        url: '/docs/styling',
+        name: 'About',
+        description: 'Introduction to variants and composing styles',
       },
     ],
   },
@@ -55,8 +50,7 @@ const ListItem = ({ item, depth = 2, styles }) => {
       <View
         variants={[
           'column',
-          'paddingVertical:2',
-          'justifySpaceBetween',
+          'justifyCenter',
           `marginLeft:${depth}` as any,
           'flex',
         ]}
@@ -65,17 +59,20 @@ const ListItem = ({ item, depth = 2, styles }) => {
         }}
 
       >
-        <Text text={item.name} variants={['h3']} />
-        {item.links.map((i) => (
-          <ListItem item={i} depth={depth + 2} key={i.url} styles={styles}/>
-        ))}
+        <Text text={item.name} variants={['h3']} responsiveVariants={{ small: ['marginVertical:2'] }}/>
+        <View variants={['gap:1', 'column', 'marginTop:3']}>
+
+          {item.links.map((i) => (
+            <ListItem item={i} depth={depth + 2} key={i.url} styles={styles}/>
+          ))}
+        </View>
       </View>
     )
   }
   return (
     <Link
       to={item.url}
-      variants={['alignCenter', 'padding:2', 'flex', 'marginVertical:1']}
+      variants={['alignCenter', 'padding:2', 'flex']}
       css={styles.link}
     >
       <View variants={['column', 'marginVertical:2']}>
@@ -85,6 +82,7 @@ const ListItem = ({ item, depth = 2, styles }) => {
       <Button
         variants={['circle', 'marginLeft:auto']}
         icon='arrowForward'
+        onPress={() => {}}
       />
     </Link>
   )
@@ -100,7 +98,7 @@ const componentStyle = variantProvider.createComponentStyle((theme) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     minHeight: '80vh',
-    ...theme.spacing.paddingVertical(8),
+    ...theme.spacing.paddingVertical(5),
     ...theme.spacing.marginBottom(9),
     width: '100vw',
     flexDirection: 'column',
@@ -131,7 +129,7 @@ const IndexPage: React.FC = () => {
   const styles = useComponentStyle(componentStyle)
 
   return (
-    <Page>
+    <Page title='Home'>
 
       <View styles={{ wrapper: styles.wrapper }} title='Template'>
 

@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "main": "src/index.ts",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",

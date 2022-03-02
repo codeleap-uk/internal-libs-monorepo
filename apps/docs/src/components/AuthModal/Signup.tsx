@@ -1,4 +1,4 @@
-import { Button, Settings, Text, TextInput, Touchable, variantProvider, View } from '@/app'
+import { React, Button, Settings, Text, TextInput, Touchable, variantProvider, View } from '@/app'
 import { Session, sessionSlice } from '@/redux'
 import { profileFromUser } from '@/services'
 import { createForm, onMount, useForm, useState } from '@codeleap/common'
@@ -6,6 +6,7 @@ import firebase from 'firebase'
 import * as yup from 'yup'
 import { Link } from '../Link'
 import { AppStatus } from '../ComponentShowcase/showCases'
+import { Toast } from '@codeleap/web'
 
 export const signupForm = createForm('signup', {
   first_name: {
@@ -47,7 +48,7 @@ export const signupForm = createForm('signup', {
   },
 })
 
-export const SignupForm = () => {
+export const SignupForm = ({ onFormSwitch, onAuthSuccess = null }) => {
   const [usingProvider, setUsingProvider] = useState('email')
 
   onMount(() => {
@@ -58,7 +59,7 @@ export const SignupForm = () => {
       form.setFormValues(profile)
       setUsingProvider('social')
     }
-    console.log({ profile })
+
   })
 
   const form = useForm(signupForm, {
@@ -66,30 +67,55 @@ export const SignupForm = () => {
     validateOn: 'blur',
   })
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const isValid = form.validateAll(true)
     if (isValid) {
-      Session.signup({ data: form.values, provider: usingProvider })
+      try {
+        const status = await Session.signup({
+          data: {
+            ...form.values,
+            avatar: null,
+          },
+          provider: usingProvider,
+        })
+        if (status === 'success') {
+          onAuthSuccess?.()
+        } else {
+          Toast.info({
+            title: 'Error signing up',
+            body: 'An error has ocurred',
+          })
+        }
+      } catch (e) {
+        logger.log('Signup failed', e, 'Authentication')
+        AppStatus.set('idle')
+        Toast.error({
+          title: 'Error signing up',
+          body: e.code ? e.message : '',
+        })
+      }
     }
   }
 
-  const renderTextInput = (register, props) => {
+  const renderTextInput = (register, props = {}) => {
     return (
       <TextInput {...form.register(register)} {...props} />
     )
   }
 
   return (
-    <View variants={['column', 'fullWidth']}>
-      <View css={styles.inputs} variants={['gap:1']}>
-        {renderTextInput('first_name', false)}
-        {renderTextInput('last_name', false)}
-        {renderTextInput('email', false)}
-        {renderTextInput('password', true)}
-        {renderTextInput('repeatPassword', {
-          visibilityToggle: true,
-        })}
-      </View>
+    <>
+
+      {renderTextInput('first_name')}
+      {renderTextInput('last_name')}
+      {renderTextInput('email')}
+      {renderTextInput('password', {
+        visibilityToggle: true,
+      })}
+      {renderTextInput('repeatPassword', {
+        visibilityToggle: true,
+      })}
+
       <Button
         text={'Submit'}
         variants={['marginTop:2', 'fullWidth']}
@@ -97,24 +123,22 @@ export const SignupForm = () => {
         disabled={!form.isValid}
 
       />
-      <View variants={['column', 'center', 'marginTop:2']}>
-        <Text
-          variants={['marginBottom:2']}
-        >
-          By signing in you agree with the <Link to={Settings.ContactINFO.TermsAndPrivacy} variants={['underlined']} text={'Terms and Conditions'}/>
-        </Text>
 
-      </View>
-    </View>
+      <Text variants={['alignSelfCenter', 'textCenter']}>
+        Already have an account? <Button text={'Login'} variants={['text', 'link', 'inline']} onPress={onFormSwitch}/>
+      </Text>
+      <Text
+        variants={['marginBottom:2', 'alignSelfCenter', 'textCenter']}
+      >
+          By signing in you agree with the <Link to={Settings.ContactINFO.TermsAndPrivacy} variants={['underlined']} text={'Terms and Conditions'}/>
+      </Text>
+
+    </>
+
   )
 }
 
 const styles = variantProvider.createComponentStyle({
-  inputs: {
-    display: 'grid',
-    gridTemplateColumns: 'auto',
-    overflow: 'hidden',
-  },
 
   touchableWrapper: {
     cursor: 'pointer',

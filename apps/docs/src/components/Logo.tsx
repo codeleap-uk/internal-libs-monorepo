@@ -12,7 +12,7 @@ export function Logo(props: LogoProps) {
 
   const { currentTheme } = useCodeleapContext()
 
-  const source = (props.variants?.includes('black') || currentTheme === 'light') ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
+  const source = (props.variants?.includes('black') || (currentTheme === 'light' && !props.variants)) ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
 
   const [numberOfPresses, setPresses] = useState(0)
 
@@ -26,7 +26,7 @@ export function Logo(props: LogoProps) {
 
   const image = <Image
     source={source}
-    style={[styles.image, props?.style]}
+    css={[styles.image, props?.style]}
   />
 
   if (props.switchServerOnPress && Settings.Environment.IsDev) {

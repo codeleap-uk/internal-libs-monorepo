@@ -7,6 +7,7 @@ import {
   ButtonComposition,
   ButtonParts,
   optionalObject,
+  AnyFunction,
 } from '@codeleap/common'
 import React, { ComponentPropsWithRef } from 'react'
 import { StylesOf } from '../types/utility'
@@ -23,9 +24,11 @@ export type ButtonProps = NativeButtonProps &
     text?: string
     rightIcon?: IconPlaceholder
     icon?: IconPlaceholder
-    onPress?: NativeButtonProps['onClick']
+    onPress?: AnyFunction
     styles?: StylesOf<ButtonComposition>
     loading?: boolean
+    debugName?: string
+    debounce?: number
   }
 
 export const Button: React.FC<ButtonProps> = (buttonProps) => {
@@ -40,9 +43,10 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     onPress,
     disabled,
     rightIcon,
+    debounce = 600,
     ...props
   } = buttonProps
-
+  const [pressed, setPressed] = React.useState(false)
   const variantStyles = useDefaultComponentStyle('Button', {
     responsiveVariants,
     variants,
@@ -50,30 +54,45 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
   })
 
   function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
-    props.onClick && props.onClick(e)
-    onPress && onPress(e)
+    if (!pressed) {
+      props?.onClick?.(e)
+
+      setPressed(true)
+
+      setTimeout(() => setPressed(false), debounce)
+
+      onPress && onPress()
+    }
   }
 
   function getStyles(key:ButtonParts) {
+
     return {
       ...variantStyles[key],
       ...optionalObject(disabled, variantStyles[key + ':disabled'], {}),
     }
   }
   const iconStyle = getStyles('icon')
-
   return (
     <Touchable
       css={getStyles('wrapper')}
       component='button'
-      onClick={handlePress}
+      debugComponent='Button'
+
+      onPress={handlePress}
       {...props}
     >
-      {loading && <ActivityIndicator css={getStyles('loader')} />}
+      {loading && <ActivityIndicator styles={{
+        'wrapper': getStyles('loaderWrapper'),
+        'backCircle': getStyles('loaderBackCircle'),
+        'frontCircle': getStyles('loaderFrontCircle'),
+        'circle': getStyles('loaderCircle'),
+      }} css={getStyles('loader')}/>}
       {!loading && (
         <Icon
           name={icon}
           style={{ ...iconStyle, ...getStyles('leftIcon') }}
+          renderEmptySpace={!!text}
         />
       )}
       {children || (
@@ -84,9 +103,11 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
           }}
         />
       )}
+
       <Icon
         name={rightIcon}
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
+        renderEmptySpace={!!text}
       />
     </Touchable>
   )

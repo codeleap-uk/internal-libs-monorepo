@@ -12,6 +12,8 @@ export type TouchableProps<T extends ElementType> = ComponentPropsWithRef<T> & {
   disabled?: boolean
   propagate?: boolean
   onPress?: AnyFunction
+  debugComponent?: string
+  debugName?: string
 }
 
 export const Touchable = <T extends ElementType = typeof View>(
@@ -24,6 +26,8 @@ export const Touchable = <T extends ElementType = typeof View>(
     disabled,
     onPress,
     onClick,
+    debugComponent,
+    debugName,
     ...props
   } = touchableProps
 
@@ -34,11 +38,14 @@ export const Touchable = <T extends ElementType = typeof View>(
 
     if (!propagate) stopPropagation(event)
 
-    if (!onClick && !onPress) { throw new Error('No onClick or onPress passed to touchable') }
+    if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
+    logger.log(
+      `<${debugComponent || 'Touchable'}/>  pressed`,
+      { debugName, debugComponent },
+      'User interaction',
+    )
     onPress && onPress()
-
-    onClick && onClick(event)
-
+    onClick?.()
     // logger.log('Touchable pressed', JSON.stringify(touchableProps, null, 2)  ,'Component')
   }
 

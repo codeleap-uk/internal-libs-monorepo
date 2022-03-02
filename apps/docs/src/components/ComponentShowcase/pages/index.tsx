@@ -1,5 +1,4 @@
-import { React, allComponents, View, Button, variantProvider, Theme } from '@/app'
-import { onUpdate, useCodeleapContext } from '@codeleap/common'
+import { React, allComponents, View, variantProvider, Theme } from '@/app'
 import { useState } from 'react'
 import { Showcase } from '..'
 import { ComponentList } from '../components/ComponentList'
@@ -9,11 +8,9 @@ const defaultComponent = Object.keys(allComponents)[0]
 
 export const ComponentShowcase: React.FC = () => {
   const [selectedComponent, setComponent] = useState(defaultComponent)
-  const { currentTheme, Theme } = useCodeleapContext()
 
   return (
     <Page header={false} footer={false} center={false} styles={{ wrapper: styles.innerWrapper }}>
-
       <ComponentList onSelect={setComponent} current={selectedComponent} />
       <View
         variants={['flex']}

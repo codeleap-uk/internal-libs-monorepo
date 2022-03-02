@@ -1,7 +1,6 @@
-import firebase, { FirebaseAuthTypes } from 'gatsby-plugin-firebase'
-
+/* eslint-disable @typescript-eslint/no-namespace */
+import fireabaseAuth from 'gatsby-plugin-firebase'
 import { api, logger } from '@/app'
-
 import { Profile, TSession } from '@/redux'
 
 const FBErrorProps = ['name', 'namespace', 'code', 'message'] as const
@@ -9,11 +8,13 @@ export type FirebaseError = Partial<
   Record<typeof FBErrorProps[number], string>
 >
 
-export {
-  firebase,
-}
+export const firebase = fireabaseAuth.auth
+const auth = fireabaseAuth.auth
 
-const auth = firebase.auth
+namespace FirebaseAuthTypes {
+  export type User = fireabaseAuth.User
+  export type UserCredential = fireabaseAuth.auth.UserCredential
+}
 
 export function isFirebaseError(err) {
   try {
@@ -34,22 +35,8 @@ export function isFirebaseError(err) {
 const SCOPE = 'Authentication'
 
 export const CredentialProviders = {
-  'google': {
-    provider: firebase.auth.GoogleAuthProvider,
-    getErrorMessage(error) {
-
-    },
-  },
-  'facebook': {
-    provider: firebase.auth.FacebookAuthProvider,
-    getErrorMessage(reason) {
-      if (reason?.code?.includes('auth/account-exists-with-different-credential')) {
-        return 'An account already exists with the same email address but different sign-in credentials. Sign in using a provider associated with this email address.'
-      }
-
-      return null
-    },
-  },
+  google: () => auth().signInWithPopup(new auth.GoogleAuthProvider()),
+  facebook: () => auth().signInWithPopup(new auth.FacebookAuthProvider()),
 }
 
 export type Providers = keyof typeof CredentialProviders
@@ -75,11 +62,9 @@ export type TryLoginArgs =
     }
 
 export async function trySocialLogin({ withProvider }: TrySocialLoginArgs) {
-  const socialCredential = new CredentialProviders[withProvider].provider()
+  const socialCredential = await CredentialProviders[withProvider]()
 
-  const userCredential = await auth().signInWithCredential(socialCredential)
-
-  return userCredential
+  return socialCredential
 }
 
 export async function loadOwnProfile(): Promise<TSession['profile']> {
@@ -202,34 +187,38 @@ export async function trySignup({ data, provider }: TrySignupArgs) {
   }
 }
 
+export async function reauthenticateCredentials(data: any) {
+  return await auth().signInWithEmailAndPassword(data.email, data.password)
+}
+
 export async function sendVerificationEmail() {
   auth().currentUser.sendEmailVerification()
 }
 
-export async function updateProfile(currentProfile:Profile, newProfile:Partial<Profile>) {
+export async function saveProfile(currentProfile:Profile, newProfile:Partial<Profile>) {
+  const isAvatarChanged = currentProfile?.avatar != newProfile?.avatar
 
-  const { data: updatedProfile } = await api.patch(
+  const { data: savedProfile } = await api.patch(
     `profiles/${currentProfile.id}/`,
-    { data: { ...currentProfile, ...newProfile }, files: newProfile?.avatar },
+    { data: { ...currentProfile, ...newProfile }, files: isAvatarChanged && newProfile?.avatar },
     { multipart: true },
   )
 
-  if (currentProfile.email !== updatedProfile.email) {
-    await auth().currentUser.updateEmail(updatedProfile.email)
-    await auth().currentUser.sendEmailVerification()
-
-  }
-  if (updatedProfile.password) {
-    auth().currentUser.updatePassword(updatedProfile.password)
-  }
-
-  return updatedProfile as Profile
-
+  return savedProfile
 }
 
-export async function sendPasswordReset(email:string) {
-  await auth().sendPasswordResetEmail(email)
+export async function updateEmail(email: string) {
+  const user = auth().currentUser
+
+  return await user.updateEmail(email)
 }
+
+export async function sendPasswordReset() {
+  const userEmail = auth().currentUser.email
+
+  return await auth().sendPasswordResetEmail(userEmail)
+}
+
 export async function logout() {
   await auth().signOut()
 }

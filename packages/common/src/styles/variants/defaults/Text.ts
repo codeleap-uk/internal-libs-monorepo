@@ -72,4 +72,10 @@ export const TextStyles = {
   p3: assignTextStyle('p3'),
   p4: assignTextStyle('p4'),
   link: assignTextStyle('p1'),
+  OSAlertBody: createTextStyle((theme) => ({
+    text: {
+      ...assignTextStyle('p1')(theme).text,
+      ...theme.presets.textCenter,
+    },
+  })),
 }
