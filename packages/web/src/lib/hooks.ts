@@ -1,8 +1,12 @@
-import { AnyFunction, onUpdate } from '@codeleap/common'
+import { AnyFunction, onMount, onUpdate } from '@codeleap/common'
 import { useRef, useState } from 'react'
 import { v4 } from 'uuid'
 export function useWindowSize() {
-  const [size, setSize] = useState([window.innerWidth, window.innerWidth])
+  const [size, setSize] = useState([])
+
+  onMount(() => {
+    setSize([window.innerWidth, window.innerWidth])
+  })
 
   function handleResize() {
     setSize([window.innerWidth, window.innerHeight])

@@ -13,18 +13,24 @@ module.exports = {
     //     redirect: true,
     //   },
     // },
+    // {
+    //   resolve: 'gatsby-plugin-firebase',
+    //   options: {
+    //     credentials: {
+    //       apiKey: 'AIzaSyBzvr9bN5M2lgzTLIo07wn3bUmmZnsMhaA',
+    //       authDomain: 'codeleap-project-template.firebaseapp.com',
+    //       databaseURL: 'https://codeleap-project-template.firebaseio.com',
+    //       projectId: 'codeleap-project-template',
+    //       storageBucket: 'codeleap-project-template.appspot.com',
+    //       messagingSenderId: '268760770384',
+    //       appId: '1:268760770384:web:49a825eb74a7b626d1ee55',
+    //     },
+    //   },
+    // },
     {
-      resolve: 'gatsby-plugin-firebase',
+      resolve: `gatsby-plugin-s3`,
       options: {
-        credentials: {
-          apiKey: 'AIzaSyBzvr9bN5M2lgzTLIo07wn3bUmmZnsMhaA',
-          authDomain: 'codeleap-project-template.firebaseapp.com',
-          databaseURL: 'https://codeleap-project-template.firebaseio.com',
-          projectId: 'codeleap-project-template',
-          storageBucket: 'codeleap-project-template.appspot.com',
-          messagingSenderId: '268760770384',
-          appId: '1:268760770384:web:49a825eb74a7b626d1ee55',
-        },
+        bucketName: 'documentation',
       },
     },
     `gatsby-plugin-tsconfig-paths`,

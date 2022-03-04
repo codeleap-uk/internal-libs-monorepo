@@ -5,10 +5,9 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { LocalStorageKeys, logger, Settings, Theme, variantProvider, variants } from './app'
 import { Session, store, useAppSelector } from './redux'
 import { Global } from '@emotion/react'
-import { globalStyle, globalStyleDark, globalStyleLight } from './app/stylesheets/Global'
+import { globalStyleDark, globalStyleLight } from './app/stylesheets/Global'
 import { ToastContainer } from 'react-toastify'
-import { auth } from 'firebase'
-import { firebase } from './services'
+import { auth } from './services'
 
 function init() {
   logger.log('Initialising app...', '', 'App lifecycle')

@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import fireabaseAuth from 'gatsby-plugin-firebase'
+// import fireabaseAuth from 'gatsby-plugin-firebase'
 import { api, logger } from '@/app'
 import { Profile, TSession } from '@/redux'
-
+import { getFirebase } from './firebase'
+import * as FireabaseAuthTypes from '@firebase/auth-types'
 const FBErrorProps = ['name', 'namespace', 'code', 'message'] as const
 export type FirebaseError = Partial<
   Record<typeof FBErrorProps[number], string>
 >
 
-export const firebase = fireabaseAuth.auth
-const auth = fireabaseAuth.auth
+export const auth = () => getFirebase().auth()
+
+export const firebase = getFirebase()
 
 namespace FirebaseAuthTypes {
-  export type User = fireabaseAuth.User
-  export type UserCredential = fireabaseAuth.auth.UserCredential
+  export type User = FireabaseAuthTypes.User
+  export type UserCredential = FireabaseAuthTypes.UserCredential
 }
 
 export function isFirebaseError(err) {
@@ -35,8 +37,8 @@ export function isFirebaseError(err) {
 const SCOPE = 'Authentication'
 
 export const CredentialProviders = {
-  google: () => auth().signInWithPopup(new auth.GoogleAuthProvider()),
-  facebook: () => auth().signInWithPopup(new auth.FacebookAuthProvider()),
+  google: () => auth().signInWithPopup(new auth().GoogleAuthProvider()),
+  facebook: () => auth().signInWithPopup(new auth().FacebookAuthProvider()),
 }
 
 export type Providers = keyof typeof CredentialProviders

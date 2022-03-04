@@ -8,7 +8,9 @@
     "gradlew": "cd android && ./gradlew",
     "styles": "node ../../node_modules/@codeleap/common/dist/scripts/createStyleSheets",
     "license-crawler": "npm-license-crawler --json ./src/app/license.json --onlyDirectDependencies",
-    "postinstall": "yarn patch-package && node ./postInstall.js && yarn run license-crawler"
+    "postinstall": "yarn patch-package && node ./postInstall.js && yarn run license-crawler",
+    "deploy": "gatsby-plugin-s3 deploy",
+    "build-web": "gatsby build"
   },
   "dependencies": {
     "@codeleap/common": "*",
@@ -36,6 +38,7 @@
     "gatsby-plugin-manifest": "^4.4.0",
     "gatsby-plugin-mdx": "^3.8.1",
     "gatsby-plugin-react-helmet": "^5.4.0",
+    "gatsby-plugin-s3": "^0.3.8",
     "gatsby-plugin-sharp": "^4.4.0",
     "gatsby-plugin-sitemap": "^5.4.0",
     "gatsby-plugin-tsconfig-paths": "^1.0.5",

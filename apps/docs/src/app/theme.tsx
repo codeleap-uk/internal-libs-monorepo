@@ -4,10 +4,12 @@ import { CSSObject } from '@emotion/css'
 import { Icons } from './assets/icons'
 import { useWindowSize } from '@codeleap/web'
 
+const window = global?.window || {}
+
 const getWindowDimensions = () => {
   return {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: window?.innerWidth || 0,
+    height: window?.innerHeight || 0,
   }
 }
 

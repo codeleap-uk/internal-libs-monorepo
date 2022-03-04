@@ -9,6 +9,8 @@ const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
 }
 
+const window = global?.window || { process: null }
+
 /**
  * [[include:Theme.md]]
  */

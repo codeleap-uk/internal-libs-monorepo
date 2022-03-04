@@ -1,9 +1,5 @@
 import { Settings } from '../app/Settings'
 import { LoggerAnalytics } from '@codeleap/common'
-// import analytics from '@react-native-firebase/analytics'
-import moment from 'moment'
-import { store } from '@/redux'
-import { firebase, profileFromUser } from './authentication'
 
 export const AppAnalytics = new LoggerAnalytics.Analytics({
   init: () => {
