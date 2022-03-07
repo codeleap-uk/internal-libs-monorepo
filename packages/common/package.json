@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
@@ -10,7 +10,6 @@
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
     "@types/react": "^17.0.38",
-    "axios": "^0.24.0",
     "chai": "^4.3.4",
     "eslint": "^8.5.0",
     "husky": "^7.0.4",
@@ -28,7 +27,6 @@
     "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
-    "axios": "^0.24.0",
     "react": "^17.0.2",
     "react-icons": "^4.3.1",
     "yup": "^0.32.11"
@@ -36,6 +34,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1",
     "@sentry/browser": "^6.16.1",
+    "axios": "0.24.0",
     "callsites": "^4.0.0",
     "deep-equal": "^2.0.5",
     "react-use": "^17.3.2"
