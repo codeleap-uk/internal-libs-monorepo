@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { RequestQueueItem } from '.'
 import { Logger } from '..'
 import { CancellablePromise } from '../..'
@@ -108,7 +108,7 @@ export class RequestClient implements IRequestClient {
       }
     }
 
-    private onRequest<T = any>(data: RequestClientConfig):CancellablePromise<T> {
+    private onRequest<T = any>(data: RequestClientConfig<T>):CancellablePromise<AxiosResponse<T>> {
 
       const requestId = `${data.baseURL || this.config?.baseURL || ''}${data.url}`
 
@@ -167,8 +167,8 @@ export class RequestClient implements IRequestClient {
       return promise
     }
 
-    patch(url:string, data: any, config?: RequestClientConfig) {
-      return this.onRequest({
+    patch<T = any>(url:string, data: any, config?: RequestClientConfig) {
+      return this.onRequest<T>({
         url,
         data,
         method: 'PATCH',
@@ -176,8 +176,8 @@ export class RequestClient implements IRequestClient {
       })
     }
 
-    put(url:string, data: any, config?: RequestClientConfig) {
-      return this.onRequest({
+    put<T = any>(url:string, data: any, config?: RequestClientConfig) {
+      return this.onRequest<T>({
         url,
         data,
         method: 'PUT',
@@ -185,24 +185,24 @@ export class RequestClient implements IRequestClient {
       })
     }
 
-    get(url:string, config?: RequestClientConfig) {
-      return this.onRequest({
+    get<T = any>(url:string, config?: RequestClientConfig) {
+      return this.onRequest<T>({
         url,
         method: 'GET',
         ...config,
       })
     }
 
-    delete(url:string, config?: RequestClientConfig) {
-      return this.onRequest({
+    delete<T = any>(url:string, config?: RequestClientConfig) {
+      return this.onRequest<T>({
         url,
         method: 'DELETE',
         ...config,
       })
     }
 
-    post(url:string, data: any, config?: RequestClientConfig) {
-      return this.onRequest({
+    post<T = any>(url:string, data: any, config?: RequestClientConfig) {
+      return this.onRequest<T>({
         url,
         data,
         method: 'POST',
