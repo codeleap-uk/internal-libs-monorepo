@@ -38,7 +38,7 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
     styles,
     ...viewProps
   } = indicatorProps
-  console.log(`ACTIVITY`, styles)
+
   const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
     styles,
     responsiveVariants,

@@ -3,10 +3,18 @@ import { textStyles } from './textStyles'
 import { CSSObject } from '@emotion/css'
 import { Icons } from './assets/icons'
 import { useWindowSize } from '@codeleap/web'
+import { LocalStorageKeys } from './constants'
 
-const window = global?.window || {}
+const IS_SSR = typeof window === 'undefined'
 
 const getWindowDimensions = () => {
+  if (IS_SSR) {
+    return {
+      height: 0,
+      widht: 0,
+    }
+
+  }
   return {
     width: window?.innerWidth || 0,
     height: window?.innerHeight || 0,
@@ -38,6 +46,7 @@ const themeObj = {
       textH: '#333',
       textP: '#555',
       grayFade: '#5552',
+      inlineCode: '#7695EC',
     },
     dark: {
       primary: '#7695EC',
@@ -62,6 +71,7 @@ const themeObj = {
       textH: '#fff',
       textP: '#fff',
       grayFade: '#5552',
+      inlineCode: '#7695EC',
     },
   },
   breakpoints: {
@@ -126,7 +136,7 @@ const themeObj = {
 
     },
   },
-  initialTheme: window?.localStorage?.getItem('codeleap.theme') || 'light',
+  initialTheme: IS_SSR ? 'light' : (window.___savedTheme || 'light'),
 } as const
 
 const appTheme = createTheme(themeObj, {

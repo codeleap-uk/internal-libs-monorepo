@@ -9,7 +9,7 @@ const ext = [
 
 ]
 
-if (Settings.Environment.IsDev && window.__REDUX_DEVTOOLS_EXTENSION__) {
+if (typeof window !== 'undefined' && Settings.Environment.IsDev && window.__REDUX_DEVTOOLS_EXTENSION__) {
   ext.push(window.__REDUX_DEVTOOLS_EXTENSION__())
 }
 

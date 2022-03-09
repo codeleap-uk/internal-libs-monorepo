@@ -1,7 +1,7 @@
-import { Theme, Image, React, variantProvider, Touchable, Settings } from '@/app'
+import { Theme, React, variantProvider, Touchable, Settings } from '@/app'
 import { onUpdate, useCodeleapContext, useState } from '@codeleap/common'
 import { Session } from '@/redux'
-
+import { Image } from './Image'
 type LogoProps = {
   variants?: string | string[]
   switchServerOnPress?: boolean
@@ -9,7 +9,11 @@ type LogoProps = {
 }
 
 export function Logo(props: LogoProps) {
+  const {
+    style,
+    switchServerOnPress,
 
+  } = props
   const { currentTheme } = useCodeleapContext()
 
   const source = (props.variants?.includes('black') || (currentTheme === 'light' && !props.variants)) ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
@@ -26,10 +30,11 @@ export function Logo(props: LogoProps) {
 
   const image = <Image
     source={source}
-    css={[styles.image, props?.style]}
+    css={[styles.image, style]}
+    {...props}
   />
 
-  if (props.switchServerOnPress && Settings.Environment.IsDev) {
+  if (switchServerOnPress && Settings.Environment.IsDev) {
     return <Touchable onPress={() => setPresses(n => n + 1) }
       debugName={'Click on Logo'}>
       {image}

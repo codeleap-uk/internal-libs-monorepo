@@ -5,7 +5,7 @@ export * from './theme'
 export { LocalStorageKeys } from './constants'
 export * from './api'
 export type { AppIcon } from './assets/icons'
-import * as AppComponents from '../components'
+
 import LibComponents, { variants } from './components'
 import React from 'react'
 import { CreateOSAlert } from '@codeleap/web'
@@ -14,7 +14,7 @@ import { Settings } from './Settings'
 
 export const allComponents = {
   ...LibComponents,
-  ...AppComponents,
+
 }
 
 export const {
@@ -30,10 +30,8 @@ export const {
   Touchable,
   Slider,
   CenterWrapper,
-  Image,
   Scroll,
   List,
-  Link,
   Drawer,
   Overlay,
   ActivityIndicator,
@@ -43,8 +41,6 @@ export const {
   Menu,
   Tooltip,
   Modal,
-  AppStatusOverlay,
-  Avatar,
 
 } = allComponents
 

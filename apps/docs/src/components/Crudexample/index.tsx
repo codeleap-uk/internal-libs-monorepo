@@ -180,4 +180,3 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
   },
 }))
 
-export default CrudExample

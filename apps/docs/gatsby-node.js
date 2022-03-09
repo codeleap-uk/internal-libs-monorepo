@@ -1,5 +1,6 @@
 const componentWithMDXScope = require('gatsby-plugin-mdx/component-with-mdx-scope')
 const { resolve } = require('path')
+
 /**
  * Implement Gatsby's Node APIs in this file.
  *
@@ -39,7 +40,7 @@ exports.createPages = async ({ graphql, actions }) => {
               path
               title
               module
-   
+
             }
           }
         }
@@ -61,3 +62,18 @@ exports.createPages = async ({ graphql, actions }) => {
   }
 }
 
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type MdxFrontmatter implements Node {
+      date: String
+      path: String
+      title: String
+      category: String
+      module: String
+      next: String
+      previous: String
+    }
+  `
+  createTypes(typeDefs)
+}

@@ -1,13 +1,13 @@
 import * as React from 'react'
 
-import { onMount, onUpdate, StyleProvider, useCodeleapContext } from '@codeleap/common'
+import { onMount, useState, onUpdate, useCodeleapContext } from '@codeleap/common'
 import { Provider as ReduxProvider } from 'react-redux'
-import { LocalStorageKeys, logger, Settings, Theme, variantProvider, variants } from './app'
+import { LocalStorageKeys, logger, Theme, variantProvider } from './app'
 import { Session, store, useAppSelector } from './redux'
 import { Global } from '@emotion/react'
 import { globalStyleDark, globalStyleLight } from './app/stylesheets/Global'
 import { ToastContainer } from 'react-toastify'
-import { auth } from './services'
+import { withFirebase } from './services/firebase'
 
 function init() {
   logger.log('Initialising app...', '', 'App lifecycle')
@@ -22,15 +22,19 @@ const Toaster = () => {
   const { currentTheme } = useCodeleapContext()
 
   const colors = Theme.colors[currentTheme]
-  const { isLoggedIn } = useAppSelector(store => store.Session)
+  const { isLoggedIn, appMounted } = useAppSelector(store => store.Session)
   onUpdate(() => {
-    const unsubscribe = auth().onAuthStateChanged((user) => {
-      if (user && !isLoggedIn) {
-        Session.autoLogin(false).then(() => Session.setMounted())
+    const unsubscribe = withFirebase((fb) => fb.auth().onAuthStateChanged((user) => {
+      if (user && !isLoggedIn && !appMounted) {
+        Session.autoLogin(false).then(() => Session.setMounted()).catch(() => Session.setMounted())
+      } else {
+        Session.setMounted()
       }
-    })
+    }))
 
-    return unsubscribe
+    return () => {
+      unsubscribe.then(unsub => unsub())
+    }
   }, [isLoggedIn])
 
   return <>
@@ -46,33 +50,14 @@ const Toaster = () => {
 
 const Root = ({ children }) => {
 
-  onMount(() => {
-
-    const unsubscribe = variantProvider.onColorSchemeChange(t => {
-      if (window) {
-        localStorage.setItem(LocalStorageKeys.THEME, t.theme)
-
-      }
-    })
-    return () => {
-      unsubscribe()
-    }
-  })
-
   return (
 
     <ReduxProvider store={store}>
 
-      <StyleProvider
-        variants={variants}
-        settings={Settings}
-        variantProvider={variantProvider}
-        logger={logger}
-      >
-        <Toaster />
+      <Toaster />
 
-        {children}
-      </StyleProvider>
+      {children}
+
     </ReduxProvider>
 
   )

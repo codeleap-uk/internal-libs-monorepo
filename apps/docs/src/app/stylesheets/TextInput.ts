@@ -11,10 +11,6 @@ const defaultVariant = createTextInputStyle((theme) => ({
     ...defaultStyles.default(theme).innerWrapper,
     borderRadius: theme.borderRadius.small,
   },
-  icon: {
-    ...defaultStyles.default(theme).icon,
-    color: theme.colors.neutral,
-  },
 }))
 
 export const AppTextInputStyles = {

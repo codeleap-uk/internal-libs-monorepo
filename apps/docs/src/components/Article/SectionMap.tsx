@@ -1,6 +1,7 @@
-import { React, Text, Link, variantProvider, View } from '@/app'
+import { React, Text, variantProvider, View } from '@/app'
 import { useComponentStyle } from '@codeleap/common'
-
+import { Link } from '../Link'
+import { getHeadingId } from './utils'
 const headings = ['h1', 'h2'] as const
 
 type Node = {
@@ -11,7 +12,7 @@ type Node = {
 
 function mapSections(content) {
   const nodes:Node[] = []
-  console.log(content)
+
   content.forEach(({ props }) => {
     const lastNode = nodes[nodes.length - 1]
     if (headings.includes(props?.mdxType)) {
@@ -40,9 +41,11 @@ function mapSections(content) {
 const SectionText = (props:{node:Node}) => {
   const { node } = props
 
+  const nodeId = getHeadingId(node.text)
+
   if (node.level === 1) {
     return <View variants={['column', 'gap:2']}>
-      <Link variants={['h4']} text={node.text} to={`#section-${node.text}`}/>
+      <Link variants={['h4']} text={node.text} to={`#${nodeId}`} />
       {
         node.children?.map(node => <SectionText node={node} />)
       }
@@ -50,7 +53,7 @@ const SectionText = (props:{node:Node}) => {
 
   } else {
 
-    return <Link variants={['h5', 'marginLeft:3']} text={node.text} to={`#section-${node.text}`}/>
+    return <Link variants={['h5', 'marginLeft:3']} text={node.text} to={`#${nodeId}`} />
   }
 }
 

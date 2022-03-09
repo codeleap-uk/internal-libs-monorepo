@@ -91,14 +91,14 @@ const dark = {
       color: 'rgb(248, 248, 242)',
     },
   }, {
-    types: ['string', 'char', 'tag', 'selector'],
+    types: ['char', 'tag', 'selector'],
     style: {
-      color: 'rgb(255, 121, 198)',
+      color: 'rgb(189, 147, 249)',
     },
   }, {
     types: ['keyword', 'variable'],
     style: {
-      color: 'rgb(189, 147, 249)',
+      color: 'rgb(255, 121, 198)',
       fontStyle: 'italic',
     },
   }, {
@@ -107,7 +107,7 @@ const dark = {
       color: 'rgb(98, 114, 164)',
     },
   }, {
-    types: ['attr-name'],
+    types: ['string', 'attr-name'],
     style: {
       color: 'rgb(241, 250, 140)',
     },
@@ -120,3 +120,4 @@ const CodeThemes = {
 }
 
 export default CodeThemes
+

@@ -15,7 +15,7 @@ export type AvatarComposition =
 
 const createAvatarStyle = createDefaultVariantFactory<AvatarComposition>()
 
-const presets = includePresets((styles) => createAvatarStyle(() => ({ general: styles })),
+const presets = includePresets((styles) => createAvatarStyle(() => ({ wrapper: styles })),
 )
 
 export const AvatarStyles = {

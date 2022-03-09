@@ -115,14 +115,13 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
 
   const style = {
     transition: 'transform 0.2s ease',
-    ...variantStyles.bubble,
     '&:after': {
       ...variantStyles.arrow,
       ...arrowPos,
       transform: arrowPos.transform + ' rotate(45deg)',
     },
-    ...styles,
     ...tooltipPositionStyles[position](10, debouncedVisible),
+    ...variantStyles.bubble,
   } as CSSObject
 
   const wrapperId = useClickOutside(

@@ -51,6 +51,7 @@ export function useClickOutside(
 export function useScrollEffect(
   effect: (passed: boolean, current: number) => any,
   breakpoint: number,
+  extraDependencies = [],
 ) {
   function handleScroll() {
     const passed = window.scrollY > breakpoint
@@ -62,5 +63,5 @@ export function useScrollEffect(
     return () => {
       document.removeEventListener('scroll', handleScroll)
     }
-  }, [breakpoint])
+  }, [breakpoint, ...extraDependencies])
 }

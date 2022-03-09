@@ -28,6 +28,7 @@ type ContentProps = {
     title: string
     path: string
   }[]
+  showMenu?: boolean
 }
 export * from './Router'
 export * from './Menu'
@@ -97,7 +98,7 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
         </title>
       </Helmet>
       {renderContentWrapper ? (
-        <Content styles={variantStyles} menuItems={menuItems}>
+        <Content styles={variantStyles} menuItems={menuItems} showMenu={currentPage?.showMenu}>
           <Router
             defaultPath={defaultPath}
             basePath={basePath}
@@ -108,7 +109,7 @@ export const RouterPage: React.FC<RouterPageProps> = (props) => {
         </Content>
       ) : (
         <>
-          {currentPage.showMenu ? <Menu items={menuItems} styles={variantStyles} /> : null}
+          {currentPage?.showMenu ? <Menu items={menuItems} styles={variantStyles} /> : null}
           <View css={variantStyles.content}>
             <Router
               defaultPath={defaultPath}

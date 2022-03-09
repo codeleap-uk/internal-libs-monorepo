@@ -1,10 +1,10 @@
-import { View, variantProvider, RouterPage, CenterWrapper, Settings } from '@/app'
+import { View, variantProvider, RouterPage, CenterWrapper, Settings, LocalStorageKeys } from '@/app'
 import { CenterWrapperProps } from '@codeleap/web'
 
 import { Footer } from './Footer'
 import { Header } from './Header'
 import { Helmet } from 'react-helmet'
-import { useComponentStyle } from '@codeleap/common'
+import { onMount, useComponentStyle } from '@codeleap/common'
 
 type PageProps = CenterWrapperProps & {
   center?: boolean
@@ -38,6 +38,24 @@ export const Page: React.FC<PageProps> = (props) => {
   ) : (
     children
   )
+
+  onMount(() => {
+
+    variantProvider.onColorSchemeChange(t => {
+
+      console.log('Theme change', t.theme)
+      localStorage.setItem(LocalStorageKeys.THEME, t.theme)
+
+    })
+  })
+  onMount(() => {
+    const storedTheme = window?.___savedTheme
+
+    if (storedTheme) {
+      variantProvider.setColorScheme(storedTheme)
+    }
+
+  })
 
   const styles = useComponentStyle(componentStyles)
   return (

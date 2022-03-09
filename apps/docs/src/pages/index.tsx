@@ -1,10 +1,9 @@
 import { Button, Text, LocalStorageKeys, React } from '@/app'
-import { AppStatusOverlay, Page } from '@/components'
+import { AppStatusOverlay, Page, Link } from '@/components'
 import { AppStatus, Session, useAppSelector } from '@/redux'
 import { onMount, onUpdate, useComponentStyle } from '@codeleap/common'
 import {
   View,
-  Link,
   variantProvider,
   Theme,
 
@@ -69,7 +68,7 @@ const ListItem = ({ item, depth = 2, styles }) => {
         }}
 
       >
-        <Text text={item.name} variants={['h3']} responsiveVariants={{ small: ['marginVertical:2'] }}/>
+        <Text text={item.name} variants={['h1']} responsiveVariants={{ small: ['marginVertical:2'] }}/>
         <View variants={['gap:1', 'column', 'marginTop:3']}>
 
           {item.links.map((i) => (
@@ -86,11 +85,11 @@ const ListItem = ({ item, depth = 2, styles }) => {
       css={styles.link}
     >
       <View variants={['column', 'marginVertical:2']}>
-        <Text text={item.name} variants={['h3', 'marginBottom:2']} />
+        <Text text={item.name} variants={[depth === 2 ? 'h1' : 'h2', 'marginBottom:2']} />
         <Text text={item.description} />
       </View>
       <Button
-        variants={['circle', 'marginLeft:auto']}
+        variants={['circle', 'marginLeft:3']}
         icon='arrowForward'
         onPress={() => {}}
       />

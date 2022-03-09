@@ -1,7 +1,8 @@
 import * as allComponents from '../showCases'
-import { View, Button, Scroll, Link, React, TextInput, variantProvider } from '@/app'
+import { View, Button, Scroll, React, TextInput, variantProvider } from '@/app'
 import { useCodeleapContext, useComponentStyle, useMemo, useState } from '@codeleap/common'
 import { Logo } from '../../Logo'
+import { Link } from '../../Link'
 
 export const ComponentList: React.FC<{
   onSelect: (name: string) => void

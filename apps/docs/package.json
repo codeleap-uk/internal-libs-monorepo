@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev:docs": "gatsby develop",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
-    "gradlew": "cd android && ./gradlew",
     "styles": "node ../../node_modules/@codeleap/common/dist/scripts/createStyleSheets",
     "license-crawler": "npm-license-crawler --json ./src/app/license.json --onlyDirectDependencies",
     "postinstall": "yarn patch-package && node ./postInstall.js && yarn run license-crawler",
     "deploy": "gatsby-plugin-s3 deploy",
-    "build-web": "gatsby build"
+    "build-web": "gatsby build",
+    "dev:docs": "gatsby develop",
+    "dev": "gatsby develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean"
   },
   "dependencies": {
     "@codeleap/common": "*",
@@ -70,6 +72,7 @@
     "@types/react-icons": "^3.0.0",
     "@welldone-software/why-did-you-render": "^6.2.3",
     "babel-plugin-module-resolver": "^4.1.0",
+    "dotenv": "^16.0.0",
     "eslint": "^7.14.0",
     "patch-package": "^6.4.7",
     "typescript": "^4.4.4"

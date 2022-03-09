@@ -4,6 +4,8 @@ title: 'Styling Basics'
 date: '2022-02-22'
 category: 'Concepts'
 module: 'concepts'
+previous: 'concepts/index'
+next: 'common/useQuery'
 ---
 
 At Codeleap, we use a styling system which aims to provide a fast development experience without compromising quality or flexibility. The base of this system is the concept of *variants*.
@@ -13,6 +15,7 @@ Variants can be described as a set of styles for a component's *composition* (it
 A *variant* of such a Button will modify one or more of the composition's elements, resulting in a different style which can be applied to the Button by referencing it's name in the variants prop.
 
 ```javascript
+
 const ButtonStyles = {
     default: {
         text: {
@@ -51,4 +54,154 @@ But once the `dark` variant is applied:
 ```
 <button style={{backgroundColor: 'black', color:'red'}}>Dark</button>
 
-Notice only the background has changed. That's because every variant inherits de default variant's style.
+Notice only the background has changed. That's because every variant inherits the default variant's style.
+
+# The theme
+
+Themes provide values to be applied across a design. The themes we use are no different, they expose values and functions (which return values of course) to be used when defining the styles of variants or individual application stylesheets in a way that can applied on both the web and react native.
+
+For example, applying padding and color to a variant looks roughly like this
+
+```javascript
+const Theme = createTheme({
+    colors: {
+        light: { // Light mode colors
+            primary: 'yellow'
+
+        },
+        dark: { // Dark mode colors
+            primary: 'blue'
+        }
+    }
+    spacing: 10
+    // ... other values
+})
+
+
+const ButtonStyles = {
+    wrapper: {
+        // since the multiplier is 3, returns { paddingTop: 30, paddingBottom: 30 }
+        ...Theme.spacing.paddingVertical(3), 
+        backgroundColor: Theme.colors.primary
+    }
+}
+```
+
+`createTheme` (exported from `@codeleap/common`) takes static values and creates an object with dynamic functions and values.
+
+The `spacing` property of the `Theme` object groups spacing values and functions such as `paddingVertical`, which use base configuration values of the `spacing` property defined when creating a theme.
+
+### TODO Create the theme spec page
+You can find the full model for the themes [here](somelink)
+
+# Themed variants
+
+With the concept of variants and a Theme, comes the need to standadardize the styling model, tying both elements togheter. 
+
+For that, we use a helper class called `VariantProvider`. Example usage:
+
+```javascript
+// styles.ts
+import {
+    createTheme,
+    VariantProvider,
+    ButtonComposition
+} from '@codeleap/common' 
+
+export const Theme = createTheme({
+    colors: {
+        light: {
+            primary: 'blue',
+            background: 'white'
+        },
+        dark: {
+            primary: 'blue',
+            background: 'black'
+        }
+    },
+    initialTheme: 'light'
+})
+
+export const variantProvider = new VariantProvider(Theme)
+
+// Gets the default styles for the button from the library
+const defaultStyles = variantProvider.getDefaultVariants('Button')
+
+// This function provides the color scheme for the current theme, 
+// and ensures we know which elements of the composition can be altered 
+// through the typescript generic `ButtonComposition`
+const createButtonVariant = variantProvider.createVariantFactory<ButtonComposition>()
+
+const ButtonStyles = {
+    ...defaultStyles,
+    // `theme` is given to the function during the app's execution with the colors for either dark 
+    // or light mode.
+    default: createButtonVariant((theme) => ({ 
+
+        // Merge the default library styles with our own
+        ...defaultStyles.default(theme), 
+        wrapper: {
+            ...defaultStyles.default(theme).wrapper,
+
+            // The color already has the correct value for the current theme
+            backgroundColor: theme.colors.background, 
+
+            // { paddingTop: 30, paddingBottom: 30 }
+            ...theme.spacing.paddingVertical(3) 
+        }
+    })),
+    primary: createButtonVariant((theme) => ({ 
+        wrapper: {
+            // Here, we override only the backgroundColor, all other properties 
+            // are inherited from the default variant
+            backgroundColor: theme.colors.primary, 
+        }
+    }))
+}
+
+export const variants = { // Define the variants for each component
+    Button: ButtonStyles
+}
+```
+
+The exported `variants` constant is then passed to a `StyleProvider` in the root level of the application.
+
+```jsx
+// App.tsx
+
+import {
+    StyleProvider,
+    Button,
+    useCodeleapContext
+} from '@codeleap/common'
+import {
+    variantProvider,
+    variants,
+    Theme
+} from './styles'
+
+const MyApp = () => {
+    const { currentTheme } = useCodeleapContext()
+
+    function toggleTheme(){
+        variantProvider.setColorScheme(currentTheme === 'light' ? 'dark' : 'light')
+    }
+
+    return <>
+        <Button onPress={toggleTheme} /> {/* This uses the styles of the default variant */}
+        <Button variants={['primary']}/> {/* This uses the styles of the primary variant */}
+        <View style={{
+            ...Theme.spading.marginTop(2) // The imported uppercase Theme can be used on it's own
+        }}> 
+            { /*Something goes here */ }
+        </View>
+    </>
+}
+
+const MyAppRoot = () => {
+    return <StyleProvider variants={variants} variantProvider={variantProvider}> 
+        <MyApp />
+    </StyleProvider>
+}
+
+```

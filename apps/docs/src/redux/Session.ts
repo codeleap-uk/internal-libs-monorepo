@@ -92,7 +92,7 @@ export const sessionSlice = createSlice({
     async logout(state, setState) {
       await Auth.logout()
 
-      setState(initialState)
+      setState({ ...initialState, appMounted: true })
     },
     async setMode(state, setState, to?:boolean) {
       const newValue = TypeGuards.isBoolean(to) ? to : !state.isDevelopment
@@ -142,6 +142,7 @@ export const sessionSlice = createSlice({
 
       setState({
         profile,
+        isLoggedIn: true,
       })
 
       return 'success'

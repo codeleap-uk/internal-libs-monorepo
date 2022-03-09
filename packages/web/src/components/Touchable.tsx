@@ -50,8 +50,8 @@ export const Touchable = <T extends ElementType = typeof View>(
   }
 
   return (
-    <Component {...props} onClick={handleClick}>
+    <View component={Component || 'div'} {...props} onClick={handleClick}>
       {children}
-    </Component>
+    </View>
   )
 }

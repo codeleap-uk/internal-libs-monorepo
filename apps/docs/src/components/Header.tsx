@@ -1,8 +1,8 @@
-import { React, Button, CenterWrapper, variantProvider, View, Tooltip, Theme, Drawer } from '@/app'
+import { React, Button, CenterWrapper, variantProvider, View, Tooltip, Theme, Drawer, List, LocalStorageKeys } from '@/app'
 import { Logo } from './Logo'
 import { Link } from './Link'
-import { onUpdate, useBooleanToggle, useCodeleapContext, useComponentStyle } from '@codeleap/common'
-import { AppStatus, useAppSelector } from '@/redux'
+import { onMount, onUpdate, useBooleanToggle, useCodeleapContext, useComponentStyle } from '@codeleap/common'
+import { AppStatus, Session, useAppSelector } from '@/redux'
 import { Avatar } from './Avatar'
 import { AuthModal } from './AuthModal'
 import { navigate } from 'gatsby'
@@ -43,6 +43,7 @@ export const Header = ({ center = true, children = null }) => {
   const toggleTheme = () => {
     variantProvider.setColorScheme(currentTheme == 'dark' ? 'light' : 'dark')
   }
+
   const isMobile = Theme.hooks.down('small')
 
   const toggleDrawer = () => {
@@ -65,6 +66,29 @@ export const Header = ({ center = true, children = null }) => {
 
   const NavComponent = isMobile ? Drawer : View
   const WrapperComponent = center ? CenterWrapper : ViewWrapper
+  const DesktopAvatar = () => (
+    isLoggedIn ?
+      <Tooltip
+        content={
+          <View variants={['column']}>
+            <Button text={'Profile'} variants={['list']} icon={'user'} onPress={() => navigate('/profile')}/>
+            <Button text={'Logout'} variants={['list', 'text:negative']} icon={'exit'} onPress={() => Session.logout()}/>
+          </View>
+        }
+        position='bottom'
+        showOn='click'>
+        <Avatar
+          profile={profile}
+          variants={['small', 'alignSelfCenter']}
+          debugName={'Header Avatar'}
+        />
+      </Tooltip> : <Avatar
+        profile={profile}
+        variants={['small', 'alignSelfCenter']}
+        debugName={'Header Avatar'}
+        onPress={ () => AppStatus.setModal('auth')}
+      />
+  )
 
   return <>
     <WrapperComponent styles={{ innerWrapper: styles.wrapper, wrapper: styles.floatingHeader }}>
@@ -77,7 +101,7 @@ export const Header = ({ center = true, children = null }) => {
       <NavComponent styles={{
         box: styles.nav,
 
-      }} css={styles.nav} open={drawerOpen} size='50vh' position='left' toggle={toggleDrawer} >
+      }} css={styles.nav} open={drawerOpen} size='80%' position='left' toggle={toggleDrawer} >
         {
           isMobile && <Link to={'/'} css={styles.logoWrapper}>
             <Logo
@@ -108,20 +132,29 @@ export const Header = ({ center = true, children = null }) => {
         {
           isMobile && <View variants={['separator', 'marginVertical:3']} />
         }
-
-        <Avatar
-          profile={profile}
-          variants={['small', 'alignSelfCenter']}
-          debugName={'Header Avatar'}
-          onPress={() => {
-            if (isLoggedIn) {
-              navigate('/profile')
-            } else {
-              AppStatus.setModal('auth')
-
-            }
-          }}
-        />
+        {/* {
+          isMobile ?
+            <View variants={['column', 'alignCenter', 'paddingHorizontal:5', 'gap:3']}>
+              <Avatar
+                profile={profile}
+                variants={['small']}
+                debugName={'Header Avatar'}
+                onPress={() => {
+                  if (isLoggedIn) {
+                    navigate('/profile')
+                  } else {
+                    AppStatus.setModal('auth')
+                  }
+                }}
+              />
+              {
+                isLoggedIn &&
+                <Button variants={['negative', 'alignSelfStretch']} text={'Logout'} icon='exit' onPress={Session.logout}/>
+              }
+            </View>
+            :
+            <DesktopAvatar />
+        } */}
 
       </NavComponent>
       {
@@ -150,6 +183,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     width: 140,
     [theme.media.down('small')]: {
       width: 120,
+
     },
 
   },
@@ -158,6 +192,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     [theme.media.down('small')]: {
       display: 'flex',
       ...theme.presets.justifyCenter,
+      marginRight: 'unset',
     },
   },
   floatingHeader: {

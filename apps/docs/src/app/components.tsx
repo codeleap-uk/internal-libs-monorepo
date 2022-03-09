@@ -1,9 +1,6 @@
 import * as Components from '@codeleap/web'
 import { variantProvider } from './theme'
 
-import { Image } from '@/components/Image'
-import { Link } from '@/components/Link'
-
 import { AppViewStyles } from './stylesheets/View'
 import { AppTextStyles } from './stylesheets/Text'
 import { AppTextInputStyles } from './stylesheets/TextInput'
@@ -41,6 +38,7 @@ export const variants = {
   Checkbox: AppCheckboxStyle,
   Drawer: AppDrawerStyles,
   Select: AppSelectStyles,
+  Tooltip: AppTooltipStyles,
 }
 
 const components = variantProvider.typeComponents({
@@ -56,7 +54,7 @@ const components = variantProvider.typeComponents({
   Select: [Components.Select, AppSelectStyles],
   Slider: [Components.Slider, defaultStyles.Slider],
   FileInput: [Components.FileInput, defaultStyles.FileInput],
-  Image: [Image, defaultStyles.Image],
+
   Scroll: [Components.Scroll, defaultStyles.View],
   List: [Components.List, defaultStyles.View],
   ActivityIndicator: [
@@ -66,7 +64,7 @@ const components = variantProvider.typeComponents({
   CenterWrapper: [Components.CenterWrapper, AppCenterWrapperStyles],
   Button: [Components.Button, AppButtonStyle],
   Modal: [Components.Modal, AppModalStyles],
-  Link: [Link, AppTextStyles],
+
   // Pager: [Components.Pager, AppPagerStyle],
   Menu: [Components.Menu, {}],
   Tooltip: [Components.Tooltip, AppTooltipStyles],

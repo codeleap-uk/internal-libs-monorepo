@@ -7,10 +7,10 @@ import {
   View,
   Icon,
   variantProvider,
-  Image,
+
   Text,
   Button,
-  Avatar,
+
   Tooltip,
   RouterPage,
 } from '@/app'
@@ -19,6 +19,8 @@ import { AvatarStyles } from '@/app/stylesheets/Avatar'
 import { Session } from '@/redux'
 import { useAppSelector } from '@/redux'
 import { Toast } from '@codeleap/web'
+import { Avatar } from '../../Avatar'
+import { Image } from '../../Image'
 
 const ActivityIndicatorShowcase = {
   render: ({ controlValues, ...props }) => {

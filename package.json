@@ -34,6 +34,7 @@
       "**/@react-navigation*/**",
       "**/@react-navigation/routers",
       "**/redux-flipper"
+      
     ]
   },
   "scripts": {
@@ -51,7 +52,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules apps/docs/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules",
-    "clear:dist": "rm -rf packages/cli/dist packages/common/dist packages/mobile/dist packages/web/dist"
+    "clear:dist": "rm -rf packages/cli/dist packages/common/dist packages/mobile/dist packages/web/dist",
+    "docs": "yarn workspace codeleap-docs"
   },
   "devDependencies": {
     "prettier": "^2.5.1",

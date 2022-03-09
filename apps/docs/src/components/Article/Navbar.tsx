@@ -1,7 +1,8 @@
-import { React, Link, Text, View, Button, variantProvider, Theme, Drawer } from '@/app'
+import { React, Text, View, Button, variantProvider, Theme, Drawer } from '@/app'
 import { Collapse } from '../Collapse'
 import { MdxMetadata } from 'types/mdx'
 import { useBooleanToggle, useComponentStyle } from '@codeleap/common'
+import { Link } from '../Link'
 
 type NavbarProps = {
   pages: Record<string, MdxMetadata[]>
@@ -16,8 +17,8 @@ const Category = ({ name, items }) => {
         transform: `rotate(${open ? 180 : 0}deg)`,
       },
     }}/>
-    <Collapse open={open} height={items.length * 30} css={staticStyles.collapsibleList}>
-      {items.map(p => <Link text={p.title} to={`/${p.module}/${p.path}`} variants={['padding:1']}/>)}
+    <Collapse open={open} height={items.length * 80} css={staticStyles.collapsibleList}>
+      {items.map((p, idx) => <Link text={p.title} key={idx} to={`/${p.module}/${p.path}`} variants={['padding:1']}/>)}
     </Collapse>
   </View>
 }
@@ -75,13 +76,15 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
       width: 1,
       directions: ['right'],
     }),
-    flexBasis: '16%',
+    width: 240,
+    minWidth: 240,
 
   },
 
   toggleButton: {
     transition: 'transform 0.3s ease',
     ...theme.presets.fixed,
+    zIndex: 1,
     right: theme.spacing.value(3),
     bottom: theme.spacing.value(3),
   },

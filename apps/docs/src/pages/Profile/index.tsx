@@ -1,7 +1,6 @@
 import { useAppSelector } from '@/redux'
-import { Button, Link, Text, variantProvider, View } from '@/app'
-
-import { Avatar, Page, RequiresAuth } from '@/components'
+import { Button, Text, variantProvider, View } from '@/app'
+import { Avatar, Page, RequiresAuth, Link } from '@/components'
 import { navigate } from 'gatsby'
 
 const Section = ({ name, value }) => {
@@ -11,7 +10,7 @@ const Section = ({ name, value }) => {
   </View>
 }
 
-const ViewProfile = ({}) => {
+const ViewProfile = () => {
   const { profile } = useAppSelector((store) => store.Session)
 
   return <Page title={`${profile?.first_name || ''}`} footer={false} styles={{ wrapper: { flex: 1 }}}>

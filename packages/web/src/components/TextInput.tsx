@@ -26,7 +26,7 @@ import { Touchable, TouchableProps } from './Touchable'
 import { jsx } from '@emotion/react'
 import { StylesOf } from '../types/utility'
 import { Icon } from '.'
-import { cx } from '@emotion/css'
+
 
 type IconProp = { name: IconPlaceholder; action?: () => void }
 type MergedRef = React.LegacyRef<HTMLInputElement> &

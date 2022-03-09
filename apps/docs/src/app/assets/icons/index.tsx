@@ -1,7 +1,7 @@
 import * as React from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { Image } from '@/app'
+import { Image } from '@/components/Image'
 import { logger } from '../../logger'
 import {
   VscLoading,
@@ -33,6 +33,7 @@ import {
   IoArrowBack,
 } from 'react-icons/io5'
 import {
+  IoMdExit,
   IoMdEye,
   IoMdEyeOff,
 } from 'react-icons/io'
@@ -61,6 +62,7 @@ export const iconImages = {
   menu: MdMenu,
   user: FaUser,
   copy: MdContentCopy,
+  exit: IoMdExit,
 }
 
 export const RenderIcon = ({ path, name = '', style = {}, log }:any) => {

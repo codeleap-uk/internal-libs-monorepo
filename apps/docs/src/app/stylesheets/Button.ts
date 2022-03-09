@@ -104,8 +104,10 @@ export const AppButtonStyle = {
     ...defaultVariant(theme),
     wrapper: {
       ...defaultVariant(theme).wrapper,
+      height: 'auto',
+      ...theme.spacing.padding(1),
       backgroundColor: 'transparent',
-
+      ...theme.presets.alignCenter,
       borderRadius: 0,
       width: '100%',
       '&:hover': {
@@ -118,22 +120,45 @@ export const AppButtonStyle = {
       color: theme.colors.textH,
       textAlign: 'center',
     },
+    icon: {
+      ...defaultVariant(theme).icon,
+      size: 16,
+      color: theme.colors.icon,
+    },
+  })),
+  noHover: createButtonVariant((theme) => ({
+
+    wrapper: {
+
+      '&:hover': {
+        backgroundColor: 'transparent',
+
+      },
+    },
+  })),
+  'text:negative': createButtonVariant((theme) => ({
+    icon: {
+      color: theme.colors.negative,
+    },
+    text: {
+      color: theme.colors.negative,
+
+    },
   })),
   icon: createButtonVariant((theme) => ({
     ...defaultStyle.icon(theme),
+    wrapper: {
+      ...defaultStyle.icon(theme).wrapper,
+      width: 'auto',
+    },
     icon: {
       ...defaultStyle.icon(theme).icon,
       color: theme.colors.textH,
-    },
-    wrapper: {
-      ...defaultVariant(theme).wrapper,
-      ...defaultStyle.icon(theme).wrapper,
-      ...theme.spacing.padding(1),
       '&:hover': {
-        backgroundColor: theme.colors.grayFade,
+        color: theme.colors.primary,
       },
-
     },
+
   })),
   'list:selected': createButtonVariant((theme) => ({
     wrapper: {
@@ -232,6 +257,11 @@ export const AppButtonStyle = {
       ...defaultVariant(theme).rightIcon,
       color: theme.colors.textH,
       transition: 'transform 0.2s ease',
+    },
+  })),
+  'icon:small': createButtonVariant(() => ({
+    icon: {
+      size: '16px',
     },
   })),
 }

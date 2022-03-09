@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "1.4.3",
+  "version": "1.4.9",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
@@ -16,11 +16,9 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
-    "publish": "npm publish"
+    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
-  
     "@types/react": "^17.0.39",
     "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",

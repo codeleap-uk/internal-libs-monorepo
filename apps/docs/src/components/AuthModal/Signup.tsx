@@ -2,11 +2,12 @@ import { React, Button, Settings, Text, TextInput, Touchable, variantProvider, V
 import { Session, sessionSlice } from '@/redux'
 import { profileFromUser } from '@/services'
 import { createForm, onMount, useForm, useState } from '@codeleap/common'
-import firebase from 'firebase'
+// import firebase from 'firebase'
 import * as yup from 'yup'
 import { Link } from '../Link'
-import { AppStatus } from '../ComponentShowcase/showCases'
+import { AppStatus } from '@/redux'
 import { Toast } from '@codeleap/web'
+import { withFirebase } from '@/services/firebase'
 
 export const signupForm = createForm('signup', {
   first_name: {
@@ -52,13 +53,16 @@ export const SignupForm = ({ onFormSwitch, onAuthSuccess = null }) => {
   const [usingProvider, setUsingProvider] = useState('email')
 
   onMount(() => {
-    const currentUser = firebase.auth().currentUser
-    const profile = profileFromUser(currentUser)
+    withFirebase((fb) => {
 
-    if (profile) {
-      form.setFormValues(profile)
-      setUsingProvider('social')
-    }
+      const currentUser = fb.auth().currentUser
+      const profile = profileFromUser(currentUser)
+
+      if (profile) {
+        form.setFormValues(profile)
+        setUsingProvider('social')
+      }
+    })
 
   })
 
@@ -104,7 +108,7 @@ export const SignupForm = ({ onFormSwitch, onAuthSuccess = null }) => {
   }
 
   return (
-    <>
+    <View variants={['column', 'gap:1']}>
 
       {renderTextInput('first_name')}
       {renderTextInput('last_name')}
@@ -133,7 +137,7 @@ export const SignupForm = ({ onFormSwitch, onAuthSuccess = null }) => {
           By signing in you agree with the <Link to={Settings.ContactINFO.TermsAndPrivacy} variants={['underlined']} text={'Terms and Conditions'}/>
       </Text>
 
-    </>
+    </View>
 
   )
 }

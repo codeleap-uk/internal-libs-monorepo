@@ -1,8 +1,9 @@
 /* eslint-disable max-lines */
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { View, Image, Text, CenterWrapper, Link, Theme } from '@/app'
-
+import { View, Text, CenterWrapper, Theme } from '@/app'
+import { Image } from './Image'
+import { Link } from './Link'
 import { variantProvider } from '@/app/theme'
 
 import { Settings } from '../app/Settings'
@@ -37,7 +38,7 @@ function renderLinkCol(arr) {
         key={index}
         to={to}
         text={text}
-        variants={['p3']}
+        variants={['p3', 'white']}
         css={[styles.footerNavText, styles.link]}
       />
     )
@@ -199,6 +200,7 @@ const styles = variantProvider.createComponentStyle({
     textDecorationColor: Theme.colors.light.white,
     color: 'white',
     '&:hover': {
+      color: 'white',
       textDecorationStyle: 'solid',
       textDecorationLine: 'underline',
       opacity: 1,

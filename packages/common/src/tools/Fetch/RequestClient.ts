@@ -29,7 +29,7 @@ export class RequestClient implements IRequestClient {
       this.axios.interceptors.request.use(async (c) => {
         let reqConfig = c as RequestClientConfig
 
-        if (reqConfig.multipart) {
+        if (reqConfig.multipart && this.config.automaticMultipartParsing) {
           reqConfig.data = toMultipart(reqConfig)
 
           reqConfig.headers = {

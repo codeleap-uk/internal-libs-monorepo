@@ -1,7 +1,7 @@
 /* eslint no-restricted-imports: 'off' */
 
 import { useRef } from 'react'
-import { React, View, Text, Touchable, Image, Button, FileInput, Icon } from '@/app'
+import { React, View, Text, Touchable, Button, FileInput, Icon } from '@/app'
 import { FileInputRef } from '@codeleap/web'
 import { AvatarStyles } from '../app/stylesheets/Avatar'
 import {
@@ -13,7 +13,7 @@ import {
   WebInputFile,
 } from '@codeleap/common'
 import { TSession } from '@/redux'
-
+import { Image } from './Image'
 type AvatarProps = {
   styles?: StylesOf<AvatarComposition>
   profile: TSession['profile']
@@ -45,7 +45,6 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
   }
 
   const AvatarImage = () => {
-    if (!profile) return <Icon name='user' />
 
     const hasAvatar = !!profile?.avatar
 
@@ -84,9 +83,7 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
 
       </Touchable>
     } else {
-      return <Button onPress={() => onPress?.()} variants={['icon']} css={variantStyles.general}>
-        <AvatarImage />
-      </Button>
+      return <Button icon='user' onPress={() => onPress?.()} variants={['icon', 'icon:small']} css={variantStyles.general} />
 
     }
   }

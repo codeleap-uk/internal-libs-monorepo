@@ -9,7 +9,7 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 import { url } from '../../lib/utils'
-import { Link as IntlLink } from 'gatsby-plugin-intl'
+import { Link as IntlLink } from 'gatsby'
 import { MenuComposition } from './styles'
 
 const RouterLink: React.FC<any> = (props) => (

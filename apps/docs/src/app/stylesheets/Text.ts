@@ -15,16 +15,23 @@ export const AppTextStyles = {
     },
   })),
   white: createTextStyle((theme) => ({
-    ...defaultStyles.default(theme),
+
     text: {
-      ...defaultStyles.default(theme).text,
 
       color: theme.colors.white,
+      '&:hover': {
+        color: theme.colors.white,
+      },
     },
   })),
   primary: createTextStyle((theme) => ({
     text: {
       color: theme.colors.primary,
+    },
+  })),
+  code: createTextStyle((theme) => ({
+    text: {
+      color: theme.colors.inlineCode,
     },
   })),
   listItem: createTextStyle((theme) => ({
@@ -68,5 +75,10 @@ export const AppTextStyles = {
       },
     },
   })),
+  neutral: createTextStyle((theme) => ({
 
+    text: {
+      color: theme.colors.neutral,
+    },
+  })),
 }

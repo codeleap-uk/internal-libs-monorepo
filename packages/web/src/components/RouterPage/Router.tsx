@@ -9,7 +9,7 @@ type RouterProps = {
 
 export const Router: React.FC<RouterProps> = (props) => {
   const { children, style, basePath, defaultPath } = props
-  const base = `/:language${basePath}`
+  const base = `${basePath}`
 
   return (
     <React.Fragment>

@@ -1,22 +1,15 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-// import fireabaseAuth from 'gatsby-plugin-firebase'
+// import firebase from 'gatsby-plugin-firebase'
 import { api, logger } from '@/app'
+
+import FirebaseAuthTypes from '@firebase/auth-types'
 import { Profile, TSession } from '@/redux'
-import { getFirebase } from './firebase'
-import * as FireabaseAuthTypes from '@firebase/auth-types'
+import { withFirebase } from './firebase'
+
 const FBErrorProps = ['name', 'namespace', 'code', 'message'] as const
 export type FirebaseError = Partial<
   Record<typeof FBErrorProps[number], string>
 >
-
-export const auth = () => getFirebase().auth()
-
-export const firebase = getFirebase()
-
-namespace FirebaseAuthTypes {
-  export type User = FireabaseAuthTypes.User
-  export type UserCredential = FireabaseAuthTypes.UserCredential
-}
 
 export function isFirebaseError(err) {
   try {
@@ -37,8 +30,8 @@ export function isFirebaseError(err) {
 const SCOPE = 'Authentication'
 
 export const CredentialProviders = {
-  google: () => auth().signInWithPopup(new auth().GoogleAuthProvider()),
-  facebook: () => auth().signInWithPopup(new auth().FacebookAuthProvider()),
+  google: () => withFirebase(firebase => firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())),
+  facebook: () => withFirebase((firebase) => firebase.auth().signInWithPopup(new firebase.auth.FacebookAuthProvider())),
 }
 
 export type Providers = keyof typeof CredentialProviders
@@ -107,9 +100,10 @@ export async function tryLogin(
           const { email, password } = args?.data || {}
 
           // for some reason firebase crashes the app when credentials are empty, so we give it an 'a'
-          credential = await auth().signInWithEmailAndPassword(
+          credential = await withFirebase(firebase => firebase.auth().signInWithEmailAndPassword(
             email || 'a',
             password || 'a',
+          ),
           )
 
           break
@@ -150,7 +144,7 @@ export type TrySignupArgs = {
 }
 
 export async function trySignup({ data, provider }: TrySignupArgs) {
-  const currentUser = auth().currentUser
+  const currentUser = await withFirebase((firebase) => firebase.auth().currentUser)
 
   let user = null
 
@@ -165,10 +159,10 @@ export async function trySignup({ data, provider }: TrySignupArgs) {
 
     user = profileFromUser(currentUser)
   } else {
-    const newUser = await auth().createUserWithEmailAndPassword(
+    const newUser = await withFirebase(firebase => firebase.auth().createUserWithEmailAndPassword(
       data.email,
       data.password,
-    )
+    ))
 
     user = newUser.user
   }
@@ -190,11 +184,11 @@ export async function trySignup({ data, provider }: TrySignupArgs) {
 }
 
 export async function reauthenticateCredentials(data: any) {
-  return await auth().signInWithEmailAndPassword(data.email, data.password)
+  return await withFirebase(firebase => firebase.auth().signInWithEmailAndPassword(data.email, data.password))
 }
 
 export async function sendVerificationEmail() {
-  auth().currentUser.sendEmailVerification()
+  withFirebase(firebase => firebase.auth().currentUser.sendEmailVerification())
 }
 
 export async function saveProfile(currentProfile:Profile, newProfile:Partial<Profile>) {
@@ -210,17 +204,17 @@ export async function saveProfile(currentProfile:Profile, newProfile:Partial<Pro
 }
 
 export async function updateEmail(email: string) {
-  const user = auth().currentUser
+  const user = await withFirebase(firebase => firebase.auth().currentUser)
 
   return await user.updateEmail(email)
 }
 
 export async function sendPasswordReset() {
-  const userEmail = auth().currentUser.email
+  const userEmail = await withFirebase(firebase => firebase.auth().currentUser.email)
 
-  return await auth().sendPasswordResetEmail(userEmail)
+  return await await withFirebase((firebase) => firebase.auth().sendPasswordResetEmail(userEmail))
 }
 
 export async function logout() {
-  await auth().signOut()
+  await withFirebase((firebase) => firebase.auth().signOut())
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { onMount } from '@codeleap/common'
-import { FlatList } from '@codeleap/web'
 
 import {
   View,

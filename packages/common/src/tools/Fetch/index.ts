@@ -11,6 +11,7 @@ export function makeFetcher(
 ) {
   return new RequestClient({
     baseURL: settings.Fetch.ApiURL,
+    automaticMultipartParsing: true,
     ...override,
   })
 }

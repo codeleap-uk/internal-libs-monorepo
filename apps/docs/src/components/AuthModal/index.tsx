@@ -1,4 +1,4 @@
-import { Modal, variantProvider, View } from '@/app'
+import { Modal, Scroll, variantProvider, View } from '@/app'
 import { ModalProps } from '@codeleap/web'
 import { capitalize, onUpdate, useToggle } from '@codeleap/common'
 import { LoginForm } from './Login'
@@ -21,11 +21,13 @@ export const AuthModal:React.FC<AuthModalProps> = (props) => {
         opacity: 1,
         visibility: 'visible',
         transitionDelay: '0.2s',
+
       }
     }
     return {
       opacity: 0,
       visibility: 'hidden',
+
     }
   }
 
@@ -45,7 +47,7 @@ export const AuthModal:React.FC<AuthModalProps> = (props) => {
       <LoginForm onFormSwitch={() => toggleForm()} onAuthSuccess={() => AppStatus.setModal('auth')}/>
 
     </View>
-    <View css={[styles.formWrapper, getFormWrapperStyle('signup')]}>
+    <View css={[styles.formWrapper, getFormWrapperStyle('signup')]} >
       <SignupForm onFormSwitch={() => toggleForm()} onAuthSuccess={() => AppStatus.setModal('auth')}/>
 
     </View>
@@ -58,12 +60,13 @@ const modalStyles = variantProvider.createComponentStyle<ModalProps['styles']>((
     height: '94vh',
     overflow: 'hidden',
     width: '80vw',
-
     maxWidth: '600px',
   },
   body: {
     alignItems: 'center',
+
     position: 'relative',
+    overflow: 'hidden',
   },
 }), true)
 
@@ -75,8 +78,10 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     position: 'absolute',
     ...theme.presets.whole,
     ...theme.presets.justifyCenter,
+
+    ...theme.spacing.marginVertical('auto'),
     ...theme.spacing.paddingHorizontal(10),
-    ...theme.spacing.paddingVertical(1),
+    ...theme.spacing.paddingVertical(1.5),
     ...theme.spacing.gap(1.5),
   },
 }), true)

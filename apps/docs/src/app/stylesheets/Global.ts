@@ -1,5 +1,7 @@
 import { css } from '@emotion/react'
 import { Theme } from '../theme'
+import CodeThemes from './Code'
+
 export const globalStyle = css`
   * {
     padding: 0;
@@ -14,7 +16,7 @@ export const globalStyle = css`
       overflow-x: hidden;
     }
   */
-  ::-webkit-scrollbar {
+  *::-webkit-scrollbar {
     width: 5px;
   }
   
@@ -23,40 +25,50 @@ export const globalStyle = css`
     padding: 20px;
     border-radius: 5px;
     position: relative;
+    max-width: 62vw;
+    ${Theme.media.down('small')} {
+      max-width: 96vw;
+      overflow-x: auto;
+    }
   }
 
-  .code_copy_btn {
-    opacity: 0;
-    transition: opacity 0.1s ease;
-  }
-
-  .code_style:hover > .code_copy_btn{
-    opacity: 1;
-  }
   
+  .code_style::-webkit-scrollbar {
+    height: 5px;
+   
+  }
 `
 
 export const globalStyleDark = css`
   ${globalStyle}
 
-  ::-webkit-scrollbar-track-piece {
+  *::-webkit-scrollbar-track-piece {
     background-color:  ${Theme.colors.dark.background};
   }
 
-  ::-webkit-scrollbar-thumb:vertical {
+  *::-webkit-scrollbar-thumb {
     background-color: ${Theme.colors.dark.primary};
     border-radius: 18px;
   } 
+  
+  .code_style::-webkit-scrollbar-track-piece{
+    background-color: ${CodeThemes.dark.plain.backgroundColor}
+  }
 `
 export const globalStyleLight = css`
   ${globalStyle}
 
-  ::-webkit-scrollbar-track-piece {
+  *::-webkit-scrollbar-track-piece {
     background-color: ${Theme.colors.light.background};
   }
-  
-  ::-webkit-scrollbar-thumb:vertical {
+ 
+  *::-webkit-scrollbar-thumb {
     background-color: ${Theme.colors.light.primary};
     border-radius: 18px;
   } 
+  
+  .code_style::-webkit-scrollbar-track-piece{
+    background-color: ${CodeThemes.light.plain.backgroundColor}
+  }
+
 `

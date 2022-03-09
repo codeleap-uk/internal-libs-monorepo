@@ -1,7 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config()
+
 module.exports = {
   siteMetadata: {
     siteUrl: 'https://www.yourdomain.tld',
-    title: 'Codeleap web template',
+    title: 'Codeleap Docs',
   },
   plugins: [
     // {
@@ -13,24 +16,16 @@ module.exports = {
     //     redirect: true,
     //   },
     // },
-    // {
-    //   resolve: 'gatsby-plugin-firebase',
-    //   options: {
-    //     credentials: {
-    //       apiKey: 'AIzaSyBzvr9bN5M2lgzTLIo07wn3bUmmZnsMhaA',
-    //       authDomain: 'codeleap-project-template.firebaseapp.com',
-    //       databaseURL: 'https://codeleap-project-template.firebaseio.com',
-    //       projectId: 'codeleap-project-template',
-    //       storageBucket: 'codeleap-project-template.appspot.com',
-    //       messagingSenderId: '268760770384',
-    //       appId: '1:268760770384:web:49a825eb74a7b626d1ee55',
-    //     },
-    //   },
-    // },
+
     {
       resolve: `gatsby-plugin-s3`,
       options: {
-        bucketName: 'documentation',
+        bucketName: 'codeleap-docs',
+        region: 'eu-west-2',
+        generateRedirectObjectsForPermanentRedirects: false,
+        generateIndexPageForRedirect: false,
+        generateRoutingRules: false,
+        acl: null,
       },
     },
     `gatsby-plugin-tsconfig-paths`,
@@ -72,6 +67,19 @@ module.exports = {
       },
       __key: 'images',
     },
-
+    // {
+    //   resolve: 'gatsby-plugin-firebase',
+    //   options: {
+    //     credentials: {
+    //       apiKey: 'AIzaSyBzvr9bN5M2lgzTLIo07wn3bUmmZnsMhaA',
+    //       authDomain: 'codeleap-project-template.firebaseapp.com',
+    //       databaseURL: 'https://codeleap-project-template.firebaseio.com',
+    //       projectId: 'codeleap-project-template',
+    //       storageBucket: 'codeleap-project-template.appspot.com',
+    //       messagingSenderId: '268760770384',
+    //       appId: '1:268760770384:web:49a825eb74a7b626d1ee55',
+    //     },
+    //   },
+    // },
   ],
 }

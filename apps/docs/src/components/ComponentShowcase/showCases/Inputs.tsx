@@ -8,7 +8,6 @@ import {
   TextInput,
   RadioInput,
   Checkbox,
-  Image,
   Button,
   Text,
   Select,
@@ -16,7 +15,7 @@ import {
 } from '@/app'
 import { useRef, useState } from 'react'
 import { iconOptions } from './shared'
-
+import { Image } from '../../Image'
 const FileInputShowcase = {
   render: ({ variants }) => {
     const fileInputRef = useRef<FileInputRef>(null)
