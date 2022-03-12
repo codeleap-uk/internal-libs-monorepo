@@ -42,7 +42,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
       <FastImage
         style={styles}
         // @ts-ignore
-        tintColor={styles?.tintColor}
+        tintColor={style?.tintColor}
         resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
         {...imageProps}
       />
