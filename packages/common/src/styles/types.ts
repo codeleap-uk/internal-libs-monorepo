@@ -50,7 +50,7 @@ export type Fonts =
 
 export type TypographyStyle = {
   lineHeight?: number
-  weigth: number
+  weight: number
   color?: string
   fontFamily?: string
   sizeMultiplier?: number

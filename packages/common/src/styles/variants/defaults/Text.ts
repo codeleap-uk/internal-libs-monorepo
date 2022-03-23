@@ -19,7 +19,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
   return createTextStyle((theme) => {
     const style = theme.typography.styles[name]
     const fontFamily = style?.fontFamily || theme?.typography?.fontFamily
-    const fontWeight = style.weigth.toString()
+    const fontWeight = style.weight.toString()
 
     const color = style?.color ||
       name.startsWith('h') ? theme?.colors.textH : theme?.colors.textP
