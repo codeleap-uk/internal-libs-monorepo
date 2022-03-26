@@ -7,7 +7,7 @@ export const textStyles = {
       viewport: 0.45,
       multiplier: 1.2,
     },
-    weigth: 700,
+    weight: 750,
   },
   h2: {
     lineHeight: 1.4,
@@ -17,7 +17,7 @@ export const textStyles = {
       viewport: 1,
       multiplier: 1,
     },
-    weigth: 700,
+    weight: 700,
   },
   h3: {
     lineHeight: 1.4,
@@ -27,7 +27,7 @@ export const textStyles = {
       viewport: 1,
       multiplier: 0.2,
     },
-    weigth: 600,
+    weight: 600,
   },
   h4: {
     lineHeight: 1,
@@ -37,7 +37,7 @@ export const textStyles = {
       viewport: 0.4,
       multiplier: 0.7,
     },
-    weigth: 400,
+    weight: 400,
   },
   h5: {
     lineHeight: 1,
@@ -47,7 +47,7 @@ export const textStyles = {
       viewport: 0.4,
       multiplier: 0.63,
     },
-    weigth: 400,
+    weight: 400,
   },
   h6: {
     lineHeight: 1,
@@ -57,7 +57,7 @@ export const textStyles = {
       viewport: 0.4,
       multiplier: 0.5,
     },
-    weigth: 400,
+    weight: 400,
   },
   p1: {
     lineHeight: 1.4,
@@ -67,7 +67,7 @@ export const textStyles = {
       viewport: 1,
       multiplier: 0.2,
     },
-    weigth: 400,
+    weight: 400,
   },
   p2: {
     lineHeight: 1,
@@ -77,7 +77,7 @@ export const textStyles = {
       viewport: 0.3,
       multiplier: 0.44,
     },
-    weigth: 400,
+    weight: 400,
   },
   p3: {
     lineHeight: 1,
@@ -87,7 +87,7 @@ export const textStyles = {
       viewport: 0.3,
       multiplier: 0.44,
     },
-    weigth: 400,
+    weight: 400,
   },
   p4: {
     lineHeight: 1,
@@ -97,6 +97,6 @@ export const textStyles = {
       viewport: 0.3,
       multiplier: 0.44,
     },
-    weigth: 400,
+    weight: 400,
   },
 }
