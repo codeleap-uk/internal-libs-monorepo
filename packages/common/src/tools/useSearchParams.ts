@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 
-type UseSearchParamsReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>]
+type UseSearchParamsReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>, () => void]
 
 export function useSearchParams<
   T extends Record<string, string> = Record<string, string>
 >(initial?: T): UseSearchParamsReturn<T> {
   const searchParams = useRef(new URLSearchParams(location.search))
   const [params, setParams] = useState<T>(() => {
-    if (initial) return initial
 
-    return Object.fromEntries(searchParams.current as any) as T
+    const initialParams = Object.fromEntries(searchParams.current as any) as T
+
+    for (const key in initial) {
+      if (initialParams[key] === '' || typeof initialParams[key] === 'undefined') {
+        initialParams[key] = initial[key]
+      }
+    }
+
+    return initialParams
   })
 
   useEffect(() => {
@@ -30,5 +37,9 @@ export function useSearchParams<
     }
   }, [params])
 
-  return [params, setParams]
+  function reset() {
+    setParams(initial)
+  }
+
+  return [params, setParams, reset]
 }

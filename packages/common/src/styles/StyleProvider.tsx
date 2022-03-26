@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useMemo, useState } from 'react'
 import {
   AppTheme,
   CommonVariantObject,
@@ -104,14 +104,14 @@ export function useDefaultComponentStyle<
       )
     }
 
-    const stylesheet = provider.getStyles(v, {
+    const stylesheet = useMemo(() => provider.getStyles(v, {
       // @ts-ignore
       variants: props.variants || [],
       // @ts-ignore
       responsiveVariants: props.responsiveVariants || {},
       rootElement: props.rootElement,
       styles,
-    }, currentTheme as string)
+    }, currentTheme as string), [props.variants, props.responsiveVariants, props.rootElement, styles, componentName])
     return stylesheet as any
   } catch (e) {
     throw new Error('useDefaultComponentStyle with args ' + arguments + e)
@@ -122,7 +122,9 @@ export function useComponentStyle<T extends FunctionType<[EnhancedTheme<any>], a
   const { currentTheme, provider } = useCodeleapContext()
   try {
 
-    return styler(provider.withColorScheme(currentTheme as string))
+    const styles = useMemo(() => styler(provider.withColorScheme(currentTheme as string)), [currentTheme])
+
+    return styles
   } catch (e) {
     throw new Error(`useComponentStyle with args ${arguments} ${e}`)
   }

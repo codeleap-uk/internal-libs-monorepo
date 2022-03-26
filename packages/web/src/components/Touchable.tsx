@@ -2,7 +2,7 @@
 import { AnyFunction, useCodeleapContext } from '@codeleap/common'
 import { jsx, CSSObject } from '@emotion/react'
 
-import React, { ComponentPropsWithRef, ElementType } from 'react'
+import React, { ComponentPropsWithRef, ElementType, forwardRef, ReactElement } from 'react'
 import { stopPropagation } from '../lib/utils/stopPropagation'
 import { View } from './View'
 
@@ -16,8 +16,9 @@ export type TouchableProps<T extends ElementType> = ComponentPropsWithRef<T> & {
   debugName?: string
 }
 
-export const Touchable = <T extends ElementType = typeof View>(
+export const TouchableCP = <T extends ElementType = typeof View>(
   touchableProps: TouchableProps<T>,
+  ref,
 ) => {
   const {
     children,
@@ -44,14 +45,18 @@ export const Touchable = <T extends ElementType = typeof View>(
       { debugName, debugComponent },
       'User interaction',
     )
-    onPress && onPress()
     onClick?.()
+    onPress && onPress()
     // logger.log('Touchable pressed', JSON.stringify(touchableProps, null, 2)  ,'Component')
   }
 
   return (
-    <View component={Component || 'div'} {...props} onClick={handleClick}>
+    <View component={Component || 'div'} {...props} onClick={handleClick} ref={ref}>
       {children}
     </View>
   )
 }
+
+export const Touchable = forwardRef(TouchableCP) as <T extends ElementType = typeof View>(
+  touchableProps: TouchableProps<T>
+) => ReactElement

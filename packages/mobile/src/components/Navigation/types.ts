@@ -11,7 +11,7 @@ export type PropTypes = {
         Group: Omit<React.ComponentPropsWithRef<TNavigators[P]['Group']>, 'children'|'name'>
     }
 }
-export type SceneComponent<K extends NavigatorType> = PropTypes[K]['Screen']['component']
+export type SceneComponent<K extends NavigatorType> = PropTypes[K]['Screen']
 export type SceneOptions<K extends NavigatorType> =
     { icon?: IconPlaceholder; default?:SceneComponent<K> } & PropTypes[K]['Screen']
 export type Scene<K extends NavigatorType> = SceneComponent<K> | SceneOptions<K>

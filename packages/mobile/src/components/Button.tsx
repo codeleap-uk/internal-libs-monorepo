@@ -38,6 +38,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
     disabled,
     rightIcon,
     debounce = 600,
+    style,
     ...props
   } = buttonProps
   const [pressed, setPressed] = React.useState(false)
@@ -61,6 +62,7 @@ export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, re
   function getStyles(key: ButtonParts) {
     return [
       variantStyles[key],
+      key === 'wrapper' && style,
       disabled && variantStyles[key + ':disabled'],
       styles[key],
       disabled && styles[key + ':disabled'],

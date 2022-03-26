@@ -12,7 +12,7 @@ import {
 import React, { ComponentPropsWithRef } from 'react'
 import { StylesOf } from '../types/utility'
 import { Text } from './Text'
-import { Touchable } from './Touchable'
+import { Touchable, TouchableProps } from './Touchable'
 import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
 import { IconPlaceholder } from '@codeleap/common'
@@ -29,7 +29,7 @@ export type ButtonProps = NativeButtonProps &
     loading?: boolean
     debugName?: string
     debounce?: number
-  }
+  } & Partial<TouchableProps<any>>
 
 export const Button: React.FC<ButtonProps> = (buttonProps) => {
   const {

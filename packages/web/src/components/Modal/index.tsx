@@ -94,7 +94,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     >
       <Overlay
         visible={visible}
-        onClick={closable ? toggle : () => {}}
+        onPress={closable ? toggle : () => {}}
         css={variantStyles.overlay}
       />
       <View

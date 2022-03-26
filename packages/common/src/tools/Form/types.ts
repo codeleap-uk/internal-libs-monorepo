@@ -43,6 +43,7 @@ export type InputValueTypes = {
   composite: any
   'range-slider': number[]
   slider: number
+  list: any[]
 }
 export type Label = string | ReactNode
 
@@ -57,6 +58,13 @@ export type SwitchField = {
   defaultValue: boolean
   validate?: Validator<boolean>
 }
+
+export type ListField<T = any> = {
+  type: 'list'
+  defaultValue: T[]
+  validate?: Validator<T[]>
+}
+
 export type SliderField = {
   type: 'slider'
   defaultValue: number
@@ -119,6 +127,7 @@ export type AllFields =
   | CompositeField
   | SliderField
   | RangeSliderField
+  | ListField
 
 export type FormField = {
   disabled?: boolean

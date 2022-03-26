@@ -29,4 +29,5 @@ export type CustomSelectProps<T> = {
   disabled?: boolean
   validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
   arrowIconName?: IconPlaceholder
+  autoClose?: boolean
 } & ComponentVariants<typeof WebSelectStyles>

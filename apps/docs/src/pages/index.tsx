@@ -8,6 +8,7 @@ import {
   Theme,
 
 } from '@/app'
+import { MultiSelect } from '@/MultiSelect'
 
 export const Overlays = () => {
   return <>

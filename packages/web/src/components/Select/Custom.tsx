@@ -7,7 +7,7 @@ import {
   useDefaultComponentStyle,
   useValidate,
 } from '@codeleap/common'
-import { useMemo, useRef } from 'react'
+import { forwardRef, useMemo, useRef } from 'react'
 import { InputLabel, FormError } from '../TextInput'
 import { Icon } from '../Icon'
 import { Touchable } from '../Touchable'
@@ -17,8 +17,8 @@ import { useClickOutside } from '../../lib/hooks'
 import { CustomSelectProps } from './types'
 import { WebSelectComposition, WebSelectParts } from './styles'
 import { SelectRenderFNProps } from '.'
-import { v4 } from 'uuid'
-const SelectItem: React.FC<
+
+export const SelectItem: React.FC<
   SelectRenderFNProps<any> & { iconName?: string }
 > = ({ styles, iconName, onPress, label, inList }) => {
   return (
@@ -41,22 +41,22 @@ const SelectItem: React.FC<
   )
 }
 
-const InputWrapper = (props) => {
+export const InputWrapper = forwardRef<any, any>((props, ref) => {
   const {
     styles,
     label,
     children,
     currentContent,
     open,
-    id,
+
     error,
     ...wrapperProps
   } = props
 
   return (
-    <View css={styles.wrapper} {...wrapperProps}>
+    <View css={styles.wrapper} ref={ref} {...wrapperProps}>
       <InputLabel label={label} style={styles.label} />
-      <View css={styles.inputWrapper} id={id}>
+      <View css={styles.inputWrapper} >
         {currentContent}
 
         <View css={styles.list}>{children}</View>
@@ -64,13 +64,14 @@ const InputWrapper = (props) => {
       <FormError message={error.message} style={styles.error} />
     </View>
   )
-}
+})
 
 export const CustomSelect: React.FC<CustomSelectProps<any>> = <
   T extends string | number = string
->(
+> (
     selectProps: CustomSelectProps<T>,
   ) => {
+
   const {
     options = [],
     value,
@@ -85,6 +86,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
     validate,
     disabled,
     arrowIconName,
+    autoClose = true,
     ...props
   } = selectProps
 
@@ -97,16 +99,12 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
     )
   }, [options])
 
-  const inputId = useRef(v4()).current
-
-  useClickOutside(
-    () => {
-      if (isOpen) {
-        setOpen(false)
-      }
-    },
-    { customId: inputId, deps: [] },
-  )
+  const inputId = useClickOutside(() => {
+    if (isOpen) {
+      console.log('aaaaaaaaaaaaaaa')
+      setOpen(false)
+    }
+  }, [isOpen, setOpen])
 
   const variantStyles = useDefaultComponentStyle('Select', {
     styles,
@@ -162,16 +160,18 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
         list: getStyles('list'),
         error: getStyles('error'),
       }}
-      {...props}
-      id={inputId}
+      id={inputId.current}
       onHover={setHovering}
+      {...props}
     >
       {options.map((item) => (
         <Item
           {...item}
           inList
           onPress={() => {
-            setOpen(false)
+            if (autoClose) {
+              setOpen(false)
+            }
             onValueChange(item.value)
           }}
           selected={item.value === value}

@@ -1,5 +1,5 @@
 import { AnyFunction, onMount, onUpdate } from '@codeleap/common'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 export function useWindowSize() {
   const [size, setSize] = useState([])
@@ -22,28 +22,51 @@ export function useWindowSize() {
   return size
 }
 
-type UseClickOutsideOpts = { customId?: string; deps: any[] }
+type UseClickOutsideOpts = any[]
 export function useClickOutside(
   callback: AnyFunction,
-  { customId, deps = [] }: UseClickOutsideOpts,
+  deps: UseClickOutsideOpts,
 ) {
-  const id = useRef(customId || v4()).current
+  const id = useRef(v4())
+  const onClick = useCallback((e: Event) => {
+    const element = document.getElementById(id.current)
 
-  function onClick(e: Event) {
-    const element = document.getElementById(id)
-    const isInside = element.contains(e.target as Node)
+    let isInside = element.contains(e.target as Node) || ((e.target as HTMLElement).id === id.current)
 
+    const iterNodes = (el:HTMLElement|Element) => {
+      if (isInside) return
+      for (let i = 0; i < el.children.length; i++) {
+        const node = el.children.item(i)
+        console.log(node)
+        const _isInside = node.contains(e.target as Node)
+        if (_isInside) {
+          isInside = _isInside
+        }
+        if (isInside) break
+
+        if (node.hasChildNodes()) {
+          iterNodes(node)
+        }
+
+        if (isInside) break
+      }
+    }
+
+    if (!isInside) {
+      iterNodes(element)
+    }
+    console.log(isInside, element, e.target)
     if (!isInside) {
       callback(e)
     }
-  }
-
+  }, deps)
   onUpdate(() => {
+
     document.addEventListener('click', onClick)
     return () => {
       document.removeEventListener('click', onClick)
     }
-  }, [...deps, onClick])
+  }, [onClick])
 
   return id
 }

@@ -12,6 +12,7 @@ export type SelectProps<T extends string | number = string> =
 
 export * from './types'
 export * from './styles'
+export * from './Custom'
 
 export const Select = <T extends string | number = string>(
   props: SelectProps<T>,
