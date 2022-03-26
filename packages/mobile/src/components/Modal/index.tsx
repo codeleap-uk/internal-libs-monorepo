@@ -80,8 +80,12 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     const buttonEntries = {}
 
     for (const [key, style] of Object.entries(variantStyles)) {
-      if (key.startsWith('closeButton')) {
-        buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
+      try {
+        if (key.startsWith('closeButton')) {
+          buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
+        }
+      } catch (e) {
+        throw 'Invalid modal button variants.'
       }
     }
     return buttonEntries

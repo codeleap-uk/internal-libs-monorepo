@@ -54,7 +54,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     edited,
     onFocus,
     onBlur,
-    multiline,
     variants,
     label,
     leftIcon,
@@ -166,9 +165,10 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
             <InputIcon {...rightIcon} style={rightIconStyle} />
         }
       </InnerWrapper>
+      {showError &&
       <FormError message={error.message} style={{
         ...variantStyles.error,
-      }} />
+      }} />}
     </View>
   )
 })
