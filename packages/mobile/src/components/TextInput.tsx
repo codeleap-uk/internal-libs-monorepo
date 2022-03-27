@@ -41,6 +41,7 @@ export type TextInputProps =
     password?: boolean
     visibilityToggle?: boolean
     touchableWrapper?: boolean
+    onPress?: () => void
     innerWrapperProps?: TouchableProps | ViewProps
   }
 
@@ -135,14 +136,23 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     return requestedStyles
   }
 
-  const InnerWrapper = touchableWrapper ? Touchable : View
+  function handlePress() {
+    if (props.onPress) {
+      props.onPress()
+    } else {
+      input.current?.focus?.()
+    }
+  }
 
   return (
-    <View
+    <Touchable
       style={getStyles('wrapper')}
+      debugName={debugName}
+      onPress={handlePress}
+      {...innerWrapperProps}
     >
       <InputLabel label={label} style={getStyles('label')} />
-      <InnerWrapper debugName={debugName} style={getStyles('innerWrapper')} {...innerWrapperProps}>
+      <View style={getStyles('innerWrapper')}>
         <InputIcon {...leftIcon} style={leftIconStyle} />
         <InputElement
           ref={input}
@@ -164,12 +174,11 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
             :
             <InputIcon {...rightIcon} style={rightIconStyle} />
         }
-      </InnerWrapper>
-      {showError &&
+      </View>
       <FormError message={error.message} style={{
         ...variantStyles.error,
-      }} />}
-    </View>
+      }} />
+    </Touchable>
   )
 })
 
