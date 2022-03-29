@@ -175,9 +175,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
             <InputIcon {...rightIcon} style={rightIconStyle} />
         }
       </View>
-      <FormError message={error.message} style={{
-        ...variantStyles.error,
-      }} />
+      <FormError message={error.message} style={getStyles('error')} />
     </Touchable>
   )
 })
