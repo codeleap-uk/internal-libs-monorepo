@@ -15,7 +15,7 @@ import {
   MobileModalStyles,
   MobileModalParts,
 } from './styles'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, ScrollViewProps } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
 import { Touchable } from '../Touchable'
@@ -39,6 +39,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   visible: boolean
   toggle?: () => void
   scroll?: boolean
+  scrollProps: ScrollViewProps
 }
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
@@ -56,6 +57,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeIconName = 'close',
     debugName,
     scroll = true,
+    scrollProps,
     ...props
   } = modalProps
 
@@ -112,6 +114,9 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        {...scrollProps}
       >
         {dismissOnBackdrop && (
           <Touchable
