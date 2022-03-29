@@ -39,7 +39,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   visible: boolean
   toggle?: () => void
   scroll?: boolean
-  scrollProps: ScrollViewProps
+  scrollProps?: ScrollViewProps
 }
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
