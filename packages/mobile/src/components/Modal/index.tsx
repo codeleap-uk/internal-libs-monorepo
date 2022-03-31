@@ -15,7 +15,7 @@ import {
   MobileModalStyles,
   MobileModalParts,
 } from './styles'
-import { StyleSheet, ScrollViewProps } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
 import { Touchable } from '../Touchable'
@@ -39,7 +39,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   visible: boolean
   toggle?: () => void
   scroll?: boolean
-  scrollProps?: ScrollViewProps
+  keyboardAware?: boolean
 }
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
@@ -57,7 +57,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeIconName = 'close',
     debugName,
     scroll = true,
-    scrollProps,
+    keyboardAware = true,
     ...props
   } = modalProps
 
@@ -82,12 +82,8 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     const buttonEntries = {}
 
     for (const [key, style] of Object.entries(variantStyles)) {
-      try {
-        if (key.startsWith('closeButton')) {
-          buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
-        }
-      } catch (e) {
-        throw 'Invalid modal button variants.'
+      if (key.startsWith('closeButton')) {
+        buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
       }
     }
     return buttonEntries
@@ -114,9 +110,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-        {...scrollProps}
+        keyboardAware={keyboardAware}
       >
         {dismissOnBackdrop && (
           <Touchable
