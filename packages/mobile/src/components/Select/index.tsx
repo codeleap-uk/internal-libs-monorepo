@@ -86,6 +86,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
         debugName: 'Select',
         onPress: close,
       }}
+      pointerEvents={'none'}
       label={label}
       debugName={'Select input'}
       styles={inputStyles}
