@@ -2,3 +2,7 @@ node_modules
 src
 .turbo
 tsconfig.json
+CodeLeap-Template-Packages.code-workspace
+.eslint*
+.vscode
+.turbo
