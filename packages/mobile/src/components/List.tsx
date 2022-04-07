@@ -8,13 +8,16 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 import {
-  KeyboardAwareFlatListProps,
+
   KeyboardAwareFlatList as KBDView,
+  // @ts-ignore
 } from 'react-native-keyboard-aware-scroll-view'
+
 import { RefreshControl, FlatList } from 'react-native'
 import { View, ViewProps } from './View'
 
-export type FlatListProps = KeyboardAwareFlatListProps<any> &
+type RNFlatListProps<T = any> = FlatList<T>['props']
+export type FlatListProps<T = any> = RNFlatListProps<T> &
   ViewProps & {
     onRefresh?: () => void
     refreshTimeout?: number
@@ -30,7 +33,7 @@ const KeyboardAwareFlatList =
     }
   >
 
-export const List = forwardRef<FlatList, FlatListProps>(
+const ListCP = forwardRef<FlatList, FlatListProps>(
   (flatListProps, ref) => {
     const {
       variants = [],
@@ -98,3 +101,5 @@ export const List = forwardRef<FlatList, FlatListProps>(
     )
   },
 )
+
+export const List = ListCP as (<T = any>(props: FlatListProps<T>) => JSX.Element)

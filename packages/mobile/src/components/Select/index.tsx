@@ -3,7 +3,6 @@ import React, { useMemo } from 'react'
 import { Modal, StyleSheet } from 'react-native'
 import { Button } from '../Button'
 import { Scroll } from '../Scroll'
-
 import { InputLabel, TextInput } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { AnimatedView, View } from '../View'
@@ -31,10 +30,17 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     header,
     closeButtonProps,
     modalLabel,
+    textInputProps = {},
+    visible = null,
+    toggle = null,
+    renderList,
     ...props
   } = selectProps
 
-  const [isModalVisible, setModalVisibility] = useBooleanToggle(false)
+  const [_isModalVisible, _setModalVisibility] = useBooleanToggle(false)
+
+  const isModalVisible = visible ?? _isModalVisible
+  const setModalVisibility = toggle ?? _setModalVisibility
 
   const variantStyles = useDefaultComponentStyle<'u:MobileSelect', typeof MobileSelectStyles>('u:MobileSelect', {
     transform: StyleSheet.flatten,
@@ -90,7 +96,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       debugName={'Select input'}
       styles={inputStyles}
       style={style}
-      {...props}
+      {...textInputProps}
     />
     <AnimatedView pointerEvents={'none'} transition='opacity' style={[
       {
@@ -147,7 +153,11 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
           }
           <ListComponent style={variantStyles.modalList}>
             {
-              options.map((item, idx) => {
+              renderList ? renderList({
+                ...selectProps,
+                isEmpty: !options.length,
+
+              }) : options.map((item, idx) => {
                 const isSelected = value === item.value
                 if (renderItem) {
                   return renderItem({

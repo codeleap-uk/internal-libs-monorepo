@@ -127,6 +127,11 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     ...(showError ? variantStyles['rightIcon:error'] : {}),
   }
 
+  const buttonIconWrapperStyle = {
+    ...variantStyles.buttonIconWrapper,
+    ...(isFocused ? variantStyles['buttonIconWrapper:focus'] : {}),
+    ...(showError ? variantStyles['buttonIconWrapper:error'] : {}),
+  }
   function getStyles(key: TextInputComposition) {
     const requestedStyles = [
       variantStyles[key],
@@ -144,7 +149,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     >
       <InputLabel label={label} style={getStyles('label')} />
       <InnerWrapper debugName={debugName} style={getStyles('innerWrapper')} {...innerWrapperProps}>
-        <InputIcon {...leftIcon} style={leftIconStyle} />
+        <InputIcon {...leftIcon} style={leftIconStyle} wrapperStyle={buttonIconWrapperStyle}/>
         <InputElement
           ref={input}
           secureTextEntry={password && !textIsVisible}
@@ -161,9 +166,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           visibilityToggle ?
             <InputIcon name={
               (textIsVisible ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder
-            } action={() => setTextVisible()} style={rightIconStyle} />
+            } action={() => setTextVisible()} style={rightIconStyle} wrapperStyle={buttonIconWrapperStyle}/>
             :
-            <InputIcon {...rightIcon} style={rightIconStyle} />
+            <InputIcon {...rightIcon} style={rightIconStyle} wrapperStyle={buttonIconWrapperStyle} />
         }
       </InnerWrapper>
       <FormError message={error.message} style={{
@@ -180,12 +185,12 @@ export const FormError = ({ message, ...props }) => {
   return message
 }
 
-export const InputIcon: React.FC<{ style: any } & IconProp> = ({ name, style, action }) => {
+export const InputIcon: React.FC<{ style: any; wrapperStyle: any } & IconProp> = ({ name, style, action, wrapperStyle = {}}) => {
   if (!name) return null
   if (action) {
-    return <Button icon={name} debugName={`${name} icon button`} onPress={() => action()} styles={{
-      icon: style,
-    }} variants={['icon']} />
+    return <Touchable debugName={`${name} icon button`} onPress={() => action()} style={wrapperStyle} >
+      <Icon name={name} style={style}/>
+    </Touchable>
   }
   return <Icon name={name} style={style} />
 }

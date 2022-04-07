@@ -10,6 +10,7 @@ import {
 import {
   KeyboardAwareSectionListProps,
   KeyboardAwareSectionList as KBDView,
+  // @ts-ignore
 } from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, SectionList } from 'react-native'
 import { View, ViewProps } from './View'

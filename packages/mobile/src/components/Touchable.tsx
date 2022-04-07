@@ -61,4 +61,4 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   )
 })
 
-export const AnimatedTouchable = createAnimatableComponent(Touchable)
+export const AnimatedTouchable = createAnimatableComponent(Touchable) as unknown as typeof Touchable

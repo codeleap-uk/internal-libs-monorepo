@@ -7,6 +7,7 @@ import {
 } from '@codeleap/common'
 import React, {
   forwardRef,
+  ReactNode,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -28,6 +29,7 @@ export type PagerProps = {
   page?: number
   loop?: boolean
   debug?: boolean
+  children?: ReactNode
   onPageChange?: (page: number) => void
 }
 

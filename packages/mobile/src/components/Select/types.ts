@@ -36,6 +36,10 @@ export type CustomSelectProps<T> = {
     modalCloseIconName?: IconPlaceholder
     showClose?: boolean
     modalLabel?: string
+    textInputProps?: TextInputProps
     closeButtonProps?: Partial<ButtonProps>
+    toggle: (isOpen?: boolean) => void
+    visible: boolean
+    renderList?: (props:CustomSelectProps<T> & {isEmpty: boolean}) => JSX.Element
   } & ComponentVariants<typeof MobileSelectStyles> & TextInputProps
 
