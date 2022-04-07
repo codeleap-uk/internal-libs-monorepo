@@ -36,7 +36,7 @@ export type CustomSelectProps<T> = {
     modalCloseIconName?: IconPlaceholder
     showClose?: boolean
     modalLabel?: string
-    textInputProps?: TextInputProps
+    textInputProps?: Partial<TextInputProps>
     closeButtonProps?: Partial<ButtonProps>
     toggle: (isOpen?: boolean) => void
     visible: boolean

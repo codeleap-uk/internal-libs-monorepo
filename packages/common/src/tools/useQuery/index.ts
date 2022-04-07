@@ -1,4 +1,4 @@
-import { usePartialState, capitalize, deepMerge } from '../../utils'
+import { usePartialState, capitalize, deepMerge, isValuePrimitive } from '../../utils'
 import { useReducer, useRef } from 'react'
 import {
   QueryState,
@@ -108,9 +108,14 @@ export function useQuery<
         throw e
       },
       setState(to: DeepPartial<T>) {
-        setApiState((current) => ({
-          data: deepMerge(current, to),
-        }))
+        setApiState((current) => {
+          const shouldMerge = !isValuePrimitive(to) && !Array.isArray(to)
+
+          return {
+            data: shouldMerge ? deepMerge(current.data, to) : to,
+          }
+
+        })
       },
       currentValue: apiState.data,
     }
