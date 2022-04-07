@@ -1,4 +1,4 @@
-import { usePartialState, capitalize } from '../../utils'
+import { usePartialState, capitalize, deepMerge } from '../../utils'
 import { useReducer, useRef } from 'react'
 import {
   QueryState,
@@ -9,6 +9,7 @@ import {
   UseApiState,
 } from './types'
 import { onUpdate } from '../../utils/hooks'
+import { DeepPartial } from '../../types'
 const getQueryStatusBooleans = (setTo) => Object.fromEntries(
   queryStatuses.map((s) => [`is${capitalize(s)}`, s === setTo]),
 )
@@ -106,10 +107,10 @@ export function useQuery<
       throwError(e: Error) {
         throw e
       },
-      setState(to: T) {
-        setApiState({
-          data: to,
-        })
+      setState(to: DeepPartial<T>) {
+        setApiState((current) => ({
+          data: deepMerge(current, to),
+        }))
       },
       currentValue: apiState.data,
     }

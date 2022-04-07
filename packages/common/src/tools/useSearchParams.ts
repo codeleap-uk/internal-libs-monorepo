@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
-type UseSearchParamsReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>, () => void]
+type UseSearchParamsReturn<T> = [
+  T,
+  React.Dispatch<React.SetStateAction<T>>,
+  () => void,
+  URLSearchParams
+]
 
 export function useSearchParams<
   T extends Record<string, string> = Record<string, string>
@@ -32,7 +37,7 @@ export function useSearchParams<
       const url =
         window.location.origin +
         window.location.pathname +
-        `?${searchParams.current.toString()}`
+        `?${searchParams.current?.toString()}`
       window.history.replaceState({ path: url }, '', url)
     }
   }, [params])
@@ -41,5 +46,5 @@ export function useSearchParams<
     setParams(initial)
   }
 
-  return [params, setParams, reset]
+  return [params, setParams, reset, searchParams.current]
 }

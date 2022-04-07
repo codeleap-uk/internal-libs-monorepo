@@ -92,3 +92,10 @@ export type SmartOmit<T, K extends keyof T> = {
 }
 
 export type AsyncReturnType<T extends FunctionType<any, Promise<any>>> = Parameters<ReturnType<T>['then']>[0]
+
+export type PropsOf<T> = T extends React.ComponentType<infer P> ? P : never
+
+export type Hashmap<T> = {
+  [key: string]: T
+}
+

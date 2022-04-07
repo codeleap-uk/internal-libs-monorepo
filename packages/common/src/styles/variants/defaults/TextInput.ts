@@ -13,6 +13,7 @@ type TextInputParts =
   | 'innerWrapper'
   | 'error'
   | 'placeholder'
+  | 'buttonIconWrapper'
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
