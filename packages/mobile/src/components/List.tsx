@@ -23,6 +23,7 @@ export type FlatListProps<T = any> = RNFlatListProps<T> &
     refreshTimeout?: number
     changeData?: any
     separators?: boolean
+    keyboardAware?: boolean
   }
 
 const KeyboardAwareFlatList =
@@ -40,6 +41,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       style,
       refreshTimeout = 3000,
       changeData,
+      keyboardAware = true,
       ...props
     } = flatListProps
     const hasRefresh = !!props.onRefresh
@@ -85,8 +87,10 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
+    const Component = keyboardAware ? KeyboardAwareFlatList : FlatList
+
     return (
-      <KeyboardAwareFlatList
+      <Component
         style={[Theme.presets.full, style]}
         contentContainerStyle={[variantStyles.wrapper]}
         ref={ref as unknown as FlatList}

@@ -21,6 +21,7 @@ export type ScrollProps = KeyboardAwareScrollViewProps &
     onRefresh?: () => void
     refreshTimeout?: number
     changeData?: any
+    keyboardAware?: boolean
     styles?: ViewStyle
   }
 
@@ -42,6 +43,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       children,
       changeData,
       styles,
+      keyboardAware = true,
       ...props
     } = scrollProps
     const hasRefresh = !!props.onRefresh
@@ -81,8 +83,10 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       rootElement: 'wrapper',
     })
 
+    const Component = keyboardAware ? KeyboardAwareScrollView : ScrollView
+
     return (
-      <KeyboardAwareScrollView
+      <Component
         style={[Theme.presets.full, style]}
         contentContainerStyle={[variantStyles.wrapper]}
         ref={ref as unknown as ScrollView}
@@ -94,7 +98,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         }
       >
         {children}
-      </KeyboardAwareScrollView>
+      </Component>
     )
   },
 )

@@ -39,6 +39,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   visible: boolean
   toggle?: () => void
   scroll?: boolean
+  keyboardAware?: boolean
 }
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
@@ -56,6 +57,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeIconName = 'close',
     debugName,
     scroll = true,
+    keyboardAware = true,
     ...props
   } = modalProps
 
@@ -108,6 +110,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
+        keyboardAware={keyboardAware}
       >
         {dismissOnBackdrop && (
           <Touchable
