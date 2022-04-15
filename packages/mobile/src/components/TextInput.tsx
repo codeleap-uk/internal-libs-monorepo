@@ -168,6 +168,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholderTextColor={StyleSheet.flatten(getStyles('placeholder'))?.color}
+          selectionColor={StyleSheet.flatten(getStyles('selection'))?.color}
           {...props}
           style={getStyles('textField')}
         />

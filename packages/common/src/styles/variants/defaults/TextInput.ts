@@ -14,6 +14,7 @@ type TextInputParts =
   | 'error'
   | 'placeholder'
   | 'buttonIconWrapper'
+  | 'selection'
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
@@ -46,6 +47,9 @@ export const TextInputStyles = {
     },
     placeholder: {
       color: theme.colors.lightGrey,
+    },
+    selection: {
+      color: theme.colors.primary,
     },
     wrapper: {
       display: 'flex',
