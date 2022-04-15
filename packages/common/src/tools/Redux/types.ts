@@ -1,4 +1,5 @@
 import type { AnyAction, Dispatch, Store } from '@reduxjs/toolkit'
+import { createRedux, createSlice } from '.'
 import { DeepPartial, FunctionType } from '../..'
 
 export type Reducers<S> = Record<
@@ -25,6 +26,7 @@ export type CreateSliceArgs<
   initialState: S
   reducers: R
   asyncReducers: AR
+  noMerge?: (keyof AR | keyof R)[]
 }
 
 export type BuildActions<
@@ -49,7 +51,8 @@ export type Slice<
   S extends AnyRecord,
   N extends string,
   R extends Reducers<S>,
-  AR extends AsyncReducers<S>
+  AR extends AsyncReducers<S>,
+  NoMerge extends (keyof R | keyof AR)[] = []
 > = {
   buildActions: BuildActions<S, R, AR>
   name: N
@@ -70,10 +73,12 @@ export type CreateReduxReturn<
 > = {
   store: EnhancedStore<RootState>
   actions: {
-    [Property in keyof T]: ReturnType<T[Property]['buildActions']>;
+    [Property in keyof T ]: ReturnType<T[Property]['buildActions']>;
   }
+
 }
 
+// For testing
 type Post = {
   id: number
   username: string
@@ -91,12 +96,12 @@ type PostState = {
 }
 
 // const initialState:PostState = {
-//     posts: [],
-//     loading: false,
-//     error: null,
+//   posts: [],
+//   loading: false,
+//   error: null,
 // }
 
-// const s =  createSlice({
+// const s = createSlice({
 //   name: 'posts',
 //   initialState,
 //   reducers: {
@@ -105,8 +110,8 @@ type PostState = {
 //     },
 //   },
 //   asyncReducers: {
-//     getData: async ( state, setState, o: string) => {
-//       setState({loading: true})
+//     getData: async (state, setState, o: string) => {
+//       setState({ loading: true })
 //       // api.get('/')
 //       //   .then(({data}) => {
 
@@ -124,3 +129,9 @@ type PostState = {
 //     },
 //   },
 // })
+
+// const a = createRedux({
+//   posts: s,
+// })
+
+// a.actions.posts.getData

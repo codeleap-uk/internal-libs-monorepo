@@ -54,7 +54,7 @@ const links = [
 ]
 
 const ListItem = ({ item, depth = 2, styles }) => {
-
+  const mounted = useAppSelector(store => store.Session.appMounted)
   if (item.links) {
     return (
       <View

@@ -9,7 +9,7 @@ export * from './TextInput'
 export * from './RadioInput'
 export * from './Switch'
 export * from './ContentView'
-
+export * from './Sections'
 export * from './Select'
 export * from './FileInput'
 export * from './Slider'

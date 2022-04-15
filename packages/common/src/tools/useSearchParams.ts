@@ -10,7 +10,7 @@ type UseSearchParamsReturn<T> = [
 export function useSearchParams<
   T extends Record<string, string> = Record<string, string>
 >(initial?: T): UseSearchParamsReturn<T> {
-  const searchParams = useRef(new URLSearchParams(location.search))
+  const searchParams = useRef(new URLSearchParams(typeof window === 'undefined' ? '' : location.search))
   const [params, setParams] = useState<T>(() => {
 
     const initialParams = Object.fromEntries(searchParams.current as any) as T

@@ -45,6 +45,9 @@ export const sessionSlice = createSlice({
         profile: payload,
       }
     },
+    reset() {
+      return initialState
+    },
   },
   asyncReducers: {
     async loginSuccess(state, setState) {
@@ -187,5 +190,5 @@ export const sessionSlice = createSlice({
       setState({ profile: updatedProfile })
     },
   },
-
+  noMerge: ['reset'],
 })

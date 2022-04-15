@@ -14,7 +14,7 @@ export function createSlice<
   R extends Reducers<S> = Reducers<S>,
   AR extends AsyncReducers<S> = AsyncReducers<S>
 >(args: CreateSliceArgs<S, N, R, AR>): Slice<S, N, R, AR> {
-  const { initialState, name, reducers, asyncReducers } = args
+  const { initialState, name, reducers, asyncReducers, noMerge } = args
   const reducerCases = []
 
   for (const actionName of Object.keys({ ...reducers, ...asyncReducers })) {
@@ -33,6 +33,7 @@ export function createSlice<
           payload: action(store.getState()[name], args),
         })
       }
+
     }
 
     for (const [actionName, action] of Object.entries(asyncReducers)) {
@@ -53,9 +54,16 @@ export function createSlice<
   return {
     buildActions,
     reducer: (state = initialState, action) => {
+
       if (reducerCases.includes(action.type)) {
+        const actionName = action.type.split('/')[1]
+        if (noMerge?.includes(actionName)) {
+          return action.payload
+        }
+
         return deepMerge(state, action.payload)
       }
+
       return state
     },
     initialState,

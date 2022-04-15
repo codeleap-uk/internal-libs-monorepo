@@ -1,6 +1,6 @@
 import { React, Button, Settings, Text, TextInput, Touchable, variantProvider, View } from '@/app'
 import { Session, sessionSlice } from '@/redux'
-import { profileFromUser } from '@/services'
+import { profileFromUser } from '@/services/authentication'
 import { createForm, onMount, useForm, useState } from '@codeleap/common'
 // import firebase from 'firebase'
 import * as yup from 'yup'
