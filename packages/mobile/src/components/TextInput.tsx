@@ -209,7 +209,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
 
 export const FormError = ({ message, ...props }) => {
   if (['number', 'string', 'undefined'].includes(typeof message)) {
-    return <Text text={`${message || ' '}`} variants={['p2', 'marginTop:1']} {...props} />
+    const text = message ? `${message.charAt(0).toUpperCase() + message.slice(1)}` : ' '
+    return <Text text={text} variants={['p2', 'marginTop:1']} {...props} />
   }
   return message
 }

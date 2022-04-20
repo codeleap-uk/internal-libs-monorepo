@@ -2,9 +2,9 @@
   "name": "@codeleap/mobile",
   "version": "1.9.0",
   "main": "src/index.ts",
-  "repository": "https://github.com/codeleap-uk/internal-libs-monorepo/tree/master/packages/mobile",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
+  "repository": "PRIVATE",
   "devDependencies": {
     "@codeleap/config": "*",
     "@types/react-native": "^0.66.15",
