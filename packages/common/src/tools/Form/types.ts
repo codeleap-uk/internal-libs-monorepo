@@ -33,6 +33,8 @@ export type CommonSliderTypes = {
   labels?: string[]
 }
 
+export type Mask = (RegExp | string)[]
+
 export type InputValueTypes = {
   checkbox: boolean
   switch: boolean
@@ -51,24 +53,28 @@ export type CheckboxField = {
   type: 'checkbox'
   defaultValue: boolean
   validate?: Validator<boolean>
+  required?: boolean
 }
 
 export type SwitchField = {
   type: 'switch'
   defaultValue: boolean
   validate?: Validator<boolean>
+  required?: boolean
 }
 
 export type ListField<T = any> = {
   type: 'list'
   defaultValue: T[]
   validate?: Validator<T[]>
+  required?: boolean
 }
 
 export type SliderField = {
   type: 'slider'
   defaultValue: number
   validate?: Validator<number>
+  required?: boolean
 
 } & CommonSliderTypes
 
@@ -76,6 +82,7 @@ export type RangeSliderField = {
   type: 'range-slider'
   defaultValue: number[]
   validate?: Validator<number[]>
+  required?: boolean
 } & CommonSliderTypes
 
 export type TextField = {
@@ -84,6 +91,11 @@ export type TextField = {
   defaultValue: string
   placeholder?: string
   validate?: Validator<string>
+  required?: boolean
+  masking?: {
+    mask: Mask | ((text:string) => Mask[])
+    saveFormatted?: boolean
+  }
 }
 
 export type SelectField<T = any> = {
@@ -93,6 +105,7 @@ export type SelectField<T = any> = {
   native?: boolean
   placeholder?: string
   validate?: Validator<T>
+  required?: boolean
 }
 
 export type RadioField<T = any> = {
@@ -100,6 +113,7 @@ export type RadioField<T = any> = {
   options: Options<T>
   defaultValue: T
   validate?: Validator<T>
+  required?: boolean
 }
 
 export type FileField = {
@@ -109,6 +123,7 @@ export type FileField = {
   imageToBase64?: boolean
   multiple?: boolean
   validate?: Validator<WebInputFile[]>
+  required?: boolean
 }
 
 export type CompositeField = {
@@ -116,6 +131,7 @@ export type CompositeField = {
   fields?: FieldsMap
   defaultValue: Record<string, unknown>
   validate?: never
+  required?: boolean
 }
 export type AllFields =
   | CheckboxField

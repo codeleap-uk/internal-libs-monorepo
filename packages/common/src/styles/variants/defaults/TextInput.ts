@@ -15,6 +15,8 @@ type TextInputParts =
   | 'placeholder'
   | 'buttonIconWrapper'
   | 'selection'
+  | 'requiredAsterisk'
+  | 'labelWrapper'
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
@@ -115,6 +117,12 @@ export const TextInputStyles = {
     },
     'innerWrapper:focus': {
       ...theme.border.primary(1),
+    },
+    requiredAsterisk: {
+      color: theme.colors.negative,
+    },
+    labelWrapper: {
+      ...theme.presets.row,
     },
   })),
   line: createTextInputStyle((theme) => ({

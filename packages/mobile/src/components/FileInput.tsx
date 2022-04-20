@@ -36,6 +36,7 @@ export type FileInputProps = {
   type?: 'image' | 'anyFile'
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
+  required?: boolean
 }
 
 const pickerDefaults = {
@@ -77,6 +78,7 @@ export const FileInput = forwardRef<
     alertProps,
     placeholder = 'Select a file',
     pickerOptions,
+    required,
     buttonProps,
   } = fileInputProps
 
@@ -162,7 +164,7 @@ export const FileInput = forwardRef<
   if (mode === 'button') {
     return (
       <View style={variantStyles.wrapper}>
-        <InputLabel label={label} style={variantStyles.label} />
+        <InputLabel label={label} style={variantStyles.label} required={required}/>
         <Button
           onPress={() => openFilePicker()}
           text={filenames || placeholder}

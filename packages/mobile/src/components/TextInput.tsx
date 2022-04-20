@@ -6,6 +6,7 @@ import {
   TextInputComposition,
   TextInputStyles,
   useBooleanToggle,
+  useComponentStyle,
   useDefaultComponentStyle,
   useValidate,
 } from '@codeleap/common'
@@ -17,6 +18,8 @@ import { StylesOf } from '../types/utility'
 import { Icon } from './Icon'
 import { NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData } from 'react-native'
 import { Touchable, TouchableProps } from './Touchable'
+import { MaskedTextInput } from '../modules/textInputMask'
+import { TextInputMaskProps } from '../modules/types/textInputMask'
 
 type IconProp = { name: IconPlaceholder; action?: () => void }
 
@@ -42,7 +45,10 @@ export type TextInputProps =
     visibilityToggle?: boolean
     touchableWrapper?: boolean
     onPress?: () => void
+    masking?: FormTypes.TextField['masking']
     innerWrapperProps?: TouchableProps | ViewProps
+    onChangeMask?: TextInputMaskProps['onChangeText']
+    required?:boolean
   }
 
 export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, inputRef) => {
@@ -65,7 +71,10 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     visibilityToggle,
     touchableWrapper,
     innerWrapperProps,
+    masking = null,
+    onChangeMask,
     debugName,
+    required = false,
     ...props
   } = rawprops
 
@@ -78,7 +87,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     variants,
     styles,
   })
-  const InputElement = NativeTextInput
+  const InputElement = masking ? MaskedTextInput : NativeTextInput
 
   const handleBlur: TextInputProps['onBlur'] = (e) => {
     if (!editedState && value) setEdited(true)
@@ -95,7 +104,10 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       onFocus(e)
     }
   }
-
+  const handleMaskChange = (masked, unmasked, obfuscated) => {
+    if (onChangeText) onChangeText(masking.saveFormatted ? masked : unmasked)
+    if (onChangeMask) onChangeMask(masked, unmasked, obfuscated)
+  }
   const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
     const text = event.nativeEvent.text
 
@@ -156,20 +168,29 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       onPress={handlePress}
       {...innerWrapperProps}
     >
-      <InputLabel label={label} style={getStyles('label')} />
+      <InputLabel
+        label={label}
+        style={getStyles('label')}
+        asteriskStyle={getStyles('requiredAsterisk')}
+        wrapperStyle={getStyles('labelWrapper')}
+        required={required}
+      />
       <View style={getStyles('innerWrapper')} {...innerWrapperProps}>
         <InputIcon {...leftIcon} style={leftIconStyle} wrapperStyle={buttonIconWrapperStyle} />
+        {/* @ts-ignore */}
         <InputElement
           ref={input}
           secureTextEntry={password && !textIsVisible}
-          onChange={handleChange}
+          onChange={(e) => masking ? onChange?.(e) : handleChange(e)}
           value={value}
           editable={disabled}
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholderTextColor={StyleSheet.flatten(getStyles('placeholder'))?.color}
           selectionColor={StyleSheet.flatten(getStyles('selection'))?.color}
+          mask={masking?.mask}
           {...props}
+          {...(masking ? { onChangeText: handleMaskChange } : {})}
           style={getStyles('textField')}
         />
         {
@@ -203,12 +224,19 @@ export const InputIcon: React.FC<{ style: any; wrapperStyle: any } & IconProp> =
   return <Icon name={name} style={style} />
 }
 
-export const InputLabel = ({ label, style }) => {
+export const InputLabel = ({ label, variants = [], styles = {}, style, asteriskStyle = null, required = false, wrapperStyle = null }) => {
+  const labelStyles = useDefaultComponentStyle('TextInput', {
+    variants, styles, transform: StyleSheet.flatten,
+  })
+
   if (!label) return null
 
   switch (typeof label) {
     case 'string':
-      return <Text style={style} text={label} />
+      return <View style={ wrapperStyle || labelStyles.labelWrapper}>
+        <Text style={style || labelStyles.label} text={label} />
+        {required && <Text style={asteriskStyle || labelStyles.requiredAsterisk} text={' *'} />}
+      </View>
     case 'object':
       return label
     default:

@@ -26,6 +26,7 @@ type CheckboxProps = NativeCheckboxProps & {
   label?: ReactNode
   styles?: StylesOf<CheckboxComposition>
   validate?: Form.ValidatorFunctionWithoutForm | string
+  required?: boolean
 }
 
 export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
@@ -38,6 +39,7 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
       value,
       onValueChange,
       validate,
+      required,
       ...props
     } = checkboxProps
 
@@ -72,7 +74,7 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
           <View style={getStyles('checkmarkWrapper')}>
             <View style={getStyles('checkmark')} />
           </View>
-          <InputLabel label={label} style={getStyles('label')} />
+          <InputLabel label={label} style={getStyles('label')} required={required}/>
         </Touchable>
         <FormError message={error.message} style={getStyles('error')} />
       </View>
