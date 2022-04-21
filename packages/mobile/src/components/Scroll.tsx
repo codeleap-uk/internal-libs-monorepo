@@ -90,12 +90,12 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         style={[Theme.presets.full, style]}
         contentContainerStyle={[variantStyles.wrapper]}
         ref={ref as unknown as ScrollView}
-        {...props}
         refreshControl={
           hasRefresh && (
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           )
         }
+        {...props}
       >
         {children}
       </Component>

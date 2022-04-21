@@ -95,12 +95,12 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         contentContainerStyle={[variantStyles.wrapper]}
         ref={ref as unknown as FlatList}
         ItemSeparatorComponent={separator}
-        {...props}
         refreshControl={
           hasRefresh && (
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           )
         }
+        {...props}
       />
     )
   },

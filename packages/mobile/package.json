@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "main": "src/index.ts",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
