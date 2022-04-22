@@ -99,7 +99,7 @@ export class Logger {
       ]
     }
 
-    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `[DEVICE : ${deviceId}]` : ''} - `, ...logContent)
+    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `[${deviceId}]` : ''} - `, ...logContent)
   }
 
   private logToTerminal: LogToTerminal = (...logArgs) => {
@@ -114,6 +114,8 @@ export class Logger {
 
       const deviceId = this.settings.Logger?.DeviceIdentifier ?
         `[${this.settings.Logger.DeviceIdentifier}]` : ''
+
+      args[1] = typeof args[1] === 'object' && this.settings.Logger?.StringifyObjects ? JSON.stringify(args[1], null, 2) : args[1]
 
       Logger.coloredLog(logType, args, color, deviceId)
 
@@ -138,7 +140,11 @@ export class Logger {
 
   error(...args: LogFunctionArgs) {
     this.logToTerminal('error', args)
-    console.log(callsites())
+    try {
+      console.log(callsites())
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   warn(...args: LogFunctionArgs) {
