@@ -99,7 +99,7 @@ export class Logger {
       ]
     }
 
-    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `[${deviceId}]` : ''} - `, ...logContent)
+    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `${deviceId}` : ''} - `, ...logContent)
   }
 
   private logToTerminal: LogToTerminal = (...logArgs) => {
