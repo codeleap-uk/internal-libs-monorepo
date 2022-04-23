@@ -94,28 +94,28 @@ export class Logger {
 
     if (nArgs === 3) {
       logContent = [
-        `(${category}) ${descriptionOrValue} -> `,
+        `(${category}) ${descriptionOrValue}${value ? ' ->' : ''}`,
         value,
       ]
     }
 
     if (nArgs === 2) {
       logContent = [
-        `${descriptionOrValue} -> `,
+        `${descriptionOrValue}${value ? ' ->' : ''}`,
         value,
       ]
     }
 
     if (nArgs === 1) {
-      const isObj = typeof value === 'object'
-      const keys = isObj ? Object.keys(value) : null
+      const isObj = typeof descriptionOrValue === 'object'
+      const keys = isObj ? Object.keys(descriptionOrValue) : null
       const title = isObj ?
-        `${keys.filter(i => !!i).slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''} -> `
+        `${keys.filter(i => !!i).slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''} ->`
         : ''
 
       logContent = [
         title,
-        value,
+        descriptionOrValue,
       ]
     }
 
