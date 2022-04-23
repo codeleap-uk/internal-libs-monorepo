@@ -92,7 +92,7 @@ export class Logger {
     const nArgs = logArgs[1].length
     let logContent = logArgs[1]
 
-    const logValue = value || descriptionOrValue
+    const logValue = nArgs === 1 ? descriptionOrValue : value
     const displayValue = stringify ? JSON.stringify(logValue, null, 2) : logValue
 
     if (nArgs === 3) {
