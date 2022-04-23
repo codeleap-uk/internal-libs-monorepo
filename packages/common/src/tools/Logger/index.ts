@@ -94,12 +94,32 @@ export class Logger {
 
     if (nArgs === 3) {
       logContent = [
-        `${category} -> ${descriptionOrValue}`,
+        `(${category}) ${descriptionOrValue} -> `,
         value,
       ]
     }
 
-    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `${deviceId}` : ''} - `, ...logContent)
+    if (nArgs === 2) {
+      logContent = [
+        `${descriptionOrValue} -> `,
+        value,
+      ]
+    }
+
+    if (nArgs === 1) {
+      const isObj = typeof value === 'object'
+      const keys = isObj ? Object.keys(value) : null
+      const title = isObj ?
+        `${keys.filter(i => !!i).slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''} -> `
+        : ''
+
+      logContent = [
+        title,
+        value,
+      ]
+    }
+
+    console[logType](`[${logType.toUpperCase()}] ${deviceId ? `${deviceId}` : ''}`, ...logContent)
   }
 
   private logToTerminal: LogToTerminal = (...logArgs) => {
@@ -115,7 +135,9 @@ export class Logger {
       const deviceId = this.settings.Logger?.DeviceIdentifier ?
         `[${this.settings.Logger.DeviceIdentifier}]` : ''
 
-      args[1] = typeof args[1] === 'object' && this.settings.Logger?.StringifyObjects ? JSON.stringify(args[1], null, 2) : args[1]
+      if (this.settings.Logger?.StringifyObjects) {
+        args.forEach((arg, k) => args[k] = arg && typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg || '')
+      }
 
       Logger.coloredLog(logType, args, color, deviceId)
 
