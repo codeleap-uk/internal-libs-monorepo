@@ -85,38 +85,47 @@ export class Logger {
   }
 
   static coloredLog:LogToTerminal = (...logArgs) => {
-    const [logType, content, _ig_color, deviceId] = logArgs
+    const [logType, content, _ig_color, deviceId, stringify] = logArgs
 
     const [descriptionOrValue, value, category] = content
 
     const nArgs = logArgs[1].length
     let logContent = logArgs[1]
 
+    const logValue = value || descriptionOrValue
+    const displayValue = stringify ? JSON.stringify(logValue, null, 2) : logValue
+
     if (nArgs === 3) {
       logContent = [
-        `(${category}) ${descriptionOrValue}${value ? ' ->' : ''}`,
-        value,
+        `(${category}) ${descriptionOrValue}${displayValue ? ' ->' : ''}`,
+        displayValue,
       ]
     }
 
     if (nArgs === 2) {
       logContent = [
-        `${descriptionOrValue}${value ? ' ->' : ''}`,
-        value,
+        `${descriptionOrValue}${displayValue ? ' ->' : ''}`,
+        displayValue,
       ]
     }
 
     if (nArgs === 1) {
       const isObj = typeof descriptionOrValue === 'object'
       const keys = isObj ? Object.keys(descriptionOrValue) : null
-      const title = isObj ?
+      const title = isObj && keys.length ?
         `${keys.filter(i => !!i).slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''} ->`
-        : ''
+        : null
 
-      logContent = [
-        title,
-        descriptionOrValue,
-      ]
+      if (title) {
+        logContent = [
+          title,
+          displayValue,
+        ]
+      } else {
+        logContent = [
+          displayValue,
+        ]
+      }
     }
 
     console[logType](`[${logType.toUpperCase()}] ${deviceId ? `${deviceId}` : ''}`, ...logContent)
@@ -135,13 +144,12 @@ export class Logger {
       const deviceId = this.settings.Logger?.DeviceIdentifier ?
         `[${this.settings.Logger.DeviceIdentifier}]` : ''
 
-      if (this.settings.Logger?.StringifyObjects) {
-        args.forEach((arg, k) => args[k] = arg && typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg || '')
-      }
-
-      Logger.coloredLog(logType, args, color, deviceId)
+      const stringify = this.settings.Logger?.StringifyObjects
 
       this.middleware.forEach(m => m(...logArgs))
+
+      Logger.coloredLog(logType, args, color, deviceId, stringify)
+
     } else {
       try {
         // NOTE: For some reason, sentry throws here sometimes
