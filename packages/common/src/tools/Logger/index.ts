@@ -93,7 +93,7 @@ export class Logger {
     let logContent = logArgs[1]
 
     const logValue = nArgs === 1 ? descriptionOrValue : value
-    const displayValue = stringify ? JSON.stringify(logValue, null, 2) : logValue
+    const displayValue = stringify && !!logValue && typeof logValue === 'object' ? JSON.stringify(logValue, null, 2) : logValue || ''
 
     if (nArgs === 3) {
       logContent = [
