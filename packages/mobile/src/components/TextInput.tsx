@@ -26,6 +26,7 @@ type IconProp = { name: IconPlaceholder; action?: () => void }
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
 
 export type TextInputProps =
+  Partial<TextInputMaskProps> &
   ComponentVariants<typeof TextInputStyles> &
   Omit<NativeProps, 'value'> &
   {
@@ -104,9 +105,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       onFocus(e)
     }
   }
-  const handleMaskChange = (masked, unmasked, obfuscated) => {
-    if (onChangeText) onChangeText(masking.saveFormatted ? masked : unmasked)
-    if (onChangeMask) onChangeMask(masked, unmasked, obfuscated)
+  const handleMaskChange = (masked, unmasked) => {
+    if (onChangeText) onChangeText((typeof masking === 'object' && masking?.saveFormatted) ? masked : unmasked)
+    if (onChangeMask) onChangeMask(masked, unmasked)
   }
   const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
     const text = event.nativeEvent.text
@@ -188,9 +189,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           onBlur={handleBlur}
           placeholderTextColor={StyleSheet.flatten(getStyles('placeholder'))?.color}
           selectionColor={StyleSheet.flatten(getStyles('selection'))?.color}
-          mask={masking?.mask}
+          includeRawValueInChangeText={true}
           {...props}
-          {...(masking ? { onChangeText: handleMaskChange } : {})}
+          {...(masking ? { onChangeText: handleMaskChange, type: masking?.type } : {})}
           style={getStyles('textField')}
         />
         {

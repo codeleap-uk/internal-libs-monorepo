@@ -22,6 +22,7 @@ export type ScrollProps = KeyboardAwareScrollViewProps &
     refreshTimeout?: number
     changeData?: any
     keyboardAware?: boolean
+    refreshing?: boolean
     styles?: ViewStyle
   }
 
@@ -47,7 +48,8 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       ...props
     } = scrollProps
     const hasRefresh = !!props.onRefresh
-    const [refreshing, setRefreshing] = useState(false)
+    const [refreshingState, setRefreshing] = useState(false)
+    const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshingState
 
     const timer = React.useRef(null)
     const previousData = usePrevious(changeData)
@@ -66,13 +68,13 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       }, refreshTimeout)
     }
     onUpdate(() => {
-      if (refreshing && !deepEqual(previousData, changeData)) {
+      if (refreshingDisplay && !deepEqual(previousData, changeData)) {
         setRefreshing(false)
         if (timer.current) {
           clearTimeout(timer.current)
         }
       }
-    }, [refreshing, changeData])
+    }, [refreshingDisplay, changeData])
     const { Theme } = useCodeleapContext()
 
     const variantStyles = useDefaultComponentStyle('View', {
@@ -92,7 +94,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         ref={ref as unknown as ScrollView}
         refreshControl={
           hasRefresh && (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshingDisplay} onRefresh={onRefresh} />
           )
         }
         {...props}

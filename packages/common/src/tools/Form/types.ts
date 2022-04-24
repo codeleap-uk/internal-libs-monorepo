@@ -33,8 +33,6 @@ export type CommonSliderTypes = {
   labels?: string[]
 }
 
-export type Mask = (RegExp | string)[]
-
 export type InputValueTypes = {
   checkbox: boolean
   switch: boolean
@@ -93,7 +91,7 @@ export type TextField = {
   validate?: Validator<string>
   required?: boolean
   masking?: {
-    mask: Mask | ((text:string) => Mask[])
+    type?: any
     saveFormatted?: boolean
   }
 }

@@ -23,6 +23,7 @@ export type FlatListProps<T = any> = RNFlatListProps<T> &
     refreshTimeout?: number
     changeData?: any
     separators?: boolean
+    refreshing?: boolean
     keyboardAware?: boolean
   }
 
@@ -45,7 +46,8 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ...props
     } = flatListProps
     const hasRefresh = !!props.onRefresh
-    const [refreshing, setRefreshing] = useState(false)
+    const [refreshingState, setRefreshing] = useState(false)
+    const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshingState
 
     const timer = React.useRef(null)
     const previousData = usePrevious(changeData)
@@ -64,13 +66,13 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       }, refreshTimeout)
     }
     onUpdate(() => {
-      if (refreshing && !deepEqual(previousData, changeData)) {
+      if (refreshingDisplay && !deepEqual(previousData, changeData)) {
         setRefreshing(false)
         if (timer.current) {
           clearTimeout(timer.current)
         }
       }
-    }, [refreshing, changeData])
+    }, [refreshingDisplay, changeData])
     const { Theme } = useCodeleapContext()
 
     const variantStyles = useDefaultComponentStyle('View', {
@@ -97,7 +99,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         ItemSeparatorComponent={separator}
         refreshControl={
           hasRefresh && (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshingDisplay} onRefresh={onRefresh} />
           )
         }
         {...props}
