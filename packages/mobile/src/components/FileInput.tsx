@@ -37,6 +37,7 @@ export type FileInputProps = {
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
   required?: boolean
+  onError?: (error: any) => void
 }
 
 const pickerDefaults = {
@@ -80,6 +81,7 @@ export const FileInput = forwardRef<
     pickerOptions,
     required,
     buttonProps,
+    onError,
   } = fileInputProps
 
   const [file, setFile] = React.useState(null)
@@ -95,10 +97,27 @@ export const FileInput = forwardRef<
       setFile(files)
       onFileSelect(files.map((file) => ({ preview: file.uri, file })))
     } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        logger.log('User cancelled the picker.', null, 'Component')
+      handleError(err)
+    }
+  }
+
+  function handleError(err) {
+    const warn = DocumentPicker.isCancel(err) || String(err).includes('Error: User cancelled')
+    if (warn) {
+      // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
+      logger.warn(err)
+      console.warn(err)
+    } else {
+      // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
+      logger.error(err)
+      console.error(err)
+      if (onError) {
+        onError(err)
       } else {
-        throw err
+        OSAlert.error({
+          title: 'Error',
+          body: err.message,
+        })
       }
     }
   }
@@ -115,7 +134,6 @@ export const FileInput = forwardRef<
   }
 
   const openFilePicker = async () => {
-
     if (type === 'image') {
       OSAlert.ask({
         title: 'Change Image',
@@ -125,14 +143,14 @@ export const FileInput = forwardRef<
           {
             text: alertProps?.options?.[0]?.text || 'Camera',
             onPress: () => {
-              ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
+              ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution).catch(handleError)
             },
             ...alertProps?.options[1],
           },
           {
             text: 'Library',
             onPress: () => {
-              ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
+              ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution).catch(handleError)
             },
             ...alertProps?.options[2],
           },
