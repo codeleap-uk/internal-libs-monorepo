@@ -37,6 +37,8 @@ export type FileInputProps = {
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
   required?: boolean
+  onOpenCamera?: () => Promise<void>
+  onOpenGallery?: () => Promise<void>
 }
 
 const pickerDefaults = {
@@ -62,6 +64,10 @@ function parsePickerData(data:any):MobileInputFile {
   }
 }
 
+const emptyPromise = async () => {
+  return
+}
+
 export const FileInput = forwardRef<
   FileInputRef,
   FileInputProps
@@ -80,6 +86,8 @@ export const FileInput = forwardRef<
     pickerOptions,
     required,
     buttonProps,
+    onOpenCamera = emptyPromise,
+    onOpenGallery = emptyPromise,
   } = fileInputProps
 
   const [file, setFile] = React.useState(null)
@@ -125,14 +133,18 @@ export const FileInput = forwardRef<
           {
             text: alertProps?.options?.[0]?.text || 'Camera',
             onPress: () => {
-              ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
+              onOpenCamera().then(() => {
+                ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
+              }).catch((err) => logger.error('Error onOpenCamera camera', err))
             },
             ...alertProps?.options[1],
           },
           {
             text: 'Library',
             onPress: () => {
-              ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
+              onOpenGallery().then(() => {
+                ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
+              }).catch((err) => logger.error('Error onOpenGallery', err))
             },
             ...alertProps?.options[2],
           },
