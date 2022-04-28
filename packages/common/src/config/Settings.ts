@@ -25,6 +25,7 @@ export type AppSettings = DeepPartial<{
     Level: LogType
     DeviceIdentifier?: string
     IgnoreWarnings?: string[]
+    StringifyObjects?: boolean
     Obfuscate: {
       keys: Matcher<'key'>[]
       values: Matcher<'value'>[]

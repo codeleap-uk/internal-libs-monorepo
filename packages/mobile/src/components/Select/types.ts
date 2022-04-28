@@ -13,6 +13,7 @@ export type SelectRenderFNProps<T> = FormTypes.Options<T>[number] & {
   styles: StylesOf<MobileSelectComposition>
   onPress: () => void
   selected?: boolean
+  index: number
 }
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element

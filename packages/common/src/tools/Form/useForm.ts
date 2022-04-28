@@ -120,8 +120,25 @@ export function useForm<
       value: deepGet(field, formValues),
     }
 
+    if (type === 'number') {
+
+      dynamicProps.value = Number.isNaN(dynamicProps.value) ? '' : String(dynamicProps.value)
+    }
+
+    if (Theme.IsBrowser) {
+      dynamicProps.type = 'number'
+    } else {
+      dynamicProps.keyboardType = 'numeric'
+    }
+
     if (changeEventName) {
       dynamicProps[changeEventName] = (value) => {
+        if (type === 'number') {
+          value = Number(value)
+          if (typeof staticProps.precision !== 'undefined') {
+            value = Number(value.toFixed(staticProps.precision))
+          }
+        }
         if (config.validateOn === 'change') {
           validateField(field, true, value)
         }

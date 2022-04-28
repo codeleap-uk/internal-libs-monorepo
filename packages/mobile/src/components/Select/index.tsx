@@ -163,10 +163,10 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
                 if (renderItem) {
                   return renderItem({
                     ...item,
+                    index: idx,
                     selected: isSelected,
                     onPress: close,
                     styles: variantStyles,
-
                   })
                 }
 

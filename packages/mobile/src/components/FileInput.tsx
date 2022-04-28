@@ -39,6 +39,7 @@ export type FileInputProps = {
   required?: boolean
   onOpenCamera?: () => Promise<void>
   onOpenGallery?: () => Promise<void>
+  onError?: (error: any) => void
 }
 
 const pickerDefaults = {
@@ -88,6 +89,7 @@ export const FileInput = forwardRef<
     buttonProps,
     onOpenCamera = emptyPromise,
     onOpenGallery = emptyPromise,
+    onError,
   } = fileInputProps
 
   const [file, setFile] = React.useState(null)
@@ -103,10 +105,27 @@ export const FileInput = forwardRef<
       setFile(files)
       onFileSelect(files.map((file) => ({ preview: file.uri, file })))
     } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        logger.log('User cancelled the picker.', null, 'Component')
+      handleError(err)
+    }
+  }
+
+  function handleError(err) {
+    const warn = DocumentPicker.isCancel(err) || String(err).includes('Error: User cancelled')
+    if (warn) {
+      // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
+      logger.warn(err)
+      console.warn(err)
+    } else {
+      // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
+      logger.error(err)
+      console.error(err)
+      if (onError) {
+        onError(err)
       } else {
-        throw err
+        OSAlert.error({
+          title: 'Error',
+          body: err.message,
+        })
       }
     }
   }
@@ -123,7 +142,6 @@ export const FileInput = forwardRef<
   }
 
   const openFilePicker = async () => {
-
     if (type === 'image') {
       OSAlert.ask({
         title: 'Change Image',
@@ -135,7 +153,7 @@ export const FileInput = forwardRef<
             onPress: () => {
               onOpenCamera().then(() => {
                 ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
-              }).catch((err) => logger.error('Error onOpenCamera camera', err))
+              }).catch(onError)
             },
             ...alertProps?.options[1],
           },
@@ -144,7 +162,7 @@ export const FileInput = forwardRef<
             onPress: () => {
               onOpenGallery().then(() => {
                 ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
-              }).catch((err) => logger.error('Error onOpenGallery', err))
+              }).catch(onError)
             },
             ...alertProps?.options[2],
           },

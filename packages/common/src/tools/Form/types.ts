@@ -33,8 +33,6 @@ export type CommonSliderTypes = {
   labels?: string[]
 }
 
-export type Mask = (RegExp | string)[]
-
 export type InputValueTypes = {
   checkbox: boolean
   switch: boolean
@@ -46,6 +44,7 @@ export type InputValueTypes = {
   'range-slider': number[]
   slider: number
   list: any[]
+  number: number
 }
 export type Label = string | ReactNode
 
@@ -93,11 +92,24 @@ export type TextField = {
   validate?: Validator<string>
   required?: boolean
   masking?: {
-    mask: Mask | ((text:string) => Mask[])
+    type?: any
     saveFormatted?: boolean
   }
 }
+export type NumberField = {
+  type: 'number'
 
+  defaultValue: number
+  placeholder?: string
+  validate?: Validator<number>
+  required?: boolean
+  precision?: number
+  masking?: {
+    type?: any
+    saveFormatted?: boolean
+  }
+
+}
 export type SelectField<T = any> = {
   type: 'select'
   options: Options<T>
@@ -144,6 +156,7 @@ export type AllFields =
   | SliderField
   | RangeSliderField
   | ListField
+  | NumberField
 
 export type FormField = {
   disabled?: boolean

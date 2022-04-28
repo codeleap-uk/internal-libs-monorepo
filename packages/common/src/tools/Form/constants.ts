@@ -8,6 +8,7 @@ export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
     file: null,
     'range-slider': [0, 100],
     slider: 1,
+    number: '',
   }
 
 export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
@@ -19,6 +20,7 @@ export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
     radio: 'onValueChange',
     text: 'onChangeText',
     file: 'onFileSelect',
+    number: 'onChangeText',
   }
 
 // const myForm = createForm({

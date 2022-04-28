@@ -22,7 +22,8 @@ export type LogToTerminalArgs = [
   logType: LogType,
   args: LogFunctionArgs,
   color?: keyof DebugColors,
-  deviceIdentifier?: string
+  deviceIdentifier?: string,
+  stringify?: boolean
 ]
 export type LogToTerminal = FunctionType<LogToTerminalArgs, void>
 
