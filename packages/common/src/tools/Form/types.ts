@@ -3,6 +3,7 @@ import { Join, Paths, Prev } from '../../types/pathMapping'
 import * as yup from 'yup'
 import { WebInputFile, MobileInputFile, DeepPartial } from '../../types'
 import { AnyObject } from 'yup/lib/object'
+
 type ValidationReturn = { message?: Label; valid?: boolean }
 
 export type ValidatorFunction<T = any, F = any> = (
@@ -165,6 +166,7 @@ export type FormField = {
   keyboardType?: string
   returnKeyType?: string
   textContentType?: string
+  autoComplete?: string
   subtitle?: Label
   debounce?: number
 } & AllFields
