@@ -121,14 +121,12 @@ export function useForm<
     }
 
     if (type === 'number') {
-
       dynamicProps.value = Number.isNaN(dynamicProps.value) ? '' : String(dynamicProps.value)
-    }
-
-    if (Theme.IsBrowser) {
-      dynamicProps.type = 'number'
-    } else {
-      dynamicProps.keyboardType = 'numeric'
+      if (Theme.IsBrowser) {
+        dynamicProps.type = 'number'
+      } else {
+        dynamicProps.keyboardType = 'numeric'
+      }
     }
 
     if (changeEventName) {
