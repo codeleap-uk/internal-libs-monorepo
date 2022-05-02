@@ -176,8 +176,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       />
       <View style={getStyles('innerWrapper')} {...innerWrapperProps}>
         <InputIcon {...leftIcon} style={leftIconStyle} wrapperStyle={buttonIconWrapperStyle} />
+        {/* @ts-ignore */}
         <InputElement
-          /* @ts-ignore */
           ref={input}
           secureTextEntry={password && !textIsVisible}
           onChange={(e) => masking ? onChange?.(e) : handleChange(e)}

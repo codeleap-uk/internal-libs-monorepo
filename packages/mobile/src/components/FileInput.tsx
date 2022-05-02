@@ -37,8 +37,8 @@ export type FileInputProps = {
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
   required?: boolean
-  onOpenCamera?: () => Promise<void>
-  onOpenGallery?: () => Promise<void>
+  onOpenCamera?: (resolve: (() => void)) => Promise<void>
+  onOpenGallery?: (resolve: (() => void)) => Promise<void>
   onError?: (error: any) => void
 }
 
@@ -65,10 +65,6 @@ function parsePickerData(data:any):MobileInputFile {
   }
 }
 
-const emptyPromise = async () => {
-  return
-}
-
 export const FileInput = forwardRef<
   FileInputRef,
   FileInputProps
@@ -87,8 +83,8 @@ export const FileInput = forwardRef<
     pickerOptions,
     required,
     buttonProps,
-    onOpenCamera = emptyPromise,
-    onOpenGallery = emptyPromise,
+    onOpenCamera = null,
+    onOpenGallery = null,
     onError,
   } = fileInputProps
 
@@ -140,7 +136,13 @@ export const FileInput = forwardRef<
       parsePickerData(data),
     ])
   }
+  const onPress = (open?: 'camera' | 'library') => {
+    const call = open === 'camera' ? 'openCamera' : 'openPicker'
+    ImageCropPicker[call]({
 
+    }).then(handlePickerResolution)
+
+  }
   const openFilePicker = async () => {
     if (type === 'image') {
       OSAlert.ask({
@@ -151,18 +153,24 @@ export const FileInput = forwardRef<
           {
             text: alertProps?.options?.[0]?.text || 'Camera',
             onPress: () => {
-              onOpenCamera().then(() => {
-                ImageCropPicker.openCamera(mergedOptions).then(handlePickerResolution)
-              }).catch(onError)
+              if (onOpenCamera) {
+                onOpenCamera(() => onPress('camera'))
+              } else {
+                onPress('camera')
+              }
+
             },
             ...alertProps?.options[1],
           },
           {
             text: 'Library',
             onPress: () => {
-              onOpenGallery().then(() => {
-                ImageCropPicker.openPicker(mergedOptions).then(handlePickerResolution)
-              }).catch(onError)
+              if (onOpenGallery) {
+                onOpenGallery(() => onPress('library'))
+              } else {
+                onPress('library')
+              }
+
             },
             ...alertProps?.options[2],
           },
