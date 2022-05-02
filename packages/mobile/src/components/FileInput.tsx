@@ -38,6 +38,7 @@ export type FileInputProps = {
   pickerOptions?: Partial<Options>
   required?: boolean
   onOpenCamera?: (resolve: (() => void)) => Promise<void>
+  onOpenFileSystem?: (resolve: (() => void)) => Promise<void>
   onOpenGallery?: (resolve: (() => void)) => Promise<void>
   onError?: (error: any) => void
 }
@@ -85,6 +86,7 @@ export const FileInput = forwardRef<
     buttonProps,
     onOpenCamera = null,
     onOpenGallery = null,
+    onOpenFileSystem = null,
     onError,
   } = fileInputProps
 
@@ -136,11 +138,14 @@ export const FileInput = forwardRef<
       parsePickerData(data),
     ])
   }
-  const onPress = (open?: 'camera' | 'library') => {
-    const call = open === 'camera' ? 'openCamera' : 'openPicker'
-    ImageCropPicker[call]({
+  const onPress = (open?: 'camera' | 'library' | 'fs', options?: Options) => {
+    if (open == 'fs') {
+      openFileSystem()
+    } else {
+      const call = open === 'camera' ? 'openCamera' : 'openPicker'
+      ImageCropPicker[call]({ ...mergedOptions, ...(options || {}) }).then(handlePickerResolution)
 
-    }).then(handlePickerResolution)
+    }
 
   }
   const openFilePicker = async () => {
@@ -184,7 +189,12 @@ export const FileInput = forwardRef<
         ],
       })
     } else {
-      openFileSystem()
+      if (onOpenFileSystem) {
+        onOpenFileSystem(() => onPress('fs'))
+      } else {
+
+        onPress('fs')
+      }
     }
 
   }
