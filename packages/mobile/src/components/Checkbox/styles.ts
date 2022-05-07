@@ -3,6 +3,7 @@ import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 type CheckboxParts =
   | 'wrapper'
   | 'label'
+  | 'labelWrapper'
   | 'input'
   | 'checkmark'
   | 'checkmarkWrapper'
@@ -35,6 +36,9 @@ export const MobileCheckboxStyles = {
         flexDirection: 'row',
         ...theme.presets.alignCenter,
         borderRadius: theme.borderRadius.small,
+      },
+      labelWrapper: {
+        flex: 1,
       },
       label: {
         ...theme.spacing.marginLeft(0.5),

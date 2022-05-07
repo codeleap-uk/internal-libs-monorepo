@@ -74,7 +74,9 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
           <View style={getStyles('checkmarkWrapper')}>
             <View style={getStyles('checkmark')} />
           </View>
-          <InputLabel label={label} style={getStyles('label')} required={required}/>
+          <View style={getStyles('labelWrapper')}>
+            <InputLabel label={label} style={getStyles('label')} required={required}/>
+          </View>
         </Touchable>
         <FormError message={error.message} style={getStyles('error')} />
       </View>
