@@ -19,7 +19,7 @@ import { Options } from 'react-native-image-crop-picker'
 import { DocumentPickerOptions } from '../modules/types/documentPicker'
 
 export type FileInputRef = {
-  openFilePicker: () => void
+  openFilePicker: (string?: 'camera' | 'library') => void
 }
 
 export type FileInputProps = {
