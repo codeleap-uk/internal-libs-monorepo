@@ -144,50 +144,51 @@ export const FileInput = forwardRef<
     } else {
       const call = open === 'camera' ? 'openCamera' : 'openPicker'
       ImageCropPicker[call]({ ...mergedOptions, ...(options || {}) }).then(handlePickerResolution)
-
     }
-
   }
-  const openFilePicker = async () => {
+  const openFilePicker = async (imageSource) => {
     if (type === 'image') {
-      OSAlert.ask({
-        title: 'Change Image',
-        body: 'Do you want to take a new picture or select an existing one?',
-        ...alertProps,
-        options: [
-          {
-            text: alertProps?.options?.[0]?.text || 'Camera',
-            onPress: () => {
-              if (onOpenCamera) {
-                onOpenCamera(() => onPress('camera'))
-              } else {
-                onPress('camera')
-              }
-
+      if (imageSource === 'camera') {
+        onPress('camera')
+      } else if (imageSource === 'library') {
+        onPress('library')
+      } else {
+        OSAlert.ask({
+          title: 'Change Image',
+          body: 'Do you want to take a new picture or select an existing one?',
+          ...alertProps,
+          options: [
+            {
+              text: alertProps?.options?.[0]?.text || 'Camera',
+              onPress: () => {
+                if (onOpenCamera) {
+                  onOpenCamera(() => onPress('camera'))
+                } else {
+                  onPress('camera')
+                }
+              },
+              ...alertProps?.options[1],
             },
-            ...alertProps?.options[1],
-          },
-          {
-            text: 'Library',
-            onPress: () => {
-              if (onOpenGallery) {
-                onOpenGallery(() => onPress('library'))
-              } else {
-                onPress('library')
-              }
-
+            {
+              text: 'Library',
+              onPress: () => {
+                if (onOpenGallery) {
+                  onOpenGallery(() => onPress('library'))
+                } else {
+                  onPress('library')
+                }
+              },
+              ...alertProps?.options[2],
             },
-            ...alertProps?.options[2],
-          },
-          {
-            text: 'Cancel',
-            style: 'cancel',
-            onPress: () => {},
-            ...alertProps?.options[0],
-          },
-
-        ],
-      })
+            {
+              text: 'Cancel',
+              style: 'cancel',
+              onPress: () => {},
+              ...alertProps?.options[0],
+            },
+          ],
+        })
+      }
     } else {
       if (onOpenFileSystem) {
         onOpenFileSystem(() => onPress('fs'))
