@@ -25,7 +25,7 @@ function initializeDebugLoggers(logToTerminal: LogToTerminal, settings: AppSetti
     ])
   }
   // ignores some warnings to make shit less annoying
-  if (settings?.Environment?.Type !== 'production' && settings?.Logger?.IgnoreWarnings?.length) {
+  if (settings?.Logger?.IgnoreWarnings?.length) {
     const newConsole = (args, oldConsole) => {
       const shouldIgnore = typeof args[0] === 'string' &&
         settings.Logger.IgnoreWarnings.some(ignoredWarning => args.join(' ').includes(ignoredWarning))
@@ -129,7 +129,8 @@ export class Logger {
     }
 
     // console[logType](`[${logType.toUpperCase()}] ${deviceId ? `${deviceId}` : ''}`, ...logContent)
-    console[logType](`${deviceId ? `${deviceId}` : ''}`, ...logContent)
+    const displayLog = logType === 'error' ? 'warn' : logType
+    console[displayLog](`${deviceId ? `${deviceId}` : ''}`, ...logContent)
   }
 
   private logToTerminal: LogToTerminal = (...logArgs) => {
@@ -156,11 +157,15 @@ export class Logger {
         // NOTE: For some reason, sentry throws here sometimes
         this.sentry.captureBreadcrumb(logType, args)
       } catch (e) {
-
+        // Nothing
       }
-      this.middleware.forEach(m => m(...logArgs))
-      if (['error', 'warn'].includes(logType)) {
-        this.sentry.sendLog()
+      try {
+        this.middleware.forEach(m => m(...logArgs))
+        if (['error', 'warn'].includes(logType)) {
+          this.sentry.sendLog()
+        }
+      } catch (e) {
+        // Nothing
       }
     }
   }
@@ -172,9 +177,9 @@ export class Logger {
   error(...args: LogFunctionArgs) {
     this.logToTerminal('error', args)
     try {
-      console.log(callsites())
+      console.warn(callsites())
     } catch (err) {
-      console.log(err)
+      console.warn(err)
     }
   }
 
