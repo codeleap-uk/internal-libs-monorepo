@@ -146,7 +146,7 @@ export const FileInput = forwardRef<
       ImageCropPicker[call]({ ...mergedOptions, ...(options || {}) }).then(handlePickerResolution)
     }
   }
-  const openFilePicker = async (imageSource) => {
+  const openFilePicker = async (imageSource = null) => {
     if (type === 'image') {
       if (imageSource === 'camera') {
         onPress('camera')

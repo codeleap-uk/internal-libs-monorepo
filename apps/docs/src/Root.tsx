@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { onMount, useState, onUpdate, useCodeleapContext } from '@codeleap/common'
+import { onMount, useState, onUpdate, useCodeleapContext, useLayoutEffect } from '@codeleap/common'
 import { Provider as ReduxProvider } from 'react-redux'
 import { LocalStorageKeys, logger, Theme, variantProvider } from './app'
 import { Session, store, useAppSelector } from './redux'
@@ -23,6 +23,12 @@ const Toaster = () => {
 
   const colors = Theme.colors[currentTheme]
   const { isLoggedIn, appMounted } = useAppSelector(store => store.Session)
+
+  useLayoutEffect(() => {
+    if (typeof window !== 'undefined') {
+      variantProvider.setColorScheme(window.___savedTheme)
+    }
+  }, [])
   onUpdate(() => {
     const unsubscribe = withFirebase((fb) => fb.auth().onAuthStateChanged((user) => {
       if (user && !isLoggedIn && !appMounted) {

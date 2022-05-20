@@ -17,7 +17,7 @@
       "**/@react-native-firebase/auth/**",
       "**/@react-native-firebase/app",
       "**/@react-native-firebase/app/**",
-      "**/react",
+
       "**/react-native-image-crop-picker/**",
       "**/react-native-image-crop-picker",
       "**/@react-navigation/bottom-tabs",
@@ -41,7 +41,6 @@
       "**/lottie",
       "**/lottie/**",
       "**/lottie*"
-      
     ]
   },
   "scripts": {
@@ -65,6 +64,7 @@
     "p:mobile": "yarn workspace @codeleap/mobile"
   },
   "devDependencies": {
+    "npm-license-crawler": "^0.2.1",
     "prettier": "^2.5.1",
     "turbo": "1.1.2",
     "typedoc": "^0.22.10"

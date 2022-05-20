@@ -41,13 +41,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     variants,
   })
 
-  const { logger: contextLogger } = useCodeleapContext()
+  const { logger } = useCodeleapContext()
   const press = () => {
     if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
 
-    const activeLogger = logger || contextLogger
-
-    activeLogger.log(
+    logger.log(
       `<${debugComponent || 'Touchable'}/>  pressed`,
       debugName || variants,
       'User interaction',

@@ -189,7 +189,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           selectionColor={StyleSheet.flatten(getStyles('selection'))?.color}
           includeRawValueInChangeText={true}
           {...props}
-          {...(masking ? { onChangeText: handleMaskChange, type: masking?.type } : {})}
+          {...(masking ? { onChangeText: handleMaskChange, type: masking?.type, refInput: (inputRef) => {
+            input.current = inputRef
+          } } : {})}
           style={getStyles('textField')}
         />
         {
