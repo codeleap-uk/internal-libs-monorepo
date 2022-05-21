@@ -41,7 +41,8 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     variants,
   })
 
-  const { logger } = useCodeleapContext()
+  // const { logger } = useCodeleapContext() // NOTE for some reason this does not work in actual projects
+
   const press = () => {
     if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
 
