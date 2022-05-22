@@ -21,14 +21,14 @@ const component = process.argv?.[2] || '--all'
 const componentList = component === '--all' ? components : component.split(',')
 
 if (!stylesPath) {
-  console.error('You must supply a path for the styles eg: ' + DEFAULT_PATH)
+  console.warn('You must supply a path for the styles eg: ' + DEFAULT_PATH)
   process.exit(1)
 }
 
 const fileData = exists(stylesPath)
 
 if (!fileData || !fileData.isDirectory()) {
-  console.error(
+  console.warn(
     `Styles path ${stylesPath} either doesn't exist or is not a directory`,
   )
   process.exit(1)

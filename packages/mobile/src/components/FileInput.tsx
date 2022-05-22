@@ -116,7 +116,7 @@ export const FileInput = forwardRef<
     } else {
       // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
       logger.error(err)
-      console.error(err)
+      console.warn(err)
       if (onError) {
         onError(err)
       } else {
