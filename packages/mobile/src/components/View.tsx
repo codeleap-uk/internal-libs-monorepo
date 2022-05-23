@@ -8,14 +8,15 @@ import {
   BaseViewProps,
 } from '@codeleap/common'
 import { View as NativeView, ViewStyle } from 'react-native'
-
+import { MotiView, MotiProps } from 'moti'
 export type ViewProps = ComponentPropsWithoutRef<typeof NativeView> &
   ComponentVariants<typeof ViewStyles> & {
     ref?: any
     component?: any
+    animated?: boolean
   } & BaseViewProps
 
-export const View: React.FC<ViewProps> = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
+export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeView, ViewProps & Partial<MotiProps>>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -23,6 +24,7 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView, ViewProps>((view
     style,
     onHover,
     component,
+    animated = false,
     ...props
   } = viewProps
 
@@ -30,7 +32,7 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView, ViewProps>((view
     responsiveVariants,
     variants,
   })
-  const Component = component || NativeView
+  const Component = animated ? MotiView : component || NativeView
 
   return (
     <Component style={[variantStyles.wrapper, style]} ref={ref} {...props}>

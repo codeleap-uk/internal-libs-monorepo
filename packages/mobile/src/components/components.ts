@@ -24,3 +24,4 @@ export * from './Modal'
 
 export * from './Navigation'
 export * from './Pager'
+export * from './NewPager'

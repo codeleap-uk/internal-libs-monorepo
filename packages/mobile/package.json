@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "1.9.25",
+  "version": "1.9.26",
   "main": "src/index.ts",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
@@ -9,6 +9,7 @@
     "@codeleap/config": "*",
     "@types/react-native": "^0.66.15",
     "@types/react-window": "^1.8.5",
+    "moti": "^0.18.0",
     "typescript": "^4.5.5"
   },
   "scripts": {
@@ -22,6 +23,7 @@
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "@react-navigation/stack": "^6.1.1",
+    "moti": "^0.18.0",
     "react": "*",
     "react-native": "*",
     "react-native-animatable": "^1.3.3",
