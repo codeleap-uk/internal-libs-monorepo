@@ -154,16 +154,10 @@ export class Logger {
 
     } else {
       try {
-        // NOTE: For some reason, sentry throws here sometimes
-        this.sentry.captureBreadcrumb(logType, args)
-      } catch (e) {
-        // Nothing
-      }
-      try {
         this.middleware.forEach(m => m(...logArgs))
-        if (['error', 'warn'].includes(logType)) {
-          this.sentry.sendLog()
-        }
+        // if (['error', 'warn'].includes(logType)) {
+        //   this.sentry.sendLog()
+        // }
       } catch (e) {
         // Nothing
       }
@@ -176,11 +170,6 @@ export class Logger {
 
   error(...args: LogFunctionArgs) {
     this.logToTerminal('error', args)
-    try {
-      console.warn(callsites())
-    } catch (err) {
-      console.warn(err)
-    }
   }
 
   warn(...args: LogFunctionArgs) {
