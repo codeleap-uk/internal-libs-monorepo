@@ -35,7 +35,13 @@ export function obfuscate(args:ObfuscateArgs) {
   }
 
   if (isCircular) {
-    return { ...args, WARNING: 'Circular object detected' }
+    try {
+      delete args.keys
+      delete args.values
+    } catch (e) {
+      // do nothing
+    }
+    return { ...args, WARNING: 'Circular reference detected' }
   } else {
     let newObj = { ...args.object }
     const isKeySensitive = (data) => args.keys.some(k => match(k, data.key, 'key'))
