@@ -26,16 +26,25 @@ function match(m:Matcher<any>, ...args:[any, any]):boolean {
 }
 
 export function obfuscate(args:ObfuscateArgs) {
-  let newObj = { ...args.object }
-  const isKeySensitive = (data) => args.keys.some(k => match(k, data.key, 'key'))
-  const isValueSensitive = (data) => args.values.some(k => match(k, data.value, 'value'))
 
-  traverse(args.object, (data) => {
+  let isCircular = false
+  try {
+    JSON.stringify(args)
+  } catch (e) {
+    isCircular = true
+  }
 
-    if (isKeySensitive(data) || isValueSensitive(data)) {
-      newObj = deepMerge(newObj, deepSet([data.path.join('.'), '[Obfuscated]']))
-    }
-  })
-
-  return newObj
+  if (isCircular) {
+    return { ...args, WARNING: 'Circular object detected' }
+  } else {
+    let newObj = { ...args.object }
+    const isKeySensitive = (data) => args.keys.some(k => match(k, data.key, 'key'))
+    const isValueSensitive = (data) => args.values.some(k => match(k, data.value, 'value'))
+    traverse(args.object, (data) => {
+      if (isKeySensitive(data) || isValueSensitive(data)) {
+        newObj = deepMerge(newObj, deepSet([data.path.join('.'), '[Obfuscated]']))
+      }
+    })
+    return newObj
+  }
 }
