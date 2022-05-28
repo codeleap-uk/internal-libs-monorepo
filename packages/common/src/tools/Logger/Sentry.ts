@@ -18,10 +18,14 @@ export class SentryService {
     if (this.use) {
       const isDebug = settings?.Sentry?.debug || false
       if (isDebug) console.log('> > > Initializing Sentry', settings.Sentry)
-      this.sentry.init({
+      const initObj = {
         dsn: settings.Sentry.dsn,
         debug: isDebug,
-      })
+      } as AppSettings['Sentry']
+      if (settings?.Sentry?.beforeBreadcrumb) {
+        initObj.beforeBreadcrumb = settings?.Sentry?.beforeBreadcrumb
+      }
+      this.sentry.init(initObj)
     }
   }
 
