@@ -27,6 +27,10 @@ function match(m:Matcher<any>, ...args:[any, any]):boolean {
 
 export function obfuscate(args:ObfuscateArgs) {
 
+  if (typeof args.object !== 'object') {
+    return args.object
+  }
+
   let isCircular = false
   try {
     JSON.stringify(args)
