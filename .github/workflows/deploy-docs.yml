@@ -17,6 +17,26 @@ jobs:
         with:
           node-version: '14.16.1'
 
+      - name: 🛠 Set up Python 3.6 (needed for eb cli)
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.6'
+      
+      - name: 🔐 Configure AWS credentials 
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: eu-west-2
+
+      # - name: 🔐 Add profile credentials to ~/.aws/credentials
+      #   env:
+      #       AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      #       AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      #   run: |
+      #       aws configure set aws_access_key_id $AWS_ACCESS_KEY
+      #       aws configure set aws_secret_access_key $AWS_SECRET_KEY
+
       - name: Check if version has been updated
         id: check
         uses: EndBug/version-check@v1
@@ -26,10 +46,8 @@ jobs:
 
       - name: Version update detected
         if: steps.check.outputs.changed == 'true'
-        run: 'echo "Version change found! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
-      # - name: 📥 Install deps and build
-      #   run: |
-      #     yarn install
-      #     yarn build
-      #     yarn docs build-web
-      #     yarn docs deploy
+        run: 
+          yarn install
+          yarn build
+          yarn docs build-web
+          yarn docs deploy
