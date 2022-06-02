@@ -9,7 +9,6 @@
     "postinstall": "yarn patch-package && node ./postInstall.js && yarn run license-crawler",
     "deploy": "gatsby-plugin-s3 deploy",
     "build-web": "gatsby build",
-    "dev:docs": "gatsby develop",
     "dev": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean"
