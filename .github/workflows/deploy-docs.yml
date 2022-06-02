@@ -1,0 +1,34 @@
+name: Documentation deployment
+on:
+  push:
+    branches:
+      - master
+    paths: 
+      - apps/docs/package.json
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: ⏬ Cloning current repo
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          file-name: ./apps/docs/package.json
+          node-version: '14.16.1'
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if version has been updated
+        id: check
+        uses: EndBug/version-check@v1
+
+      - name: Version update detected
+        if: steps.check.outputs.changed == 'true'
+        run: 'echo "Version change found! New version: ${{ steps.check.outputs.version }} (${{ steps.check.outputs.type }})"'
+      # - name: 📥 Install deps and build
+      #   run: |
+      #     yarn install
+      #     yarn build
+      #     yarn docs build-web
+      #     yarn docs deploy
