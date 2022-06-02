@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: '14.16.1'
+          node-version: '16.15.1'
 
       - name: 🛠 Set up Python 3.6 (needed for eb cli)
         uses: actions/setup-python@v1
