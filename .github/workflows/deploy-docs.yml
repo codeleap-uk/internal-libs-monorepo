@@ -47,7 +47,7 @@ jobs:
       - name: Version update detected
         if: steps.check.outputs.changed == 'true'
         run: 
-          yarn install
+          yarn
           yarn build
           yarn docs build-web
           yarn docs deploy
