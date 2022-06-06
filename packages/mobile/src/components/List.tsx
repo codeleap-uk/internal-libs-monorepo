@@ -13,10 +13,10 @@ import {
   // @ts-ignore
 } from 'react-native-keyboard-aware-scroll-view'
 
-import { RefreshControl, FlatList } from 'react-native'
+import { RefreshControl, FlatList, FlatListProps as RNFlatListProps } from 'react-native'
 import { View, ViewProps } from './View'
+import { EmptyPlaceholder, EmptyPlaceholderProps } from './EmptyPlaceholder'
 
-type RNFlatListProps<T = any> = FlatList<T>['props']
 export type FlatListProps<T = any> = RNFlatListProps<T> &
   ViewProps & {
     onRefresh?: () => void
@@ -24,7 +24,9 @@ export type FlatListProps<T = any> = RNFlatListProps<T> &
     changeData?: any
     separators?: boolean
     refreshing?: boolean
+    placeholder?: EmptyPlaceholderProps
     keyboardAware?: boolean
+
   }
 
 const KeyboardAwareFlatList =
@@ -42,6 +44,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       style,
       refreshTimeout = 3000,
       changeData,
+      placeholder,
       keyboardAware = true,
       ...props
     } = flatListProps
@@ -102,6 +105,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
             <RefreshControl refreshing={refreshingDisplay} onRefresh={onRefresh} />
           )
         }
+        ListEmptyComponent={<EmptyPlaceholder {...placeholder}/>}
         {...props}
       />
     )
@@ -109,3 +113,4 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 )
 
 export const List = ListCP as (<T = any>(props: FlatListProps<T>) => JSX.Element)
+

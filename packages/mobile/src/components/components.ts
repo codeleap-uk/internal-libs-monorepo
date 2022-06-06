@@ -24,4 +24,5 @@ export * from './Modal'
 
 export * from './Navigation'
 export * from './Pager'
-export * from './NewPager'
+export * from './EmptyPlaceholder'
+export * from './Gap'

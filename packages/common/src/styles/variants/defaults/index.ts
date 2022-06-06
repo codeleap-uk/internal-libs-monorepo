@@ -22,6 +22,7 @@ import { RouterPageStyles } from './RouterPage'
 import { AvatarStyles } from './Avatar'
 import { SwitchStyles } from './Switch'
 import { IconStyles } from './Icon'
+import { EmptyPlaceholderStyles } from './EmptyPlaceholder'
 
 export const DEFAULT_STYLES = {
   Button: ButtonStyles,
@@ -48,6 +49,7 @@ export const DEFAULT_STYLES = {
   PageRouter: RouterPageStyles,
   Switch: SwitchStyles,
   Navigation: {},
+  EmptyPlaceholder: EmptyPlaceholderStyles,
 } as const
 
 export type DEFAULT_VARIANTS = typeof DEFAULT_STYLES
@@ -77,3 +79,4 @@ export * from './RouterPage'
 export * from './Avatar'
 export * from './Switch'
 export * from './Icon'
+export * from './EmptyPlaceholder'
