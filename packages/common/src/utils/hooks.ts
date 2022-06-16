@@ -16,6 +16,7 @@ import {
 import { deepMerge } from './object'
 import { AnyFunction, DeepPartial } from '../types'
 import { range } from './array'
+import { uniqueId } from 'lodash'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -473,4 +474,9 @@ export function usePagination({
     first,
     last,
   }
+}
+
+export function useId(prefix?: string) {
+  const id = useRef(uniqueId(prefix))
+  return id.current
 }

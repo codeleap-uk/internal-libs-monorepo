@@ -20,6 +20,7 @@ export type AppSettings = DeepPartial<{
     dsn: string
     provider: SentryProvider
     debug?: boolean
+    initArgs?: Partial<Parameters<SentryProvider['init']>[0]>
     beforeBreadcrumb?: any
   }
   Logger: {

@@ -91,11 +91,19 @@ export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 }
 
-export type AsyncReturnType<T extends FunctionType<any, Promise<any>>> = Parameters<ReturnType<T>['then']>[0]
-
 export type PropsOf<T> = T extends React.ComponentType<infer P> ? P : never
 
 export type Hashmap<T> = {
   [key: string]: T
 }
 
+export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T
+
+export type AsyncReturnType<T> = T extends (...args: any[]) => Promise<infer U> ? U : never
+
+export type VariantsOf<T> =T extends ((props: {variants: infer V}) => any) ?
+  (V extends (string | string[]) ? V : (string[]))
+
+  : (string[])
+
+export type VariantList<T> = Exclude<T, string>

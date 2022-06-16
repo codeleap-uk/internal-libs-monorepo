@@ -95,7 +95,7 @@ export class VariantProvider<
   ):T
 
   createComponentStyle<T extends Record<string, CSSIn> = Record<string, CSSIn>>(
-    styles: FunctionType<[Theme], T>, staticStyles?: true, useTheme?: keyof AT['colors'],
+    styles: FunctionType<[ThemeColorScheme<AT>], T>, staticStyles?: true, useTheme?: keyof AT['colors'],
   ):T
 
   createComponentStyle<T extends Record<string, CSSIn> = Record<string, CSSIn>>(

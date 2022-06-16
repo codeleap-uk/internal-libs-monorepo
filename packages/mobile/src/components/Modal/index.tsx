@@ -38,6 +38,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closeIconName?: IconPlaceholder
   visible: boolean
   toggle?: () => void
+  zIndex?: number
   scroll?: boolean
   keyboardAware?: boolean
 }
@@ -58,6 +59,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     debugName,
     scroll = true,
     keyboardAware = true,
+    zIndex = null,
     ...props
   } = modalProps
 
@@ -100,9 +102,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     },
   }
 
+  const wrapperStyle = StyleSheet.flatten(getStyles('wrapper'))
   return (
     <View
-      style={getStyles('wrapper')}
+      style={[wrapperStyle, { zIndex: typeof zIndex === 'number' ? zIndex : wrapperStyle?.zIndex }]}
       pointerEvents={visible ? 'auto' : 'none'}
     >
       <AnimatedView style={getStyles('overlay')} transition={'opacity'} />

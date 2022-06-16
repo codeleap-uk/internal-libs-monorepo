@@ -21,6 +21,7 @@ export class SentryService {
       const initObj = {
         dsn: settings.Sentry.dsn,
         debug: isDebug,
+        ...settings?.Sentry?.initArgs,
       } as AppSettings['Sentry']
       if (settings?.Sentry?.beforeBreadcrumb) {
         initObj.beforeBreadcrumb = settings?.Sentry?.beforeBreadcrumb

@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Join, Paths, Prev } from '../../types/pathMapping'
 import * as yup from 'yup'
-import { WebInputFile, MobileInputFile, DeepPartial } from '../../types'
+import { WebInputFile, MobileInputFile, DeepPartial, RNMaskedTextTypes } from '../../types'
 import { AnyObject } from 'yup/lib/object'
 
 type ValidationReturn = { message?: Label; valid?: boolean }
@@ -14,6 +14,9 @@ export type ValidatorFunctionWithoutForm<T = any> = (
   value: T
 ) => ValidationReturn
 
+export type WithTransformer<T> = {
+  transformer: (value: T) => any
+}
 export type Validator<T> = T extends boolean
   ?
       | ValidatorFunction<true>
@@ -32,6 +35,10 @@ export type CommonSliderTypes = {
   min?: number
   max?: number
   labels?: string[]
+}
+
+type Mask = Partial<RNMaskedTextTypes.TextInputMaskProps> &{
+  saveFormatted?: boolean
 }
 
 export type InputValueTypes = {
@@ -54,21 +61,21 @@ export type CheckboxField = {
   defaultValue: boolean
   validate?: Validator<boolean>
   required?: boolean
-}
+} & WithTransformer<boolean>
 
 export type SwitchField = {
   type: 'switch'
   defaultValue: boolean
   validate?: Validator<boolean>
   required?: boolean
-}
+} & WithTransformer<boolean>
 
 export type ListField<T = any> = {
   type: 'list'
   defaultValue: T[]
   validate?: Validator<T[]>
   required?: boolean
-}
+} & WithTransformer<T[]>
 
 export type SliderField = {
   type: 'slider'
@@ -76,14 +83,14 @@ export type SliderField = {
   validate?: Validator<number>
   required?: boolean
 
-} & CommonSliderTypes
+} & CommonSliderTypes & WithTransformer<number>
 
 export type RangeSliderField = {
   type: 'range-slider'
   defaultValue: number[]
   validate?: Validator<number[]>
   required?: boolean
-} & CommonSliderTypes
+} & CommonSliderTypes & WithTransformer<number[]>
 
 export type TextField = {
   type: 'text'
@@ -92,11 +99,8 @@ export type TextField = {
   placeholder?: string
   validate?: Validator<string>
   required?: boolean
-  masking?: {
-    type?: any
-    saveFormatted?: boolean
-  }
-}
+  masking?: Mask
+} & WithTransformer<string>
 export type NumberField = {
   type: 'number'
 
@@ -105,12 +109,9 @@ export type NumberField = {
   validate?: Validator<number>
   required?: boolean
   precision?: number
-  masking?: {
-    type?: any
-    saveFormatted?: boolean
-  }
+  masking?: Mask
 
-}
+} & WithTransformer<number>
 export type SelectField<T = any> = {
   type: 'select'
   options: Options<T>
@@ -119,7 +120,7 @@ export type SelectField<T = any> = {
   placeholder?: string
   validate?: Validator<T>
   required?: boolean
-}
+} & WithTransformer<T>
 
 export type RadioField<T = any> = {
   type: 'radio'
@@ -127,7 +128,7 @@ export type RadioField<T = any> = {
   defaultValue: T
   validate?: Validator<T>
   required?: boolean
-}
+} & WithTransformer<T>
 
 export type FileField = {
   type: 'file'
@@ -137,7 +138,7 @@ export type FileField = {
   multiple?: boolean
   validate?: Validator<WebInputFile[]>
   required?: boolean
-}
+} & WithTransformer<WebInputFile[]>
 
 export type CompositeField = {
   type: 'composite'
@@ -145,7 +146,8 @@ export type CompositeField = {
   defaultValue: Record<string, unknown>
   validate?: never
   required?: boolean
-}
+
+} & WithTransformer<Record<string, unknown>>
 export type AllFields =
   | CheckboxField
   | SwitchField
@@ -240,3 +242,4 @@ export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
         : never;
     }[keyof T]
   : ''
+export type FormShape<Form extends CreateFormReturn<any>> = MapValues<Form['config']>

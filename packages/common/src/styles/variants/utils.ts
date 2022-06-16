@@ -1,6 +1,8 @@
+import { AnyFunction } from 'callsites'
 import { CSSProperties } from 'react'
 import { VariantProp } from '.'
 import { EnhancedTheme } from '..'
+import { VariantList, VariantsOf } from '../../types'
 import { deepMerge } from '../../utils/object'
 import {
   ApplyVariantsArgs,
@@ -25,14 +27,14 @@ export function mapVariants<
   return thisComponentVariants
 }
 
-export function standardizeVariants(variants: VariantProp<any>): string[] {
+export function standardizeVariants<T = any, V extends VariantList<VariantsOf<T>> = VariantList<VariantsOf<T>>>(variants: VariantProp<any>): V {
   let variantList = []
   if (typeof variants === 'string') {
     variantList = variants.split(' ')
   } else {
     variantList = [...(variants || [])]
   }
-  return variantList
+  return variantList as unknown as V
 }
 
 export function applyVariants({

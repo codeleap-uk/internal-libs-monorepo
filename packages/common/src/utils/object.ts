@@ -1,4 +1,5 @@
 import { FunctionType } from '..'
+import { AppSettings } from '../config'
 
 export function deepMerge(base = {}, changes = {}): any {
   const obj = {
@@ -30,7 +31,7 @@ export function mapObject<T>(
 
 export const deepSet = ([path, value]) => {
   const parts = path.split('.')
-  const newObj = {}
+  const newObj = Array.isArray(value) ? [] : {}
 
   if (parts.length === 1) {
     newObj[parts[0]] = value
@@ -123,5 +124,15 @@ export function traverse(obj = {}, callback:TraverseCallback, args?: TraverseRec
         depth: info.depth + 1,
       })
     }
+  }
+}
+
+export function createSettings<T extends AppSettings>(a:T): T {
+  return a
+}
+
+export function extractKey(obj:any) {
+  if (obj.id) {
+    return obj.id
   }
 }

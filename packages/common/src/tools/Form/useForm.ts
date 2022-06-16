@@ -42,7 +42,9 @@ export function useForm<
   // @ts-ignore
   function setFieldValue(...args: FieldPaths) {
     // @ts-ignore
-    const val = deepSet(args)
+    const transform = form?.staticFieldProps[args[0]]?.transformer || (x => x)
+    // @ts-ignore
+    const val = deepSet([args[0], transform(args[1])])
 
     if (shouldLog('setValue', config)) {
       // @ts-ignore
@@ -82,6 +84,19 @@ export function useForm<
     return {
       valid: true,
       message: '',
+    }
+  }
+
+  function validateMultiple<T extends readonly FieldPaths[0][]>(fields: T, set = false) {
+    const results = fields.map((field) => [field, validateField(field, set)])
+
+    const overallValid = results.every(([, result]) => result.valid)
+
+    const fieldResults = Object.fromEntries(results) as Record<T[number], ReturnType<FormTypes.ValidatorFunction>>
+
+    return {
+      valid: overallValid,
+      results: fieldResults,
     }
   }
 
@@ -262,6 +277,7 @@ export function useForm<
     getTransformedValue,
     setFormValues,
     reset,
+    validateMultiple,
     isValid: validateAll(),
   }
 }
