@@ -7,12 +7,6 @@ import {
   assignTextStyle,
 } from '@codeleap/common'
 
-export const backgroundTransition = {
-  duration: 200,
-  ease: 'easeOut',
-  useNativeDriver: false,
-}
-
 export const modalTransition = {
   duration: 150,
   ease: 'easeOut',
