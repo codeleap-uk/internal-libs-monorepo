@@ -31,7 +31,7 @@ export function mapObject<T>(
 
 export const deepSet = ([path, value]) => {
   const parts = path.split('.')
-  const newObj = {}
+  const newObj = Array.isArray(value) ? [] : {}
 
   if (parts.length === 1) {
     newObj[parts[0]] = value
