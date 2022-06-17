@@ -2,7 +2,6 @@ import {
   ButtonComposition,
   createDefaultVariantFactory,
   includePresets,
-  ModalComposition,
   ModalStyles,
   assignTextStyle,
 } from '@codeleap/common'
@@ -108,7 +107,7 @@ export const MobileModalStyles = {
       },
     }
   }),
-  popup: createModalStyle((theme) => ({})),
+  popup: createModalStyle(() => ({})),
   fullscreen: createModalStyle((theme) => ({
     overlay: {
       backgroundColor: theme.colors.background,

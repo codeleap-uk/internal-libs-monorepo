@@ -21,7 +21,7 @@ export * from './Button'
 export * from './ContentView'
 export * from './Overlay'
 export * from './Modal'
-
+export * from './NewPager'
 export * from './Navigation'
 export * from './Pager'
 export * from './EmptyPlaceholder'

@@ -43,9 +43,9 @@ export const NewPager:React.FC<NewPagerProps> = (pagerProps) => {
     returnEarly = true,
     renderPageWrapper,
     pageWrapperProps = {},
-
+    children,
   } = pagerProps
-  let { children } = pagerProps
+
   let variantStyles = useDefaultComponentStyle<'u:Pager', typeof NewMobilePagerStyles>(
     'u:Pager',
     {
@@ -58,7 +58,7 @@ export const NewPager:React.FC<NewPagerProps> = (pagerProps) => {
 
   const lastPage = nChildren - 1
 
-  children = Array.isArray(children) ? children : [children]
+  const childArr = React.Children.toArray(children)
 
   const WrapperComponent = renderPageWrapper || View
 
@@ -68,7 +68,7 @@ export const NewPager:React.FC<NewPagerProps> = (pagerProps) => {
   return (
     <View style={[variantStyles.wrapper, style]} >
       {
-        children.map((child:NewPagerProps['children'][number], index) => {
+        childArr.map((child:NewPagerProps['children'][number], index) => {
           const isActive = index === page
           const isLast = index === lastPage
           const isFirst = index === 0
@@ -96,9 +96,7 @@ export const NewPager:React.FC<NewPagerProps> = (pagerProps) => {
             index,
             page,
           }
-          console.log({
-            child,
-          })
+
           const content = typeof child === 'function' ? child(pageProps) : child
 
           const wrapperProps = {
