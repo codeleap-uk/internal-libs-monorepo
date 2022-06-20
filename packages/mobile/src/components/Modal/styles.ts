@@ -2,16 +2,9 @@ import {
   ButtonComposition,
   createDefaultVariantFactory,
   includePresets,
-  ModalComposition,
   ModalStyles,
   assignTextStyle,
 } from '@codeleap/common'
-
-export const backgroundTransition = {
-  duration: 200,
-  ease: 'easeOut',
-  useNativeDriver: false,
-}
 
 export const modalTransition = {
   duration: 150,
@@ -114,7 +107,7 @@ export const MobileModalStyles = {
       },
     }
   }),
-  popup: createModalStyle((theme) => ({})),
+  popup: createModalStyle(() => ({})),
   fullscreen: createModalStyle((theme) => ({
     overlay: {
       backgroundColor: theme.colors.background,

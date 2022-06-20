@@ -69,7 +69,6 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       close()
     }
   }
-
   const selectedLabel:string = useMemo(() => {
     const current = options.find(o => o.value === value)
 
@@ -88,7 +87,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       }}
       editable={false}
       touchableWrapper
-      innerWrapperProps={{
+      wrapperProps={{
         debugName: 'Select',
         onPress: close,
       }}

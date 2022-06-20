@@ -6,9 +6,7 @@ import {
   capitalize,
   ComponentVariants,
   IconPlaceholder,
-  onUpdate,
   useDefaultComponentStyle,
-  useCodeleapContext,
 } from '@codeleap/common'
 import {
   MobileModalComposition,

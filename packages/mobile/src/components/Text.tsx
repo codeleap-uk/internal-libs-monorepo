@@ -6,25 +6,38 @@ import {
   BaseViewProps,
   TextStyles,
 } from '@codeleap/common'
-import { Text as NativeText } from 'react-native'
-
+import { Animated, StyleSheet, Text as NativeText } from 'react-native'
+import { MotiText as _MotiText, MotiProps } from 'moti'
+import { useAnimateColor } from '../utils/hooks'
 export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   text?: string
   variants?: ComponentVariants<typeof TextStyles>['variants']
-} & BaseViewProps
+  animated?: boolean
+  colorChangeConfig?: Partial<Animated.TimingAnimationConfig>
+} & BaseViewProps & MotiProps
+
+const MotiText = Animated.createAnimatedComponent(_MotiText)
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
-  const { variants = [], text, style, ...props } = textProps
+  const { variants = [], text, style, colorChangeConfig, ...props } = textProps
 
   const variantStyles = useDefaultComponentStyle('Text', {
     variants,
     rootElement: 'text',
   })
 
-  const styles = [variantStyles.text, style]
-  return (
-    <NativeText {...props} style={styles} ref={ref}>
-      {text}
-    </NativeText>
-  )
+  const styles = StyleSheet.flatten([variantStyles.text, style])
+
+  const animatedColor = useAnimateColor(styles.color, colorChangeConfig)
+
+  const Component = textProps.animated ? MotiText : NativeText
+
+  const colorStyle = { color: props.animated ? animatedColor : styles.color }
+
+  // @ts-ignore
+  return <Component {...props} style={[styles, colorStyle]} ref={ref}>
+    {text}
+  </Component>
+
 })
+

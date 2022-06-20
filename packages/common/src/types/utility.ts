@@ -107,3 +107,5 @@ export type VariantsOf<T> =T extends ((props: {variants: infer V}) => any) ?
   : (string[])
 
 export type VariantList<T> = Exclude<T, string>
+
+export type GetRefType<T> = T extends React.Ref<infer U> ? U : never

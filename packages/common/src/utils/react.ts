@@ -1,6 +1,7 @@
 import equals from 'deep-equal'
 import { Logger } from '../tools/Logger'
 import { LogFunctionArgs } from '../tools/Logger/types'
+import React from 'react'
 
 export const deepEqual = equals
 
@@ -38,4 +39,32 @@ export function arePropsEqual<A, B>(
     }
   }
   return true
+}
+
+export const flattenChildren = (children, flat = []) => {
+  flat = [...flat, ...React.Children.toArray(children)]
+
+  if (children.props && children.props.children) {
+    return flattenChildren(children.props.children, flat)
+  }
+
+  return flat
+}
+
+export const simplifyChildren = children => {
+  const flat = flattenChildren(children)
+
+  return flat.map(
+    ({
+      key,
+      ref,
+      type,
+      props: {
+        children,
+        ...props
+      },
+    }) => ({
+      key, ref, type, props,
+    }),
+  )
 }

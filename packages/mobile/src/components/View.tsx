@@ -32,7 +32,7 @@ export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeV
     responsiveVariants,
     variants,
   })
-  const Component = animated ? MotiView : component || NativeView
+  const Component = animated ? MotiView : (component || NativeView)
 
   return (
     <Component style={[variantStyles.wrapper, style]} ref={ref} {...props}>

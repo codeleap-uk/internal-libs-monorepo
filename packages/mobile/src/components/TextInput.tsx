@@ -45,7 +45,8 @@ export type TextInputProps =
     touchableWrapper?: boolean
     onPress?: () => void
     masking?: FormTypes.TextField['masking']
-    innerWrapperProps?: TouchableProps | ViewProps
+    innerWrapperProps?: ViewProps
+    wrapperProps?: TouchableProps | ViewProps
     onChangeMask?: TextInputMaskProps['onChangeText']
     required?:boolean
   }
@@ -62,6 +63,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     onBlur,
     variants,
     label,
+    wrapperProps,
     leftIcon,
     rightIcon,
     styles,
@@ -165,7 +167,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       style={getStyles('wrapper')}
       debugName={debugName}
       onPress={handlePress}
-      {...innerWrapperProps}
+      {...wrapperProps}
     >
       <InputLabel
         label={label}

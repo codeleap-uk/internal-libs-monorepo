@@ -9,12 +9,14 @@ import {
 } from '@codeleap/common'
 
 import {
-  KeyboardAwareScrollViewProps,
   KeyboardAwareScrollView as KBDView,
   // @ts-ignore
 } from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, ScrollView, ScrollViewProps, ViewStyle } from 'react-native'
 import { ViewProps } from './View'
+import { KeyboardAwareScrollViewTypes } from '../modules'
+
+type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
 
 export type ScrollProps = KeyboardAwareScrollViewProps &
   ViewProps & {
