@@ -8,23 +8,25 @@ import {
   useCodeleapContext,
   AnyFunction,
 } from '@codeleap/common'
-import { TouchableOpacity as NativeTouchable } from 'react-native'
+import { TouchableOpacity as NativeTouchable, Pressable, View } from 'react-native'
 
 import { createAnimatableComponent } from 'react-native-animatable'
 export type TouchableProps = Omit<
-  ComponentPropsWithoutRef<typeof NativeTouchable>,
+  ComponentPropsWithoutRef<typeof Pressable>,
   'onPress'
 > & {
   variants?: ComponentVariants<typeof ViewStyles>['variants']
   component?: any
-  ref?: React.Ref<NativeTouchable>
+  ref?: React.Ref<View>
   debugName: string
+  activeOpacity?: number
   debugComponent?: string
+  feedbackVariant?: 'opacity' | 'none' | 'highlight'
   onPress?: AnyFunction
 } & BaseViewProps
 
 export const Touchable: React.FC<TouchableProps> = forwardRef<
-  NativeTouchable,
+  View,
   TouchableProps
 >((touchableProps, ref) => {
   const {
@@ -32,8 +34,10 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     children,
     onPress,
     style,
+    activeOpacity = 0.5,
     debugName,
     debugComponent,
+    feedbackVariant = 'opacity',
     ...props
   } = touchableProps
 
@@ -41,24 +45,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     variants,
   })
 
-  const { logger: contextLogger } = useCodeleapContext() // NOTE for some reason this does not work in actual projects
-  let activeLogger = null
-  try {
-    // @ts-ignore
-    if (global?.logger) {
-      // @ts-ignore
-      activeLogger = global.logger
-    } else {
-      activeLogger = contextLogger
-    }
-  } catch (e) {
-    console.log('Error getting Touchable logger')
-  }
+  const { logger } = useCodeleapContext()
 
   const press = () => {
     if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
 
-    activeLogger && activeLogger.log(
+    logger.log(
       `<${debugComponent || 'Touchable'}/>  pressed`,
       debugName || variants,
       'User interaction',
@@ -68,10 +60,29 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
   const styles = [variantStyles.wrapper, style]
 
+  function getFeedbackStyle(pressed:boolean, variant: TouchableProps['feedbackVariant']) {
+    switch (variant) {
+      case 'highlight':
+        return {
+          backgroundColor: pressed ? '#e0e0e0' : 'transparent',
+        }
+        break
+      case 'opacity':
+        return {
+          opacity: pressed ? activeOpacity : 1,
+        }
+      case 'none':
+        return {}
+    }
+  }
+
   return (
-    <NativeTouchable onPress={press} style={styles} {...props} ref={ref}>
+    <Pressable onPress={press} style={({ pressed }) => ([
+      getFeedbackStyle(pressed, feedbackVariant),
+      styles,
+    ])} {...props} ref={ref}>
       {children}
-    </NativeTouchable>
+    </Pressable>
   )
 })
 

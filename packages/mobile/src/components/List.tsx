@@ -6,6 +6,7 @@ import {
   useDefaultComponentStyle,
   usePrevious,
   useCodeleapContext,
+  TypeGuards,
 } from '@codeleap/common'
 import {
 
@@ -13,13 +14,29 @@ import {
   // @ts-ignore
 } from 'react-native-keyboard-aware-scroll-view'
 
-import { RefreshControl, FlatList, FlatListProps as RNFlatListProps } from 'react-native'
+import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo } from 'react-native'
 import { View, ViewProps } from './View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from './EmptyPlaceholder'
+import { ActivityIndicator } from './ActivityIndicator'
+import { Text } from './Text'
+export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
-export type FlatListProps<T = any> = RNFlatListProps<T> &
+export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & {
+  data: T[]
+  keyExtractor?: (item: T, index: number) => string
+  renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
+  onRefresh?: () => void
+  getItemLayout?: ((
+    data:T,
+    index: number,
+) => { length: number; offset: number; index: number })
+}
+
+export type FlatListProps<
+  T = any[],
+  Data = T extends Array<infer D> ? D : never
+> =RNFlatListProps<Data> &
   ViewProps & {
-    onRefresh?: () => void
     refreshTimeout?: number
     changeData?: any
     separators?: boolean
@@ -112,5 +129,27 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
   },
 )
 
-export const List = ListCP as (<T = any>(props: FlatListProps<T>) => JSX.Element)
+export type PaginationIndicatorProps = {
+  isFetching?: boolean
+  hasMore?: boolean
+  noMoreItemsText: React.ReactChild
+  activityIndicator?: JSX.Element
+}
+
+export const PaginationIndicator = ({ hasMore, isFetching, noMoreItemsText, activityIndicator }: PaginationIndicatorProps) => {
+  if (isFetching) {
+    return activityIndicator || <ActivityIndicator variants={['center', 'marginVertical:3']}/>
+  }
+  if (!hasMore) {
+    if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
+      return <Text variants={['h4', 'marginVertical:3', 'textCenter', 'fullWidth']} text={noMoreItemsText.toString()}/>
+    }
+    return noMoreItemsText
+  }
+  return null
+}
+
+export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
+
+export const List = ListCP as ListComponentType
 

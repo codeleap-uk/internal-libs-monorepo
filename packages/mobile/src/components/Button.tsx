@@ -6,6 +6,7 @@ import {
   ButtonComposition,
   ButtonParts,
   IconPlaceholder,
+  GetRefType,
 } from '@codeleap/common'
 import { forwardRef } from 'react'
 import { StylesOf } from '../types/utility'
@@ -13,7 +14,7 @@ import { Text } from './Text'
 import { Touchable, TouchableProps } from './Touchable'
 import { Icon } from './Icon'
 import { ActivityIndicator } from './ActivityIndicator'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 type ChildProps = {
   styles: StylesOf<ButtonParts>
@@ -33,7 +34,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
 
-export const Button = forwardRef<TouchableOpacity, ButtonProps>((buttonProps, ref) => {
+export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>((buttonProps, ref) => {
   const {
     variants = [],
     children,
