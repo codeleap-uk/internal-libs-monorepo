@@ -27,7 +27,7 @@ export type PermFunction = FunctionType<[], Promise<PermissionStatus>>
 
 export type PermissionActions = Record<'onAsk'|'onCheck', PermFunction> & { init?: 'check' | PermissionState }
 
-export type PermissionActionRecord = {[x:string] : PermissionActions}
+export type PermissionActionRecord = Record<string, PermissionActions>
 
 export interface IPermissionManager<T extends PermissionActionRecord> {
     getMany(perms: PermissionArray<T>, options?: CheckOptions): Promise<PermissionState[]>

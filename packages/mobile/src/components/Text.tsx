@@ -19,7 +19,7 @@ export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
 const MotiText = Animated.createAnimatedComponent(_MotiText)
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
-  const { variants = [], text, style, colorChangeConfig, ...props } = textProps
+  const { variants = [], text, children, style, colorChangeConfig, ...props } = textProps
 
   const variantStyles = useDefaultComponentStyle('Text', {
     variants,
@@ -36,7 +36,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
 
   // @ts-ignore
   return <Component {...props} style={[styles, colorStyle]} ref={ref}>
-    {text}
+    {text || children}
   </Component>
 
 })

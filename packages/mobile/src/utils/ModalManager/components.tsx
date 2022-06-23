@@ -2,19 +2,21 @@ import * as React from 'react'
 import { usePrevious, onMount, onUpdate, PropsOf } from '@codeleap/common'
 import { useModalContext } from './context'
 import { Portal } from '@gorhom/portal'
-import { Modal } from '../../components/Modal'
+import { Modal as _Modal } from '../../components/Modal'
 
-type AbsoluteModalProps = Omit<PropsOf<typeof Modal>, 'visible' | 'toggle'> & {
+export type ManagedModalProps<T = PropsOf<typeof _Modal>> = Omit<T, 'visible' | 'toggle'> & {
   id?: string
   initialVisible ?: boolean
   parent?: string
+  absolute?: boolean
   visible?: boolean
-  toggle?: PropsOf<typeof Modal>['toggle']
+  toggle?: PropsOf<typeof _Modal>['toggle']
 }
 
-export const AbsoluteModal:React.FC<AbsoluteModalProps> = ({
+export const Modal:React.FC<ManagedModalProps> = ({
   children,
   id,
+  absolute = true,
   initialVisible = false,
   parent,
   ...props
@@ -43,16 +45,25 @@ export const AbsoluteModal:React.FC<AbsoluteModalProps> = ({
 
   const visible = modalId ? modals.isVisible(modalId) : props.visible
 
-  return <Portal>
-    <Modal {...props} visible={visible} toggle={() => {
+  const ctxProps = modals?.state?.[modalId]?.props
+  const content = (
+    <_Modal {...props} {...ctxProps} visible={visible} toggle={() => {
       if (modalId) {
         modals.toggleModal(modalId)
       } else {
-        props.toggle()
+        props?.toggle?.()
       }
     }}>
       {children}
-    </Modal>
-  </Portal>
+    </_Modal>
+  )
+
+  if (absolute) {
+    return <Portal>
+      {content}
+    </Portal>
+  }
+
+  return content
 }
 

@@ -11,6 +11,7 @@ import {
   Image as NativeImage,
   ImageStyle,
   StyleProp,
+  StyleSheet,
   TextStyle,
   ViewStyle,
 } from 'react-native'
@@ -35,14 +36,14 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
 
   const variantStyles = useDefaultComponentStyle('Image', { variants })
 
-  const styles = [variantStyles.wrapper, style]
+  const styles = StyleSheet.flatten([variantStyles.wrapper, style])
 
   if (fast) {
     return (
       <FastImage
         style={styles}
         // @ts-ignore
-        tintColor={style?.tintColor}
+        tintColor={styles?.tintColor}
         resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
         {...imageProps}
       />

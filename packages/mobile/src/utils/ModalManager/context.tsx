@@ -1,25 +1,29 @@
 import * as React from 'react'
-import { AnyFunction, useCodeleapContext, useState } from '@codeleap/common'
+import { AnyFunction, onUpdate, TypeGuards, useCodeleapContext, useState } from '@codeleap/common'
 import { PortalProvider } from '@gorhom/portal'
+import { ModalProps } from '../../components/Modal'
 
 export type AppModalProps = {
   visible: boolean
   attachments: string[]
   attachedTo: string[]
+  props?: any
 }
 type TModalState = AppModalProps
 type ModalTransitionOptions = {
   duration?: number
+  props?: any
 }
 
 type TModalContext = {
-    state: Record<string, TModalState>
-    toggleModal: (name: string, setTo?: boolean) => void
-    setModal: (name: string, to: Partial<TModalState>) => void
-    currentModal: string
+  state: Record<string, TModalState>
+  toggleModal: (name: string, setTo?: boolean, props?: any) => void
+  setModal: (name: string, to: Partial<TModalState>) => void
+  currentModal: string
   isVisible: (name: string) => boolean
   transition: (from: string, to: string, options?: ModalTransitionOptions) => Promise<void>
- attach: (modal: string, to: string) => void
+  attach: (modal: string, to: string) => void
+  transitionDuration: number
 }
 
 const ModalContext = React.createContext({} as TModalContext)
@@ -32,7 +36,7 @@ export function Provider({ children }) {
     return !!modals[name]?.visible
   }
 
-  const toggleModal:TModalContext['toggleModal'] = (name, set?: boolean) => {
+  const toggleModal:TModalContext['toggleModal'] = (name, set?: boolean, props?: any) => {
     const visible = isVisible(name)
 
     const newVisible = typeof set === 'boolean' ? set : !visible
@@ -44,6 +48,7 @@ export function Provider({ children }) {
         [name]: {
           ...current[name],
           visible: newVisible,
+          props,
         },
         ...Object.fromEntries(attached),
       }
@@ -64,30 +69,37 @@ export function Provider({ children }) {
   }
 
   const codeleapCtx = useCodeleapContext()
-
+  const defaultDuration = codeleapCtx?.Theme?.values?.transitions?.modal?.duration || 300
   const transition:TModalContext['transition'] = (from, to, options) => {
-    const _options:ModalTransitionOptions = {
-      duration: codeleapCtx?.Theme?.values?.modalTransitionDuration || 300,
-      ...options,
-    }
-
-    const toVisible = isVisible(to)
-    const fromVisible = isVisible(from)
-    if (toVisible) return
-    if (!fromVisible && !toVisible) {
-      toggleModal(to)
-      return
-    }
-
-    toggleModal(from)
     return new Promise((resolve) => {
       setTimeout(() => {
-        if (to) {
-          toggleModal(to)
-        }
-        resolve()
-      }, _options.duration)
 
+        if (!from) {
+          toggleModal(to, true, options?.props)
+          return
+        }
+        const _options:ModalTransitionOptions = {
+          duration: defaultDuration,
+          ...options,
+        }
+
+        const toVisible = isVisible(to)
+        const fromVisible = isVisible(from)
+
+        // if (!fromVisible && !toVisible) {
+        //   toggleModal(to, true, options?.props)
+        //   return
+        // }
+
+        toggleModal(from, false)
+        setTimeout(() => {
+
+          toggleModal(to, true, options?.props)
+
+          resolve()
+        }, _options.duration)
+
+      })
     })
   }
 
@@ -123,6 +135,7 @@ export function Provider({ children }) {
     attach,
     isVisible,
     transition,
+    transitionDuration: defaultDuration,
 
   }}>
     <PortalProvider>
@@ -143,6 +156,7 @@ export type UseModalSequenceOptions = {
   closeLastOnFinish?: boolean
   waitForLastToCloseBeforeCallingFinish?: boolean
   transitionOpts?: Partial<Parameters<TModalContext['transition']>[2]>
+  autoOpen?: boolean
 }
 
 export function useModalSequence(ids: string[], options?: UseModalSequenceOptions) {
@@ -163,7 +177,16 @@ export function useModalSequence(ids: string[], options?: UseModalSequenceOption
     nextId: ids[idx + 1],
     previousId: ids[idx - 1],
   }
-  function next() {
+
+  onUpdate(() => {
+    if (_options.autoOpen && typeof ids?.[0] === 'number') {
+      if (!modals.isVisible(ids[0])) {
+        modals.toggleModal(ids[0])
+      }
+    }
+  }, [_options.autoOpen, ids?.[0]])
+
+  function next(props?: any) {
     if (idx === ids.length - 1) {
       if (_options.closeLastOnFinish) {
         modals.transition(ids[idx], null).then(() => {
@@ -181,15 +204,30 @@ export function useModalSequence(ids: string[], options?: UseModalSequenceOption
       return
     } else {
       if (!state.nextId) return
-      modals.transition(ids[idx], ids[idx + 1])
+      modals.transition(ids[idx], state.nextId, props)
       setIdx(i => i + 1)
     }
   }
-  function previous() {
+  function previous(props?: any) {
     if (!state.previousId) return
-    modals.transition(ids[idx], ids[idx - 1])
+
+    modals.transition(ids[idx], state.previousId, props)
     setIdx(i => i - 1)
 
+  }
+
+  function goto(idxOrId: string | number, props?: any) {
+    let newId:string = null
+    if (TypeGuards.isString(idxOrId)) {
+      newId = idxOrId
+
+    } else {
+      newId = ids[idxOrId]
+    }
+    modals.transition(ids[idx], newId, {
+      props,
+    })
+    setIdx(ids.indexOf(newId))
   }
   function reset() {
     setIdx(0)
@@ -200,6 +238,7 @@ export function useModalSequence(ids: string[], options?: UseModalSequenceOption
     next,
     previous,
     setModal: setIdx,
+    goto,
     currentIdx: idx,
     ...state,
 

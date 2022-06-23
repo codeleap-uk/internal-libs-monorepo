@@ -14,6 +14,10 @@ export class PermissionManager<
 
     private permSubscribers: Record<keyof T, PermissionTypes.PermissionSubscriber[]>
 
+    public _perms: T
+
+    public opts: I
+
     private params: T
 
     public permissions: {
@@ -108,10 +112,13 @@ export class PermissionManager<
     }
 
     async update() {
+      const res = {} as Record<keyof T, PermissionTypes.PermissionState>
       for (const p of Object.keys(this._permissions)) {
-        await this.check(p, {
+        res[p as keyof T] = await this.check(p, {
           ask: false,
         })
       }
+      return res
     }
+
 }

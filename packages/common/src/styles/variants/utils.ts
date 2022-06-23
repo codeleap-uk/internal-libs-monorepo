@@ -32,7 +32,7 @@ export function standardizeVariants<T = any, V extends VariantList<VariantsOf<T>
   if (typeof variants === 'string') {
     variantList = variants.split(' ')
   } else {
-    variantList = [...(variants || [])]
+    variantList = [...(variants.filter((v) => !!v) || [])]
   }
   return variantList as unknown as V
 }
@@ -44,6 +44,7 @@ export function applyVariants({
   theme,
   variantName,
 }: ApplyVariantsArgs) {
+  if (typeof variantName !== 'string') return {}
   if (!styles[variantName]) {
     if (variantName.startsWith('padding') || variantName.startsWith('margin') || variantName.startsWith('gap')) {
       const [spacingFunction, multiplier] = variantName.split(':')

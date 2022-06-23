@@ -1,9 +1,13 @@
 import { useModalContext, useModalSequence, Provider } from './context'
-import { AbsoluteModal } from './components'
+import { Modal, ManagedModalProps } from './components'
 
 export const ModalManager = {
   useModalContext,
-  AbsoluteModal,
+  Modal,
   Provider,
   useModalSequence,
+}
+
+export type {
+  ManagedModalProps,
 }

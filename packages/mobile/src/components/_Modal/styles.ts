@@ -1,40 +1,50 @@
 import {
-  assignTextStyle,
   ButtonComposition,
   createDefaultVariantFactory,
   includePresets,
+  ModalStyles,
+  assignTextStyle,
 } from '@codeleap/common'
 
-export type AnimatableParts = 'box' | 'backdrop'
+export const modalTransition = {
+  duration: 150,
+  ease: 'easeOut',
+  useNativeDriver: false,
+}
 
 export type MobileModalParts =
-  | AnimatableParts
   | 'wrapper'
+  | 'overlay'
   | 'innerWrapper'
   | 'innerWrapperScroll'
-  | 'body'
+  | 'box'
   | 'footer'
+  | 'body'
   | 'header'
+  | 'touchableBackdrop'
+  | 'box:pose'
   | 'title'
   | `closeButton${Capitalize<ButtonComposition>}`
 
 export type MobileModalComposition =
   | MobileModalParts
-  | `${AnimatableParts}:visible`
-  | `${AnimatableParts}:hidden`
-  | `${AnimatableParts}:transition`
+  | `${MobileModalParts}:visible`
 
 const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
 
 const presets = includePresets((style) => createModalStyle(() => ({ body: style })))
 
-export const MobileModalStyles = {
+const defaultModalStyles = ModalStyles
 
+export const MobileModalStyles = {
+  ...defaultModalStyles,
   ...presets,
   default: createModalStyle((Theme) => {
     const fullSize = {
       ...Theme.presets.whole,
       position: 'absolute',
+      width: Theme?.values?.width,
+      height: Theme?.values?.height,
     }
 
     return {
@@ -43,33 +53,15 @@ export const MobileModalStyles = {
 
         ...fullSize,
       },
-      'box:transition': {
-        scale: {
-          duration: Theme.values.transitions.modal.duration,
-          type: 'timing',
-        },
-        opacity: {
-          duration: Theme.values.transitions.modal.duration,
-          type: 'timing',
-        },
-      },
-      'backdrop:transition': {
-        opacity: {
-          duration: Theme.values.transitions.modal.duration,
-          type: 'timing',
-        },
-      },
-      backdrop: {
+
+      overlay: {
+        opacity: 0,
 
         backgroundColor: Theme.colors.black,
         ...fullSize,
       },
-
-      'backdrop:visible': {
+      'overlay:visible': {
         opacity: 0.5,
-      },
-      'backdrop:hidden': {
-        opacity: 0,
       },
       innerWrapper: {},
       innerWrapperScroll: {
@@ -84,15 +76,18 @@ export const MobileModalStyles = {
         borderRadius: Theme.borderRadius.medium,
         ...Theme.spacing.padding(2),
       },
-
-      'box:hidden': {
+      touchableBackdrop: {
+        ...fullSize,
+      },
+      'box:pose': {
         opacity: 0,
         scale: 0.8,
-
+        transition: modalTransition,
       },
-      'box:visible': {
+      'box:pose:visible': {
         opacity: 1,
         scale: 1,
+        transition: modalTransition,
       },
       header: {
         flexDirection: 'row',

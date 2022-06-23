@@ -2,6 +2,7 @@ import * as React from 'react'
 import {
   ComponentVariants,
   IconPlaceholder,
+  onUpdate,
   OverlayComposition,
   OverlayStyles,
   useDefaultComponentStyle,
@@ -13,7 +14,8 @@ import { Button } from './Button'
 import { View } from './View'
 import { StylesOf } from '../types/utility'
 import { StyleSheet, ViewProps } from 'react-native'
-import { AnimatedTouchable } from './Touchable'
+import { AnimatedTouchable, Touchable } from './Touchable'
+import { useAnimationState } from 'moti'
 
 export type OverlayProps = ViewProps & {
   title?: ReactNode
@@ -43,21 +45,28 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
     variants: variants as any,
   }) as StylesOf<OverlayComposition>
 
-  const touchableStyle = [
+  const animation = useAnimationState({
+    visible: variantStyles['wrapper:visible'],
+    hidden: styles['wrapper:visible'],
+  })
+
+  onUpdate(() => {
+    animation.transitionTo(visible ? 'visible' : 'hidden')
+  }, [visible])
+
+  const viewStyles = [
     variantStyles.wrapper,
     styles.wrapper,
-    visible && variantStyles['wrapper:visible'],
-    visible && styles['wrapper:visible'],
   ]
 
   return (
-    <AnimatedTouchable
-      // @ts-ignore
-      transition={'opacity'}
-      style={touchableStyle}
-      {...props}
-    >
-      <View>
+    <View animated state={animation} style={viewStyles}>
+      <Touchable
+
+        feedbackVariant='none'
+        variants={['whole', 'full', 'absolute']}
+        {...props}
+      >
         {(title || showClose) && (
           <View style={variantStyles.header}>
             <InputLabel style={variantStyles.title} label={title} />
@@ -71,7 +80,7 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
             )}
           </View>
         )}
-      </View>
-    </AnimatedTouchable>
+      </Touchable>
+    </View>
   )
 }

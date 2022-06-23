@@ -98,6 +98,7 @@ export function getNestedStylesByKey<T extends StylesOf<any>>(match:string, vari
   const styles = {}
 
   for (const [key, value] of Object.entries(variantStyles)) {
+
     if (key.startsWith(match)) {
       const partName = capitalize(key.replace(match, ''), true)
       styles[partName] = value

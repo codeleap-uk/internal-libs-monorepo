@@ -1,13 +1,11 @@
 import * as React from 'react'
-import { View, ViewProps } from '../View'
+import { View, ViewProps, AnimatedView } from '../View'
 import { Button, ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'
 import {
+  capitalize,
   ComponentVariants,
-  getNestedStylesByKey,
   IconPlaceholder,
-  onUpdate,
-  TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import {
@@ -18,10 +16,9 @@ import {
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
-import { useDynamicAnimation } from 'moti'
-import { Backdrop } from '../Backdrop'
-import { useStaticAnimationStyles } from '../../utils/hooks'
+import { Touchable } from '../Touchable'
 import { Text } from '../Text'
+import { Animated } from '../Animated'
 
 export * from './styles'
 
@@ -35,7 +32,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closable?: boolean
   footer?: React.ReactNode
   title?: React.ReactNode
-  debugName: string
+  debugName?: string
   closeIconName?: IconPlaceholder
   visible: boolean
   toggle?: () => void
@@ -64,7 +61,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     ...props
   } = modalProps
 
-  const variantStyles = useDefaultComponentStyle('u:Modal', {
+  const variantStyles = useDefaultComponentStyle('Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
     styles,
@@ -74,46 +71,61 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     const s = [
       variantStyles[key],
       styles[key],
+      visible ? variantStyles[key + ':visible'] : {},
+      visible ? styles[key + ':visible'] : {},
     ]
 
-    return StyleSheet.flatten(s)
+    return s
   }
-  const buttonStyles = React.useMemo(() => getNestedStylesByKey('closeButton', variantStyles), [variantStyles])
 
-  const boxAnimationStates = useStaticAnimationStyles(variantStyles, ['box:hidden', 'box:visible'])
+  const buttonStyles = React.useMemo(() => {
+    const buttonEntries = {}
 
-  const boxAnimation = useDynamicAnimation(() => {
-    return visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden']
-  })
+    for (const [key, style] of Object.entries(variantStyles)) {
+      if (key.startsWith('closeButton')) {
+        buttonEntries[capitalize(key.replace('closeButton', ''), true)] = style
+      }
+    }
+    return buttonEntries
+  }, [variantStyles])
 
-  onUpdate(() => {
-    boxAnimation.animateTo(visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden'])
-  }, [visible])
-  const wrapperStyle = getStyles('wrapper')
+  const boxAnimation = {
+    hidden: {
+      ...variantStyles['box:pose'],
+      ...styles['box:pose'],
+    },
+    visible: {
+      ...variantStyles['box:pose:visible'],
+      ...styles['box:pose:visible'],
+    },
+  }
+
+  const wrapperStyle = StyleSheet.flatten(getStyles('wrapper'))
   return (
-    <View style={[wrapperStyle, { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex }]} pointerEvents={visible ? 'auto' : 'none'}>
-
+    <View
+      style={[wrapperStyle, { zIndex: typeof zIndex === 'number' ? zIndex : wrapperStyle?.zIndex }]}
+      pointerEvents={visible ? 'auto' : 'none'}
+    >
+      <AnimatedView style={getStyles('overlay')} transition={'opacity'} />
       <Scroll
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
         keyboardAware={keyboardAware}
       >
-        <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
-          'wrapper:hidden': variantStyles['backdrop:hidden'],
-          'wrapper:visible': variantStyles['backdrop:visible'],
-          wrapper: variantStyles.backdrop,
-        }} onPress={(dismissOnBackdrop && closable) ? toggle : (() => {})}
-        wrapperProps={{
-          transition: { ...variantStyles['backdrop:transition'] },
-        }}
-        />
-        <View
-          animated
-          state={boxAnimation}
+        {dismissOnBackdrop && (
+          <Touchable
+            debugName={`${debugName} modal backdrop`}
+            activeOpacity={1}
+            onPress={() => toggle()}
+            style={getStyles('touchableBackdrop')}
+          />
+        )}
+        <Animated
+          component='View'
+          config={boxAnimation}
+          pose={visible ? 'visible' : 'hidden'}
           style={getStyles('box')}
-          transition={{ ...variantStyles['box:transition'] }}
-          {...props}
         >
           {(title || showClose) && (
             <View style={getStyles('header')}>
@@ -123,7 +135,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
                 title
               )}
 
-              {(showClose && closable) && (
+              {showClose && closable && (
                 <Button
                   debugName={`${debugName} modal close button`}
                   icon={closeIconName as IconPlaceholder}
@@ -141,10 +153,9 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
               {typeof footer === 'string' ? <Text text={footer} /> : footer}
             </View>
           )}
-        </View>
+        </Animated>
       </Scroll>
     </View>
-
   )
 }
 

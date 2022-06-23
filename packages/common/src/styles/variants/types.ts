@@ -39,7 +39,7 @@ export type FromVariantsBuilder<S, T extends DefaultVariantBuilder<S>> = {
 
 export type VariantProp<T = CommonVariantObject> =
   | string
-  | (keyof T | Spacing | `d:${string}`)[]
+  | (keyof T | Spacing | `d:${string}` | boolean | null | undefined | '')[]
 export type ResponsiveVariantsProp<
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
   Styles = CommonVariantObject<any>,
