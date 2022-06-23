@@ -29,6 +29,7 @@ export function mapVariants<
 
 export function standardizeVariants<T = any, V extends VariantList<VariantsOf<T>> = VariantList<VariantsOf<T>>>(variants: VariantProp<any>): V {
   let variantList = []
+  if (!variants) return [] as unknown as V
   if (typeof variants === 'string') {
     variantList = variants.split(' ')
   } else {
