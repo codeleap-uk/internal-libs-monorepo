@@ -20,7 +20,7 @@ module.exports = {
     {
       resolve: `gatsby-plugin-s3`,
       options: {
-        bucketName: 'codeleap-docs',
+        bucketName: 'docs.codeleap.co.uk',
         region: 'eu-west-2',
         generateRedirectObjectsForPermanentRedirects: false,
         generateIndexPageForRedirect: false,
