@@ -22,6 +22,7 @@ import { useDynamicAnimation } from 'moti'
 import { Backdrop } from '../Backdrop'
 import { useStaticAnimationStyles } from '../../utils/hooks'
 import { Text } from '../Text'
+import { Touchable } from '../Touchable'
 
 export * from './styles'
 
@@ -93,20 +94,26 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   return (
     <View style={[wrapperStyle, { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex }]} pointerEvents={visible ? 'auto' : 'none'}>
 
+      <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
+        'wrapper:hidden': variantStyles['backdrop:hidden'],
+        'wrapper:visible': variantStyles['backdrop:visible'],
+        wrapper: variantStyles.backdrop,
+      }}
+      wrapperProps={{
+        transition: { ...variantStyles['backdrop:transition'] },
+      }}
+      />
       <Scroll
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
         keyboardAware={keyboardAware}
       >
-        <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
-          'wrapper:hidden': variantStyles['backdrop:hidden'],
-          'wrapper:visible': variantStyles['backdrop:visible'],
-          wrapper: variantStyles.backdrop,
-        }} onPress={(dismissOnBackdrop && closable) ? toggle : (() => {})}
-        wrapperProps={{
-          transition: { ...variantStyles['backdrop:transition'] },
-        }}
+        <Touchable
+          feedbackVariant='none'
+          onPress={(dismissOnBackdrop && closable) ? toggle : (() => {})}
+          debugName={'Modal backdrop touchable'}
+          style={variantStyles.backdropTouchable}
         />
         <View
           animated

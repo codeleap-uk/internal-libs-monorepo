@@ -52,12 +52,12 @@ const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
   },
 }))
 
-export default ({ children, pageContext }) => {
+function ArticlePage({ children, pageContext }) {
   const { title, next = null, previous = null } = pageContext.frontmatter
   const { allMdx } = useStaticQuery(query)
 
   const { pages, flatData } = useMdx(allMdx, pageContext.module)
-  const isMobile = Theme.hooks.down('small')
+  const isMobile = Theme.hooks.down('mid')
 
   const { nextPage, previousPage } = useMemo(() => {
     let nextPage:MdxMetadata = null
@@ -76,37 +76,39 @@ export default ({ children, pageContext }) => {
     return { nextPage, previousPage }
   }, [next, previous])
   return <MDXProvider components={mdxTransforms}>
-    <Page header={false} center={false} title={title} variants={['row']}>
-      <Header center={false}>
+    <Page title={title} header={
+      <Header >
         {!isMobile && <SearchBar items={flatData}/>}
       </Header>
-      <View variants={['row', 'flex']} responsiveVariants={{
-        small: ['column'],
-      }}>
-        <Navbar pages={pages} title={`@codeleap/${pageContext.module}`}/>
-        {isMobile && <SearchBar items={flatData}/>}
-        <Article>
-          {children}
-          {
-            (nextPage || previousPage) && <>
-              <View variants={['separator', 'marginVertical:3', 'fullWidth']} css={{ borderTopColor: Theme.colors.dark.neutral }} />
-              <View variants={['justifySpaceBetween', 'fullWidth']}>
-                {
-                  previousPage && <PageNavButton data={previousPage} type='previous'/>
-                }
-                {
-                  nextPage && <PageNavButton data={nextPage} type='next'/>
-                }
+    } responsiveVariants={{
+      mid: ['column'],
+    }}>
+      <Navbar pages={pages} title={`@codeleap/${pageContext.module}`}/>
+      {isMobile && <SearchBar items={flatData}/>}
+      <Article>
+        {children}
+        {
+          (nextPage || previousPage) && <>
+            <View variants={['separator', 'marginVertical:3', 'fullWidth']} css={{ borderTopColor: Theme.colors.dark.neutral }} />
+            <View variants={['justifySpaceBetween', 'fullWidth']}>
+              {
+                previousPage && <PageNavButton data={previousPage} type='previous'/>
+              }
+              {
+                nextPage && <PageNavButton data={nextPage} type='next'/>
+              }
 
-              </View>
-            </>
-          }
-        </Article>
-        <SectionMap content={children}/>
-      </View>
+            </View>
+          </>
+        }
+      </Article>
+      <SectionMap content={children}/>
+      {/* </View> */}
     </Page>
   </MDXProvider>
 }
+
+export default ArticlePage
 
 const query = graphql`
   query {

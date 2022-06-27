@@ -1,17 +1,16 @@
 import { View, variantProvider, RouterPage, CenterWrapper, Settings, LocalStorageKeys } from '@/app'
-import { CenterWrapperProps } from '@codeleap/web'
 
 import { Footer } from './Footer'
 import { Header } from './Header'
 import { Helmet } from 'react-helmet'
-import { onMount, useComponentStyle } from '@codeleap/common'
+import { onMount, PropsOf, useComponentStyle } from '@codeleap/common'
 
-type PageProps = CenterWrapperProps & {
+type PageProps = PropsOf<typeof CenterWrapper> & {
   center?: boolean
   withRouter?: boolean
   basePath?: string
   title?: string
-  header?:boolean
+  header?:boolean|React.ReactElement
   footer?:boolean
   appendNameToTitle?: boolean
   className?: string
@@ -39,29 +38,11 @@ export const Page: React.FC<PageProps> = (props) => {
     children
   )
 
-  onMount(() => {
-
-    variantProvider.onColorSchemeChange(t => {
-
-      console.log('Theme change', t.theme)
-      localStorage.setItem(LocalStorageKeys.THEME, t.theme)
-
-    })
-  })
-  onMount(() => {
-    const storedTheme = window?.___savedTheme
-
-    if (storedTheme) {
-      variantProvider.setColorScheme(storedTheme)
-    }
-
-  })
-
   const styles = useComponentStyle(componentStyles)
   return (
     <View variants={['column']} css={[styles.wrapper, !center && centerWrapperProps?.styles?.wrapper]} className={className}>
       {!withRouter && <Helmet>{title && <title>{title} {appendNameToTitle ? ` | ${Settings.AppName}` : ''}</title>}</Helmet>}
-      {header && <Header center={center}/>}
+      {header && typeof header === 'boolean' ? <Header center={center}/> : header}
       {center ? (
         <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>
       ) : (

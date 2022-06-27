@@ -71,7 +71,11 @@ export const Backdrop = (backdropProps:BackdropProps) => {
   }, [visible, animationStates])
 
   return <View pointerEvents={visible ? 'auto' : 'none' } animated style={variantStyles.wrapper} state={animation} {...wrapperProps}>
-    <Touchable feedbackVariant='none' style={variantStyles.touchable} {...props} />
+    {
+      props?.onPress ?
+        <Touchable feedbackVariant='none' style={variantStyles.touchable} {...props} />
+        : null
+    }
     {children}
   </View>
 }

@@ -1,9 +1,7 @@
-import { AppTheme, createTheme, VariantProvider } from '@codeleap/common'
+import { createTheme, VariantProvider } from '@codeleap/common'
 import { textStyles } from './textStyles'
 import { CSSObject } from '@emotion/css'
 import { Icons } from './assets/icons'
-import { useWindowSize } from '@codeleap/web'
-import { LocalStorageKeys } from './constants'
 
 const IS_SSR = typeof window === 'undefined'
 
@@ -11,7 +9,7 @@ const getWindowDimensions = () => {
   if (IS_SSR) {
     return {
       height: 0,
-      widht: 0,
+      width: 0,
     }
 
   }
@@ -139,8 +137,15 @@ const themeObj = {
   initialTheme: IS_SSR ? 'light' : (window.___savedTheme || 'light'),
 } as const
 
+let windowSize = [0, 0]
+
+export function setWindowSize(to: typeof windowSize) {
+
+  windowSize = to
+}
+
 const appTheme = createTheme(themeObj, {
-  screenSize: useWindowSize,
+  screenSize: () => windowSize,
 })
 
 const styleGetter = (

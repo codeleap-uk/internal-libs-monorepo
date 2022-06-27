@@ -40,6 +40,8 @@ export const Settings: AppSettings = {
       `WARN  Require cycle`,
       ` Warning: Failed`,
       `Warning: Failed`,
+      'Do not call Hooks inside useEffect',
+      'React does not recognize the',
     ],
     Obfuscate,
   },

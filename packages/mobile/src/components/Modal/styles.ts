@@ -15,6 +15,7 @@ export type MobileModalParts =
   | 'body'
   | 'footer'
   | 'header'
+  | 'backdropTouchable'
   | 'title'
   | `closeButton${Capitalize<ButtonComposition>}`
 
@@ -64,7 +65,9 @@ export const MobileModalStyles = {
         backgroundColor: Theme.colors.black,
         ...fullSize,
       },
-
+      backdropTouchable: {
+        ...fullSize,
+      },
       'backdrop:visible': {
         opacity: 0.5,
       },

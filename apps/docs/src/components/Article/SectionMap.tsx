@@ -84,8 +84,8 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
       directions: ['left'],
     }),
     ...theme.spacing.gap(2),
-    flexBasis: '16%',
-    [theme.media.down('small')]: {
+    flexBasis: '25%',
+    [theme.media.down('mid')]: {
       position: 'static',
       order: -1,
       ...theme.border.grayFade({

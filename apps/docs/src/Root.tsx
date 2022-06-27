@@ -8,7 +8,8 @@ import { Global } from '@emotion/react'
 import { globalStyleDark, globalStyleLight } from './app/stylesheets/Global'
 import { ToastContainer } from 'react-toastify'
 import { withFirebase } from './services/firebase'
-
+import { useWindowSize } from '@codeleap/web'
+import { setWindowSize } from './app/theme'
 function init() {
   logger.log('Initialising app...', '', 'App lifecycle')
 
@@ -54,15 +55,24 @@ const Toaster = () => {
   </>
 }
 
-const Root = ({ children }) => {
+const ChildWrapper = ({ children }) => {
+  return children
+}
 
+const Root = ({ children }) => {
+  const winSize = useWindowSize()
+
+  setWindowSize(winSize)
+  // useLayoutEffect(() => {
+  // }, [winSize?.[0], winSize?.[1]])
   return (
 
     <ReduxProvider store={store}>
 
       <Toaster />
-
-      {children}
+      <ChildWrapper key={winSize.toString()}>
+        {children}
+      </ChildWrapper>
 
     </ReduxProvider>
 

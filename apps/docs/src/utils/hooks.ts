@@ -13,8 +13,10 @@ export function useMdx(allMdx, moduleName:string) {
     if (itemData.module !== moduleName) return acc
 
     const copy = { ...acc }
-
-    if (copy[itemData.category]) {
+    if (!itemData.category) {
+      if (!copy._root_) copy._root_ = []
+      copy._root_.push(itemData)
+    } else if (copy[itemData.category]) {
       copy[itemData.category].push(itemData)
     } else {
       copy[itemData.category] = [itemData]

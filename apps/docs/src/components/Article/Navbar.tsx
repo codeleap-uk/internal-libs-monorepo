@@ -8,7 +8,7 @@ type NavbarProps = {
   pages: Record<string, MdxMetadata[]>
   title: string
 }
-
+const ArticleLink = ({ title, path }) => <Link text={title} to={path} variants={['padding:1']}/>
 const Category = ({ name, items }) => {
   const [open, toggle] = useBooleanToggle(false)
   return <View variants={['column', 'fullWidth']}>
@@ -18,7 +18,7 @@ const Category = ({ name, items }) => {
       },
     }}/>
     <Collapse open={open} height={items.length * 80} css={staticStyles.collapsibleList}>
-      {items.map((p, idx) => <Link text={p.title} key={idx} to={`/${p.module}/${p.path}`} variants={['padding:1']}/>)}
+      {items.map((p, idx) => <ArticleLink title={p.title} key={idx} path={`/${p.module}/${p.path}`} />)}
     </Collapse>
   </View>
 }
@@ -28,7 +28,7 @@ export const Navbar:React.FC<NavbarProps> = ({ pages, title }) => {
 
   const styles = useComponentStyle(componentStyles)
 
-  const isMobile = Theme.hooks.down('small')
+  const isMobile = Theme.hooks.down('mid')
 
   const WrapperComponent = isMobile ? Drawer : View
 
@@ -52,10 +52,15 @@ export const Navbar:React.FC<NavbarProps> = ({ pages, title }) => {
     >
       <Text variants={['h4', 'alignSelfCenter', 'marginVertical:2']} text={title} responsiveVariants={{ small: ['h3'] }}/>
       {
+        pages?._root_?.map?.(item => <ArticleLink title={item.title} path={item.path} key={item.path}/>)
+      }
+
+      {
         Object.entries(pages)
-          .map(([category, items]) => (
+          .map(([category, items]) => category !== '_root_' ? (
+
             <Category name={category} key={category} items={items} />
-          ))
+          ) : null)
       }
     </WrapperComponent>
   </>
@@ -76,8 +81,9 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
       width: 1,
       directions: ['right'],
     }),
-    width: 240,
-    minWidth: 240,
+    // width: 240,
+    // minWidth: 240,
+    flexBasis: '30%',
 
   },
 
