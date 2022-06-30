@@ -1,0 +1,36 @@
+---
+path: 'permissions/problem'
+title: 'The problem'
+date: '2022-06-30'
+category: Permissions
+module: mobile
+next: 'mobile/permissions/solution'
+index: 0
+---
+
+# Understanding permissions in React Native
+
+IOS and Android devices require the user to allow the application access certain device features, such as the camera, the photo library or the device's location.
+
+Being a cross-platform tool, React Native provides a way to read and request such permissions from Javascript code with it's permissions module on both platforms. Although the module itself is quite flexible, it's API can be a pain and it's ripe with incompatibilities between platforms, as they both have their own systems and guidelines for how permissions should behave.
+
+The [react-native-permissions](https://www.npmjs.com/package/react-native-permissions) package from npm aims to solve some of these issues by providing an abstraction that unifies both systems into a cohesive, simple API, with a clearly defined set of rules.
+
+This is the package we use to check and ask for permissions.
+
+# Handling user stupidity, among other things
+
+Both operating systems display a dialog with accept and reject buttons whenever a permission is requested by the app and the user has not blocked access to it (if he did, we need it to be changed in the settings app). Furthermore, both platform's have guidelines regarding the UI/UX for the in-app screens preceding the permission request, and it's generally a good idea to let the user know why we need the permission in the first place.
+
+This is where the `!fun` part comes in, as we have to: 
+
+- Cover a lot of possible cases for the current state of the permission
+- Write code to perform all checks in a lot of places where the user directly causes the permission request (eg. when taking a picture with the camera) or when a certain event happens (eg. Request notification permissions on app open)
+- Make sure changes made to app's permissions in the device settings are correctly handled when returning to the app
+- Seamlessly transition between modals with different permission requests
+- Somehow not annoy the user and the testers by requesting permissions all the time
+- Follow platform guidelines
+- And probably many more things which have caused me and other developers severe PTSD
+
+Hopefully, this helps to explain why the permissions system in the library is done the way it is, and helps if you ever need a checklist for a refactor of it or something else entirely. 
+If you're scared after reading about this, know that you are not alone.

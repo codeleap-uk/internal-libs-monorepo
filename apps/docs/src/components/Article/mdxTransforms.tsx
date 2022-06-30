@@ -1,7 +1,7 @@
-import { React, Text, Button, View } from '@/app'
+import { React, Text, Button, View, Theme } from '@/app'
 import CodeThemes from '@/app/stylesheets/Code'
 import { copyToClipboard } from '@/utils/dom'
-import { useCodeleapContext, useState } from '@codeleap/common'
+import { useCodeleapContext, useState, useMemo } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
@@ -17,8 +17,25 @@ export const mdxTransforms = {
   h4: ({ children }) => <Text variants={['h4']} text={children}/>,
   h5: ({ children }) => <Text variants={['h5']} text={children}/>,
   h6: ({ children }) => <Text variants={['h6']} text={children}/>,
-  p: ({ children }) => <Text text={children}/>,
-  code: ({ children }) => <Text text={children} variants={['code']}/>,
+
+  p: ({ children }) => <Text text={children} />,
+  inlineCode: ({ children }) => {
+
+    return <View variants={['inlineFlex', 'paddingHorizontal:0.5']}>
+      <Text text={children} variants={['code', 'inline']}/>
+    </View>
+  },
+  ul: ({ children }) => {
+
+    return <View variants={['column', 'gap:1', 'paddingLeft:2']} component='ul'> {children} </View>
+  },
+  ol: ({ children }) => {
+
+    return <View variants={['column', 'gap:1', 'paddingLeft:2']} component='ul'> {children} </View>
+  },
+  li: ({ children }) => {
+    return <Text component='li' text={children}/>
+  },
   pre: (props) => {
     const className = props.children.props.className || ''
     const matches = className.match(/language-(?<lang>.*)/)
@@ -40,17 +57,19 @@ export const mdxTransforms = {
 
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => {
-          return <View variants={['column', 'relative', 'fullWidth']} onHover={setHover}>
-            <Button icon='copy' className='code_copy_btn' variants={['icon']} css={{
-              position: 'absolute',
+          return <View variants={['column', 'relative', 'fullWidth', 'codeWrapper']} onHover={setHover} css={{
+            backgroundColor: style.backgroundColor,
+          }}>
+            {/* <Button icon='copy' className='code_copy_btn' variants={['icon']} css={{
+              position: 'sticky',
 
               top: 8,
-              right: 12,
+              left: '100%',
 
               zIndex: 1,
               transition: 'opacity 0.2s ease',
               opacity: hover ? 1 : 0,
-            }} onPress={() => copy(code)}/>
+            }} onPress={() => copy(code)}/> */}
             <pre
               className={className + ' code_style'}
               style={style}
@@ -72,7 +91,7 @@ export const mdxTransforms = {
     )
   },
   a: (props) => {
-    return <Link to={props.href} text={props.children} variants={['underlined', 'primary']}/>
+    return <Link to={props.href} text={props.children} openNewTab variants={['primary']}/>
   },
 }
 

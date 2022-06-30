@@ -8,6 +8,10 @@ type NavbarProps = {
   pages: Record<string, MdxMetadata[]>
   title: string
 }
+function sortItems(items: MdxMetadata[]) {
+  return items.sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+}
+
 const ArticleLink = ({ title, path }) => <Link text={title} to={path} variants={['padding:1']}/>
 const Category = ({ name, items }) => {
   const [open, toggle] = useBooleanToggle(false)
@@ -18,7 +22,8 @@ const Category = ({ name, items }) => {
       },
     }}/>
     <Collapse open={open} height={items.length * 80} css={staticStyles.collapsibleList}>
-      {items.map((p, idx) => <ArticleLink title={p.title} key={idx} path={`/${p.module}/${p.path}`} />)}
+      {sortItems(items)
+        .map((p, idx) => <ArticleLink title={p.title} key={idx} path={`/${p.module}/${p.path}`} />)}
     </Collapse>
   </View>
 }
@@ -52,7 +57,7 @@ export const Navbar:React.FC<NavbarProps> = ({ pages, title }) => {
     >
       <Text variants={['h4', 'alignSelfCenter', 'marginVertical:2']} text={title} responsiveVariants={{ small: ['h3'] }}/>
       {
-        pages?._root_?.map?.(item => <ArticleLink title={item.title} path={item.path} key={item.path}/>)
+        sortItems(pages?._root_ || []).map?.(item => <ArticleLink title={item.title} path={item.path} key={item.path}/>)
       }
 
       {
@@ -83,7 +88,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     }),
     // width: 240,
     // minWidth: 240,
-    flexBasis: '30%',
+    flexBasis: '20%',
 
   },
 

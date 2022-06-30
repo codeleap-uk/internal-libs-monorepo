@@ -1,11 +1,11 @@
 // native smooth scrolling for Chrome, Firefox & Opera
 // @see: https://caniuse.com/#feat=css-scroll-behavior
-const nativeSmoothScrollTo = (elem) => {
+const nativeSmoothScrollTo = (elem, pad = 0) => {
   if (!window) return
   window.scroll({
     behavior: 'smooth',
     left: 0,
-    top: elem.getBoundingClientRect().top + window.pageYOffset,
+    top: elem.getBoundingClientRect().top + window.pageYOffset + pad,
   })
 }
 
@@ -46,7 +46,7 @@ const smoothScrollTo = (to, duration) => {
 // detect support for the behavior property in ScrollOptions
 
 // smooth scrolling stub
-export const scrollToElem = (elemSelector) => {
+export const scrollToElem = (elemSelector, padOffsets = [0, 0]) => {
   if (!document) return
   const supportsNativeSmoothScroll =
     'scrollBehavior' in document.documentElement.style || {}
@@ -57,9 +57,9 @@ export const scrollToElem = (elemSelector) => {
   const elem = document.querySelector(elemSelector)
   if (elem) {
     if (supportsNativeSmoothScroll) {
-      nativeSmoothScrollTo(elem)
+      nativeSmoothScrollTo(elem, padOffsets[0])
     } else {
-      smoothScrollTo(elem.offsetTop, 600)
+      smoothScrollTo(elem.offsetTop + padOffsets[0], 600)
     }
   }
 }

@@ -1,3 +1,4 @@
+import { TypeGuards } from '@codeleap/common'
 import { useScrollEffect } from '@codeleap/web'
 import { useStaticQuery } from 'gatsby'
 import { MdxMetadata } from 'types/mdx'

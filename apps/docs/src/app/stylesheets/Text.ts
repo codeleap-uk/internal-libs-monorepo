@@ -12,6 +12,7 @@ export const AppTextStyles = {
       ...defaultStyles.default(theme).text,
 
       textDecoration: 'none',
+
     },
   })),
   white: createTextStyle((theme) => ({
@@ -32,6 +33,7 @@ export const AppTextStyles = {
   code: createTextStyle((theme) => ({
     text: {
       color: theme.colors.inlineCode,
+
     },
   })),
   listItem: createTextStyle((theme) => ({
@@ -62,6 +64,8 @@ export const AppTextStyles = {
       ...defaultStyles.default(theme).text,
 
       '&:hover': {
+        textDecoration: 'underline',
+
         color: theme.colors.primary,
       },
     },
@@ -75,6 +79,7 @@ export const AppTextStyles = {
       },
     },
   })),
+
   neutral: createTextStyle((theme) => ({
 
     text: {

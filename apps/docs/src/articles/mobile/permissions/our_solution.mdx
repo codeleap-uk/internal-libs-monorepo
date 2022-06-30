@@ -1,0 +1,249 @@
+---
+path: 'permissions/solution'
+title: 'Our current solution'
+date: '2022-06-30'
+category: Permissions
+module: mobile
+index: 1
+---
+
+# Breaking down the problem
+
+So, we have a few necessities:
+
+1. A centralized, global, and customizable way to request and check the permissions required by the application
+2. A way to configure the display for the screens preceding a permission request
+3. A display manager capable of controlling the visibility of the aformentioned screens depending on permission states
+4. An abstracted, simple way to request one or more permissions if they are not already granted, and trigger actions depending on the request's result.
+
+# 1. PermissionManager
+
+Since the only required actions for dealing with permissions at a low level are requesting and checking it, and both return the new status of the permission, we only really need to worry about tracking the permission states in a globally accessible way. The `PermissionManager` class does exactly that. It's in the `common` package simply because it's functionality is general enough to be reutilized in a non React Native environment such as the browser should the need arise.
+
+```typescript
+import { PermissionManager } from '@codeleap/common'
+import RNPermissions from 'react-native-permissions'
+import { Platform } from 'react-native'
+
+const platform = Platform.OS
+
+export const AppPermissions = new PermissionManager({
+  camera: {
+    onAsk: async () => { // Called when we actually want the OS to ask the permission with the dialog
+      const status = await RNPermissions.request(RNPermissions.PERMISSIONS[platform.toUpperCase()].CAMERA)
+      return status // This is a string which can be one of many statuses, check the react-native-permissions docs for more info on it
+    },
+    onCheck: async () => { // Called when we just need to get the latest state
+      const status = await RNPermissions.check(RNPermissions.PERMISSIONS[platform.toUpperCase()].CAMERA)
+      return status 
+    },
+  },
+  notifications: {
+    onAsk: async () => {
+      const { status } = await RNPermissions.requestNotifications(['alert', 'badge', 'sound'])
+      return status
+    },
+    onCheck: async () => {
+      return (await RNPermissions.checkNotifications()).status
+    },
+  },
+})
+```
+
+Most useful methods are:
+
+```typescript
+AppPermissions.get('camera', {
+    ask: true // If you just want to get the latest state, set it to false
+}).then(({
+    isGranted
+}) => {
+    if(isGranted){
+        // do something
+    }
+})
+
+AppPermissions.values // Gets the current state, includes all permissions
+
+AppPermissions.update() // Check every permission to update it's state
+
+// The callback will fire whenever the state for any permission changes
+const unsubscribe = AppPermissions.onChange((name, newState) => {
+    console.log(name, newState.status) // 'camera granted' if the camera permission was granted
+})
+
+unsubscribe() // Removes the listener for onChange
+```
+
+# 2. Configuring the display
+
+This is just a matter of explicitly setting the data show on the screen when requesting permissions, and some of the behavior it should have when pressing buttons.
+
+```typescript
+import { PermissionManager } from '@codeleap/common'
+import RNPermissions from 'react-native-permissions'
+import { Platform } from 'react-native'
+import { Permissions } from '@codeleap/mobile'
+
+const platform = Platform.OS
+
+export const AppPermissions = new PermissionManager({
+    // ...
+})
+
+
+export type PermissionNames = keyof typeof AppPermissions.values
+export const permissionNames = Object.keys(AppPermissions.values) as PermissionNames[]
+
+const modalConfig:Permissions.PermissionModalsConfig<keyof typeof AppPermissions.values> = {
+  camera: { // Properties at the highest level are treated as default, but can be overriden per permission status
+    onAllow: 'ask', // Will call AppPermissions.get('camera', { ask: true })
+    title: 'Camera',
+    icon: 'image',
+
+    description: [
+      `${AppName} needs access to your camera to capture and share photos.`,
+    ],
+    blocked: {
+      description: [
+        `${AppName} needs access to your camera to capture and share photos.`,
+        'Please open settings and allow access to "Camera"',
+      ],
+      onAllow: 'openSettings', // Will navigate to de device settings
+
+    },
+  },
+  notifications: {
+
+    icon: 'notifications',
+
+    description: [
+      `Notifications may include alerts, sounds, and icon badges.`,
+      `These can be configured later in the Settings app.`,
+    ],
+    title: `${AppName} would like to send you notifications`,
+    onAllow: 'ask',
+
+    blocked: {
+
+      onAllow: 'openSettings',
+    },
+
+  }
+}
+```
+
+# 3. Connecting to the app
+
+The `@codeleap/mobile` package includes a `Permissions` module, which can be used to wrap your app with a `<Permissions.Provider/>`, exposing data and two utilities for easier permission management. Do keep in mind that it depends on the `ModalManager` module, and as such, needs to be rendered inside `<ModalManager.Provider />`.
+
+```jsx
+// services/permissions.tsx
+import { PermissionManager } from '@codeleap/common'
+import RNPermissions from 'react-native-permissions'
+import { Platform } from 'react-native'
+import { Permissions } from '@codeleap/mobile'
+
+const platform = Platform.OS
+
+export const AppPermissions = new PermissionManager({
+    // ...
+})
+
+
+export type PermissionNames = keyof typeof AppPermissions.values
+export const permissionNames = Object.keys(AppPermissions.values) as PermissionNames[]
+
+const modalConfig:Permissions.PermissionModalsConfig<keyof typeof AppPermissions.values> = {
+ // ...
+}
+
+export const {
+  // We'll hook this up to the modal later 
+  usePermissionModal, 
+
+  // This exposes handlers for requesting permissions and accessing their state
+  usePermissions,
+} = Permissions.createTypedPermissionHooks({
+  modalConfig,
+  permissionsManager: AppPermissions,
+})
+
+const Provider = ({ children }) => <Permissions.Provider AppPermissions={AppPermissions} modalConfig={modalConfig}>{children}</Permissions.Provider>
+
+export {
+  Provider as PermissionsProvider,
+}
+```
+
+Wrap your app with `<PermissionsProvider />`.
+
+# 4. Modal and requesting permissions
+
+```jsx
+import {
+    usePermissionModal,
+    permissionNames
+} from '@/services/permissions'
+  
+export function PermissionModal(props: PermissionModalProps) {
+  const { permissionName } = props
+
+  const {
+    config,
+    onAllow,
+    onDeny,
+    modalId,
+
+  } = usePermissionModal(permissionName)
+
+  return <ModalManager.Modal
+    debugName={`Permission ${permissionName} modal`}
+    absolute={false}
+
+    id={modalId}
+
+    closable={false}
+    dismissOnBackdrop={false}
+  >
+    { /* View for your modal goes here */ }
+  </ModalManager.Modal>
+}
+
+export function AllPermissionModals() { // This should be rendered somewhere in the app
+
+  return <>
+    {permissionNames.map(permissionName => <PermissionModal key={permissionName} permissionName={permissionName}/>)}
+  </>
+}
+```
+
+To request permissions when pressing a button
+
+```jsx
+import {
+    usePermissions
+} from '@/services/permissions'
+
+function Component(){
+
+    const permissions = usePermissions()
+
+    return <Button onPress={() => {
+
+        permissions.askPermission('camera' , (status) => {
+            if(status === 'granted'){
+                // handle opening camera
+            }
+        })
+
+        permissions.askMany(['camera','library'], (result) => {
+            if(result.overall === 'granted'){
+                // handle success for both permissions granted
+            }
+        })
+    
+    }} />
+}
+
+```

@@ -61,16 +61,14 @@ const ChildWrapper = ({ children }) => {
 
 const Root = ({ children }) => {
   const winSize = useWindowSize()
-
+  const sizeStr = winSize.toString()
   setWindowSize(winSize)
-  // useLayoutEffect(() => {
-  // }, [winSize?.[0], winSize?.[1]])
   return (
 
     <ReduxProvider store={store}>
 
       <Toaster />
-      <ChildWrapper key={winSize.toString()}>
+      <ChildWrapper key={sizeStr}>
         {children}
       </ChildWrapper>
 

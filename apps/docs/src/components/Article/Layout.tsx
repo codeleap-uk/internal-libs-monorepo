@@ -39,7 +39,6 @@ const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
       },
 
     },
-    width: '20%',
   },
   icon: {
     transition: 'color 0.2s ease',
@@ -123,6 +122,7 @@ const query = graphql`
             module
             next
             previous
+            index
           }
         }
       }

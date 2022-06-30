@@ -14,7 +14,13 @@ export const AppViewStyles = {
       flexDirection: 'row',
     },
   })),
-
+  codeWrapper: createViewStyle(() => ({
+    wrapper: {
+      maxWidth: '100%',
+      maxHeight: 460,
+      overflowX: 'auto',
+    },
+  })),
   separator: createViewStyle((theme) => ({
     ...defaultStyles.default(theme),
     wrapper: {

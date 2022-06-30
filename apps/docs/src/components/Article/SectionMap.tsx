@@ -12,7 +12,9 @@ type Node = {
 
 function mapSections(content) {
   const nodes:Node[] = []
-
+  if (!Array.isArray(content)) {
+    content = [content]
+  }
   content.forEach(({ props }) => {
     const lastNode = nodes[nodes.length - 1]
     if (headings.includes(props?.mdxType)) {
