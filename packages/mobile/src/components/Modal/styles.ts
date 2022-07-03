@@ -7,7 +7,7 @@ import {
 
 export type AnimatableParts = 'box' | 'backdrop'
 
-export type MobileModalParts =
+export type ModalParts =
   | AnimatableParts
   | 'wrapper'
   | 'innerWrapper'
@@ -19,17 +19,17 @@ export type MobileModalParts =
   | 'title'
   | `closeButton${Capitalize<ButtonComposition>}`
 
-export type MobileModalComposition =
-  | MobileModalParts
+export type ModalComposition =
+  | ModalParts
   | `${AnimatableParts}:visible`
   | `${AnimatableParts}:hidden`
   | `${AnimatableParts}:transition`
 
-const createModalStyle = createDefaultVariantFactory<MobileModalComposition>()
+const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 
 const presets = includePresets((style) => createModalStyle(() => ({ body: style })))
 
-export const MobileModalStyles = {
+export const ModalStyles = {
 
   ...presets,
   default: createModalStyle((Theme) => {

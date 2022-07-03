@@ -1,36 +1,19 @@
 import { expect } from 'chai'
 import { AppTheme, createTheme, EnhancedTheme } from '../..'
-const themeConfig: AppTheme = {
-  breakpoints: {
-    xs: 576,
-    xxs: 10,
-  },
-  colors: {
-    primary: 'red',
-  },
-  spacing: 10,
-  baseFontSize: 16,
-  borderRadius: {
-    large: 10,
-    small: 10,
-    medium: 10,
-  },
-  icons: {},
-  fontFamily: 'Arial, sans-serif',
-}
+import { themeObj } from '../../mocks/theme'
 
-let theme: EnhancedTheme<typeof themeConfig> = null
+let theme: EnhancedTheme<typeof themeObj> = null
 
 let screenSize = [400, 500]
 describe('Theme', () => {
   before(() => {
-    theme = createTheme(themeConfig, {
+    theme = createTheme(themeObj, {
       screenSize: () => screenSize,
     })
   })
 
   it('Theme should be created', () => {
-    console.log(theme)
+    // console.log(theme)
     expect(theme.colors).to.be.an('object')
   })
 

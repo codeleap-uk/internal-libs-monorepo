@@ -1,11 +1,12 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
-import shadeColor from '../../../utils/shadeColor'
+import { shadeColor } from '../../../utils'
 import { optionalObject } from '../../../utils'
 import { ActivityIndicatorComposition } from '.'
 
 export type ButtonStates = 'disabled'
-export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader' | `loader${Capitalize<ActivityIndicatorComposition>}`
+export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader' | `loader${Capitalize<ActivityIndicatorComposition>}` |
+  'badgeText' | 'badgeWrapper'
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
@@ -57,6 +58,15 @@ export const ButtonStyles = {
       }, {}),
 
     },
+    badgeWrapper: {
+      backgroundColor: theme.colors.negative,
+      position: 'absolute',
+      ...theme.spacing.padding(2.5),
+    },
+    badgeText: {
+      color: theme.colors.white,
+    },
+
   })),
   negative: createButtonStyle((theme) => ({
     wrapper: {

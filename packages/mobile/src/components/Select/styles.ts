@@ -1,5 +1,4 @@
 import { assignTextStyle, ButtonParts, createDefaultVariantFactory, TextInputComposition } from '@codeleap/common'
-import { MobileModalStyles } from '../Modal'
 type ModalParts =
   'Box' |
   'Wrapper' |
@@ -15,20 +14,20 @@ type ModalParts =
 
 type InputParts = `input${Capitalize<TextInputComposition>}`
 
-export type MobileSelectParts = InputParts
+export type SelectParts = InputParts
 | `backdrop`
 | `backdrop:visible`
 | `backdrop:hidden`
 | `modal${ModalParts}`
 
-export type MobileSelectComposition = MobileSelectParts
+export type SelectComposition = SelectParts
 
-const createSelectStyle = createDefaultVariantFactory<MobileSelectComposition>()
+const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 
-export const MobileSelectStyles = {
+export const SelectStyles = {
   default: createSelectStyle((theme) => ({
     modalBox: {
-      // ...MobileModalStyles.default(theme).box,
+      // ...ModalStyles.default(theme).box,
       backgroundColor: theme.colors.background,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
@@ -36,7 +35,7 @@ export const MobileSelectStyles = {
       elevation: 5,
     },
     modalWrapper: {
-      // ...MobileModalStyles.default(theme).wrapper,
+      // ...ModalStyles.default(theme).wrapper,
       flex: 1,
       alignItems: 'stretch',
       justifyContent: 'flex-end',
@@ -53,7 +52,7 @@ export const MobileSelectStyles = {
       ...theme.spacing.marginVertical(0.6),
     },
     backdrop: {
-      // ...MobileModalStyles.default(theme).overlay,
+      // ...ModalStyles.default(theme).overlay,
       zIndex: 10,
       flex: 1,
 

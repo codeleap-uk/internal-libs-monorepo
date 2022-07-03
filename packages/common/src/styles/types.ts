@@ -3,6 +3,9 @@ import {
   DefaultVariants,
   VariantProvider,
   CommonVariantObject,
+  VariantStyleSheet,
+  ComponentVariantsDefinition,
+  DefaultVariantBuilder,
 } from './variants'
 import { Hooks, MediaQueries } from './MediaQuery'
 import { AppSettings } from '../config'
@@ -118,7 +121,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
 export type ThemeValues = AppTheme
 
 export type StyleContextProps<
-  Variants extends DefaultVariants,
+  Variants extends Readonly<Record<string, DefaultVariantBuilder>>,
   Provider extends VariantProvider<any, any>
 > = {
   variantProvider: Provider
@@ -130,7 +133,7 @@ export type StyleContextProps<
 }
 
 export type StyleContextValue<
-  C extends Readonly<Record<string, CommonVariantObject<any>>>
+  C extends Readonly<Record<string, DefaultVariantBuilder>>
 > = {
   Theme: EnhancedTheme<any>
   currentTheme: string|number

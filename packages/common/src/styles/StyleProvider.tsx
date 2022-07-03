@@ -16,12 +16,12 @@ import { StyleContextProps, StyleContextValue } from './types'
 
 export const StyleContext = createContext(
   {} as StyleContextValue<
-    DefaultVariants & Record<string, CommonVariantObject<any>>
+    Record<string, DefaultVariantBuilder>
   >,
 )
 
 export const StyleProvider = <
-  S extends DefaultVariants,
+  S extends Readonly<Record<string, DefaultVariantBuilder>>,
   V extends VariantProvider<any, AppTheme>
 >({
     children,

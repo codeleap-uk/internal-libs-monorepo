@@ -2,50 +2,75 @@ import {
   createDefaultVariantFactory,
   includePresets,
 } from '@codeleap/common'
+import { Easing } from 'react-native'
 
 export type PagerComposition =
   | 'page'
   | 'page:transition'
-  | 'page:pose:previous'
-  | 'page:pose:next'
-  | 'page:pose:current'
+  | 'page:previous'
+  | 'page:next'
+  | 'page:current'
   | 'wrapper'
 
 const createPagerStyle = createDefaultVariantFactory<PagerComposition>()
 
 const presets = includePresets((style) => createPagerStyle(() => ({ wrapper: style })),
 )
+export const defaultPagerTransition = {
+  type: 'timing',
+  duration: 300,
+  easing: Easing.linear,
+}
 
-export const MobilePagerStyles = {
+export function pagerAnimation(height, width, translate = 'X', transition = defaultPagerTransition) {
+  const translateProp = `translate${translate}`
+
+  const translateVal = translate === 'X' ? width : height
+
+  return {
+    wrapper: {
+      height,
+      width,
+      overflow: 'hidden',
+    },
+    'page:transition': {
+      [translateProp]: transition,
+    },
+    'page:next': {
+      [translateProp]: translateVal,
+
+    },
+    'page:current': {
+      [translateProp]: 0,
+    },
+    'page:previous': {
+      [translateProp]: -translateVal,
+    },
+  }
+}
+
+export const PagerStyles = {
   ...presets,
-  default: createPagerStyle((Theme) => {
-    const transition = {
-      duration: 500,
-      ease: 'easeInOut',
-      useNativeDriver: true,
-    }
+  default: createPagerStyle((theme) => ({
+    page: {
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      top: 0,
+    },
+  })),
+  horizontal: createPagerStyle((Theme) => {
 
-    return {
-      wrapper: {
-        ...Theme.presets.full,
-      },
-      'page:pose:next': {
-        left: Theme.values.width * 1.8,
-        transition: transition,
-      },
-      'page:pose:current': {
-        left: 0,
-        transition: transition,
-      },
-      'page:pose:previous': {
-        left: -Theme.values.width * 1.8,
-        transition: transition,
-      },
-      page: {
-        width: '100%',
-        height: '100%',
-      },
-    }
+    const width = Theme.values.width
+    const height = Theme.values.height * 0.8
+    return pagerAnimation(height, width, 'X')
   }),
-  pageless: createPagerStyle(() => ({})),
+  vertical: createPagerStyle((Theme) => {
+    const height = Theme.values.height * 0.8
+    const width = Theme.values.width
+    return pagerAnimation(height, width, 'Y')
+  }),
 }

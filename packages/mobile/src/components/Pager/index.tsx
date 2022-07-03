@@ -1,58 +1,52 @@
 import {
   ComponentVariants,
-  onUpdate,
   useDefaultComponentStyle,
-  useDebounce,
-  useCodeleapContext,
 } from '@codeleap/common'
 import React, {
-  forwardRef,
   ReactNode,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
 } from 'react'
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
-import { Animated } from '../Animated'
-import { Button } from '../Button'
 import { View } from '../View'
-import { Text } from '../Text'
-import { MobilePagerStyles, PagerComposition } from './styles'
-
+import { PagerStyles, PagerComposition } from './styles'
 export * from './styles'
 
+type PageProps = {
+  isLast: boolean
+  isFirst: boolean
+  isActive: boolean
+  isNext: boolean
+  page: number
+  index: number
+  isPrevious: boolean
+}
+
 export type PagerProps = {
-  variants?: ComponentVariants<typeof MobilePagerStyles>['variants']
+  variants?: ComponentVariants<typeof PagerStyles>['variants']
   styles?: StylesOf<PagerComposition>
+  children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
   page?: number
-  loop?: boolean
-  debug?: boolean
-  children?: ReactNode
-  onPageChange?: (page: number) => void
+  style?: any
+  setPage?: (page: number) => void
+  returnEarly?: boolean
+  renderPageWrapper?:React.FC<PageProps>
+  pageWrapperProps?: any
 }
 
-export type PagerRef = {
-  forward(by?: number): void
-  back(by?: number): void
-  to(index?: number): void
-}
-
-export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
+export const Pager:React.FC<PagerProps> = (pagerProps) => {
   const {
-    children,
+
     styles,
     variants,
-    page: propPage,
-    debug,
-    loop,
-    onPageChange,
+    page,
+    style = {},
+    returnEarly = true,
+    renderPageWrapper,
+    pageWrapperProps = {},
+    children,
   } = pagerProps
 
-  const [page, setPage] = useState(() => propPage ?? 0)
-
-  const variantStyles = useDefaultComponentStyle<'u:Pager', typeof MobilePagerStyles>(
+  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerStyles>(
     'u:Pager',
     {
       styles,
@@ -60,183 +54,68 @@ export const Pager = forwardRef<PagerRef, PagerProps>((pagerProps, ref) => {
       variants,
     },
   )
-  const { logger } = useCodeleapContext()
   const nChildren = React.Children.count(children)
 
   const lastPage = nChildren - 1
 
-  const pagerRef = useRef<PagerRef>({
-    forward: (by = 1) => {
-      setPage((currentPage) => {
-        if (currentPage < lastPage) {
-          return currentPage + by
-        } else if (loop) {
-          return by - 1
-        }
-        return currentPage
-      })
-    },
-    back: (by = 1) => {
-      setPage((currentPage) => {
-        if (currentPage > 0) {
-          return currentPage - by
-        } else if (loop) {
-          return nChildren - by
-        }
-        return currentPage
-      })
-    },
-    to: (n: number) => {
-      if (n >= 0 && n <= lastPage) {
-        setPage(n)
-      } else {
-        logger.warn(
-          'Attempted to go to a page which falls outside range',
-          { currentPage: page, attemptedToGoTo: n, pageRange: [0, lastPage] },
-          'Component',
-        )
+  const childArr = React.Children.toArray(children)
+
+  const WrapperComponent = renderPageWrapper || View
+
+  // Reamimated seems to glitch if this is not done
+  variantStyles = JSON.parse(JSON.stringify(variantStyles))
+
+  return (
+    <View style={[variantStyles.wrapper, style]} >
+      {
+        childArr.map((child:PagerProps['children'][number], index) => {
+          const isActive = index === page
+          const isLast = index === lastPage
+          const isFirst = index === 0
+          const isNext = index === page + 1
+          const isPrevious = index === page - 1
+          const shouldRender = isActive || isNext || isPrevious
+
+          if (!shouldRender && returnEarly) return null
+          let pos = 0
+
+          if (isActive) {
+            pos = 1
+          } else if (index > page) {
+            pos = 2
+          } else {
+            pos = 0
+          }
+
+          const pageProps = {
+            isLast,
+            isActive,
+            isFirst,
+            isNext,
+            isPrevious,
+            index,
+            page,
+          }
+
+          const content = typeof child === 'function' ? child(pageProps) : child
+
+          const wrapperProps = {
+            key: index,
+            style: variantStyles.page,
+            animated: true,
+            transition: variantStyles['page:transition'],
+            animate: [variantStyles['page:previous'], variantStyles['page:current'], variantStyles['page:next']][pos],
+            ...pageWrapperProps,
+          }
+
+          return (
+            <WrapperComponent {...wrapperProps}>
+              {content}
+            </WrapperComponent>
+          )
+
+        })
       }
-    },
-  })
-
-  onUpdate(() => {
-    onPageChange?.(page)
-  }, [page])
-
-  onUpdate(() => {
-    if (typeof propPage === 'number') {
-      setPage(propPage)
-    }
-  }, [propPage])
-
-  useImperativeHandle(ref, () => pagerRef.current)
-
-  const pagePoses = useMemo(() => {
-    return {
-      current: variantStyles['page:pose:current'],
-      next: variantStyles['page:pose:next'],
-      previous: variantStyles['page:pose:previous'],
-    }
-  }, [variantStyles])
-
-  return (
-    <View style={variantStyles.wrapper}>
-      {React.Children.map(children, (child, idx) => (
-        <Page
-          {...pagerProps}
-          idx={idx}
-          lastPage={lastPage}
-          pagePoses={pagePoses}
-          style={[variantStyles.page]}
-          page={page}
-        >
-          {child}
-        </Page>
-      ))}
-
-      {debug && (
-        <View
-          variants={['absolute']}
-          style={{ bottom: 0, left: 0, right: 0 }}
-        >
-          <Button text='previous' debugName='Previous Pager' onPress={pagerRef.current.back} />
-          <Text text={page.toString()} />
-          <Button text='next' debugName='Next Pager' onPress={pagerRef.current.forward} />
-        </View>
-      )}
     </View>
-
   )
-})
-type PageProps = PagerProps & {
-  idx: number
-  lastPage: number
-  page: number
-  pagePoses: any
-  style: any
-}
-const Page: React.FC<PageProps> = (pageProps) => {
-  const {
-    children: child,
-    idx,
-    loop,
-    lastPage,
-    page,
-    style,
-    pagePoses,
-  } = pageProps
-
-  if (!React.isValidElement(child)) return null
-
-  // const isLast = idx === lastPage
-  // const isFirst = idx === 0
-
-  // const isLoopNext = (loop && isFirst && page === lastPage)
-  // const isLoopPrevious = (loop && isLast && page === 0)
-
-  // const isCurrent = idx === page
-  // const isSequenceNext = idx ===  page + 1
-  // const isSequencePrevious = idx ===  page  - 1
-
-  // const isNext = isSequenceNext || isLoopNext
-
-  // const isPrevious = isSequencePrevious || isLoopPrevious
-
-  // const isCurrentOrAdjacent = [
-  //     isCurrent,
-  //     isNext,
-  //     isPrevious
-  // ].includes(true)
-
-  // if(isCurrentOrAdjacent){
-  //     return <Animated
-  //         key={idx}
-  //         component='View'
-  //         config={pagePoses}
-  //         pose={isCurrent ? 'current' : (isNext ? 'next' : 'previous')}
-  //         style={[{
-  //             position: 'absolute',
-  //             top: 0,
-
-  //         },style]}
-  //     >
-  //         {child}
-  //     </Animated>
-  // }
-  const isCurrent = idx === page
-  const isNext = idx > page
-  const [_opacity, setOpacity] = useState(isCurrent ? 1 : 0)
-
-  const [opacity, resetDebounceTimer] = useDebounce(_opacity, 800)
-
-  onUpdate(() => {
-    if (isCurrent) {
-      setOpacity(1)
-    } else {
-      setOpacity(0)
-    }
-
-    return resetDebounceTimer
-  }, [idx, page])
-
-  return (
-    <Animated
-      key={idx}
-      component='View'
-      config={pagePoses}
-      pose={isCurrent ? 'current' : isNext ? 'next' : 'previous'}
-      style={[
-        {
-          position: 'absolute',
-          top: 0,
-          opacity: isCurrent ? _opacity : opacity,
-        },
-        style,
-      ]}
-    >
-      {child}
-    </Animated>
-  )
-
-  // return <View style={{display:'none'}} key={idx}>{child}</View>
 }

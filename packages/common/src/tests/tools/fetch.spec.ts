@@ -18,11 +18,11 @@ describe('RequestClient', () => {
     const req = api.get('/api?results=1')
     req
       .then((response) => {
-        console.log(response.statusText)
+        // console.log(response.statusText)
         done()
       })
       .catch(({ failedRequest }) => {
-        console.log('aaaaaaaaaa', failedRequest)
+        // console.log('aaaaaaaaaa', failedRequest)
         expect(failedRequest.errorReason).to.eq('REQUEST_ABORTED')
         done()
       })
@@ -37,7 +37,7 @@ describe('RequestClient', () => {
 
     req2
       .then((res) => {
-        console.log('then', res.data)
+        // console.log('then', res.data)
         done()
       })
       .catch((err) => {
@@ -53,9 +53,9 @@ describe('RequestClient', () => {
       baseURL: '',
       multipart: true,
     }).then((a) => {
-      console.log(a)
+      // console.log(a)
     }).catch(a => {
-      console.log(a)
+      // console.log(a)
     })
 
   })

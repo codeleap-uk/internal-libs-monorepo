@@ -7,10 +7,10 @@ import { ReactElement } from 'react'
 import { StylesOf } from '../../types/utility'
 import { ButtonProps } from '../Button'
 import { TextInputProps } from '../TextInput'
-import { MobileSelectComposition, MobileSelectStyles } from './styles'
+import { SelectComposition, SelectStyles } from './styles'
 
 export type SelectRenderFNProps<T> = FormTypes.Options<T>[number] & {
-  styles: StylesOf<MobileSelectComposition>
+  styles: StylesOf<SelectComposition>
   onPress: () => void
   selected?: boolean
   index: number
@@ -26,7 +26,7 @@ export type CustomSelectProps<T> = {
     onDropdownToggle?: (isOpen?: boolean) => void
     onValueChange?: (value: T) => void
     renderItem?: SelectRenderFN<T>
-    styles?: StylesOf<MobileSelectComposition>
+    styles?: StylesOf<SelectComposition>
     style?: any
     arrowIconName?: IconPlaceholder
     scroll?: boolean
@@ -42,5 +42,5 @@ export type CustomSelectProps<T> = {
     toggle: (isOpen?: boolean) => void
     visible: boolean
     renderList?: (props:CustomSelectProps<T> & {isEmpty: boolean}) => JSX.Element
-  } & ComponentVariants<typeof MobileSelectStyles> & TextInputProps
+  } & ComponentVariants<typeof SelectStyles> & TextInputProps
 

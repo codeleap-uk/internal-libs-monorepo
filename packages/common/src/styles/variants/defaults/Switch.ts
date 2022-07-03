@@ -1,4 +1,3 @@
-import shadeColor from '../../../utils/shadeColor'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
 type SwitchParts = 'wrapper' | 'label' | 'input' | 'error' | 'inputWrapper'
