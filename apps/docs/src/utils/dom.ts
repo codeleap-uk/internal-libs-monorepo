@@ -17,7 +17,7 @@ export function copyToClipboard(text:string) {
   try {
     const successful = document.execCommand('copy')
     const msg = successful ? 'successful' : 'unsuccessful'
-    alert('Copy text command was ' + msg)
+
   } catch (err) {
     alert('Unable to copy')
   }

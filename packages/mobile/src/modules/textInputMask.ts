@@ -7,3 +7,5 @@ import { TextInputMaskProps } from './types/textInputMask'
 export const MaskedTextInput = TextInputMask as unknown as React.ForwardRefExoticComponent<TextInputMaskProps & {
     ref?: any
 }>
+
+export * from './types/textInputMask'

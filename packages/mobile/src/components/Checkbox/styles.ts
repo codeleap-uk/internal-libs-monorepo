@@ -9,18 +9,18 @@ type CheckboxParts =
   | 'checkmarkWrapper'
   | 'error'
 
-export type MobileCheckboxComposition =
+export type CheckboxComposition =
   | CheckboxParts
   | `${CheckboxParts}:checked`
   | `${CheckboxParts}:disabled`
   | `${CheckboxParts}:error`
 const createCheckboxStyle =
-  createDefaultVariantFactory<MobileCheckboxComposition>()
+  createDefaultVariantFactory<CheckboxComposition>()
 
 const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })),
 )
 
-export const MobileCheckboxStyles = {
+export const CheckboxStyles = {
   ...presets,
   default: createCheckboxStyle((theme) => {
     const size = theme.typography.baseFontSize * 1.2

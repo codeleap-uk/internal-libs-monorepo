@@ -12,6 +12,8 @@ import {
 import { InputLabel } from '../TextInput'
 import { SliderProps } from './types'
 
+export * from './styles'
+
 export const Slider: React.FC<SliderProps> = (sliderProps) => {
   const [tooltipVisible, setTooltipVisible] = React.useState(false)
 

@@ -9,7 +9,6 @@ import {
   IconPlaceholder,
   Spacing,
 } from '../types'
-import { DEFAULT_VARIANTS } from './defaults'
 import {
   ComponentVariants,
   FunctionType,
@@ -37,6 +36,9 @@ export type FromVariantsBuilder<S, T extends DefaultVariantBuilder<S>> = {
   [Property in keyof T]: ReturnType<T[Property]>;
 }
 
+export type VariantStyleSheet<C extends string, > = Record<C, DefaultVariantBuilder>
+export type ComponentVariantsDefinition = Record<string, VariantStyleSheet<string>>
+
 export type VariantProp<T = CommonVariantObject> =
   | string
   | (keyof T | Spacing | `d:${string}` | boolean | null | undefined | '')[]
@@ -51,7 +53,7 @@ export type ResponsiveVariantsProp<
 export type GetStylesArgs<
   VariantObject extends CommonVariantObject,
   Theme extends EnhancedTheme<any>,
-  Root,
+  Root extends string|number|symbol,
 > = [
   styles: VariantObject,
   options: {
@@ -120,7 +122,7 @@ export type TypedComponents<
         | ComponentVariants<T[Property][1], Theme>
         | ComponentVariants<T[Property][1]>
       >
-    : Property extends keyof DEFAULT_VARIANTS
+    : Property extends string
     ? ReplaceProps<
         T[Property],
         Theme,

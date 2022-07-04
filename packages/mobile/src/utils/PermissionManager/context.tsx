@@ -29,15 +29,15 @@ export function Provider({ children, AppPermissions, modalConfig }:PermissionPro
 
   onMount(() => {
 
-    AppState.addEventListener('focus', () => {
-
-      AppPermissions.update().then((vals) => {
-        const statuses = getStatuses(vals)
-        if (!deepEqual(statuses, state)) {
-          setState({ ...statuses })
-        }
-
-      })
+    AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        AppPermissions.update().then((vals) => {
+          const statuses = getStatuses(vals)
+          if (!deepEqual(statuses, state)) {
+            setState({ ...statuses })
+          }
+        })
+      }
     })
 
   })

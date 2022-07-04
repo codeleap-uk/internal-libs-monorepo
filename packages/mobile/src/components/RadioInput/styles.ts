@@ -1,35 +1,30 @@
 import {
-  createDefaultVariantFactory,
-  RadioInputStyles,
+  createDefaultVariantFactory, includePresets,
 } from '@codeleap/common'
 type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark'
 
 type RadioGroupParts = 'label' | 'wrapper' | 'list'
 
-export type MobileRadioInputComposition =
+export type RadioInputComposition =
   | `${RadioParts}:checked`
   | RadioParts
   | RadioGroupParts
 
 const createRadioStyle =
-  createDefaultVariantFactory<MobileRadioInputComposition>()
+  createDefaultVariantFactory<RadioInputComposition>()
 
-const defaultStyles = RadioInputStyles.default
+const presets = includePresets(style => createRadioStyle(() => ({ wrapper: style })))
 
-export const MobileRadioInputStyles = {
-  ...RadioInputStyles,
+export const RadioInputStyles = {
+  ...presets,
   default: createRadioStyle((theme) => {
-    const style = defaultStyles(theme)
 
     const itemHeight = theme.typography.baseFontSize * 1.2
     const markHeight = itemHeight / 2
     const translateX = -(markHeight / 2)
     const translateY = -(markHeight / 2)
     return {
-      ...style,
-      itemWrapper: {
-        ...style.itemWrapper,
-      },
+
       button: {
         height: itemHeight,
         width: itemHeight,

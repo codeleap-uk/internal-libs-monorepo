@@ -48,7 +48,7 @@ export const TextInputStyles = {
       flex: 1,
     },
     placeholder: {
-      color: theme.colors.lightGrey,
+      color: theme.colors.lightGray,
     },
     selection: {
       color: theme.colors.primary,

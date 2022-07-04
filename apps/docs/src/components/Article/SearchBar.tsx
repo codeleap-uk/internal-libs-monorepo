@@ -62,10 +62,7 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
 
   useClickOutside(() => {
     setFocus(false)
-  }, {
-    deps: [],
-    customId: 'SearchBar',
-  })
+  }, [])
 
   onUpdate(() => {
     if (debouncedSearch.length) {
@@ -104,7 +101,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     ...theme.spacing.marginRight('auto'),
     ...theme.presets.relative,
     flex: 0.6,
-    [theme.media.down('small')]: {
+    [theme.media.down('mid')]: {
       order: -2,
       ...theme.spacing.marginHorizontal(1),
       ...theme.spacing.marginVertical(2),

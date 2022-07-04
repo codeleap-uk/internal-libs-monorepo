@@ -6,9 +6,10 @@ import { Scroll } from '../Scroll'
 import { InputLabel, TextInput } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { AnimatedView, View } from '../View'
-import { MobileSelectStyles } from './styles'
+import { SelectStyles } from './styles'
 import { CustomSelectProps } from './types'
 
+export * from './styles'
 export const Select = <T extends string|number = string>(selectProps:CustomSelectProps<T>) => {
   const {
     value,
@@ -42,7 +43,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
   const isModalVisible = visible ?? _isModalVisible
   const setModalVisibility = toggle ?? _setModalVisibility
 
-  const variantStyles = useDefaultComponentStyle<'u:MobileSelect', typeof MobileSelectStyles>('u:MobileSelect', {
+  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectStyles>('u:Select', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,

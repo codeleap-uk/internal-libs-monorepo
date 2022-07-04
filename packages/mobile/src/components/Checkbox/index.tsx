@@ -5,6 +5,8 @@ import {
   StylesOf,
   Form,
   useValidate,
+  GetRefType,
+  PropsOf,
 } from '@codeleap/common'
 import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
 import { Switch as NativeCheckbox } from 'react-native'
@@ -12,8 +14,8 @@ import { InputLabel, FormError } from '../TextInput'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
 import {
-  MobileCheckboxStyles as CheckboxStyles,
-  MobileCheckboxComposition as CheckboxComposition,
+  CheckboxStyles,
+  CheckboxComposition,
 } from './styles'
 export * from './styles'
 
@@ -29,7 +31,7 @@ type CheckboxProps = NativeCheckboxProps & {
   required?: boolean
 }
 
-export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
+export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, CheckboxProps>(
   (checkboxProps, ref) => {
     const {
       variants = [],
@@ -65,7 +67,7 @@ export const Checkbox = forwardRef<NativeCheckbox, CheckboxProps>(
     }
 
     return (
-      <View style={getStyles('wrapper')} {...props}>
+      <View style={getStyles('wrapper')} ref={ref} {...props}>
         <Touchable
           debugName={`Set checkbox value to ${!value}`}
           style={getStyles('input')}

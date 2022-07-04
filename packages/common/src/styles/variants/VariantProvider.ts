@@ -4,6 +4,7 @@ import {
   GetStylesArgs,
   ComponentStyleMap,
   TypedComponents,
+  DefaultVariantBuilder,
 } from './types'
 import { mapVariants, standardizeVariants, applyVariants } from './utils'
 import { DefaultVariants, DEFAULT_VARIANTS, DEFAULT_STYLES } from './defaults'
@@ -151,11 +152,11 @@ export class VariantProvider<
     }
   }
 
-  getStyles<VariantObject extends CommonVariantObject<any, CSSIn>>(
+  getStyles<VariantObject extends DefaultVariantBuilder, Comp extends keyof ReturnType<VariantObject[keyof VariantObject]> = keyof ReturnType<VariantObject[keyof VariantObject]>>(
     ...args: GetStylesArgs<
       VariantObject,
       Theme,
-      keyof VariantObject[keyof VariantObject]
+      Comp
     >
   ) {
     const [
@@ -212,11 +213,11 @@ export class VariantProvider<
           k,
           this.createStylesheet({ ...v, ...override?.[k] }),
         ]),
-      ) as Record<NestedKeys<VariantObject>, CSSOut>
+      ) as Record<Comp, CSSOut>
       return appliableStyles
     } catch (e) {
       this.logger.error(`Error on getStyles for Component ${debugName} \n${variantList.join('\n')}\n` + debugName, e, SCOPE)
-      return {}
+      return {} as Record<Comp, CSSOut>
     }
   }
 

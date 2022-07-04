@@ -12,7 +12,9 @@ type Node = {
 
 function mapSections(content) {
   const nodes:Node[] = []
-
+  if (!Array.isArray(content)) {
+    content = [content]
+  }
   content.forEach(({ props }) => {
     const lastNode = nodes[nodes.length - 1]
     if (headings.includes(props?.mdxType)) {
@@ -84,8 +86,8 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
       directions: ['left'],
     }),
     ...theme.spacing.gap(2),
-    flexBasis: '16%',
-    [theme.media.down('small')]: {
+    flexBasis: '25%',
+    [theme.media.down('mid')]: {
       position: 'static',
       order: -1,
       ...theme.border.grayFade({

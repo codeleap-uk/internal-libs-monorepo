@@ -1,213 +1,78 @@
-# Codeleap libs
+# Codeleap Libraries
 
-This repository includes:
+This repository contains component and utility abstractions to make our work on projects easier, as well as templates for getting started with new projects or for reference on how to use a certain feature.
 
-- Web and mobile templates (as submodules), located on the /apps directory
-- Common, Config, and Web packages on the /packages directory
+Read the docs at [docs.codeleap.co.uk/](docs.codeleap.co.uk/)
 
-## What does each package do?
+## Libraries
 
-- Common : Includes utilities for theming, variant creation, data fetching, redux logic, and logging
-- Web : Web react components/specific utilities
-- Config : Common ESLint and vscode configs
+- @codeleap/common: Includes the styling system, redux, api, form and permission APIs as well as some miscellaneous utilities.
+- @codeleap/mobile: Components for react-native, along with some systems specific to mobile platforms such as the permission and OSAlert modules.
+- @codeleap/web: Components for websites, with various APIs for DOM manipulation and simplifying the process of making a Gatsby website.
 
-## How do I work on it?
+## Templates and examples
 
-After cloning the repo:
+Both the web and mobile templates include examples of API usage for their respective library and the @codeleap/common package.
+
+## Contributing
+
+This repository utilizes `yarn workspaces` along with `turborepo` for package/build management. The templates are tracked through git submodules, to allow simple cloning for new projects.
+
+### Setup
 
 ```bash
-git submodule update --init --recursive # pull the submodules for templates
-yarn # install dependencies
-yarn dev # runs gatsby
+git clone https://github.com/codeleap-uk/internal-libs-monorepo
+
+cd internal-libs-monorepo
+
+# Install dependencies
+yarn
+
+# Builds local versions of libraries
+yarn build
+
+# Pulls git submodules for templates
+git submodule update --init --recursive
+
+
+# To build the app for android. Substitute android for 'ios' to run on apple devices
+yarn mobile android
+
+# To run the gatsby website
+yarn web dev
 ```
 
-### If you're making components
+Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save]() extension for a smoother development experience. You can also just run `yarn build` again.
 
-Add them to packages/web/src/components. The structure of components is as follows:
+### Updating the documentation
 
-```jsx
-/** @jsx jsx */
-import { jsx } from '@emotion/react' // This lets you pass the css prop for styling
+All pages for the docs website use mdx, a mix between markdown and react's jsx. The articles themselves are located at `apps/docs/src/articles`. The frontmatter at the start of each file defines it's metadata, such as which module it belongs to (common,mobile,web), the path it will have under the respective module's url, and the title among other things such as the category (used for sidebar).
 
-import {
-    useDefaultComponentStyle,
-    ButtonStyles,
-    ComponentVariants,
-    ButtonComposition,
-    IconPlaceholder,
-    useCodeleapContext
-} from '@codeleap/common'; // Import styling hooks and component typings for variants
-
-import React, { ComponentPropsWithRef } from 'react' // More typings
-
-import { StylesOf } from '../types/utility'; // Even more typings
-
-// You can compose components out of other components
-import { Text } from './Text';
-import { Touchable } from './Touchable';
-import { Icon } from './Icon';
-import { ActivityIndicator } from './ActivityIndicator';
-
-// These are the props of the native html button
-type NativeButtonProps = ComponentPropsWithRef<'button'>
-
-
-export type ButtonProps =
-    NativeButtonProps &  // ButtonProps extends the native button props
-    ComponentVariants<typeof ButtonStyles>  & // Grabs 'variants' and 'responsiveVariants' prop typings for the button
-    {
-        styles?: StylesOf<ButtonComposition> // Style override prop for each part of the button
-
-        text?:string
-        rightIcon?: IconPlaceholder // Just regular props
-        icon?: IconPlaceholder
-        onPress:NativeButtonProps['onClick']
-        loading?: boolean
-    }
-
-
-export const Button:React.FC<ButtonProps> = (buttonProps) => {
-  const {
-    variants = [],
-    responsiveVariants = {},
-    children,
-    icon,
-    text,
-    loading,
-    styles,
-    onPress,
-    rightIcon,
-    ...props
-  } = buttonProps
-
-  // This aggregates the variants and style overrides passed to the component
-  const variantStyles = useDefaultComponentStyle('Button', {
-    responsiveVariants,
-    variants,
-    styles,
-  })
-
-
-  function handlePress(e:Parameters<ButtonProps['onPress']>[0]){
-    props.onClick && props.onClick(e)
-    onPress && onPress(e)
-  }
-
-
-  return (
-    <Touchable
-      css={variantStyles.wrapper} // variantStyles separates styles for each part of the component
-      component='button'
-      onClick={handlePress}
-      {...props}
-    >
-      {loading && <ActivityIndicator css={variantStyles.loader} />}
-      {!loading && <Icon name={icon} style={{...variantStyles.icon, ...variantStyles.leftIcon}}/>}
-      {children || <Text text={text} styles={{
-        text: variantStyles.text,
-      }}/>}
-      <Icon name={rightIcon} style={{...variantStyles.icon, ...variantStyles.rightIcon}}/>
-    </Touchable>
-  )
-}
+```mdx
+---
+path: 'permissions/solution'
+title: 'Our current solution'
+date: '2022-06-30'
+category: Permissions
+module: mobile
+index: 1
+---
 ```
 
-Export the Button in `components/index.ts`
+### Submitting your changes
 
-```jsx
-export * from "./Button";
-```
+Please open a PR with an appropiatly named branch in the format `{scope}/{feature}`, where:
 
-In the web template, make sure the Component is re exported with correct typings and variants in `app/components.tsx`, like so:
+- `scope` is one of:
+  - mobile: for changes to the mobile package or template
+  - web: for changes to the web package or template
+  - common: for changes to the common package
+- `feature` is a simplified description of your changes
 
-```jsx
-import * as Components from "@codeleap/web";
+PRs will be integrated/approved with the following criteria in mind:
 
-import { Image as AppImage } from "@/lib/components/Image";
+- What problem does the change solve?
+- How difficult is it to integrate in existing apps?
+- Does it provide both good UX and DX?
 
-export const variants = {
-  ...defaultStyles,
-};
-
-export const components = variantProvider.typeComponents({
-  Button: [Components.Button, defaultStyles.Button],
-});
-
-export const { Button } = components;
-```
-
-If you wish to override the default style:
-
-```jsx
-// app/stylesheets/Button.ts
-import { ButtonComposition } from '@codeleap/common'
-import { Theme, variantProvider } from '../theme'
-
-const defaultStyle = variantProvider.getDefaultVariants('Button')
-
-const createButtonVariant = variantProvider.createVariantFactory<ButtonComposition>()
-
-export const AppButtonStyle = {
-  ...defaultStyle,
-  default: createButtonVariant({
-    ...defaultStyle.default,
-    'wrapper': {
-      ...defaultStyle.default.wrapper,
-      ...defaultStyle.pill.wrapper,
-
-      ':active': {
-        transform: 'scale(0.9)',
-      },
-    },
-    icon: {
-      ...Theme.spacing.marginLeft(1),
-    },
-  }),
-  primary: createButtonVariant({
-    wrapper: {
-      backgroundColor: Theme.colors.primary,
-    },
-    text: {
-      color: Theme.colors.white,
-    },
-    icon: {
-      color: Theme.colors.white,
-      width: 24,
-      height: 24,
-    },
-  }),
-}
-
-// app/components.tsx
-import * as Components from '@codeleap/web';
-import { AppButtonStyle } from './stylesheets/Button'
-import { Image as AppImage } from '@/lib/components/Image'
-
-export const variants = {
-  ...defaultStyles,
-  Button: AppButtonStyle // set it here
-}
-
-export const components = variantProvider.typeComponents({
-  Button: [Components.Button, AppButtonStyle], // and here
-})
-
-
-export const {
-  Button
-} = components
-
-```
-
-## To push your code
-
-```
-cd apps/codeleap-web-template
-git add
-git commit -m "something"
-git push origin some-branch
-```
-
-This will push the submodule to update it's remote repository
-
-The parent folder follows standard commit procedures, just remember to commit the submodules first
+Please include this in the description of the PR to make discussion easier. 

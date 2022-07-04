@@ -11,9 +11,9 @@ import {
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import {
-  MobileModalComposition,
-  MobileModalStyles,
-  MobileModalParts,
+  ModalComposition,
+  ModalStyles,
+  ModalParts,
 } from './styles'
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
@@ -22,12 +22,13 @@ import { useDynamicAnimation } from 'moti'
 import { Backdrop } from '../Backdrop'
 import { useStaticAnimationStyles } from '../../utils/hooks'
 import { Text } from '../Text'
+import { Touchable } from '../Touchable'
 
 export * from './styles'
 
 export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
-  variants?: ComponentVariants<typeof MobileModalStyles>['variants']
-  styles?: StylesOf<MobileModalComposition>
+  variants?: ComponentVariants<typeof ModalStyles>['variants']
+  styles?: StylesOf<ModalComposition>
   dismissOnBackdrop?: boolean
   buttonProps?: ButtonProps
   accessible?: boolean
@@ -70,7 +71,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     styles,
   }) as ModalProps['styles']
 
-  function getStyles(key: MobileModalParts) {
+  function getStyles(key: ModalParts) {
     const s = [
       variantStyles[key],
       styles[key],
@@ -93,20 +94,27 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   return (
     <View style={[wrapperStyle, { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex }]} pointerEvents={visible ? 'auto' : 'none'}>
 
+      <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
+        'wrapper:hidden': variantStyles['backdrop:hidden'],
+        'wrapper:visible': variantStyles['backdrop:visible'],
+        wrapper: variantStyles.backdrop,
+      }}
+      wrapperProps={{
+        transition: { ...variantStyles['backdrop:transition'] },
+      }}
+      />
       <Scroll
         style={getStyles('innerWrapper')}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
         keyboardAware={keyboardAware}
       >
-        <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
-          'wrapper:hidden': variantStyles['backdrop:hidden'],
-          'wrapper:visible': variantStyles['backdrop:visible'],
-          wrapper: variantStyles.backdrop,
-        }} onPress={(dismissOnBackdrop && closable) ? toggle : (() => {})}
-        wrapperProps={{
-          transition: { ...variantStyles['backdrop:transition'] },
-        }}
+        <Touchable
+          feedbackVariant='none'
+          onPress={(dismissOnBackdrop && closable) ? toggle : (() => {})}
+          debugName={'Modal backdrop touchable'}
+          style={variantStyles.backdropTouchable}
+          android_ripple={null}
         />
         <View
           animated

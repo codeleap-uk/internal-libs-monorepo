@@ -1,7 +1,7 @@
 import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react'
 import { Scroll, ScrollProps } from '../Scroll'
 
-import { Easing, EasingFunction, StyleSheet } from 'react-native'
+import { EasingFunction, StyleSheet } from 'react-native'
 import { PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlStyles } from './styles'
 import { Touchable } from '../Touchable'

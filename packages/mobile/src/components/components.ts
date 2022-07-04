@@ -20,12 +20,16 @@ export * from './List'
 export * from './ActivityIndicator'
 export * from './Button'
 export * from './ContentView'
-export * from './Overlay'
 export * from './Modal'
 
-export * from './NewPager'
 export * from './Navigation'
 export * from './Pager'
 export * from './EmptyPlaceholder'
-export * from './Gap'
 export * from './Backdrop'
+
+import * as Legacy from './legacy'
+export {
+  Legacy,
+}
+
+export * from './defaultStyles'

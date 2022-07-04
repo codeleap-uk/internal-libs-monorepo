@@ -12,7 +12,6 @@ export const globalStyle = css`
     #gatsby-focus-wrapper {
       height: 100vh;
       min-height: 100vh;
-      background-color: ${Theme.colors.b};
       overflow-x: hidden;
     }
   */
@@ -21,15 +20,13 @@ export const globalStyle = css`
   }
   
   .code_style {
-    align-self: stretch;
+    
     padding: 20px;
     border-radius: 5px;
     position: relative;
-    max-width: 62vw;
-    ${Theme.media.down('small')} {
-      max-width: 96vw;
-      overflow-x: auto;
-    }
+    
+
+    
   }
 
   

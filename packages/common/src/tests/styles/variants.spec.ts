@@ -1,21 +1,9 @@
 import { expect } from 'chai'
-import { createTheme, VariantProvider } from '../..'
+import { createTheme, VariantProvider, includePresets } from '../..'
+import { themeObj } from '../../mocks/theme'
 
 const theme = createTheme(
-  {
-    breakpoints: {
-      xs: 576,
-      xxs: 10,
-    },
-    colors: {
-      primary: 'red',
-    },
-    spacing: 10,
-    baseFontSize: 16,
-    borderRadius: 10,
-    icons: {},
-    fontFamily: 'Arial, sans-serif',
-  },
+  themeObj,
   {
     screenSize: () => screenSize,
   },
@@ -30,72 +18,82 @@ const createButtonVariant = variantProvider.createVariantFactory<
   'text' | 'wrapper' | 'innerWrapper'
 >()
 
+const presets = includePresets(s => createButtonVariant(() => ({ wrapper: s })))
 const ButtonStyles = {
-  ...defaultStyles.Button,
-  outline: createButtonVariant({
+  ...presets,
+  outline: createButtonVariant(() => ({
     ...defaultStyles.Button.centerRow,
     wrapper: {
-      ...defaultStyles.Button.whole.inner,
       color: 'green',
     },
-  }),
-  fill: createButtonVariant({
+  })),
+  fill: createButtonVariant(() => ({
     text: {},
     innerWrapper: {},
     wrapper: {
       color: 'blue',
       ...theme.spacing.margin(3),
     },
-  }),
+  })),
 }
 
 describe('Variants', () => {
   it('should say the color is green', () => {
     const styles = variantProvider.getStyles(
       ButtonStyles,
-      ['outline'],
-      'wrapper',
+      {
+        variants: ['outline'],
+        rootElement: 'wrapper',
+      },
     )
-    console.log('outline', styles)
+
     expect(styles.wrapper.color).to.eq('green')
   })
 
   it('should use fill variant due to screen size', () => {
     const styles = variantProvider.getStyles(
       ButtonStyles,
-      ['outline', 'marginBottom:1', 'marginBottom:11'],
-      'wrapper',
       {
-        xs: ['fill'],
+        variants: ['outline', 'marginBottom:1', 'marginBottom:11'],
+        debugName: '',
+        rootElement: 'wrapper',
+        responsiveVariants: {
+          xs: ['fill'],
+        },
       },
+
     )
-    console.log('fill', styles)
+
     expect(styles.wrapper.color).to.eq('blue')
   })
 
   it('should work with string', () => {
     const styles = variantProvider.getStyles(
       ButtonStyles,
-      'outline marginBottom:2.5',
-      'wrapper',
       {
-        xs: 'fill',
+        variants: 'outline marginBottom:2.5',
+        rootElement: 'wrapper',
+        responsiveVariants: {
+          xs: 'fill',
+        },
       },
     )
-    console.log('fill', styles)
+
     expect(styles.wrapper.color).to.eq('blue')
   })
 
   it('should accept variant from presets', () => {
     const styles = variantProvider.getStyles(
       ButtonStyles,
-      ['alignStart'],
-      'wrapper',
       {
-        xs: 'fill',
+        variants: ['alignStart'],
+        rootElement: 'wrapper',
+        responsiveVariants: {
+          xs: 'fill',
+        },
       },
     )
-    console.log(styles.wrapper)
+
     expect(styles.wrapper.alignItems).to.eq('flex-start')
   })
 })

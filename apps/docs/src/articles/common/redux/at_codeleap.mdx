@@ -1,0 +1,167 @@
+---
+path: 'redux/redux_at_codeleap'
+title: 'Our custom redux abstraction'
+date: '2022-07-03'
+category: Redux
+module: common
+index: 0
+---
+
+> INFO This article assumes you know the basic data flow and structure of redux. [Read the docs](https://redux.js.org/tutorials/fundamentals/part-1-overview) if you don't, or just need to remember.
+
+# Why it's abstracted in the first place
+
+The store+reducer+actions structure used by redux is unquestionably a great way to manage global state in a predictable and scalable fashion. However, it's adoption causes the codebase to become cluttered with boilerplate code and allows for plenty of developer error(when specifying action types for example). 
+
+Redux toolkit solves both of these issues (and some others), but doesn't include a simple way to handle asynchronous operations inside actions, as evidenced by [this](https://redux.js.org/usage/writing-logic-thunks#using-createasyncthunk) part of the redux toolkit docs.
+
+The redux team have also create Redux toolkit query, which aims to solve the problem described in the paragraph above. It's problem is that it's too opinionated, and does not allow ease of use when dispatching actions outside of components, which is a surprisingly convenient feature to have when developing apps with lots of third-party libraries and concurrent operations.
+
+With these issues in mind, Codeleap's flavor of redux was created.
+
+# The recipe
+
+These are the problems we need to solve:
+
+1. Reduce boilerplate code as much as possible.
+2. Provide an easy, standardized way to handle both synchronous and asynchronous operations when it comes to actions
+3. Typesafety, as global state may easily cause problems when data types change and a part of the application is not adapted to support those changes.
+4. Lack of opinion. Our API must not tell the developer how can or cannot structure/alter his state, it must only provide tools to do so.
+5. Extensiblity: There are loads of plugins for redux, the API must support these plugins either through middlewares or hooks.
+6. Reduce the possibility of developer error, be that through typescript, or removing the need to structure the basic components of redux.
+
+Quite the easy challenge no?
+
+Well, maybe there's a better way to solve it, but this is the best solution we came up with it. It's heavily inspired by Redux toolkit, and actually uses some of it's types.
+
+> NOTE The code below won't walk you through the implementation details, but if you wish to dive deeper, look [here](https://github.com/codeleap-uk/internal-libs-monorepo/tree/master/packages/common/src/tools/Redux).
+
+> TIP In a real world scenario, the example below would be best solved by using react-query, but it's made this way to conform to the most common examples of CRUD architecture.
+
+```typescript
+// redux/todos.ts
+import {ApiClient} from '@/services'
+import { createSlice } from '@codeleap/common'
+
+export type Todo = {
+  id: number
+  created_datetime: string
+  title: string
+  note: string
+}
+
+type TodosState = {
+  todos: Todo[]
+  loading: boolean
+  error: {
+    message: string
+  } | null
+}
+
+const initialState: TodosState = {
+  todos: [],
+  loading: false,
+  error: null,
+}
+
+type PaginationParams = {
+    limit?: number
+    offset?: number
+}
+
+// The createSlice function is simply  a wrapper around redux's dispatch, which creates an internal reducer to match action types the functions specified withing "reducers" and "asyncReducers"
+export const todosSlice = createSlice({
+  name: 'Todos', // this is needed for creation of action names
+  initialState,
+  reducers: {
+    setTodo(state, value: Partial<Todo>){ // "value" here is the action's payload
+        const todoIdx = state.todos.findIndex(todo => todo.id === value.id)
+
+        const newTodos = [...state.todos]
+
+        newTodos[todoIdx] = value
+
+        return {
+            todos: newTodos
+        }
+    }
+  },
+  asyncReducers: {
+    list: async (state, setState, params: PaginationParams) => {
+         setState({
+            loading: true
+        })
+        const todos = ApiClient.todos.list(params)
+
+        setState({
+            todos: [...state.todos, ...todos],
+            loading: false
+        })
+    },
+    create: async (state, setState, params: Omit<Todo,'id'>) => {
+        setState({
+            loading: true
+        })
+
+        const newTodo = ApiClient.todos.create(params)
+
+        
+        setState({
+            todos: [...state.todos, newTodo],
+            loading: false
+        })
+
+     
+    }
+  }
+})
+
+// redux/index.ts
+
+import { createRedux } from '@codeleap/common'
+import { todosSlice } from './todos'
+import { TypedUseSelectorHook, useSelector } from 'react-redux'
+
+
+export const {
+  store,
+  actions: { Todos },
+} = createRedux({
+  Todos: todosSlice
+
+})
+
+export type RootState = ReturnType<typeof store.getState>
+
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
+```
+
+And use it in the component like so
+
+```jsx
+// TodoList.tsx
+import { useAppSelector, Todos, Todo } from '@/redux' // This is just an alias to the redux folder
+import { onMount } from '@codeleap/common'
+
+export const TodoList = () => {
+    const {todos} = useAppSelector(store => store.Todos)
+
+    onMount(() => {
+        Todos.list()
+    })
+
+    function createTodo(values: Todo){
+        Todos.create(values).then((newTodo) => {
+            console.log('New todo created', newTodo)
+        })
+    }
+
+    return <>
+        <TodoForm onSubmit={createTodo}/>
+        {todos.map(todo => <Todo item={todo} key={todo.id}/>)}
+    </>
+}
+```
+
+As you can see, there's still a lot of code, but it's significantly less verbose and complicated than redux, doesn't leave a lot of room for error, and integrates nicely with asynchronous API calls while providing maximum control to the developer

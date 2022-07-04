@@ -32,7 +32,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const { data } = await graphql(`
     {
-      allMdx(limit: 5, sort: { fields: [frontmatter___title], order: DESC }) {
+      allMdx( sort: { fields: [frontmatter___title], order: DESC }) {
         edges {
           node {
             fileAbsolutePath
@@ -73,6 +73,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       module: String
       next: String
       previous: String
+      index: Int
     }
   `
   createTypes(typeDefs)

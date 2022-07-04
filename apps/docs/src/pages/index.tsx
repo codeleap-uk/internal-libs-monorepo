@@ -65,11 +65,11 @@ const ListItem = ({ item, depth = 2, styles }) => {
           'flex',
         ]}
         responsiveVariants={{
-          small: [`marginLeft:0`],
+          mid: [`marginLeft:0`],
         }}
 
       >
-        <Text text={item.name} variants={['h1']} responsiveVariants={{ small: ['marginVertical:2'] }}/>
+        <Text text={item.name} variants={['h1']} responsiveVariants={{ mid: ['marginVertical:2'] }}/>
         <View variants={['gap:1', 'column', 'marginTop:3']}>
 
           {item.links.map((i) => (
@@ -112,7 +112,7 @@ const componentStyle = variantProvider.createComponentStyle((theme) => ({
     ...theme.spacing.marginBottom(9),
     width: '100vw',
     flexDirection: 'column',
-    [theme.media.down('small')]: {
+    [theme.media.down('mid')]: {
       gridTemplateColumns: 'repeat(1, 1fr)',
     },
   },

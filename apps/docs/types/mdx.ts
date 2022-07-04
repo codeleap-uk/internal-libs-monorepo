@@ -4,4 +4,5 @@ export type MdxMetadata = {
     date: string
     category: string
     module: string
+    index?: number
 }

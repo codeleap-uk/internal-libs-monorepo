@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { ReactNode, useRef, ComponentPropsWithoutRef } from 'react'
-import { v4 } from 'uuid'
+import { ReactNode, ComponentPropsWithoutRef } from 'react'
 
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
@@ -10,7 +9,7 @@ import {
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
-import { MobileRadioInputStyles, MobileRadioInputComposition } from './styles'
+import { RadioInputComposition, RadioInputStyles } from './styles'
 
 export * from './styles'
 
@@ -27,7 +26,7 @@ export type RadioButtonProps = Omit<
 > & {
   item: RadioItem
   select: () => void
-  style: StylesOf<MobileRadioInputComposition>
+  style: StylesOf<RadioInputComposition>
   checked: boolean
   defaultValue?: number
 }
@@ -37,8 +36,8 @@ export type RadioGroupProps<T> = {
   value: T
   onValueChange(value: T): void
   label: ReactNode
-  styles?: StylesOf<MobileRadioInputComposition>
-} & ComponentVariants<typeof MobileRadioInputStyles>
+  styles?: StylesOf<RadioInputComposition>
+} & ComponentVariants<typeof RadioInputStyles>
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
   item,

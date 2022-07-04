@@ -30,14 +30,15 @@ export function useClickOutside(
   const id = useRef(v4())
   const onClick = useCallback((e: Event) => {
     const element = document.getElementById(id.current)
-
+    if (!element) return
     let isInside = element.contains(e.target as Node) || ((e.target as HTMLElement).id === id.current)
 
     const iterNodes = (el:HTMLElement|Element) => {
       if (isInside) return
       for (let i = 0; i < el.children.length; i++) {
         const node = el.children.item(i)
-        console.log(node)
+        console.log({ node })
+        if (!node) return
         const _isInside = node.contains(e.target as Node)
         if (_isInside) {
           isInside = _isInside

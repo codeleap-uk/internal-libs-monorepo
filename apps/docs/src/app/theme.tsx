@@ -1,9 +1,7 @@
-import { AppTheme, createTheme, VariantProvider } from '@codeleap/common'
+import { createTheme, VariantProvider } from '@codeleap/common'
 import { textStyles } from './textStyles'
 import { CSSObject } from '@emotion/css'
 import { Icons } from './assets/icons'
-import { useWindowSize } from '@codeleap/web'
-import { LocalStorageKeys } from './constants'
 
 const IS_SSR = typeof window === 'undefined'
 
@@ -11,7 +9,7 @@ const getWindowDimensions = () => {
   if (IS_SSR) {
     return {
       height: 0,
-      widht: 0,
+      width: 0,
     }
 
   }
@@ -32,8 +30,8 @@ const themeObj = {
       background: '#ffffff',
       backgroundSecondary: '#fff',
       gray: '#333',
-      lightGrey: '#ccc',
-      veryLightGrey: '#f7f7f7',
+      lightGray: '#ccc',
+      veryLightGray: '#f7f7f7',
       negative: '#a11',
       positive: '#ada',
       secondary: '#000',
@@ -47,6 +45,11 @@ const themeObj = {
       textP: '#555',
       grayFade: '#5552',
       inlineCode: '#7695EC',
+      info: '#00b9f7',
+      danger: '#fc3c5c',
+      warning: '#fcfc41',
+      tip: '#6fb539',
+      note: '#5b5b5a',
     },
     dark: {
       primary: '#7695EC',
@@ -58,9 +61,9 @@ const themeObj = {
       backgroundSecondary: '#303030',
       gray: '#333',
       neutral: '#777777bb',
-      lightGrey: '#ccc',
+      lightGray: '#ccc',
       black: '#000',
-      veryLightGrey: '#f7f7f7',
+      veryLightGray: '#f7f7f7',
       negative: '#a11',
       positive: '#ada',
       secondary: '#000',
@@ -72,6 +75,11 @@ const themeObj = {
       textP: '#fff',
       grayFade: '#5552',
       inlineCode: '#7695EC',
+      info: '#00b9f7',
+      danger: '#fc3c5c',
+      warning: '#fcfc41',
+      tip: '#6fb539',
+      note: '#5b5b5a',
     },
   },
   breakpoints: {
@@ -139,8 +147,15 @@ const themeObj = {
   initialTheme: IS_SSR ? 'light' : (window.___savedTheme || 'light'),
 } as const
 
+let windowSize = [0, 0]
+
+export function setWindowSize(to: typeof windowSize) {
+
+  windowSize = to
+}
+
 const appTheme = createTheme(themeObj, {
-  screenSize: useWindowSize,
+  screenSize: () => windowSize,
 })
 
 const styleGetter = (
