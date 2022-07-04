@@ -1,7 +1,0 @@
-node_modules
-src/**/*
-src
-.eslintrc.js
-.eslintignore
-.turbo
-tsconfig.json
