@@ -1,7 +1,7 @@
-import { React, Text, Button, View, Theme } from '@/app'
+import { React, Text, Button, View, Theme, variantProvider, Icon } from '@/app'
 import CodeThemes from '@/app/stylesheets/Code'
 import { copyToClipboard } from '@/utils/dom'
-import { useCodeleapContext, useState, useMemo } from '@codeleap/common'
+import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
@@ -10,6 +10,37 @@ function copy(text:string) {
   return copyToClipboard(text)
 }
 
+const quoteTypes = {
+  info: 'INFO',
+  note: 'NOTE',
+  warning: 'WARNING',
+  danger: 'DANGER',
+  tip: 'TIP',
+}
+
+const blockquoteStyles = variantProvider.createComponentStyle((theme) => {
+  const s = {}
+  Object.keys(quoteTypes).forEach(k => {
+    s[k] = {
+      ...theme.border[k]({
+        directions: ['left'],
+        width: 5,
+        style: 'solid',
+      }),
+      backgroundColor: theme.colors[k] + '20',
+      borderRadius: theme.borderRadius.small,
+    }
+
+    s[`${k}-icon`] = {
+      color: theme.colors[k],
+      height: 24,
+      width: 24,
+      ...theme.spacing.marginRight(1),
+    }
+  })
+  return s
+}, true)
+
 export const mdxTransforms = {
   h1: ({ children }) => <Text variants={['h1']} id={getHeadingId(children)} text={children}/>,
   h2: ({ children }) => <Text variants={['h2']} id={getHeadingId(children)} text={children}/>,
@@ -17,7 +48,63 @@ export const mdxTransforms = {
   h4: ({ children }) => <Text variants={['h4']} text={children}/>,
   h5: ({ children }) => <Text variants={['h5']} text={children}/>,
   h6: ({ children }) => <Text variants={['h6']} text={children}/>,
+  blockquote: ({ children }) => {
 
+    const quoteType = useMemo(() => {
+      let elChildren = children?.props?.children
+      if (!Array.isArray(elChildren)) elChildren = [elChildren]
+      const qt = elChildren?.[0]
+      if (TypeGuards.isString(qt)) {
+        const typeEntry = Object.entries(quoteTypes).find(t => qt.startsWith(t[1]))
+
+        if (!typeEntry) {
+          return {
+            key: 'info',
+            value: 'INFO',
+            formattedChildren: children?.props?.children,
+          }
+        }
+
+        const removeIdx = qt.indexOf(typeEntry[1]) + typeEntry[1].length + 1
+
+        return {
+          key: typeEntry[0],
+          value: typeEntry[1],
+          formattedChildren: [
+            qt.slice(removeIdx),
+            ...elChildren?.slice(1),
+          ],
+        }
+      }
+      return {
+        key: 'info',
+        value: 'INFO',
+        formattedChildren: elChildren,
+      }
+    }, [children?.props?.children?.[0]])
+
+    return <View variants={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
+      {
+        quoteType?.key && (
+          <Icon name={`docsquote-${quoteType?.key}`} style={blockquoteStyles[quoteType.key + '-icon']}/>
+        )
+      }
+      <Text>
+
+        {
+          quoteType.formattedChildren.map((c, idx, arr) => {
+            if (TypeGuards.isString(c)) {
+              return c
+
+            }
+
+            return c
+          })
+        }
+      </Text>
+
+    </View>
+  },
   p: ({ children }) => <Text text={children} />,
   inlineCode: ({ children }) => {
 

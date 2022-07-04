@@ -45,6 +45,11 @@ const themeObj = {
       textP: '#555',
       grayFade: '#5552',
       inlineCode: '#7695EC',
+      info: '#00b9f7',
+      danger: '#fc3c5c',
+      warning: '#fcfc41',
+      tip: '#6fb539',
+      note: '#5b5b5a',
     },
     dark: {
       primary: '#7695EC',
@@ -70,6 +75,11 @@ const themeObj = {
       textP: '#fff',
       grayFade: '#5552',
       inlineCode: '#7695EC',
+      info: '#00b9f7',
+      danger: '#fc3c5c',
+      warning: '#fcfc41',
+      tip: '#6fb539',
+      note: '#5b5b5a',
     },
   },
   breakpoints: {

@@ -21,6 +21,11 @@ import {
   MdCheck,
   MdAdd,
   MdContentCopy,
+  MdInfo,
+  MdWarning,
+  MdDangerous,
+  MdLightbulbOutline,
+  MdNotes,
 } from 'react-icons/md'
 import {
   FaGoogle,
@@ -63,6 +68,11 @@ export const iconImages = {
   user: FaUser,
   copy: MdContentCopy,
   exit: IoMdExit,
+  'docsquote-info': MdInfo,
+  'docsquote-warning': MdWarning,
+  'docsquote-danger': MdDangerous,
+  'docsquote-tip': MdLightbulbOutline,
+  'docsquote-note': MdNotes,
 }
 
 export const RenderIcon = ({ path, name = '', style = {}, log }:any) => {
