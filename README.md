@@ -42,7 +42,7 @@ yarn mobile android
 yarn web dev
 ```
 
-Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save]() extension for a smoother development experience. You can also just run `yarn build` again.
+Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save](https://marketplace.visualstudio.com/items?itemName=pucelle.run-on-save) extension for a smoother development experience. You can also just run `yarn build` again.
 
 ### Updating the documentation
 
