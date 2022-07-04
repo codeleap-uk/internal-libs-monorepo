@@ -2,7 +2,7 @@
 
 This repository contains component and utility abstractions to make our work on projects easier, as well as templates for getting started with new projects or for reference on how to use a certain feature.
 
-Read the docs at [docs.codeleap.co.uk/](docs.codeleap.co.uk/)
+Read the docs at [docs.codeleap.co.uk](http://docs.codeleap.co.uk/)
 
 ## Libraries
 
