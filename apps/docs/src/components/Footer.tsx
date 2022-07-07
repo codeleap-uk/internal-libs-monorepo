@@ -15,20 +15,20 @@ import { useComponentStyle } from '@codeleap/common'
 import { Logo } from './Logo'
 
 type FooterProps = any
-
+const baseURL = 'https://codeleap.co.uk'
 const linksA = [
   { text: 'HOME', to: '/#' },
   { text: 'SERVICES', to: '/#services' },
   { text: 'PORTFOLIO', to: '/#portfolio' },
   { text: 'PRICING', to: '/#pricing' },
-]
+].map((p) => ({ ...p, to: `${baseURL}${p.to}` }))
 
 const linksB = [
   { text: 'ABOUT', to: '/about' },
   { text: 'BLOG', to: '/blog' },
   { text: 'CAREERS', to: '/careers' },
   { text: 'CONTACT', to: '/#contact' },
-]
+].map((p) => ({ ...p, to: `${baseURL}${p.to}` }))
 
 function renderLinkCol(arr) {
 
@@ -40,6 +40,7 @@ function renderLinkCol(arr) {
         text={text}
         variants={['p3', 'white']}
         css={[styles.footerNavText, styles.link]}
+        openNewTab
       />
     )
   })

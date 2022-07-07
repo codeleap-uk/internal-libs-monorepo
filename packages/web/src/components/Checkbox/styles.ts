@@ -20,6 +20,8 @@ export const WebCheckboxStyles = {
       alignItems: 'center',
       position: 'relative',
       cursor: 'pointer',
+      minHeight: '18px',
+      minWidth: '18px',
       '.checkbox-label': {
         height: '18px',
         width: '18px',
@@ -27,7 +29,10 @@ export const WebCheckboxStyles = {
         borderRadius: theme.borderRadius.small,
         position: 'absolute',
         overflow: 'hidden',
+        top: '50%',
+        transform: 'translateY(-50%)',
         transition: 'background 0.3s ease',
+
         ':after': {
           content: '""',
           border: `2px solid ${theme.colors.white}`,
@@ -49,6 +54,8 @@ export const WebCheckboxStyles = {
     },
     input: {
       visibility: 'hidden',
+      height: 0,
+      width: 0,
       '&:checked + .checkbox-label': {
         '&:after': {
           transform: 'translate(-50%,-50%) rotate(45deg) scale(1)',

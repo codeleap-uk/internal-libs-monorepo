@@ -1,25 +1,17 @@
 ---
-path: 'management'
 title: 'Management'
-date: '2022-07-03'
-category: 'Concepts'
-module: 'concepts'
 ---
 
 # Branching
 
 To save us from becoming a complete mess, we follow a basic git flow (see below). As of now we don't need anything fancy. The orange lane represents hot-fixes, the blue one in the middle the master version, and the green lanes are for developing features or experimenting.
 
-import image from '../../images/branching-example.png'
 
-<img src={image} style={{ width: '100%', height: 'auto', backgroundColor: 'red' }}/>
+![Branching example](branching-example.png)
 
 First of all, I really recommend using SourceTree or some other visual git inspector so that you can actually understand what the hell is going on.
 
 Branches must be named as "type/YYMM-name", YYMM being the due milestone. For example:
 
-> feature/YYMM-something-new
-> 
-
-> fix/YYMM-some-bug
->
+- `feature/YYMM-something-new` 
+- `fix/YYMM-some-bug`

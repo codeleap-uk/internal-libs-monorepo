@@ -20,16 +20,11 @@ function init() {
 init()
 
 const Toaster = () => {
-  const { currentTheme } = useCodeleapContext()
 
+  const { currentTheme } = useCodeleapContext()
   const colors = Theme.colors[currentTheme]
   const { isLoggedIn, appMounted } = useAppSelector(store => store.Session)
 
-  useLayoutEffect(() => {
-    if (typeof window !== 'undefined') {
-      variantProvider.setColorScheme(window.___savedTheme)
-    }
-  }, [])
   onUpdate(() => {
     const unsubscribe = withFirebase((fb) => fb.auth().onAuthStateChanged((user) => {
       if (user && !isLoggedIn && !appMounted) {
@@ -60,6 +55,18 @@ const ChildWrapper = ({ children }) => {
 }
 
 const Root = ({ children }) => {
+  const { currentTheme } = useCodeleapContext()
+
+  onMount(() => {
+    const savedTheme = localStorage.getItem(LocalStorageKeys.THEME)
+    if (savedTheme) {
+      variantProvider.setColorScheme(savedTheme)
+    }
+  })
+  onUpdate(() => {
+    localStorage.setItem(LocalStorageKeys.THEME, currentTheme)
+  }, [currentTheme])
+
   const winSize = useWindowSize()
   const sizeStr = winSize.toString()
   setWindowSize(winSize)

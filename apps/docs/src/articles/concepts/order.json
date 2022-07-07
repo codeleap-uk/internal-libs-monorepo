@@ -1,0 +1,16 @@
+{
+    "root": [
+        "index"
+    ],
+    "workflow": [
+        "contributing",
+        "pr-template",
+        "management"
+    ],
+    "styling": [
+        "fundamentals",
+        "theme"
+    ]
+}
+    
+   

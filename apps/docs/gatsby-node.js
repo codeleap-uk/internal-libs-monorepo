@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const componentWithMDXScope = require('gatsby-plugin-mdx/component-with-mdx-scope')
-const { resolve } = require('path')
+const path = require('path')
+const fs = require('fs')
+const { inferProperties } = require('./src/components/Article/inferProperties')
 
 /**
  * Implement Gatsby's Node APIs in this file.
@@ -48,13 +51,26 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `).catch(error => console.error(error))
   if (data) {
+    const moduleOrders = {}
     data.allMdx.edges.forEach(({ node }) => {
+      const pageInfo = inferProperties(node.fileAbsolutePath)
+      let order = null
+      if (!!moduleOrders[pageInfo.module]) {
+        order = moduleOrders[pageInfo.module]
+      } else if (fs.existsSync(pageInfo.orderFile)) {
+        order = fs.readFileSync(pageInfo.orderFile).toString()
+        order = JSON.parse(order)
+        moduleOrders[pageInfo.module] = order
+      }
+
       createPage({
-        path: `/${node.frontmatter.module}/${node.frontmatter.path}`,
+        path: pageInfo.path,
         component: node.fileAbsolutePath,
         context: {
-          pagePath: node.frontmatter.path,
-          module: node.frontmatter.module,
+          pagePath: pageInfo.path,
+          module: pageInfo.module,
+          isLibrary: pageInfo.isLibrary,
+          order,
         },
       })
     })

@@ -5,6 +5,7 @@ import {
   StylesOf,
   useDefaultComponentStyle,
   useCodeleapContext,
+  TypeGuards,
 } from '@codeleap/common'
 import { ComponentPropsWithRef } from 'react'
 import { View } from '../View'
@@ -34,9 +35,12 @@ export const Checkbox = (checkboxProps: CheckboxProps) => {
     ...props
   } = checkboxProps
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    onChange && onChange(e)
-    onValueChange && onValueChange(e.target.checked)
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>, value?: boolean) {
+    const isChecked = TypeGuards.isBoolean(value) ? value : e.target.checked
+    if (e) {
+      onChange && onChange(e)
+    }
+    onValueChange && onValueChange(isChecked)
   }
 
   const variantStyles = useDefaultComponentStyle('Checkbox', {
@@ -44,9 +48,6 @@ export const Checkbox = (checkboxProps: CheckboxProps) => {
     variants,
     styles,
   } as any) as StylesOf<WebCheckboxComposition>
-
-  const { logger } = useCodeleapContext()
-  logger.log('Checkbox Style', variantStyles, 'Style')
 
   return (
     <View component='label' css={{ ...variantStyles.wrapper }}>
@@ -59,6 +60,7 @@ export const Checkbox = (checkboxProps: CheckboxProps) => {
       />
       <span
         className='checkbox-label'
+        onClick={() => handleChange(null, !checked)}
         css={{
           ...variantStyles.checkmarkWrapper,
           '&:after': {

@@ -8,15 +8,10 @@ export const globalStyle = css`
     margin: 0;
     box-sizing: border-box;
   }
-  /* #___gatsby,
-    #gatsby-focus-wrapper {
-      height: 100vh;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-  */
+
   *::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
   }
   
   .code_style {

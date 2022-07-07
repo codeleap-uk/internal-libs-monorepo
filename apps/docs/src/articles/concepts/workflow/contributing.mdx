@@ -1,0 +1,72 @@
+---
+title: 'Contributing'
+---
+
+# Contributing
+
+- It is worth reminding that our entire documentation is a constant work in progress.
+
+- For development tasks, when starting every project it is best to go through the main features and considering whether we need to implement any improvements into the template that could be used in future apps, so we keep adding to our pool of available resources.
+
+- Similarly, if you have any suggestions on how to improve our Notion docs, please let us know! Let's write down great documentation together :)
+
+# Writing/patching documentation
+
+Clone the `internal-libs-monorepo` repository and navigate to `apps/docs/src/articles`, the folder which contains all of the documentation pages, in the `.mdx` format.
+
+> TIP If you are not familiar with MDX, read more about it [here](https://mdxjs.com/docs/what-is-mdx/).
+
+The structure of this folder is as follows:
+
+- {module}
+    - {category}
+        - ...articles
+    - ...articles without category
+    - order.json (file used for determining order of articles on navbar and automatically assigning previous and next buttons at the end of articles)
+
+## To clarify 
+
+- {module} is either: 
+    - One of ['mobile', 'common', 'web'], which is literally the name of one of our npm libraries
+    - 'concepts', which is a category of it's own dedicated to holding documentation about our culture, procedures, and overarching technical concepts
+- {category} is the subgroup of articles inside the documentation of module, so for a component library, you could have `components` and `hooks` categories to separate content. If a category is not specified (the .mdx file is at the root of the module's folder), it's simply placed at the root in the navbar.
+
+The `order.json` file at the root has the following structure:
+```json
+{   // The order of keys matters here. In this example, root items would appear first, then the inner list for category-1, and finally for category-2
+    "root": [ // This tells the order in which to render root items
+        "index"
+    ],
+    "category-1": [ // This is the order of the collapsible list for each category
+        "article1",
+        "article2"
+    ],
+    "category-2": [
+        "article3",
+        "article4"
+    ]
+}
+
+```
+
+So, in summary, just determine where what you wish to write should go based on the existing folder structure, and where in the order of articles it should be placed, then start writing.
+
+## About styling
+
+If you feel the need to change styles of some part of the documentation `apps/docs/src/components/mdxTransforms.tsx` is your file. Each markdown tag maps directly to one of the html tags defined in the file. You may use any React features inside the functions assigned to these html tags.
+
+## Guidelines for writing documentation
+
+- Order articles so that they can be read sequentially while improving upon the understanding of previous articles.
+- When you reference some other part of the documentation, add a link to make navigation easier. Relative paths are supported. If you reference an external resource, add a link as well.
+- Add nice titles to what you write.
+- Include examples when talking about code, it makes everything easier.
+- If you wish to add information that is not vital to the content of the article itself, use `blockquotes`. They will be styled according to their types (Annotated directly at the start).
+    - To add a blockquote to the article, use the following syntax: 
+    ```markdown
+    > NOTE this is a note
+    > WARNING You've been warned 
+    > TIP It's a great idea, I'm telling you
+    > INFO You really should knnow this
+    ```
+

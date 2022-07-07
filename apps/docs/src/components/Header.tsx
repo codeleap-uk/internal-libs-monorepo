@@ -20,10 +20,7 @@ const navItems = [
     name: 'Mobile',
     url: '/mobile/introduction',
   },
-  {
-    name: 'CLI',
-    url: '/cli/introduction',
-  },
+
 ]
 
 const ViewWrapper = ({ styles, children }) => {

@@ -1,8 +1,9 @@
-import { React, Text, Button, View, Theme, variantProvider, Icon } from '@/app'
+import { React, Text, Button, View, Theme, variantProvider, Icon, Checkbox } from '@/app'
 import CodeThemes from '@/app/stylesheets/Code'
 import { copyToClipboard } from '@/utils/dom'
-import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor } from '@codeleap/common'
+import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor, useBooleanToggle } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
+import { Image } from '../Image'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
 
@@ -51,17 +52,19 @@ export const mdxTransforms = {
   blockquote: ({ children }) => {
 
     const quoteType = useMemo(() => {
-      let elChildren = children?.props?.children
+
+      let elChildren = Array.isArray(children) ? children : children?.props?.children
       if (!Array.isArray(elChildren)) elChildren = [elChildren]
       const qt = elChildren?.[0]
+
       if (TypeGuards.isString(qt)) {
         const typeEntry = Object.entries(quoteTypes).find(t => qt.startsWith(t[1]))
 
         if (!typeEntry) {
           return {
-            key: 'info',
-            value: 'INFO',
-            formattedChildren: children?.props?.children,
+            key: null,
+            value: null,
+            formattedChildren: elChildren,
           }
         }
 
@@ -83,7 +86,7 @@ export const mdxTransforms = {
       }
     }, [children?.props?.children?.[0]])
 
-    return <View variants={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
+    return <View component='blockquote' variants={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
       {
         quoteType?.key && (
           <Icon name={`docsquote-${quoteType?.key}`} style={blockquoteStyles[quoteType.key + '-icon']}/>
@@ -105,6 +108,10 @@ export const mdxTransforms = {
 
     </View>
   },
+  input: (props) => {
+    const [checked, setChecked] = useBooleanToggle(props.checked)
+    return <Checkbox {...props} variants={['inline']} checked={checked} onValueChange={setChecked}/>
+  },
   p: ({ children }) => <Text text={children} />,
   inlineCode: ({ children }) => {
 
@@ -118,7 +125,7 @@ export const mdxTransforms = {
   },
   ol: ({ children }) => {
 
-    return <View variants={['column', 'gap:1', 'paddingLeft:2']} component='ul'> {children} </View>
+    return <View variants={['column', 'gap:1', 'paddingLeft:2']} component='l'> {children} </View>
   },
   li: ({ children }) => {
     return <Text component='li' text={children}/>
@@ -177,8 +184,32 @@ export const mdxTransforms = {
       </Highlight>
     )
   },
+  img: (props) => {
+
+    return <>
+      <Image source={props.src} alt={props.alt} />
+      <Text text={props.alt} variants={['textCenter', 'subtle']}/>
+    </>
+  },
   a: (props) => {
-    return <Link to={props.href} text={props.children} openNewTab variants={['primary']}/>
+    const isExternal = useMemo(() => {
+
+      try {
+        const url = new URL(props.href)
+        console.log({
+          or: window.location.origin,
+          or2: url.origin,
+        })
+        if (url.origin !== window.location.origin) {
+          return true
+        }
+      } catch (e) {
+
+      }
+      return false
+    }, [props.href])
+
+    return <Link to={props.href} text={props.children} variants={['primary']} openNewTab={isExternal}/>
   },
 }
 

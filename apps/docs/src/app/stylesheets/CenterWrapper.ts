@@ -20,6 +20,7 @@ export const AppCenterWrapperStyles = {
       display: 'flex',
       width: '80%',
       maxWidth: 1280,
+
       [theme.media.down('xxlarge')]: {
         paddingLeft: theme.spacing.value(8),
         paddingRight: theme.spacing.value(8),
@@ -40,6 +41,11 @@ export const AppCenterWrapperStyles = {
         paddingLeft: theme.spacing.value(2),
         paddingRight: theme.spacing.value(2),
       },
+    },
+  })),
+  mainContent: createCenterWrapperStyle((theme) => ({
+    innerWrapper: {
+      minHeight: theme.values.height - theme.values.headerHeight,
     },
   })),
 }

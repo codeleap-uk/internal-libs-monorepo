@@ -54,7 +54,7 @@ module.exports = {
       options: {
         name: 'articles',
         path: `${__dirname}/src/articles`,
-        ignore: ['**/.tsx*'],
+        ignore: ['**/.tsx*', '**/*.{tsx, png, jsx, js, jpg, webp}'],
       },
     },
     'gatsby-plugin-sharp',

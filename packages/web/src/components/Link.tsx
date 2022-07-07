@@ -33,7 +33,9 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
         scrollToElem(to)
       }
       if (openNewTab) {
+        event.preventDefault()
         window?.open?.(to, '_blank')
+        return false
       }
     }
   }

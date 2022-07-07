@@ -1,6 +1,6 @@
 import { graphql, navigate, useStaticQuery } from 'gatsby'
 import { MDXProvider } from '@mdx-js/react'
-import { useMdx } from '@/utils/hooks'
+import { useMdx } from './utils'
 import { Page } from '../Page'
 import { SectionMap } from './SectionMap'
 import { mdxTransforms } from './mdxTransforms'
@@ -14,7 +14,7 @@ import { capitalize, useComponentStyle, useMemo } from '@codeleap/common'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
   const style = useComponentStyle(PageNavButtonStyles)
-  const onPress = () => navigate(`/${data.module}/${data.path}`)
+  const onPress = () => navigate('/' + data.path)
   return <Touchable variants={['padding:1', 'gap:1', 'alignCenter']} onPress={onPress} css={style.wrapper}>
     {type === 'previous' && <Icon name='arrowBack' variants={['marginRight:auto']} style={style.icon}/>}
     <View variants={['column']}>
@@ -52,28 +52,15 @@ const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
 }))
 
 function ArticlePage({ children, pageContext }) {
-  const { title, next = null, previous = null } = pageContext.frontmatter
+  const { title } = pageContext.frontmatter
   const { allMdx } = useStaticQuery(query)
 
-  const { pages, flatData } = useMdx(allMdx, pageContext.module)
+  const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
+  // return null
   const isMobile = Theme.hooks.down('mid')
 
-  const { nextPage, previousPage } = useMemo(() => {
-    let nextPage:MdxMetadata = null
-    let previousPage:MdxMetadata = null
+  const navTitle = pageContext.isLibrary ? `@codeleap/${pageContext.module}` : capitalize(pageContext.module)
 
-    for (const p of flatData) {
-      if (nextPage && previousPage) break
-
-      if (`${p.module}/${p.path}` === previous) {
-        previousPage = p
-      } else if (`${p.module}/${p.path}` === next) {
-        nextPage = p
-      }
-    }
-
-    return { nextPage, previousPage }
-  }, [next, previous])
   return <MDXProvider components={mdxTransforms}>
     <Page title={title} header={
       <Header >
@@ -81,20 +68,20 @@ function ArticlePage({ children, pageContext }) {
       </Header>
     } responsiveVariants={{
       mid: ['column'],
-    }}>
-      <Navbar pages={pages} title={`@codeleap/${pageContext.module}`}/>
+    }} variants={['mainContent']}>
+      <Navbar pages={pages} title={navTitle}/>
       {isMobile && <SearchBar items={flatData}/>}
       <Article>
         {children}
         {
-          (nextPage || previousPage) && <>
+          (next || previous) && <>
             <View variants={['separator', 'marginVertical:3', 'fullWidth']} css={{ borderTopColor: Theme.colors.dark.neutral }} />
             <View variants={['justifySpaceBetween', 'fullWidth']}>
               {
-                previousPage && <PageNavButton data={previousPage} type='previous'/>
+                previous && <PageNavButton data={previous} type='previous'/>
               }
               {
-                nextPage && <PageNavButton data={nextPage} type='next'/>
+                next && <PageNavButton data={next} type='next'/>
               }
 
             </View>
@@ -114,6 +101,7 @@ const query = graphql`
     allMdx(filter: {}) {
       edges {
         node {
+          fileAbsolutePath
           frontmatter {
             date
             path

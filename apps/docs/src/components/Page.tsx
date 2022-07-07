@@ -46,7 +46,10 @@ export const Page: React.FC<PageProps> = (props) => {
       {center ? (
         <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>
       ) : (
-        content
+        <View>
+
+          {content}
+        </View>
       )}
 
       {footer && <Footer />}

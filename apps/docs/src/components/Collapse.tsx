@@ -1,27 +1,30 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 
-import { View } from '@/app'
+import { Scroll, View } from '@/app'
 import { TypeGuards } from '@codeleap/common'
 
 type CollapseProps = {
     open: boolean
     height?: number
     css?:any
+    scroll?: boolean
 }
 
-export const Collapse:React.FC<CollapseProps> = ({ open, height = 1000, children, ...props }) => {
+export const Collapse:React.FC<CollapseProps> = ({ open, height = 1000, scroll, children, ...props }) => {
+
+  const Component = scroll ? Scroll : View
   // @ts-ignore
-  return <View css={[
+  return <Component css={[
     {
       height: 'auto',
       maxHeight: open ?
         (TypeGuards.isString(height) ? height : `${height}px`)
         : '0px',
       transition: 'max-height 0.3s ease',
-      overflowY: 'hidden',
+      overflowY: scroll ? (open ? 'auto' : 'hidden') : 'hidden',
     },
   ]} {...props}>
     {children}
-  </View>
+  </Component>
 }

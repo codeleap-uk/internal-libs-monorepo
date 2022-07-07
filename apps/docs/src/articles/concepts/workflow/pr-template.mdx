@@ -1,11 +1,5 @@
 ---
-path: 'pr-template'
 title: 'PR Template'
-date: '2022-07-03'
-category: 'Concepts'
-module: 'concepts'
-previous: 'concepts/styling'
-next: 'common/useQuery'
 ---
 
 
@@ -16,21 +10,14 @@ next: 'common/useQuery'
 ## What is this about?
 PREFACE: In an effort to improve the teams’s efficiency and developer independence, we’re moving towards increased reliance in processes and methods to perform and review tasks.
 
-> ⚠️ **THE CODELEAP DEVELOPER BIBLE**
->
-> 1. Never commit to main/master in production projects, and avoid doing so in development unless there’s a good reason to do so. It is always best to get someone else’s feedback of your work before clients do. [Check branching guidelines here.](https://docs.codeleap.co.uk/concepts/project-management)
->
-> 2. Developers at CodeLeap should be independent and resolve issues by contacting peers, getting feedback from them and resolving product and technical issues.
->
-> 3. It does not matter *how* or *who* resolves an issue. *What matters is resolving the clients issues*. Resourcefulness is as important as technical ability. Be resourceful and always aim to resolve the client’s issue as fast and efficiently as possible.
->
-> 4. The reviewer is not a tester, and much less so are the clients. It is the assignee’s responsibility to make sure their implementations work on every platform, in any relevant scenario for the project. The reviewer's job is to proof read and ensure outstanding technical and usability quality.
->
-> 5. Be mindful of collateral changes and think about the future. Good developers are only accurately identified after their code passes the test of time. Build things to be clear, avoid refactors in the future and avoid leaving technical debt behind.
->
-> 6. Make sure your pull requests meet all the criteria in this PR checklist - **making good shit is our top priority.**
->
-> 7. Please ask the team any questions that arise during development - you can never be too clear!
+⚠️ **THE CODELEAP DEVELOPER BIBLE**
+1. Never commit to main/master in production projects, and avoid doing so in development unless there’s a good reason to do so. It is always best to get someone else’s feedback of your work before clients do. [Check branching guidelines here.](../management)
+2. Developers at CodeLeap should be independent and resolve issues by contacting peers, getting feedback from them and resolving product and technical issues.
+3. It does not matter *how* or *who* resolves an issue. *What matters is resolving the clients issues*. Resourcefulness is as important as technical ability. Be resourceful and always aim to resolve the client’s issue as fast and efficiently as possible.
+4. The reviewer is not a tester, and much less so are the clients. It is the assignee’s responsibility to make sure their implementations work on every platform, in any relevant scenario for the project. The reviewer's job is to proof read and ensure outstanding technical and usability quality.
+5. Be mindful of collateral changes and think about the future. Good developers are only accurately identified after their code passes the test of time. Build things to be clear, avoid refactors in the future and avoid leaving technical debt behind.
+6. Make sure your pull requests meet all the criteria in this PR checklist - **making good shit is our top priority.**
+7. Please ask the team any questions that arise during development - you can never be too clear!
 
 
 ## The review process
@@ -78,8 +65,8 @@ Make sure you follow these best coding practices:
 - [ ]  [DRY - Don't Repeat Yourself](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)
 - [ ]  [KISS - Keep It Simple, Stupid](https://en.wikipedia.org/wiki/KISS_principle)
 - [ ]  Reuse existing code - check whether what you've done could be done by reusing or modifying similar components or functions
-- [ ]  [Use variants wisely](http://docs.codeleap.co.uk/concepts/styling) - check for best usage of existing variants or create new variants (when relevant); make sure variant sequences are not repeating themselves (DRY) or are redundant with styles object
-- [ ]  [No arbitrary values](http://docs.codeleap.co.uk/concepts/styling#the%20theme:~:text=default%20variant%27s%20style.-,The%20theme,-Themes%20provide%20values) - always use flex, Theme, variants or something intelligent and responsive to define styles
+- [ ]  [Use variants wisely](/concepts/styling/fundamentals) - check for best usage of existing variants or create new variants (when relevant); make sure variant sequences are not repeating themselves (DRY) or are redundant with styles object
+- [ ]  [No arbitrary values](/concepts/styling/theme#the%20theme:~:text=default%20variant%27s%20style.-,The%20theme,-Themes%20provide%20values) - always use flex, Theme, variants or something intelligent and responsive to define styles
 - [ ]  [Consistently bad is better than inconsistently good](https://jgefroh.medium.com/why-consistency-is-one-of-the-top-indicators-of-good-code-352ba5d62020#:~:text=Consistently%20bad%20is%20better%20than%20inconsistently%20good.) - make sure your code is similar to rest of the code
 - [ ]  [Self documenting code](https://en.wikipedia.org/wiki/Self-documenting_code) - make sure your functions and variable names explain what they actually do
 - [ ]  Cleanup - leave consistent empty line spacing, remove logs, remove uneeded commented code, etc...

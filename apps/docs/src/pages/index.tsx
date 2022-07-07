@@ -44,11 +44,6 @@ const links = [
         name: '@codeleap/mobile',
         description: 'Components and utilities for creating bleeding edge iOS and Android apps',
       },
-      {
-        url: '/cli/introduction',
-        name: '@codeleap/cli',
-        description: 'Tools for organized and efficient project management',
-      },
     ],
   },
 ]

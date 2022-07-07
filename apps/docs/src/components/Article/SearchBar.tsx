@@ -23,6 +23,9 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
 
     const results = props.items
       .reduce((acc, item) => {
+        console.log({
+          item,
+        })
         if (!item.title.toLowerCase().includes(debouncedSearch.toLowerCase())) return acc
         const copy = { ...acc }
 
@@ -53,7 +56,7 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
     ]} css={styles.resultWrapper}>
       <Text text={`@codeleap/${moduleName}`}/>
       {moduleResults.map(({ title, path }) => (
-        <Link css={styles.result} text={title} to={`/${moduleName}/${path}`}/>
+        <Link css={styles.result} text={title} to={`/${path}`}/>
       ))}
     </View>
   }) : null
@@ -86,7 +89,7 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
       isDropdownOpen && {
         boxShadow: '0 0 1px 2px #0002',
       },
-    ]} open={isDropdownOpen && focus} height={300}>
+    ]} open={isDropdownOpen && focus} height={300} scroll>
       {
         hasResults ?
           resultList :

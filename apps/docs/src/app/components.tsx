@@ -48,7 +48,7 @@ const components = variantProvider.typeComponents({
   Touchable: [Components.Touchable, defaultStyles.Touchable],
   TextInput: [Components.TextInput, AppTextInputStyles],
   // Switch: [Components.Switch, defaultStyles.Switch],
-  Checkbox: [Components.Checkbox, defaultStyles.Checkbox],
+  Checkbox: [Components.Checkbox, AppCheckboxStyle],
   RadioInput: [Components.RadioGroup, defaultStyles.RadioInput],
   ContentView: [Components.ContentView, defaultStyles.ContentView],
   Select: [Components.Select, AppSelectStyles],

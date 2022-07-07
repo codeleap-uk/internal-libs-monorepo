@@ -25,6 +25,12 @@ export const AppTextStyles = {
       },
     },
   })),
+  subtle: createTextStyle((theme) => ({
+    text: {
+      color: theme.colors.gray,
+      fontStyle: 'italic',
+    },
+  })),
   primary: createTextStyle((theme) => ({
     text: {
       color: theme.colors.primary,
