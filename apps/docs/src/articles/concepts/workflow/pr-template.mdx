@@ -38,7 +38,7 @@ PREFACE: In an effort to improve the teams’s efficiency and developer independ
 
 ## Overview
 
-*What is this pull request about?*
+*What is this pull request about? Please add link to Notion issues here:* 
 
 Ex. This adds whatever new feature...
 
@@ -83,17 +83,31 @@ Test your changes while:
 
 Also make sure (*strike out if not applicable*):
 
+- [ ] `Images` -> If you added/changed any image or icon, check:
+    - [ ] Resolution is sufficient (at least [3x the size in UI points](https://developer.apple.com/design/human-interface-guidelines/foundations/images/#:~:text=All%20platforms%20use,with%20more%20pixels.) that's used in the code)
+    - [ ] File type is adequate (png or svg for icons and interface details, jpg for large images)
+    - [ ] It has the correct resizeMode
+    - [ ] It has an adequate placeholder (if needed)
 - [ ]  `Input` -> If you added/changed an `input` field - check it has adequate:
     - [ ]  Placeholders
     - [ ]  Labels
     - [ ]  “onSubmitEdit” handling
     - [ ]  Keyboard type
     - [ ]  Text data type
-- [ ]  `List` and `grids` -> If you added/changed a list of items of any kind - check it scrolls and works correctly when having varying number of items (0, 1, 2, 3, 9+, etc...)
+    - [ ]  Keyboard avoidance
+- [ ]  `List`, `grids`, `scrolls` -> If you added/changed a list of items of any kind - check:
+    - [ ] It scrolls and works correctly when having varying number of items (0, 1, 2, 3, 9+, etc...)
+    - [ ] It has adequate pagination
+    - [ ] It has adequate refresh control
+    - [ ] It has adequate placeholders/empty component
+    - [ ] It has adequate scroll indicators
+- [ ]  `TabBar & Header` -> If your changes add/change an app page, make sure it handles the tabbar and header information correctly
+- [ ]  `Safe Areas` -> Make sure your changes handle with the safe areas in the top and bottom of the page adequately
 - [ ]  `Fetch, loading and AppStatus` -> If you display any content fetched from the server, make sure we correctly handle a loading indication through local UI changes (spinner) or using AppStatus as needed. Also make sure the page renders correctly after refreshing (not coming from another screen)
 - [ ]  `Placeholders & missing content` -> Also when displaying fetched content of any kind, make sure to handle when there is no content by showing a placeholder or hiding the item. Check object properties that might not always exist and handle UI accordingly
 - [ ]  `Formatting` -> If you use any formattable data like numbers, currencies, date or time, make sure they're formatted in the best way for the users
 - [ ]  `Dependencies` -> If you add dependencies like packages, images or fonts, make sure they're all commited (including patch-package if relevant) and will work from a clean repo/yarn install on all platforms
+
 
 ## Operating System Test Checklist
 
