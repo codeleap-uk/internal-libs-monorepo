@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/react'
 
 import { React, TextInput, Text, variantProvider, View } from '@/app'
-import { onUpdate, useComponentStyle, useDebounce, useMemo, useState } from '@codeleap/common'
+import { capitalize, onUpdate, useComponentStyle, useDebounce, useMemo, useState } from '@codeleap/common'
 import { useClickOutside } from '@codeleap/web'
 import { MdxMetadata } from 'types/mdx'
 import { Collapse } from '../Collapse'
@@ -23,10 +23,13 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
 
     const results = props.items
       .reduce((acc, item) => {
-        console.log({
-          item,
-        })
-        if (!item.title.toLowerCase().includes(debouncedSearch.toLowerCase())) return acc
+        const searchTerm = debouncedSearch.toLowerCase()
+        const match = [
+          item.title.toLowerCase(),
+          item.category ? item.category.toLowerCase() : '',
+          item.module.toLowerCase(),
+        ].some(prop => prop.includes(searchTerm))
+        if (!match) return acc
         const copy = { ...acc }
 
         if (copy[item.module]) {
@@ -55,8 +58,15 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
       'gap:2',
     ]} css={styles.resultWrapper}>
       <Text text={`@codeleap/${moduleName}`}/>
-      {moduleResults.map(({ title, path }) => (
-        <Link css={styles.result} text={title} to={`/${path}`}/>
+      {moduleResults.map(({ title, path, category }) => (
+        <Link css={styles.result} to={`/${path}`}>
+          <Text text={title} variants={['inline']}/>
+          {
+            category !== 'root' ?
+              <Text text={ `- ${capitalize(category)}`} variants={['inline', 'marginLeft:1', 'subtle']}/>
+              : null
+          }
+        </Link>
       ))}
     </View>
   }) : null
