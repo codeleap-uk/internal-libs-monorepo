@@ -10,15 +10,15 @@ import { navigate } from 'gatsby'
 const navItems = [
   {
     name: 'Common',
-    url: '/common/introduction',
+    url: '/common',
   },
   {
     name: 'Web',
-    url: '/web/introduction',
+    url: '/web',
   },
   {
     name: 'Mobile',
-    url: '/mobile/introduction',
+    url: '/mobile',
   },
 
 ]

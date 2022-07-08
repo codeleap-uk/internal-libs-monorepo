@@ -11,23 +11,22 @@ const { inferProperties } = require('./src/components/Article/inferProperties')
  */
 
 const CLIENT_ONLY_PATHS = [
-  'components',
+  '/components',
 ] // These pages will NOT follow standard Gatsby routing. To be used with internal router.
 
 exports.onCreatePage = async ({ page, actions }) => {
   const { createPage } = actions
 
   // console.info({ CLIENT_ONLY_PATHS, path: page.path })
+  const clientOnly = CLIENT_ONLY_PATHS.some(p => page.path.startsWith(p))
 
-  for (const c in CLIENT_ONLY_PATHS) {
-    const str = CLIENT_ONLY_PATHS[c]
-    const matchPlainRegex = new RegExp(`^\/${str}`)
-    const matchLocaleRegex = new RegExp(`^\/\\w+\/${str}`)
-    if (page.path.match(matchPlainRegex) || page.path.match(matchLocaleRegex)) {
-      page.matchPath = `${page.path}*`
-      createPage(page)
-    }
+  // NOTE test this with INTL later, it was screwing up docs rendering
+  if (clientOnly) {
+    page.matchPath = `${page.path}*`
+    createPage(page)
+
   }
+
 }
 
 exports.createPages = async ({ graphql, actions }) => {
@@ -40,9 +39,7 @@ exports.createPages = async ({ graphql, actions }) => {
           node {
             fileAbsolutePath
             frontmatter {
-              path
               title
-              module
 
             }
           }
@@ -62,8 +59,7 @@ exports.createPages = async ({ graphql, actions }) => {
         order = JSON.parse(order)
         moduleOrders[pageInfo.module] = order
       }
-
-      createPage({
+      const createPageArgs = {
         path: pageInfo.path,
         component: node.fileAbsolutePath,
         context: {
@@ -72,7 +68,18 @@ exports.createPages = async ({ graphql, actions }) => {
           isLibrary: pageInfo.isLibrary,
           order,
         },
-      })
+      }
+
+      createPage(createPageArgs)
+      if (pageInfo.filename === 'index') {
+        const indexPath = pageInfo.path.split('/').slice(0, -1).join('/')
+
+        createPage({
+          ...createPageArgs,
+          path: indexPath,
+
+        })
+      }
     })
 
   }
@@ -82,14 +89,7 @@ exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
     type MdxFrontmatter implements Node {
-      date: String
-      path: String
       title: String
-      category: String
-      module: String
-      next: String
-      previous: String
-      index: Int
     }
   `
   createTypes(typeDefs)

@@ -9,7 +9,6 @@ import { Article } from './Article'
 import { React, Icon, Theme, Touchable, View, Text, variantProvider } from '@/app'
 import { Header } from '../Header'
 import { SearchBar } from './SearchBar'
-import { MdxMetadata } from 'types/mdx'
 import { capitalize, useComponentStyle, useMemo } from '@codeleap/common'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
@@ -56,22 +55,21 @@ function ArticlePage({ children, pageContext }) {
   const { allMdx } = useStaticQuery(query)
 
   const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
-  // return null
+
   const isMobile = Theme.hooks.down('mid')
+  const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
 
-  const navTitle = pageContext.isLibrary ? `@codeleap/${pageContext.module}` : capitalize(pageContext.module)
-
-  return <MDXProvider components={mdxTransforms}>
-    <Page title={title} header={
-      <Header >
-        {!isMobile && <SearchBar items={flatData}/>}
-      </Header>
-    } responsiveVariants={{
-      mid: ['column'],
-    }} variants={['mainContent']}>
-      <Navbar pages={pages} title={navTitle}/>
-      {isMobile && <SearchBar items={flatData}/>}
-      <Article>
+  return <Page title={title} header={
+    <Header >
+      {!isMobile && <SearchBar items={flatData}/>}
+    </Header>
+  } responsiveVariants={{
+    mid: ['column'],
+  }} variants={['mainContent']}>
+    <Navbar pages={pages} title={navTitle}/>
+    {isMobile && <SearchBar items={flatData}/>}
+    <Article>
+      <MDXProvider components={mdxTransforms}>
         {children}
         {
           (next || previous) && <>
@@ -87,11 +85,12 @@ function ArticlePage({ children, pageContext }) {
             </View>
           </>
         }
-      </Article>
-      <SectionMap content={children}/>
-      {/* </View> */}
-    </Page>
-  </MDXProvider>
+      </MDXProvider>
+    </Article>
+    <SectionMap content={children}/>
+
+  </Page>
+
 }
 
 export default ArticlePage
@@ -103,14 +102,7 @@ const query = graphql`
         node {
           fileAbsolutePath
           frontmatter {
-            date
-            path
             title
-            category
-            module
-            next
-            previous
-            index
           }
         }
       }

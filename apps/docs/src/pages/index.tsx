@@ -29,18 +29,18 @@ const links = [
     name: 'Modules',
     links: [
       {
-        url: '/common/introduction',
+        url: '/common',
         name: '@codeleap/common',
         description:
           'The library that provides APIs for building portable and modular code on both platforms',
       },
       {
-        url: '/web/introduction',
+        url: '/web',
         name: '@codeleap/web',
         description: 'Components and hooks for building awesome websites',
       },
       {
-        url: '/mobile/introduction',
+        url: '/mobile',
         name: '@codeleap/mobile',
         description: 'Components and utilities for creating bleeding edge iOS and Android apps',
       },

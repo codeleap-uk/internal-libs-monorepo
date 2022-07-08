@@ -196,10 +196,7 @@ export const mdxTransforms = {
 
       try {
         const url = new URL(props.href)
-        console.log({
-          or: window.location.origin,
-          or2: url.origin,
-        })
+
         if (url.origin !== window.location.origin) {
           return true
         }

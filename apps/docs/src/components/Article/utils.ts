@@ -63,9 +63,6 @@ export function useMdx(allMdx, pageContext) {
         const bIdx = orderKeys.indexOf(b[0].toLowerCase())
         return aIdx - bIdx
       })
-      const next = null
-      const previous = null
-      const current = null
 
       orderedPages = orderedPages.map(([category, pageList]) => {
         const order = pageContext?.order?.[category.toLowerCase()]
@@ -87,9 +84,7 @@ export function useMdx(allMdx, pageContext) {
       result.current.previous = orderedFlatData[currentIdx - 1]
 
       pages = orderedPages
-      console.log({
-        orderedPages,
-      })
+
     } else {
       pages = Object.entries(pages)
     }
