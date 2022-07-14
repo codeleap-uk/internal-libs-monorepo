@@ -1,6 +1,6 @@
 {
   "name": "codeleap",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "workspaces": {
     "packages": [
@@ -40,7 +40,6 @@
       "**/expo/**",
       "**/react-native-animatable",
       "**/react-native-animatable/*",
-
       "**/lottie",
       "**/lottie/**",
       "**/lottie*"
@@ -48,7 +47,6 @@
   },
   "scripts": {
     "build": "turbo run build",
-    
     "dev:packages": "yarn build --parallel && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/web/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn build --parallel\"",
     "dev:yarn-run-build": "yarn --cwd ./packages/mobile build & yarn --cwd ./packages/common build",
     "dev:packages-yarn": "yarn dev:yarn-run-build && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn dev:yarn-run-build\"",
