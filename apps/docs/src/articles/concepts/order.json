@@ -1,6 +1,7 @@
 {
     "root": [
-        "index"
+        "index",
+        "typescript"
     ],
     "workflow": [
         "contributing",

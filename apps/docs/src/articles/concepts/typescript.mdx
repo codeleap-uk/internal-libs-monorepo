@@ -1,0 +1,121 @@
+---
+title: Typescript 101
+---
+
+This will cover some helpful typescript concepts so you can work with our template more effectively
+
+# Types
+
+A type can be something as basic as
+
+```typescript
+type MyString = string
+
+type MyBool= boolean
+
+type MyNumber = number
+
+type MyObject = {
+    property: string
+    otherProperty: number
+}
+```
+
+These can be used with both variables and functions, as well as generics (which we'll get into later)
+
+```typescript
+const someNumber:MyNumber = 10
+
+const sayHello = (name: MyString) => {
+    console.log(`Hi ${name}`)
+}
+```
+
+Now we'll get into some other useful typescript features
+
+# Unions
+
+Say you have a component which accepts a variant prop. The value of this prop should be one of the following variants
+
+round 
+OR
+square
+
+To represent such a thing with typescript, we can use Union types
+
+```typescript
+
+// You may look at this as an OR(||) sign. It basically means that 
+// whatever value is assigned to a variable of this type
+// should be either 'round' or 'square'
+type VariantProp = 'round' | 'square'
+
+const a:VariantProp = 'round' // No error
+
+const b:VariantProp = 'triangle' // Error, since triangle is not a member of the VariantProp Union
+
+type ComponentProps = {
+    variant: VariantProp
+}
+
+```
+
+Unions themselves may be used to make other types. For instance, if we wanted the component to accept multiple variants
+
+```typescript
+// The "[]"" at the end means "an array of whatever type is between the first bracket and the equals sign"
+type VariantList = VariantProp[]
+const  a:VariantList = ['square','circle'] // Success
+const  b:VariantList = ['triangle','circle'] // Error, since triangle is not a member of the VariantProp Union
+
+type ComponentProps = {
+    variant: VariantList
+}
+```
+
+It's not limited to strings either, if we wanted the component to accept either a `Date` or a `string` as it's date prop 
+
+```typescript
+type ComponentProps = {
+    date: Date | string
+}
+```
+
+Any type can be part of a union.
+
+# Template literals
+
+The VariantList type we created earlier looks like this
+
+```typescript
+type VariantProp = 'round' | 'square'
+type VariantList = VariantProp[]
+```
+
+If we wanted the prop to also accept definitions for margins in the format `margin:<valid css value for margin>`, how would we do so?
+
+That's where template literal types come in. 
+
+```typescript
+
+// This says: I only accept 'auto' or a number as my value
+type MarginValues = number | 'auto'
+
+// `margin:${MarginValues}` works just like JS string interpolation, but for types. 
+// We're basically saying we want a string that starts with 'margin:' and 
+// ends with either 'auto' or a numerical value
+type VariantProp = 'round' | 'square' | `margin:${MarginValues}`
+
+
+type VariantList = VariantProp[]
+
+const a:VariantList = ['square', 'margin:10'] // Success
+const b:VariantList = ['square', 'margin:auto'] // Success
+
+// Error, since 'randomValue' is not a member of the MarginValues union
+const c:VariantList = ['square', 'margin:randomvalue'] 
+```
+
+
+
+
