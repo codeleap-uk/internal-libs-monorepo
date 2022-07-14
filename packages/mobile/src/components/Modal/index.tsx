@@ -91,8 +91,12 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     boxAnimation.animateTo(visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden'])
   }, [visible])
   const wrapperStyle = getStyles('wrapper')
+
   return (
-    <View style={[wrapperStyle, { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex }]} pointerEvents={visible ? 'auto' : 'none'}>
+    <View
+      style={[wrapperStyle, { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex }]}
+      pointerEvents={visible ? 'auto' : 'none'}
+    >
 
       <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
         'wrapper:hidden': variantStyles['backdrop:hidden'],
@@ -109,13 +113,14 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         scrollEnabled={scroll}
         keyboardAware={keyboardAware}
       >
-        <Touchable
-          feedbackVariant='none'
-          onPress={(dismissOnBackdrop && closable) ? toggle : (() => {})}
-          debugName={'Modal backdrop touchable'}
-          style={variantStyles.backdropTouchable}
-          android_ripple={null}
-        />
+        {dismissOnBackdrop &&
+          <Touchable
+            feedbackVariant='none'
+            onPress={ closable ? toggle : (() => {})}
+            debugName={'Modal backdrop touchable'}
+            style={variantStyles.backdropTouchable}
+            android_ripple={null}
+          />}
         <View
           animated
           state={boxAnimation}

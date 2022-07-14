@@ -18,6 +18,7 @@ import { ModalStyles } from './Modal'
 import { EmptyPlaceholderStyles } from './EmptyPlaceholder'
 import { BackdropStyles } from './Backdrop'
 import { PagerStyles } from './Pager'
+import { CalendarStyles } from './Calendar'
 
 export const defaultStyles = {
   View: ViewStyles,
@@ -39,5 +40,6 @@ export const defaultStyles = {
   Modal: ModalStyles,
   EmptyPlaceholder: EmptyPlaceholderStyles,
   Backdrop: BackdropStyles,
+  Calendar: CalendarStyles,
   Pager: PagerStyles,
 }

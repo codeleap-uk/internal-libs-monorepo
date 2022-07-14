@@ -36,6 +36,8 @@ export const ModalStyles = {
     const fullSize = {
       ...Theme.presets.whole,
       position: 'absolute',
+      width: Theme?.values?.width,
+      height: Theme?.values?.height,
     }
 
     return {

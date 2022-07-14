@@ -23,3 +23,11 @@ export function isArray(x): x is any[] {
 export function is<T extends unknown>(x, Enum: T[]): x is T {
   return Enum.includes(x)
 }
+type Abstract<T> = Function & {prototype: T}
+
+type Constructor<T> = new (...args: any[]) => T
+type Class<T = any> = Abstract<T> | Constructor<T>
+
+export function isInstance<T extends Class, X = T extends Class<infer X> ? X : never>(x, cls: T): x is X {
+  return x instanceof cls
+}

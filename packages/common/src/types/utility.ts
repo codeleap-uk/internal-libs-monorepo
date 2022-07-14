@@ -109,3 +109,7 @@ export type VariantsOf<T> =T extends ((props: {variants: infer V}) => any) ?
 export type VariantList<T> = Exclude<T, string>
 
 export type GetRefType<T> = T extends React.Ref<infer U> ? U : never
+
+export type FilterKeys<T, Filter = any> = Exclude<{
+  [P in keyof T]: T[P] extends Filter ? P : '__never__'
+}[keyof T], '__never__'>

@@ -40,6 +40,7 @@
       "**/expo/**",
       "**/react-native-animatable",
       "**/react-native-animatable/*",
+
       "**/lottie",
       "**/lottie/**",
       "**/lottie*"

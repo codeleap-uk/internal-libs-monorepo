@@ -21,6 +21,7 @@ export * from './ActivityIndicator'
 export * from './Button'
 export * from './ContentView'
 export * from './Modal'
+export * from './Calendar'
 
 export * from './Navigation'
 export * from './Pager'

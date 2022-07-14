@@ -127,11 +127,7 @@ export const usePermissions:UsePermissions<any> = () => {
 
           onOpen = () => new Promise((resolve) => {
             setTimeout(() => {
-              console.log('transition', {
-                prevModal,
-                permissionModalName,
 
-              })
               modalCtx.transition(prevModal, permissionModalName, {
                 props: {
                   onPermissionResolve: (status) => {
@@ -163,9 +159,7 @@ export const usePermissions:UsePermissions<any> = () => {
       }
     }
     if (prevModal) {
-      console.log(`Close prev modal`, {
-        prevModal,
-      })
+
       setTimeout(() => {
         modalCtx.toggleModal(prevModal, false, {})
       })
