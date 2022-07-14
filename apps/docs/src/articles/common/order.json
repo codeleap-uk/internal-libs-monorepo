@@ -4,7 +4,11 @@
     ],
     "redux": [
         "at_codeleap"
-    ]
+    ],
+    "React Query" : [
+        "index"
+    ],
+    "__categories__" : ["root", "redux", "React Query"]
 }
     
    

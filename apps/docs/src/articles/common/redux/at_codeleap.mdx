@@ -83,7 +83,9 @@ export const todosSlice = createSlice({
   },
   asyncReducers: {
     list: async (state, setState, params: PaginationParams) => {
-         setState({
+      // This simply dispatches an action under the hood. 
+      // But by using a function in this manner, we are able to write async code without thunks or sagas
+        setState({ 
             loading: true
         })
         const todos = ApiClient.todos.list(params)

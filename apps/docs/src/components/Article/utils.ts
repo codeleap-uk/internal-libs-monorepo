@@ -1,6 +1,4 @@
-import { capitalize, TypeGuards, usePrevious, useRef } from '@codeleap/common'
-import { useScrollEffect } from '@codeleap/web'
-import { useStaticQuery } from 'gatsby'
+import { capitalize, usePrevious, useRef } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 
 const characterReplaceMap = new Map([
@@ -57,15 +55,16 @@ export function useMdx(allMdx, pageContext) {
 
     if (pageContext?.order) {
       const orderedFlatData = []
-      const orderKeys = Object.keys(pageContext.order)
+      const orderKeys = [...(pageContext.order?.__categories__ || Object.keys(pageContext.order))]
+      console.log(orderKeys)
       let orderedPages = Object.entries<MdxMetadata[]>(pages).sort((a, b) => {
-        const aIdx = orderKeys.indexOf(a[0].toLowerCase())
-        const bIdx = orderKeys.indexOf(b[0].toLowerCase())
+        const aIdx = orderKeys.indexOf(a[0])
+        const bIdx = orderKeys.indexOf(b[0])
         return aIdx - bIdx
       })
 
       orderedPages = orderedPages.map(([category, pageList]) => {
-        const order = pageContext?.order?.[category.toLowerCase()]
+        const order = pageContext?.order?.[category]
         if (order) {
           pageList = pageList.sort((a, b) => {
             const aIdx = order.indexOf(a.filename)
