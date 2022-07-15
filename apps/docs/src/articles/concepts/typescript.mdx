@@ -50,9 +50,11 @@ To represent such a thing with typescript, we can use Union types
 // should be either 'round' or 'square'
 type VariantProp = 'round' | 'square'
 
-const a:VariantProp = 'round' // No error
+// No error
+const a:VariantProp = 'round' 
 
-const b:VariantProp = 'triangle' // Error, since triangle is not a member of the VariantProp Union
+// Error, since triangle is not a member of the VariantProp Union
+const b:VariantProp = 'triangle' 
 
 type ComponentProps = {
     variant: VariantProp
@@ -63,10 +65,14 @@ type ComponentProps = {
 Unions themselves may be used to make other types. For instance, if we wanted the component to accept multiple variants
 
 ```typescript
-// The "[]"" at the end means "an array of whatever type is between the first bracket and the equals sign"
+// The "[]" at the end means "an array of whatever type is between the first bracket and the equals sign"
 type VariantList = VariantProp[]
-const  a:VariantList = ['square','circle'] // Success
-const  b:VariantList = ['triangle','circle'] // Error, since triangle is not a member of the VariantProp Union
+
+// Success
+const  a:VariantList = ['square','round'] 
+
+// Error, since triangle is not a member of the VariantProp Union
+const  b:VariantList = ['triangle','round'] 
 
 type ComponentProps = {
     variant: VariantList
