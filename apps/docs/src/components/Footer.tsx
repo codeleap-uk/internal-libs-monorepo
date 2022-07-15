@@ -2,7 +2,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import { View, Text, CenterWrapper, Theme } from '@/app'
-import { Image } from './Image'
 import { Link } from './Link'
 import { variantProvider } from '@/app/theme'
 
@@ -11,7 +10,6 @@ import { Settings } from '../app/Settings'
 import { FaFacebookSquare, FaLinkedin } from 'react-icons/fa'
 
 import { format } from 'date-fns'
-import { useComponentStyle } from '@codeleap/common'
 import { Logo } from './Logo'
 
 type FooterProps = any
@@ -264,6 +262,9 @@ const styles = variantProvider.createComponentStyle({
     width: 200,
     marginBottom: Theme.spacing.value(3),
     alignSelf: 'flex-start',
+    [Theme.media.down('mid')]: {
+      alignSelf: 'center',
+    },
   },
   mobileDisclaimers: {
     flex: 1,

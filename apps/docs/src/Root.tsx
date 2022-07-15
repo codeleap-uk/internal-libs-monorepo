@@ -68,7 +68,7 @@ const Root = ({ children }) => {
   }, [currentTheme])
 
   const winSize = useWindowSize()
-  const sizeStr = winSize.toString()
+  const sizeStr = winSize?.[0]?.toString()
   setWindowSize(winSize)
   return (
 

@@ -93,6 +93,7 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
       onChangeText={setSearch}
       value={search}
       onFocus={ () => setFocus(true)}
+      onBlur={ () => setFocus(false)}
     />
     <Collapse css={[
       styles.dropdown,
