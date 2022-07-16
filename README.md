@@ -25,20 +25,21 @@ git clone https://github.com/codeleap-uk/internal-libs-monorepo
 
 cd internal-libs-monorepo
 
+# Pulls git submodules for templates
+git submodule update --init --recursive
+
 # Install dependencies
 yarn
 
 # Builds local versions of libraries
 yarn build
 
-# Pulls git submodules for templates
-git submodule update --init --recursive
-
-
 # To build the app for android. Substitute android for 'ios' to run on apple devices
 yarn mobile android
+# To run the mobile template
+yarn mobile dev
 
-# To run the gatsby website
+# To run the web template
 yarn web dev
 ```
 
