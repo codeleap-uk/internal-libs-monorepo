@@ -1,10 +1,6 @@
 /* eslint-disable no-restricted-imports */
 import {
-  DefaultVariants,
   VariantProvider,
-  CommonVariantObject,
-  VariantStyleSheet,
-  ComponentVariantsDefinition,
   DefaultVariantBuilder,
 } from './variants'
 import { Hooks, MediaQueries } from './MediaQuery'
@@ -74,7 +70,7 @@ export type AppTheme = {
   readonly spacing: number
   readonly colors: FreeThemeColors
 
-  readonly values?: {
+   values?: {
     width?: number
     height?: number
   } & AnyProps<any>

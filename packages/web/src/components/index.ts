@@ -18,7 +18,7 @@ export * from './Tooltip'
 export * from './Slider'
 export * from './Select'
 export * from './Scroll'
-
+export * from './Collapse'
 export * from './RouterPage'
 export * from './CenterWrapper'
 export * from './HorizontalScroll'

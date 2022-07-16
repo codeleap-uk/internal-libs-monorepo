@@ -33,11 +33,10 @@ export const StyleProvider = <
   const [theme, setTheme] = useState(variantProvider.theme.theme)
 
   onMount(() => {
-    const unsubscribe = variantProvider.onColorSchemeChange((t) => {
+    variantProvider.onColorSchemeChange((t) => {
       setTheme(t.theme as string)
     })
 
-    return unsubscribe
   })
 
   return (

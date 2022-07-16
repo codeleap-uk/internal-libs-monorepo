@@ -91,6 +91,7 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
     variants,
     responsiveVariants,
   })
+
   return (
     <View
       css={{

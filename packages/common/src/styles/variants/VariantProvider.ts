@@ -187,7 +187,10 @@ export class VariantProvider<
 
       if (responsiveVariants) {
         for (const breakpoint in responsiveVariants) {
-          const shouldApplyResponsiveVariants = this.theme.hooks.down(breakpoint)
+          const max = this.theme.breakpoints[breakpoint]
+          const currentSize = [this.theme.values?.width, this.theme.values?.height]
+
+          const shouldApplyResponsiveVariants = currentSize[0] < max
 
           if (shouldApplyResponsiveVariants) {
             const responseVariantList = standardizeVariants(

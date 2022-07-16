@@ -10,14 +10,7 @@ import { ToastContainer } from 'react-toastify'
 import { withFirebase } from './services/firebase'
 import { useWindowSize } from '@codeleap/web'
 import { setWindowSize } from './app/theme'
-function init() {
-  logger.log('Initialising app...', '', 'App lifecycle')
 
-  logger.analytics.event('App Initialized', { confidential: 'Cacetinho' })
-
-}
-
-init()
 
 const Toaster = () => {
 
