@@ -1,0 +1,242 @@
+// import { queryClient } from '@/services/api'
+import { useMemo, useState } from 'react'
+import { QueryFunctionContext,
+  QueryKey,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import { OperationKey, PaginationReturn, UsePaginationParams } from './types'
+import { getPaginationData, getQueryKeys } from './utils'
+
+export function usePagination<
+ TItem = any,
+ TData extends PaginationReturn<TItem> = PaginationReturn<TItem>,
+ P extends UsePaginationParams<TData> = UsePaginationParams<TData>
+>(key: string, params:P) {
+  type OverrideParamType<K extends OperationKey> = Parameters<P['overrides'][K]>[0]
+
+  function withOverride<
+    K extends OperationKey
+  >(op: K, values: Parameters<P['overrides'][K]>[0]): ReturnType<P['overrides'][K]> {
+    const overrideFn:P['overrides'][K] = params?.overrides?.[op]
+    const a:Parameters<typeof overrideFn>[0] = values
+    if (overrideFn) {
+      // @ts-ignore
+      return overrideFn(a)
+    }
+    // @ts-ignore
+    return values
+  }
+
+  const QUERY_KEYS = getQueryKeys(key)
+  const [isRefreshing, setRefreshing] = useState(false)
+  const queryClient = useQueryClient()
+
+  const listFn = async ({ pageParam }:QueryFunctionContext<QueryKey, any>) => {
+    const data = await params.onList(pageParam)
+    return data as unknown as PaginationReturn<TData>
+  }
+
+  const defaultListParams:OverrideParamType<'list'> = {
+    initialData: {
+      pageParams: [
+        {
+          limit: params.limit,
+          offset: 0,
+        },
+      ],
+      pages: [],
+    },
+    refetchOnMount: (query) => {
+
+      return query.state.dataUpdateCount === 0 || query.isStaleByTime()
+    },
+    getNextPageParam: (page, pages) => {
+      return {
+        limit: params.limit,
+        offset: pages.reduce((acc, p) => p.results.length + acc, 0),
+      }
+
+    },
+    ...params?.overrides?.list,
+    queryFn: listFn,
+    queryKey: QUERY_KEYS.list,
+    keepPreviousData: true,
+
+  }
+
+  const list = useInfiniteQuery(withOverride('list', defaultListParams))
+
+  type ListQueryData = typeof list.data
+
+  type TItems = TData['results']
+
+  const {
+    flatItems,
+    pagesById,
+    itemMap,
+  } = useMemo(() => {
+    const flatData = getPaginationData<TItems[number]>({
+      keyExtractor: params.keyExtractor,
+      queryKeyOrList: list.data,
+    })
+    return {
+      ...flatData,
+      flatItems: params?.sort ? flatData.flatItems.sort(params.sort) : flatData.flatItems,
+    }
+  }, [list.dataUpdatedAt])
+
+  const retrieveParams = (params?.where || []).filter(x => typeof x !== 'undefined')
+
+  const defaultRetrieveParams:OverrideParamType<'retrieve'> = {
+    queryKey: [...QUERY_KEYS.retrieve, ...retrieveParams],
+    queryFn: async () => {
+      if (retrieveParams.length) {
+
+        return await params.onRetrieve(...retrieveParams)
+      }
+      return null
+    },
+
+    onSuccess(data) {
+      if (!data) return
+
+      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+        const itemId = params.keyExtractor(data)
+        if (!itemMap[itemId]) {
+          old.pages[0].results.unshift(data)
+          // @ts-ignore
+          old.pageParams[0].limit += 1
+        }
+        return old
+      })
+    },
+
+  }
+
+  const retrieve = useQuery(withOverride('retrieve', defaultRetrieveParams))
+
+  const defaultCreateParams:OverrideParamType<'create'> = {
+    mutationKey: QUERY_KEYS.create,
+    mutationFn: params.onCreate,
+    onMutate() {
+      params?.beforeMutate?.('create')
+    },
+    onError() {
+      params?.afterMutate?.('create', {
+        status: 'error',
+      })
+    },
+
+    onSuccess(newItem) {
+
+      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+
+        old.pages[0].results.unshift(newItem)
+        // @ts-ignore
+        old.pageParams[0].limit += 1
+        return old
+      })
+      params?.afterMutate?.('create', {
+        status: 'success',
+      })
+    },
+  }
+  const create = useMutation(withOverride('create', defaultCreateParams))
+
+  const defaultUpdateParams:OverrideParamType<'update'> = {
+    mutationKey: QUERY_KEYS.update,
+    mutationFn: params.onUpdate,
+
+    onMutate() {
+      params?.beforeMutate?.('update')
+
+    },
+    onError() {
+      params?.afterMutate?.('update', {
+        status: 'error',
+      })
+    },
+    onSuccess(data) {
+      const itemId = params.keyExtractor(data)
+      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+        const [pageIdx, itemIdx] = pagesById[itemId]
+        old.pages[pageIdx].results[itemIdx] = data
+        return old
+      })
+      params?.afterMutate?.('update', {
+        status: 'success',
+      })
+    },
+
+  }
+  const update = useMutation(withOverride('update', defaultUpdateParams))
+
+  const defaultRemoveParams:OverrideParamType<'remove'> = {
+    mutationKey: QUERY_KEYS.remove,
+    mutationFn: params.onRemove,
+    onMutate() {
+      params?.beforeMutate?.('remove')
+
+    },
+    onError() {
+      params?.afterMutate?.('remove', {
+        status: 'error',
+      })
+    },
+    onSuccess(data) {
+      const _id = params.keyExtractor(data)
+      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, oldData => {
+        const [pageIdx, itemIdx] = pagesById[_id]
+
+        oldData.pages[pageIdx].results.splice(itemIdx, 1)
+        let updateIdx = pageIdx + 1
+
+        while (updateIdx < oldData.pageParams.length) {
+          // @ts-ignore
+          oldData.pageParams[updateIdx].offset -= 1
+          updateIdx += 1
+        }
+
+        return oldData
+
+      })
+      params?.afterMutate?.('remove', {
+        status: 'success',
+      })
+    },
+
+  }
+  const remove = useMutation(withOverride('remove', defaultRemoveParams))
+
+  const listQuery = {
+    ...list,
+    isRefreshing,
+    refresh: (...params: Parameters<typeof list.refetch>) => {
+      setRefreshing(true)
+      list.refetch(...params).then(() => {
+        setRefreshing(false)
+      })
+    },
+  }
+  const itemName = params?.itemName || key
+
+  return {
+    items: flatItems,
+    pagesById,
+    itemMap,
+    itemName,
+    queries: {
+      list: listQuery,
+      update,
+      remove,
+      create,
+      retrieve,
+    },
+    QUERY_KEYS,
+    params,
+    // flatListProps,
+  }
+}

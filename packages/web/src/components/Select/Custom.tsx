@@ -20,7 +20,9 @@ import { SelectRenderFNProps } from '.'
 
 export const SelectItem: React.FC<
   SelectRenderFNProps<any> & { iconName?: string }
-> = ({ styles, iconName, onPress, label, inList }) => {
+> = ({ styles, iconName, onPress, label, icon, inList }) => {
+  const showIcon = (!inList || !!icon)
+
   return (
     <Touchable
       onPress={onPress}
@@ -31,9 +33,9 @@ export const SelectItem: React.FC<
       ) : (
         label
       )}
-      {!inList && (
+      {showIcon && (
         <Icon
-          name={iconName as IconPlaceholder}
+          name={icon || iconName as IconPlaceholder}
           style={styles.buttonIcon as any}
         />
       )}
@@ -101,10 +103,11 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
 
   const inputId = useClickOutside(() => {
     if (isOpen) {
-      console.log('aaaaaaaaaaaaaaa')
       setOpen(false)
     }
-  }, [isOpen, setOpen])
+  }, {
+    deps: [isOpen, setOpen],
+  })
 
   const variantStyles = useDefaultComponentStyle('Select', {
     styles,
@@ -160,7 +163,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
         list: getStyles('list'),
         error: getStyles('error'),
       }}
-      id={inputId.current}
+      id={inputId}
       onHover={setHovering}
       {...props}
     >
@@ -188,6 +191,13 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
               ...optionalObject(
                 item.value === value,
                 variantStyles['itemWrapper:selected'],
+                {},
+              ),
+            }),
+            buttonIcon: getStyles('buttonIcon', {
+              ...optionalObject(
+                item.value === value,
+                variantStyles['buttonIcon:selected'],
                 {},
               ),
             }),

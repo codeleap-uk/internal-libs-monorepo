@@ -19,6 +19,10 @@ import { EmptyPlaceholderStyles } from './EmptyPlaceholder'
 import { BackdropStyles } from './Backdrop'
 import { PagerStyles } from './Pager'
 import { CalendarStyles } from './Calendar'
+import { DrawerStyles } from './Drawer/styles'
+import { ListStyles } from './List'
+import { AutoCompleteStyles } from './AutoComplete'
+import { MultiSelectStyles } from './MultiSelect'
 
 export const defaultStyles = {
   View: ViewStyles,
@@ -32,6 +36,7 @@ export const defaultStyles = {
   Switch: SwitchStyles,
   Select: SelectStyles,
   FileInput: FileInputStyles,
+  List: ListStyles,
   Slider: SliderStyles,
   SegmentedControl: SegmentedControlStyles,
   ActivityIndicator: ActivityIndicatorStyles,
@@ -42,4 +47,7 @@ export const defaultStyles = {
   Backdrop: BackdropStyles,
   Calendar: CalendarStyles,
   Pager: PagerStyles,
+  Drawer: DrawerStyles,
+  AutoComplete: AutoCompleteStyles,
+  MultiSelect: MultiSelectStyles,
 }

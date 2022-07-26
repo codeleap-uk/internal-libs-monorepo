@@ -33,6 +33,7 @@
     "yup": "^0.32.11"
   },
   "dependencies": {
+    "@tanstack/react-query": "4.0.10",
     "@reduxjs/toolkit": "^1.7.1",
     "@sentry/browser": "^6.16.1",
     "axios": "0.24.0",
@@ -40,6 +41,7 @@
     "deep-equal": "^2.0.5",
     "lodash": "^4.17.21",
     "react-use": "^17.3.2",
-    "url-parse": "^1.5.10"
+    "url-parse": "^1.5.10",
+    "util": "0.12.4"
   }
 }

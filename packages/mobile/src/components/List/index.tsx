@@ -7,6 +7,7 @@ import {
   usePrevious,
   useCodeleapContext,
   TypeGuards,
+  ComponentVariants,
 } from '@codeleap/common'
 import {
 
@@ -14,11 +15,13 @@ import {
   // @ts-ignore
 } from 'react-native-keyboard-aware-scroll-view'
 
-import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo } from 'react-native'
+import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { Text } from '../Text'
+import { ListComposition, ListStyles } from './styles'
+import { StylesOf } from '../../types'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -32,20 +35,20 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
     index: number,
 ) => { length: number; offset: number; index: number })
 }
-
+export * from './styles'
 export type FlatListProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
 > =RNFlatListProps<Data> &
-  ViewProps & {
+  Omit<ViewProps, 'variants'> & {
     refreshTimeout?: number
     changeData?: any
     separators?: boolean
     refreshing?: boolean
     placeholder?: EmptyPlaceholderProps
     keyboardAware?: boolean
-
-  }
+    styles?: StylesOf<ListComposition>
+  } & ComponentVariants<typeof ListStyles>
 
 const KeyboardAwareFlatList =
   KBDView as unknown as React.ForwardRefExoticComponent<
@@ -60,6 +63,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const {
       variants = [],
       style,
+      styles = {},
       refreshTimeout = 3000,
       changeData,
       placeholder,
@@ -94,10 +98,12 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         }
       }
     }, [refreshingDisplay, changeData])
-    const { Theme } = useCodeleapContext()
 
-    const variantStyles = useDefaultComponentStyle('View', {
+    const variantStyles = useDefaultComponentStyle<'u:List', typeof ListStyles>('u:List', {
       variants,
+      styles,
+      transform: StyleSheet.flatten,
+
     })
 
     const renderSeparator = () => {
@@ -114,8 +120,8 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     return (
       <Component
-        style={[Theme.presets.full, style]}
-        contentContainerStyle={[variantStyles.wrapper]}
+        style={[variantStyles.wrapper, style]}
+        contentContainerStyle={variantStyles.content}
         ref={ref as unknown as FlatList}
         ItemSeparatorComponent={separator}
         refreshControl={

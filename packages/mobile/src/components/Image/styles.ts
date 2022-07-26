@@ -1,9 +1,9 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type ImageComposition = 'wrapper'
+export type ImageComposition = 'wrapper' | 'touchable'
 const createImageStyle = createDefaultVariantFactory<ImageComposition>()
 
-const presets = includePresets((styles) => createImageStyle(() => ({ wrapper: styles })),
+const presets = includePresets((styles) => createImageStyle(() => ({ wrapper: styles, touchable: styles })),
 )
 
 export const ImageStyles = {
@@ -11,11 +11,7 @@ export const ImageStyles = {
   default: createImageStyle(() => ({
     wrapper: {},
   })),
-  skeleton: createImageStyle(() => ({
-    wrapper: {
-      backgroundColor: '#f3f3f3',
-    },
-  })),
+
   round: createImageStyle(() => ({
     wrapper: {
       borderRadius: 100,

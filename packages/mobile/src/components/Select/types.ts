@@ -3,44 +3,35 @@ import {
   FormTypes,
   IconPlaceholder,
 } from '@codeleap/common'
-import { ReactElement } from 'react'
 import { StylesOf } from '../../types/utility'
-import { ButtonProps } from '../Button'
+import { DrawerProps } from '../Drawer'
+import { FlatListProps } from '../List'
 import { TextInputProps } from '../TextInput'
 import { SelectComposition, SelectStyles } from './styles'
 
-export type SelectRenderFNProps<T> = FormTypes.Options<T>[number] & {
+export type SelectRenderFNProps<T> = & {
   styles: StylesOf<SelectComposition>
   onPress: () => void
-  selected?: boolean
-  index: number
+  isSelected?: boolean
+  item: FormTypes.Options<T>[number]
 }
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
 
-export type CustomSelectProps<T> = {
+type SelectDrawerProps = Omit<DrawerProps, 'variants' | 'styles'>
+
+export type CustomSelectProps<T> = SelectDrawerProps & {
     value: T
     placeholder?: FormTypes.Label
     label?: FormTypes.Label
     options?: FormTypes.Options<T>
-    onDropdownToggle?: (isOpen?: boolean) => void
     onValueChange?: (value: T) => void
     renderItem?: SelectRenderFN<T>
     styles?: StylesOf<SelectComposition>
     style?: any
     arrowIconName?: IconPlaceholder
-    scroll?: boolean
     closeOnSelect?: boolean
-    footer?: ReactElement
-    header?: ReactElement
-    showLabelOnModal?: boolean
-    modalCloseIconName?: IconPlaceholder
-    showClose?: boolean
-    modalLabel?: string
-    textInputProps?: Partial<TextInputProps>
-    closeButtonProps?: Partial<ButtonProps>
-    toggle: (isOpen?: boolean) => void
-    visible: boolean
-    renderList?: (props:CustomSelectProps<T> & {isEmpty: boolean}) => JSX.Element
-  } & ComponentVariants<typeof SelectStyles> & TextInputProps
+    inputProps?: Partial<TextInputProps>
+    listProps?: Partial<FlatListProps>
+  } & ComponentVariants<typeof SelectStyles>
 

@@ -10,7 +10,7 @@ import { mapVariants, standardizeVariants, applyVariants } from './utils'
 import { DefaultVariants, DEFAULT_VARIANTS, DEFAULT_STYLES } from './defaults'
 import { AppTheme, EnhancedTheme } from '../types'
 import { AnyFunction, NestedKeys } from '../../types'
-import { mapObject, TypeGuards } from '../../utils'
+import { mapObject, TypeGuards, uniqueArrayByProperty } from '../../utils'
 
 import { silentLogger } from '../../constants'
 import { FunctionType } from '../../types'
@@ -210,13 +210,17 @@ export class VariantProvider<
           }
         }
       }
-
-      const appliableStyles = Object.fromEntries(
-        mapObject(computedStyles, ([k, v]) => [
-          k,
-          this.createStylesheet({ ...v, ...override?.[k] }),
-        ]),
-      ) as Record<Comp, CSSOut>
+      const styleKeys = uniqueArrayByProperty([...Object.keys(computedStyles), ...Object.keys(override || {})], (a) => a)
+      const appliableStyles = {} as Record<Comp, CSSOut>
+      for (const k of styleKeys) {
+        appliableStyles[k] = this.createStylesheet({ ...computedStyles?.[k], ...override?.[k] })
+      }
+      // const appliableStyles = Object.fromEntries(
+      //   mapObject(computedStyles, ([k, v]) => [
+      //     k,
+      //     this.createStylesheet({ ...v, ...override?.[k] }),
+      //   ]),
+      // )
       return appliableStyles
     } catch (e) {
       this.logger.error(`Error on getStyles for Component ${debugName} \n${variantList.join('\n')}\n` + debugName, e, SCOPE)

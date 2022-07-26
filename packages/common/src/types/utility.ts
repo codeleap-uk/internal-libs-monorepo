@@ -91,7 +91,7 @@ export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 }
 
-export type PropsOf<T> = T extends React.ComponentType<infer P> ? P : never
+export type PropsOf<T> = T extends React.ComponentType<infer P> ? P : any
 
 export type Hashmap<T> = {
   [key: string]: T
@@ -113,3 +113,14 @@ export type GetRefType<T> = T extends React.Ref<infer U> ? U : never
 export type FilterKeys<T, Filter = any> = Exclude<{
   [P in keyof T]: T[P] extends Filter ? P : '__never__'
 }[keyof T], '__never__'>
+
+export type ReactState<T = any> = [
+  T,
+  React.Dispatch<React.SetStateAction<T>>
+]
+
+export type ReactStateProps<Name extends string, T = any, State extends ReactState<T> = ReactState<T>> = {
+  [P in Name as `set${Capitalize<Name>}`]: State[1]
+} & {
+  [P in Name ]: State[0]
+}

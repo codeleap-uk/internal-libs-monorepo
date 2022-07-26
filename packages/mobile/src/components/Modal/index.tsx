@@ -21,7 +21,7 @@ import { StylesOf } from '../../types/utility'
 import { useDynamicAnimation } from 'moti'
 import { Backdrop } from '../Backdrop'
 import { useStaticAnimationStyles } from '../../utils/hooks'
-import { Text } from '../Text'
+import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
 
 export * from './styles'
@@ -42,7 +42,41 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   toggle?: () => void
   zIndex?: number
   scroll?: boolean
+  header?: React.ReactElement
   keyboardAware?: boolean
+  renderHeader?: (props: ModalHeaderProps) => React.ReactElement
+}
+
+export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
+  styles: {
+    wrapper: ViewProps['style']
+    title: TextProps['style']
+    closeButton: ButtonProps['styles']
+  }
+}
+
+const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
+  const { styles, title, showClose, closable, debugName, closeIconName, toggle } = props
+  return <>
+    {(title || showClose) && (
+      <View style={styles.wrapper}>
+        {typeof title === 'string' ? (
+          <Text text={title} style={styles.title} />
+        ) : (
+          title
+        )}
+
+        {(showClose && closable) && (
+          <Button
+            debugName={`${debugName} modal close button`}
+            icon={closeIconName as IconPlaceholder}
+            variants={['icon']}
+            onPress={toggle}
+            styles={styles.closeButton}
+          />
+        )}
+      </View>
+    )}</>
 }
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
@@ -50,16 +84,17 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     variants = [],
     styles = {},
     visible,
-    showClose,
+
     closable = true,
-    title,
+
     footer,
     children,
     toggle = () => null,
     dismissOnBackdrop = true,
-    closeIconName = 'close',
+    header = null,
     debugName,
     scroll = true,
+    renderHeader,
     keyboardAware = true,
     zIndex = null,
     ...props
@@ -91,6 +126,18 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     boxAnimation.animateTo(visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden'])
   }, [visible])
   const wrapperStyle = getStyles('wrapper')
+  const ScrollComponent = scroll ? Scroll : View
+  const scrollStyle = scroll ? getStyles('innerWrapper') : [getStyles('innerWrapper'), getStyles('innerWrapperScroll')]
+
+  const headerProps:ModalHeaderProps = {
+    ...modalProps,
+    styles: {
+      wrapper: getStyles('header'),
+      title: getStyles('title'),
+      closeButton: buttonStyles,
+    },
+  }
+  const Header = renderHeader || DefaultHeader
 
   return (
     <View
@@ -107,8 +154,8 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         transition: { ...variantStyles['backdrop:transition'] },
       }}
       />
-      <Scroll
-        style={getStyles('innerWrapper')}
+      <ScrollComponent
+        style={scrollStyle}
         contentContainerStyle={getStyles('innerWrapperScroll')}
         scrollEnabled={scroll}
         keyboardAware={keyboardAware}
@@ -128,25 +175,8 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
           transition={{ ...variantStyles['box:transition'] }}
           {...props}
         >
-          {(title || showClose) && (
-            <View style={getStyles('header')}>
-              {typeof title === 'string' ? (
-                <Text text={title} style={getStyles('title')} />
-              ) : (
-                title
-              )}
 
-              {(showClose && closable) && (
-                <Button
-                  debugName={`${debugName} modal close button`}
-                  icon={closeIconName as IconPlaceholder}
-                  variants={['icon']}
-                  onPress={toggle}
-                  styles={buttonStyles}
-                />
-              )}
-            </View>
-          )}
+          {header ? header : <Header {...headerProps}/>}
 
           <View style={getStyles('body')}>{children}</View>
           {footer && (
@@ -155,7 +185,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
             </View>
           )}
         </View>
-      </Scroll>
+      </ScrollComponent>
     </View>
 
   )

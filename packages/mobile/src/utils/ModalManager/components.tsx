@@ -3,25 +3,22 @@ import { usePrevious, onMount, onUpdate, PropsOf } from '@codeleap/common'
 import { useModalContext } from './context'
 import { Portal } from '@gorhom/portal'
 import { Modal as _Modal } from '../../components/Modal'
+import { Drawer as _Drawer } from '../../components/Drawer'
 
-export type ManagedModalProps<T = PropsOf<typeof _Modal>> = Omit<T, 'visible' | 'toggle'> & {
+type UseManagedModalArgs = {
   id?: string
   initialVisible ?: boolean
   parent?: string
-  absolute?: boolean
   visible?: boolean
   toggle?: PropsOf<typeof _Modal>['toggle']
 }
 
-export const Modal:React.FC<ManagedModalProps> = ({
-  children,
-  id,
-  absolute = true,
-  initialVisible = false,
-  parent,
-  ...props
-}) => {
-
+function useManagedModal(props:UseManagedModalArgs) {
+  const {
+    initialVisible = false,
+    parent,
+    id,
+  } = props
   const modalId = id
   const modals = useModalContext()
 
@@ -46,14 +43,33 @@ export const Modal:React.FC<ManagedModalProps> = ({
   const visible = modalId ? modals.isVisible(modalId) : props.visible
 
   const ctxProps = modals?.state?.[modalId]?.props
-  const content = (
-    <_Modal {...props} {...ctxProps} visible={visible} toggle={() => {
+
+  const componentProps = {
+    ...props, ...ctxProps, visible: visible, toggle: () => {
       if (modalId) {
         modals.toggleModal(modalId)
       } else {
         props?.toggle?.()
       }
-    }}>
+    },
+  }
+
+  return componentProps
+}
+export type ManagedModalProps<T = PropsOf<typeof _Modal>> = Omit<T, 'visible' | 'toggle'> & UseManagedModalArgs & {
+
+  absolute?: boolean
+
+}
+export const Modal:React.FC<ManagedModalProps> = ({
+  children,
+  absolute = true,
+  ...props
+}) => {
+  const componentProps = useManagedModal(props)
+
+  const content = (
+    <_Modal {...componentProps}>
       {children}
     </_Modal>
   )
@@ -67,3 +83,30 @@ export const Modal:React.FC<ManagedModalProps> = ({
   return content
 }
 
+export type ManagedDrawerProps<T = PropsOf<typeof _Drawer>> = Omit<T, 'visible' | 'toggle'> & UseManagedModalArgs & {
+
+  absolute?: boolean
+
+}
+
+export const Drawer:React.FC<ManagedDrawerProps> = ({
+  children,
+  absolute = true,
+  ...props
+}) => {
+  const componentProps = useManagedModal(props)
+
+  const content = (
+    <_Drawer {...componentProps}>
+      {children}
+    </_Drawer>
+  )
+
+  if (absolute) {
+    return <Portal>
+      {content}
+    </Portal>
+  }
+
+  return content
+}

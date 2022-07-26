@@ -95,6 +95,7 @@ export const WebSelectStyles = {
       width: 24,
       color: Theme.colors.white,
       transition: 'all 0.2s ease',
+      ...Theme.spacing.marginLeft('auto'),
     },
     'buttonIcon:open': {
       transform: 'rotate(180deg)',

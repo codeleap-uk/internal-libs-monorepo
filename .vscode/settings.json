@@ -24,7 +24,7 @@
       }
     ]
   },
-  "todohighlight.keywords": ["TODO", "NOTE", "NOTES", "FIXME", "HACK", "DISCUSS", "WTF"],
+  "todohighlight.keywords": ["TODO","INFO", "NOTE", "NOTES", "FIXME", "HACK", "DISCUSS", "WTF"],
     "todohighlight.defaultStyle": {
       "color": "red",
       "border": "2px solid #aaa",

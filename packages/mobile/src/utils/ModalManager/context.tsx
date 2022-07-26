@@ -23,6 +23,7 @@ type TModalContext = {
   isVisible: (name: string) => boolean
   transition: (from: string, to: string, options?: ModalTransitionOptions) => Promise<void>
   attach: (modal: string, to: string) => void
+  remove(name: string): void
   transitionDuration: number
 }
 
@@ -127,6 +128,14 @@ export function Provider({ children }) {
     })
   }
 
+  function remove(id: string) {
+    const newModals = { ...modals }
+
+    delete newModals[id]
+
+    setModals(newModals)
+  }
+
   return <ModalContext.Provider value={{
     state: modals,
     toggleModal,
@@ -134,6 +143,7 @@ export function Provider({ children }) {
     currentModal,
     attach,
     isVisible,
+    remove,
     transition,
     transitionDuration: defaultDuration,
 

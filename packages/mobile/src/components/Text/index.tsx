@@ -14,7 +14,7 @@ import { TextStyles } from './styles'
 export * from './styles'
 
 export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
-  text?: string
+  text?: React.ReactNode
   variants?: ComponentVariants<typeof TextStyles>['variants']
   animated?: boolean
   colorChangeConfig?: Partial<Animated.TimingAnimationConfig>

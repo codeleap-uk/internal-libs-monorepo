@@ -19,6 +19,8 @@ import { FastImage } from '../../modules/fastImage'
 import {
   ImageStyles,
 } from './styles'
+import { useImageSpotlight } from '../ImageView/Spotlight'
+import { Touchable } from '../Touchable'
 export * from './styles'
 type NativeImageProps = ComponentPropsWithoutRef<typeof NativeImage>
 export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
@@ -32,17 +34,22 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
     | MobileInputFile
     | string
   resizeMode?: keyof typeof FastImage.resizeMode
+  spotlight?: string
 }
 
 export const ImageComponent: React.FC<ImageProps> = (props) => {
-  const { variants, style, fast = true, resizeMode = 'contain', ...imageProps } = props
+  const { variants, style, fast = true, spotlight = null, resizeMode = 'contain', ...imageProps } = props
 
-  const variantStyles = useDefaultComponentStyle('Image', { variants })
+  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImageStyles>('u:Image', { variants })
 
   const styles = StyleSheet.flatten([variantStyles.wrapper, style])
 
+  const spotlightActions = useImageSpotlight(spotlight, props.source)
+  const Wrapper = !!spotlight ? Touchable : ({ children }) => <>{children}</>
   if (fast) {
+    // <Wrapper onPress={spotlightActions.onImagePressed} debugName={`Press spotlight image ${props.source}`} style={[variantStyles.touchable]}>
     return (
+
       <FastImage
         style={styles}
         // @ts-ignore
@@ -51,8 +58,12 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
         {...imageProps}
       />
     )
+    { /* </Wrapper> */ }
   }
-  return <NativeImage style={styles} resizeMode={resizeMode} {...(imageProps as any)} />
+  return <Wrapper onPress={spotlightActions.onImagePressed} debugName={`Press spotlight image ${props.source}`} style={[variantStyles.touchable]}>
+    <NativeImage style={styles} resizeMode={resizeMode} {...(imageProps as any)} />
+
+  </Wrapper>
 }
 
 function areEqual(prevProps, nextProps) {

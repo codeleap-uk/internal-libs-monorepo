@@ -5,29 +5,14 @@ import { IconPlaceholder,
 import React, { useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
-import { Text } from '../Text'
 import { TextInput } from '../TextInput'
-import { Touchable } from '../Touchable'
-import { SelectStyles } from './styles'
-import { CustomSelectProps } from './types'
+import { MultiSelectProps } from './types'
 import { ModalManager } from '../../utils'
-import { Icon } from '../Icon'
-
-export const SelectItem = ({ item, icon = null, isSelected, styles, onPress }) => {
-  return <Touchable style={[
-    styles.itemWrapper,
-    isSelected && styles['itemWrapper:selected'],
-  ]} onPress={onPress} debugName={`Select ${item.value}`}>
-    <Text text={item.label} style={[
-      styles.itemText,
-      isSelected && styles['itemText:selected'],
-    ]}/>
-    {icon ? <Icon name={icon} style={[styles?.itemIcon, isSelected && styles?.['itemIcon:selected']]}/> : null}
-  </Touchable>
-}
+import { MultiSelectStyles } from './styles'
+import { SelectItem } from '../Select'
 
 export * from './styles'
-export const Select = <T extends string|number = string>(selectProps:CustomSelectProps<T>) => {
+export const MultiSelect = <T extends string|number = string>(selectProps:MultiSelectProps<T>) => {
   const {
     value,
     onValueChange,
@@ -37,15 +22,15 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     style,
     variants,
     renderItem,
-    closeOnSelect = true,
     listProps,
     placeholder = 'Select',
     arrowIconName = 'selectArrow',
+    selectedIcon = 'multiSelectMarker',
     inputProps = {},
     ...drawerProps
   } = selectProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectStyles>('u:Select', {
+  const variantStyles = useDefaultComponentStyle<'u:MultiSelect', typeof MultiSelectStyles>('u:MultiSelect', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,
@@ -59,18 +44,22 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
   const close = () => drawerProps?.toggle?.()
 
-  const select = (value) => {
+  const select = (itemValue) => {
+    const newVal = [...value]
 
-    onValueChange(value)
-    if (closeOnSelect) {
-      close?.()
+    if (newVal.includes(itemValue)) {
+      newVal.splice(newVal.indexOf(itemValue), 1)
+    } else {
+      newVal.push(itemValue)
     }
+    onValueChange(newVal)
+
   }
 
   const selectedLabel:string = useMemo(() => {
-    const current = options.find(o => o.value === value)
+    const current = options.filter(o => value.includes(o.value)).map(o => o.label)
 
-    const display = current?.label ?? placeholder
+    const display = current?.join(', ') ?? placeholder
 
     return TypeGuards.isString(display) ? display : ''
   }, [value, placeholder, options])
@@ -79,10 +68,11 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
   const renderListItem = ({ item }) => {
     return <Item
-      isSelected={value === item.value}
+      isSelected={value.includes(item.value)}
       item={item}
       onPress={() => select(item.value)}
       styles={variantStyles}
+      icon={selectedIcon as IconPlaceholder}
     />
   }
   return <>
@@ -106,7 +96,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       {...inputProps}
     />
     <ModalManager.Drawer scroll={false} title={label} {...drawerProps} styles={variantStyles}>
-      <List<CustomSelectProps<any>['options']>
+      <List<MultiSelectProps<any>['options']>
         data={options}
         style={variantStyles.list}
         contentContainerStyle={variantStyles.listContent}
@@ -121,3 +111,4 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
 export * from './styles'
 export * from './types'
+

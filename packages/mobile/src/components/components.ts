@@ -22,11 +22,14 @@ export * from './Button'
 export * from './ContentView'
 export * from './Modal'
 export * from './Calendar'
-
+export * from './ImageView'
 export * from './Navigation'
 export * from './Pager'
 export * from './EmptyPlaceholder'
 export * from './Backdrop'
+export * from './Drawer'
+export * from './MultiSelect'
+export * from './AutoComplete'
 
 import * as Legacy from './legacy'
 export {

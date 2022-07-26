@@ -124,13 +124,15 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
     ...variantStyles.bubble,
   } as CSSObject
 
-  const wrapperRef = useClickOutside(
+  const wrapperId = useClickOutside(
     () => {
       if (isVisible) {
         setVisible(false)
       }
     },
-    [setVisible, isVisible],
+    {
+      deps: [setVisible, isVisible],
+    },
 
   )
 
@@ -138,7 +140,7 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
     return (
       <Touchable
         onPress={() => setVisible()}
-        ref={wrapperRef}
+        id={wrapperId}
         css={variantStyles.wrapper}
       >
         <View css={style}>{content}</View>
@@ -148,7 +150,7 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
   }
 
   return (
-    <View onHover={setVisible} ref={wrapperRef} css={variantStyles.wrapper}>
+    <View onHover={setVisible} id={wrapperId} css={variantStyles.wrapper}>
       <View css={style}>{content}</View>
       {children}
     </View>
