@@ -24,7 +24,10 @@ export const RadioInputStyles = {
     const translateX = -(markHeight / 2)
     const translateY = -(markHeight / 2)
     return {
-
+      itemWrapper: {
+        ...theme.presets.row,
+        ...theme.spacing.marginVertical(1.3),
+      },
       button: {
         height: itemHeight,
         width: itemHeight,

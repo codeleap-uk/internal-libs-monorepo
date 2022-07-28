@@ -19,7 +19,6 @@ export const ViewStyles = {
       width: '100%',
       height: t.values.pixel,
       backgroundColor: t.colors.borders,
-      marginLeft: t.spacing.value(3),
     },
   })),
 }

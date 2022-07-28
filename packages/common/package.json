@@ -4,7 +4,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
-  "repository": "PRIVATE",
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "packages/common"
+  }, 
   "devDependencies": {
     "@codeleap/config": "^1.0.0",
     "@emotion/css": "^11.7.1",

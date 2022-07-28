@@ -29,6 +29,8 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     renderItem?: SelectRenderFN<T>
     styles?: StylesOf<SelectComposition>
     style?: any
+    hideInput?: boolean
+
     arrowIconName?: IconPlaceholder
     closeOnSelect?: boolean
     inputProps?: Partial<TextInputProps>

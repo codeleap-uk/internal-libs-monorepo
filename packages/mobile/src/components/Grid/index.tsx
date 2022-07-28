@@ -1,28 +1,24 @@
 import * as React from 'react'
-import { forwardRef, useState } from 'react'
+import { forwardRef } from 'react'
 import {
-
   useDefaultComponentStyle,
-
   ComponentVariants,
 } from '@codeleap/common'
-import {
 
-  KeyboardAwareFlatList,
-} from 'react-native-keyboard-aware-scroll-view'
-
-import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
+import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-grid'
+import { RefreshControl, StyleSheet, RefreshControlProps } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { ListComposition, ListStyles } from './styles'
+import { GridComposition, GridStyles } from './styles'
 import { StylesOf } from '../../types'
+import listenToKeyboardEvents from 'react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC'
 
-export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
+export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
-export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & {
+export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & {
   data: T[]
   keyExtractor?: (item: T, index: number) => string
-  renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
+  renderItem: (data: GridRenderItemInfo<T>) => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
@@ -31,22 +27,23 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
 }
 
 export * from './styles'
-export * from './PaginationIndicator'
 
-export type FlatListProps<
+const KeyboardAwareFlatGrid = listenToKeyboardEvents(FlatGrid) as React.FC<FlatGridProps>
+
+export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
-> =RNFlatListProps<Data> &
+> =FlatGridProps<Data> &
   Omit<ViewProps, 'variants'> & {
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
     keyboardAware?: boolean
-    styles?: StylesOf<ListComposition>
+    styles?: StylesOf<GridComposition>
     refreshControlProps?: Partial<RefreshControlProps>
-  } & ComponentVariants<typeof ListStyles>
+  } & ComponentVariants<typeof GridStyles>
 
-const ListCP = forwardRef<FlatList, FlatListProps>(
-  (flatListProps, ref) => {
+const GridCP = forwardRef<FlatGrid, GridProps>(
+  (flatGridProps, ref) => {
     const {
       variants = [],
       style,
@@ -57,9 +54,9 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       keyboardAware = true,
       refreshControlProps = {},
       ...props
-    } = flatListProps
+    } = flatGridProps
 
-    const variantStyles = useDefaultComponentStyle<'u:List', typeof ListStyles>('u:List', {
+    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridStyles>('u:Grid', {
       variants,
       styles,
       transform: StyleSheet.flatten,
@@ -76,14 +73,14 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    const Component:any = keyboardAware ? KeyboardAwareFlatList : FlatList
+    const Component = keyboardAware ? KeyboardAwareFlatGrid : FlatGrid
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
     return (
       <Component
         style={[variantStyles.wrapper, style]}
         contentContainerStyle={variantStyles.content}
-        ref={ref as unknown as FlatList}
+        ref={ref as unknown as FlatGrid}
         ItemSeparatorComponent={separator}
         refreshControl={
           !!onRefresh && (
@@ -104,7 +101,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
   },
 )
 
-export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
+export type GridComponentType = <T extends any[] = any[]>(props: FlatGridProps<T>) => React.ReactElement
 
-export const List = ListCP as ListComponentType
+export const Grid = GridCP as GridComponentType
 

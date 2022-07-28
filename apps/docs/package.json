@@ -2,6 +2,11 @@
   "name": "codeleap-docs",
   "version": "1.6.3",
   "private": true,
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "apps/docs"
+  },
   "scripts": {
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "styles": "node ../../node_modules/@codeleap/common/dist/scripts/createStyleSheets",

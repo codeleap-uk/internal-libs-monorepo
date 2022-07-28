@@ -7,6 +7,7 @@ export function stringiparse(string) {
 }
 
 export function capitalize(str: string, reverse = false) {
+  if (!str.length) return str
   const firstChar = reverse ? str[0].toLowerCase() : str[0].toUpperCase()
   return firstChar + str.substring(1)
 }

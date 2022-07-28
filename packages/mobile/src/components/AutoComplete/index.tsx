@@ -43,7 +43,7 @@ export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
         styles={styles.closeButton}/>
     </View>
     <TextInput leftIcon={{
-      name: icon as IconPlaceholder,
+      icon: icon as IconPlaceholder,
     }} debugName={`AutoComplete ${debugName} search input`} value={search} onChangeText={setSearch} styles={styles.searchInput} {...searchInputProps}/>
   </View>
 }

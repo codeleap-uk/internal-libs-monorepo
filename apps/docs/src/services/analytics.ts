@@ -8,7 +8,6 @@ export const AppAnalytics = new LoggerAnalytics.Analytics({
     // })
   },
   onEvent: (eventArgs) => {
-    console.log(eventArgs.data)
     // analytics().logEvent('app_action', eventArgs).then(console.log)
     //   .catch(console.error)
   },

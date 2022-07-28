@@ -1,15 +1,15 @@
 import { createDefaultVariantFactory } from '@codeleap/common'
+import { ScrollComposition, ScrollStyles } from '../Scroll/styles'
 
-export type ListComposition = 'wrapper' |'content'
+export type ListComposition = ScrollComposition
 
 const createListStyle = createDefaultVariantFactory<ListComposition>()
 
 export const ListStyles = {
   default: createListStyle((theme) => {
+    const defaultStyles = ScrollStyles.default(theme)
     return {
-      wrapper: {
-        ...theme.presets.fullHeight,
-      },
+      ...defaultStyles,
     }
   }),
 }

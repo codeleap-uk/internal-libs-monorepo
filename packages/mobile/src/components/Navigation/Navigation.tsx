@@ -10,13 +10,9 @@ import { Navigators } from './constants'
 export const Navigation = <T extends NavigatorType>({ type, scenes, ...props }: NavigationProps<T>) => {
   const NavigationComponent = Navigators[type] as TNavigators[T]
 
-  const defaultProps = {}
-  if (type === 'Tab') {
-    defaultProps.screenOptions = { headerShown: false }
-  }
   // console.log('render Navigation', { type, scenes, props, defaultProps })
 
-  return <NavigationComponent.Navigator {...(props as any)} {...defaultProps}>
+  return <NavigationComponent.Navigator {...props}>
     {
       Object.entries(scenes).map(([name, content], idx) => {
         const isFunction = TypeGuards.isFunction(content)

@@ -79,6 +79,7 @@ export type AppTheme = {
     large: number
     medium: number
     small: number
+    round: number
   }
 
   readonly presets ?: Record<string, any>

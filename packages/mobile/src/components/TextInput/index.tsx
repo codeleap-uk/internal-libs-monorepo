@@ -2,6 +2,7 @@ import * as React from 'react'
 import {
   ComponentVariants,
   FormTypes,
+  getNestedStylesByKey,
   IconPlaceholder,
 
   useBooleanToggle,
@@ -23,9 +24,11 @@ export { InputLabel } from './Label'
 export * from './styles'
 
 import {
+  InputIconComposition,
   TextInputComposition,
   TextInputStyles,
 } from './styles'
+import { ActionIcon, ActionIconParts, ActionIconProps } from '../ActionIcon'
 
 type IconProp = { name: IconPlaceholder; action?: () => void }
 
@@ -43,8 +46,8 @@ export type TextInputProps =
     type?: string
     label?: React.ReactNode
     debugName: string
-    leftIcon?: IconProp
-    rightIcon?: IconProp
+    leftIcon?: Partial<ActionIconProps>
+    rightIcon?: Partial<ActionIconProps>
     styles?: StylesOf<TextInputComposition>
     validate?: FormTypes.ValidatorFunctionWithoutForm | string
     value?: string
@@ -90,9 +93,10 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
 
   const input = useRef<any>(null)
   const [textIsVisible, setTextVisible] = useBooleanToggle(false)
-  const variantStyles = useDefaultComponentStyle('TextInput', {
+  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputStyles>('u:TextInput', {
     variants,
     styles,
+    transform: StyleSheet.flatten,
   })
   const InputElement = masking ? MaskedTextInput : NativeTextInput
 
@@ -128,29 +132,12 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
 
   const { showError, error } = useValidate(value, validate)
 
-  const leftIconStyle = {
-    ...variantStyles.icon,
-    ...(isFocused ? variantStyles['icon:focus'] : {}),
-    ...(showError ? variantStyles['icon:error'] : {}),
-    ...variantStyles.leftIcon,
-    ...(isFocused ? variantStyles['leftIcon:focus'] : {}),
-    ...(showError ? variantStyles['leftIcon:error'] : {}),
-  }
+  const commonIconStyles = getNestedStylesByKey('icon', variantStyles)
 
-  const rightIconStyle = {
-    ...variantStyles.icon,
-    ...(isFocused ? variantStyles['icon:focus'] : {}),
-    ...(showError ? variantStyles['icon:error'] : {}),
-    ...variantStyles.rightIcon,
-    ...(isFocused ? variantStyles['rightIcon:focus'] : {}),
-    ...(showError ? variantStyles['rightIcon:error'] : {}),
-  }
+  const leftIconStyles = getNestedStylesByKey('leftIcon', variantStyles)
 
-  const buttonIconWrapperStyle = {
-    ...variantStyles.buttonIconWrapper,
-    ...(isFocused ? variantStyles['buttonIconWrapper:focus'] : {}),
-    ...(showError ? variantStyles['buttonIconWrapper:error'] : {}),
-  }
+  const rightIconStyles = getNestedStylesByKey('rightIcon', variantStyles)
+
   function getStyles(key: TextInputComposition) {
     const requestedStyles = [
       variantStyles[key],
@@ -168,6 +155,12 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     }
   }
 
+  const visibilityToggleProps = visibilityToggle ? {
+    onPress: () => setTextVisible(),
+    icon: (textIsVisible ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder,
+    debugName: `${debugName} toggle visibility`,
+  } : {}
+
   return (
     <Touchable
       style={getStyles('wrapper')}
@@ -184,7 +177,14 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
         required={required}
       />
       <View style={getStyles('innerWrapper')} {...innerWrapperProps}>
-        <InputIcon {...leftIcon} style={leftIconStyle} wrapperStyle={buttonIconWrapperStyle} />
+        <InputIcon
+          isFocused={isFocused}
+          showError={showError}
+          styles={leftIconStyles}
+          commonStyles={commonIconStyles}
+          debugName={`${debugName} left icon`}
+          {...leftIcon}
+        />
         {/* @ts-ignore */}
         <InputElement
           ref={input}
@@ -203,14 +203,16 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           } } : {})}
           style={getStyles('textField')}
         />
-        {
-          visibilityToggle ?
-            <InputIcon name={
-              (textIsVisible ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder
-            } action={() => setTextVisible()} style={rightIconStyle} wrapperStyle={buttonIconWrapperStyle}/>
-            :
-            <InputIcon {...rightIcon} style={rightIconStyle} wrapperStyle={buttonIconWrapperStyle} />
-        }
+        <InputIcon
+          isFocused={isFocused}
+          showError={showError}
+          styles={rightIconStyles}
+          commonStyles={commonIconStyles}
+          debugName={`${debugName} right icon`}
+          {...rightIcon}
+          {...visibilityToggleProps}
+        />
+
       </View>
       <FormError message={error.message} style={getStyles('error')} />
     </Touchable>
@@ -225,12 +227,37 @@ export const FormError = ({ message, ...props }) => {
   return message
 }
 
-export const InputIcon: React.FC<{ style: any; wrapperStyle: any } & IconProp> = ({ name, style, action, wrapperStyle = {}}) => {
-  if (!name) return null
-  if (action) {
-    return <Touchable debugName={`${name} icon button`} onPress={() => action()} style={wrapperStyle} >
-      <Icon name={name} style={style}/>
-    </Touchable>
+type InputIconProps = {
+  styles: StylesOf<InputIconComposition>
+  commonStyles: StylesOf<InputIconComposition>
+  isFocused: boolean
+  showError: boolean
+} & Omit<ActionIconProps, 'styles'>
+
+export const InputIcon:React.FC<InputIconProps> = ({ styles, commonStyles, isFocused, showError, ...props }) => {
+  if (!props.icon) return null
+
+  function getStyles(key: ActionIconParts | '') {
+    if (key === 'icon') key = ''
+    const requestedStyles = [
+      commonStyles[key],
+      isFocused ? commonStyles[key + ':focus'] : {},
+      showError ? commonStyles[key + ':error'] : {},
+      styles[key],
+      isFocused ? styles[key + ':focus'] : {},
+      showError ? styles[key + ':error'] : {},
+    ]
+    return StyleSheet.flatten(requestedStyles)
   }
-  return <Icon name={name} style={style} />
+  const iconStyles = {
+    icon: getStyles('icon'),
+    touchablePressable: getStyles('touchablePressable'),
+    touchableWrapper: getStyles('touchableWrapper'),
+    touchableRipple: getStyles('touchableRipple'),
+  }
+
+  return <ActionIcon
+    styles={iconStyles}
+    {...props}
+  />
 }

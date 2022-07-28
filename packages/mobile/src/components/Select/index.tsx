@@ -42,6 +42,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     placeholder = 'Select',
     arrowIconName = 'selectArrow',
     inputProps = {},
+    hideInput = false,
     ...drawerProps
   } = selectProps
 
@@ -86,25 +87,30 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     />
   }
   return <>
-    <TextInput
-      caretHidden
-      value={selectedLabel}
-      rightIcon={{
-        name: arrowIconName as IconPlaceholder,
-      }}
-      editable={false}
-      touchableWrapper
-      wrapperProps={{
-        debugName: 'Select',
-        onPress: close,
-      }}
-      pointerEvents={'none'}
-      label={label}
-      debugName={'Select input'}
-      styles={inputStyles}
-      style={style}
-      {...inputProps}
-    />
+    {
+      !hideInput && (
+        <TextInput
+          caretHidden
+          value={selectedLabel}
+          rightIcon={{
+            icon: arrowIconName as IconPlaceholder,
+          }}
+          editable={false}
+          touchableWrapper
+          wrapperProps={{
+            debugName: 'Select',
+            onPress: close,
+          }}
+          pointerEvents={'none'}
+          label={label}
+          debugName={'Select input'}
+          styles={inputStyles}
+          style={style}
+          {...inputProps}
+        />
+      )
+    }
+
     <ModalManager.Drawer scroll={false} title={label} {...drawerProps} styles={variantStyles}>
       <List<CustomSelectProps<any>['options']>
         data={options}

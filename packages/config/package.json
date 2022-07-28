@@ -3,7 +3,11 @@
   "version": "1.1.1",
   "main": "index.js",
   "license": "UNLICENSED",
-  "repository": "PRIVATE",
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "packages/config"
+  },
   "files": [
     ".eslintrc.js"
   ],

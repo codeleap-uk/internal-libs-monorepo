@@ -20,9 +20,12 @@ import { BackdropStyles } from './Backdrop'
 import { PagerStyles } from './Pager'
 import { CalendarStyles } from './Calendar'
 import { DrawerStyles } from './Drawer/styles'
-import { ListStyles } from './List'
+import { ListStyles, PaginationIndicatorStyles } from './List'
 import { AutoCompleteStyles } from './AutoComplete'
 import { MultiSelectStyles } from './MultiSelect'
+import { ScrollStyles } from './Scroll'
+import { ActionIconStyles } from './ActionIcon'
+import { GridStyles } from './Grid'
 
 export const defaultStyles = {
   View: ViewStyles,
@@ -50,4 +53,8 @@ export const defaultStyles = {
   Drawer: DrawerStyles,
   AutoComplete: AutoCompleteStyles,
   MultiSelect: MultiSelectStyles,
+  Scroll: ScrollStyles,
+  PaginationIndicator: PaginationIndicatorStyles,
+  ActionIcon: ActionIconStyles,
+  Grid: GridStyles,
 }

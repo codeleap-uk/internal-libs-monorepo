@@ -1,16 +1,20 @@
 import { assignTextStyle, createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ActionIconParts } from '../ActionIcon'
+
+export type IconParts = Exclude<ActionIconParts, 'icon' | 'icon:disabled'>
+type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
+
+export type InputIconComposition = `${InputIcons}${Capitalize<IconParts>}`
+| InputIcons
 
 type TextInputParts =
   | 'wrapper'
-  | 'icon'
-  | 'leftIcon'
-  | 'rightIcon'
+  | InputIconComposition
   | 'textField'
   | 'label'
   | 'innerWrapper'
   | 'error'
   | 'placeholder'
-  | 'buttonIconWrapper'
   | 'selection'
   | 'requiredAsterisk'
   | 'labelWrapper'
@@ -55,32 +59,31 @@ export const TextInputStyles = {
       display: 'flex',
       alignItems: 'center',
     },
-    'icon:focus': {
-      color: theme.colors.primary,
-    },
+
     label: {
       ...theme.spacing.marginBottom(1),
       ...assignTextStyle('h5')(theme).text,
     },
-    icon: {
-      size: 20,
+    'icon': {
       color: theme.colors.neutral,
     },
-    leftIcon: {
-      ...theme.spacing.marginRight(1),
-      size: 20,
+    'icon:error': {
+      color: theme.colors.negative,
     },
-    rightIcon: {
+    'icon:focus': {
+      color: theme.colors.primary,
+    },
+    leftIconTouchableWrapper: {
+      ...theme.spacing.marginRight(1),
+    },
+    rightIconTouchableWrapper: {
       ...theme.spacing.marginLeft(1),
-      size: 20,
     },
     error: {
       color: theme.colors.negative,
       ...theme.spacing.marginTop(0.5),
     },
-    'icon:error': {
-      color: theme.colors.negative,
-    },
+
     'label:error': {
       color: theme.colors.negative,
     },

@@ -21,6 +21,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     options,
     style,
     variants,
+    hideInput = false,
     renderItem,
     listProps,
     placeholder = 'Select',
@@ -76,25 +77,30 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     />
   }
   return <>
-    <TextInput
-      caretHidden
-      value={selectedLabel}
-      rightIcon={{
-        name: arrowIconName as IconPlaceholder,
-      }}
-      editable={false}
-      touchableWrapper
-      wrapperProps={{
-        debugName: 'Select',
-        onPress: close,
-      }}
-      pointerEvents={'none'}
-      label={label}
-      debugName={'Select input'}
-      styles={inputStyles}
-      style={style}
-      {...inputProps}
-    />
+    {
+      !hideInput && (
+        <TextInput
+          caretHidden
+          value={selectedLabel}
+          rightIcon={{
+            icon: arrowIconName as IconPlaceholder,
+          }}
+          editable={false}
+          touchableWrapper
+          wrapperProps={{
+            debugName: 'Select',
+            onPress: close,
+          }}
+          pointerEvents={'none'}
+          label={label}
+          debugName={'Select input'}
+          styles={inputStyles}
+          style={style}
+          {...inputProps}
+        />
+      )
+    }
+
     <ModalManager.Drawer scroll={false} title={label} {...drawerProps} styles={variantStyles}>
       <List<MultiSelectProps<any>['options']>
         data={options}

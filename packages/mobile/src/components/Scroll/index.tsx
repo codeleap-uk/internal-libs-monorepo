@@ -9,12 +9,13 @@ import {
 } from '@codeleap/common'
 
 import {
-  KeyboardAwareScrollView as KBDView,
-  // @ts-ignore
+  KeyboardAwareScrollView,
 } from 'react-native-keyboard-aware-scroll-view'
-import { RefreshControl, ScrollView, ScrollViewProps, ViewStyle } from 'react-native'
+import { RefreshControl, RefreshControlProps, ScrollView, StyleSheet } from 'react-native'
 import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
+import { StylesOf } from '../../types'
+import { ScrollComposition, ScrollStyles } from './styles'
 
 type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
 
@@ -25,17 +26,9 @@ export type ScrollProps = KeyboardAwareScrollViewProps &
     changeData?: any
     keyboardAware?: boolean
     refreshing?: boolean
-    styles?: ViewStyle
+    styles?: StylesOf<ScrollComposition>
+    refreshControlProps?: Partial<RefreshControlProps>
   }
-
-const KeyboardAwareScrollView =
-  KBDView as unknown as React.ForwardRefExoticComponent<
-    ViewProps & {
-      refreshControl?: JSX.Element
-      ref?: ScrollView
-
-    } & ScrollViewProps
-  >
 
 export const Scroll = forwardRef<ScrollView, ScrollProps>(
   (scrollProps, ref) => {
@@ -45,7 +38,8 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       refreshTimeout = 3000,
       children,
       changeData,
-      styles,
+      styles = {},
+      refreshControlProps = {},
       keyboardAware = true,
       ...props
     } = scrollProps
@@ -79,16 +73,15 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     }, [refreshingDisplay, changeData])
     const { Theme } = useCodeleapContext()
 
-    const variantStyles = useDefaultComponentStyle('View', {
+    const variantStyles = useDefaultComponentStyle<'u:Scroll', typeof ScrollStyles>('u:Scroll', {
       variants,
-      styles: {
-        wrapper: styles,
-      },
+      styles,
+      transform: StyleSheet.flatten,
       rootElement: 'wrapper',
     })
 
     const Component = keyboardAware ? KeyboardAwareScrollView : ScrollView
-
+    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
     return (
       <Component
         style={[Theme.presets.full, style]}
@@ -96,7 +89,13 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         ref={ref as unknown as ScrollView}
         refreshControl={
           hasRefresh && (
-            <RefreshControl refreshing={refreshingDisplay} onRefresh={onRefresh} />
+            <RefreshControl
+              refreshing={refreshingDisplay}
+              onRefresh={onRefresh}
+              tintColor={refreshStyles?.color}
+              colors={[refreshStyles?.color]}
+              {...refreshControlProps}
+            />
           )
         }
         {...props}
@@ -106,3 +105,4 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     )
   },
 )
+export * from './styles'

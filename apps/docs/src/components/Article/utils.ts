@@ -56,7 +56,6 @@ export function useMdx(allMdx, pageContext) {
     if (pageContext?.order) {
       const orderedFlatData = []
       const orderKeys = [...(pageContext.order?.__categories__ || Object.keys(pageContext.order))]
-      console.log(orderKeys)
       let orderedPages = Object.entries<MdxMetadata[]>(pages).sort((a, b) => {
         const aIdx = orderKeys.indexOf(a[0])
         const bIdx = orderKeys.indexOf(b[0])

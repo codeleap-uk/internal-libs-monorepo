@@ -23,6 +23,18 @@
         "licenseUrl": "https://github.com/reach/router/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "@reduxjs/toolkit@1.8.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/reduxjs/redux-toolkit",
+        "licenseUrl": "https://github.com/reduxjs/redux-toolkit/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
+    "@sentry/browser@6.19.6": {
+        "licenses": "BSD-3-Clause",
+        "repository": "https://github.com/getsentry/sentry-javascript",
+        "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "beautiful-react-hooks@1.2.0": {
         "licenses": "MIT",
         "repository": "https://github.com/antonioru/beautiful-react-hooks",
@@ -89,10 +101,22 @@
         "licenseUrl": "https://github.com:react-icons/react-icons/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "react-redux@7.2.8": {
+        "licenses": "MIT",
+        "repository": "github:reduxjs/react-redux",
+        "licenseUrl": "github:reduxjs/react-redux",
+        "parents": "codeleap-docs"
+    },
     "react-toastify@8.2.0": {
         "licenses": "MIT",
         "repository": "https://github.com/fkhadra/react-toastify",
         "licenseUrl": "https://github.com/fkhadra/react-toastify/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
+    "react@17.0.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/facebook/react",
+        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
         "parents": "codeleap-docs"
     }
 }

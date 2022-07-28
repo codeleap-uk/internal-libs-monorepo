@@ -7,19 +7,21 @@ import {
 
   useCodeleapContext,
   AnyFunction,
+  defaultPresets,
 } from '@codeleap/common'
-import { Platform, Pressable, StyleSheet, View } from 'react-native'
+import { Platform, Pressable, StyleSheet, View as RNView } from 'react-native'
 
 import { createAnimatableComponent } from 'react-native-animatable'
 import { TouchableComposition, TouchableStyles } from './styles'
 import { StylesOf } from '../../types'
+import { View } from '../View'
 export type TouchableProps = Omit<
   ComponentPropsWithoutRef<typeof Pressable>,
   'onPress'
 > & {
   variants?: ComponentVariants<typeof TouchableStyles>['variants']
   component?: any
-  ref?: React.Ref<View>
+  ref?: React.Ref<RNView>
   debugName: string
   activeOpacity?: number
   debugComponent?: string
@@ -28,8 +30,30 @@ export type TouchableProps = Omit<
   styles?: StylesOf<TouchableComposition>
 } & BaseViewProps
 export * from './styles'
+
+const rippleStyles = {
+  paddingTop: 0,
+  paddingLeft: 0,
+  paddingRight: 0,
+  paddingBottom: 0,
+  overflow: 'hidden',
+}
+
+const defaultPressableStyles = {
+  marginTop: 0,
+  marginLeft: 0,
+  marginRight: 0,
+  marginBottom: 0,
+  // height: '100%',
+  minWidth: '100%',
+  // minHeight: '100%',
+  // maxHeight: '100%',
+  maxWidth: '100%',
+
+}
+
 export const Touchable: React.FC<TouchableProps> = forwardRef<
-  View,
+  RNView,
   TouchableProps
 >((touchableProps, ref) => {
   const {
@@ -44,10 +68,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     feedbackVariant = 'opacity',
     ...props
   } = touchableProps
-
-  const variantStyles = useDefaultComponentStyle('u:Touchable', {
+  const _feedbackVariant = onPress ? feedbackVariant : 'none'
+  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchableStyles>('u:Touchable', {
     variants,
     transform: StyleSheet.flatten,
+    rootElement: 'wrapper',
     styles,
   })
 
@@ -64,11 +89,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     onPress && onPress()
   }
 
-  const _styles = [variantStyles.wrapper, style]
+  const _styles = StyleSheet.flatten([variantStyles.wrapper, style])
 
-  function getFeedbackStyle(pressed:boolean, variant: TouchableProps['feedbackVariant']) {
-    if (Platform.OS === 'android' && (!!variantStyles.ripple || !!props.android_ripple)) return {}
-    switch (variant) {
+  const hasRipple = (!!variantStyles.ripple || !!props.android_ripple) && _feedbackVariant !== 'none'
+  function getFeedbackStyle(pressed:boolean) {
+    if (Platform.OS === 'android' && hasRipple) return {}
+    switch (_feedbackVariant) {
       case 'highlight':
         return {
           backgroundColor: pressed ? '#e0e0e0' : 'transparent',
@@ -82,17 +108,25 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         return {}
     }
   }
-  const rippleConfig = (!!variantStyles.ripple || !!props.android_ripple) ? {
+
+  const rippleConfig = hasRipple ? {
     ...(variantStyles.ripple || {}),
     ...(props.android_ripple || {}),
   } : null
+
+  const Wrapper = View
+
   return (
-    <Pressable onPress={press} style={({ pressed }) => ([
-      getFeedbackStyle(pressed, feedbackVariant),
-      _styles,
-    ])} android_ripple={rippleConfig} {...props} ref={ref}>
-      {children}
-    </Pressable>
+    <Wrapper style={[_styles, rippleStyles]}>
+      <Pressable onPress={press} style={({ pressed }) => ([
+        getFeedbackStyle(pressed),
+        variantStyles.pressable,
+        _styles,
+        defaultPressableStyles,
+      ])} android_ripple={rippleConfig} {...props} ref={ref}>
+        {children}
+      </Pressable>
+    </Wrapper>
   )
 })
 

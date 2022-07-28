@@ -1,7 +1,8 @@
 {
   "name": "codeleap",
-  "version": "0.1.1",
+  "version": "0.0.0",
   "private": true,
+  "repository": "https://github.com/codeleap-uk/internal-libs-monorepo.git", 
   "workspaces": {
     "packages": [
       "apps/*",

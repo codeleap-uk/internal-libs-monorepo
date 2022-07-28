@@ -41,7 +41,7 @@ export const SelectStyles = {
 
       },
       listContent: {
-        ...theme.presets.safeAreaBottom(),
+        paddingBottom: theme.values.bottomNavHeight + theme.spacing.value(1),
       },
 
     }

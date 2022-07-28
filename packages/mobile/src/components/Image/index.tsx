@@ -46,8 +46,15 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
 
   const spotlightActions = useImageSpotlight(spotlight, props.source)
   const Wrapper = !!spotlight ? Touchable : ({ children }) => <>{children}</>
+  const wrapperProps = {
+    onPress: spotlightActions.onImagePressed,
+    debugName: `Press spotlight image ${props.source}`,
+    style: [variantStyles.touchable],
+    android_ripple: null,
+  }
+
   if (fast) {
-    // <Wrapper onPress={spotlightActions.onImagePressed} debugName={`Press spotlight image ${props.source}`} style={[variantStyles.touchable]}>
+    <Wrapper {...wrapperProps}>
     return (
 
       <FastImage
@@ -58,9 +65,9 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
         {...imageProps}
       />
     )
-    { /* </Wrapper> */ }
+    </Wrapper>
   }
-  return <Wrapper onPress={spotlightActions.onImagePressed} debugName={`Press spotlight image ${props.source}`} style={[variantStyles.touchable]}>
+  return <Wrapper {...wrapperProps}>
     <NativeImage style={styles} resizeMode={resizeMode} {...(imageProps as any)} />
 
   </Wrapper>

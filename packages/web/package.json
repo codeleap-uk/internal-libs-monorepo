@@ -3,8 +3,11 @@
   "version": "1.5.14",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
-  "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "packages/web"
+  }, 
   "license": "UNLICENSED",
   "devDependencies": {
     "@codeleap/config": "*",

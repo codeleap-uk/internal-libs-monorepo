@@ -11,12 +11,12 @@ export type MessageType = 'foreground' | 'background' | 'press' | 'initial'
 
 export type NotificationHandler = FunctionType<[message: Message, type: MessageType], any>
 
-type HandleNotificationParam = {
+export type HandleNotificationParam = {
     data: Message
     type: MessageType
 }
 
-type NotificationStateChangeListener = FunctionType<[isInitialized: boolean], any>
+export type NotificationStateChangeListener = FunctionType<[isInitialized: boolean, token?: string], any>
 export class NotificationManager {
 
     stateChangeListeners:NotificationStateChangeListener[] = []
@@ -31,9 +31,11 @@ export class NotificationManager {
 
     unsubscribeFromPress = null
 
-    currentToken = null
+    _currentToken = null
 
-    constructor(private logger = silentLogger) {
+    _initialNoficationHandled = false
+
+    constructor(private logger = silentLogger, public autoHandleInitialNotification = true) {
     }
 
     async init() {
@@ -67,6 +69,7 @@ export class NotificationManager {
             this.currentToken = null
             this.initialized = false
           }
+
         })
         // logger.log('init success', {}, MODULE)
       } catch (e) {
@@ -93,6 +96,15 @@ export class NotificationManager {
       for (const listener of this.messageListeners) {
         await listener(args.data, args.type)
       }
+    }
+
+    get currentToken() {
+      return this._currentToken
+    }
+
+    set currentToken(token: string) {
+      this._currentToken = token
+      this.triggerStateChange()
     }
 
     get initialized() {
@@ -125,6 +137,18 @@ export class NotificationManager {
           })
         })
 
+        if (!this._initialNoficationHandled && this.autoHandleInitialNotification) {
+          this.getInitialNotification().then(msg => {
+            if (!msg.data) return
+            this.logger.log('Notification initial', msg, MODULE)
+            this.handleNotification(msg).then(() => {
+              this._initialNoficationHandled = true
+            }).catch(e => {
+              this._initialNoficationHandled = true
+              this.logger.error('Error handling initial notification', e, MODULE)
+            })
+          })
+        }
       } else {
         this.unsubscribeFromMessage = null
 
@@ -134,8 +158,9 @@ export class NotificationManager {
 
         this.logger.log('Deinitialized', '', MODULE)
       }
+      this._initialized = to
 
-      this.stateChangeListeners.forEach(l => l(to))
+      this.triggerStateChange()
     }
 
     onNotification(handler:NotificationHandler) {
@@ -144,6 +169,12 @@ export class NotificationManager {
       return () => {
         this.messageListeners.splice(newLen - 1)
       }
+    }
+
+    private triggerStateChange() {
+      this.stateChangeListeners.forEach(l => {
+        l(this._initialized, this.currentToken)
+      })
     }
 
     onStateChange(handler:NotificationStateChangeListener) {
@@ -155,11 +186,10 @@ export class NotificationManager {
 
     }
 
-    async getInitialNotification() {
+    async getInitialNotification():Promise<HandleNotificationParam> {
       try {
 
         const msg = await messaging().getInitialNotification()
-        this.logger.log('Initial notification', msg, MODULE)
         return {
           data: msg as Message,
           type: 'initial',
