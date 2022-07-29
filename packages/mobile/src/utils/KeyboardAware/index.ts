@@ -9,7 +9,7 @@ export {
   listenToKeyboardEvents,
   KeyboardAwareFlatList,
   KeyboardAwareSectionList,
-  KeyboardAwareScrollView
+  KeyboardAwareScrollView,
 }
 
 export * from './types'
