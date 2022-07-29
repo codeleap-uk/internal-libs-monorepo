@@ -11,7 +11,7 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { GridComposition, GridStyles } from './styles'
 import { StylesOf } from '../../types'
-import listenToKeyboardEvents from 'react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC'
+import { listenToKeyboardEvents } from '../../utils'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -28,7 +28,7 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 
 export * from './styles'
 
-const KeyboardAwareFlatGrid = listenToKeyboardEvents(FlatGrid) as React.FC<FlatGridProps>
+const KeyboardAwareFlatGrid = listenToKeyboardEvents(FlatGrid)
 
 export type GridProps<
   T = any[],

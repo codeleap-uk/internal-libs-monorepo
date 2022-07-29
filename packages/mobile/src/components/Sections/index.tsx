@@ -7,14 +7,11 @@ import {
   usePrevious,
   useCodeleapContext,
 } from '@codeleap/common'
-import {
 
-  KeyboardAwareSectionList as KBDView,
-  // @ts-ignore
-} from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, SectionList } from 'react-native'
 import { View, ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
+import { KeyboardAwareSectionList } from '../../utils/KeyboardAware/types'
 
 export type SectionListProps = KeyboardAwareScrollViewTypes.KeyboardAwareSectionListProps<any> &
   ViewProps & {
@@ -23,14 +20,6 @@ export type SectionListProps = KeyboardAwareScrollViewTypes.KeyboardAwareSection
     changeData?: any
     separators?: boolean
   }
-
-const KeyboardAwareSectionList =
-  KBDView as unknown as React.ForwardRefExoticComponent<
-    ViewProps & {
-      refreshControl?: JSX.Element
-      ref?: SectionList
-    }
-  >
 
 export const Sections = forwardRef<SectionList, SectionListProps>(
   (flatListProps, ref) => {

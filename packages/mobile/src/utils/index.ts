@@ -6,3 +6,4 @@ export * from './ModalManager'
 import * as Permissions from './PermissionManager'
 
 export { Permissions }
+export * from './KeyboardAware'

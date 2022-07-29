@@ -6,16 +6,14 @@ import {
 
   ComponentVariants,
 } from '@codeleap/common'
-import {
 
-  KeyboardAwareFlatList,
-} from 'react-native-keyboard-aware-scroll-view'
 
 import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListStyles } from './styles'
 import { StylesOf } from '../../types'
+import { KeyboardAwareFlatList } from '../../utils'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 

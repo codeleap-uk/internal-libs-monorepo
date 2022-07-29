@@ -8,14 +8,12 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 
-import {
-  KeyboardAwareScrollView,
-} from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, RefreshControlProps, ScrollView, StyleSheet } from 'react-native'
 import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollStyles } from './styles'
+import { KeyboardAwareScrollView } from '../../utils'
 
 type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
 
