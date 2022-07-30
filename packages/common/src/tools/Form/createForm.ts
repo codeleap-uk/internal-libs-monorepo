@@ -3,7 +3,6 @@ import * as Form from './types'
 import * as yup from 'yup'
 import { humanizeCamelCase } from '../../utils'
 import { changeEventNames } from './constants'
-import { useForm } from './useForm'
 
 function getDefaultValue(field: Partial<Form.FormField>) {
   switch (field.type) {

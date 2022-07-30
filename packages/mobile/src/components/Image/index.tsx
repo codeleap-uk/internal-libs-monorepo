@@ -2,9 +2,9 @@ import * as React from 'react'
 import {
   ComponentVariants,
 
-  MobileInputFile,
   useDefaultComponentStyle,
   arePropsEqual,
+  FormTypes,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef } from 'react'
 import {
@@ -21,6 +21,7 @@ import {
 } from './styles'
 import { useImageSpotlight } from '../ImageView/Spotlight'
 import { Touchable } from '../Touchable'
+import { isFile, toMultipartFile } from '../../utils'
 export * from './styles'
 type NativeImageProps = ComponentPropsWithoutRef<typeof NativeImage>
 export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
@@ -31,19 +32,23 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
     | (NativeImageProps['source'] & {
         priority?: keyof typeof FastImage.priority
       })
-    | MobileInputFile
+    | FormTypes.AnyFile
     | string
+    | number
   resizeMode?: keyof typeof FastImage.resizeMode
   spotlight?: string
 }
 
 export const ImageComponent: React.FC<ImageProps> = (props) => {
-  const { variants, style, fast = true, spotlight = null, resizeMode = 'contain', ...imageProps } = props
+  const { variants, style, fast = true, spotlight = null, resizeMode = 'contain', source, ...imageProps } = props
 
   const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImageStyles>('u:Image', { variants })
 
   const styles = StyleSheet.flatten([variantStyles.wrapper, style])
-
+  let imSource = source
+  if (isFile(imSource)) {
+    imSource = toMultipartFile(imSource)
+  }
   const spotlightActions = useImageSpotlight(spotlight, props.source)
   const Wrapper = !!spotlight ? Touchable : ({ children }) => <>{children}</>
   const wrapperProps = {
@@ -52,23 +57,23 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     style: [variantStyles.touchable],
     android_ripple: null,
   }
-
   if (fast) {
-    <Wrapper {...wrapperProps}>
     return (
+      <Wrapper {...wrapperProps}>
 
-      <FastImage
-        style={styles}
-        // @ts-ignore
-        tintColor={styles?.tintColor}
-        resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
-        {...imageProps}
-      />
+        <FastImage
+          style={styles}
+          // @ts-ignore
+          tintColor={styles?.tintColor}
+          source={imSource}
+          resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
+          {...imageProps}
+        />
+      </Wrapper>
     )
-    </Wrapper>
   }
   return <Wrapper {...wrapperProps}>
-    <NativeImage style={styles} resizeMode={resizeMode} {...(imageProps as any)} />
+    <NativeImage style={styles} resizeMode={resizeMode} source={imSource} {...(imageProps as any)} />
 
   </Wrapper>
 }

@@ -6,6 +6,7 @@ export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
     text: '',
     composite: {},
     file: null,
+    multipleFile: [],
     'range-slider': [0, 100],
     slider: 1,
     number: '',
@@ -20,40 +21,7 @@ export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
     radio: 'onValueChange',
     text: 'onChangeText',
     file: 'onFileSelect',
+    multipleFile: 'onFileSelect',
     number: 'onChangeText',
   }
 
-// const myForm = createForm({
-//     something: {
-//       type: 'composite',
-//       fields: {
-//         other: {
-//           type: 'checkbox',
-//         },
-//       },
-
-//     },
-
-//     test: {
-//       type: 'radio',
-//       options: [
-//         {
-//           label: 'a',
-//           'value': 'asdas',
-//         },
-//       ],
-//       defaultValue: 'asd',
-//       validate: yup.string().length(2, 'asddasdasdasd'),
-//     },
-//   })
-
-// const CP = () => {
-//     const form = useForm(myForm, {
-//       output: 'json',
-//       validateOn: 'blur',
-//     })
-
-//     form.setFieldValue('something', {
-//       other: true,
-//     })
-//   }

@@ -15,7 +15,9 @@ export class RequestClient implements IRequestClient {
 
     logger: Logger
 
-    constructor({ logger, ...config }:RequestClientConfig) {
+    toMultipart: RequestClientConfig['multipartParser']
+
+    constructor({ logger, multipartParser = toMultipart, ...config }:RequestClientConfig) {
       this.config = config
       this.logger = logger || silentLogger
 
@@ -23,6 +25,7 @@ export class RequestClient implements IRequestClient {
 
       this.applyInterceptors()
       this.queue = {}
+      this.toMultipart = multipartParser
     }
 
     applyInterceptors() {
@@ -30,7 +33,7 @@ export class RequestClient implements IRequestClient {
         let reqConfig = c as RequestClientConfig
 
         if (reqConfig.multipart && this.config.automaticMultipartParsing) {
-          reqConfig.data = toMultipart(reqConfig)
+          reqConfig.data = this.toMultipart(reqConfig.data)
 
           reqConfig.headers = {
             ...reqConfig?.headers,

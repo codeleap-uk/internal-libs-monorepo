@@ -8,6 +8,7 @@ import {
   parseFilePathData,
   useDefaultComponentStyle,
   useCodeleapContext,
+  MobileFile,
 } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Button, ButtonProps } from '../Button'
@@ -50,15 +51,13 @@ export type FileInputProps = {
 }
 
 const pickerDefaults = {
-  width: 300,
-  height: 400,
   cropping: true,
 }
 
 function parsePickerData(data:any):MobileInputFile {
 
   const filePathData = parseFilePathData(data.path)
-  const d:MobileInputFile['file'] = {
+  const d:MobileFile = {
     name: filePathData.name,
     size: data.size,
     type: data.mime,
@@ -114,24 +113,10 @@ export const FileInput = forwardRef<
   }
 
   function handleError(err) {
-    const warn = DocumentPicker.isCancel(err) || String(err).includes('Error: User cancelled')
-    if (warn) {
-      // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
-      logger.warn(err)
 
-    } else {
-      // NOTE yeah, it should not be both of course but just logger.* isn't showing for some reason
-      logger.error(err)
+    logger.warn('File Input Error', err, 'FILE INPUT')
+    onError?.(err)
 
-      if (onError) {
-        onError(err)
-      } else {
-        OSAlert.error({
-          title: 'Error',
-          body: err.message,
-        })
-      }
-    }
   }
 
   const mergedOptions = {

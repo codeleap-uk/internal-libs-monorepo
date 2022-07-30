@@ -47,7 +47,8 @@ export type InputValueTypes = {
   text: string
   select: any
   radio: any
-  file: (WebInputFile | MobileInputFile)[]
+  file: AnyFile
+  multipleFile: AnyFile[]
   composite: any
   'range-slider': number[]
   slider: number
@@ -130,15 +131,27 @@ export type RadioField<T = any> = {
   required?: boolean
 } & WithTransformer<T>
 
+export type AnyFile = WebInputFile | MobileInputFile
+
 export type FileField = {
   type: 'file'
   allow?: string[]
-  defaultValue: (WebInputFile | MobileInputFile)[]
+  defaultValue: AnyFile
   imageToBase64?: boolean
   multiple?: boolean
-  validate?: Validator<WebInputFile[]>
+  validate?: Validator<AnyFile>
   required?: boolean
-} & WithTransformer<WebInputFile[]>
+} & WithTransformer<AnyFile>
+
+export type MultipleFileField = {
+  type: 'multipleFile'
+  allow?: string[]
+  defaultValue: AnyFile[]
+  imageToBase64?: boolean
+  multiple?: boolean
+  validate?: Validator<AnyFile[]>
+  required?: boolean
+} & WithTransformer<AnyFile[]>
 
 export type CompositeField = {
   type: 'composite'
@@ -160,6 +173,7 @@ export type AllFields =
   | RangeSliderField
   | ListField
   | NumberField
+  | MultipleFileField
 
 export type FormField = {
   disabled?: boolean

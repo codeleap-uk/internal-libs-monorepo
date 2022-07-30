@@ -1,5 +1,5 @@
 import * as FormTypes from './types'
-import { usePartialState, deepGet, deepSet, deepMerge } from '../../utils'
+import { usePartialState, deepGet, deepSet, deepMerge, TypeGuards } from '../../utils'
 import { FunctionType } from '../../types'
 import { useCodeleapContext } from '../../styles/StyleProvider'
 import { createRef, useCallback, useRef } from 'react'
@@ -88,6 +88,7 @@ export function useForm<
   }
 
   function validateMultiple<T extends readonly FieldPaths[0][]>(fields: T, set = false) {
+    // @ts-ignore
     const results = fields.map((field) => [field, validateField(field, set)])
 
     const overallValid = results.every(([, result]) => result.valid)
@@ -151,6 +152,8 @@ export function useForm<
           if (typeof staticProps.precision !== 'undefined') {
             value = Number(value.toFixed(staticProps.precision))
           }
+        } else if (type === 'file') {
+          value = TypeGuards.isArray(value) && !!value.length ? value[0] : null
         }
         if (config.validateOn === 'change') {
           validateField(field, true, value)

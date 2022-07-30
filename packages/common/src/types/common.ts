@@ -13,7 +13,9 @@ export type MobileFile = {
   uri: string
 }
 
-export type MobileInputFile = {
+export type FileWithPreview = {
   file: MobileFile
   preview: string
 }
+
+export type MobileInputFile = FileWithPreview | MobileFile

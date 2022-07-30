@@ -35,5 +35,6 @@ export type RequestClientConfig<D = any> = AxiosRequestConfig<D> & {
   logger?: Logger
   debug?: boolean
   automaticMultipartParsing?: boolean
+  multipartParser?: (body:any) => FormData
   silent?: boolean
 }
