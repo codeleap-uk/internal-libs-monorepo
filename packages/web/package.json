@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "1.5.14",
+  "version": "2.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
