@@ -9,7 +9,8 @@ export type SelectComposition =
   `itemWrapper${ItemStates}` |
   `itemText${ItemStates}` |
   'scroll' |
-  'scrollContent'
+  'scrollContent' |
+  `itemIcon${ItemStates}`
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 
@@ -24,10 +25,11 @@ export const SelectStyles = {
 
       },
       itemWrapper: {
-        ...theme.spacing.padding(2),
         ...theme.presets.row,
         ...theme.presets.justifySpaceBetween,
         ...theme.presets.alignCenter,
+        ...theme.spacing.padding(1.4),
+        height: 50,
       },
       'itemWrapper:selected': {
         backgroundColor: theme.colors.primary,
@@ -35,6 +37,14 @@ export const SelectStyles = {
       'itemText:selected': {
         color: theme.colors.white,
 
+      },
+      'itemIcon:selected': {
+        color: theme.colors.white,
+        ...theme.sized(3),
+      },
+      itemIcon: {
+        width: 0,
+        height: 0,
       },
       list: {
         height: 'auto',

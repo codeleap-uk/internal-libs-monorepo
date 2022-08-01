@@ -4,12 +4,14 @@ import {
   ComponentVariants,
   useDefaultComponentStyle,
   BaseViewProps,
-
+  TypeGuards,
+  useState,
 } from '@codeleap/common'
-import { Animated, StyleSheet, Text as NativeText } from 'react-native'
+import { Animated, GestureResponderEvent, Platform, StyleSheet, Text as NativeText } from 'react-native'
 import { MotiText as _MotiText, MotiProps } from 'moti'
-import { useAnimateColor } from '../../utils'
+import { useAnimateColor, usePressableFeedback } from '../../utils'
 import { TextStyles } from './styles'
+import { View } from '../View'
 
 export * from './styles'
 
@@ -18,6 +20,7 @@ export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   variants?: ComponentVariants<typeof TextStyles>['variants']
   animated?: boolean
   colorChangeConfig?: Partial<Animated.TimingAnimationConfig>
+  debugName?: string
 } & BaseViewProps & MotiProps
 
 const MotiText = Animated.createAnimatedComponent(_MotiText)
@@ -25,8 +28,21 @@ const MotiText = Animated.createAnimatedComponent(_MotiText)
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const { variants = [], text, children, style, colorChangeConfig, ...props } = textProps
 
-  const variantStyles = useDefaultComponentStyle('Text', {
+  const pressPolyfillEnabled = Platform.OS === 'android' && !!props.onPress
+
+  const [pressed, setPressed] = useState(false)
+  const handlePress = (pressed) => {
+    if (!pressPolyfillEnabled) return
+    return () => {
+      if (props.onPress) {
+        setPressed(pressed)
+
+      }
+    }
+  }
+  const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextStyles>('u:Text', {
     variants,
+    transform: StyleSheet.flatten,
     rootElement: 'text',
   })
 
@@ -34,14 +50,53 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
 
   const animatedColor = useAnimateColor(styles.color, colorChangeConfig)
 
+  if (!!text && !TypeGuards.isString(text)) return <>{text}</>
+
   const Component = textProps.animated ? MotiText : NativeText
 
   const colorStyle = { color: props.animated ? animatedColor : styles.color }
 
+  const { getFeedbackStyle } = usePressableFeedback(styles, {
+    disabled: !pressPolyfillEnabled,
+    feedbackConfig: variantStyles.pressFeedback,
+    hightlightPropertyIn: 'color',
+    hightlightPropertyOut: 'backgroundColor',
+  })
+  const feedbackStyle = pressPolyfillEnabled ? getFeedbackStyle(pressed) : undefined
+
+  return <Component {...props}
+    onPressIn={handlePress(true)} onPressOut={handlePress(false)}
+    style={[styles, colorStyle, feedbackStyle]}
+    // @ts-ignore
+    ref={ref}
+  >
+    {text}
+  </Component>
+
   // @ts-ignore
   return <Component {...props} style={[styles, colorStyle]} ref={ref}>
-    {text || children}
+    {text}
+    {children}
   </Component>
 
 })
 
+// const childArr = React.Children.toArray([
+//   text,
+//   children,
+// ])
+
+// return <View style={[styles, colorStyle]}>
+//   {
+//     childArr.map((child) => {
+//       if (TypeGuards.isString(child)) {
+//         // @ts-ignore
+//         return <Component {...props} ref={ref}>
+//           {child}
+//         </Component>
+
+//       }
+//       return child
+//     })
+//   }
+// </View>

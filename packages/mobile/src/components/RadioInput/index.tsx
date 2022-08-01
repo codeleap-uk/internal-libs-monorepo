@@ -47,7 +47,9 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   ...props
 }) => {
   return (
-    <Touchable onPress={select} style={style.itemWrapper} debugName={'Change radioButton value'}>
+    <Touchable onPress={select} style={style.itemWrapper} debugName={'Change radioButton value'} styles={{
+      feedback: style.buttonFeedback,
+    }}>
       <View style={[style.button, checked && style['button:checked']]}>
         <View
           style={[style.buttonMark, checked && style['buttonMark:checked']]}

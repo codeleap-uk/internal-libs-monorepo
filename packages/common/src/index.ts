@@ -8,5 +8,5 @@ export { silentLogger } from './constants'
 import * as ReactQuery from '@tanstack/react-query'
 
 export {
-    ReactQuery
+  ReactQuery,
 }

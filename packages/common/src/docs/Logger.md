@@ -25,9 +25,5 @@ logger.error("Error description", { thing: "happened" }, "Category");
 
 // Other log types
 logger.info("Information", { thing: "happened" }, "Category");
-logger.debug.red(
-  "Debugging something, will be red",
-  { thing: "happened" },
-  "Category"
-);
+
 ```

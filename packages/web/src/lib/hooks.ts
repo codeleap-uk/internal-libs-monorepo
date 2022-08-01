@@ -22,58 +22,90 @@ export function useWindowSize() {
   return size
 }
 
-type UseClickOutsideOpts = {
-  customId?: string
-  deps?: any[]
-}
-export function useClickOutside(
-  callback: AnyFunction,
-  deps?: UseClickOutsideOpts,
+// type UseClickOutsideOpts = {
+//   customId?: string
+//   deps?: any[]
+// }
+// export function useClickOutside(
+//   callback: AnyFunction,
+//   deps?: UseClickOutsideOpts,
+// ) {
+//   const id = useRef(deps?.customId || v4())
+
+//   const onClick = useCallback((e: Event) => {
+//     const element = document.getElementById(id.current)
+//     if (!element) return
+//     const isInside = element.contains(e.target as Node) || ((e.target as HTMLElement).id === id.current)
+
+//     // const iterNodes = (el:HTMLElement|Element) => {
+//     //   if (isInside) return
+//     //   for (let i = 0; i < el.children.length; i++) {
+//     //     const node = el.children.item(i)
+
+//     //     if (!node) return
+//     //     const _isInside = node.contains(e.target as Node)
+//     //     if (_isInside) {
+//     //       isInside = _isInside
+//     //     }
+//     //     if (isInside) break
+
+//     //     if (node.hasChildNodes()) {
+//     //       iterNodes(node)
+//     //     }
+
+//     //     if (isInside) break
+//     //   }
+//     // }
+
+//     // if (!isInside) {
+//     //   iterNodes(element)
+//     // }
+
+//     if (!isInside) {
+//       callback(e)
+//     }
+//   }, deps?.deps || [])
+//   onUpdate(() => {
+
+//     document.addEventListener('click', onClick)
+//     return () => {
+//       document.removeEventListener('click', onClick)
+//     }
+//   }, [onClick])
+
+//   return id.current
+// }
+
+import { useEffect } from 'react'
+
+const DEFAULT_EVENTS = ['mousedown', 'touchstart']
+
+export function useClickOutside<T extends HTMLElement = any>(
+  handler: () => void,
+  events?: string[] | null,
+  nodes?: HTMLElement[],
 ) {
-  const id = useRef(deps?.customId || v4())
+  const ref = useRef<T>()
 
-  const onClick = useCallback((e: Event) => {
-    const element = document.getElementById(id.current)
-    if (!element) return
-    const isInside = element.contains(e.target as Node) || ((e.target as HTMLElement).id === id.current)
+  useEffect(() => {
+    const listener = (event: any) => {
+      if (Array.isArray(nodes)) {
+        const shouldIgnore = event?.target?.hasAttribute('data-ignore-outside-clicks')
+        const shouldTrigger = nodes.every((node) => !!node && !node.contains(event.target))
+        shouldTrigger && !shouldIgnore && handler()
+      } else if (ref.current && !ref.current.contains(event.target)) {
+        handler()
+      }
+    };
 
-    // const iterNodes = (el:HTMLElement|Element) => {
-    //   if (isInside) return
-    //   for (let i = 0; i < el.children.length; i++) {
-    //     const node = el.children.item(i)
+    (events || DEFAULT_EVENTS).forEach((fn) => document.addEventListener(fn, listener))
 
-    //     if (!node) return
-    //     const _isInside = node.contains(e.target as Node)
-    //     if (_isInside) {
-    //       isInside = _isInside
-    //     }
-    //     if (isInside) break
-
-    //     if (node.hasChildNodes()) {
-    //       iterNodes(node)
-    //     }
-
-    //     if (isInside) break
-    //   }
-    // }
-
-    // if (!isInside) {
-    //   iterNodes(element)
-    // }
-
-    if (!isInside) {
-      callback(e)
-    }
-  }, deps?.deps || [])
-  onUpdate(() => {
-
-    document.addEventListener('click', onClick)
     return () => {
-      document.removeEventListener('click', onClick)
+      (events || DEFAULT_EVENTS).forEach((fn) => document.removeEventListener(fn, listener))
     }
-  }, [onClick])
+  }, [ref, handler, nodes])
 
-  return id.current
+  return ref
 }
 
 export function useScrollEffect(

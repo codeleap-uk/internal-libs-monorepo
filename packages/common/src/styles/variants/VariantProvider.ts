@@ -152,7 +152,10 @@ export class VariantProvider<
     }
   }
 
-  getStyles<VariantObject extends DefaultVariantBuilder, Comp extends keyof ReturnType<VariantObject[keyof VariantObject]> = keyof ReturnType<VariantObject[keyof VariantObject]>>(
+  getStyles<
+    VariantObject extends DefaultVariantBuilder,
+    Comp extends keyof ReturnType<VariantObject[keyof VariantObject]> = keyof ReturnType<VariantObject[keyof VariantObject]>
+  >(
     ...args: GetStylesArgs<
       VariantObject,
       Theme,
@@ -167,6 +170,7 @@ export class VariantProvider<
         responsiveVariants,
         styles: override,
         debugName = '',
+        size,
       },
       useTheme,
     ] = args
@@ -190,7 +194,7 @@ export class VariantProvider<
           const max = this.theme.breakpoints[breakpoint]
           const currentSize = [this.theme.values?.width, this.theme.values?.height]
 
-          const shouldApplyResponsiveVariants = currentSize[0] < max
+          const shouldApplyResponsiveVariants = (size?.width || 0) < max
 
           if (shouldApplyResponsiveVariants) {
             const responseVariantList = standardizeVariants(

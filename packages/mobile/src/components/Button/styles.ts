@@ -1,12 +1,27 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap/common'
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
+import { TouchableStylesGen } from '../Touchable'
 
 export type ButtonStates = 'disabled'
-export type ButtonParts = 'text' | 'inner' |'wrapper' | 'icon' | 'leftIcon' | 'rightIcon' | 'loader' | `loader${Capitalize<ActivityIndicatorComposition>}` |
-  'badgeText' | 'badgeWrapper' | 'ripple'
+export type ButtonParts =
+| 'text'
+| 'inner'
+| 'wrapper'
+| 'icon'
+| 'leftIcon'
+| 'rightIcon'
+| 'loader'
+| `loader${Capitalize<ActivityIndicatorComposition>}`
+| 'badgeText'
+| 'badgeWrapper'
+
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
-const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
+export type ButtonStylesGen<TCSS = any> = StylesOf<ButtonComposition, TCSS> & {
+  feedback?: TouchableStylesGen['feedback']
+}
+
+const createButtonStyle = createDefaultVariantFactory<ButtonComposition, ButtonStylesGen >()
 
 const presets = includePresets((styles) => createButtonStyle(() => ({ wrapper: styles })))
 
@@ -14,18 +29,16 @@ export const ButtonStyles = {
   ...presets,
   default: createButtonStyle((theme) => ({
     wrapper: {
-      cursor: 'pointer',
-      border: 'none',
-      outline: 'none',
-      display: 'flex',
+
       flexDirection: 'row',
       backgroundColor: theme.colors.primary,
+      ...theme.presets.justifyCenter,
       ...theme.presets.alignCenter,
-
+      ...theme.spacing.paddingHorizontal(2.5),
     },
     text: {
-      flex: 1,
       textAlign: 'center',
+      // ...theme.spacing.marginHorizontal(2.5),
     },
     loader: {
       height: 20,
@@ -48,6 +61,17 @@ export const ButtonStyles = {
     },
     badgeText: {
       color: theme.colors.white,
+    },
+
+    leftIcon: {
+      ...theme.sized(4),
+      ...theme.spacing.marginRight('auto'),
+      // ...theme.spacing.marginLeft(2.5),
+    },
+    rightIcon: {
+      ...theme.spacing.marginLeft('auto'),
+      // ...theme.spacing.marginRight(2.5),
+      ...theme.sized(4),
     },
 
   })),

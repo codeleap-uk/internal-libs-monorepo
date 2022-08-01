@@ -79,7 +79,7 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
           />
           <InputLabel label={label} style={getStyles('label')} />
         </View>
-        <FormError message={error.message} style={getStyles('error')} />
+        <FormError text={error.message} style={getStyles('error')} />
       </View>
     )
   },

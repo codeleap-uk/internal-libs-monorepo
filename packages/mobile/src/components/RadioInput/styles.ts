@@ -1,7 +1,7 @@
 import {
   createDefaultVariantFactory, includePresets,
 } from '@codeleap/common'
-type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark'
+type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark' | 'buttonFeedback'
 
 type RadioGroupParts = 'label' | 'wrapper' | 'list'
 
@@ -37,6 +37,7 @@ export const RadioInputStyles = {
         position: 'relative',
         ...theme.spacing.marginRight(1),
       },
+      buttonFeedback: { type: 'opacity', value: 0.5 },
       buttonMark: {
         backgroundColor: theme.colors.primary,
         position: 'absolute',

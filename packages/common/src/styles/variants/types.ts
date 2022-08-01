@@ -64,6 +64,7 @@ export type GetStylesArgs<
     styles?: NestedKeys<VariantObject> extends string
       ? StylesOf<NestedKeys<VariantObject>>
       : any
+      size?: {width: number; height: number}
   },
   useTheme?: string
 ]

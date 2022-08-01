@@ -24,7 +24,7 @@ export type AppSettings = DeepPartial<{
     beforeBreadcrumb?: any
   }
   Logger: {
-    Level: LogType
+    Level: LogType | LogType[]
     DeviceIdentifier?: string
     IgnoreWarnings?: string[]
     StringifyObjects?: boolean

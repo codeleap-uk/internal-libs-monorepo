@@ -12,14 +12,7 @@ export const MultiSelectStyles = {
     const defaultStyle = SelectStyles.default(theme)
     return {
       ...defaultStyle,
-      'itemIcon:selected': {
-        color: theme.colors.white,
-        ...theme.sized(3),
-      },
-      itemIcon: {
-        width: 0,
-        height: 0,
-      },
+
     }
   }),
 }

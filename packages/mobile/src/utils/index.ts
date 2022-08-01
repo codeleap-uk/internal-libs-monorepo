@@ -1,4 +1,4 @@
-export { default as OSAlert } from './OSAlert'
+export * from './OSAlert'
 export * from './hooks'
 export * from './misc'
 export * from './notifications'

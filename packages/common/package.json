@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
@@ -8,13 +8,14 @@
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
     "type": "git",
     "directory": "packages/common"
-  }, 
+  },
   "devDependencies": {
     "@codeleap/config": "^1.0.0",
     "@emotion/css": "^11.7.1",
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
     "@types/react": "^17.0.38",
+    "@types/tinycolor2": "^1.4.3",
     "chai": "^4.3.4",
     "eslint": "^8.5.0",
     "husky": "^7.0.4",
@@ -37,14 +38,15 @@
     "yup": "^0.32.11"
   },
   "dependencies": {
-    "@tanstack/react-query": "4.0.10",
     "@reduxjs/toolkit": "^1.7.1",
     "@sentry/browser": "^6.16.1",
+    "@tanstack/react-query": "4.0.10",
     "axios": "0.24.0",
     "callsites": "^4.0.0",
     "deep-equal": "^2.0.5",
     "lodash": "^4.17.21",
     "react-use": "^17.3.2",
+    "tinycolor2": "^1.4.2",
     "url-parse": "^1.5.10",
     "util": "0.12.4"
   }

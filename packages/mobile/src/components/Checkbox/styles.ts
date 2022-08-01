@@ -5,6 +5,7 @@ type CheckboxParts =
   | 'label'
   | 'labelWrapper'
   | 'input'
+  | 'inputFeedback'
   | 'checkmark'
   | 'checkmarkWrapper'
   | 'error'
@@ -39,6 +40,10 @@ export const CheckboxStyles = {
       },
       labelWrapper: {
         flex: 1,
+      },
+      inputFeedback: {
+        type: 'opacity',
+        value: 0.5,
       },
       label: {
         ...theme.spacing.marginLeft(0.5),

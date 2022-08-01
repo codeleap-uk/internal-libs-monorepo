@@ -1,19 +1,35 @@
-import { assignTextStyle, createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { assignTextStyle, createDefaultVariantFactory, includePresets, shadeColor, StylesOf } from '@codeleap/common'
+import { FeedbackConfig } from '../../utils'
 
-export type TextComposition = 'text'
-const createTextStyle = createDefaultVariantFactory<TextComposition>()
+export type TextComposition = 'text' | 'touchFeedback'
+
+export type TextStylesGen<TCSS = any> = StylesOf<'text', TCSS> & {
+  'pressFeedback'?: FeedbackConfig
+}
+
+const createTextStyle = createDefaultVariantFactory<
+  TextComposition, TextStylesGen
+>()
 
 const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })),
 )
 
 export const TextStyles = {
   ...presets,
-  default: createTextStyle((theme) => ({
-    text: {
-      fontFamily: theme.typography.fontFamily,
-      ...assignTextStyle('p1')(theme).text,
-    },
-  })),
+  default: createTextStyle((theme) => {
+    const defaultStyle = assignTextStyle('p1')(theme).text
+    return {
+      text: {
+        fontFamily: theme.typography.fontFamily,
+        ...defaultStyle,
+      },
+      pressFeedback: {
+        type: 'highlight',
+        brightness: 0,
+        shiftOpacity: 0.3,
+      },
+    }
+  }),
   h1: assignTextStyle('h1'),
   h2: assignTextStyle('h2'),
   h3: assignTextStyle('h3'),

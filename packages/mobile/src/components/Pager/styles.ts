@@ -51,17 +51,22 @@ export function pagerAnimation(height, width, translate = 'X', transition = defa
 
 export const PagerStyles = {
   ...presets,
-  default: createPagerStyle((theme) => ({
-    page: {
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      top: 0,
-    },
-  })),
+  default: createPagerStyle((theme) => {
+    const width = theme.values.width
+    const height = theme.values.height * 0.8
+    return {
+      ...pagerAnimation(height, width, 'X'),
+      page: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        top: 0,
+      },
+    }
+  }),
   horizontal: createPagerStyle((Theme) => {
 
     const width = Theme.values.width

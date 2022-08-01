@@ -97,9 +97,10 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
           }}
           editable={false}
           touchableWrapper
+          onPress={close}
           wrapperProps={{
             debugName: 'Select',
-            onPress: close,
+
           }}
           pointerEvents={'none'}
           label={label}

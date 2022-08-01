@@ -14,6 +14,8 @@ type TextInputParts =
   | 'label'
   | 'innerWrapper'
   | 'error'
+  | 'subtitle'
+  | 'subtitleWrapper'
   | 'placeholder'
   | 'selection'
   | 'requiredAsterisk'
@@ -74,16 +76,24 @@ export const TextInputStyles = {
       color: theme.colors.primary,
     },
     leftIconTouchableWrapper: {
-      ...theme.spacing.marginRight(1),
+      // ...theme.spacing.marginRight(0.5),
     },
     rightIconTouchableWrapper: {
-      ...theme.spacing.marginLeft(1),
+      // ...theme.spacing.marginLeft(0.5),
     },
     error: {
       color: theme.colors.negative,
-      ...theme.spacing.marginTop(0.5),
-    },
 
+    },
+    subtitleWrapper: {
+      ...theme.spacing.marginTop(0.2),
+      ...theme.presets.row,
+      ...theme.presets.justifySpaceBetween,
+      ...theme.presets.alignCenter,
+    },
+    subtitle: {
+      ...theme.presets.textRight,
+    },
     'label:error': {
       color: theme.colors.negative,
     },

@@ -5,12 +5,14 @@ import {
   getNestedStylesByKey,
   IconPlaceholder,
 
+  TypeGuards,
+
   useBooleanToggle,
   useDefaultComponentStyle,
   useValidate,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { Text } from '../Text'
+import { Text, TextProps } from '../Text'
 import { View, ViewProps } from '../View'
 import { StylesOf } from '../../types'
 import { Icon } from '../Icon'
@@ -34,6 +36,11 @@ type IconProp = { name: IconPlaceholder; action?: () => void }
 
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
 
+type SubtitleProps = {
+  errorProps: TextProps
+  styles: Record<'wrapper'|'error'|'subtitle', any>
+}
+
 export type TextInputProps =
   Partial<TextInputMaskProps> &
   ComponentVariants<typeof TextInputStyles> &
@@ -54,6 +61,7 @@ export type TextInputProps =
     password?: boolean
     visibilityToggle?: boolean
     touchableWrapper?: boolean
+    subtitle?: string | ((props: SubtitleProps) => React.ReactElement)
     onPress?: () => void
     masking?: FormTypes.TextField['masking']
     innerWrapperProps?: ViewProps
@@ -82,6 +90,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     visibilityToggle,
     innerWrapperProps,
     masking = null,
+    subtitle = '',
     onChangeMask,
     debugName,
     required = false,
@@ -144,7 +153,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       isFocused ? variantStyles[key + ':focus'] : {},
       showError ? variantStyles[key + ':error'] : {},
     ]
-    return requestedStyles
+    return StyleSheet.flatten(requestedStyles)
   }
 
   function handlePress() {
@@ -161,6 +170,19 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     debugName: `${debugName} toggle visibility`,
   } : {}
 
+  const subtitleStyles = {
+    error: getStyles('error'),
+    wrapper: getStyles('subtitleWrapper'),
+    subtitle: getStyles('subtitle'),
+
+  }
+  const errorProps = { text: error.message, style: subtitleStyles.error }
+
+  const subtitleContent = TypeGuards.isFunction(subtitle) ? subtitle({ styles: subtitleStyles, errorProps }) : <View style={subtitleStyles.wrapper}>
+    <FormError {...errorProps}/>
+    {TypeGuards.isString(subtitle) ? <Text text={subtitle} style={subtitleStyles.subtitle}/> : (subtitle || null)}
+  </View>
+
   return (
     <Touchable
       style={getStyles('wrapper')}
@@ -168,6 +190,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       onPress={handlePress}
       {...wrapperProps}
       android_ripple={null}
+      noFeedback
     >
       <InputLabel
         label={label}
@@ -214,17 +237,27 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
         />
 
       </View>
-      <FormError message={error.message} style={getStyles('error')} />
+      {subtitleContent}
     </Touchable>
   )
 })
 
-export const FormError = ({ message, ...props }) => {
-  if (['number', 'string', 'undefined'].includes(typeof message)) {
-    const text = message ? `${message.charAt(0).toUpperCase() + message.slice(1)}` : ' '
-    return <Text text={text} variants={['p2', 'marginTop:1']} {...props} />
+export const FormError:React.FC<TextProps> = ({ text, ...props }) => {
+  let message = text
+  if (TypeGuards.isNumber(message)) {
+    message = message.toString()
   }
-  return message
+  if (typeof message === 'undefined') {
+    message = ''
+  }
+
+  if (TypeGuards.isString(message)) {
+    const text = message ? `${message.charAt(0).toUpperCase() + message.slice(1)}` : ' '
+    return <Text text={text} {...props} />
+  }
+  return <>
+    {text}
+  </>
 }
 
 type InputIconProps = {
@@ -237,7 +270,8 @@ type InputIconProps = {
 export const InputIcon:React.FC<InputIconProps> = ({ styles, commonStyles, isFocused, showError, ...props }) => {
   if (!props.icon) return null
 
-  function getStyles(key: ActionIconParts | '') {
+  function getStyles(k: ActionIconParts | '') {
+    let key = k
     if (key === 'icon') key = ''
     const requestedStyles = [
       commonStyles[key],
@@ -247,13 +281,14 @@ export const InputIcon:React.FC<InputIconProps> = ({ styles, commonStyles, isFoc
       isFocused ? styles[key + ':focus'] : {},
       showError ? styles[key + ':error'] : {},
     ]
+
     return StyleSheet.flatten(requestedStyles)
   }
   const iconStyles = {
     icon: getStyles('icon'),
     touchablePressable: getStyles('touchablePressable'),
     touchableWrapper: getStyles('touchableWrapper'),
-    touchableRipple: getStyles('touchableRipple'),
+    touchableFeedback: getStyles('touchableFeedback'),
   }
 
   return <ActionIcon

@@ -11,7 +11,7 @@ import {
 } from '.'
 import { AnyFunction, ComponentVariants, FunctionType, NestedKeys, StylesOf } from '..'
 import { silentLogger } from '../constants'
-import { onMount } from '../utils'
+import { onMount, onUpdate } from '../utils'
 import { StyleContextProps, StyleContextValue } from './types'
 
 export const StyleContext = createContext(
@@ -19,6 +19,45 @@ export const StyleContext = createContext(
     Record<string, DefaultVariantBuilder>
   >,
 )
+
+function useWindowSize() {
+  const window = global?.window || { process: null }
+  const isBrowser = !window?.process
+  const [size, setSize] = useState([0, 0])
+
+  onMount(() => {
+    if (isBrowser) {
+
+      // @ts-ignore
+      setSize([window.innerWidth, window.innerWidth])
+    }
+  })
+
+  function handleResize() {
+    if (isBrowser) {
+
+      // @ts-ignore
+      setSize([window.innerWidth, window.innerHeight])
+    }
+  }
+
+  onUpdate(() => {
+    if (isBrowser) {
+
+      // @ts-ignore
+      window.addEventListener('resize', handleResize)
+      return () => {
+        // @ts-ignore
+        window.removeEventListener('resize', handleResize)
+      }
+    }
+  }, [])
+
+  return {
+    width: size[0],
+    height: size[1],
+  }
+}
 
 export const StyleProvider = <
   S extends Readonly<Record<string, DefaultVariantBuilder>>,
@@ -30,6 +69,7 @@ export const StyleProvider = <
     logger,
     settings,
   }: StyleContextProps<S, V>) => {
+
   const [theme, setTheme] = useState(variantProvider.theme.theme)
 
   onMount(() => {
@@ -79,6 +119,8 @@ export function useDefaultComponentStyle<
 ): K extends ComponentNameArg
   ? Record<NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[K]>>, any>
   : Record<NestedKeys<FromVariantsBuilder<any, S>>, any> {
+
+  const windowSize = useWindowSize()
   const { ComponentVariants: CV, provider, currentTheme } = useCodeleapContext() || {}
   try {
 
@@ -110,7 +152,8 @@ export function useDefaultComponentStyle<
       responsiveVariants: props.responsiveVariants || {},
       rootElement: props.rootElement,
       styles,
-    }, currentTheme as string), [props.variants, props.responsiveVariants, props.rootElement, styles, componentName])
+      size: windowSize,
+    }, currentTheme as string), [props.variants, windowSize.height, windowSize.width, props.responsiveVariants, props.rootElement, styles, componentName])
     return stylesheet as any
   } catch (e) {
     throw new Error('useDefaultComponentStyle with args ' + arguments + e)

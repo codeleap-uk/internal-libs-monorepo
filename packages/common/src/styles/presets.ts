@@ -158,16 +158,16 @@ export const defaultPresets = {
     flexWrap: 'wrap',
   },
   debRed: {
-    backgroundColor: 'red',
+    backgroundColor: '#f00',
   },
   debGreen: {
-    backgroundColor: 'green',
+    backgroundColor: '#0f0',
   },
   debBlue: {
-    backgroundColor: 'blue',
+    backgroundColor: '#00f',
   },
   debYellow: {
-    backgroundColor: 'yellow',
+    backgroundColor: '#f9e902',
   },
 } as const
 

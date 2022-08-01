@@ -72,6 +72,9 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
           debugName={`Set checkbox value to ${!value}`}
           style={getStyles('input')}
           onPress={() => onValueChange(!value)}
+          styles={{
+            feedback: getStyles('inputFeedback'),
+          }}
         >
           <View style={getStyles('checkmarkWrapper')}>
             <View style={getStyles('checkmark')} />
@@ -80,7 +83,7 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
             <InputLabel label={label} style={getStyles('label')} required={required}/>
           </View>
         </Touchable>
-        <FormError message={error.message} style={getStyles('error')} />
+        <FormError text={error.message} style={getStyles('error')} />
       </View>
     )
   },

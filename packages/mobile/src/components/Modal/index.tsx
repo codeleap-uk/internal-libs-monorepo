@@ -162,11 +162,11 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       >
         {dismissOnBackdrop &&
           <Touchable
-            feedbackVariant='none'
             onPress={ closable ? toggle : (() => {})}
             debugName={'Modal backdrop touchable'}
             style={variantStyles.backdropTouchable}
             android_ripple={null}
+            noFeedback
           />}
         <View
           animated

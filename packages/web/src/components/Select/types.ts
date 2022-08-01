@@ -31,3 +31,19 @@ export type CustomSelectProps<T = any> = {
   arrowIconName?: IconPlaceholder
   autoClose?: boolean
 } & ComponentVariants<typeof WebSelectStyles>
+
+export type MultiSelectProps<T = any> = {
+  value: T[]
+  placeholder?: string
+  label?: FormTypes.Label
+  options?: {value: T; label?: FormTypes.Label ; icon?: IconPlaceholder}[]
+  onDropdownToggle?: (isOpen?: boolean) => void
+  onValueChange?: (value: T[]) => void
+  renderItem?: SelectRenderFN<T>
+  renderCurrentlySelected?: SelectRenderFN<T>
+  styles?: StylesOf<WebSelectComposition>
+  disabled?: boolean
+  validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
+  arrowIconName?: IconPlaceholder
+
+} & ComponentVariants<typeof WebSelectStyles>

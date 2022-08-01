@@ -5,6 +5,7 @@ import {
   useDefaultComponentStyle,
   arePropsEqual,
   FormTypes,
+  TypeGuards,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef } from 'react'
 import {
@@ -48,6 +49,8 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
   let imSource = source
   if (isFile(imSource)) {
     imSource = toMultipartFile(imSource)
+  } else if (TypeGuards.isString(source)) {
+    imSource = { uri: source }
   }
   const spotlightActions = useImageSpotlight(spotlight, props.source)
   const Wrapper = !!spotlight ? Touchable : ({ children }) => <>{children}</>

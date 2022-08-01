@@ -1,3 +1,5 @@
+import tinycolor from 'tinycolor2'
+import * as TypeGuards from './typeGuards'
 export function hexToRgb(hex) {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   return result
@@ -9,14 +11,36 @@ export function hexToRgb(hex) {
     : null
 }
 
-export function shadeColor(color: string, percent: number) {
-  const newColor = color
-    .replace(/^#/, '')
-    .replace(/../g, (color) => (
-      '0' +
-        Math.min(255, Math.max(0, parseInt(color, 16) + percent)).toString(16)
-    ).substr(-2),
-    )
+const shadeColorCache = {}
+export function shadeColor(color: string, percent = 0, opacity = null) {
+  const _color = color.trim()
+  const serialParams = [_color, percent.toString()]
+  if (TypeGuards.isNumber(opacity)) {
+    serialParams.push(opacity.toString())
+  }
+  const cacheKey = serialParams.join('/')
 
-  return '#' + newColor
+  if (!!shadeColorCache[cacheKey]) {
+    return shadeColorCache[cacheKey]
+  }
+  const cl = tinycolor(_color)
+  if (percent !== 0) {
+
+    const shouldDarken = percent < 0
+
+    if (shouldDarken) {
+      cl.darken(-percent)
+    } else {
+      cl.lighten(percent)
+    }
+  }
+  if (TypeGuards.isNumber(opacity)) {
+    cl.setAlpha(opacity)
+
+  }
+
+  const rgbObj = cl.toRgb()
+  const rgbStr = `rgba(${rgbObj.r},${rgbObj.g},${rgbObj.b},${rgbObj.a})`
+  shadeColorCache[cacheKey] = rgbStr
+  return rgbStr
 }

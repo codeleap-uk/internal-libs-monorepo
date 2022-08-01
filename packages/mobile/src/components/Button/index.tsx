@@ -9,8 +9,6 @@ import {
   TypeGuards,
   deepMerge,
   PropsOf,
-  standardizeVariants,
-  useCodeleapContext,
 } from '@codeleap/common'
 
 import {
@@ -25,7 +23,7 @@ import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
 import { View, ViewProps } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
-import { Platform, PressableAndroidRippleConfig, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 export * from './styles'
 
 type ChildProps = {
@@ -145,27 +143,25 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   }
 
-  let android_ripple:PressableAndroidRippleConfig = null
-
-  if (Platform.OS === 'android' && !!variantStyles.ripple) {
-    android_ripple = variantStyles.ripple
-  }
   return (
     <Touchable
       style={_styles.wrapper}
       onPress={handlePress}
       ref={ref}
       disabled={disabled}
-      android_ripple={android_ripple}
+      styles={{
+        feedback: variantStyles.feedback,
+      }}
       debugComponent={'Button'}
+      noFeedback={!onPress}
       {...props}
     >
       {_badge}
       {loading && <ActivityIndicator style={_styles.loader} />}
-      {!loading && <Icon name={icon} style={_styles.leftIcon} renderEmptySpace={hasText}/>}
+      {!loading && <Icon name={icon} style={_styles.leftIcon} renderEmptySpace={hasText && !!rightIcon}/>}
       {text ? <Text text={text} style={_styles.text} /> : null}
       {childrenContent}
-      <Icon name={rightIcon} style={_styles.rightIcon} renderEmptySpace={hasText} />
+      <Icon name={rightIcon} style={_styles.rightIcon} renderEmptySpace={hasText && !!icon} />
     </Touchable>
   )
 })

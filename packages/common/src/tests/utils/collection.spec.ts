@@ -20,7 +20,6 @@ const collection = new Collection(items, 'id')
 
 describe('Collection', () => {
   it('Returns items with at correct ids', () => {
-    console.log(Collection.prototype)
     const item = collection.getItem('1')
 
     expect(JSON.stringify(item)).to.be.eq(JSON.stringify(items[0]))

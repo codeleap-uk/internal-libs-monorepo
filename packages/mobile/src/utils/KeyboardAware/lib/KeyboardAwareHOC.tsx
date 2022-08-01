@@ -15,6 +15,7 @@ import {
   EventSubscription,
   KeyboardEventListener,
   NativeSyntheticEvent,
+  ScrollView,
 } from 'react-native'
 import type { KeyboardAwareInterface } from './KeyboardAwareInterface'
 export function isIphoneX() {
@@ -74,7 +75,9 @@ export type KeyboardAwareHOCProps = {
   update?: Function
   contentContainerStyle?: any
   enableOnAndroid?: boolean
+  Scrollable: any
   innerRef?: Function
+  hocOptions?: any
 } & typeof keyboardAwareHOCTypeEvents
 export type KeyboardAwareHOCState = {
   keyboardSpace: number
@@ -157,18 +160,7 @@ const ScrollIntoViewDefaultOptions: KeyboardAwareHOCOptions = {
   },
 }
 
-function KeyboardAwareHOC(
-  ScrollableComponent: React.ComponentClass<any>,
-  userOptions = ScrollIntoViewDefaultOptions,
-) {
-
-  const hocOptions: KeyboardAwareHOCOptions = {
-    ...ScrollIntoViewDefaultOptions,
-    ...userOptions,
-  }
-
-  return class extends React.Component<KeyboardAwareHOCProps, KeyboardAwareHOCState>
-    implements KeyboardAwareInterface {
+class KeyboardAwareScrollable extends React.Component<KeyboardAwareHOCProps, KeyboardAwareHOCState> implements KeyboardAwareInterface {
     _rnkasv_keyboardView: any
 
     keyboardWillShowEvent: EventSubscription
@@ -187,7 +179,7 @@ function KeyboardAwareHOC(
 
     state: KeyboardAwareHOCState
 
-    static displayName = `KeyboardAware${getDisplayName(ScrollableComponent)}`
+    static displayName = `KeyboardAware`
 
     static propTypes = {
       viewIsInsideTabBar: PropTypes.bool,
@@ -213,13 +205,13 @@ function KeyboardAwareHOC(
 
     // HOC options are used to init default props, so that these options can be overriden with component props
     static defaultProps = {
-      enableAutomaticScroll: hocOptions.enableAutomaticScroll,
-      extraHeight: hocOptions.extraHeight,
-      extraScrollHeight: hocOptions.extraScrollHeight,
-      enableResetScrollToCoords: hocOptions.enableResetScrollToCoords,
-      keyboardOpeningTime: hocOptions.keyboardOpeningTime,
-      viewIsInsideTabBar: hocOptions.viewIsInsideTabBar,
-      enableOnAndroid: hocOptions.enableOnAndroid,
+      enableAutomaticScroll: ScrollIntoViewDefaultOptions.enableAutomaticScroll,
+      extraHeight: ScrollIntoViewDefaultOptions.extraHeight,
+      extraScrollHeight: ScrollIntoViewDefaultOptions.extraScrollHeight,
+      enableResetScrollToCoords: ScrollIntoViewDefaultOptions.enableResetScrollToCoords,
+      keyboardOpeningTime: ScrollIntoViewDefaultOptions.keyboardOpeningTime,
+      viewIsInsideTabBar: ScrollIntoViewDefaultOptions.viewIsInsideTabBar,
+      enableOnAndroid: ScrollIntoViewDefaultOptions.enableOnAndroid,
     }
 
     constructor(props: KeyboardAwareHOCProps) {
@@ -533,7 +525,7 @@ function KeyboardAwareHOC(
     }
 
     _handleRef = (ref: React.ComponentClass<any>) => {
-      this._rnkasv_keyboardView = ref ? hocOptions.extractNativeRef(ref) : ref
+      this._rnkasv_keyboardView = ref ? this.props.hocOptions.extractNativeRef(ref) : ref
       if (this.props.innerRef) {
         this.props.innerRef(this._rnkasv_keyboardView)
       }
@@ -552,7 +544,7 @@ function KeyboardAwareHOC(
     }
 
     render() {
-      const { enableOnAndroid, contentContainerStyle, onScroll } = this.props
+      const { enableOnAndroid, contentContainerStyle, onScroll, Scrollable } = this.props
       let newContentContainerStyle
       if (Platform.OS === 'android' && enableOnAndroid) {
         newContentContainerStyle = [].concat(contentContainerStyle).concat({
@@ -561,9 +553,9 @@ function KeyboardAwareHOC(
             this.state.keyboardSpace,
         })
       }
-      const refProps = { [hocOptions.refPropName]: this._handleRef }
+      const refProps = { [this.props.hocOptions.refPropName]: this._handleRef }
       return (
-        <ScrollableComponent
+        <Scrollable
           {...refProps}
           keyboardDismissMode='interactive'
           contentInset={{ bottom: this.state.keyboardSpace }}
@@ -589,7 +581,25 @@ function KeyboardAwareHOC(
         />
       )
     }
+}
+
+function KeyboardAwareHOC(
+  ScrollableComponent: React.ComponentClass<any>,
+  userOptions = ScrollIntoViewDefaultOptions,
+) {
+
+  const hocOptions: KeyboardAwareHOCOptions = {
+    ...ScrollIntoViewDefaultOptions,
+    ...userOptions,
   }
+
+  return React.forwardRef((props, ref) => <KeyboardAwareScrollable
+    hocOptions={hocOptions}
+    // @ts-ignore
+    ref={ref}
+    Scrollable={ScrollableComponent}
+    {...props}
+  />)
 }
 
 // Allow to pass options, without breaking change, and curried for composition

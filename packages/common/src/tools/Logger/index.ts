@@ -1,45 +1,16 @@
-import callsites from 'callsites'
 import { AppSettings } from '../../config/Settings'
+import { TypeGuards } from '../../utils'
 import { Analytics } from './Analytics'
-import { foregroundColors, colors, logColors } from './constants'
 import { SentryService } from './Sentry'
 import {
-  DebugColors,
-  DebugColor,
   LogToTerminal,
   LogFunctionArgs,
   LogType,
   LoggerMiddleware,
 } from './types'
-import { makeLogger } from './utils'
 
 export * as LoggerTypes from './types'
 export * as LoggerAnalytics from './Analytics'
-
-function initializeDebugLoggers(logToTerminal: LogToTerminal, settings: AppSettings) {
-  const logFunctions = []
-  for (const logConfig of Object.keys(foregroundColors)) {
-    logFunctions.push([
-      logConfig.toLowerCase(),
-      makeLogger(logConfig as DebugColor, logToTerminal),
-    ])
-  }
-  // ignores some warnings to make shit less annoying
-  if (settings?.Logger?.IgnoreWarnings?.length) {
-    const newConsole = (args, oldConsole) => {
-      const shouldIgnore = typeof args[0] === 'string' &&
-        settings.Logger.IgnoreWarnings.some(ignoredWarning => args.join(' ').includes(ignoredWarning))
-      if (shouldIgnore) return
-      else return oldConsole.apply(console, args)
-    }
-    const consoles = ['log', 'warn', 'error']
-    consoles.forEach(t => {
-      const tmp = console[t]
-      console[t] = (...args) => newConsole(args, tmp)
-    })
-  }
-  return Object.fromEntries(logFunctions) as DebugColors
-}
 
 const logLevels: LogType[] = ['debug', 'info', 'log', 'warn', 'error']
 
@@ -58,8 +29,6 @@ const hollowAnalytics = new Analytics({
 export class Logger {
   settings: AppSettings
 
-  debug: DebugColors
-
   sentry: SentryService
 
   middleware:LoggerMiddleware[] = []
@@ -67,7 +36,21 @@ export class Logger {
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
     this.middleware = middleware || []
-    this.debug = initializeDebugLoggers(this.logToTerminal, settings)
+
+    if (settings?.Logger?.IgnoreWarnings?.length) {
+      const newConsole = (args, oldConsole) => {
+        const shouldIgnore = typeof args[0] === 'string' &&
+          settings.Logger.IgnoreWarnings.some(ignoredWarning => args.join(' ').includes(ignoredWarning))
+        if (shouldIgnore) return
+        else return oldConsole.apply(console, args)
+      }
+      const consoles = ['log', 'warn', 'error']
+      consoles.forEach(t => {
+        const tmp = console[t]
+        console[t] = (...args) => newConsole(args, tmp)
+      })
+    }
+
     this.sentry = new SentryService(settings)
 
     if (!analytics) {
@@ -136,9 +119,9 @@ export class Logger {
   private logToTerminal: LogToTerminal = (...logArgs) => {
     const [logType, args, color] = logArgs
     if (this.settings.Logger.Level === 'silent') return
-    const shouldLog =
+    const shouldLog = TypeGuards.isString(this.settings.Logger.Level) ?
       logLevels.indexOf(logType) >=
-      logLevels.indexOf(this.settings.Logger.Level)
+      logLevels.indexOf(this.settings.Logger.Level) : this.settings.Logger.Level.includes(logType)
     if (!shouldLog) return
 
     if (this.settings.Environment.IsDev) {
@@ -178,6 +161,10 @@ export class Logger {
 
   log(...args: LogFunctionArgs) {
     this.logToTerminal('log', args)
+  }
+
+  debug(...args: LogFunctionArgs) {
+    this.logToTerminal('debug', args)
   }
 }
 

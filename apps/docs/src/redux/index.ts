@@ -13,7 +13,6 @@ if (typeof window !== 'undefined' && Settings.Environment.IsDev && window.__REDU
   ext.push(window.__REDUX_DEVTOOLS_EXTENSION__())
 }
 
-console.log(ext)
 export const {
   store,
   actions: { Posts, AppStatus, Session },

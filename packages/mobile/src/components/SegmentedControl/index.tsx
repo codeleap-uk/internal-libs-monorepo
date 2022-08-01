@@ -1,12 +1,12 @@
 import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react'
 import { Scroll, ScrollProps } from '../Scroll'
 
-import { EasingFunction, StyleSheet } from 'react-native'
+import { Easing, EasingFunction, StyleSheet } from 'react-native'
 import { PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlStyles } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
-import { Text } from '../Text'
+import { Text, TextProps } from '../Text'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { View } from '../View'
 export * from './styles'
@@ -24,6 +24,8 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
       duration?: number
       easing?: EasingFunction
     }
+    textProps?: Partial<PropsOf<typeof Text>>
+    touchableProps?: Partial<PropsOf<typeof Touchable>>
     styles?: StylesOf<SegmentedControlComposition>
     scrollProps?: any
     RenderButton?: (props: SegmentedControlProps & {
@@ -31,12 +33,14 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
       textProps: PropsOf<typeof Text>
       option: {label: string; value: any}
     }) => ReactElement
-    RenderAnimatedView?: (props: SegmentedControlProps) => ReactElement
+    RenderAnimatedView?: (props: Partial<SegmentedControlProps>) => ReactElement
+    getItemWidth?: (item:{label: string; value: T }, idx: number, arr: {label: string; value: T }[]) => number
 }
 
 const defaultAnimation = {
+  type: 'timing',
   duration: 200,
-  // easing: Easing.linear,
+  easing: Easing.linear,
 }
 
 const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
@@ -49,13 +53,13 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     animation = {},
     variants = [],
     scrollProps = {},
+    getItemWidth = (i) => i.label.length * 20,
     RenderAnimatedView,
     RenderButton,
-
+    ...viewProps
   } = props
-  const { Theme } = useCodeleapContext()
 
-  const _animation = {
+  let _animation = {
     ...defaultAnimation, ...animation,
   }
 
@@ -75,14 +79,10 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   }
 
   const widthStyle = useMemo(() => {
-    const maxWordLength = Object.assign([], options)
-      .sort((a, b) => {
-        return a.label.length - b.label.length
-      })[0].label.length
-    const fitMaxWidth = Theme.values.width - Theme.spacing.value(4)
-    let fitItemWidth = maxWordLength * options.length * 6
-    if (fitItemWidth * options.length < fitMaxWidth) fitItemWidth = fitMaxWidth / options.length
-    return { width: fitItemWidth }
+    const sizes = options.map(getItemWidth)
+    const maxWidth = sizes.sort((a, b) => b - a)[0]
+
+    return { width: maxWidth }
   }, [options])
 
   const currentOptionIdx = options.findIndex(o => o.value === value) || 0
@@ -118,6 +118,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const AnimatedView = RenderAnimatedView || View
   variantStyles = JSON.parse(JSON.stringify(variantStyles))
+  _animation = JSON.parse(JSON.stringify(_animation))
   return (
     <Scroll
       horizontal
@@ -128,14 +129,19 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
       ref={scrollRef}
     >
       <View style={variantStyles.wrapper}>
-        <AnimatedView {...props}
+        <AnimatedView
+          options={options}
+          styles={variantStyles}
+
           animated
           style={[variantStyles.selectedBubble, widthStyle]}
           animate={{
             translateX,
           }}
+          transition={{
+            translateX: _animation,
+          }}
 
-          transition={_animation}
         />
         {options.map((o, idx) => {
           const selected = value === o.value
@@ -145,13 +151,16 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             debugName: `Segmented Control ${debugName}, option ${o.label}`,
             onPress: onPress(o.value, idx),
             style: [widthStyle, variantStyles.button],
+            ...props.touchableProps,
+
           }
 
-          const textProps = {
+          const textProps:TextProps = {
             text: o.label as string,
             colorChangeConfig: _animation,
             style: StyleSheet.flatten([variantStyles.text, selected && variantStyles['text:selected']]),
             animated: true,
+            ...props.textProps,
           }
 
           if (RenderButton) {
@@ -161,7 +170,11 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
           }
           return <Touchable
             {...touchableProps}
+            noFeedback={selected}
             key={touchableProps.key}
+            styles={{
+              feedback: variantStyles.buttonFeedback,
+            }}
           >
             <Text
 

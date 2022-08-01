@@ -114,7 +114,7 @@ export class NotificationManager {
     set initialized(to:boolean) {
 
       if (to) {
-        this.logger.log('Initialized', '', MODULE)
+        this.logger.info('Initialized', '', MODULE)
         this.unsubscribeFromMessage = messaging().onMessage((msg) => {
           this.handleNotification({
             data: msg,
@@ -130,7 +130,7 @@ export class NotificationManager {
         })
 
         this.unsubscribeFromPress = messaging().onNotificationOpenedApp(msg => {
-          this.logger.log('Notification press', msg, MODULE)
+          this.logger.info('Notification press', msg, MODULE)
           this.handleNotification({
             data: msg,
             type: 'press',
@@ -140,7 +140,7 @@ export class NotificationManager {
         if (!this._initialNoficationHandled && this.autoHandleInitialNotification) {
           this.getInitialNotification().then(msg => {
             if (!msg.data) return
-            this.logger.log('Notification initial', msg, MODULE)
+            this.logger.info('Notification initial', msg, MODULE)
             this.handleNotification(msg).then(() => {
               this._initialNoficationHandled = true
             }).catch(e => {
@@ -156,7 +156,7 @@ export class NotificationManager {
 
         this.unsubscribeFromPress = null
 
-        this.logger.log('Deinitialized', '', MODULE)
+        this.logger.info('Deinitialized', '', MODULE)
       }
       this._initialized = to
 

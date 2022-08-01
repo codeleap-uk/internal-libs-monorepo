@@ -1,5 +1,4 @@
 import equals from 'deep-equal'
-import { Logger } from '../tools/Logger'
 import { LogFunctionArgs } from '../tools/Logger/types'
 import React from 'react'
 
@@ -34,7 +33,7 @@ export function arePropsEqual<A, B>(
         { item: c, nextItem, prevItem, previous, next, check },
         'arePropsEqual',
       ]
-      if (debug) Logger.coloredLog('debug', logArgs, 'yellow')
+      if (debug) console.log(...logArgs)
       return false
     }
   }

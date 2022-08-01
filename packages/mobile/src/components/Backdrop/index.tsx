@@ -40,7 +40,7 @@ export const Backdrop = (backdropProps:BackdropProps) => {
   return <View pointerEvents={visible ? 'auto' : 'none' } animated style={variantStyles.wrapper} state={animation} {...wrapperProps}>
     {
       props?.onPress ?
-        <Touchable feedbackVariant='none' style={variantStyles.touchable} {...props} android_ripple={null}/>
+        <Touchable style={variantStyles.touchable} {...props} noFeedback android_ripple={null}/>
         : null
     }
     {children}

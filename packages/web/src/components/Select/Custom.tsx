@@ -14,7 +14,7 @@ import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { Text } from '../Text'
 import { useClickOutside } from '../../lib/hooks'
-import { CustomSelectProps } from './types'
+import { CustomSelectProps, MultiSelectProps } from './types'
 import { WebSelectComposition, WebSelectParts } from './styles'
 import { SelectRenderFNProps } from '.'
 
@@ -101,14 +101,13 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
     )
   }, [options])
 
-  const inputId = useClickOutside(() => {
-    if (isOpen) {
-      setOpen(false)
-    }
-  }, {
-    deps: [isOpen, setOpen],
-  })
-
+  const wrapperRef = useClickOutside(
+    () => {
+      if (isOpen) {
+        setOpen(false)
+      }
+    },
+  )
   const variantStyles = useDefaultComponentStyle('Select', {
     styles,
     variants,
@@ -163,7 +162,8 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
         list: getStyles('list'),
         error: getStyles('error'),
       }}
-      id={inputId}
+      // id={inputId}
+      ref={wrapperRef}
       onHover={setHovering}
       {...props}
     >
@@ -207,3 +207,4 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
     </InputWrapper>
   )
 }
+

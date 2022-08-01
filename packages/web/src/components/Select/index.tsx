@@ -13,6 +13,7 @@ export type SelectProps<T extends string | number = string> =
 export * from './types'
 export * from './styles'
 export * from './Custom'
+export * from './Multi'
 
 export const Select = <T extends string | number = string>(
   props: SelectProps<T>,
@@ -20,6 +21,6 @@ export const Select = <T extends string | number = string>(
   if (props.type === 'native') {
     return <NativeSelect {...props} />
   }
-
+  // @ts-ignore
   return <CustomSelect {...props} />
 }

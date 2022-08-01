@@ -3,8 +3,6 @@ import { Navigation } from './Navigation'
 
 export function createAppNavigation(Scenes:any) {
 
-  console.log('Creating app navigation', { Scenes }, 'PACKAGES')
-
   const AllScenes = Object.entries<any>(Scenes).reduce((allScenes, [moduleName, content]) => {
 
     const subScenes = []

@@ -16,14 +16,14 @@ import { Alert, AlertButton } from 'react-native'
 
 type NativeAlertArgs = Parameters<typeof Alert.alert>
 
-type OSAlertArgs = {
+export type OSAlertArgs = {
   title: NativeAlertArgs['0']
   body?: NativeAlertArgs['1']
   options?: NativeAlertArgs['2']
 }
-type AlertEvent = AlertButton['onPress']
-type OSAlertType = 'info' | 'error' | 'warn' | 'ask'
-type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
+export type AlertEvent = AlertButton['onPress']
+export type OSAlertType = 'info' | 'error' | 'warn' | 'ask'
+export type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
 const currentAlerts = {
 
@@ -57,7 +57,7 @@ function ask({ title, body, options = null }: OSAlertArgs) {
   if (!title) {
     title = 'Quick quetion'
   }
-  OSAlert({
+  _OSAlert({
     title,
     body,
     options,
@@ -84,7 +84,7 @@ function warn(args: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
   if (!onReject) {
     onReject = () => null
   }
-  OSAlert({
+  _OSAlert({
     title,
     body,
     options: [
@@ -120,7 +120,7 @@ function info(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
   if (!title) {
     title = 'FYI'
   }
-  OSAlert({
+  _OSAlert({
     title,
     body,
     options: [
@@ -151,7 +151,7 @@ function OSError(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
   if (!body) {
     body = 'Something went wrong'
   }
-  OSAlert({
+  _OSAlert({
     title,
     body,
     options: [
@@ -166,13 +166,13 @@ function OSError(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
   })
 }
 
-function OSAlert(params: OSAlertArgs) {
+function _OSAlert(params: OSAlertArgs) {
   Alert.alert(params.title, params.body, params.options, {
     cancelable: false,
   })
 }
 
-export default {
+export const OSAlert = {
   ask,
   warn,
   info,
