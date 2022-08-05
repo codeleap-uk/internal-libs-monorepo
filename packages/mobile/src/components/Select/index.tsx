@@ -41,6 +41,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     listProps,
     placeholder = 'Select',
     arrowIconName = 'selectArrow',
+    selectedIcon = 'selectMarker',
     inputProps = {},
     hideInput = false,
     ...drawerProps
@@ -83,6 +84,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       isSelected={value === item.value}
       item={item}
       onPress={() => select(item.value)}
+      icon={selectedIcon}
       styles={variantStyles}
     />
   }

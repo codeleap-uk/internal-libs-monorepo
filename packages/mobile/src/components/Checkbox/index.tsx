@@ -9,14 +9,15 @@ import {
   PropsOf,
 } from '@codeleap/common'
 import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
-import { Switch as NativeCheckbox } from 'react-native'
-import { InputLabel, FormError } from '../TextInput'
+import { StyleSheet, Switch as NativeCheckbox } from 'react-native'
+import { FormError } from '../TextInput'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
 import {
   CheckboxStyles,
   CheckboxComposition,
 } from './styles'
+import { InputLabel } from '../InputLabel'
 export * from './styles'
 
 type NativeCheckboxProps = Omit<
@@ -45,29 +46,25 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
       ...props
     } = checkboxProps
 
-    const variantStyles = useDefaultComponentStyle('Checkbox', {
-      // @ts-ignore
+    const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxStyles>('u:Checkbox', {
       variants,
+      styles,
+      transform: StyleSheet.flatten,
     })
 
     const { error, showError } = useValidate(value, validate)
 
-    function getStyles(key: CheckboxComposition) {
+    function getStyles(key: CheckboxComposition, styleObj = variantStyles) {
       return [
-        variantStyles[key],
-        variantStyles[key],
-        key === 'wrapper' ? style : {},
-        value ? variantStyles[key + ':checked'] : {},
-        value ? styles[key + ':checked'] : {},
-        showError ? variantStyles[key + ':error'] : {},
-        showError ? styles[key + ':error'] : {},
-        checkboxProps.disabled ? variantStyles[key + ':disabled'] : {},
-        checkboxProps.disabled ? styles[key + ':disabled'] : {},
+        styleObj[key],
+        value ? styleObj[key + ':checked'] : {},
+        showError ? styleObj[key + ':error'] : {},
+        checkboxProps.disabled ? styleObj[key + ':disabled'] : {},
       ]
     }
 
     return (
-      <View style={getStyles('wrapper')} ref={ref} {...props}>
+      <View style={[getStyles('wrapper'), style]} ref={ref} {...props}>
         <Touchable
           debugName={`Set checkbox value to ${!value}`}
           style={getStyles('input')}
@@ -79,9 +76,13 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
           <View style={getStyles('checkmarkWrapper')}>
             <View style={getStyles('checkmark')} />
           </View>
-          <View style={getStyles('labelWrapper')}>
-            <InputLabel label={label} style={getStyles('label')} required={required}/>
-          </View>
+
+          <InputLabel label={label} styles={{
+            asterisk: getStyles('labelAsterisk'),
+            wrapper: getStyles('labelWrapper'),
+            text: getStyles('labelText'),
+          }} required={required}/>
+
         </Touchable>
         <FormError text={error.message} style={getStyles('error')} />
       </View>

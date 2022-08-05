@@ -1,6 +1,7 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { InputLabelComposition } from '../InputLabel'
 
-export type SwitchParts = 'wrapper' | 'label' | 'input' | 'error' | 'inputWrapper'
+export type SwitchParts = 'wrapper' | `label${Capitalize<InputLabelComposition>}` | 'input' | 'error' | 'inputWrapper'
 export type SwitchComposition =
   | SwitchParts
   | `${SwitchParts}:disabled`
@@ -19,7 +20,7 @@ export const SwitchStyles = {
       ...theme.presets.row,
       ...theme.presets.alignCenter,
     },
-    label: {
+    labelWrapper: {
       ...theme.spacing.marginLeft(0.5),
     },
     input: {

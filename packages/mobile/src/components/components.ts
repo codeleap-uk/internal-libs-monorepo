@@ -31,6 +31,7 @@ export * from './Drawer'
 export * from './MultiSelect'
 export * from './AutoComplete'
 export * from './Grid'
+export * from './InputLabel'
 export * from './ActionIcon'
 
 import * as Legacy from './legacy'

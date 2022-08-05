@@ -23,7 +23,7 @@ export * from './styles'
 
 export type EmptyPlaceholderProps = {
   itemName?: string
-  title?: string
+  title?: React.ReactElement
   loading?: boolean
   styles?: StylesOf<EmptyPlaceholderComposition>
   variants?: ComponentVariants<typeof EmptyPlaceholderStyles>['variants']

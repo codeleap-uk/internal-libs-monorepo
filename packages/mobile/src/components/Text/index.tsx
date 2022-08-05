@@ -71,11 +71,6 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
     ref={ref}
   >
     {text}
-  </Component>
-
-  // @ts-ignore
-  return <Component {...props} style={[styles, colorStyle]} ref={ref}>
-    {text}
     {children}
   </Component>
 

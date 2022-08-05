@@ -2,13 +2,14 @@ import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react
 import { Scroll, ScrollProps } from '../Scroll'
 
 import { Easing, EasingFunction, StyleSheet } from 'react-native'
-import { PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
+import { FormTypes, getNestedStylesByKey, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlStyles } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
 import { Text, TextProps } from '../Text'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { View } from '../View'
+import { InputLabel } from '../InputLabel'
 export * from './styles'
 export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrollView & {
   scrollTo: (index: number) => void
@@ -28,6 +29,7 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
     touchableProps?: Partial<PropsOf<typeof Touchable>>
     styles?: StylesOf<SegmentedControlComposition>
     scrollProps?: any
+    label?: FormTypes.Label
     RenderButton?: (props: SegmentedControlProps & {
       touchableProps: PropsOf<typeof Touchable>
       textProps: PropsOf<typeof Text>
@@ -48,6 +50,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     options = [],
     onValueChange,
     debugName,
+    label,
     value,
     styles = {},
     animation = {},
@@ -56,7 +59,6 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     getItemWidth = (i) => i.label.length * 20,
     RenderAnimatedView,
     RenderButton,
-    ...viewProps
   } = props
 
   let _animation = {
@@ -119,7 +121,10 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   const AnimatedView = RenderAnimatedView || View
   variantStyles = JSON.parse(JSON.stringify(variantStyles))
   _animation = JSON.parse(JSON.stringify(_animation))
-  return (
+
+  const labelStyles = getNestedStylesByKey('label', variantStyles)
+  return (<>
+    <InputLabel label={label} styles={labelStyles} required={false}/>
     <Scroll
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -186,6 +191,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
         })}
       </View>
     </Scroll>
+  </>
   )
 
 })

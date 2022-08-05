@@ -1,5 +1,6 @@
 import { assignTextStyle, createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ActionIconParts } from '../ActionIcon'
+import { InputLabelComposition } from '../InputLabel'
 
 export type IconParts = Exclude<ActionIconParts, 'icon' | 'icon:disabled'>
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
@@ -11,15 +12,13 @@ type TextInputParts =
   | 'wrapper'
   | InputIconComposition
   | 'textField'
-  | 'label'
   | 'innerWrapper'
   | 'error'
   | 'subtitle'
   | 'subtitleWrapper'
   | 'placeholder'
   | 'selection'
-  | 'requiredAsterisk'
-  | 'labelWrapper'
+  | `label${Capitalize<InputLabelComposition>}`
 
 export type TextInputComposition =
   | `${TextInputParts}:error`
@@ -62,8 +61,11 @@ export const TextInputStyles = {
       alignItems: 'center',
     },
 
-    label: {
+    labelWrapper: {
       ...theme.spacing.marginBottom(1),
+
+    },
+    labelText: {
       ...assignTextStyle('h5')(theme).text,
     },
     'icon': {
@@ -94,7 +96,7 @@ export const TextInputStyles = {
     subtitle: {
       ...theme.presets.textRight,
     },
-    'label:error': {
+    'labelText:error': {
       color: theme.colors.negative,
     },
 
@@ -104,12 +106,7 @@ export const TextInputStyles = {
     'innerWrapper:focus': {
       ...theme.border.primary(1),
     },
-    requiredAsterisk: {
-      color: theme.colors.negative,
-    },
-    labelWrapper: {
-      ...theme.presets.row,
-    },
+
   })),
   line: createTextInputStyle((theme) => ({
     innerWrapper: {

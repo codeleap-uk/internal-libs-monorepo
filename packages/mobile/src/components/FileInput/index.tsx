@@ -1,45 +1,28 @@
 import React, { forwardRef, useImperativeHandle } from 'react'
 import { DocumentPicker, ImageCropPicker } from '../../modules/documentPicker'
 import {
-  ComponentVariants,
-
-  IconPlaceholder,
   MobileInputFile,
   parseFilePathData,
-  useDefaultComponentStyle,
   useCodeleapContext,
   MobileFile,
 } from '@codeleap/common'
-import { StylesOf } from '../../types'
-import { Button, ButtonProps } from '../Button'
-import { View } from '../View'
-import { InputLabel } from '../TextInput'
 import { OSAlert } from '../../utils'
 import { Options } from 'react-native-image-crop-picker'
 import { DocumentPickerOptions } from '../../modules/types/documentPicker'
 
 export * from './styles'
 
-import {
-  FileInputComposition,
-  FileInputStyles,
-} from './styles'
-
 export type FileInputRef = {
   openFilePicker: (string?: 'camera' | 'library') => void
 }
 
 export type FileInputProps = {
-  label?: string
-  iconName?: IconPlaceholder
-  styles?: StylesOf<FileInputComposition>
   mode: 'hidden' | 'button'
-  variants?: ComponentVariants<typeof FileInputStyles>['variants']
   onFileSelect(files: MobileInputFile[]): void
   options?: DocumentPickerOptions<any>
-  buttonProps?: ButtonProps
+
   ref?: FileInputRef
-  placeholder?: string
+
   type?: 'image' | 'anyFile'
   alertProps?: Parameters<typeof OSAlert.ask>[0]
   pickerOptions?: Partial<Options>
@@ -76,26 +59,20 @@ export const FileInput = forwardRef<
   FileInputProps
 >((fileInputProps, ref) => {
   const {
-    mode = 'hidden',
+
     onFileSelect,
-    iconName,
-    styles,
-    label,
-    variants,
+
     options,
     type = 'image',
     alertProps,
-    placeholder = 'Select a file',
+
     pickerOptions,
-    required,
-    buttonProps,
+
     onOpenCamera = null,
     onOpenGallery = null,
     onOpenFileSystem = null,
     onError,
   } = fileInputProps
-
-  const [file, setFile] = React.useState(null)
 
   const { logger } = useCodeleapContext()
 
@@ -105,7 +82,6 @@ export const FileInput = forwardRef<
       if (!Array.isArray(files)) {
         files = [files]
       }
-      setFile(files)
       onFileSelect(files.map((file) => ({ preview: file.uri, file })))
     } catch (err) {
       handleError(err)
@@ -191,31 +167,9 @@ export const FileInput = forwardRef<
 
   }
 
-  const variantStyles = useDefaultComponentStyle('FileInput', {
-    styles,
-    variants,
-  })
-
   useImperativeHandle(ref, () => ({
     openFilePicker,
   }))
-
-  const filenames = file ? file.map((f) => f.name) : ''
-  if (mode === 'button') {
-    return (
-      <View style={variantStyles.wrapper}>
-        <InputLabel label={label} style={variantStyles.label} required={required}/>
-        <Button
-          onPress={() => openFilePicker()}
-          text={filenames || placeholder}
-          debugName={'Open file picker'}
-          icon={iconName || ('fileInputButton' as IconPlaceholder)}
-          variants={filenames ? '' : 'icon'}
-          {...buttonProps}
-        />
-      </View>
-    )
-  }
 
   return null
 })

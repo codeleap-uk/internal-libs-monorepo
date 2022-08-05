@@ -15,13 +15,10 @@ import { ComponentPropsWithoutRef, forwardRef, useImperativeHandle, useRef, useS
 import { Text, TextProps } from '../Text'
 import { View, ViewProps } from '../View'
 import { StylesOf } from '../../types'
-import { Icon } from '../Icon'
 import { NativeSyntheticEvent, StyleSheet, TextInput as NativeTextInput, TextInputChangeEventData } from 'react-native'
 import { Touchable, TouchableProps } from '../Touchable'
 import { MaskedTextInput, TextInputMaskProps } from '../../modules/textInputMask'
-import { InputLabel } from './Label'
-
-export { InputLabel } from './Label'
+import { InputLabel } from '../InputLabel'
 
 export * from './styles'
 
@@ -31,8 +28,6 @@ import {
   TextInputStyles,
 } from './styles'
 import { ActionIcon, ActionIconParts, ActionIconProps } from '../ActionIcon'
-
-type IconProp = { name: IconPlaceholder; action?: () => void }
 
 type NativeProps = ComponentPropsWithoutRef<typeof NativeTextInput>
 
@@ -194,9 +189,11 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     >
       <InputLabel
         label={label}
-        style={getStyles('label')}
-        asteriskStyle={getStyles('requiredAsterisk')}
-        wrapperStyle={getStyles('labelWrapper')}
+        styles={{
+          wrapper: getStyles('labelWrapper'),
+          asterisk: getStyles('labelAsterisk'),
+          text: getStyles('labelText'),
+        }}
         required={required}
       />
       <View style={getStyles('innerWrapper')} {...innerWrapperProps}>
@@ -206,6 +203,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           styles={leftIconStyles}
           commonStyles={commonIconStyles}
           debugName={`${debugName} left icon`}
+          onPress={() => {}}
+          noFeedback={!leftIcon?.onPress}
           {...leftIcon}
         />
         {/* @ts-ignore */}
@@ -232,6 +231,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           styles={rightIconStyles}
           commonStyles={commonIconStyles}
           debugName={`${debugName} right icon`}
+          onPress={() => {}}
+          noFeedback={!rightIcon?.onPress}
           {...rightIcon}
           {...visibilityToggleProps}
         />

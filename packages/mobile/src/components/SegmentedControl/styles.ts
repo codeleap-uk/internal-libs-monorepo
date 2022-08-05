@@ -1,4 +1,5 @@
 import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap/common'
+import { InputLabelComposition } from '../InputLabel'
 import { TouchableStylesGen } from '../Touchable'
 
 export type SegmentedControlStates = 'selected'
@@ -12,7 +13,8 @@ export type SegmentedControlComposition =
  `text:${SegmentedControlStates}` |
  'button' |
  'buttonFeedback' |
- `button:${SegmentedControlStates}`
+ `button:${SegmentedControlStates}` |
+ `label${Capitalize<InputLabelComposition>}`
 
 export type SegmentedControlStylesGen<TCSS = any> =
   StylesOf<

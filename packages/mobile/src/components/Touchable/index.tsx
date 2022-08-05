@@ -89,7 +89,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   const { logger } = useCodeleapContext()
 
   const press = () => {
-    if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
+    if (!onPress) {
+      logger.warn('No onPress passed to touchable', {
+        touchableProps,
+      }, 'User Interaction')
+      return
+    }
 
     logger.log(
       `<${debugComponent || 'Touchable'}/>  pressed`,
@@ -117,17 +122,19 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       'margin',
       'alignSelf',
       'border',
+      'top!',
+      'left!',
+      'right!',
+      'bottom!',
+      'position!',
       // 'flex!',
     ]
     const sharedKeys = [
       'width!',
       'height!',
       'flex!',
-      'position!',
-      'top!',
-      'left!',
-      'right!',
-      'bottom!',
+      'backgroundColor!',
+
     ]
 
     const wrapperStyle = {} as any
@@ -171,7 +178,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         pressableStyle,
         // !!rippleConfig && ripplePressableStyles,
         getFeedbackStyle(pressed),
-
+        variantStyles.pressable,
       ])} android_ripple={rippleConfig} {...props} ref={ref}>
         {children}
       </Pressable>

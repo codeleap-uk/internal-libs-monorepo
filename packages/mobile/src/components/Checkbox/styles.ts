@@ -1,14 +1,14 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { InputLabelComposition } from '../InputLabel'
 
 type CheckboxParts =
   | 'wrapper'
-  | 'label'
-  | 'labelWrapper'
   | 'input'
   | 'inputFeedback'
   | 'checkmark'
   | 'checkmarkWrapper'
   | 'error'
+  | `label${Capitalize<InputLabelComposition>}`
 
 export type CheckboxComposition =
   | CheckboxParts
@@ -36,17 +36,16 @@ export const CheckboxStyles = {
       input: {
         flexDirection: 'row',
         ...theme.presets.alignCenter,
-        borderRadius: theme.borderRadius.small,
+
       },
       labelWrapper: {
-        flex: 1,
+        // flex: 1,
+        ...theme.spacing.marginLeft(1),
+
       },
       inputFeedback: {
         type: 'opacity',
         value: 0.5,
-      },
-      label: {
-        ...theme.spacing.marginLeft(0.5),
       },
 
       checkmark: {
@@ -67,6 +66,7 @@ export const CheckboxStyles = {
       checkmarkWrapper: {
         position: 'relative',
         width: size,
+        borderRadius: theme.borderRadius.small,
         height: size,
         ...theme.border.neutral(1),
       },

@@ -7,10 +7,13 @@ import { useRef } from 'react'
 import { StyleSheet } from 'react-native'
 import { View } from '../View'
 import {
+  getNestedStylesByKey,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import { InputLabel } from '../TextInput'
+
 import { SliderProps } from './types'
+import { InputLabel } from '../InputLabel'
+import { SliderStyles } from './styles'
 
 export * from './styles'
 
@@ -38,8 +41,10 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
   const toggleTooltipTimeout = useRef(null)
   const valueRef = useRef(value)
 
-  const variantStyles = useDefaultComponentStyle('Slider', {
+  const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderStyles>('u:Slider', {
     variants,
+    styles,
+    transform: StyleSheet.flatten,
   })
 
   function setValue() {
@@ -66,7 +71,7 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
 
   return (
     <View style={[variantStyles.wrapper, style]}>
-      <InputLabel label={label} style={[variantStyles.label, styles.label]} />
+      <InputLabel label={label} styles={getNestedStylesByKey('label', variantStyles)} />
       <RNSlider
         value={value}
         onSlidingStart={() => {
@@ -105,16 +110,16 @@ export const Slider: React.FC<SliderProps> = (sliderProps) => {
         maximumValue={labels ? labels.length - 1 : 10}
         trackMarks={labels ? Object.keys(labels).map((z) => parseInt(z)) : []}
         containerStyle={
-            [variantStyles.inputContainer, styles.inputContainer] as any
+            [variantStyles.inputContainer] as any
         }
         thumbStyle={
-            StyleSheet.flatten([variantStyles.handle, styles.handle]) as any
+            StyleSheet.flatten([variantStyles.handle]) as any
         }
-        trackStyle={[variantStyles.track, styles.track] as any}
+        trackStyle={[variantStyles.track] as any}
         minimumTrackTintColor={
           StyleSheet.flatten([
             variantStyles.selectedTrack,
-            styles.selectedTrack,
+
           ])?.backgroundColor
         }
         {...props}

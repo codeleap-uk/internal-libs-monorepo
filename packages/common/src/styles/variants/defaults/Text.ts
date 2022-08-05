@@ -32,6 +32,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
           fontSize: createClampExpression(style, theme.typography.baseFontSize),
           lineHeight: style.lineHeight,
           color,
+          letterSpacing: style.letterSpacing,
           ...add,
         },
       }
@@ -47,6 +48,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
         fontFamily,
         lineHeight,
         fontSize,
+        letterSpacing: style.letterSpacing ?? null,
         ...add,
       },
     }

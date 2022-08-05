@@ -161,7 +161,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       {!loading && <Icon name={icon} style={_styles.leftIcon} renderEmptySpace={hasText && !!rightIcon}/>}
       {text ? <Text text={text} style={_styles.text} /> : null}
       {childrenContent}
-      <Icon name={rightIcon} style={_styles.rightIcon} renderEmptySpace={hasText && !!icon} />
+      <Icon name={rightIcon} style={_styles.rightIcon} renderEmptySpace={(hasText && !!icon) || loading} />
     </Touchable>
   )
 })

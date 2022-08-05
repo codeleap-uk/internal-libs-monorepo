@@ -20,7 +20,7 @@ export type ContentViewProps = Omit<
   ViewProps,
   'variants' | 'responsiveVariants'
 > & {
-  placeholderMsg: string
+  message?: string
   loading?: boolean
   styles?: StylesOf<ViewComposition>
 } & ComponentVariants<typeof ContentViewStyles>
@@ -30,7 +30,7 @@ const WrapContent = ({ children, ...props }) => (
 )
 
 export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
-  const { children, placeholderMsg, loading, variants, styles, ...props } =
+  const { children, message, loading, variants, styles, ...props } =
     rawProps
 
   const variantStyle = useDefaultComponentStyle('ContentView', {
@@ -57,7 +57,7 @@ export const ContentView: React.FC<ContentViewProps> = (rawProps) => {
 
   return (
     <WrapContent {...props} style={styles}>
-      <Text text={placeholderMsg} />
+      <Text text={message} />
     </WrapContent>
   )
 }

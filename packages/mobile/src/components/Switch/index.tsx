@@ -10,13 +10,14 @@ import {
 } from '@codeleap/common'
 import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
 import { StyleSheet, Switch as NativeSwitch } from 'react-native'
-import { InputLabel, FormError } from '../TextInput'
+import { FormError } from '../TextInput'
 import { View } from '../View'
 
 import {
   SwitchStyles,
   SwitchComposition,
 } from './styles'
+import { InputLabel } from '../InputLabel'
 export * from './styles'
 type NativeSwitchProps = Omit<
   ComponentPropsWithRef<typeof NativeSwitch>,
@@ -77,7 +78,11 @@ export const Switch = forwardRef<NativeSwitch, SwitchProps>(
             ref={ref}
             {...props}
           />
-          <InputLabel label={label} style={getStyles('label')} />
+          <InputLabel label={label} styles={{
+            asterisk: getStyles('labelAsterisk'),
+            text: getStyles('labelText'),
+            wrapper: getStyles('labelWrapper'),
+          }} />
         </View>
         <FormError text={error.message} style={getStyles('error')} />
       </View>

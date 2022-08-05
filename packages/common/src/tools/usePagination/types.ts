@@ -38,8 +38,8 @@ export type UsePaginationParams<
     onUpdate?: (item:Partial<TItem>) => Promise<TItem>
     keyExtractor: (item: TItem) => string | number
     sort?: (a: TItem, b: TItem) => number
-    beforeMutate?: (action: MutationOps) => void
-    afterMutate?: (action: MutationOps, result: MutationResult) => void
+    beforeMutate?: (action: MutationOps) => void | Promise<void>
+    afterMutate?: (action: MutationOps, result: MutationResult) => void | Promise<void>
     where?: RetrieveArg
     limit?: number
     overrides?: Partial<{

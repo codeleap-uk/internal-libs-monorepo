@@ -54,6 +54,7 @@ export type TypographyStyle = {
   color?: string
   fontFamily?: string
   sizeMultiplier?: number
+  letterSpacing?: number
   lineHeightMultiplier?: number
   size?: {
     multiplier: number

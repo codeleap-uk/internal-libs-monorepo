@@ -6,7 +6,7 @@
   "workspaces": {
     "packages": [
       "apps/*",
-      "packages/*"
+      "packages/*"    
     ],
     "nohoist": [
       "**/react-native",

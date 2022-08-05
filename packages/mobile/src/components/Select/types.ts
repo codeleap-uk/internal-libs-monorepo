@@ -30,7 +30,7 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     styles?: StylesOf<SelectComposition>
     style?: any
     hideInput?: boolean
-
+    selectedIcon?: IconPlaceholder
     arrowIconName?: IconPlaceholder
     closeOnSelect?: boolean
     inputProps?: Partial<TextInputProps>

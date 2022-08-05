@@ -11,7 +11,7 @@ import { View } from '../View'
 import { PagerStyles, PagerComposition } from './styles'
 export * from './styles'
 
-type PageProps = {
+export type PageProps = {
   isLast: boolean
   isFirst: boolean
   isActive: boolean

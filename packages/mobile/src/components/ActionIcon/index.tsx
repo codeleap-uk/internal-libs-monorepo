@@ -13,7 +13,7 @@ export type ActionIconProps= {
 } & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconStyles>
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
-  const { icon, iconProps, variants, styles, ...touchableProps } = props
+  const { icon, iconProps, variants, styles, children, ...touchableProps } = props
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconStyles>('u:ActionIcon', {
     variants, styles, transform: StyleSheet.flatten,
   })
@@ -25,6 +25,7 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
         variantStyles.icon,
         touchableProps?.disabled && variantStyles['icon:disabled'],
       ]} {...iconProps}/>
+    {children}
   </Touchable>
 }
 

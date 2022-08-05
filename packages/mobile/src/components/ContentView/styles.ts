@@ -14,12 +14,11 @@ export const ContentViewStyles = {
     wrapper: {
       display: 'flex',
       ...theme.presets.column,
-      ...theme.presets.alignCenter,
     },
     loader: {
       alignSelf: 'center',
-      height: 100,
-      width: 100,
+      height: theme.values.width * 0.15,
+      width: theme.values.width * 0.15,
     },
   })),
 }

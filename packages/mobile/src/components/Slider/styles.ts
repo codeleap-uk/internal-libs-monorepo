@@ -1,10 +1,11 @@
 import { assignTextStyle, createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { InputLabelComposition } from '../InputLabel'
 
 export type SliderComposition =
   | 'wrapper'
   | 'handle'
   | 'track'
-  | 'label'
+  | `label${Capitalize<InputLabelComposition>}`
   | 'selectedTrack'
   | 'inputContainer'
   | 'tooltip'

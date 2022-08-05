@@ -121,11 +121,11 @@ export function usePagination<
   const defaultCreateParams:OverrideParamType<'create'> = {
     mutationKey: QUERY_KEYS.create,
     mutationFn: params.onCreate,
-    onMutate() {
-      params?.beforeMutate?.('create')
+    async onMutate() {
+      await params?.beforeMutate?.('create')
     },
-    onError() {
-      params?.afterMutate?.('create', {
+    async onError() {
+      await params?.afterMutate?.('create', {
         status: 'error',
       })
     },
@@ -150,23 +150,23 @@ export function usePagination<
     mutationKey: QUERY_KEYS.update,
     mutationFn: params.onUpdate,
 
-    onMutate() {
-      params?.beforeMutate?.('update')
+    async onMutate() {
+      await params?.beforeMutate?.('update')
 
     },
-    onError() {
-      params?.afterMutate?.('update', {
+    async onError() {
+      await params?.afterMutate?.('update', {
         status: 'error',
       })
     },
-    onSuccess(data) {
+    async onSuccess(data) {
       const itemId = params.keyExtractor(data)
       queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
         const [pageIdx, itemIdx] = pagesById[itemId]
         old.pages[pageIdx].results[itemIdx] = data
         return old
       })
-      params?.afterMutate?.('update', {
+      await params?.afterMutate?.('update', {
         status: 'success',
       })
     },
@@ -177,16 +177,16 @@ export function usePagination<
   const defaultRemoveParams:OverrideParamType<'remove'> = {
     mutationKey: QUERY_KEYS.remove,
     mutationFn: params.onRemove,
-    onMutate() {
-      params?.beforeMutate?.('remove')
+    async onMutate() {
+      await params?.beforeMutate?.('remove')
 
     },
-    onError() {
-      params?.afterMutate?.('remove', {
+    async onError() {
+      await params?.afterMutate?.('remove', {
         status: 'error',
       })
     },
-    onSuccess(data) {
+    async onSuccess(data) {
       const _id = params.keyExtractor(data)
       queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, oldData => {
         const [pageIdx, itemIdx] = pagesById[_id]
@@ -203,7 +203,7 @@ export function usePagination<
         return oldData
 
       })
-      params?.afterMutate?.('remove', {
+      await params?.afterMutate?.('remove', {
         status: 'success',
       })
     },

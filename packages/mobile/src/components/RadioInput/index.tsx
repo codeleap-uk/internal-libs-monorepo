@@ -5,11 +5,13 @@ import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import {
   ComponentVariants,
+  getNestedStylesByKey,
   StylesOf,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
 import { RadioInputComposition, RadioInputStyles } from './styles'
+import { InputLabel } from '../InputLabel'
 
 export * from './styles'
 
@@ -18,7 +20,7 @@ type RadioItem<T extends unknown = any> = {
   label: ReactNode
 }
 
-const getRadioStyle = (props) => useDefaultComponentStyle('RadioInput', props)
+const getRadioStyle = (props) => useDefaultComponentStyle<'u:RadioInput', typeof RadioInputStyles>('u:RadioInput', props)
 
 export type RadioButtonProps = Omit<
   ComponentPropsWithoutRef<typeof Touchable>,
@@ -35,6 +37,7 @@ export type RadioGroupProps<T> = {
   options: RadioItem<T>[]
   value: T
   onValueChange(value: T): void
+  required?: boolean
   label: ReactNode
   styles?: StylesOf<RadioInputComposition>
 } & ComponentVariants<typeof RadioInputStyles>
@@ -73,6 +76,7 @@ export const RadioGroup = <T extends unknown>(
     onValueChange,
     label,
     responsiveVariants,
+    required = false,
     variants,
     styles,
   } = radioGroupProps
@@ -84,8 +88,8 @@ export const RadioGroup = <T extends unknown>(
   })
   return (
     <View style={radioStyle.wrapper}>
-      {typeof label === 'string' ? <Text text={label} /> : label}
-      <View style={radioStyle.listWrapper}>
+      <InputLabel required={required} label={label} styles={getNestedStylesByKey('label', radioStyle)}/>
+      <View style={radioStyle.list}>
         {options?.map((item, idx) => (
           <RadioButton
             debugName={'RadioButton'}
