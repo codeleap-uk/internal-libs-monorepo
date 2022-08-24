@@ -31,7 +31,7 @@ export type EmptyPlaceholderProps = {
 }
 
 export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPlaceholderProps) => {
-  const { itemName, title, loading, styles = {}, variants = [], emptyIconName = 'search' } = props
+  const { itemName, title, loading, styles = {}, variants = [], emptyIconName = 'placeholder' } = props
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
   const componentStyles = useDefaultComponentStyle('EmptyPlaceholder', {

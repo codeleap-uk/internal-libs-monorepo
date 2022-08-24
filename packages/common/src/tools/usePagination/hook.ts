@@ -9,6 +9,7 @@ import { QueryFunctionContext,
 } from '@tanstack/react-query'
 import { OperationKey, PaginationReturn, UsePaginationParams } from './types'
 import { getPaginationData, getQueryKeys } from './utils'
+import { TypeGuards } from '../../utils'
 
 export function usePagination<
  TItem = any,
@@ -54,14 +55,19 @@ export function usePagination<
       return query.state.dataUpdateCount === 0 || query.isStaleByTime()
     },
     getNextPageParam: (page, pages) => {
+      const currentTotal = pages.reduce((acc, p) => p.results.length + acc, 0)
+
+      if (currentTotal >= (page?.count || Infinity)) {
+        return undefined
+      }
       return {
         limit: params.limit,
-        offset: pages.reduce((acc, p) => p.results.length + acc, 0),
+        offset: currentTotal,
       }
 
     },
-    ...params?.overrides?.list,
     queryFn: listFn,
+
     queryKey: QUERY_KEYS.list,
     keepPreviousData: true,
 
@@ -81,10 +87,12 @@ export function usePagination<
     const flatData = getPaginationData<TItems[number]>({
       keyExtractor: params.keyExtractor,
       queryKeyOrList: list.data,
+      filter: params?.filter,
     })
+
     return {
       ...flatData,
-      flatItems: params?.sort ? flatData.flatItems.sort(params.sort) : flatData.flatItems,
+      flatItems: flatData.flatItems,
     }
   }, [list.dataUpdatedAt])
 
@@ -109,7 +117,11 @@ export function usePagination<
           old.pages[0].results.unshift(data)
           // @ts-ignore
           old.pageParams[0].limit += 1
+        } else {
+          const [itemPage, itemIdx] = pagesById[itemId]
+          old.pages[itemPage].results[itemIdx] = data
         }
+
         return old
       })
     },
@@ -132,15 +144,16 @@ export function usePagination<
 
     onSuccess(newItem) {
 
+      params?.afterMutate?.('create', {
+        status: 'success',
+        item: newItem,
+      })
       queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
 
         old.pages[0].results.unshift(newItem)
         // @ts-ignore
         old.pageParams[0].limit += 1
         return old
-      })
-      params?.afterMutate?.('create', {
-        status: 'success',
       })
     },
   }
@@ -160,15 +173,17 @@ export function usePagination<
       })
     },
     async onSuccess(data) {
+      await params?.afterMutate?.('update', {
+        status: 'success',
+        item: data,
+      })
       const itemId = params.keyExtractor(data)
       queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
         const [pageIdx, itemIdx] = pagesById[itemId]
         old.pages[pageIdx].results[itemIdx] = data
         return old
       })
-      await params?.afterMutate?.('update', {
-        status: 'success',
-      })
+
     },
 
   }
@@ -188,6 +203,10 @@ export function usePagination<
     },
     async onSuccess(data) {
       const _id = params.keyExtractor(data)
+      await params?.afterMutate?.('remove', {
+        status: 'success',
+        item: data,
+      })
       queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, oldData => {
         const [pageIdx, itemIdx] = pagesById[_id]
 
@@ -195,6 +214,9 @@ export function usePagination<
         let updateIdx = pageIdx + 1
 
         while (updateIdx < oldData.pageParams.length) {
+          if (TypeGuards.isUndefined(oldData?.pageParams?.[updateIdx])) {
+            break
+          }
           // @ts-ignore
           oldData.pageParams[updateIdx].offset -= 1
           updateIdx += 1
@@ -203,9 +225,7 @@ export function usePagination<
         return oldData
 
       })
-      await params?.afterMutate?.('remove', {
-        status: 'success',
-      })
+
     },
 
   }
@@ -235,6 +255,9 @@ export function usePagination<
       create,
       retrieve,
     },
+    create: create.mutateAsync,
+    remove: remove.mutateAsync,
+    update: update.mutateAsync,
     QUERY_KEYS,
     params,
     // flatListProps,

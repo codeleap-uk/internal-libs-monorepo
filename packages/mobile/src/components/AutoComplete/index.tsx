@@ -125,16 +125,8 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
   }, [debouncedSearch, caseSensitive, options.length, filterFn])
 
   return <Select
-    {...selectProps}
     styles={variantStyles}
     options={ loading ? [] : filteredOptions}
-    listProps={{
-      ...selectProps?.listProps,
-      placeholder: {
-        loading,
-        ...selectProps?.listProps?.placeholder,
-      },
-    }}
     header={
       <AutoCompleteHeader
         debugName={selectProps.debugName}
@@ -152,6 +144,14 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
         {...headerProps}
       />
     }
+    {...selectProps}
+    listProps={{
+      ...selectProps?.listProps,
+      placeholder: {
+        loading,
+        ...selectProps?.listProps?.placeholder,
+      },
+    }}
   />
 
 }

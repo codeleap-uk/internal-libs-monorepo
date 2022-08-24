@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { usePrevious } from '../utils'
 
 type UseSearchParamsReturn<T> = [
   T,
@@ -23,11 +24,14 @@ export function useSearchParams<
 
     return initialParams
   })
+  const previousParams = usePrevious(params)
 
   useEffect(() => {
     if (window.history) {
-      Object.entries(params).forEach(([k, v]) => {
-        if (v) {
+      Object.entries({ ...previousParams, ...params }).forEach(([k, v]) => {
+        if (!!previousParams?.[k] && !params?.[k]) {
+          searchParams.current.delete(k)
+        } else if (v) {
           searchParams.current.set(k, v)
         } else {
           searchParams.current.delete(k)

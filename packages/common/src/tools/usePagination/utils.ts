@@ -9,12 +9,13 @@ export const getQueryKeys = (base:string) => ({
   remove: [`${base}.remove`],
   retrieve: [`${base}.retrieve`],
 })
-
-export function getPaginationData<TItem>(params?: {
-    queryKeyOrList: UseInfiniteQueryResult<PaginationReturn<TItem>>['data'] | QueryKey
-    queryClient?: QueryClient
-    keyExtractor: (item: TItem) => string | number
-  }) {
+type GetPaginationDataParams<TItem = any, Arr extends TItem[]= TItem[]> = {
+  queryKeyOrList: UseInfiniteQueryResult<PaginationReturn<TItem>>['data'] | QueryKey
+  queryClient?: QueryClient
+  keyExtractor: (item: TItem) => string | number
+  filter: Parameters<Arr['filter']>[0]
+}
+export function getPaginationData<TItem>(params?: GetPaginationDataParams<TItem>) {
   const pagesById = {} as Record<ReturnType<typeof params.keyExtractor>, [number, number]>
   const flatItems = [] as TItem[]
   const itemMap = {} as Record<ReturnType<typeof params.keyExtractor>, TItem>
@@ -29,8 +30,17 @@ export function getPaginationData<TItem>(params?: {
 
   let pageIdx = 0
   for (const page of listVal.pages) {
-    flatItems.push(...page.results)
+
     page.results.forEach((i, itemIdx) => {
+      const flatIdx = flatItems.length
+      let include = true
+      if (params?.filter) {
+        include = params?.filter(i, flatIdx, flatItems) as boolean
+      }
+
+      if (include) {
+        flatItems.push(i)
+      }
       const itemId = params.keyExtractor(i)
       pagesById[itemId] = [pageIdx, itemIdx]
       itemMap[itemId] = i

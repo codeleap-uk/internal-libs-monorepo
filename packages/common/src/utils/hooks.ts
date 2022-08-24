@@ -17,6 +17,7 @@ import { deepMerge } from './object'
 import { AnyFunction, DeepPartial } from '../types'
 
 import { uniqueId } from 'lodash'
+import { useUnmount } from 'react-use'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -105,7 +106,7 @@ export function usePartialState<T = any>(initial: T | (() => T)) {
   ] as const
 }
 
-export function useInterval(callback: AnyFunction, interval: number) {
+export function useInterval(callback: AnyFunction, interval: number, deps = []) {
   const intervalRef = useRef(null)
   function clear() {
     clearInterval(intervalRef.current)

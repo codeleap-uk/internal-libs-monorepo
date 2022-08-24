@@ -7,7 +7,7 @@ import {
   MobileFile,
 } from '@codeleap/common'
 import { OSAlert } from '../../utils'
-import { Options } from 'react-native-image-crop-picker'
+import { ImageOrVideo, Options } from 'react-native-image-crop-picker'
 import { DocumentPickerOptions } from '../../modules/types/documentPicker'
 
 export * from './styles'
@@ -18,7 +18,7 @@ export type FileInputRef = {
 
 export type FileInputProps = {
   mode: 'hidden' | 'button'
-  onFileSelect(files: MobileInputFile[]): void
+  onFileSelect(files: MobileInputFile<ImageOrVideo>[]): void
   options?: DocumentPickerOptions<any>
 
   ref?: FileInputRef
@@ -37,10 +37,11 @@ const pickerDefaults = {
   cropping: true,
 }
 
-function parsePickerData(data:any):MobileInputFile {
+function parsePickerData(data:ImageOrVideo):MobileInputFile<ImageOrVideo> {
 
   const filePathData = parseFilePathData(data.path)
   const d:MobileFile = {
+    ...data,
     name: filePathData.name,
     size: data.size,
     type: data.mime,
@@ -82,6 +83,7 @@ export const FileInput = forwardRef<
       if (!Array.isArray(files)) {
         files = [files]
       }
+
       onFileSelect(files.map((file) => ({ preview: file.uri, file })))
     } catch (err) {
       handleError(err)
@@ -100,10 +102,14 @@ export const FileInput = forwardRef<
     ...pickerOptions,
   } as Options
 
-  const handlePickerResolution = data => {
-    onFileSelect(mergedOptions.multiple ? data.map(parsePickerData) : [
-      parsePickerData(data),
-    ])
+  const handlePickerResolution = (data: ImageOrVideo | ImageOrVideo[]) => {
+    let imageArray:ImageOrVideo[] = []
+    if (!Array.isArray(data)) {
+      imageArray = [data]
+    } else {
+      imageArray = data
+    }
+    onFileSelect(imageArray.map(parsePickerData))
   }
   const onPress = (open?: 'camera' | 'library' | 'fs', options?: Options) => {
     if (open == 'fs') {

@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { forwardRef, useState } from 'react'
+import { forwardRef } from 'react'
 import {
 
   useDefaultComponentStyle,
 
   ComponentVariants,
 } from '@codeleap/common'
-
 
 import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
 import { View, ViewProps } from '../View'
@@ -50,6 +49,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       style,
       styles = {},
       onRefresh,
+      component,
       refreshing,
       placeholder,
       keyboardAware = true,
@@ -74,7 +74,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    const Component:any = keyboardAware ? KeyboardAwareFlatList : FlatList
+    const Component:any = component || (keyboardAware ? KeyboardAwareFlatList : FlatList)
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
     return (

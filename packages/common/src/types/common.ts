@@ -5,7 +5,7 @@ export type WebInputFile = {
   preview: string
 }
 
-export type MobileFile = {
+type MobileFileBase = {
   fileCopyUri?: string
   name: string
   size: number
@@ -13,9 +13,11 @@ export type MobileFile = {
   uri: string
 }
 
-export type FileWithPreview = {
-  file: MobileFile
+export type MobileFile<Extra = {}> = Omit<MobileFileBase, keyof Extra> & Partial<Extra>
+
+export type FileWithPreview<Extra = {}> = {
+  file: MobileFile<Extra>
   preview: string
 }
 
-export type MobileInputFile = FileWithPreview | MobileFile
+export type MobileInputFile<Extra = {}> = FileWithPreview | MobileFile<Extra>

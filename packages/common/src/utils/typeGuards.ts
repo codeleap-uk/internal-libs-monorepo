@@ -19,6 +19,17 @@ export function isFunction(x): x is (AnyFunction|(new (...args) => any)) {
 export function isArray(x): x is any[] {
   return Array.isArray(x)
 }
+export function isUndefined(x): x is undefined {
+  return typeof x === 'undefined'
+}
+
+export function isNull(x): x is null {
+  return typeof x === null
+}
+
+export function isNil(x): x is null | undefined {
+  return isNull(x) || isUndefined(x)
+}
 
 export function is<T extends unknown>(x, Enum: T[]): x is T {
   return Enum.includes(x)

@@ -16,8 +16,9 @@ export type PaginationReturn<Data = any> = {
   }
 
 export type MutationOps = 'create' | 'update' | 'remove'
-export type MutationResult = {
+export type MutationResult<Item = any> = {
     status: 'success' | 'error'
+    item?: Item
   }
 
 export type MutationOverride<TItem> = (_default: Partial<UseMutationOptions<TItem, any, Partial<TItem>>>) => UseMutationOptions<TItem, any, Partial<TItem> >
@@ -39,7 +40,8 @@ export type UsePaginationParams<
     keyExtractor: (item: TItem) => string | number
     sort?: (a: TItem, b: TItem) => number
     beforeMutate?: (action: MutationOps) => void | Promise<void>
-    afterMutate?: (action: MutationOps, result: MutationResult) => void | Promise<void>
+    filter?: Parameters<TItem[]['filter']>[0]
+    afterMutate?: (action: MutationOps, result: MutationResult<TItem>) => void | Promise<void>
     where?: RetrieveArg
     limit?: number
     overrides?: Partial<{
