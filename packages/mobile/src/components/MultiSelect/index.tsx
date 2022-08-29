@@ -28,6 +28,9 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     arrowIconName = 'selectArrow',
     selectedIcon = 'multiSelectMarker',
     inputProps = {},
+    clearable = false,
+    clearIconName = 'close',
+    validate = null,
     ...drawerProps
   } = selectProps
 
@@ -76,6 +79,19 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
       icon={selectedIcon as IconPlaceholder}
     />
   }
+
+  const isEmpty = value.length === 0
+  const showClearIcon = !isEmpty && clearable
+  const inputIcon = showClearIcon ? arrowIconName : clearIconName
+
+  const onPressInputIcon = () => {
+    if (showClearIcon) {
+      onValueChange([])
+    } else {
+      close?.()
+    }
+
+  }
   return <>
     {
       !hideInput && (
@@ -83,7 +99,8 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
           caretHidden
           value={selectedLabel}
           rightIcon={{
-            icon: arrowIconName as IconPlaceholder,
+            icon: inputIcon as IconPlaceholder,
+            onPress: onPressInputIcon,
           }}
           editable={false}
           touchableWrapper
@@ -96,6 +113,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
           debugName={'Select input'}
           styles={inputStyles}
           style={style}
+          validate={validate}
           {...inputProps}
         />
       )

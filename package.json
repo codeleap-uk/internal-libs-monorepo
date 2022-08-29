@@ -60,6 +60,7 @@
     "docs": "yarn workspace codeleap-docs",
     "web": "yarn workspace web-template",
     "common": "yarn workspace @codeleap/common",
+    "cli": "yarn workspace @codeleap/codeleap-cli",
     "config": "yarn workspace @codeleap/config",
     "mobile": "yarn workspace mobile-template",
     "p:web": "yarn workspace @codeleap/web",

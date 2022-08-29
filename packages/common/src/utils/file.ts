@@ -1,14 +1,23 @@
-const separators = /[\\\/.]+/
+const separators = /[\\\/]+/
 
 export function parseFilePathData(path: string) {
   const parts = path.split(separators)
 
-  const fileName = parts[parts.length - 2]
-  const filePath = path.split(fileName)[0]
+  const lastPart = parts[parts.length - 1]
+
+  let fileName = lastPart
+  let ext = ''
+
+  if (lastPart.includes('.')) {
+    const dotIdx = fileName.lastIndexOf('.')
+    fileName = fileName.substring(0, dotIdx)
+
+    ext = lastPart.substring(dotIdx + 1)
+  }
 
   return {
-    path: filePath,
-    extension: parts[parts.length - 1],
+    path: parts.slice(0, -1).join('/'),
+    extension: ext,
     name: fileName,
   }
 }

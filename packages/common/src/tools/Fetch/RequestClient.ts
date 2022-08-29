@@ -50,8 +50,7 @@ export class RequestClient implements IRequestClient {
 
         return reqConfig
       })
-
-      this.axios.interceptors.response.use(async (axiosResponse) => {
+      const resMiddleware = async (axiosResponse) => {
         let response = { ...axiosResponse }
 
         if (this.config.responseMiddleware) {
@@ -61,7 +60,9 @@ export class RequestClient implements IRequestClient {
         }
 
         return response
-      })
+      }
+      this.axios.interceptors.response.use(resMiddleware, resMiddleware)
+
     }
 
     setInQueue(req: RequestQueueItem) {

@@ -35,3 +35,4 @@ yarn-error.log*
 .turbo
 dist
 public
+test_area

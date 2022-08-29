@@ -35,5 +35,8 @@ export type MultiSelectProps<T> = MultiSelectDrawerProps & {
     selectedIcon?: IconPlaceholder
     hideInput?: boolean
     listProps?: Partial<FlatListProps>
+    clearable?: boolean
+    clearIconName?: IconPlaceholder
+    validate?: TextInputProps['validate']
   } & ComponentVariants<typeof MultiSelectStyles>
 

@@ -24,7 +24,7 @@ export function isUndefined(x): x is undefined {
 }
 
 export function isNull(x): x is null {
-  return typeof x === null
+  return x === null
 }
 
 export function isNil(x): x is null | undefined {

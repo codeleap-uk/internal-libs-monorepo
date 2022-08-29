@@ -114,20 +114,21 @@ export function useForm<
     return Object.values(errors).join('').length === 0
   }
 
-  const inputRefs = []
+  const inputRefs = useRef([])
 
-  function focusNext(idx:number) {
-    if (!(idx < inputRefs.length)) return
-    const nextRef = inputRefs?.[idx]?.current
+  function focus(idx:number) {
+    // if (!(idx < inputRefs.current.length)) return
+    const nextRef = inputRefs?.current?.[idx]?.current
 
     if (nextRef?.focus) {
       nextRef.focus?.()
     }
   }
 
-  const nRegisteredTextRefs = useRef(0)
+  const registeredFields = useRef([])
 
   function register(field: FieldPaths[0]) {
+    const nFields = registeredFields.current.length
     // @ts-ignore
     const { changeEventName, validate, type, ...staticProps } =
       form.staticFieldProps[field as string]
@@ -164,24 +165,23 @@ export function useForm<
     }
 
     if (type === 'text') {
-      const thisRefIdx = nRegisteredTextRefs.current
-
-      if (nRegisteredTextRefs.current < form.numberOfTextFields) {
-        inputRefs.push(createRef())
-
+      if (!Theme.IsBrowser) {
+        dynamicProps.returnKeyType = 'next'
+      }
+      const nRegisteredTextRefs = inputRefs.current.length
+      const thisRefIdx = nRegisteredTextRefs
+      if (form.numberOfTextFields > nRegisteredTextRefs) {
+        inputRefs.current.push(createRef())
       }
 
-      dynamicProps.ref = inputRefs[thisRefIdx]
+      dynamicProps.ref = inputRefs.current[thisRefIdx]
 
       dynamicProps.onSubmitEditing = () => {
-        focusNext(thisRefIdx + 1)
+        const nextRef = thisRefIdx + 1
+        if (inputRefs.current.length <= nextRef) return
+        focus(thisRefIdx + 1)
       }
 
-      nRegisteredTextRefs.current += 1
-      if (nRegisteredTextRefs.current === form.numberOfTextFields) {
-
-        nRegisteredTextRefs.current = 0
-      }
     }
 
     if (validate) {
@@ -201,7 +201,8 @@ export function useForm<
           break
       }
     }
-
+    // if(!)
+    registeredFields.current.push(type)
     return {
       ...staticProps,
       ...dynamicProps,

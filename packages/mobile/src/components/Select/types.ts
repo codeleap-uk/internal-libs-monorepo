@@ -35,5 +35,7 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     closeOnSelect?: boolean
     inputProps?: Partial<TextInputProps>
     listProps?: Partial<FlatListProps>
+    clearable?: boolean
+    clearIconName?: IconPlaceholder
   } & ComponentVariants<typeof SelectStyles>
 

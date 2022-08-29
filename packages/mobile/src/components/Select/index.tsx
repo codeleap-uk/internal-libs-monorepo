@@ -41,6 +41,8 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     listProps,
     placeholder = 'Select',
     arrowIconName = 'selectArrow',
+    clearIconName = 'close',
+    clearable = false,
     selectedIcon = 'selectMarker',
     inputProps = {},
     hideInput = false,
@@ -76,7 +78,6 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
     return TypeGuards.isString(display) ? display : ''
   }, [value, placeholder, options])
-
   const Item = renderItem || SelectItem
 
   const renderListItem = ({ item }) => {
@@ -88,6 +89,19 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       styles={variantStyles}
     />
   }
+  const isEmpty = TypeGuards.isNil(value)
+  const showClearIcon = !isEmpty && clearable
+
+  const inputIcon = showClearIcon ? clearIconName : arrowIconName
+
+  const onPressInputIcon = () => {
+    if (showClearIcon) {
+      onValueChange(null)
+    } else {
+      close?.()
+    }
+
+  }
   return <>
     {
       !hideInput && (
@@ -95,7 +109,9 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
           caretHidden
           value={selectedLabel}
           rightIcon={{
-            icon: arrowIconName as IconPlaceholder,
+            icon: inputIcon as IconPlaceholder,
+            onPress: onPressInputIcon,
+            noFeedback: true,
           }}
           editable={false}
           touchableWrapper
