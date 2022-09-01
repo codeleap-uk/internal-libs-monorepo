@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Logger } from '../Logger'
 
 export type FetchFailure =
@@ -37,4 +37,5 @@ export type RequestClientConfig<D = any> = AxiosRequestConfig<D> & {
   automaticMultipartParsing?: boolean
   multipartParser?: (body:any) => FormData
   silent?: boolean
+  onError?: (e: AxiosError) => void
 }

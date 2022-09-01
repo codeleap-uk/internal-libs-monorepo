@@ -178,7 +178,7 @@ export type AllFields =
 export type FormField = {
   disabled?: boolean
   label?: Label
-  autoCapitalize?: boolean
+  autoCapitalize?: boolean | string
   keyboardType?: string
   returnKeyType?: string
   textContentType?: string

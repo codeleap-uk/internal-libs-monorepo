@@ -63,42 +63,49 @@ type AskManyOpts<T extends string|number|symbol > = {
 export type UsePermissions<
   _PermissionNames extends string,
   PermissionNames extends string = `${_PermissionNames}?` | _PermissionNames> = () => TPermissionContext & {
-  askPermission: (name: PermissionNames, onResolve?: (status: PermissionTypes.PermissionStatus) => any) => any
+  askPermission: (name: PermissionNames, onResolve?: (status: PermissionTypes.PermissionStatus) => any) => Promise<PermissionTypes.PermissionStatus>
   askMany<T extends PermissionNames, R = TAskManyResults<T>>(
     perms: T[],
     onResolve?: (res:R) => any,
     options?: AskManyOpts<T>
-  ):Promise<void>
+  ):Promise<
+    R
+  >
 }
 
 export const usePermissions:UsePermissions<any> = () => {
   const modalCtx = ModalManager.useModalContext()
   const permissionCtx = useContext(PermissionContext)
 
-  async function askPermission(name: string, onResolve?: (status: PermissionTypes.PermissionStatus, modalName?: string) => any) {
-    const status = await permissionCtx.manager.get(name, {
-      ask: false,
-      askOnDenied: false,
-      askOnPending: false,
+  function askPermission(name: string, onResolve?: (status: PermissionTypes.PermissionStatus, modalName?: string) => any) {
+    return new Promise<PermissionTypes.PermissionStatus>((resolve, reject) => {
+      permissionCtx.manager.get(name, {
+        ask: false,
+        askOnDenied: false,
+        askOnPending: false,
+      }).then(status => {
+        const permissionModalName = `permissions.${name}`
+
+        if (!status.isGranted) {
+
+          modalCtx.toggleModal(permissionModalName, true, {
+            onPermissionResolve: (status) => {
+              modalCtx.toggleModal(permissionModalName, false, {})
+              setTimeout(() => {
+                onResolve?.(status, permissionModalName)
+
+                resolve(status)
+              }, modalCtx.transitionDuration)
+            },
+          })
+
+        } else {
+          onResolve?.(status.status as unknown as PermissionTypes.PermissionStatus)
+          resolve(status)
+        }
+      })
     })
 
-    const permissionModalName = `permissions.${name}`
-
-    if (!status.isGranted) {
-
-      modalCtx.toggleModal(permissionModalName, true, {
-        onPermissionResolve: (status) => {
-          modalCtx.toggleModal(permissionModalName, false, {})
-          setTimeout(() => {
-            onResolve?.(status, permissionModalName)
-
-          }, modalCtx.transitionDuration)
-        },
-      })
-
-    } else {
-      onResolve?.(status.status as unknown as PermissionTypes.PermissionStatus)
-    }
   }
 
   const askMany = async (
@@ -164,10 +171,12 @@ export const usePermissions:UsePermissions<any> = () => {
         modalCtx.toggleModal(prevModal, false, {})
       })
     }
-    onResolve({
+    const res:Parameters<typeof onResolve>[0] = {
       ...results,
       overall: Object.values(results).every(x => x === 'granted') ? 'granted' : 'denied',
-    })
+    }
+    onResolve(res)
+    return res
   }
 
   return {

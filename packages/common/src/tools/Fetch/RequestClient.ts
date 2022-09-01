@@ -50,18 +50,6 @@ export class RequestClient implements IRequestClient {
 
         return reqConfig
       })
-      const resMiddleware = async (axiosResponse) => {
-        let response = { ...axiosResponse }
-
-        if (this.config.responseMiddleware) {
-          for (const middleware of this.config.responseMiddleware) {
-            response = (await middleware(response)) || response
-          }
-        }
-
-        return response
-      }
-      this.axios.interceptors.response.use(resMiddleware, resMiddleware)
 
     }
 
@@ -159,6 +147,9 @@ export class RequestClient implements IRequestClient {
         }).catch((err) => {
           if (data.debug) {
             console.log(err?.request)
+          }
+          if (this.config.onError) {
+            this.config.onError(err)
           }
           this.onRequestFailure(err, { ...data }, reject)
         })
