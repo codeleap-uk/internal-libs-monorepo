@@ -131,6 +131,9 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
       style={variantStyles.scroll}
       contentContainerStyle={variantStyles.scrollContent}
       {...scrollProps}
+      keyboardAware={{
+        enabled: false,
+      }}
       ref={scrollRef}
     >
       <View style={variantStyles.wrapper}>

@@ -119,14 +119,13 @@ export function useForm<
   function focus(idx:number) {
     // if (!(idx < inputRefs.current.length)) return
     const nextRef = inputRefs?.current?.[idx]?.current
-
-    if (nextRef?.focus) {
+    if (nextRef?.focus && nextRef?.isTextInput) {
       nextRef.focus?.()
     }
   }
 
   const registeredFields = useRef([])
-
+  let registeredTextRefsOnThisRender = 0
   function register(field: FieldPaths[0]) {
     const nFields = registeredFields.current.length
     // @ts-ignore
@@ -164,22 +163,22 @@ export function useForm<
       }
     }
 
-    if (type === 'text') {
+    if (type === 'text' || type === 'number') {
       if (!Theme.IsBrowser) {
         dynamicProps.returnKeyType = 'next'
       }
-      const nRegisteredTextRefs = inputRefs.current.length
-      const thisRefIdx = nRegisteredTextRefs
-      if (form.numberOfTextFields > nRegisteredTextRefs) {
+
+      const thisRefIdx = registeredTextRefsOnThisRender
+
+      if (thisRefIdx >= inputRefs.current.length) {
         inputRefs.current.push(createRef())
       }
-
       dynamicProps.ref = inputRefs.current[thisRefIdx]
-
+      registeredTextRefsOnThisRender++
       dynamicProps.onSubmitEditing = () => {
         const nextRef = thisRefIdx + 1
         if (inputRefs.current.length <= nextRef) return
-        focus(thisRefIdx + 1)
+        focus(nextRef)
       }
 
     }

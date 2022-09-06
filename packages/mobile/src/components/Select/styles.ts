@@ -18,6 +18,7 @@ export const SelectStyles = {
   ...DrawerStyles,
   default: createSelectStyle((theme) => {
     const defaultStyle = DrawerStyles.default(theme)
+
     return {
       ...defaultStyle,
       box: {
@@ -49,10 +50,12 @@ export const SelectStyles = {
       list: {
         height: 'auto',
 
+        maxHeight: theme.values.window.height * 0.75,
+
       },
-      listContent: {
-        paddingBottom: theme.values.bottomNavHeight + theme.spacing.value(1),
-      },
+      // listContent: {
+      //   paddingBottom: theme.values.safeAreaTop,
+      // },
 
     }
   }),

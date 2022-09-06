@@ -7,6 +7,7 @@ import {
 
   useCodeleapContext,
   AnyFunction,
+  TypeGuards,
 } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView } from 'react-native'
 
@@ -27,41 +28,10 @@ export type TouchableProps = Omit<
   debugComponent?: string
   onPress?: AnyFunction
   noFeedback?: boolean
+  debounce?: number
   styles?: StylesOf<TouchableComposition>
 } & BaseViewProps
 export * from './styles'
-
-const defaultWrapperStyles = {
-  paddingTop: 0,
-  paddingLeft: 0,
-  paddingRight: 0,
-  paddingBottom: 0,
-  overflow: 'hidden',
-  alignItems: 'stretch',
-}
-
-const defaultPressableStyles = {
-  marginTop: 0,
-  marginLeft: 0,
-  marginRight: 0,
-  marginBottom: 0,
-
-}
-
-const ripplePressableStyles = {
-  // position: 'absolute',
-  // top: 0,
-  // left: 0,
-  // right: 0,
-  // bottom: 0,
-  // width: '100%',
-  // minWidth: '100%',
-  // maxWidth: '100%',
-  // height: '100%',
-  // minHeight: '100%',
-  // maxHeight: '100%',
-  // flex: 1,
-}
 
 export const Touchable: React.FC<TouchableProps> = forwardRef<
   RNView,
@@ -74,11 +44,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     style,
     debugName,
     debugComponent,
+    debounce = null,
     noFeedback = false,
     styles,
     ...props
   } = touchableProps
-
+  const [pressed, setPressed] = React.useState(false)
   const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchableStyles>('u:Touchable', {
     variants,
     transform: StyleSheet.flatten,
@@ -95,13 +66,25 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       }, 'User Interaction')
       return
     }
+    const _onPress = () => {
+      logger.log(
+        `<${debugComponent || 'Touchable'}/>  pressed`,
+        debugName || variants,
+        'User interaction',
+      )
+      onPress && onPress()
+    }
+    if (TypeGuards.isNumber(debounce)) {
+      if (pressed) {
+        return
+      }
+      setPressed(true)
+      _onPress()
+      setTimeout(() => setPressed(false), debounce)
+    } else {
+      _onPress()
+    }
 
-    logger.log(
-      `<${debugComponent || 'Touchable'}/>  pressed`,
-      debugName || variants,
-      'User interaction',
-    )
-    onPress && onPress()
   }
 
   const _styles = StyleSheet.flatten([variantStyles.wrapper, style])

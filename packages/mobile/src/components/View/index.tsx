@@ -10,6 +10,7 @@ import {
 } from '@codeleap/common'
 import { View as NativeView } from 'react-native'
 import { MotiView, MotiProps } from 'moti'
+import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 
 export * from './styles'
 
@@ -18,6 +19,7 @@ export type ViewProps = ComponentPropsWithoutRef<typeof NativeView> &
     ref?: any
     component?: any
     animated?: boolean
+    keyboardAware?: GetKeyboardAwarePropsOptions
   } & BaseViewProps
 
 export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeView, ViewProps & Partial<MotiProps>>((viewProps, ref) => {
@@ -26,7 +28,7 @@ export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeV
     variants = [],
     children,
     style,
-
+    keyboardAware,
     component,
     animated = false,
     ...props
@@ -37,9 +39,21 @@ export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeV
     variants,
   })
   const Component = animated ? MotiView : (component || NativeView)
+  const keyboard = useKeyboardAwareView({ debug: true })
+  const _props = keyboard.getKeyboardAwareProps(
+    {
+      style: [variantStyles.wrapper, style], ref: ref, ...props,
+    },
+    {
+      adapt: 'paddingBottom',
+      baseStyleProp: 'style',
 
+      enabled: false,
+      ...keyboardAware,
+    },
+  )
   return (
-    <Component style={[variantStyles.wrapper, style]} ref={ref} {...props}>
+    <Component {..._props}>
       {children}
     </Component>
   )

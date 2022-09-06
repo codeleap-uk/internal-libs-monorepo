@@ -84,7 +84,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     password,
     visibilityToggle,
     innerWrapperProps,
-    masking = null,
+    masking,
     subtitle = '',
     onChangeMask,
     debugName,
@@ -96,6 +96,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
   const [editedState, setEdited] = useState(edited)
 
   const input = useRef<any>(null)
+  const maskInputRef = useRef<any>(null)
   const [textIsVisible, setTextVisible] = useBooleanToggle(false)
   const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputStyles>('u:TextInput', {
     variants,
@@ -120,7 +121,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     }
   }
   const handleMaskChange = (masked, unmasked) => {
-    if (onChangeText) onChangeText((typeof masking === 'object' && masking?.saveFormatted) ? masked : unmasked)
+
+    if (onChangeText) onChangeText(masking?.saveFormatted ? masked : masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
   }
   const handleChange = (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -130,9 +132,16 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     if (onChangeText) onChangeText(text)
   }
 
-  useImperativeHandle(inputRef, () => ({ ...input.current, focus: () => {
-    input.current?.focus?.()
-  }, isTextInput: true }))
+  useImperativeHandle(inputRef, () => {
+    return {
+      ...input.current,
+      focus: () => {
+        input.current?.focus?.()
+      },
+      isTextInput: true,
+    }
+
+  }, [!!masking, !!input?.current?.focus])
 
   const { showError, error } = useValidate(value, validate)
 
@@ -177,7 +186,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
     <FormError {...errorProps}/>
     {TypeGuards.isString(subtitle) ? <Text text={subtitle} style={subtitleStyles.subtitle}/> : (subtitle || null)}
   </View>
-
   return (
     <Touchable
       style={getStyles('wrapper')}
@@ -209,7 +217,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
         />
         {/* @ts-ignore */}
         <InputElement
-          ref={input}
+
           secureTextEntry={password && !textIsVisible}
           onChange={(e) => masking ? onChange?.(e) : handleChange(e)}
           value={value}
@@ -220,9 +228,21 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           selectionColor={StyleSheet.flatten(getStyles('selection'))?.color}
           includeRawValueInChangeText={true}
           {...props}
-          {...(masking ? { onChangeText: handleMaskChange, type: masking?.type, refInput: (inputRef) => {
-            input.current = inputRef
-          } } : {})}
+          {...masking}
+          {...(!!masking ? {
+            onChangeText: handleMaskChange,
+            ref: maskInputRef,
+            refInput: (inputRef) => {
+              // console.log(inputRef)
+              if (!!inputRef) {
+                input.current = inputRef
+
+              }
+            },
+            ...masking,
+          } : {
+            ref: input,
+          })}
           style={getStyles('textField')}
         />
         <InputIcon

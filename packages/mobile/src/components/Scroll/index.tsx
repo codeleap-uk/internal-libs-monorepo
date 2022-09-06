@@ -5,7 +5,6 @@ import {
   onUpdate,
   useDefaultComponentStyle,
   usePrevious,
-  useCodeleapContext,
 } from '@codeleap/common'
 
 import { RefreshControl, RefreshControlProps, ScrollView, StyleSheet } from 'react-native'
@@ -13,7 +12,9 @@ import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollStyles } from './styles'
-import { KeyboardAwareScrollView } from '../../utils'
+import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
+import { ScrollView as MotiScrollView } from 'moti'
+// import { KeyboardAwareScrollView } from '../../utils'
 
 type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
 
@@ -22,10 +23,11 @@ export type ScrollProps = KeyboardAwareScrollViewProps &
     onRefresh?: () => void
     refreshTimeout?: number
     changeData?: any
-    keyboardAware?: boolean
+    keyboardAware?: GetKeyboardAwarePropsOptions
     refreshing?: boolean
     styles?: StylesOf<ScrollComposition>
     refreshControlProps?: Partial<RefreshControlProps>
+    debugName?: string
   }
 
 export const Scroll = forwardRef<ScrollView, ScrollProps>(
@@ -38,7 +40,10 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       changeData,
       styles = {},
       refreshControlProps = {},
-      keyboardAware = true,
+      contentContainerStyle,
+      keyboardAware,
+      debugName = '',
+      animated = true,
       ...props
     } = scrollProps
     const hasRefresh = !!props.onRefresh
@@ -69,34 +74,47 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
         }
       }
     }, [refreshingDisplay, changeData])
-    const { Theme } = useCodeleapContext()
 
     const variantStyles = useDefaultComponentStyle<'u:Scroll', typeof ScrollStyles>('u:Scroll', {
       variants,
       styles,
       transform: StyleSheet.flatten,
-      rootElement: 'wrapper',
+      rootElement: 'content',
     })
 
-    const Component = keyboardAware ? KeyboardAwareScrollView : ScrollView
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
+    const _scrollProps = {
+      style: [variantStyles.wrapper, style],
+      contentContainerStyle: [variantStyles.content, contentContainerStyle],
+      ref: ref as unknown as ScrollView,
+      refreshControl: hasRefresh && (
+        <RefreshControl
+          refreshing={refreshingDisplay}
+          onRefresh={onRefresh}
+          tintColor={refreshStyles?.color}
+          colors={[refreshStyles?.color]}
+          {...refreshControlProps}
+        />
+      ),
+      ...props,
+    }
+    const keyboard = useKeyboardAwareView({
+      debugName,
+    })
+
+    const rootProps = keyboard.getKeyboardAwareProps(_scrollProps, {
+      adapt: 'marginBottom',
+      baseStyleProp: 'style',
+      animated,
+      ...keyboardAware,
+
+    })
+    const Component = animated ? MotiScrollView : ScrollView
+
     return (
       <Component
-        style={[Theme.presets.full, style]}
-        contentContainerStyle={[variantStyles.wrapper]}
-        ref={ref as unknown as ScrollView}
-        refreshControl={
-          hasRefresh && (
-            <RefreshControl
-              refreshing={refreshingDisplay}
-              onRefresh={onRefresh}
-              tintColor={refreshStyles?.color}
-              colors={[refreshStyles?.color]}
-              {...refreshControlProps}
-            />
-          )
-        }
-        {...props}
+        {...rootProps}
+
       >
         {children}
       </Component>

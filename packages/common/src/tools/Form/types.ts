@@ -27,9 +27,9 @@ export type Validator<T> = T extends boolean
 
 export type Options<T> = { label: Label; value: T }[]
 
-type FormValidateOn = 'submit' | 'blur' | 'change'
+type FormValidateOn = 'change'
 
-export type FormOutput = 'json' | 'multipart' | 'mixed'
+export type FormOutput = 'json'
 
 export type CommonSliderTypes = {
   min?: number

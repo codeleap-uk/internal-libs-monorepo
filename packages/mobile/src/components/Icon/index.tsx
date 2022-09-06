@@ -6,6 +6,8 @@ import {
   useCodeleapContext,
   arePropsEqual,
   IconPlaceholder,
+  onMount,
+  onUpdate,
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 import { View } from '../View'
@@ -35,19 +37,23 @@ export const IconComponent: React.FC<IconProps> = ({ name, style, variants, rend
     },
     rootElement: 'icon',
   })
+  const Component = Theme?.icons?.[name]
+  onUpdate(() => {
+    if (!Component && !!name) {
+      logger.warn(
+        `Icon: No icon found in theme for name "${name}".`,
+        { props: { style, name, variants, variantStyles }},
+        'Component',
+      )
+    }
+  }, [name])
 
   if (!name) {
     return renderEmptySpace ? <View style={variantStyles.icon}/> : null
   }
 
-  const Component = Theme?.icons?.[name]
-
   if (!Component) {
-    logger.warn(
-      `Icon: No icon found in theme for name "${name}".`,
-      { props: { style, name, variants, variantStyles }},
-      'Component',
-    )
+
     return null
   }
   return <Component {...otherProps} style={variantStyles.icon} />

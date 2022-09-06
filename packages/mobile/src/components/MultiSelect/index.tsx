@@ -82,7 +82,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
 
   const isEmpty = value.length === 0
   const showClearIcon = !isEmpty && clearable
-  const inputIcon = showClearIcon ? arrowIconName : clearIconName
+  const inputIcon = showClearIcon ? clearIconName : arrowIconName
 
   const onPressInputIcon = () => {
     if (showClearIcon) {
@@ -119,7 +119,9 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
       )
     }
 
-    <ModalManager.Drawer scroll={false} title={label} {...drawerProps} styles={variantStyles}>
+    <ModalManager.Drawer scroll={false} title={label} keyboardAware={{
+      enabled: false,
+    }} {...drawerProps} styles={variantStyles}>
       <List<MultiSelectProps<any>['options']>
         data={options}
         style={variantStyles.list}

@@ -18,7 +18,7 @@ export const EmptyPlaceholderStyles = {
   default: createEmptyPlaceholderStyle((theme) => ({
     wrapper: {
       ...theme.presets.center,
-      minHeight: theme.values.height / 2,
+      minHeight: theme.values.window.height / 2,
       height: '100%',
       flex: 1,
     },

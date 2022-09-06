@@ -13,11 +13,16 @@ export const DrawerStyles = {
       ...defaultStyle,
       box: {
         width: '100%',
-        maxHeight: theme.values.height * 0.7,
-        paddingBottom: (theme.values.bottomNavHeight ?? 0) + theme.spacing.value(1),
+        paddingBottom: 0,
+        paddingTop: 0,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        maxHeight: '100%',
+
       },
-      innerWrapperScroll: {
+      innerWrapper: {
         ...theme.presets.justifyEnd,
+
       },
 
       'box:hidden': {

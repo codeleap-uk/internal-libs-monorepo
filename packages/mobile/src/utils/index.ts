@@ -8,3 +8,4 @@ import * as Permissions from './PermissionManager'
 export { Permissions }
 export * from './KeyboardAware'
 export * from './input'
+export * from './theme'

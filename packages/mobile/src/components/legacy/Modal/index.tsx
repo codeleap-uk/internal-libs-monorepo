@@ -19,6 +19,7 @@ import { StylesOf } from '../../../types/utility'
 import { Touchable } from '../../Touchable'
 import { Text } from '../../Text'
 import { Animated } from '../../Animated'
+import { GetKeyboardAwarePropsOptions } from '../../../utils'
 
 export * from './styles'
 
@@ -38,7 +39,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   toggle?: () => void
   zIndex?: number
   scroll?: boolean
-  keyboardAware?: boolean
+  keyboardAware?: GetKeyboardAwarePropsOptions
 }
 
 export const Modal: React.FC<ModalProps> = (modalProps) => {
@@ -56,7 +57,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeIconName = 'close',
     debugName,
     scroll = true,
-    keyboardAware = true,
+    keyboardAware,
     zIndex = null,
     ...props
   } = modalProps

@@ -8,7 +8,7 @@ export * from './styles'
 export type DrawerProps = Omit<ModalProps, 'variants'> & ComponentVariants<typeof DrawerStyles>
 
 export const Drawer:React.FC<DrawerProps> = (props) => {
-  const { variants, styles, ...modalProps } = props
+  const { variants, styles, scrollProps, ...modalProps } = props
 
   const variantStyles = useDefaultComponentStyle('u:Drawer', {
     variants,
@@ -18,7 +18,16 @@ export const Drawer:React.FC<DrawerProps> = (props) => {
 
   return <Modal
     styles={variantStyles}
+    scroll={false}
 
     {...modalProps}
+    scrollProps={{
+      ...scrollProps,
+      keyboardAware: {
+
+        enabled: false,
+        ...scrollProps?.keyboardAware,
+      },
+    }}
   />
 }

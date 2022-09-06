@@ -46,6 +46,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     selectedIcon = 'selectMarker',
     inputProps = {},
     hideInput = false,
+
     ...drawerProps
   } = selectProps
 
@@ -102,6 +103,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     }
 
   }
+
   return <>
     {
       !hideInput && (
@@ -130,13 +132,30 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       )
     }
 
-    <ModalManager.Drawer scroll={false} title={label} {...drawerProps} styles={variantStyles}>
+    <ModalManager.Drawer
+      scroll={false}
+      title={label}
+      {...drawerProps}
+      keyboardAware={{
+        baseStyleProp: 'style',
+        adapt: 'paddingBottom',
+        enabled: true,
+        enableOnAndroid: true,
+      }}
+      styles={variantStyles}
+    >
       <List<CustomSelectProps<any>['options']>
         data={options}
         style={variantStyles.list}
         contentContainerStyle={variantStyles.listContent}
         keyExtractor={(i) => i.value}
         renderItem={renderListItem}
+        keyboardAware={{
+          baseStyleProp: 'style',
+          adapt: 'maxHeight',
+          enabled: true,
+          enableOnAndroid: true,
+        }}
         {...listProps}
       />
     </ModalManager.Drawer>

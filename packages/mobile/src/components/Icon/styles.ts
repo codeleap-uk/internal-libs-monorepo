@@ -13,6 +13,11 @@ export const IconStyles = {
       color: theme.colors.icon,
     },
   })),
+  originalColor: createIconStyle(theme => ({
+    icon: {
+      color: 'auto',
+    },
+  })),
   white: createIconStyle((theme) => ({
     icon: {
       color: theme.colors.white,

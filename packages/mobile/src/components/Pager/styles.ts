@@ -53,7 +53,7 @@ export const PagerStyles = {
   ...presets,
   default: createPagerStyle((theme) => {
     const width = theme.values.width
-    const height = theme.values.height * 0.8
+    const height = theme.values.window.height * 0.8
     return {
       ...pagerAnimation(height, width, 'X'),
       page: {
@@ -67,15 +67,15 @@ export const PagerStyles = {
       },
     }
   }),
-  horizontal: createPagerStyle((Theme) => {
+  horizontal: createPagerStyle((theme) => {
 
-    const width = Theme.values.width
-    const height = Theme.values.height * 0.8
+    const width = theme.values.width
+    const height = theme.values.window.height * 0.8
     return pagerAnimation(height, width, 'X')
   }),
-  vertical: createPagerStyle((Theme) => {
-    const height = Theme.values.height * 0.8
-    const width = Theme.values.width
+  vertical: createPagerStyle((theme) => {
+    const height = theme.values.window.height * 0.8
+    const width = theme.values.width
     return pagerAnimation(height, width, 'Y')
   }),
 }

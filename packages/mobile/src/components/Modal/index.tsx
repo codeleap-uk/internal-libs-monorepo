@@ -7,6 +7,7 @@ import {
   getNestedStylesByKey,
   IconPlaceholder,
   onUpdate,
+  PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
@@ -20,9 +21,10 @@ import { StylesOf } from '../../types/utility'
 
 import { useDynamicAnimation } from 'moti'
 import { Backdrop } from '../Backdrop'
-import { useStaticAnimationStyles } from '../../utils/hooks'
+import { useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 
 export * from './styles'
 
@@ -43,8 +45,10 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   zIndex?: number
   scroll?: boolean
   header?: React.ReactElement
-  keyboardAware?: boolean
+  closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
+  keyboardAware?: GetKeyboardAwarePropsOptions
+  scrollProps?: PropsOf<typeof Scroll>
 }
 
 export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
@@ -95,8 +99,9 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     debugName,
     scroll = true,
     renderHeader,
-    keyboardAware = true,
     zIndex = null,
+    scrollProps = {},
+    closeOnHardwareBackPress = true,
     ...props
   } = modalProps
 
@@ -126,8 +131,9 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     boxAnimation.animateTo(visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden'])
   }, [visible])
   const wrapperStyle = getStyles('wrapper')
+
   const ScrollComponent = scroll ? Scroll : View
-  const scrollStyle = scroll ? getStyles('innerWrapper') : [getStyles('innerWrapper'), getStyles('innerWrapperScroll')]
+  const scrollStyle = scroll ? getStyles('scroll') : getStyles('innerWrapper')
 
   const headerProps:ModalHeaderProps = {
     ...modalProps,
@@ -138,6 +144,13 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     },
   }
   const Header = renderHeader || DefaultHeader
+
+  useBackButton(() => {
+    if (visible && closeOnHardwareBackPress) {
+      toggle()
+      return true
+    }
+  }, [visible, toggle, closeOnHardwareBackPress])
 
   return (
     <View
@@ -156,23 +169,33 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       />
       <ScrollComponent
         style={scrollStyle}
-        contentContainerStyle={getStyles('innerWrapperScroll')}
-        scrollEnabled={scroll}
-        keyboardAware={keyboardAware}
+        contentContainerStyle={getStyles('scrollContent')}
+        keyboardAware= {{
+          adapt: 'marginBottom',
+          baseStyleProp: 'style',
+          animated: true,
+          enabled: visible,
+          enableOnAndroid: true,
+        }}
+        animated
+        { ...scrollProps}
       >
         {dismissOnBackdrop &&
           <Touchable
             onPress={ closable ? toggle : (() => {})}
+            debounce={400}
             debugName={'Modal backdrop touchable'}
             style={variantStyles.backdropTouchable}
             android_ripple={null}
             noFeedback
           />}
+
         <View
           animated
           state={boxAnimation}
           style={getStyles('box')}
           transition={{ ...variantStyles['box:transition'] }}
+
           {...props}
         >
 
@@ -185,6 +208,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
             </View>
           )}
         </View>
+
       </ScrollComponent>
     </View>
 

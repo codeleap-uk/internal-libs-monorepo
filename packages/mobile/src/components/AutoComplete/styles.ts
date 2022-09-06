@@ -15,16 +15,11 @@ export const AutoCompleteStyles = {
       ...defaultStyle,
       header: {
         ...theme.spacing.paddingHorizontal(2),
+        ...theme.spacing.paddingTop(1),
         ...theme.presets.column,
         ...theme.presets.alignStart,
       },
-      box: {
-        minHeight: theme.values.height * 0.85,
-        maxHeight: theme.values.height * 0.85,
-      },
-      listContent: {
-        ...theme.presets.safeAreaBottom(0, true),
-      },
+
       searchInputWrapper: {
         ...theme.presets.fullWidth,
         ...theme.spacing.marginTop(2),

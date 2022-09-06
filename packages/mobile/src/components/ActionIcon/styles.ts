@@ -29,6 +29,11 @@ export const ActionIconStyles = {
 
     }
   }),
+  originalColor: createActionIconStyle(theme => ({
+    icon: {
+      color: 'auto',
+    },
+  })),
   small: createActionIconStyle((theme) => ({
     touchableWrapper: {
       ...theme.sized(3.5),

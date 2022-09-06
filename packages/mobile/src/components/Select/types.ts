@@ -4,6 +4,7 @@ import {
   IconPlaceholder,
 } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { DrawerProps } from '../Drawer'
 import { FlatListProps } from '../List'
 import { TextInputProps } from '../TextInput'
@@ -37,5 +38,6 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     listProps?: Partial<FlatListProps>
     clearable?: boolean
     clearIconName?: IconPlaceholder
+    keyboardAware?: GetKeyboardAwarePropsOptions
   } & ComponentVariants<typeof SelectStyles>
 

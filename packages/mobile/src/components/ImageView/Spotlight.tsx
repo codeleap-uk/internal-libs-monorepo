@@ -45,7 +45,6 @@ export function useSpotlight(name: string) {
 
   const imList =
     Object.values(ctx.spotlights[name] || {})
-      .sort((a, b) => a.created - b.created)
 
   return {
     images: imList,

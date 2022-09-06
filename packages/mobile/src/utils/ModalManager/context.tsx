@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AnyFunction, onUpdate, TypeGuards, useCodeleapContext, useState } from '@codeleap/common'
 import { PortalProvider } from '@gorhom/portal'
-import { ModalProps } from '../../components/Modal'
+import { KeyboardProvider } from '../KeyboardAware'
 
 export type AppModalProps = {
   visible: boolean
@@ -136,23 +136,26 @@ export function Provider({ children }) {
     setModals(newModals)
   }
 
-  return <ModalContext.Provider value={{
-    state: modals,
-    toggleModal,
-    setModal,
-    currentModal,
-    attach,
-    isVisible,
-    remove,
-    transition,
-    transitionDuration: defaultDuration,
+  return <KeyboardProvider>
+    <ModalContext.Provider value={{
+      state: modals,
+      toggleModal,
+      setModal,
+      currentModal,
+      attach,
+      isVisible,
+      remove,
+      transition,
+      transitionDuration: defaultDuration,
 
-  }}>
-    <PortalProvider>
+    }}>
+      <PortalProvider>
 
-      {children}
-    </PortalProvider>
-  </ModalContext.Provider>
+        {children}
+      </PortalProvider>
+    </ModalContext.Provider>
+  </KeyboardProvider>
+
 }
 
 export function useModalContext() {

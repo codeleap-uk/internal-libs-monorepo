@@ -39,12 +39,12 @@ const defaultModalStyles = ModalStyles
 export const MobileModalStyles = {
   ...defaultModalStyles,
   ...presets,
-  default: createModalStyle((Theme) => {
+  default: createModalStyle((theme) => {
     const fullSize = {
-      ...Theme.presets.whole,
+      ...theme.presets.whole,
       position: 'absolute',
-      width: Theme?.values?.width,
-      height: Theme?.values?.height,
+      width: theme?.values?.width,
+      height: theme?.values?.height,
     }
 
     return {
@@ -57,7 +57,7 @@ export const MobileModalStyles = {
       overlay: {
         opacity: 0,
 
-        backgroundColor: Theme.colors.black,
+        backgroundColor: theme.colors.black,
         ...fullSize,
       },
       'overlay:visible': {
@@ -67,14 +67,14 @@ export const MobileModalStyles = {
       innerWrapperScroll: {
         display: 'flex',
         alignItems: 'center',
-        ...Theme.presets.justifyCenter,
-        minHeight: Theme.values.height,
+        ...theme.presets.justifyCenter,
+        minHeight: theme.values.window.height,
       },
       box: {
         width: '80%',
-        backgroundColor: Theme.colors.background,
-        borderRadius: Theme.borderRadius.medium,
-        ...Theme.spacing.padding(2),
+        backgroundColor: theme.colors.background,
+        borderRadius: theme.borderRadius.medium,
+        ...theme.spacing.padding(2),
       },
       touchableBackdrop: {
         ...fullSize,
@@ -91,17 +91,17 @@ export const MobileModalStyles = {
       },
       header: {
         flexDirection: 'row',
-        ...Theme.presets.justifySpaceBetween,
-        ...Theme.presets.alignCenter,
+        ...theme.presets.justifySpaceBetween,
+        ...theme.presets.alignCenter,
       },
       closeButtonWrapper: {
         alignSelf: 'center',
-        ...Theme.spacing.marginLeft('auto'),
+        ...theme.spacing.marginLeft('auto'),
       },
       title: {
-        ...Theme.presets.textCenter,
-        ...assignTextStyle('h3')(Theme).text,
-        ...Theme.spacing.paddingBottom(1),
+        ...theme.presets.textCenter,
+        ...assignTextStyle('h3')(theme).text,
+        ...theme.spacing.paddingBottom(1),
         flex: 1,
       },
     }
@@ -118,7 +118,7 @@ export const MobileModalStyles = {
       flex: 1,
       borderRadius: 0,
       width: theme.values.width,
-      height: theme.values.height,
+      height: theme.values.window.height,
       ...theme.presets.center,
     },
   })),

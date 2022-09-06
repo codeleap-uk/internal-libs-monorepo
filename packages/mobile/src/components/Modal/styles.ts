@@ -11,7 +11,9 @@ export type ModalParts =
   | AnimatableParts
   | 'wrapper'
   | 'innerWrapper'
-  | 'innerWrapperScroll'
+
+  | 'scrollContent'
+  | 'scroll'
   | 'body'
   | 'footer'
   | 'header'
@@ -32,39 +34,44 @@ const presets = includePresets((style) => createModalStyle(() => ({ body: style 
 export const ModalStyles = {
 
   ...presets,
-  default: createModalStyle((Theme) => {
+  default: createModalStyle((theme) => {
     const fullSize = {
-      ...Theme.presets.whole,
+      ...theme.presets.whole,
       position: 'absolute',
-      width: Theme?.values?.width,
-      height: Theme?.values?.height,
+      width: theme.values.width,
+      height: theme.values.height,
+      maxHeight: theme.values.height,
     }
 
     return {
       wrapper: {
         zIndex: 1,
-
-        ...fullSize,
+        height: theme.values.height,
+        width: theme.values.width,
+        ...theme.presets.whole,
+        position: 'absolute',
+        ...theme.presets.safeAreaTop(),
+        paddingBottom: theme.values.bottomNavHeight,
       },
       'box:transition': {
         scale: {
-          duration: Theme.values.transitions.modal.duration,
+          duration: theme.values.transitions.modal.duration,
           type: 'timing',
         },
         opacity: {
-          duration: Theme.values.transitions.modal.duration,
+          duration: theme.values.transitions.modal.duration,
           type: 'timing',
         },
       },
       'backdrop:transition': {
         opacity: {
-          duration: Theme.values.transitions.modal.duration,
+          duration: theme.values.transitions.modal.duration,
           type: 'timing',
         },
       },
       backdrop: {
 
-        backgroundColor: Theme.colors.black,
+        backgroundColor: theme.colors.black,
         ...fullSize,
       },
       backdropTouchable: {
@@ -76,18 +83,29 @@ export const ModalStyles = {
       'backdrop:hidden': {
         opacity: 0,
       },
-      innerWrapper: {},
-      innerWrapperScroll: {
-        display: 'flex',
-        alignItems: 'center',
-        ...Theme.presets.justifyCenter,
-        minHeight: Theme.values.height,
+      innerWrapper: {
+        ...theme.presets.alignCenter,
+        ...theme.presets.justifyCenter,
+        width: theme.values.width,
+        flex: 1,
+      },
+      scroll: {
+        width: theme.values.width,
+        height: theme.values.window.height,
+        maxHeight: theme.values.window.height,
+      },
+      scrollContent: {
+        ...theme.presets.alignCenter,
+        ...theme.presets.justifyCenter,
+        ...theme.spacing.paddingVertical(2),
+        ...theme.presets.fullWidth,
+        flex: 1,
       },
       box: {
         width: '80%',
-        backgroundColor: Theme.colors.background,
-        borderRadius: Theme.borderRadius.medium,
-        ...Theme.spacing.padding(2),
+        backgroundColor: theme.colors.background,
+        borderRadius: theme.borderRadius.medium,
+        ...theme.spacing.padding(2),
       },
 
       'box:hidden': {
@@ -101,17 +119,17 @@ export const ModalStyles = {
       },
       header: {
         flexDirection: 'row',
-        ...Theme.presets.justifySpaceBetween,
-        ...Theme.presets.alignCenter,
+        ...theme.presets.justifySpaceBetween,
+        ...theme.presets.alignCenter,
       },
       closeButtonWrapper: {
         alignSelf: 'center',
-        ...Theme.spacing.marginLeft('auto'),
+        ...theme.spacing.marginLeft('auto'),
       },
       title: {
-        ...Theme.presets.textCenter,
-        ...assignTextStyle('h3')(Theme).text,
-        ...Theme.spacing.paddingBottom(1),
+        ...theme.presets.textCenter,
+        ...assignTextStyle('h3')(theme).text,
+        ...theme.spacing.paddingBottom(1),
         flex: 1,
       },
     }
@@ -128,7 +146,7 @@ export const ModalStyles = {
       flex: 1,
       borderRadius: 0,
       width: theme.values.width,
-      height: theme.values.height,
+      height: theme.values.window.height,
       ...theme.presets.center,
     },
   })),

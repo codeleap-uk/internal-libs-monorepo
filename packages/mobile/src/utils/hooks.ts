@@ -1,5 +1,5 @@
 import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useState } from '@codeleap/common'
-import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig } from 'react-native'
+import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler } from 'react-native'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -142,4 +142,22 @@ export function usePressableFeedback(styles: any, config:UsePressableFeedbackCon
     getFeedbackStyle,
     rippleConfig,
   }
+}
+
+export function useBackButton(cb: () => boolean|void, deps = []) {
+  onUpdate(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      const stopBubbling = cb()
+
+      if (TypeGuards.isBoolean(stopBubbling)) {
+        return stopBubbling
+      }
+
+      return false
+
+    })
+    return () => {
+      subscription.remove()
+    }
+  }, deps)
 }

@@ -11,7 +11,7 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { GridComposition, GridStyles } from './styles'
 import { StylesOf } from '../../types'
-import { listenToKeyboardEvents } from '../../utils'
+import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -28,8 +28,6 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 
 export * from './styles'
 
-const KeyboardAwareFlatGrid = listenToKeyboardEvents(FlatGrid)
-
 export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
@@ -37,7 +35,8 @@ export type GridProps<
   Omit<ViewProps, 'variants'> & {
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
-    keyboardAware?: boolean
+    keyboardAware?: GetKeyboardAwarePropsOptions
+    debugName?: string
     styles?: StylesOf<GridComposition>
     refreshControlProps?: Partial<RefreshControlProps>
   } & ComponentVariants<typeof GridStyles>
@@ -51,7 +50,8 @@ const GridCP = forwardRef<FlatGrid, GridProps>(
       onRefresh,
       refreshing,
       placeholder,
-      keyboardAware = true,
+      keyboardAware,
+      debugName,
       refreshControlProps = {},
       ...props
     } = flatGridProps
@@ -73,16 +73,15 @@ const GridCP = forwardRef<FlatGrid, GridProps>(
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    const Component = keyboardAware ? KeyboardAwareFlatGrid : FlatGrid
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
+    const Component = FlatGrid
 
-    return (
-      <Component
-        style={[variantStyles.wrapper, style]}
-        contentContainerStyle={variantStyles.content}
-        ref={ref as unknown as FlatGrid}
-        ItemSeparatorComponent={separator}
-        refreshControl={
+    const _gridProps = {
+      style: [variantStyles.wrapper, style],
+      contentContainerStyle: variantStyles.content,
+      ref: ref as unknown as FlatGrid,
+      ItemSeparatorComponent: separator,
+      refreshControl:
           !!onRefresh && (
             <RefreshControl
               refreshing={refreshing}
@@ -91,11 +90,22 @@ const GridCP = forwardRef<FlatGrid, GridProps>(
               colors={[refreshStyles?.color]}
               {...refreshControlProps}
             />
-          )
-        }
+          ),
 
-        ListEmptyComponent={<EmptyPlaceholder {...placeholder}/>}
-        {...props}
+      ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
+      ...props,
+    }
+    const keyboard = useKeyboardAwareView({
+      debugName,
+    })
+    const gridProps = keyboard.getKeyboardAwareProps(_gridProps, {
+      baseStyleProp: 'contentContainerStyle',
+      adapt: 'paddingBottom',
+      ...keyboardAware,
+    })
+    return (
+      <Component
+        {...gridProps}
       />
     )
   },

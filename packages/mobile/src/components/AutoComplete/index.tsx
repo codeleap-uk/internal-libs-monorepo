@@ -4,6 +4,7 @@ import { ComponentVariants,
   getNestedStylesByKey,
   IconPlaceholder,
   onUpdate,
+  PropsOf,
   ReactStateProps,
   TypeGuards,
   useDebounce,
@@ -21,7 +22,9 @@ import { StyleSheet } from 'react-native'
 import { Text } from '../Text'
 import { Button } from '../Button'
 
-export type AutoCompleteHeaderProps = ReactStateProps<'search', string> & {
+export type AutoCompleteHeaderProps = ReactStateProps<'search', string> &
+  Omit<PropsOf<typeof View>, 'style'|'styles'|'variants'>
+& {
     label: FormTypes.Label
     searchInputProps?: Partial<TextInputProps>
     styles: ModalHeaderProps['styles'] & { searchInput?: TextInputProps['styles']; titleWrapper?:ViewProps['style']}
@@ -31,9 +34,9 @@ export type AutoCompleteHeaderProps = ReactStateProps<'search', string> & {
   }
 
 export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
-  const { search, setSearch, icon = 'search', debugName, label, styles, toggle, searchInputProps } = props
+  const { search, setSearch, icon = 'search', debugName, label, styles, toggle, searchInputProps, ...viewProps } = props
 
-  return <View style={[styles.wrapper]}>
+  return <View style={[styles.wrapper]} {...viewProps}>
     <View style={styles.titleWrapper}>
       <Text style={styles.title} text={label}/>
       <Button
@@ -42,7 +45,7 @@ export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
         onPress={toggle} variants={['icon']}
         styles={styles.closeButton}/>
     </View>
-    <TextInput leftIcon={{
+    <TextInput subtitle={() => null} leftIcon={{
       icon: icon as IconPlaceholder,
     }} debugName={`AutoComplete ${debugName} search input`} value={search} onChangeText={setSearch} styles={styles.searchInput} {...searchInputProps}/>
   </View>
@@ -77,6 +80,7 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
   const [search, setSearch] = useState('')
   const [debouncedSearch, resetDebounce] = useDebounce(search, debounce)
   const [filteredOptions, setFilteredOptions] = useState(options)
+
   const [loading, setLoading] = useState(false)
   const variantStyles = useDefaultComponentStyle<'u:AutoComplete', typeof AutoCompleteStyles>('u:AutoComplete', {
     variants,
@@ -123,7 +127,6 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
       resetDebounce()
     }
   }, [debouncedSearch, caseSensitive, options.length, filterFn])
-
   return <Select
     styles={variantStyles}
     options={ loading ? [] : filteredOptions}
@@ -141,9 +144,11 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
           searchInput: searchInputStyles,
           titleWrapper: variantStyles.titleWrapper,
         }}
+
         {...headerProps}
       />
     }
+
     {...selectProps}
     listProps={{
       ...selectProps?.listProps,
