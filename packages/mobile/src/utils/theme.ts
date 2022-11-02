@@ -1,4 +1,5 @@
 import { Platform, Dimensions, StatusBar, StyleSheet } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 
 type AppValues = {
   headerHeight: number
@@ -9,11 +10,12 @@ export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
   const screenDimensions = Dimensions.get('screen')
 
   const hasNotch = Platform.OS === 'ios' ? (Dimensions.get('window').height >= 812) : (initialWindowMetrics?.insets?.top > 24 || StatusBar.currentHeight > 24)
+  const hasIsland = DeviceInfo.hasDynamicIsland()
   const bottomNavHeight = Platform.OS === 'android' ? initialWindowMetrics?.insets?.bottom : 0
 
   const prefersConstantNavigationBar = bottomNavHeight > 0
 
-  const safeAreaTop = Platform.OS === 'ios' ? (hasNotch ? 34 : 20) : StatusBar.currentHeight
+  const safeAreaTop = Platform.OS === 'ios' ? (hasNotch ? 34 + (hasIsland ? 12 : 0) : 20) : StatusBar.currentHeight
 
   const safeAreaBottom = (hasNotch && !prefersConstantNavigationBar ? 20 : 0)
   return {
@@ -21,6 +23,7 @@ export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
 
     pixel: StyleSheet.hairlineWidth,
     hasNotch,
+    hasIsland,
     prefersConstantNavigationBar,
     safeAreaTop,
     safeAreaBottom,
