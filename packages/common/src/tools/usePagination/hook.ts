@@ -149,10 +149,19 @@ export function usePagination<
         item: newItem,
       })
       queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+        if (params.appendTo == 'end') {
+          const idx = old.pages.length - 1
+          old.pages[idx].results.push(newItem)
 
-        old.pages[0].results.unshift(newItem)
-        // @ts-ignore
-        old.pageParams[0].limit += 1
+          // @ts-ignore
+          old.pageParams[idx].limit += 1
+
+        } else {
+          old.pages[0].results.unshift(newItem)
+          // @ts-ignore
+          old.pageParams[0].limit += 1
+
+        }
         return old
       })
     },

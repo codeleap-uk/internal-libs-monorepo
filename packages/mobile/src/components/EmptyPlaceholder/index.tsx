@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Icon } from '../Icon'
 import { View } from '../View'
 import { Text } from '../Text'
-import { ActivityIndicator } from '../ActivityIndicator'
+import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
 import {
   ComponentVariants,
 
@@ -28,10 +28,23 @@ export type EmptyPlaceholderProps = {
   styles?: StylesOf<EmptyPlaceholderComposition>
   variants?: ComponentVariants<typeof EmptyPlaceholderStyles>['variants']
   emptyIconName?: IconPlaceholder
+  renderEmpty?: (props: {
+    emptyText:string | React.ReactElement
+    emptyIconName?: IconPlaceholder
+    styles: StylesOf<EmptyPlaceholderComposition> & {activityIndicatorStyles: StylesOf<ActivityIndicatorComposition>}
+  }) => React.ReactElement
 }
 
 export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPlaceholderProps) => {
-  const { itemName, title, loading, styles = {}, variants = [], emptyIconName = 'placeholder' } = props
+  const {
+    itemName,
+    title,
+    loading,
+    styles = {},
+    variants = [],
+    emptyIconName = 'placeholder',
+    renderEmpty,
+  } = props
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
   const componentStyles = useDefaultComponentStyle('EmptyPlaceholder', {
@@ -47,6 +60,21 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     return (
       <View style={[componentStyles.wrapper, componentStyles['wrapper:loading']]} >
         <ActivityIndicator styles={activityIndicatorStyles}/>
+      </View>
+    )
+  }
+
+  if (renderEmpty) {
+    return (
+      <View style={componentStyles.wrapper}>
+        {renderEmpty({
+          emptyText,
+          emptyIconName: emptyIconName as IconPlaceholder,
+          styles: {
+            ...componentStyles,
+            activityIndicatorStyles,
+          },
+        })}
       </View>
     )
   }

@@ -3,6 +3,7 @@ import { RequestClientConfig } from './types'
 import { RequestClient } from './RequestClient'
 export * from 'axios'
 export * from './types'
+export * from './CrudAPI'
 export { RequestClient } from './RequestClient'
 
 export function makeFetcher(

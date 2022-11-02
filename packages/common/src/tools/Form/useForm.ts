@@ -3,7 +3,6 @@ import { usePartialState, deepGet, deepSet, deepMerge, TypeGuards } from '../../
 import { FunctionType } from '../../types'
 import { useCodeleapContext } from '../../styles/StyleProvider'
 import { createRef, useCallback, useRef } from 'react'
-import { toMultipart } from '../Fetch/utils'
 
 export * as FormTypes from './types'
 
@@ -186,21 +185,12 @@ export function useForm<
     if (validate) {
       switch (config.validateOn) {
         case 'change':
-          // dynamicProps.validate = () => validateField(field, true)
           dynamicProps.validate = fieldErrors[field]
           break
-        case 'blur':
-          dynamicProps.onBlur = () => {
-            validateField(field, true)
-          }
-          dynamicProps.validate = fieldErrors[field]
-          break
-        case 'submit':
-          dynamicProps.validate = fieldErrors[field]
-          break
+
       }
+
     }
-    // if(!)
     registeredFields.current.push(type)
     return {
       ...staticProps,
@@ -211,36 +201,7 @@ export function useForm<
   function getTransformedValue(): Values {
     let out = {}
     switch (config.output) {
-      case 'multipart':
-        let shouldSetNewFileValue = true
-        const multipartData = Object.entries(formValues).reduce((acc, [key, value]) => {
-          let newValue = { ...acc }
 
-          if (form.staticFieldProps[key]?.type === 'file') {
-            if (shouldSetNewFileValue) {
-              newValue = {
-                ...newValue,
-                files: (Theme.IsBrowser ? value?.[0]?.file : value?.[0]?.preview) || null,
-              }
-              shouldSetNewFileValue = false
-            }
-          } else {
-            newValue = {
-              ...newValue,
-              data: {
-                ...newValue.data,
-                [key]: value,
-              },
-            }
-          }
-          return newValue
-        }, { files: null, data: {}})
-
-        out = toMultipart({
-          multipart: true,
-          data: multipartData,
-        })
-        break
       default:
         out = formValues
         break
@@ -251,11 +212,6 @@ export function useForm<
 
   async function onSubmit(cb: FunctionType<[Values], any>, e?: any) {
     if (e?.preventDefault) e.preventDefault()
-
-    if (config.validateOn === 'submit') {
-      const valid = validateAll(true)
-      if (!valid) return
-    }
 
     await cb(getTransformedValue())
   }
@@ -269,6 +225,7 @@ export function useForm<
       setFieldErrors(getInitialErrors())
     }
   }
+
   return {
     setFieldValue,
     values: formValues as Values,

@@ -44,6 +44,7 @@ export type UsePaginationParams<
     afterMutate?: (action: MutationOps, result: MutationResult<TItem>) => void | Promise<void>
     where?: RetrieveArg
     limit?: number
+    appendTo?: 'start' | 'end'
     overrides?: Partial<{
       list?: (_default: Partial<UseInfiniteQueryOptions<PaginationReturn, any>>) => UseInfiniteQueryOptions<PaginationReturn, any>
       retrieve?: (_default: UseQueryOptions<TItem>) => UseQueryOptions<TItem>

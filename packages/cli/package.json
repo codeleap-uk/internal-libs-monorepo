@@ -1,13 +1,13 @@
 {
   "name": "@codeleap/cli",
-  "version": "1.0.3",
-  "main": "dist/index.js",
+  "version": "1.1.0",
+  "main": "./dist/index.js",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
   "license": "UNLICENSED",
   "bin": {
-    "codeleap": "dist/index.js",
-    "codeleap-cli": "dist/index.js"
+    "codeleap": "./dist/index.js",
+    "codeleap-cli": "./dist/index.js"
   },
   "devDependencies": {
     "@codeleap/config": "*",
@@ -32,6 +32,7 @@
     "dive": "^0.5.0",
     "figlet": "^1.5.2",
     "firebase-admin": "^11.0.1",
+    "generate-password": "^1.7.0",
     "inquirer": "^8.2.0",
     "nanospinner": "^1.0.0",
     "node-keytool": "^0.0.3",

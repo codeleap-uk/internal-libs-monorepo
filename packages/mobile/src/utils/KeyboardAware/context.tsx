@@ -20,7 +20,7 @@ export const KeyboardCtx = React.createContext({} as TKeyboardCtx)
 
 export const KeyboardProvider = ({ children }) => {
   const [keyboardEvent, setKeyboardEvent] = useState<KeyboardEvent>(null)
-
+  const [keyboardVisible, setKeyboardVisible] = useState(false)
   const { Theme } = useCodeleapContext()
   useEffect(() => {
     const eventNames = Platform.select<KeyboardVisibilityEvents>({
@@ -37,10 +37,12 @@ export const KeyboardProvider = ({ children }) => {
       Keyboard.addListener(eventNames.show, (e) => {
 
         setKeyboardEvent(e)
+        setKeyboardVisible(true)
       }),
       Keyboard.addListener(eventNames.hide, (e) => {
 
         setKeyboardEvent(e)
+        setKeyboardVisible(false)
       }),
     ]
     return () => {
@@ -57,8 +59,8 @@ export const KeyboardProvider = ({ children }) => {
 
   const _return = {
     event: keyboardEvent,
-    isVisible: height > 0,
-    height: height ? height + adjustKeyboard : 0,
+    isVisible: keyboardVisible,
+    height: (!!height && keyboardVisible) ? height + adjustKeyboard : 0,
     ...Keyboard,
   }
 

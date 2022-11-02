@@ -10,6 +10,7 @@ export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
     'range-slider': [0, 100],
     slider: 1,
     number: '',
+    list: [],
   }
 
 export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
@@ -23,5 +24,6 @@ export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
     file: 'onFileSelect',
     multipleFile: 'onFileSelect',
     number: 'onChangeText',
+    list: 'onValueChange',
   }
 

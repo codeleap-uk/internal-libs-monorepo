@@ -135,13 +135,13 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     <ModalManager.Drawer
       scroll={false}
       title={label}
-      {...drawerProps}
       keyboardAware={{
         baseStyleProp: 'style',
         adapt: 'paddingBottom',
         enabled: true,
         enableOnAndroid: true,
       }}
+      {...drawerProps}
       styles={variantStyles}
     >
       <List<CustomSelectProps<any>['options']>

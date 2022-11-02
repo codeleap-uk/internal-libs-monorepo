@@ -67,13 +67,12 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     const renderSeparator = useCallback(() => {
       return (
-        <View variants={['separator']}></View>
+        <View style={variantStyles.separator}></View>
       )
     }, [])
 
-    const separatorProp = props.separators
     const isEmpty = !props.data || !props.data.length
-    const separator = !isEmpty && separatorProp == true && renderSeparator
+    const separator = !isEmpty && props?.separators && renderSeparator
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
@@ -95,9 +94,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
     }
-    const keyboard = useKeyboardAwareView({
-      debug: true,
-    })
+    const keyboard = useKeyboardAwareView()
     const listProps = keyboard.getKeyboardAwareProps(_listProps, {
       adapt: 'paddingBottom',
       baseStyleProp: 'contentContainerStyle',

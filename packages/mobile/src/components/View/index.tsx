@@ -39,7 +39,7 @@ export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeV
     variants,
   })
   const Component = animated ? MotiView : (component || NativeView)
-  const keyboard = useKeyboardAwareView({ debug: true })
+  const keyboard = useKeyboardAwareView()
   const _props = keyboard.getKeyboardAwareProps(
     {
       style: [variantStyles.wrapper, style], ref: ref, ...props,

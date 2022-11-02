@@ -6,7 +6,7 @@ import {
 import { Hooks, MediaQueries } from './MediaQuery'
 import { AppSettings } from '../config'
 import { Logger } from '../tools/Logger'
-import { AnyFunction } from '../types/utility'
+import { AnyFunction, FunctionType } from '../types/utility'
 import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
@@ -66,6 +66,13 @@ export type TypographyStyle = {
 
 type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
 
+export type FontAttrs = {
+  weight: number
+  family: string
+  size: number
+  letterSpacing: number
+}
+
 export type AppTheme = {
   readonly breakpoints?: Record<string, number>
   readonly spacing: number
@@ -93,6 +100,10 @@ export type AppTheme = {
     baseFontSize: number
     pColor: string
     hColor: string
+    resolveFontFamily?: FunctionType<[
+      name: string,
+      attrs: FontAttrs
+    ], string> | Record<string, string>
   }
 }
 

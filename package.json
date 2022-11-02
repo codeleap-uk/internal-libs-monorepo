@@ -2,11 +2,11 @@
   "name": "codeleap",
   "version": "0.0.0",
   "private": true,
-  "repository": "https://github.com/codeleap-uk/internal-libs-monorepo.git", 
+  "repository": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
   "workspaces": {
     "packages": [
       "apps/*",
-      "packages/*"    
+      "packages/*"
     ],
     "nohoist": [
       "**/react-native",
@@ -60,7 +60,7 @@
     "docs": "yarn workspace codeleap-docs",
     "web": "yarn workspace web-template",
     "common": "yarn workspace @codeleap/common",
-    "cli": "yarn workspace @codeleap/codeleap-cli",
+    "cli": "yarn workspace @codeleap/cli",
     "config": "yarn workspace @codeleap/config",
     "mobile": "yarn workspace mobile-template",
     "p:web": "yarn workspace @codeleap/web",

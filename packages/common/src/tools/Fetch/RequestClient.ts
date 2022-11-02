@@ -205,4 +205,17 @@ export class RequestClient implements IRequestClient {
       })
     }
 
+    branch(branchConfig?: RequestClientConfig) {
+      const config = {
+        ...this.config,
+        ...branchConfig,
+      }
+
+      if (!!branchConfig?.baseURL) {
+        config.baseURL = this.config.baseURL + branchConfig.baseURL
+      }
+
+      return new RequestClient(config)
+    }
+
 }

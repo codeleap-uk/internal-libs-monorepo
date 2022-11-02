@@ -76,6 +76,8 @@ export type ListField<T = any> = {
   defaultValue: T[]
   validate?: Validator<T[]>
   required?: boolean
+  options?: Options<T>
+  placeholder?: string
 } & WithTransformer<T[]>
 
 export type SliderField = {

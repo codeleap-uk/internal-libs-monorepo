@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { cli } from 'cleye'
-import { initCommand } from './commands/init'
+import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -8,7 +8,7 @@ const packageJson = require('../package.json')
 
 cli({
   name: 'codeleap',
-  commands: [initCommand, renameMobileCommand],
+  commands: [generateReleaseKey, renameMobileCommand],
   version: packageJson.version,
 })
 
