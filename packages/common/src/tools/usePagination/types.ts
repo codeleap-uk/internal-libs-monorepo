@@ -1,6 +1,8 @@
-import { UseInfiniteQueryOptions,
+import {
+  UseInfiniteQueryOptions,
   UseMutationOptions,
   UseQueryOptions,
+  InfiniteData,
 } from '@tanstack/react-query'
 
 export type PaginationParams = {
@@ -23,13 +25,24 @@ export type MutationResult<Item = any> = {
 
 export type MutationOverride<TItem> = (_default: Partial<UseMutationOptions<TItem, any, Partial<TItem>>>) => UseMutationOptions<TItem, any, Partial<TItem> >
 
+export type DeriveDataArgs<TItem = any> = {
+  item: TItem
+  index: number
+  arr?: TItem[]
+  currentData?: any
+  context: {
+    passedFilter?: boolean
+  }
+}
+export type DeriveDataFn<TItem = any> = (args:DeriveDataArgs<TItem>) => any
+
 export type UsePaginationParams<
     TData extends PaginationReturn,
     ExtraParams = {},
 
     TItem = TData['results'][number],
     CreateArg = any,
-    RetrieveArg extends any[]= any[]
+    RetrieveArg extends any[]= any[],
   > = {
     extraParams?: ExtraParams
     onList: (params: PaginationParams & ExtraParams) => Promise<TData>
@@ -41,6 +54,7 @@ export type UsePaginationParams<
     sort?: (a: TItem, b: TItem) => number
     beforeMutate?: (action: MutationOps) => void | Promise<void>
     filter?: Parameters<TItem[]['filter']>[0]
+    deriveData?: DeriveDataFn<TItem>
     afterMutate?: (action: MutationOps, result: MutationResult<TItem>) => void | Promise<void>
     where?: RetrieveArg
     limit?: number
@@ -56,3 +70,9 @@ export type UsePaginationParams<
     transformResult: (page: TData) => PaginationReturn<TData>
   })
 export type OperationKey = keyof UsePaginationParams<any>['overrides']
+export type AppendToPaginationParams<TItem = any> = {
+  item:TItem, to?: 'start' | 'end', modifyPageQuery?: boolean
+}
+export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>
+
+export type AppendToPagination<TItem = any> = (params: AppendToPaginationParams<TItem>) => AppendToPaginationReturn<PaginationReturn<TItem>>

@@ -1,13 +1,13 @@
 // import { queryClient } from '@/services/api'
 import { useMemo, useState } from 'react'
-import { QueryFunctionContext,
+import { InfiniteData, QueryFunctionContext,
   QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { OperationKey, PaginationReturn, UsePaginationParams } from './types'
+import { AppendToPagination, OperationKey, PaginationReturn, UsePaginationParams } from './types'
 import { getPaginationData, getQueryKeys } from './utils'
 import { TypeGuards } from '../../utils'
 
@@ -81,6 +81,7 @@ export function usePagination<
 
   const {
     flatItems,
+    derivedData,
     pagesById,
     itemMap,
   } = useMemo(() => {
@@ -88,11 +89,11 @@ export function usePagination<
       keyExtractor: params.keyExtractor,
       queryKeyOrList: list.data,
       filter: params?.filter,
+      derive: params?.deriveData,
     })
 
     return {
       ...flatData,
-      flatItems: flatData.flatItems,
     }
   }, [list.dataUpdatedAt])
 
@@ -130,6 +131,25 @@ export function usePagination<
 
   const retrieve = useQuery(withOverride('retrieve', defaultRetrieveParams))
 
+  const append:AppendToPagination<TItem> = (args) => {
+    return queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+      if (args.to == 'end') {
+        const idx = old.pages.length - 1
+        old.pages[idx].results.push(args.item)
+
+        // @ts-ignore
+        old.pageParams[idx].limit += 1
+
+      } else {
+        old.pages[0].results.unshift(args.item)
+        // @ts-ignore
+        old.pageParams[0].limit += 1
+
+      }
+      return old
+    })
+  }
+
   const defaultCreateParams:OverrideParamType<'create'> = {
     mutationKey: QUERY_KEYS.create,
     mutationFn: params.onCreate,
@@ -148,26 +168,24 @@ export function usePagination<
         status: 'success',
         item: newItem,
       })
-      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
-        if (params.appendTo == 'end') {
-          const idx = old.pages.length - 1
-          old.pages[idx].results.push(newItem)
 
-          // @ts-ignore
-          old.pageParams[idx].limit += 1
-
-        } else {
-          old.pages[0].results.unshift(newItem)
-          // @ts-ignore
-          old.pageParams[0].limit += 1
-
-        }
-        return old
+      append({
+        item: newItem,
+        to: params?.appendTo,
       })
+
     },
   }
   const create = useMutation(withOverride('create', defaultCreateParams))
 
+  const updateItem = (data:TItem) => {
+    const itemId = params.keyExtractor(data)
+    queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+      const [pageIdx, itemIdx] = pagesById[itemId]
+      old.pages[pageIdx].results[itemIdx] = data
+      return old
+    })
+  }
   const defaultUpdateParams:OverrideParamType<'update'> = {
     mutationKey: QUERY_KEYS.update,
     mutationFn: params.onUpdate,
@@ -186,17 +204,33 @@ export function usePagination<
         status: 'success',
         item: data,
       })
-      const itemId = params.keyExtractor(data)
-      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
-        const [pageIdx, itemIdx] = pagesById[itemId]
-        old.pages[pageIdx].results[itemIdx] = data
-        return old
-      })
+
+      updateItem(data)
 
     },
 
   }
   const update = useMutation(withOverride('update', defaultUpdateParams))
+
+  const removeItem = (id:string|number):InfiniteData<PaginationReturn<TItem>> => {
+    return queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, oldData => {
+      const [pageIdx, itemIdx] = pagesById[id]
+
+      oldData.pages[pageIdx].results.splice(itemIdx, 1)
+      let updateIdx = pageIdx + 1
+
+      while (updateIdx < oldData.pageParams.length) {
+        if (TypeGuards.isUndefined(oldData?.pageParams?.[updateIdx])) {
+          break
+        }
+        // @ts-ignore
+        oldData.pageParams[updateIdx].offset -= 1
+        updateIdx += 1
+      }
+
+      return oldData
+    })
+  }
 
   const defaultRemoveParams:OverrideParamType<'remove'> = {
     mutationKey: QUERY_KEYS.remove,
@@ -216,24 +250,8 @@ export function usePagination<
         status: 'success',
         item: data,
       })
-      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, oldData => {
-        const [pageIdx, itemIdx] = pagesById[_id]
 
-        oldData.pages[pageIdx].results.splice(itemIdx, 1)
-        let updateIdx = pageIdx + 1
-
-        while (updateIdx < oldData.pageParams.length) {
-          if (TypeGuards.isUndefined(oldData?.pageParams?.[updateIdx])) {
-            break
-          }
-          // @ts-ignore
-          oldData.pageParams[updateIdx].offset -= 1
-          updateIdx += 1
-        }
-
-        return oldData
-
-      })
+      removeItem(_id)
 
     },
 
@@ -251,7 +269,7 @@ export function usePagination<
     },
   }
   const itemName = params?.itemName || key
-
+  type TDerivedData = ReturnType<typeof params.deriveData>
   return {
     items: flatItems,
     pagesById,
@@ -267,8 +285,14 @@ export function usePagination<
     create: create.mutateAsync,
     remove: remove.mutateAsync,
     update: update.mutateAsync,
+    derivedData,
     QUERY_KEYS,
     params,
+    objects: {
+      remove: removeItem,
+      append,
+      update: updateItem,
+    },
     // flatListProps,
   }
 }

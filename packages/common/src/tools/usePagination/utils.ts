@@ -1,6 +1,6 @@
 import { InfiniteData, QueryClient, QueryKey, UseInfiniteQueryResult } from '@tanstack/react-query'
 import { TypeGuards } from '../../utils'
-import { PaginationReturn } from './types'
+import { DeriveDataArgs, DeriveDataFn, PaginationReturn } from './types'
 
 export const getQueryKeys = (base:string) => ({
   list: [`${base}.list`],
@@ -14,8 +14,9 @@ type GetPaginationDataParams<TItem = any, Arr extends TItem[]= TItem[]> = {
   queryClient?: QueryClient
   keyExtractor: (item: TItem) => string | number
   filter: Parameters<Arr['filter']>[0]
+  derive?: DeriveDataFn<TItem>
 }
-export function getPaginationData<TItem>(params?: GetPaginationDataParams<TItem>) {
+export function getPaginationData<TItem, TParams extends GetPaginationDataParams<TItem> = GetPaginationDataParams<TItem>>(params?: TParams) {
   const pagesById = {} as Record<ReturnType<typeof params.keyExtractor>, [number, number]>
   const flatItems = [] as TItem[]
   const itemMap = {} as Record<ReturnType<typeof params.keyExtractor>, TItem>
@@ -29,6 +30,7 @@ export function getPaginationData<TItem>(params?: GetPaginationDataParams<TItem>
   }
 
   let pageIdx = 0
+  let derivedData:ReturnType<TParams['derive']> = null
   for (const page of listVal.pages) {
 
     page.results.forEach((i, itemIdx) => {
@@ -37,7 +39,19 @@ export function getPaginationData<TItem>(params?: GetPaginationDataParams<TItem>
       if (params?.filter) {
         include = params?.filter(i, flatIdx, flatItems) as boolean
       }
+      if (params?.derive) {
+        derivedData = params.derive?.({
+          item: i,
+          context: {
+            passedFilter: include,
 
+          },
+          index: flatIdx,
+          arr: flatItems,
+          currentData: derivedData,
+
+        }) as ReturnType<TParams['derive']>
+      }
       if (include) {
         flatItems.push(i)
       }
@@ -50,6 +64,7 @@ export function getPaginationData<TItem>(params?: GetPaginationDataParams<TItem>
   return {
     flatItems: flatItems,
     pagesById,
+    derivedData,
     itemMap,
   }
 }
