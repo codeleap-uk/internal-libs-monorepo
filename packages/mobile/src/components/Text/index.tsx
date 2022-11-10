@@ -21,22 +21,43 @@ export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   animated?: boolean
   colorChangeConfig?: Partial<Animated.TimingAnimationConfig>
   debugName?: string
+  debounce?: number
 } & BaseViewProps & MotiProps
 
 const MotiText = Animated.createAnimatedComponent(_MotiText)
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
-  const { variants = [], text, children, style, colorChangeConfig, ...props } = textProps
+  const { variants = [], text, children, onPress, style, colorChangeConfig, debounce = 1000, ...props } = textProps
 
-  const pressPolyfillEnabled = Platform.OS === 'android' && !!props.onPress
+  const pressPolyfillEnabled = Platform.OS === 'android' && !!onPress
 
   const [pressed, setPressed] = useState(false)
+  const pressedRef = React.useRef(false)
+
+  const _onPress:TextProps['onPress'] = (e) => {
+    if (!onPress) return
+
+    if (TypeGuards.isNumber(debounce)) {
+      if (pressedRef.current) {
+        return
+      }
+
+      pressedRef.current = true
+      onPress?.(e)
+      setTimeout(() => {
+        pressedRef.current = false
+      }, debounce)
+
+    } else {
+      onPress?.(e)
+    }
+  }
+
   const handlePress = (pressed) => {
     if (!pressPolyfillEnabled) return
     return () => {
-      if (props.onPress) {
+      if (onPress) {
         setPressed(pressed)
-
       }
     }
   }
@@ -64,9 +85,14 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   })
   const feedbackStyle = pressPolyfillEnabled ? getFeedbackStyle(pressed) : undefined
 
+  const pressProps = !!onPress ? {
+    onPress: _onPress,
+  } : {}
+
   return <Component {...props}
     onPressIn={handlePress(true)} onPressOut={handlePress(false)}
     style={[styles, colorStyle, feedbackStyle]}
+    {...pressProps}
     // @ts-ignore
     ref={ref}
   >

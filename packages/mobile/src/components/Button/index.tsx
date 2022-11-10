@@ -28,7 +28,6 @@ export * from './styles'
 
 type ChildProps = {
   styles: StylesOf<ButtonParts>
-  pressed: boolean
   props: Omit<ButtonProps, 'children'>
 }
 
@@ -80,27 +79,15 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     disabled,
     badge = null,
     rightIcon,
-    debounce = 600,
     style,
     ...props
   } = buttonProps
-  const [pressed, setPressed] = React.useState(false)
 
   const variantStyles = useDefaultComponentStyle('u:Button', {
     variants,
     transform: StyleSheet.flatten,
     styles,
   })
-
-  function handlePress() {
-    if (!pressed) {
-      setPressed(true)
-
-      setTimeout(() => setPressed(false), debounce)
-
-      onPress && onPress()
-    }
-  }
 
   function getStyles(key: ButtonParts) {
     return [
@@ -129,8 +116,9 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   }
 
-  const childrenContent = typeof children === 'function' ?
-    children({ styles: _styles, props: buttonProps, pressed })
+  const childrenContent = TypeGuards.isFunction(children) ?
+    // @ts-ignore
+    children({ styles: _styles, props: buttonProps })
     : children
 
   let _badge = null
@@ -146,12 +134,12 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   return (
     <Touchable
       style={_styles.wrapper}
-      onPress={handlePress}
       ref={ref}
       disabled={disabled}
       styles={{
         feedback: variantStyles.feedback,
       }}
+      onPress={onPress}
       debugComponent={'Button'}
       noFeedback={!onPress}
       {...props}

@@ -44,12 +44,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     style,
     debugName,
     debugComponent,
-    debounce = null,
+    debounce = 1000,
     noFeedback = false,
     styles,
     ...props
   } = touchableProps
-  const [pressed, setPressed] = React.useState(false)
+  const pressed = React.useRef(false)
   const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchableStyles>('u:Touchable', {
     variants,
     transform: StyleSheet.flatten,
@@ -75,12 +75,14 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       onPress && onPress()
     }
     if (TypeGuards.isNumber(debounce)) {
-      if (pressed) {
+      if (pressed.current) {
         return
       }
-      setPressed(true)
+      pressed.current = true
       _onPress()
-      setTimeout(() => setPressed(false), debounce)
+      setTimeout(() => {
+        pressed.current = false
+      }, debounce)
     } else {
       _onPress()
     }
