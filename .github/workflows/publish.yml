@@ -12,25 +12,15 @@ jobs:
       - name: Clone current repo
         uses: actions/checkout@v2
 
-      - name: Get Yarn cache path
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      
+    
       - uses: actions/setup-node@v2
         with:
           node-version: '16.15.1'
       
-      - name: Load Yarn cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: |
-          yarn install
+          yarn --prefer-offline
 
       - name: Build libraries
         run: |
@@ -43,11 +33,11 @@ jobs:
 
       - name: Version bump
         run: |
-          yarn config set version-git-tag false
-          yarn config set npmAuthToken ${{ secrets.NPM_TOKEN }}
-          yarn common publish --patch
-          yarn p:mobile publish --patch
-          yarn p:web publish --patch
+          cd packages/common && npm version patch && npm publish
+          cd ../..
+          cd packages/mobile && npm version patch && npm publish
+          cd ../..
+          cd packages/web && npm version patch && npm publish
 
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
