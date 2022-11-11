@@ -33,11 +33,17 @@ jobs:
 
       - name: Version bump
         run: |
-          cd packages/common && npm version patch && npm publish
+          cd packages/common
+          npm version patch
+          npm publish
           cd ../..
-          cd packages/mobile && npm version patch && npm publish
+          cd packages/mobile
+          npm version patch
+          npm publish
           cd ../..
-          cd packages/web && npm version patch && npm publish
+          cd packages/web
+          npm version patch
+          npm publish
 
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
