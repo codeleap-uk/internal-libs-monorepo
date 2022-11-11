@@ -49,7 +49,10 @@ jobs:
           yarn p:mobile publish --patch
           yarn p:web publish --patch
 
-     
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
 
       - name: Git push
         run: |
