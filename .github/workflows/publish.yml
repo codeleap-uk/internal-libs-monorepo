@@ -45,5 +45,6 @@ jobs:
 
 
       - name: Git push
+        if: always()
         run: |
           git push origin master
