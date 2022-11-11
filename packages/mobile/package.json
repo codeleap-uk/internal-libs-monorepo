@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -17,7 +17,8 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
+    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
+    "publish": "npm publish"
   },
   "peerDependencies": {
     "@codeleap/common": "*",
