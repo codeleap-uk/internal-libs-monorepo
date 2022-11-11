@@ -43,9 +43,9 @@ jobs:
 
       - name: Version bump
         run: |
-          yarn common version --patch
-          yarn p:mobile version --patch
-          yarn p:web version --patch
+          yarn common version --patch --no-git-tag-version
+          yarn p:mobile version --patch --no-git-tag-version
+          yarn p:web version --patch --no-git-tag-version
 
       - uses: JS-DevTools/npm-publish@v1
         with:
