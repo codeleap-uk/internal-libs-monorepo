@@ -43,27 +43,13 @@ jobs:
 
       - name: Version bump
         run: |
-          yarn common version --patch --no-git-tag-version
-          yarn p:mobile version --patch --no-git-tag-version
-          yarn p:web version --patch --no-git-tag-version
+          yarn config set version-git-tag false
+          yarn config set npmAuthToken ${{ secrets.NPM_TOKEN }}
+          yarn common publish --patch
+          yarn p:mobile publish --patch
+          yarn p:web publish --patch
 
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/common/package.json
-          dry-run: true
-
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/mobile/package.json
-          dry-run: true
-      
-      - uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./packages/web/package.json
-          dry-run: true
+     
 
       - name: Git push
         run: |
