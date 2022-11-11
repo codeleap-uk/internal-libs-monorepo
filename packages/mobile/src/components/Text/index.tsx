@@ -92,6 +92,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   return <Component {...props}
     onPressIn={handlePress(true)} onPressOut={handlePress(false)}
     style={[styles, colorStyle, feedbackStyle]}
+    allowFontScaling={false}
     {...pressProps}
     // @ts-ignore
     ref={ref}
