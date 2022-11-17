@@ -78,12 +78,9 @@ export const useKeyboardAwareView = (params?: UseKeyboardAwareViewParams) => {
         newStyleProp.height = baseHeight - keyboard.height
         break
       case 'maxHeight':
-        if (keyboard.isVisible) {
-          warnOnNotNumber()
-          const baseMaxHeight = baseValue || Dimensions.get('window').height
-          newStyleProp.maxHeight = baseMaxHeight - keyboard.height
-          // break
-        }
+        warnOnNotNumber()
+        const baseMaxHeight = baseValue || Dimensions.get('window').height
+        newStyleProp.maxHeight = baseMaxHeight - keyboard.height
         break
       case 'paddingBottom':
         warnOnNotNumber()
