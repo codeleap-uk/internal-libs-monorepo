@@ -30,6 +30,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     inputProps = {},
     clearable = false,
     clearIconName = 'close',
+    limit = null,
     validate = null,
     ...drawerProps
   } = selectProps
@@ -54,6 +55,9 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     if (newVal.includes(itemValue)) {
       newVal.splice(newVal.indexOf(itemValue), 1)
     } else {
+      if (TypeGuards.isNumber(limit) && newVal.length >= limit) {
+        return
+      }
       newVal.push(itemValue)
     }
     onValueChange(newVal)
