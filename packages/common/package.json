@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "2.3.13",
+  "version": "2.3.14",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
