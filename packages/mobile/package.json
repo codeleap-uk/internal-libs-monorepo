@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "2.3.14",
+  "version": "2.3.15",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
