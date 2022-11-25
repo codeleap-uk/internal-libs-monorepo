@@ -5,9 +5,10 @@ import { spinWhileNotCompleted } from '../lib/spinner'
 import fs from 'fs'
 import path from 'path'
 import dive from 'dive'
-import { chalk, inquirer, figlet, cwd, getAndroidBundleId, walkDir, getAndroidAppName, renameAndroid } from '../lib'
+import { chalk, inquirer, figlet, getAndroidBundleId, walkDir, getAndroidAppName, renameAndroid } from '../lib'
 import { renameIos } from '../lib/ios'
 import '../lib/firebase'
+import { cwd } from '../constants'
 const commandName = 'rename-mobile'
 
 export const renameMobileCommand = codeleapCommand(

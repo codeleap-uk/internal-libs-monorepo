@@ -1,9 +1,10 @@
 // import { waitFor } from '@codeleap/common'
 import { codeleapCommand } from '../lib/Command'
 
-import { subprocess, path, cwd } from '../lib'
+import { subprocess, path } from '../lib'
 import generator from 'generate-password'
 import { AndroidConfigFile } from '../lib/android/keystore'
+import { cwd } from '../constants'
 
 async function genKeystore(type: 'release' | 'debug') {
   const pass = generator.generate({
