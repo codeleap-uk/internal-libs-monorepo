@@ -2,15 +2,22 @@ export { default as figlet } from 'figlet'
 export { default as chalk } from 'chalk'
 export { default as inquirer } from 'inquirer'
 
-import path from 'path'
+import { Octokit } from 'octokit'
+import simpleGit from 'simple-git'
+import { cwd, USER_CONFIG } from '../constants'
 
-const _cwd = process.cwd()
-export const isDev = process.argv[1] == 'src/index.ts'
-export const cwd = path.join(
-  _cwd,
-  isDev ? 'tests' : '',
-)
+export const git = simpleGit({
+  baseDir: cwd,
+})
+
+export const octokit = new Octokit({
+  auth: USER_CONFIG.GITHUB_TOKEN,
+})
 
 export * from './utils'
 export * from './walk'
 export * from './android'
+export * from './ios'
+
+export { createMobileApp } from './createApp/mobile'
+

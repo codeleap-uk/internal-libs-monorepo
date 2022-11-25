@@ -7,6 +7,7 @@ import { walkDir } from '../walk'
 import firebase from 'firebase-admin'
 import Keytool from 'node-keytool'
 import { parseFilePathData } from '@codeleap/common'
+import { firebaseApp } from '../firebase'
 
 type RenameAndroidOptions = {
     changeBundle?: boolean
@@ -99,7 +100,7 @@ export async function renameAndroid(
 
     }
   })
-
+  if (!firebaseApp) return
   const pm = firebase.projectManagement()
 
   const androidAppReqs = (await pm.listAndroidApps()).map(async a => {

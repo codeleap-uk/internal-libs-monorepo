@@ -34,22 +34,7 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: Publish
-        run: |
-
-          cd packages/common
-          npm version patch
-          npm publish
-         
-          cd ../..
-          cd packages/mobile
-          npm version patch
-          npm publish
-
-          cd ../..
-          cd packages/web
-          npm version patch
-          npm publish
-
+        run: ${PWD}/publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

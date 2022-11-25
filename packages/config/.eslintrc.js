@@ -164,6 +164,7 @@ const typescript = {
     },
     'multilineDetection': 'brackets',
   }],
+  '@typescript-eslint/no-var-require': 'off',
 }
 
 module.exports = {

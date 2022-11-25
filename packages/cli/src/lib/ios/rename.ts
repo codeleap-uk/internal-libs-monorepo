@@ -4,7 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { walkDir } from '../walk'
 import firebase from 'firebase-admin'
-import { AppPlatform } from 'firebase-admin/project-management'
+import { firebaseApp } from '../firebase'
 
 type RenameiosOptions = {
     changeBundle?: boolean
@@ -93,6 +93,7 @@ export async function renameIos(
     fs.renameSync(i.from, i.to)
 
   })
+  if (!firebaseApp) return
   const pm = firebase.projectManagement()
 
   const iosAppReqs = (await pm.listIosApps()).map(async a => {

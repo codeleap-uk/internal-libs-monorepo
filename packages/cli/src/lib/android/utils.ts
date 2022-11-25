@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { cwd } from '..'
+import { cwd } from '../../constants'
 export const getAndroidBundleId = (androidManifestContent: string) => {
   const pkgStr = 'package="'
   const packageIdx = androidManifestContent.indexOf(pkgStr) + pkgStr.length
@@ -10,18 +10,18 @@ export const getAndroidBundleId = (androidManifestContent: string) => {
   return packageName.trim()
 }
 export const getAndroidAppName = (stringsXmlContent: string) => {
-  // const pkgStr = 'name="app_name">'
-  // const packageIdx = stringsXmlContent.indexOf(pkgStr) + pkgStr.length
-  // let packageName = stringsXmlContent.substring(packageIdx)
-  // const packageEndIdx = packageName.indexOf('<')
-  // packageName = packageName.substring(0, packageEndIdx)
-  // return packageName.trim()
+  const pkgStr = 'name="app_name">'
+  const packageIdx = stringsXmlContent.indexOf(pkgStr) + pkgStr.length
+  let packageName = stringsXmlContent.substring(packageIdx)
+  const packageEndIdx = packageName.indexOf('<')
+  packageName = packageName.substring(0, packageEndIdx)
+  return packageName.trim()
 
-  return JSON.parse(
-    fs.readFileSync(
-      path.join(cwd, 'app.json'),
-    ).toString(),
-  ).name
+  // return JSON.parse(
+  //   fs.readFileSync(
+  //     path.join(cwd, 'app.json'),
+  //   ).toString(),
+  // ).name
 }
 
 export const readGradleProperties = (androidFolder: string) => {

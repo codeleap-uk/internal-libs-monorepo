@@ -1,11 +1,12 @@
 import firebase from 'firebase-admin'
 import path from 'path'
-import { cwd } from '.'
-export let firebaseApp:firebase.app.App = null
+import { cwd } from '../constants'
 
-if (!firebaseApp) {
+let _firebaseApp:firebase.app.App = null
+
+if (!_firebaseApp) {
   try {
-    firebaseApp = firebase.initializeApp({
+    _firebaseApp = firebase.initializeApp({
       credential: firebase.credential.cert(
         path.join(cwd, 'firebase_admin.json'),
       ),
@@ -15,3 +16,13 @@ if (!firebaseApp) {
 
   }
 }
+
+export async function loadFirebaseAdmin(credentialPath: string) {
+  _firebaseApp = firebase.initializeApp({
+    credential: firebase.credential.cert(
+      credentialPath,
+    ),
+  })
+}
+
+export const firebaseApp = _firebaseApp
