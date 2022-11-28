@@ -7,11 +7,10 @@ import {
   TypeGuards,
   useState,
 } from '@codeleap/common'
-import { Animated, GestureResponderEvent, Platform, StyleSheet, Text as NativeText } from 'react-native'
+import { Animated, Platform, StyleSheet, Text as NativeText } from 'react-native'
 import { MotiText as _MotiText, MotiProps } from 'moti'
 import { useAnimateColor, usePressableFeedback } from '../../utils'
 import { TextStyles } from './styles'
-import { View } from '../View'
 
 export * from './styles'
 
@@ -22,14 +21,15 @@ export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   colorChangeConfig?: Partial<Animated.TimingAnimationConfig>
   debugName?: string
   debounce?: number
+  pressDisabled?: boolean
 } & BaseViewProps & MotiProps
 
 const MotiText = Animated.createAnimatedComponent(_MotiText)
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
-  const { variants = [], text, children, onPress, style, colorChangeConfig, debounce = 1000, ...props } = textProps
+  const { variants = [], text, children, onPress, style, colorChangeConfig, debounce = 1000, pressDisabled, ...props } = textProps
 
-  const pressPolyfillEnabled = Platform.OS === 'android' && !!onPress
+  const pressPolyfillEnabled = Platform.OS === 'android' && !!onPress && !pressDisabled
 
   const [pressed, setPressed] = useState(false)
   const pressedRef = React.useRef(false)
@@ -86,12 +86,12 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const feedbackStyle = pressPolyfillEnabled ? getFeedbackStyle(pressed) : undefined
 
   const pressProps = !!onPress ? {
-    onPress: _onPress,
+    onPress: pressDisabled ? null : _onPress,
   } : {}
 
   return <Component {...props}
     onPressIn={handlePress(true)} onPressOut={handlePress(false)}
-    style={[styles, colorStyle, feedbackStyle]}
+    style={[styles, colorStyle, feedbackStyle, !!onPress && pressDisabled ? variantStyles['text:disabled'] : null]}
     allowFontScaling={false}
     {...pressProps}
     // @ts-ignore

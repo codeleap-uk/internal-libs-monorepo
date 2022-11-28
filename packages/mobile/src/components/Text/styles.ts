@@ -1,7 +1,7 @@
 import { assignTextStyle, createDefaultVariantFactory, includePresets, shadeColor, StylesOf } from '@codeleap/common'
 import { FeedbackConfig } from '../../utils'
 
-export type TextComposition = 'text' | 'touchFeedback'
+export type TextComposition = 'text' | 'pressFeedback' | 'text:disabled'
 
 export type TextStylesGen<TCSS = any> = StylesOf<'text', TCSS> & {
   'pressFeedback'?: FeedbackConfig
@@ -22,6 +22,9 @@ export const TextStyles = {
       text: {
         fontFamily: theme.typography.fontFamily,
         ...defaultStyle,
+      },
+      'text:disabled': {
+        color: theme.colors.disabled,
       },
       pressFeedback: {
         type: 'highlight',
