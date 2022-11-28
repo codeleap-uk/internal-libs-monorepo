@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - publish
-    tags:
-      - v[0-9]+.[0-9]+.[0-9]+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,23 +11,7 @@ jobs:
       - name: Clone current repo
         uses: actions/checkout@v2
 
-      - name: Update CHANGELOG
-        id: changelog
-        uses: requarks/changelog-action@v1
-        with:
-          token: ${{ github.token }}
-          tag: ${{ github.ref_name }}
-
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          draft: false
-          name: ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.changes }}
-          token: ${{ github.token }}
-
-    
+  
       - uses: actions/setup-node@v3
         with:
           node-version: '16.15.0'
