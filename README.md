@@ -60,6 +60,15 @@ index: 1
 ---
 ```
 
+## Commit standard
+
+This repository uses [cz-customizable](https://github.com/leoforfree/cz-customizable), an alternative to [Commitizen](https://github.com/commitizen/cz-cli) that allows for customization of the prompts for making a commit.
+
+> It's advised to commit using a command line instead of a GUI tool such as VSCode's git feature or Github desktop, to ensure commit's follow the standard and are correctly displayed in changelogs for releases
+
+There is no simple way to make git hooks interactive across windows and unix, so use `yarn commit` instead of `git commit`. 
+
+These conventions are established to make tracking of changes to our libraries easier through changelogs.
 ### Submitting your changes
 
 Please open a PR with an appropiatly named branch in the format `{scope}/{feature}`, where:
@@ -68,7 +77,7 @@ Please open a PR with an appropiatly named branch in the format `{scope}/{featur
   - mobile: for changes to the mobile package or template
   - web: for changes to the web package or template
   - common: for changes to the common package
-- `feature` is a simplified description of your changes
+- `feature` is a simplified or abbreviated description of your changes
 
 PRs will be integrated/approved with the following criteria in mind:
 

@@ -66,11 +66,10 @@
     "p:web": "yarn workspace @codeleap/web",
     "p:mobile": "yarn workspace @codeleap/mobile",
     "prepare": "husky install",
-    "commit": "cz"
+    "commit": "node ./node_modules/cz-customizable/standalone.js"
   },
   "devDependencies": {
-    "commitizen": "^4.2.5",
-    "cz-conventional-changelog": "3.3.0",
+    "cz-customizable": "^7.0.0",
     "husky": "^8.0.2",
     "npm-license-crawler": "^0.2.1",
     "prettier": "^2.5.1",
@@ -80,11 +79,6 @@
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
-  },
-  "husky": {
-    "hooks": {
-      "prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
-    }
   },
   "packageManager": "yarn@1.22.17",
   "turbo": {
