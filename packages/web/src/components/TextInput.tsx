@@ -27,7 +27,6 @@ import { jsx } from '@emotion/react'
 import { StylesOf } from '../types/utility'
 import { Icon } from '.'
 
-
 type IconProp = { name: IconPlaceholder; action?: () => void }
 type MergedRef = React.LegacyRef<HTMLInputElement> &
   React.Ref<HTMLTextAreaElement>

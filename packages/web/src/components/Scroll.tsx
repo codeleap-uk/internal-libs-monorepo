@@ -7,12 +7,11 @@ import {
 } from 'react'
 import { View, ViewProps } from './View'
 
-
 export const ScrollCP = <T extends ElementType = 'div'>(
   props: ViewProps<T>,
   ref: Ref<any>,
 ) => {
-  
+
   return (
     <View
       {...props}

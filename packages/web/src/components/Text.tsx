@@ -35,11 +35,10 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 
   const Component = component
 
-
-  const a = {...variantStyles.text, ...props.style}
+  const css = { ...variantStyles.text, ...props.style }
   return (
     <Component
-      css={a}
+      css={css}
       {...props}
     >
       {text || children}
