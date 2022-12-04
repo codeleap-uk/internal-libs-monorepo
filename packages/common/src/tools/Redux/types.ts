@@ -57,7 +57,7 @@ export type Slice<
   buildActions: BuildActions<S, R, AR>
   name: N
   initialState: S
-  reducer: (state: S, action: { type: string; payload: DeepPartial<S> }) => S;
+  reducer: (state: S, action: { type: string; payload: DeepPartial<S> }) => S
 }
 
 export interface EnhancedStore<S = any> extends Store {

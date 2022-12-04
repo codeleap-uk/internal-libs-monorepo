@@ -225,7 +225,7 @@ export interface UseListStateHandler<T> {
     fn: (item: T, index?: number) => T
   ) => void
   remove: (...indices: number[]) => void
-  reorder: ({ from, to }: { from: number; to: number }) => void;
+  reorder: ({ from, to }: { from: number; to: number }) => void
   setItem: (index: number, item: T) => void
   setItemProp: <K extends keyof T, U extends T[K]>(index: number, prop: K, value: U) => void
 }

@@ -1,14 +1,14 @@
 export const inputPresets = {
-    email: () => ({
+  email: () => ({
 
-    }),
-    name: () => ({
-        autoCapialize: 'words',
-        autoComplete: 'name',
+  }),
+  name: () => ({
+    autoCapialize: 'words',
+    autoComplete: 'name',
 
-    }),
-    chat: () => ({
-        returnKeyType: 'send',
-        
-    })
+  }),
+  chat: () => ({
+    returnKeyType: 'send',
+
+  }),
 }

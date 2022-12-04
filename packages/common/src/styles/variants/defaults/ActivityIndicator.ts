@@ -13,12 +13,11 @@ const createActivityIndicatorStyle =
 const presets = includePresets((styles) => createActivityIndicatorStyle(() => ({ wrapper: styles })),
 )
 
-
 export const getActivityIndicatorBaseStyles = (size:number) => {
   const sizes = {
     height: size,
     width: size,
-    borderWidth: size  * 0.25,
+    borderWidth: size * 0.25,
   }
 
   return {
@@ -36,10 +35,10 @@ export const getActivityIndicatorBaseStyles = (size:number) => {
       right: 0,
     } as any,
     backCircle: {
-      
+
       // borderColor: theme.colors.primary,
       minWidth: '100%',
-      opacity: 0.5, 
+      opacity: 0.5,
     } as any,
     frontCircle: {
       position: 'absolute',
@@ -66,6 +65,5 @@ export const ActivityIndicatorStyles = {
       },
     }
 
-    
   }),
 }

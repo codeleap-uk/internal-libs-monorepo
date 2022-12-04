@@ -51,11 +51,11 @@ export class VariantProvider<
     this.theme = theme
   }
 
-  getDefaultVariants(): DefaultVariants<CSSIn>;
+  getDefaultVariants(): DefaultVariants<CSSIn>
 
   getDefaultVariants<ComponentName extends keyof DefaultVariants>(
     componentName?: ComponentName
-  ): DefaultVariants<CSSIn>[ComponentName];
+  ): DefaultVariants<CSSIn>[ComponentName]
 
   getDefaultVariants(componentName?: keyof DEFAULT_VARIANTS) {
 
