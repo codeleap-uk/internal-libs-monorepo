@@ -66,7 +66,8 @@
     "p:web": "yarn workspace @codeleap/web",
     "p:mobile": "yarn workspace @codeleap/mobile",
     "prepare": "husky install",
-    "commit": "node ./node_modules/cz-customizable/standalone.js"
+    "commit": "node ./node_modules/cz-customizable/standalone.js",
+    "release": "standard-version"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",
