@@ -119,7 +119,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       'height!',
       'flex!',
       'backgroundColor!',
-
     ]
 
     const wrapperStyle = {} as any
@@ -144,7 +143,10 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         pressableStyle[key] = value
       }
     })
-
+    if (wrapperStyle.position === 'absolute') {
+      pressableStyle.width = '100%'
+      pressableStyle.height = '100%'
+    }
     wrapperStyle.overflow = 'hidden'
     // wrapperStyle.flexDirection = 'row'
     // wrapperStyle.alignItems = 'stretch'
