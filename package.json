@@ -45,7 +45,10 @@
       "**/react-native-animatable/*",
       "**/lottie",
       "**/lottie/**",
-      "**/lottie*"
+      "**/lottie*",
+      "**/@react-native-community*",
+      "**/@react-native-community/**",
+      "**/@react-native-community/*"
     ]
   },
   "scripts": {
