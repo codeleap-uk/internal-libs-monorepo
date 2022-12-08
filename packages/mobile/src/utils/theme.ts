@@ -9,7 +9,7 @@ type AppValues = {
 export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
   const screenDimensions = Dimensions.get('screen')
 
-  const hasNotch = Platform.OS === 'ios' ? (Dimensions.get('window').height >= 812) : (initialWindowMetrics?.insets?.top > 24 || StatusBar.currentHeight > 24)
+  const hasNotch = DeviceInfo.hasNotch()
   const hasIsland = DeviceInfo.hasDynamicIsland()
   const bottomNavHeight = Platform.OS === 'android' ? initialWindowMetrics?.insets?.bottom : 0
 
