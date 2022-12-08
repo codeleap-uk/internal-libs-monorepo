@@ -1,5 +1,7 @@
-import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useState } from '@codeleap/common'
+import { onMount, onUpdate, shadeColor, TypeGuards, useCallback, usePrevious, useRef, useState } from '@codeleap/common'
 import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler } from 'react-native'
+// @ts-ignore
+import AsyncStorage from '@react-native-community/async-storage'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -160,4 +162,51 @@ export function useBackButton(cb: () => boolean|void, deps = []) {
       subscription.remove()
     }
   }, deps)
+}
+type StateSetter<T> = T | ((prev:T) => T)
+
+export function useAsyncStorageState<T>(key:string, defaultValue?: T) {
+  const [value, _setValue] = useState<T>(undefined)
+
+  onMount(() => {
+    AsyncStorage.getItem(key).then(val => {
+      let storedValue = defaultValue
+
+      if (val) {
+        storedValue = JSON.parse(val)
+      }
+
+      _setValue(storedValue)
+    })
+  })
+
+  const setValue = (to: StateSetter<T>) => {
+    return new Promise<void>((resolve, reject) => {
+      _setValue((prev) => {
+        let newValue = prev
+        try {
+
+          if (typeof to !== 'function') {
+            newValue = to
+          } else {
+            const fn = to as ((prev:T) => T)
+            newValue = fn(value)
+          }
+
+          const jsonVal = JSON.stringify(newValue)
+
+          AsyncStorage.setItem(key, jsonVal).then(resolve).catch(reject)
+          resolve()
+          return newValue
+        } catch (e) {
+          reject(e)
+          return newValue
+        }
+
+      })
+    })
+
+  }
+
+  return [value, setValue] as [T, typeof setValue]
 }
