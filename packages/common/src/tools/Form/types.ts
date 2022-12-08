@@ -221,12 +221,6 @@ export type MapValues<T extends FieldsMap> = {
     : InputValueTypes[T[Property]['type']];
 }
 
-// export type CreateFormReturn<T extends FieldsMap, O extends FormOutput = 'json'> = {
-//     register(name: Paths<FlattenFields<T>>):any
-//     values: MapValues<T>
-//     transform: () => O extends 'json' ? MapValues<T> : FormData
-// }
-
 export type CreateFormReturn<T extends FieldsMap> = {
   config: T
   defaultValue: MapValues<T>
@@ -238,8 +232,6 @@ export type CreateFormReturn<T extends FieldsMap> = {
 export type FormStep = 'setValue' | 'validate'
 
 export type UseFormConfig<T> = {
-  validateOn: FormValidateOn
-  output: FormOutput
   log?: FormStep[]
   initialState?: DeepPartial<T>
 }

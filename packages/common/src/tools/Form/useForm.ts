@@ -154,9 +154,9 @@ export function useForm<
         } else if (type === 'file') {
           value = TypeGuards.isArray(value) && !!value.length ? value[0] : null
         }
-        if (config.validateOn === 'change') {
-          validateField(field, true, value)
-        }
+
+        validateField(field, true, value)
+
         // @ts-ignore
         setFieldValue(field, value)
       }
@@ -183,13 +183,7 @@ export function useForm<
     }
 
     if (validate) {
-      switch (config.validateOn) {
-        case 'change':
-          dynamicProps.validate = fieldErrors[field]
-          break
-
-      }
-
+      dynamicProps.validate = fieldErrors[field]
     }
     registeredFields.current.push(type)
     return {
@@ -199,15 +193,7 @@ export function useForm<
   }
 
   function getTransformedValue(): Values {
-    let out = {}
-    switch (config.output) {
-
-      default:
-        out = formValues
-        break
-    }
-
-    return out as any
+    return formValues as Values
   }
 
   async function onSubmit(cb: FunctionType<[Values], any>, e?: any) {
@@ -216,8 +202,8 @@ export function useForm<
     await cb(getTransformedValue())
   }
 
-  function reset(args?: ('values'|'errors')[]) {
-    const resetStates = args || ['values', 'errors']
+  function reset(states?: ('values'|'errors')[]) {
+    const resetStates = states || ['values', 'errors']
     if (resetStates.includes('values')) {
       setFormValues(getInitialState())
     }
