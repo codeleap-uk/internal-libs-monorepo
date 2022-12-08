@@ -79,14 +79,16 @@ export type AppTheme = {
   readonly colors: FreeThemeColors
 
    values?: {
-    width?: number
-    height?: number
+    width: number
+    height: number
+    innerSpacing: Record<'X'|'Y', number>
   } & AnyProps<any>
 
   readonly borderRadius: {
     large: number
     medium: number
     small: number
+    modalOuter: number
     round: number
   }
 
