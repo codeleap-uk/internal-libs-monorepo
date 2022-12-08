@@ -4,6 +4,8 @@ export * from './utils'
 
 export * from './hook'
 
+export * from './CodeleapQueryClient'
+
 export {
   UsePaginationTypes,
 }

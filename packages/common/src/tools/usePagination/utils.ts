@@ -1,14 +1,29 @@
 import { InfiniteData, QueryClient, QueryKey, UseInfiniteQueryResult } from '@tanstack/react-query'
 import { TypeGuards } from '../../utils'
+import { CodeleapQueryClient } from './CodeleapQueryClient'
 import { DeriveDataArgs, DeriveDataFn, PaginationReturn } from './types'
 
-export const getQueryKeys = (base:string) => ({
-  list: [`${base}.list`],
-  create: [`${base}.create`],
-  update: [`${base}.update`],
-  remove: [`${base}.remove`],
-  retrieve: [`${base}.retrieve`],
-})
+export const getQueryKeys = (base:string) => {
+
+  return {
+    list: [`${base}.list`],
+    create: [`${base}.create`],
+    update: [`${base}.update`],
+    remove: [`${base}.remove`],
+    retrieve: [`${base}.retrieve`],
+  }
+}
+
+export const getPaginationKeys = <Data = any>(base:string, queryClient: CodeleapQueryClient) => {
+  return {
+    list: queryClient.queryKey<Data>([`${base}.list`]),
+    create: queryClient.queryKey<Data>([`${base}.create`]),
+    update: queryClient.queryKey<Data>([`${base}.update`]),
+    remove: queryClient.queryKey<Data>([`${base}.remove`]),
+    retrieve: queryClient.dynamicQueryKey<Data>((id: string|number) => [`${base}.retrieve.${id}`]),
+  }
+}
+
 type GetPaginationDataParams<TItem = any, Arr extends TItem[]= TItem[]> = {
   queryKeyOrList: UseInfiniteQueryResult<PaginationReturn<TItem>>['data'] | QueryKey
   queryClient?: QueryClient

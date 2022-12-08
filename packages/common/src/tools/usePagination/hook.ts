@@ -8,14 +8,14 @@ import { InfiniteData, QueryFunctionContext,
   useQueryClient,
 } from '@tanstack/react-query'
 import { AppendToPagination, OperationKey, PaginationReturn, UsePaginationParams } from './types'
-import { getPaginationData, getQueryKeys } from './utils'
+import { getPaginationData, getPaginationKeys, getQueryKeys } from './utils'
 import { TypeGuards } from '../../utils'
 
 export function usePagination<
  TItem = any,
  TData extends PaginationReturn<TItem> = PaginationReturn<TItem>,
  P extends UsePaginationParams<TData> = UsePaginationParams<TData>
->(key: string, params:P) {
+>(key: string | ReturnType<typeof getPaginationKeys>, params:P) {
   type OverrideParamType<K extends OperationKey> = Parameters<P['overrides'][K]>[0]
 
   function withOverride<
@@ -31,7 +31,20 @@ export function usePagination<
     return values
   }
 
-  const QUERY_KEYS = getQueryKeys(key)
+  const QUERY_KEYS = useMemo(() => {
+    if (TypeGuards.isString(key)) {
+      return getQueryKeys(key)
+    }
+
+    return {
+      create: key.create.key,
+      list: key.list.key,
+      remove: key.remove.key,
+      update: key.update.key,
+      retrieve: key.retrieve.key(1).slice(0, 2),
+    }
+  }, [key])
+
   const [isRefreshing, setRefreshing] = useState(false)
   const queryClient = useQueryClient()
 
