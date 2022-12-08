@@ -2,7 +2,7 @@ import { IconPlaceholder,
   getNestedStylesByKey,
   useDefaultComponentStyle,
   TypeGuards } from '@codeleap/common'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
 import { Text } from '../Text'
@@ -13,16 +13,39 @@ import { CustomSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Icon } from '../Icon'
 
-export const SelectItem = ({ item, icon = null, isSelected, styles, onPress }) => {
-  return <Touchable style={[
-    styles.itemWrapper,
-    isSelected && styles['itemWrapper:selected'],
-  ]} onPress={onPress} debugName={`Select ${item.value}`}>
-    <Text text={item.label} style={[
-      styles.itemText,
-      isSelected && styles['itemText:selected'],
-    ]}/>
-    {icon ? <Icon name={icon} style={[styles?.itemIcon, isSelected && styles?.['itemIcon:selected']]}/> : null}
+export const SelectItem = ({
+  item,
+  icon = null,
+  isSelected,
+  styles,
+  onPress,
+  iconProps = {},
+  textProps = {},
+  ...touchableProps
+}) => {
+  return <Touchable
+    style={[
+      styles.itemWrapper,
+      isSelected && styles['itemWrapper:selected'],
+    ]}
+    onPress={onPress}
+    debugName={`Select ${item.value}`}
+    debounce={null}
+    {...touchableProps}
+  >
+    <Text
+      text={item.label}
+      style={[
+        styles.itemText,
+        isSelected && styles['itemText:selected'],
+      ]}
+      {...textProps}
+    />
+    {icon ? <Icon
+      name={icon}
+      style={[styles?.itemIcon, isSelected && styles?.['itemIcon:selected']]}
+      {...iconProps}
+    /> : null}
   </Touchable>
 }
 
@@ -46,7 +69,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     selectedIcon = 'selectMarker',
     inputProps = {},
     hideInput = false,
-
+    itemProps = {},
     ...drawerProps
   } = selectProps
 
@@ -81,15 +104,17 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
   }, [value, placeholder, options])
   const Item = renderItem || SelectItem
 
-  const renderListItem = ({ item }) => {
+  const renderListItem = useCallback(({ item }) => {
+
     return <Item
       isSelected={value === item.value}
       item={item}
       onPress={() => select(item.value)}
       icon={selectedIcon}
       styles={variantStyles}
+      {...itemProps}
     />
-  }
+  }, [value, select])
   const isEmpty = TypeGuards.isNil(value)
   const showClearIcon = !isEmpty && clearable
 
@@ -132,33 +157,31 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
       )
     }
 
-    <ModalManager.Drawer
-      scroll={false}
+    <ModalManager.Modal
       title={label}
       keyboardAware={{
-        baseStyleProp: 'style',
-        adapt: 'paddingBottom',
-        enabled: true,
-        enableOnAndroid: true,
+
+        enabled: false,
       }}
       {...drawerProps}
       styles={variantStyles}
+      id={null}
     >
       <List<CustomSelectProps<any>['options']>
         data={options}
-        style={variantStyles.list}
-        contentContainerStyle={variantStyles.listContent}
+        scrollEnabled={false}
+        showsHorizontalScrollIndicator={false}
+        styles={getNestedStylesByKey('list', variantStyles)}
         keyExtractor={(i) => i.value}
         renderItem={renderListItem}
         keyboardAware={{
-          baseStyleProp: 'style',
-          adapt: 'maxHeight',
-          enabled: true,
-          enableOnAndroid: true,
+          enabled: false,
+          enableOnAndroid: false,
         }}
+        separators
         {...listProps}
       />
-    </ModalManager.Drawer>
+    </ModalManager.Modal>
 
   </>
 }

@@ -1,15 +1,15 @@
-import { createDefaultVariantFactory, TextInputComposition } from '@codeleap/common'
+import { assignTextStyle, createDefaultVariantFactory, TextInputComposition } from '@codeleap/common'
 import { DrawerComposition, DrawerStyles } from '../Drawer'
+import { ListComposition } from '../List'
+import { ModalComposition } from '../Modal'
 type ItemStates = '' | ':selected'
 export type SelectComposition =
-  DrawerComposition |
+  ModalComposition |
   `input${TextInputComposition}` |
-  'list' |
+  `list${Capitalize<ListComposition>}` |
   'listContent' |
   `itemWrapper${ItemStates}` |
   `itemText${ItemStates}` |
-  'scroll' |
-  'scrollContent' |
   `itemIcon${ItemStates}`
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
@@ -17,46 +17,124 @@ const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 export const SelectStyles = {
   ...DrawerStyles,
   default: createSelectStyle((theme) => {
-    const defaultStyle = DrawerStyles.default(theme)
 
     return {
-      ...defaultStyle,
-      box: {
-        ...theme.spacing.paddingHorizontal(0),
+      wrapper: {
+        ...theme.presets.absolute,
+        // ...theme.presets.whole,
+        ...theme.presets.fullHeight,
+        ...theme.presets.fullWidth,
+      },
+      'box:transition': {
+        scale: {
+          duration: theme.values.transitions.modal.duration,
+          type: 'timing',
+        },
+        opacity: {
+          duration: theme.values.transitions.modal.duration,
+          type: 'timing',
+        },
+      },
+      'backdrop:transition': {
+        opacity: {
+          duration: theme.values.transitions.modal.duration,
+          type: 'timing',
+        },
+      },
+      backdrop: {
+        ...theme.presets.absolute,
+        ...theme.presets.whole,
+
+        backgroundColor: theme.colors.black,
 
       },
+      backdropTouchable: {
+        // height: '100%',
+        ...theme.presets.absolute,
+        ...theme.presets.whole,
+
+      },
+      'backdrop:visible': {
+        opacity: 0.5,
+      },
+      'backdrop:hidden': {
+        opacity: 0,
+      },
+      innerWrapper: {
+
+      },
+      scroll: {
+        flex: 1,
+        // maxHeight: theme.values.height,
+      },
+      scrollContent: {
+        ...theme.presets.alignCenter,
+        ...theme.presets.justifyCenter,
+        minHeight: '100%',
+        ...theme.presets.safeAreaTop(theme.values.innerSpacing.Y),
+        ...theme.presets.safeAreaBottom(theme.values.innerSpacing.Y),
+      },
+      box: {
+        backgroundColor: theme.colors.background,
+        width: theme.values.width - theme.spacing.value(theme.values.innerSpacing.X * 2),
+        borderRadius: theme.borderRadius.modalOuter,
+        ...theme.spacing.paddingHorizontal(theme.values.innerSpacing.X),
+        ...theme.spacing.paddingVertical(theme.values.innerSpacing.Y),
+      },
+
+      'box:hidden': {
+        opacity: 0,
+        scale: 0.8,
+
+      },
+      'box:visible': {
+        opacity: 1,
+        scale: 1,
+      },
+      header: {
+        flexDirection: 'row',
+        ...theme.presets.justifySpaceBetween,
+        ...theme.presets.alignCenter,
+      },
+      closeButtonTouchableWrapper: {
+        alignSelf: 'center',
+        ...theme.spacing.marginLeft('auto'),
+      },
+      closeButtonIcon: {
+        color: theme.colors.text,
+      },
+      title: {
+        ...assignTextStyle('h3')(theme).text,
+      },
+      listWrapper: {
+        height: 'auto',
+      },
+
       itemWrapper: {
         ...theme.presets.row,
         ...theme.presets.justifySpaceBetween,
         ...theme.presets.alignCenter,
-        ...theme.spacing.padding(1.4),
-        height: 50,
+        borderRadius: theme.borderRadius.medium,
+        ...theme.spacing.padding(1),
+        backgroundColor: theme.colors.backgroundSecondary,
       },
       'itemWrapper:selected': {
         backgroundColor: theme.colors.primary,
       },
-      'itemText:selected': {
-        color: theme.colors.white,
+      'itemIcon:selected': {
+        color: theme.colors.backgroundSecondary,
+        ...theme.sized(2),
 
       },
-      'itemIcon:selected': {
-        color: theme.colors.white,
-        ...theme.sized(3),
+      'itemText:selected': {
+        color: theme.colors.backgroundSecondary,
+
       },
       itemIcon: {
-        width: 0,
         height: 0,
-      },
-      list: {
-        height: 'auto',
-
-        maxHeight: theme.values.window.height * 0.75,
+        width: 0,
 
       },
-      // listContent: {
-      //   paddingBottom: theme.values.safeAreaTop,
-      // },
-
     }
   }),
 }

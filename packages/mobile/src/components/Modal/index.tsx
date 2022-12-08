@@ -25,6 +25,7 @@ import { useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
+import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
 
@@ -43,6 +44,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   visible: boolean
   toggle?: () => void
   zIndex?: number
+  description?: React.ReactElement
   scroll?: boolean
   header?: React.ReactElement
   closeOnHardwareBackPress?: boolean
@@ -57,12 +59,13 @@ export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
     title: TextProps['style']
     closeButton: ButtonProps['styles']
   }
+  description?: React.ReactElement
 }
 
 const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
-  const { styles, title = null, showClose = false, closable, debugName, closeIconName = 'close', toggle } = props
+  const { styles, title = null, showClose = false, description = null, closable, debugName, closeIconName = 'close', toggle } = props
   return <>
-    {(title || showClose) && (
+    {(title || showClose || description) && (
       <View style={styles.wrapper}>
         {typeof title === 'string' ? (
           <Text text={title} style={styles.title} />
@@ -71,10 +74,9 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
         )}
 
         {(showClose && closable) && (
-          <Button
+          <ActionIcon
             debugName={`${debugName} modal close button`}
             icon={closeIconName as IconPlaceholder}
-            variants={['icon']}
             onPress={toggle}
             styles={styles.closeButton}
           />
@@ -104,7 +106,6 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeOnHardwareBackPress = true,
     ...props
   } = modalProps
-
   const variantStyles = useDefaultComponentStyle('u:Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
@@ -136,7 +137,9 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   const scrollStyle = scroll ? getStyles('scroll') : getStyles('innerWrapper')
 
   const headerProps:ModalHeaderProps = {
+
     ...modalProps,
+    closable,
     styles: {
       wrapper: getStyles('header'),
       title: getStyles('title'),
@@ -170,14 +173,16 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       <ScrollComponent
         style={scrollStyle}
         contentContainerStyle={getStyles('scrollContent')}
+        showsVerticalScrollIndicator={false}
         keyboardAware= {{
-          adapt: 'marginBottom',
+          adapt: 'maxHeight',
           baseStyleProp: 'style',
           animated: true,
           enabled: visible,
-          enableOnAndroid: true,
+          // enableOnAndroid: true,
         }}
         animated
+        // ref={scrollRef}
         { ...scrollProps}
       >
         {dismissOnBackdrop &&

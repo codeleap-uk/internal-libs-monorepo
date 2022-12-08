@@ -2,19 +2,26 @@ import {
   ComponentVariants,
   FormTypes,
   IconPlaceholder,
+  PropsOf,
 } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { DrawerProps } from '../Drawer'
+import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
+import { Text } from '../Text'
 import { TextInputProps } from '../TextInput'
+import { Touchable } from '../Touchable'
 import { SelectComposition, SelectStyles } from './styles'
 
-export type SelectRenderFNProps<T> = & {
+export type SelectRenderFNProps<T> = {
   styles: StylesOf<SelectComposition>
   onPress: () => void
   isSelected?: boolean
   item: FormTypes.Options<T>[number]
+  touchableProps?: Partial<PropsOf<typeof Touchable>>
+  textProps?: Partial<PropsOf<typeof Text>>
+  iconProps?: Partial<PropsOf<typeof Icon>>
 }
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
@@ -39,5 +46,8 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     clearable?: boolean
     clearIconName?: IconPlaceholder
     keyboardAware?: GetKeyboardAwarePropsOptions
+    itemProps?: Partial<
+      Pick<SelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'
+    >>
   } & ComponentVariants<typeof SelectStyles>
 

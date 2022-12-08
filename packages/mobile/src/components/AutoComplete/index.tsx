@@ -31,10 +31,11 @@ export type AutoCompleteHeaderProps = ReactStateProps<'search', string> &
     debugName: string
     icon?: IconPlaceholder
     toggle: ModalHeaderProps['toggle']
+    description?: React.ReactElement
   }
 
 export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
-  const { search, setSearch, icon = 'search', debugName, label, styles, toggle, searchInputProps, ...viewProps } = props
+  const { search, setSearch, icon = 'search', description = null, debugName, label, styles, toggle, searchInputProps, ...viewProps } = props
 
   return <View style={[styles.wrapper]} {...viewProps}>
     <View style={styles.titleWrapper}>
@@ -45,6 +46,9 @@ export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
         onPress={toggle} variants={['icon']}
         styles={styles.closeButton}/>
     </View>
+    {
+      description
+    }
     <TextInput subtitle={() => null} leftIcon={{
       icon: icon as IconPlaceholder,
     }} debugName={`AutoComplete ${debugName} search input`} value={search} onChangeText={setSearch} styles={styles.searchInput} {...searchInputProps}/>

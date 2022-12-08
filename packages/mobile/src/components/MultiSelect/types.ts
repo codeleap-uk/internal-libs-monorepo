@@ -2,11 +2,15 @@ import {
   ComponentVariants,
   FormTypes,
   IconPlaceholder,
+  PropsOf,
 } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
 import { DrawerProps } from '../Drawer'
+import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
+import { Text } from '../Text'
 import { TextInputProps } from '../TextInput'
+import { Touchable } from '../Touchable'
 import { MultiSelectComposition, MultiSelectStyles } from './styles'
 
 export type MultiSelectRenderFNProps<T> = {
@@ -15,6 +19,9 @@ export type MultiSelectRenderFNProps<T> = {
   isSelected?: boolean
   item: FormTypes.Options<T>[number]
   icon?: IconPlaceholder
+  touchableProps?: Partial<PropsOf<typeof Touchable>>
+  textProps?: Partial<PropsOf<typeof Text>>
+  iconProps?: Partial<PropsOf<typeof Icon>>
 }
 
 export type MultiSelectRenderFN<T> = (props: MultiSelectRenderFNProps<T>) => JSX.Element
@@ -39,5 +46,6 @@ export type MultiSelectProps<T> = MultiSelectDrawerProps & {
     clearable?: boolean
     clearIconName?: IconPlaceholder
     validate?: TextInputProps['validate']
+    itemProps?: Partial<Pick<MultiSelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'>>
   } & ComponentVariants<typeof MultiSelectStyles>
 

@@ -32,6 +32,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     clearIconName = 'close',
     limit = null,
     validate = null,
+    itemProps = {},
     ...drawerProps
   } = selectProps
 
@@ -81,6 +82,8 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
       onPress={() => select(item.value)}
       styles={variantStyles}
       icon={selectedIcon as IconPlaceholder}
+      {...itemProps}
+
     />
   }
 
@@ -123,16 +126,19 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
       )
     }
 
-    <ModalManager.Drawer scroll={false} title={label} {...drawerProps} styles={variantStyles}>
+    <ModalManager.Modal title={label} {...drawerProps} styles={variantStyles} id={null}>
       <List<MultiSelectProps<any>['options']>
         data={options}
-        style={variantStyles.list}
-        contentContainerStyle={variantStyles.listContent}
+        styles={getNestedStylesByKey('list', variantStyles)}
         keyExtractor={(i) => i.value}
+        separators
+        keyboardAware={{
+          enabled: false,
+        }}
         renderItem={renderListItem}
         {...listProps}
       />
-    </ModalManager.Drawer>
+    </ModalManager.Modal>
 
   </>
 }

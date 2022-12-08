@@ -1,9 +1,9 @@
 import {
   assignTextStyle,
-  ButtonComposition,
   createDefaultVariantFactory,
   includePresets,
 } from '@codeleap/common'
+import { ActionIconComposition } from '../ActionIcon'
 
 export type AnimatableParts = 'box' | 'backdrop'
 
@@ -11,7 +11,6 @@ export type ModalParts =
   | AnimatableParts
   | 'wrapper'
   | 'innerWrapper'
-
   | 'scrollContent'
   | 'scroll'
   | 'body'
@@ -19,7 +18,7 @@ export type ModalParts =
   | 'header'
   | 'backdropTouchable'
   | 'title'
-  | `closeButton${Capitalize<ButtonComposition>}`
+  | `closeButton${Capitalize<ActionIconComposition>}`
 
 export type ModalComposition =
   | ModalParts
@@ -32,26 +31,14 @@ const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 const presets = includePresets((style) => createModalStyle(() => ({ body: style })))
 
 export const ModalStyles = {
-
   ...presets,
   default: createModalStyle((theme) => {
-    const fullSize = {
-      ...theme.presets.whole,
-      position: 'absolute',
-      width: theme.values.width,
-      height: theme.values.height,
-      maxHeight: theme.values.height,
-    }
-
     return {
       wrapper: {
-        zIndex: 1,
-        height: theme.values.height,
-        width: theme.values.width,
-        ...theme.presets.whole,
-        position: 'absolute',
-        ...theme.presets.safeAreaTop(),
-        paddingBottom: theme.values.bottomNavHeight,
+        ...theme.presets.absolute,
+        // ...theme.presets.whole,
+        ...theme.presets.fullHeight,
+        ...theme.presets.fullWidth,
       },
       'box:transition': {
         scale: {
@@ -70,12 +57,17 @@ export const ModalStyles = {
         },
       },
       backdrop: {
+        ...theme.presets.absolute,
+        ...theme.presets.whole,
 
         backgroundColor: theme.colors.black,
-        ...fullSize,
+
       },
       backdropTouchable: {
-        ...fullSize,
+        // height: '100%',
+        ...theme.presets.absolute,
+        ...theme.presets.whole,
+
       },
       'backdrop:visible': {
         opacity: 0.5,
@@ -84,28 +76,25 @@ export const ModalStyles = {
         opacity: 0,
       },
       innerWrapper: {
-        ...theme.presets.alignCenter,
-        ...theme.presets.justifyCenter,
-        width: theme.values.width,
-        flex: 1,
+
       },
       scroll: {
-        width: theme.values.width,
-        height: theme.values.window.height,
-        maxHeight: theme.values.window.height,
+        flex: 1,
+        // maxHeight: theme.values.height,
       },
       scrollContent: {
         ...theme.presets.alignCenter,
         ...theme.presets.justifyCenter,
-        ...theme.spacing.paddingVertical(2),
-        ...theme.presets.fullWidth,
-        flex: 1,
+        minHeight: '100%',
+        ...theme.presets.safeAreaTop(theme.values.innerSpacing.Y),
+        ...theme.presets.safeAreaBottom(theme.values.innerSpacing.Y),
       },
       box: {
-        width: '80%',
         backgroundColor: theme.colors.background,
-        borderRadius: theme.borderRadius.medium,
-        ...theme.spacing.padding(2),
+        width: theme.values.width - theme.spacing.value(theme.values.innerSpacing.X * 2),
+        borderRadius: theme.borderRadius.modalOuter,
+        ...theme.spacing.paddingHorizontal(theme.values.innerSpacing.X),
+        ...theme.spacing.paddingVertical(theme.values.innerSpacing.Y),
       },
 
       'box:hidden': {
@@ -121,16 +110,17 @@ export const ModalStyles = {
         flexDirection: 'row',
         ...theme.presets.justifySpaceBetween,
         ...theme.presets.alignCenter,
+        ...theme.spacing.marginBottom(1),
       },
-      closeButtonWrapper: {
+      closeButtonTouchableWrapper: {
         alignSelf: 'center',
         ...theme.spacing.marginLeft('auto'),
       },
+      closeButtonIcon: {
+        color: theme.colors.text,
+      },
       title: {
-        ...theme.presets.textCenter,
         ...assignTextStyle('h3')(theme).text,
-        ...theme.spacing.paddingBottom(1),
-        flex: 1,
       },
     }
   }),
