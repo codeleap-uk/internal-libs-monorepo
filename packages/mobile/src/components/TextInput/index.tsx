@@ -211,7 +211,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
           styles={leftIconStyles}
           commonStyles={commonIconStyles}
           debugName={`${debugName} left icon`}
-          onPress={() => {}}
+          onPress={() => {
+            input?.current?.focus?.()
+          }}
           noFeedback={!leftIcon?.onPress}
           {...leftIcon}
         />
