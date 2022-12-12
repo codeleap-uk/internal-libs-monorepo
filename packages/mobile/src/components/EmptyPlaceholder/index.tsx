@@ -16,18 +16,25 @@ import {
   EmptyPlaceholderStyles,
 } from './styles'
 
-import { StyleSheet } from 'react-native'
+import { ImageSourcePropType, StyleSheet, Image as RNImage } from 'react-native'
 import { StylesOf } from '../../types'
+import { Image } from '../Image'
 
 export * from './styles'
 
 export type EmptyPlaceholderProps = {
   itemName?: string
-  title?: React.ReactElement
+
+  title?: React.ReactElement | string
+  description?: React.ReactElement | string
+  image?: ImageSourcePropType
+  icon?: IconPlaceholder
+
   loading?: boolean
+
   styles?: StylesOf<EmptyPlaceholderComposition>
   variants?: ComponentVariants<typeof EmptyPlaceholderStyles>['variants']
-  emptyIconName?: IconPlaceholder
+
   renderEmpty?: (props: {
     emptyText:string | React.ReactElement
     emptyIconName?: IconPlaceholder
@@ -40,14 +47,16 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     itemName,
     title,
     loading,
+    description,
+    image,
     styles = {},
     variants = [],
-    emptyIconName = 'placeholder',
+    icon = null,
     renderEmpty,
   } = props
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
-  const componentStyles = useDefaultComponentStyle('EmptyPlaceholder', {
+  const componentStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderStyles>('u:EmptyPlaceholder', {
     variants,
     transform: StyleSheet.flatten,
     styles,
@@ -69,7 +78,7 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
       <View style={componentStyles.wrapper}>
         {renderEmpty({
           emptyText,
-          emptyIconName: emptyIconName as IconPlaceholder,
+          emptyIconName: icon as IconPlaceholder,
           styles: {
             ...componentStyles,
             activityIndicatorStyles,
@@ -79,10 +88,25 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     )
   }
 
+  let _image = null
+
+  if (icon) {
+    _image = <Icon name={icon} style={componentStyles.icon}/>
+  } else if (image) {
+    _image = <Image source={image} style={[
+      componentStyles.image,
+
+    ]}/>
+  }
+
   return (
     <View style={componentStyles.wrapper}>
-      <Icon name={emptyIconName as IconPlaceholder} style={componentStyles.icon}/>
-      <Text text={emptyText} style={componentStyles.text}/>
+      <View style={componentStyles.imageWrapper}>
+        {_image}
+      </View>
+
+      {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} style={componentStyles.title}/> }
+      {React.isValidElement(description) ? description : <Text text={description} style={componentStyles.description}/> }
     </View>
   )
 }

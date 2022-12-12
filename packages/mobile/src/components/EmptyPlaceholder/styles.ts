@@ -5,7 +5,10 @@ export type EmptyPlaceholderComposition =
   | 'wrapper:loading'
   | `loader${Capitalize<ActivityIndicatorComposition>}`
   | 'wrapper'
-  | 'text'
+  | 'title'
+  | 'description'
+  | 'image'
+  | 'imageWrapper'
   | 'icon'
 
 const createEmptyPlaceholderStyle = createDefaultVariantFactory<EmptyPlaceholderComposition>()
@@ -17,24 +20,24 @@ export const EmptyPlaceholderStyles = {
   ...presets,
   default: createEmptyPlaceholderStyle((theme) => ({
     wrapper: {
+      flexGrow: 1,
       ...theme.presets.center,
-      minHeight: theme.values.window.height / 2,
-      height: '100%',
-      flex: 1,
     },
-    loaderWrapper: {
-
-      ...theme.spacing.marginVertical(8),
-      ...theme.presets.center,
-      ...theme.presets.flex,
+    title: {
+      ...assignTextStyle('h3')(theme).text,
+      ...theme.spacing.marginBottom(theme.values.innerSpacing.Y),
     },
-    icon: {
-      color: theme.colors.placeholder,
-      size: theme.spacing.value(24),
-    },
-    text: {
+    description: {
       ...assignTextStyle('p1')(theme).text,
-      ...theme.presets.textCenter,
+    },
+    imageWrapper: {
+      ...theme.spacing.paddingBottom(theme.values.innerSpacing.Y * 2),
+      ...theme.presets.fullWidth,
+      ...theme.presets.alignCenter,
+      height: '45%',
+    },
+    image: {
+      ...theme.presets.fullHeight,
     },
   })),
   compact: createEmptyPlaceholderStyle((theme) => ({
