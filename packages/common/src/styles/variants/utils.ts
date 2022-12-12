@@ -64,6 +64,29 @@ export function applyVariants({
         computedStyles,
         styles.dynamicHandler(theme, variantName.replace('d:', '')),
       )
+    } else if (variantName.startsWith('w:') || variantName.startsWith('h:')) {
+      const [dimension, size] = variantName.split(':')
+
+      let value:string|number = 0
+
+      if (size.endsWith('su')) {
+        value = theme.spacing.value(
+          Number(size.replace('su', '').trim()),
+        )
+      } else if (size.endsWith('px')) {
+        value = Number(size.replace('px', '').trim())
+
+      } else {
+        value = `${size}%`
+      }
+
+      const dim = dimension === 'w' ? 'width' : 'height'
+
+      return deepMerge(computedStyles, {
+        [rootElement]: {
+          [dim]: value,
+        },
+      })
     }
 
     return computedStyles

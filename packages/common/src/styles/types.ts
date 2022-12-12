@@ -187,6 +187,8 @@ export type Spacing =
   | `padding${SpacingVariants}:${SpacingMultiplier}`
   | `margin${SpacingVariants}:${SpacingMultiplier}`
   | `gap:${SpacingMultiplier}`
+  | `w:${SpacingMultiplier}`
+  | `h:${SpacingMultiplier}`
 
 export type BaseViewProps = {
   css?: any
