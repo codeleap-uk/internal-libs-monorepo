@@ -306,6 +306,6 @@ export function usePagination<
       append,
       update: updateItem,
     },
-    // flatListProps,
+    options: params,
   }
 }
