@@ -44,7 +44,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     style,
     debugName,
     debugComponent,
-    debounce = 1000,
+    debounce = 500,
     noFeedback = false,
     styles,
     ...props
