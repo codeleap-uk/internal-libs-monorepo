@@ -193,7 +193,7 @@ export function usePermissionModal(permissionName: string) {
   const permissionCtx = usePermissions()
   const modalState = modals.state[modalId]
 
-  const currentState = permissionCtx.state[permissionName]
+  const currentState = permissionCtx?.state?.[permissionName]
   const status = currentState
   const [debouncedStatus, reset] = useDebounce(status, modals.transitionDuration * 0.5)
 
