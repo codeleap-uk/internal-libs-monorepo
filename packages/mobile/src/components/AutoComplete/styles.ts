@@ -121,8 +121,8 @@ export const AutoCompleteStyles = {
         width: 0,
       },
       header: {
-        ...theme.spacing.paddingHorizontal(2),
-        ...theme.spacing.paddingTop(1),
+        ...theme.spacing.paddingHorizontal(theme.values.innerSpacing.X),
+        ...theme.spacing.paddingVertical(theme.values.innerSpacing.Y),
         ...theme.presets.column,
         ...theme.presets.alignStart,
       },
