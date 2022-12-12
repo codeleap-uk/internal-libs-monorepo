@@ -13,7 +13,11 @@ export function isObject(x): x is object {
 export function isBoolean(x): x is boolean {
   return typeof x === 'boolean'
 }
-export function isFunction(x): x is (AnyFunction|(new (...args) => any)) {
+export function isFunction(x): x is (AnyFunction) {
+  return typeof x === 'function'
+}
+
+export function isConstructor(x): x is (new (...args) => any) {
   return typeof x === 'function'
 }
 export function isArray(x): x is any[] {
@@ -31,7 +35,7 @@ export function isNil(x): x is null | undefined {
   return isNull(x) || isUndefined(x)
 }
 
-export function is<T extends unknown>(x, Enum: T[]): x is T {
+export function is<T >(x, Enum: T[]): x is T {
   return Enum.includes(x)
 }
 type Abstract<T> = Function & {prototype: T}
