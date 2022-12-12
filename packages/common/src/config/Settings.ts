@@ -40,7 +40,6 @@ export type AppSettings = DeepPartial<{
     PrivacyPolicy: string
   }
   Fetch: {
-    ApiURL: string
     ProductionURL: string
     DevelopmentURL: string
   }

@@ -11,7 +11,7 @@ export function makeFetcher(
   override?: Partial<RequestClientConfig>,
 ) {
   return new RequestClient({
-    baseURL: settings.Fetch.ApiURL,
+    baseURL: settings.Environment.IsDev ? settings.Fetch.DevelopmentURL : settings.Fetch.ProductionURL,
     automaticMultipartParsing: true,
     ...override,
   })
