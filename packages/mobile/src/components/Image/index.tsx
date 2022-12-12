@@ -38,10 +38,20 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
     | number
   resizeMode?: keyof typeof FastImage.resizeMode
   spotlight?: string
+  maintainAspectRatioFrom?: 'width' | 'height' | 'none'
 }
 
 export const ImageComponent: React.FC<ImageProps> = (props) => {
-  const { variants, style, fast = true, spotlight = null, resizeMode = 'contain', source, ...imageProps } = props
+  const {
+    variants,
+    style,
+    fast = true,
+    spotlight = null,
+    resizeMode = 'contain',
+    source,
+    maintainAspectRatioFrom = 'height',
+    ...imageProps
+  } = props
 
   const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImageStyles>('u:Image', { variants })
 
@@ -60,12 +70,32 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     style: [variantStyles.touchable],
     android_ripple: null,
   }
+
+  const aspectRatioStyle = React.useMemo(() => {
+    if (maintainAspectRatioFrom === 'none' || !imSource) return null
+    try {
+      // @ts-ignore
+      const assetSource = NativeImage.resolveAssetSource(imSource)
+      const aspectRatio = assetSource.width / assetSource.height
+
+      if (Number.isNaN(aspectRatio)) {
+        return null
+      }
+      return {
+        aspectRatio,
+      }
+    } catch (e) {
+      return null
+    }
+
+  }, [maintainAspectRatioFrom, imSource])
+
   if (fast) {
     return (
       <Wrapper {...wrapperProps}>
 
         <FastImage
-          style={styles}
+          style={[aspectRatioStyle, styles]}
           // @ts-ignore
           tintColor={styles?.tintColor}
           source={imSource}
@@ -76,7 +106,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     )
   }
   return <Wrapper {...wrapperProps}>
-    <NativeImage style={styles} resizeMode={resizeMode} source={imSource} {...(imageProps as any)} />
+    <NativeImage style={[aspectRatioStyle, styles]} resizeMode={resizeMode} source={imSource} {...(imageProps as any)} />
 
   </Wrapper>
 }
