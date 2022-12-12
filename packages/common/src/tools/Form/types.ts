@@ -133,8 +133,7 @@ export type RadioField<T = any> = {
   required?: boolean
 } & WithTransformer<T>
 
-export type AnyFile = WebInputFile | MobileInputFile
-
+export type AnyFile = WebInputFile | MobileInputFile|string|number
 export type FileField = {
   type: 'file'
   allow?: string[]
