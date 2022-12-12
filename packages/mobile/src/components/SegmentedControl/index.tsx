@@ -69,6 +69,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     styles,
     transform: StyleSheet.flatten,
     variants,
+    rootElement: 'scroll',
   })
 
   const scrollRef = useRef<KeyboardAwareScrollViewTypes.KeyboardAwareScrollView>(null)
@@ -123,7 +124,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   _animation = JSON.parse(JSON.stringify(_animation))
 
   const labelStyles = getNestedStylesByKey('label', variantStyles)
-  return (<>
+  return (<View style={variantStyles.wrapper}>
     <InputLabel label={label} styles={labelStyles} required={false}/>
     <Scroll
       horizontal
@@ -136,7 +137,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
       }}
       ref={scrollRef}
     >
-      <View style={variantStyles.wrapper}>
+      <View style={variantStyles.innerWrapper}>
         <AnimatedView
           options={options}
           styles={variantStyles}
@@ -158,7 +159,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             key: idx,
             debugName: `Segmented Control ${debugName}, option ${o.label}`,
             onPress: onPress(o.value, idx),
-            style: [widthStyle, variantStyles.button],
+            style: [widthStyle, variantStyles.button, selected && variantStyles['button:selected']],
             ...props.touchableProps,
 
           }
@@ -194,7 +195,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
         })}
       </View>
     </Scroll>
-  </>
+  </View>
   )
 
 })

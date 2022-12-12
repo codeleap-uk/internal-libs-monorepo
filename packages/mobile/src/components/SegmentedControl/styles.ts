@@ -7,6 +7,7 @@ export type SegmentedControlStates = 'selected'
 export type SegmentedControlComposition =
  'selectedBubble' |
  'wrapper' |
+ 'innerWrapper' |
  'scroll' |
  'scrollContent' |
  'text' |
@@ -28,7 +29,7 @@ SegmentedControlComposition,
 SegmentedControlStylesGen
 >()
 
-const presets = includePresets((style) => createSegmentedControlStyle(() => ({ scrollContent: style })))
+const presets = includePresets((style) => createSegmentedControlStyle(() => ({ wrapper: style })))
 
 export const SegmentedControlStyles = {
   ...presets,
@@ -45,22 +46,25 @@ export const SegmentedControlStyles = {
       'text:selected': {
         color: theme.colors.white,
       },
+      wrapper: {
+        height: 'auto',
+      },
       scroll: {
         height: theme.values.buttons.default.height,
-        // borderRadius: Theme.borderRadius.large,
+        maxHeight: theme.values.buttons.default.height,
       },
       scrollContent: {
-        // borderRadius: Theme.borderRadius.large,
         ...theme.presets.row,
-        ...theme.spacing.paddingHorizontal(2),
         ...theme.presets.alignStretch,
+        height: theme.values.buttons.default.height,
+
       },
       button: {
         backgroundColor: 'transparent',
         ...theme.presets.alignCenter,
         ...theme.presets.justifyCenter,
 
-        borderRadius: theme.borderRadius.large,
+        borderRadius: theme.borderRadius.medium,
         ...theme.spacing.padding(1),
         minHeight: '100%',
 
@@ -69,18 +73,17 @@ export const SegmentedControlStyles = {
         position: 'absolute',
         zIndex: -1,
         ...theme.spacing.padding(2),
-        // maxHeight: 50,
-        // minHeight: 50,
         top: 0,
         bottom: 0,
-        borderRadius: theme.borderRadius.large,
+        borderRadius: theme.borderRadius.medium,
         backgroundColor: theme.colors.primary,
       },
-      wrapper: {
-        borderRadius: theme.borderRadius.large,
+      innerWrapper: {
+        borderRadius: theme.borderRadius.medium,
         backgroundColor: theme.colors.backgroundSecondary,
         ...theme.presets.row,
         position: 'relative',
+        height: theme.values.buttons.default.height,
       },
 
     }
