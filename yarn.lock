@@ -4060,11 +4060,6 @@
   resolved "https://registry.yarnpkg.com/@kwsites/promise-deferred/-/promise-deferred-1.1.1.tgz#8ace5259254426ccef57f3175bc64ed7095ed919"
   integrity sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==
 
-"@lukemorales/query-key-factory@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@lukemorales/query-key-factory/-/query-key-factory-1.0.3.tgz#d85352f2362a7ac90eba75db8a2edf58668ab0d4"
-  integrity sha512-50E4OCFbOUkHNCiHS5g2RzoDH2ZI0zg+k1/z0x9c9QqfotWNHSVSQ0F1Xb6cO+Ys/W+uMrECIFEcvzFJ/oVmFg==
-
 "@mdx-js/mdx@v1":
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-1.6.22.tgz#8a723157bf90e78f17dc0f27995398e6c731f1ba"
@@ -15552,7 +15547,7 @@ intl@^1.2.5:
   resolved "https://registry.yarnpkg.com/intl/-/intl-1.2.5.tgz#82244a2190c4e419f8371f5aa34daa3420e2abde"
   integrity sha1-giRKIZDE5Bn4Nx9ao02qNCDiq94=
 
-invariant@*, invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
+invariant@*, invariant@2.2.4, invariant@^2.2.2, invariant@^2.2.3, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -22353,6 +22348,14 @@ react-native-vector-icons@^9.0.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
+
+react-native-webview@^11.25.1:
+  version "11.25.1"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.25.1.tgz#d33c5b1f78dc725c4151b6f5f87d195dc3a7b7f0"
+  integrity sha512-uMQYcS+gpIjTm1cHJHiEaP/X3t5gqiLDzJmrTJy2zmkH4DyVmmzHTSkXJlz2x4F0EGRSiXBjFCA8Xi9wG4+6Yg==
+  dependencies:
+    escape-string-regexp "2.0.0"
+    invariant "2.2.4"
 
 react-native@0.66.4:
   version "0.66.4"
