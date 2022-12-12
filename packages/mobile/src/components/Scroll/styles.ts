@@ -1,10 +1,13 @@
-import { createDefaultVariantFactory } from '@codeleap/common'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 export type ScrollComposition = 'wrapper' |'content' | 'refreshControl'
 
 const createScrollStyle = createDefaultVariantFactory<ScrollComposition>()
 
+const presets = includePresets(style => createScrollStyle(() => ({ content: style })))
+
 export const ScrollStyles = {
+  ...presets,
   default: createScrollStyle((theme) => {
     return {
       wrapper: {
