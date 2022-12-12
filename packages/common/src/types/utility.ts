@@ -124,3 +124,7 @@ export type ReactStateProps<Name extends string, T = any, State extends ReactSta
 } & {
   [P in Name ]: State[0]
 }
+
+export type ExtractVariants<O extends VariantProp> = O extends VariantProp<infer X> ? keyof X : never
+
+export type MergeVariants<A extends VariantProp, B extends VariantProp> = (ExtractVariants<A> | ExtractVariants<B>)[]
