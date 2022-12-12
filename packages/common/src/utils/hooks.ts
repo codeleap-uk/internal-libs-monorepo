@@ -83,6 +83,14 @@ export function useBooleanToggle(initial: boolean) {
   return [v, toggleOrSet] as const
 }
 
+export function useModal(startsOpen = false) {
+  const [visible, toggle] = useBooleanToggle(startsOpen)
+
+  return {
+    visible, toggle,
+  }
+}
+
 type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>
 
 export function usePartialState<T = any>(initial: T | (() => T)) {
@@ -124,7 +132,7 @@ export function useInterval(callback: AnyFunction, interval: number, deps = []) 
   }
 }
 
-export function useDebounce<T extends unknown>(
+export function useDebounce<T>(
   value: T,
   debounce: number,
 ): [T, () => void] {
