@@ -206,9 +206,11 @@ export class RequestClient implements IRequestClient {
   }
 
   branch(branchConfig?: RequestClientConfig) {
-    const config = {
+    const config:RequestClientConfig = {
       ...this.config,
       ...branchConfig,
+      multipartParser: this.toMultipart,
+      logger: this.logger,
     }
 
     if (!!branchConfig?.baseURL) {
