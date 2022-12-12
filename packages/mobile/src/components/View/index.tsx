@@ -7,6 +7,7 @@ import {
   ViewStyles,
   BaseViewProps,
   useCodeleapContext,
+  useMemo,
 } from '@codeleap/common'
 import { View as NativeView } from 'react-native'
 import { MotiView, MotiProps } from 'moti'
@@ -73,26 +74,37 @@ type GapProps = ViewProps & {
 
 export const Gap:React.FC<GapProps> = ({ children, value, defaultProps = {}, ...props }) => {
   const { Theme } = useCodeleapContext()
+  const childArr = React.Children.toArray(children)
+
   const horizontal = props.variants?.includes('row')
+  const spacings = useMemo(() => {
+    return childArr.map((_, idx) => {
+      let spacingFunction = horizontal ? 'marginHorizontal' : 'marginVertical'
+
+      switch (idx) {
+        case 0:
+          spacingFunction = horizontal ? 'marginRight' : 'marginBottom'
+          break
+        case childArr.length - 1:
+          spacingFunction = horizontal ? 'marginLeft' : 'marginTop'
+          break
+        default:
+          break
+      }
+
+      return Theme.spacing[spacingFunction](value / 2)
+    })
+
+  }, [childArr.length, horizontal])
+
   return (
     <View {...props}>
       {
-        React.Children.toArray(children).map((Element, idx, childArr) => {
+        childArr.map((Element, idx, childArr) => {
           if (React.isValidElement(Element)) {
             const props = { ...Element.props, ...defaultProps }
 
-            let spacingFunction = horizontal ? 'marginHorizontal' : 'marginVertical'
-            switch (idx) {
-              case 0:
-                spacingFunction = horizontal ? 'marginRight' : 'marginBottom'
-                break
-              case childArr.length - 1:
-                spacingFunction = horizontal ? 'marginLeft' : 'marginTop'
-                break
-              default:
-                break
-            }
-            props.style = [props.style, Theme.spacing[spacingFunction](value / 2)]
+            props.style = [props.style, spacings[idx]]
             return React.cloneElement(Element, props)
           }
           return Element
