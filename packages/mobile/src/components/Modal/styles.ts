@@ -85,7 +85,7 @@ export const ModalStyles = {
       scrollContent: {
         ...theme.presets.alignCenter,
         ...theme.presets.justifyCenter,
-        minHeight: '100%',
+        flexGrow: 1,
         ...theme.presets.safeAreaTop(theme.values.innerSpacing.Y),
         ...theme.presets.safeAreaBottom(theme.values.innerSpacing.Y),
       },
@@ -110,6 +110,7 @@ export const ModalStyles = {
         flexDirection: 'row',
         ...theme.presets.justifySpaceBetween,
         ...theme.presets.alignCenter,
+        ...theme.presets.alignSelfStretch,
         ...theme.spacing.marginBottom(1),
       },
       closeButtonTouchableWrapper: {
@@ -126,18 +127,17 @@ export const ModalStyles = {
   }),
   popup: createModalStyle(() => ({})),
   fullscreen: createModalStyle((theme) => ({
-    overlay: {
-      backgroundColor: theme.colors.background,
-    },
-    'overlay:visible': {
-      opacity: 1,
+    scrollContent: {
+      paddingTop: 0,
+      paddingBottom: 0,
     },
     box: {
-      flex: 1,
+      width: '100%',
+      flexGrow: 1,
       borderRadius: 0,
-      width: theme.values.width,
-      height: theme.values.window.height,
       ...theme.presets.center,
+      ...theme.presets.safeAreaTop(theme.values.innerSpacing.Y),
+      ...theme.presets.safeAreaBottom(theme.values.innerSpacing.Y),
     },
   })),
 }
