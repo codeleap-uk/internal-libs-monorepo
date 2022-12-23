@@ -233,6 +233,7 @@ export type FormStep = 'setValue' | 'validate'
 export type UseFormConfig<T> = {
   log?: FormStep[]
   initialState?: DeepPartial<T>
+  validateOn?: 'change' | 'none'
 }
 
 export type PathsWithValues<T, D extends number = 10> = [D] extends [never]

@@ -23,7 +23,12 @@ export function useForm<
   Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<
     Form['config']
   >
->(form: Form, config: FormTypes.UseFormConfig<Values>) {
+>(form: Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
+
+    const config:FormTypes.UseFormConfig<Values> = {
+      validateOn: 'change',
+      ...formConfig
+    }
 
   const getInitialState = useCallback(() => {
     return deepMerge(form.defaultValue, config.initialState || {}) as Values
@@ -127,9 +132,9 @@ export function useForm<
   let registeredTextRefsOnThisRender = 0
   function register(field: FieldPaths[0]) {
     const nFields = registeredFields.current.length
-    // @ts-ignore
     const { changeEventName, validate, type, ...staticProps } =
-      form.staticFieldProps[field as string]
+    // @ts-ignore
+    form.staticFieldProps[field as string]
 
     const dynamicProps: any = {
       value: deepGet(field, formValues),
@@ -155,7 +160,9 @@ export function useForm<
           value = TypeGuards.isArray(value) && !!value.length ? value[0] : null
         }
 
-        validateField(field, true, value)
+        if(config.validateOn === 'change'){
+          validateField(field, true, value)
+        }
 
         // @ts-ignore
         setFieldValue(field, value)
