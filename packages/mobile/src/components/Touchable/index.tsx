@@ -8,6 +8,7 @@ import {
   useCodeleapContext,
   AnyFunction,
   TypeGuards,
+  onMount,
 } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView } from 'react-native'
 
@@ -29,6 +30,7 @@ export type TouchableProps = Omit<
   onPress?: AnyFunction
   noFeedback?: boolean
   debounce?: number
+  leadingDebounce?: boolean
   styles?: StylesOf<TouchableComposition>
 } & BaseViewProps
 export * from './styles'
@@ -45,11 +47,23 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     debugName,
     debugComponent,
     debounce = 500,
+    leadingDebounce,
     noFeedback = false,
     styles,
     ...props
   } = touchableProps
-  const pressed = React.useRef(false)
+
+  
+  const pressed = React.useRef(!!leadingDebounce)
+
+  onMount(() => {
+    if(!!leadingDebounce && !!debounce){
+      setTimeout(() => {
+        pressed.current = false
+      }, debounce)
+    }
+  })
+
   const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchableStyles>('u:Touchable', {
     variants,
     transform: StyleSheet.flatten,
