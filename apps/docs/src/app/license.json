@@ -35,12 +35,6 @@
         "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "axios@0.25.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/axios/axios",
-        "licenseUrl": "https://github.com/axios/axios/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
     "beautiful-react-hooks@1.2.0": {
         "licenses": "MIT",
         "repository": "https://github.com/antonioru/beautiful-react-hooks",
