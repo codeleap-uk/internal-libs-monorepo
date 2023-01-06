@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.3.23 (2023-01-04)
+
+### 2.3.22 (2022-12-30)
+
+
+### Bug Fixes
+
+* **mobile:** ignore react-native-device-info types ([f5c1f81](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f5c1f816d2b25f258db09c7d9a5f893a3529c058))
+
 ### 2.3.21 (2022-12-23)
 
 ### 2.3.20 (2022-12-12)
