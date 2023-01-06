@@ -22092,11 +22092,6 @@ react-native-device-info@^10.3.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-10.3.0.tgz#6bab64d84d3415dd00cc446c73ec5e2e61fddbe7"
   integrity sha512-/ziZN1sA1REbJTv5mQZ4tXggcTvSbct+u5kCaze8BmN//lbxcTvWsU6NQd4IihLt89VkbX+14IGc9sVApSxd/w==
 
-react-native-device-info@^8.4.9:
-  version "8.7.1"
-  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.1.tgz#fbb06f87dbbc4423abe713874699fb2e6e99fd15"
-  integrity sha512-cVMZztFa2Qn6qpQa601W61CtUwZQ1KXfqCOeltejAWEXmgIWivC692WGSdtGudj4upSi1UgMSaGcvKjfcpdGjg==
-
 react-native-document-picker@^8.0.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/react-native-document-picker/-/react-native-document-picker-8.1.0.tgz#e167a98b6fcdd1aee08597793029101d674eab83"
@@ -22696,6 +22691,11 @@ redux-middleware-flipper@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/redux-middleware-flipper/-/redux-middleware-flipper-1.0.9.tgz#cdcb21e1a6500c1c94d5d5a2d7ac02cb4382c60a"
   integrity sha512-8TrWjHpnj/lFuy5VLVsidHwnOf5TGAxsJNaBCopx8Nreda6VjjSazfWF4WyIe8FVkOWiIyOkbrKilbVsuzUwlw==
+
+redux-persist@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-6.0.0.tgz#b4d2972f9859597c130d40d4b146fecdab51b3a8"
+  integrity sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==
 
 redux-thunk@^2.4.0, redux-thunk@^2.4.1:
   version "2.4.1"
@@ -25960,6 +25960,13 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typedoc-plugin-markdown@^3.14.0:
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/typedoc-plugin-markdown/-/typedoc-plugin-markdown-3.14.0.tgz#17b99ee3ab0d21046d253f185f7669e80d0d7891"
+  integrity sha512-UyQLkLRkfTFhLdhSf3RRpA3nNInGn+k6sll2vRXjflaMNwQAAiB61SYbisNZTg16t4K1dt1bPQMMGLrxS0GZ0Q==
+  dependencies:
+    handlebars "^4.7.7"
 
 typedoc@^0.22.10:
   version "0.22.14"
