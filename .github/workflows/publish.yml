@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-      - apps/docs/**/*
+    paths:
+      - "packages/**/*"
 jobs:
   build:
     runs-on: ubuntu-latest

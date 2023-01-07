@@ -26,14 +26,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: eu-west-2
 
-
-      - name: Check if version has been updated
-        id: check
-        uses: EndBug/version-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          file-name: ./apps/docs/package.json
-
       - name: Version update detected
         if: steps.check.outputs.changed == 'true'
         run: |
