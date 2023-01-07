@@ -27,7 +27,6 @@ jobs:
           aws-region: eu-west-2
 
       - name: Version update detected
-        if: steps.check.outputs.changed == 'true'
         run: |
           yarn install
           yarn build
