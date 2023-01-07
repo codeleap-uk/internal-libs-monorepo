@@ -73,7 +73,7 @@ function ArticlePage({ children, pageContext }) {
         {children}
         {
           (next || previous) && <>
-            <View variants={['separator', 'marginVertical:3', 'fullWidth']} css={{ borderTopColor: Theme.colors.dark.neutral }} />
+            <View  css={style.bottomSeparator} />
             <View variants={['justifySpaceBetween', 'fullWidth']}>
               {
                 previous && <PageNavButton data={previous} type='previous'/>
@@ -93,6 +93,16 @@ function ArticlePage({ children, pageContext }) {
 
 }
 
+const style = variantProvider.createComponentStyle(theme => ({
+  bottomSeparator: {
+    ...theme.border.grayFade({
+      directions: ['top'],
+      width: 1,
+
+    }),
+    ...theme.presets.fullWidth
+  }
+}), true)
 export default ArticlePage
 
 const query = graphql`

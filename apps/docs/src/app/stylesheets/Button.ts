@@ -251,6 +251,7 @@ export const AppButtonStyle = {
       ...defaultVariant(theme).text,
       color: theme.colors.textH,
       textTransform: 'capitalize',
+      textAlign: 'left'
 
     },
     rightIcon: {
@@ -258,6 +259,11 @@ export const AppButtonStyle = {
       color: theme.colors.textH,
       transition: 'transform 0.2s ease',
     },
+    leftIcon: {
+      size: 0,
+      height: 0,
+      width: 0
+    }
   })),
   'icon:small': createButtonVariant(() => ({
     icon: {
