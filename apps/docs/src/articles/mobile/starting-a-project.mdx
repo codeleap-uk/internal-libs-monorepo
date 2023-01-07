@@ -1,0 +1,45 @@
+---
+title: Starting a mobile project
+---
+
+# With Codeleap CLI
+
+> INFO This section requires the Codeleap CLI. See the installation guide here
+
+Run the following in your projects folder.
+
+```bash
+codeleap create app-name
+```
+
+When prompted for the type of app to create, select `Mobile`
+
+The CLI will perform the following actions
+- Clone the [mobile template repository](https://github.com/codeleap-uk/mobile-template) into a folder named `x-app-name` in the current directory.
+- Create a Github repository in the codeleap organization for the new project
+
+At some point, the CLI will ask you to setup the Firebase project and drop the admin credentials file in it's folder.
+
+To do so follow the steps below 
+1. Go to the [Firebase console](https://console.firebase.google.com) and log in with your codeleap google account.
+2. Click on "Add project"
+3. For the name of the app, use `x-app-name`. Read about our naming conventions for management [here]()
+![Create project](fir_create_project.png)
+4. When prompted to enable analytics for your project, only do so if you know it's going to be necessary
+5. After the project has been created, go to the settings by pressing "Project Settings"
+![Go to project settings](fir_project_settings.png)
+6. In the Project Settings page, click "Generate new private key" under the "Service accounts" tab
+![Get private key](fir_private_key.png)
+7. Download the JSON file when prompted, and store it in 1password with the `app-name firebase private key`
+8. Inside the folder created by the CLI earlier, replace the contents of "firebase_admin.json" with  those of the file downloaded from firebase.
+9. Go back to your terminal, and press  "Enter" to continue the process.
+
+From this point on, the CLI should:
+
+- Rename the contents of android and ios folders to reflect the new project's name
+- Create an Android app for the new project with the correct keystores for release and debug
+- Create an IOS app for the new project
+- Commit changes to repository
+
+> INFO The steps above define all that's needed to have a basic working application, but some features such as Push Notifications for IOS and reporting with sentry require a bit more setup. You can find guides for such things [here]()
+

@@ -1,10 +1,11 @@
 {
     "root": [
-        "index"
+        "index",
+        "starting-a-project"
     ],
     "permissions": [
         "problem",
-        "our solution"
+        "our_solution"
     ],
     "components": [
         "button"
