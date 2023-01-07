@@ -4,14 +4,44 @@ title: 'Management'
 
 # Branching
 
-To save us from becoming a complete mess, we follow a basic git flow (see below). As of now we don't need anything fancy. The orange lane represents hot-fixes, the blue one in the middle the master version, and the green lanes are for developing features or experimenting.
 
+## Naming and separation
 
-![Branching example](branching-example.png)
+Branching methodology changes according to the tasks to be performed for a given branch, and can be broadly divided into two categories
 
-First of all, I really recommend using SourceTree or some other visual git inspector so that you can actually understand what the hell is going on.
+### Big or atomic tasks:
 
-Branches must be named as "type/YYMM-name", YYMM being the due milestone. For example:
+This category encompasses
 
-- `feature/YYMM-something-new` 
-- `fix/YYMM-some-bug`
+- Developing new screens/features
+- Integrating with a Service
+- Refactoring part of a codebase
+- Experimenting with different libraries or ways to solve a problem
+
+For this type of task, it's generally better to name branches in the following manner depending on the changes/additions to be made
+
+- For features/screens: `feat/<screen or feature name>`
+- For integrations: `feat/<service name>-integration`
+- For refactors: `refactor/<module to refactor>`
+- For experiments: `experiment/<library or solution name>`
+
+This makes it easy to track development accross multiple PR's with different collaborators, and test if what's developed works as expected without external interference before trying to integrate with other branches
+
+### Collections of small fixes
+
+This category is generally related to a Notion task with multiple bullet points refering to small fixes to be made to the application.
+
+To work with sprints and our weekly reviews for every project, these sort of branches would ideally follow the guidelines below:
+
+- Be named `fixes/<day of the review>-<month of the review>`
+- Have a link to the related Notion task
+- Be merged at most 7 after their creation
+
+## Tracking the status of branches
+
+When starting a new branch, it's good to open a PR as soon as possible. This allows reviewers to quickly see what's being changed in the project all at once, and choose to test what's been developed.
+
+If work on the branch has not been finished yet, prefix the PR's title with "WIP" (meaning work in progress), to let people know it's not done yet.
+
+Once done, remove "WIP" from the title and request the review of those involved in the project
+
