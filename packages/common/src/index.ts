@@ -7,6 +7,7 @@ export { silentLogger } from './constants'
 
 import * as ReactQuery from '@tanstack/react-query'
 import * as yup from 'yup'
+export * as ReduxToolKit from '@reduxjs/toolkit'
 
 export {
   ReactQuery,

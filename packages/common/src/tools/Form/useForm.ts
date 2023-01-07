@@ -219,6 +219,15 @@ export function useForm<
     }
   }
 
+  const setters = {} as FormTypes.FormSetters<Values>
+
+  for(const fieldName in formValues){
+    // @ts-ignore
+    setters[fieldName] = (value) => setFieldValue(fieldName, value)
+  }
+
+  
+
   return {
     setFieldValue,
     values: formValues as Values,
@@ -232,5 +241,6 @@ export function useForm<
     reset,
     validateMultiple,
     isValid: validateAll(),
+    setters
   }
 }

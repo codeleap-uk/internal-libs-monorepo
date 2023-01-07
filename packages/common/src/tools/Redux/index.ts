@@ -1,11 +1,12 @@
 import { deepMerge } from '../../utils'
-import { combineReducers, createStore, Store, applyMiddleware, compose } from '@reduxjs/toolkit'
+import { combineReducers, createStore as defaultCreateStore, Store, applyMiddleware, compose } from '@reduxjs/toolkit'
 import {
   Reducers,
   AsyncReducers,
   CreateSliceArgs,
   Slice,
   CreateReduxReturn,
+  CreateReduxOptions,
 } from './types'
 
 export function createSlice<
@@ -71,9 +72,15 @@ export function createSlice<
   } as unknown as Slice<S, N, R, AR>
 }
 
+
+
+
 export function createRedux<
   T extends Record<string, Slice<any, any, any, any>>
->(slices: T, middleware = [], ...xArgs: any[]): CreateReduxReturn<T> {
+>(slices: T, options: CreateReduxOptions<T>): CreateReduxReturn<T> {
+
+  const {middlewares = [], composeArgs = [], createStore = defaultCreateStore} = options
+
   const reducers = {} as Record<string, T[string]['reducer']>
   const rootInitialState = {} as { [x: string]: T[string]['initialState'] }
   const actionBuilders = {} as Record<string, T[string]['buildActions']>
@@ -86,15 +93,13 @@ export function createRedux<
     actionBuilders[name] = buildActions
   }
 
-  const middlewares = [
-    ...middleware,
-  ]
+
   const store = createStore(
     combineReducers(reducers),
     rootInitialState,
     compose(
       applyMiddleware(...middlewares),
-      ...(xArgs || []),
+      ...composeArgs,
     ),
 
   ) as CreateReduxReturn<T>['store']

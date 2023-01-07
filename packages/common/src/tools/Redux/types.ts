@@ -1,5 +1,5 @@
-import type { AnyAction, Dispatch, Store } from '@reduxjs/toolkit'
-import { createRedux, createSlice } from '.'
+import  type { Store, Dispatch, AnyAction, StoreEnhancer, PreloadedState, Reducer, Action } from '@reduxjs/toolkit'
+
 import { DeepPartial, FunctionType } from '../..'
 
 export type Reducers<S> = Record<
@@ -78,60 +78,25 @@ export type CreateReduxReturn<
 
 }
 
-// For testing
-type Post = {
-  id: number
-  username: string
-  created_datetime: string
-  title: string
-  content: string
+export interface StoreCreator<S, A extends Action, Ext, StateExt> {
+  (
+    reducer: Reducer<S, A>,
+    enhancer?: StoreEnhancer<Ext, StateExt>
+  ): Store<S & StateExt, A> & Ext
+  (
+    reducer: Reducer<S, A>,
+    preloadedState?: PreloadedState<S>,
+    enhancer?: StoreEnhancer<Ext>
+  ): Store<S & StateExt, A> & Ext
 }
 
-type PostState = {
-  posts: Post[]
-  loading: boolean
-  error: {
-    message: string
-  } | null
+export type CreateReduxOptions<
+  T extends Record<string, Slice<any, any, any, any>>,
+  RootState = {
+    [Property in keyof T]: T[Property]['initialState'];
 }
-
-// const initialState:PostState = {
-//   posts: [],
-//   loading: false,
-//   error: null,
-// }
-
-// const s = createSlice({
-//   name: 'posts',
-//   initialState,
-//   reducers: {
-//     pp: (state) => {
-//       return state
-//     },
-//   },
-//   asyncReducers: {
-//     getData: async (state, setState, o: string) => {
-//       setState({ loading: true })
-//       // api.get('/')
-//       //   .then(({data}) => {
-
-//       //     setState({loading: false, posts: data.results})
-
-//       //   }).catch(() => {
-
-//       //     setState({
-//       //       error: {
-//       //         message: 'Error fetching data',
-//       //       },
-//       //     })
-
-//       //   })
-//     },
-//   },
-// })
-
-// const a = createRedux({
-//   posts: s,
-// })
-
-// a.actions.posts.getData
+> = {
+  createStore?: StoreCreator<RootState,any, {}, {}>
+  middlewares?: any[]
+  composeArgs?: any[]
+}

@@ -251,3 +251,6 @@ export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
     }[keyof T]
   : ''
 export type FormShape<Form extends CreateFormReturn<any>> = MapValues<Form['config']>
+export type FormSetters<Values> = {
+  [Property in keyof Values]: (value: Values[Property]) => void
+}
