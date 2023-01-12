@@ -8,6 +8,7 @@ type TPermissionContext = {
   state: Record<string, PermissionTypes.PermissionStatus>
   modalConfig: PermissionModalsConfig<any>
   manager: PermissionManager<any, any>
+  setState: (forPermission: string, status: PermissionTypes.PermissionState) => void
 }
 
 const PermissionContext = React.createContext({} as TPermissionContext)
@@ -42,10 +43,19 @@ export function Provider({ children, AppPermissions, modalConfig }:PermissionPro
 
   })
 
+  const setPermissionState = (forPermission: string, status: PermissionTypes.PermissionState) => {
+    setState({
+      ...state,
+      [forPermission]: status
+    })
+  } 
+
+
   return <PermissionContext.Provider value={{
     state,
     modalConfig: modalConfig,
     manager: AppPermissions,
+    setState: setPermissionState
   }}>
     {children}
   </PermissionContext.Provider>
@@ -139,6 +149,7 @@ export const usePermissions:UsePermissions<any> = () => {
                 props: {
                   onPermissionResolve: (status) => {
                     resolve(status)
+                    permissionCtx.setState(permission, status)
                   },
                 },
               })
@@ -150,6 +161,8 @@ export const usePermissions:UsePermissions<any> = () => {
               modalCtx.toggleModal(permissionModalName, true, {
                 onPermissionResolve: (status) => {
                   resolve(status)
+                  permissionCtx.setState(permission, status)
+
                 },
               })
             })
