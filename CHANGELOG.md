@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.3.26 (2023-01-12)
+
+
+### Bug Fixes
+
+* **mobile:** fixes permission state not updating after permission request ([f627a93](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f627a939d94d3ca74cf6ced13a6a999c6045f8be))
+
 ### 2.3.25 (2023-01-07)
 
 ### 2.3.24 (2023-01-06)
