@@ -6,7 +6,7 @@ import {
 } from '@codeleap/common'
 
 import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-grid'
-import { RefreshControl, StyleSheet, RefreshControlProps } from 'react-native'
+import { RefreshControl, StyleSheet, RefreshControlProps, FlatList } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { GridComposition, GridStyles } from './styles'
@@ -27,7 +27,7 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 }
 
 export * from './styles'
-
+type GridRef = React.ClassAttributes<FlatGrid<any>>['ref']
 export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
@@ -41,7 +41,7 @@ export type GridProps<
     refreshControlProps?: Partial<RefreshControlProps>
   } & ComponentVariants<typeof GridStyles>
 
-const GridCP = forwardRef<FlatGrid, GridProps>(
+const GridCP = forwardRef<GridRef, GridProps>(
   (flatGridProps, ref) => {
     const {
       variants = [],
@@ -79,7 +79,7 @@ const GridCP = forwardRef<FlatGrid, GridProps>(
     const _gridProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
-      ref: ref as unknown as FlatGrid,
+      ref: ref as unknown as React.LegacyRef<GridRef>,
       ItemSeparatorComponent: separator,
       refreshControl:
           !!onRefresh && (
@@ -104,8 +104,10 @@ const GridCP = forwardRef<FlatGrid, GridProps>(
       ...keyboardAware,
     })
     return (
+      // @ts-ignore 
       <Component
         {...gridProps}
+        
       />
     )
   },

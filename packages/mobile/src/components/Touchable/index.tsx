@@ -17,22 +17,24 @@ import { TouchableComposition, TouchableStyles } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
-export type TouchableProps = Omit<
-  ComponentPropsWithoutRef<typeof Pressable>,
-  'onPress'
-> & {
-  variants?: ComponentVariants<typeof TouchableStyles>['variants']
-  component?: any
-  ref?: React.Ref<RNView>
-  debugName: string
-  activeOpacity?: number
-  debugComponent?: string
-  onPress?: AnyFunction
-  noFeedback?: boolean
-  debounce?: number
-  leadingDebounce?: boolean
-  styles?: StylesOf<TouchableComposition>
+export type TouchableProps = React.PropsWithChildren<
+  Omit<
+    ComponentPropsWithoutRef<typeof Pressable>,
+    'onPress'|'children'
+  > & {
+    variants?: ComponentVariants<typeof TouchableStyles>['variants']
+    component?: any
+    ref?: React.Ref<RNView>
+    debugName: string
+    activeOpacity?: number
+    debugComponent?: string
+    onPress?: AnyFunction
+    noFeedback?: boolean
+    debounce?: number
+    leadingDebounce?: boolean
+    styles?: StylesOf<TouchableComposition>
 } & BaseViewProps
+>
 export * from './styles'
 
 export const Touchable: React.FC<TouchableProps> = forwardRef<

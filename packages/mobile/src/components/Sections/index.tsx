@@ -77,7 +77,8 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       <KeyboardAwareSectionList
         style={[Theme.presets.full, style]}
         contentContainerStyle={[variantStyles.wrapper]}
-        ref={ref as unknown as SectionList}
+        // @ts-ignore
+        ref={ref}
         ItemSeparatorComponent={separator}
         {...props}
         refreshControl={

@@ -50,7 +50,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
   keyboardAware?: GetKeyboardAwarePropsOptions
-  scrollProps?: PropsOf<typeof Scroll>
+  scrollProps?: PropsOf<typeof Scroll,'ref'>
 }
 
 export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {

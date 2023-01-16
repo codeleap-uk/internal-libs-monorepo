@@ -9,15 +9,15 @@ import {
   useCodeleapContext,
   useMemo,
 } from '@codeleap/common'
-import { View as NativeView } from 'react-native'
+import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
 import { MotiView, MotiProps } from 'moti'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 
 export * from './styles'
 
-export type ViewProps = ComponentPropsWithoutRef<typeof NativeView> &
+export type ViewProps = RNViewProps &
   ComponentVariants<typeof ViewStyles> & {
-    ref?: any
+    ref?: React.ClassAttributes<NativeView>['ref']
     component?: any
     animated?: boolean
     keyboardAware?: GetKeyboardAwarePropsOptions
@@ -53,6 +53,7 @@ export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeV
       ...keyboardAware,
     },
   )
+
   return (
     <Component {..._props}>
       {children}
@@ -72,7 +73,7 @@ type GapProps = ViewProps & {
   defaultProps?: any
 }
 
-export const Gap:React.FC<GapProps> = ({ children, value, defaultProps = {}, ...props }) => {
+export const Gap:React.FC<React.PropsWithChildren<GapProps>> = ({ children, value, defaultProps = {}, ...props }) => {
   const { Theme } = useCodeleapContext()
   const childArr = React.Children.toArray(children)
 

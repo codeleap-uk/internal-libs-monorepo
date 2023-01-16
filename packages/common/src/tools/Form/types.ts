@@ -222,7 +222,7 @@ export type MapValues<T extends FieldsMap> = {
 
 export type CreateFormReturn<T extends FieldsMap> = {
   config: T
-  defaultValue: MapValues<T>
+  defaultValue: MapValues<ValidateFieldsMap<T>>
   staticFieldProps: Record<string, any>
   name: string
   numberOfTextFields: number

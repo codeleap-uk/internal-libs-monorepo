@@ -1,4 +1,4 @@
-import { VariableSizeList as VirtualList } from 'react-window'
+import { VariableSizeList as VirtualList , VariableSizeListProps} from 'react-window'
 import { ComponentProps, CSSProperties, ReactElement } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import {
@@ -23,7 +23,7 @@ export type ListProps<T> = {
   getSize: (i: T, idx: number) => number
   renderItem: ListRender<T>
 } & Omit<
-  ComponentProps<typeof VirtualList>,
+  VariableSizeListProps,
   | 'itemCount'
   | 'itemSize'
   | 'itemData'
@@ -56,6 +56,7 @@ export const List = <T extends unknown>(
   return (
     <AutoSizer>
       {({ height, width }) => (
+        // @ts-ignore
         <VirtualList
           height={height}
           width={width}
