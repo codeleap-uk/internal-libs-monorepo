@@ -25,7 +25,7 @@ type TSpotlightCtx = {
 
 const SpotlightCtx = React.createContext({} as TSpotlightCtx)
 
-export const SpotlightProvider:React.FC = ({ children }) => {
+export const SpotlightProvider:React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const [spotlights, setSpotlights] = useState<TSpotlightCtx['spotlights']>({})
   const [indexes, setIndexes] = useState<TSpotlightCtx['indexes']>({})
   const ctxValue:TSpotlightCtx = {

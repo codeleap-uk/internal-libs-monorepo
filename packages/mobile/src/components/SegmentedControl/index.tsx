@@ -10,6 +10,7 @@ import { Text, TextProps } from '../Text'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { View } from '../View'
 import { InputLabel } from '../InputLabel'
+
 export * from './styles'
 export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrollView & {
   scrollTo: (index: number) => void

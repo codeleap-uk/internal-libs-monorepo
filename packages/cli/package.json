@@ -14,10 +14,11 @@
     "@types/inquirer": "^8.2.0",
     "@types/libsodium-wrappers": "^0.7.10",
     "cross-env": "^7.0.3",
+    "@codeleap/common": "*",
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
-    "@codeleap/common": "*"
+    "@codeleap/common": ""
   },
   "scripts": {
     "build": "tsc --build",
@@ -27,21 +28,19 @@
     "dev": "cross-env CODELEAP_CLI_DEV_MODE=true tsnd --transpile-only src/index.ts"
   },
   "dependencies": {
-    "@google-cloud/resource-manager": "^4.1.1",
     "axios": "^1.1.3",
     "chalk": "4.1.2",
     "chalk-animation": "^1.6.0",
     "cleye": "^1.1.0",
     "dive": "^0.5.0",
     "figlet": "^1.5.2",
-    "firebase-admin": "^11.0.1",
+    "firebase-admin": "^11.4.1",
     "generate-password": "^1.7.0",
     "inquirer": "^8.2.0",
     "libsodium-wrappers": "^0.7.10",
     "nanospinner": "^1.0.0",
     "node-keytool": "^0.0.3",
     "octokit": "^2.0.10",
-    "react": "^17.0.2",
     "react-icons": "^4.3.1",
     "simple-git": "^3.15.0",
     "yup": "^0.32.11"

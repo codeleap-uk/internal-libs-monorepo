@@ -58,6 +58,7 @@ export const Pager:React.FC<PagerProps> = (pagerProps) => {
 
   const lastPage = nChildren - 1
 
+
   const childArr = React.Children.toArray(children)
 
   const WrapperComponent = renderPageWrapper || View

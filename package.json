@@ -21,6 +21,8 @@
       "**/@react-native-firebase/messaging",
       "**/@react-native-firebase/messaging/**",
       "**/react",
+      "**/@types/react*",
+      "**/@types/react",
       "**/moti",
       "**/react-native-reanimated",
       "**/react-native-image-crop-picker/**",
@@ -79,7 +81,9 @@
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
     "turbo": "1.1.2",
-    "typedoc": "^0.22.10"
+    "typedoc": "^0.22.10",
+    "typescript": "4.5.4",
+    "ts-node-dev": "^1.1.8"
   },
   "engines": {
     "npm": ">=7.0.0",

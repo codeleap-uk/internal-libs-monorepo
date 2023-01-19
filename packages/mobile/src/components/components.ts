@@ -34,9 +34,6 @@ export * from './Grid'
 export * from './InputLabel'
 export * from './ActionIcon'
 
-import * as Legacy from './legacy'
-export {
-  Legacy,
-}
+
 
 export * from './defaultStyles'

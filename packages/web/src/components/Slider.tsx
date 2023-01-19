@@ -5,5 +5,6 @@ type SliderProps = RCSliderProps & {}
 export const Slider: React.FC<SliderProps> = (sliderProps) => {
   const { ...props } = sliderProps
 
+  //@ts-ignore
   return <RCSlider {...props} />
 }

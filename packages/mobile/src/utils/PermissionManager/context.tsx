@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { ModalManager } from '@codeleap/mobile'
+import { useModalContext } from '../ModalManager/context'
 import { deepEqual, onMount, onUpdate, PermissionManager, PermissionTypes, useDebounce, usePrevious } from '@codeleap/common'
 import { AppState, Linking } from 'react-native'
 import { PermissionConfig, PermissionModalsConfig } from './types'
@@ -84,7 +84,7 @@ export type UsePermissions<
 }
 
 export const usePermissions:UsePermissions<any> = () => {
-  const modalCtx = ModalManager.useModalContext()
+  const modalCtx = useModalContext()
   const permissionCtx = useContext(PermissionContext)
 
   function askPermission(name: string, onResolve?: (status: PermissionTypes.PermissionStatus, modalName?: string) => any) {
@@ -202,7 +202,7 @@ export const usePermissions:UsePermissions<any> = () => {
 export function usePermissionModal(permissionName: string) {
 
   const modalId = `permissions.${permissionName}`
-  const modals = ModalManager.useModalContext()
+  const modals = useModalContext()
   const permissionCtx = usePermissions()
   const modalState = modals.state[modalId]
 
@@ -280,7 +280,6 @@ export function usePermissionModal(permissionName: string) {
     },
     currentState,
     config,
-
   }
 }
 

@@ -109,7 +109,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       ...keyboardAware,
 
     })
-    const Component = animated ? MotiScrollView : ScrollView
+    const Component = (animated ? MotiScrollView : ScrollView ) as unknown as typeof ScrollView
 
     return (
       <Component

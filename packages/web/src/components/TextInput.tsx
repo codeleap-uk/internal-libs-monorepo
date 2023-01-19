@@ -35,7 +35,7 @@ type NativeProps = ComponentPropsWithoutRef<'input'> &
   ComponentPropsWithoutRef<'textarea'>
 
 export type TextInputProps = ComponentVariants<typeof TextInputStyles> &
-  Omit<NativeProps, 'value'> & {
+  Omit<NativeProps, 'value'|'crossOrigin'> & {
     multiline?: boolean
     onChangeText?: (text: string) => void
     disabled?: boolean
