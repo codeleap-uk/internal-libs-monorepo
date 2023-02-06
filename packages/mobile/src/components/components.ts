@@ -32,6 +32,7 @@ export * from './MultiSelect'
 export * from './AutoComplete'
 export * from './Grid'
 export * from './InputLabel'
+export * from './LoadingOverlay'
 export * from './ActionIcon'
 
 
