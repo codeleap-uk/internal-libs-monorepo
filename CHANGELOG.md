@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 2.4.0 (2023-02-06)
+
+
+### Features
+
+* **mobile:** adds (optional) LoadingOverlay to image ([851f262](https://github.com/codeleap-uk/internal-libs-monorepo/commit/851f26255962d8868a6e3f6478ba71b3be5f8ee4))
+
 ### 2.3.28 (2023-01-19)
 
 ### 2.3.27 (2023-01-19)
