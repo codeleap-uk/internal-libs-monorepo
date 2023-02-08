@@ -38,8 +38,10 @@ jobs:
           yarn release
           chmod +x ./publish.sh
           ./publish.sh
+          yarn notifyVersion
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }} 
 
       - name: Git push
         if: always()
