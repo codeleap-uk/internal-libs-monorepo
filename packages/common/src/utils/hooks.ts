@@ -383,3 +383,15 @@ export function useId(prefix?: string) {
   const id = useRef(uniqueId(prefix))
   return id.current
 }
+
+
+export function useForceRender(){
+  const [_, forceRender] = useReducer((x) => x+1, 0)
+
+  return forceRender
+}
+
+export function useCounter(){
+  return useReducer((x) => x+1, 0)
+
+}
