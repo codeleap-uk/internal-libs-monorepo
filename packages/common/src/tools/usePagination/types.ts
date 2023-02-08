@@ -4,6 +4,7 @@ import {
   UseQueryOptions,
   InfiniteData,
 } from '@tanstack/react-query'
+import { GetPaginationDataParams } from './utils'
 
 export type PaginationParams = {
     limit: number
@@ -53,9 +54,10 @@ export type UsePaginationParams<
     keyExtractor: (item: TItem) => string | number
     sort?: (a: TItem, b: TItem) => number
     beforeMutate?: (action: MutationOps) => void | Promise<void>
-    filter?: Parameters<TItem[]['filter']>[0]
+    filter?: GetPaginationDataParams<TItem>['filter']
     deriveData?: DeriveDataFn<TItem>
     afterMutate?: (action: MutationOps, result: MutationResult<TItem>) => void | Promise<void>
+    listDeps?: any[]
     where?: RetrieveArg
     limit?: number
     appendTo?: 'start' | 'end'
