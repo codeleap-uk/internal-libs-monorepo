@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.4.2 (2023-02-09)
+
+
+### Bug Fixes
+
+* **mobile:** fixes image loading overlay displaying animation for fast loads, improves loading overlay perf ([456cfe7](https://github.com/codeleap-uk/internal-libs-monorepo/commit/456cfe7837917a07c2250056c1557827085d2160))
+
 ### 2.4.1 (2023-02-08)
 
 ## 2.4.0 (2023-02-06)
