@@ -73,7 +73,7 @@ export type UsePaginationParams<
   })
 export type OperationKey = keyof UsePaginationParams<any>['overrides']
 export type AppendToPaginationParams<TItem = any> = {
-  item:TItem, to?: 'start' | 'end', modifyPageQuery?: boolean
+  item:TItem|TItem[], to?: 'start' | 'end', modifyPageQuery?: boolean
 }
 export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>
 

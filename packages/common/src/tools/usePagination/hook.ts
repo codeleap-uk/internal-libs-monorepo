@@ -151,15 +151,16 @@ export function usePagination<
 
   const append:AppendToPagination<TItem> = (args) => {
     return queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+      const itemsToAppend = TypeGuards.isArray(args.item) ? args.item : [args.item]
       if (args.to == 'end') {
         const idx = old.pages.length - 1
-        old.pages[idx].results.push(args.item)
+        old.pages[idx].results.push(...itemsToAppend)
 
         // @ts-ignore
         old.pageParams[idx].limit += 1
 
       } else {
-        old.pages[0].results.unshift(args.item)
+        old.pages[0].results.unshift(...itemsToAppend)
         // @ts-ignore
         old.pageParams[0].limit += 1
 
