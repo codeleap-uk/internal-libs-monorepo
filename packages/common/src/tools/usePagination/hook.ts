@@ -157,12 +157,12 @@ export function usePagination<
         old.pages[idx].results.push(...itemsToAppend)
 
         // @ts-ignore
-        old.pageParams[idx].limit += 1
+        old.pageParams[idx].limit += itemsToAppend.length
 
       } else {
         old.pages[0].results.unshift(...itemsToAppend)
         // @ts-ignore
-        old.pageParams[0].limit += 1
+        old.pageParams[0].limit += itemsToAppend.length
 
       }
       return old
