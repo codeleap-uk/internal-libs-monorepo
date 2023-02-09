@@ -44,7 +44,7 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
     | number
   resizeMode?: keyof typeof FastImage.resizeMode
   spotlight?: string
-  maintainAspectRatioFrom?: 'width' | 'height' | 'none'
+  maintainAspectRatio?: boolean
   withLoadingOverlay?: boolean | React.FC<LoadingOverlayProps>
 }
 
@@ -61,7 +61,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     resizeMode = 'contain',
     source,
     withLoadingOverlay = false,
-    maintainAspectRatioFrom = 'height',
+    maintainAspectRatio = true,
     ...imageProps
   } = props
 
@@ -86,10 +86,11 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
   }
 
   const aspectRatioStyle = React.useMemo(() => {
-    if (maintainAspectRatioFrom === 'none' || !imSource) return null
+    if (!maintainAspectRatio|| !imSource) return null
     try {
       // @ts-ignore
       const assetSource = NativeImage.resolveAssetSource(imSource)
+
       const aspectRatio = assetSource.width / assetSource.height
 
       if (Number.isNaN(aspectRatio)) {
@@ -102,24 +103,38 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
       return null
     }
 
-  }, [maintainAspectRatioFrom, imSource])
+  }, [maintainAspectRatio, imSource])
 
+  const loadEndedEarly = React.useRef(false)
 
-  const loadProps = {
-    onLoadStart: () => setLoading(true), onLoadEnd: () => setLoading(false)
-  }
+  const loadProps = React.useRef({
+    onLoadStart: () => {
+      if(withLoadingOverlay) {
+        setTimeout(() => {
+          if(!loadEndedEarly.current){
+            setLoading(true)
+          }
+        },60)
+      }
+    }, onLoadEnd: () => {
+      loadEndedEarly.current = true
+      if(withLoadingOverlay) setLoading(false)
+    }
+  })
 
   const Loading = TypeGuards.isFunction(withLoadingOverlay) ? withLoadingOverlay : LoadingOverlay
   const showLoading = !!withLoadingOverlay
 
   const overlayStyle = React.useMemo(() => getNestedStylesByKey('overlay', variantStyles), [variantStyles])
 
-  const loadingElement = showLoading ? (
-    <Loading visible={loading} styles={overlayStyle}/>
-
-    ) : null
+  const loadingElement = React.useMemo(() =>  {
+    return showLoading ? (
+      <Loading visible={loading} styles={overlayStyle}/>
+  
+      ) : null
+  }, [showLoading, loading])
     
-
+  
   if (fast) {
     return (
       <Wrapper {...wrapperProps}>
@@ -130,7 +145,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
           tintColor={styles?.tintColor}
           source={imSource}
           resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
-          {...loadProps}
+          {...loadProps.current}
           {...imageProps}
         />
         {loadingElement}
@@ -142,7 +157,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
       style={[aspectRatioStyle, styles]} 
       resizeMode={resizeMode} 
       source={imSource} {...(imageProps as any)}  
-      {...loadProps}
+      {...loadProps.current}
     />
     {
       loadingElement
