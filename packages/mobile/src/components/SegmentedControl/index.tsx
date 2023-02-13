@@ -2,7 +2,7 @@ import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react
 import { Scroll, ScrollProps } from '../Scroll'
 
 import { Easing, EasingFunction, StyleSheet } from 'react-native'
-import { FormTypes, getNestedStylesByKey, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
+import { FormTypes, getNestedStylesByKey, PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlStyles } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
@@ -47,6 +47,9 @@ const defaultAnimation = {
 }
 
 const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
+
+  const { Theme } = useCodeleapContext()
+
   const {
     options = [],
     onValueChange,
@@ -57,7 +60,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     animation = {},
     variants = [],
     scrollProps = {},
-    getItemWidth = (i) => i.label.length * 20,
+    getItemWidth = (i) => (Theme.values.width - Theme.spacing.value(4)) / options.length,
     RenderAnimatedView,
     RenderButton,
   } = props
