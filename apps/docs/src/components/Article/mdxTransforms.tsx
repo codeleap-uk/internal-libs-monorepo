@@ -31,11 +31,12 @@ const blockquoteStyles = variantProvider.createComponentStyle((theme) => {
       backgroundColor: theme.colors[k] + '20',
       borderRadius: theme.borderRadius.small,
     }
-
+    
     s[`${k}-icon`] = {
       color: theme.colors[k],
       height: 24,
       width: 24,
+      alignSelf: 'flex-start',
       ...theme.spacing.marginRight(1),
     }
   })
