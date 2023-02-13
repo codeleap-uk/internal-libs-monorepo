@@ -49,7 +49,7 @@ const SectionText = (props:{node:Node}) => {
     return <View variants={['column', 'gap:2']}>
       <Link variants={['h4']} text={node.text} to={`#${nodeId}`} />
       {
-        node.children?.map(node => <SectionText node={node} />)
+        node.children?.map((node,idx) => <SectionText node={node} key={idx} />)
       }
     </View>
 
@@ -65,7 +65,7 @@ export const SectionMap:React.FC = ({ content }) => {
   return <View css={styles.wrapper}>
     <Text variants={['h4', 'primary']} text={'Table of contents'}/>
     {
-      contentSections.map(node => <SectionText node={node} />)
+      contentSections.map((node,idx)=> <SectionText node={node} key={idx}/>)
     }
   </View>
 }

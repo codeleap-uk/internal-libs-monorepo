@@ -22,32 +22,50 @@ The structure of this folder is as follows:
     - {category}
         - ...articles
     - ...articles without category
-    - order.json (file used for determining order of articles on navbar and automatically assigning previous and next buttons at the end of articles)
+    - order.json (file used for determining order of articles on navbar and automatically assigning previous and next buttons at their end)
 
-## To clarify 
+Where:
 
-- {module} is either: 
-    - One of ['mobile', 'common', 'web'], which is literally the name of one of our npm libraries
-    - 'concepts', which is a category of it's own dedicated to holding documentation about our culture, procedures, and overarching technical concepts
-- {category} is the subgroup of articles inside the documentation of module, so for a component library, you could have `components` and `hooks` categories to separate content. If a category is not specified (the .mdx file is at the root of the module's folder), it's simply placed at the root in the navbar.
+- {module} is one of: mobile, common, web, cli or "concepts", which is a category of it's own dedicated to holding documentation about our culture, procedures, and overarching technical concepts
+- {category} is the subgroup of articles inside the documentation of a module, so for a component library, you could have `components` and `hooks` categories to separate content. If a category is not specified (the .mdx file is at the root of the module's folder), it's simply placed at the root in the navbar.
 
-The `order.json` file at the root has the following structure:
+The `order.json` file at the root of each `module` has the following structure:
 ```json
-{   // The order of keys matters here. In this example, root items would appear first, then the inner list for category-1, and finally for category-2
-    "root": [ // This tells the order in which to render root items
-        "index"
-    ],
-    "category-1": [ // This is the order of the collapsible list for each category
-        "article1",
-        "article2"
-    ],
-    "category-2": [
-        "article3",
-        "article4"
-    ]
-}
-
+[
+    {
+        "name": "root",
+        "items": [
+            "index",
+            "typescript"
+        ]
+    },
+    {
+        "name": "workflow",
+        "items": [
+            "contributing",
+            "pr-template",
+            "management"
+        ]
+    },
+    {
+        "name": "styling",
+        "items": [
+            "fundamentals",
+            "theme"
+        ]
+    }
+]
 ```
+
+The example above produces the following output
+
+![Order output](order_json_output.png)
+
+For each of these objects, name can be either `root` or the name of the folder in which the mdx file resides. If name is root, links to articles are placed on the top level of the navbar without a dropdown ("Welcome to Codeleap" and "Typescript 101" in the example above). 
+
+`items` is an array of the filenames inside the folder (or beside the order file if `name` is `root`), which dictates their order of exhibition.
+
+Keep in mind that the title displayed in the navbar is determined inside the `mdx` file itself
 
 So, in summary, just determine where what you wish to write should go based on the existing folder structure, and where in the order of articles it should be placed, then start writing.
 
