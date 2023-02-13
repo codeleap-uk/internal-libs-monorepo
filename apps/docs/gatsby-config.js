@@ -67,6 +67,14 @@ module.exports = {
       },
       __key: 'images',
     },
+    {
+      resolve: 'gatsby-plugin-copy-files-enhanced',
+      options: {
+          source: `${__dirname}/src/images` ,
+          destination: '/images',
+          purge: true,
+      }
+  }
     // {
     //   resolve: 'gatsby-plugin-firebase',
     //   options: {

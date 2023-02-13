@@ -1,12 +1,12 @@
 import { React, Text, Button, View, Theme, variantProvider, Icon, Checkbox } from '@/app'
 import CodeThemes from '@/app/stylesheets/Code'
 import { copyToClipboard } from '@/utils/dom'
-import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor, useBooleanToggle } from '@codeleap/common'
+import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor, useBooleanToggle, onMount } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Image } from '../Image'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
-
+import {PhotoView} from 'react-photo-view'
 function copy(text:string) {
   return copyToClipboard(text)
 }
@@ -186,10 +186,14 @@ export const mdxTransforms = {
   },
   img: (props) => {
 
+    const fullSrc = `/images/${props.src}`
+    
     return <>
-      <Image source={props.src} alt={props.alt} />
-      <Text text={props.alt} variants={['textCenter', 'subtle']}/>
-    </>
+        <PhotoView src={fullSrc}>
+          <Image source={props.src} alt={props.alt} />
+          </PhotoView>
+        <Text text={props.alt} variants={['textCenter', 'subtle']}/>
+      </>
   },
   a: (props) => {
     const isExternal = useMemo(() => {
