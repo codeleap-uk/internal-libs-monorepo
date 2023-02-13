@@ -1,27 +1,31 @@
 module.exports = {
     types: [
-      { value: 'feat', name: 'feat: A new feature' },
-      { value: 'fix', name: 'fix: A bug fix' },
-      { value: 'docs', name: 'docs: Documentation only changes' },
+      { value: 'feat', name: 'feat: A new feature', section: "Features" },
+      { value: 'fix', name: 'fix: A bug fix', section: "Bug fixes" },
+      { value: 'docs', name: 'docs: Documentation only changes', section: "Documentation" },
       {
         value: 'style',
         name: 'style: Changes that do not affect the meaning of the code, (white-space, formatting, missing semi-colons, etc)',
+        hidden: true
       },
       {
         value: 'refactor',
         name: 'refactor: A code change that neither fixes a bug nor adds a feature',
+        hidden: true
       },
       {
         value: 'perf',
         name: 'perf: A code change that improves performance',
+        hidden: true
       },
-      { value: 'test', name: 'test: Adding missing tests' },
+      { value: 'test', name: 'test: Adding missing tests', hidden: true },
       {
         value: 'chore',
         name: 'chore: Changes to the build process or auxiliary tools, and libraries such as documentation generation',
+        hidden: true
       },
-      { value: 'revert', name: 'revert:   Revert to a commit' },
-      { value: 'WIP', name: 'WIP: Work in progress' },
+      { value: 'revert', name: 'revert:   Revert to a commit', hidden: true },
+      { value: 'WIP', name: 'WIP: Work in progress', hidden: true },
     ],
   
     scopes: [{ name: 'mobile' }, { name: 'web' }, { name: 'common' }, { name: 'cli' }, { name: "mobile-template"}, {name: "web-template"}, {name: "documentation"},{name: 'tooling'}],

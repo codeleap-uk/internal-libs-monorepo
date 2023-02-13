@@ -7,10 +7,11 @@ import { walkDir } from '../walk'
 import firebase from 'firebase-admin'
 import Keytool from 'node-keytool'
 import { parseFilePathData } from '@codeleap/common'
-import { firebaseApp } from '../firebase'
+import { AndroidConfigFile } from './keystore'
 
 type RenameAndroidOptions = {
     changeBundle?: boolean
+    firebase?: firebase.app.App
 }
 
 export async function renameAndroid(
@@ -19,6 +20,7 @@ export async function renameAndroid(
   options?: RenameAndroidOptions,
 ) {
   const newBundleName = getNewBundleName(newName)
+  const {firebase=null} = options || {}
 
   const androidManifest = fs.readFileSync(
     path.join(androidFolder, 'app', 'src', 'main', 'AndroidManifest.xml'),
@@ -100,15 +102,16 @@ export async function renameAndroid(
 
     }
   })
-  if (!firebaseApp) return
+  if (!firebase) return
   const pm = firebase.projectManagement()
-
+  console.log(pm.app.options,pm.app.name)
   const androidAppReqs = (await pm.listAndroidApps()).map(async a => {
     return {
       ...a,
       meta: (await a.getMetadata()),
     }
   })
+  console.log(androidAppReqs)
   const androidApps = await Promise.all(androidAppReqs)
   const googleServiceFile = path.join(androidFolder, 'app', 'google-services.json')
   if (!androidApps.some(a => a.meta.packageName === newBundleName)) {
@@ -123,6 +126,12 @@ export async function renameAndroid(
       withFileTypes: true,
     })
 
+    const gradleProperties = new AndroidConfigFile(
+      path.join(
+        androidFolder, 'app','keystores','config.json'
+      )
+    )
+
     for (const keystore of keystores) {
       const keyPathData = parseFilePathData(keystore.name)
       const valid = ['jks', 'keystore'].includes(keyPathData.extension) && keystore.isFile()
@@ -134,16 +143,15 @@ export async function renameAndroid(
         'keystore': 'PKCS12',
         'jks': 'JKS',
       }
-      const gradleProperties = readGradleProperties(androidFolder)
 
       const key = Keytool(
         path.join(keystoresFolder, keystore.name),
-        gradleProperties[`${keyPathData.name.toUpperCase()}_KEY_PASSWORD`],
+        gradleProperties[keystore.name].storePassword,
         { debug: false, storeType: storeTypeMap[keyPathData.extension] },
       )
 
       key.list((err, vals) => {
-        vals.certs.forEach(c => {
+        return vals.certs.forEach(c => {
           newApp.addShaCertificate({
             certType: c.algorithm.toLowerCase().replace('-', ''),
             shaHash: c.fingerprint,

@@ -10,8 +10,14 @@ const packageJson = require('../package.json')
 
 cli({
   name: 'codeleap',
-  commands: [generateReleaseKey, renameMobileCommand, createAppCommand, configureCommand],
+  commands: [
+    generateReleaseKey, 
+    renameMobileCommand, 
+    createAppCommand, 
+    configureCommand
+  ],
   version: packageJson.version,
+
 })
 
 export {}
