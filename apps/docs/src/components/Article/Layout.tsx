@@ -68,7 +68,7 @@ function ArticlePage({ children, pageContext }) {
   }} variants={['mainContent']}>
     <Navbar pages={pages} title={navTitle}/>
     {isMobile && <SearchBar items={flatData}/>}
-    <Article>
+    <Article title={title}>
       <MDXProvider components={mdxTransforms}>
         {children}
         {
