@@ -2,6 +2,7 @@
 import { cli } from 'cleye'
 import { configureCommand } from './commands/configure'
 import { createAppCommand } from './commands/createApp'
+import { downloadKeystores } from './commands/downloadKeystores'
 import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 
@@ -14,7 +15,8 @@ cli({
     generateReleaseKey, 
     renameMobileCommand, 
     createAppCommand, 
-    configureCommand
+    configureCommand,
+    downloadKeystores
   ],
   version: packageJson.version,
 

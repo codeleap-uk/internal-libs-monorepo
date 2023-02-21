@@ -1,12 +1,12 @@
 /* eslint-disable handle-callback-err */
-import { getNewBundleName } from '../utils'
+import { getNewBundleName, parseFilePathData } from '../utils'
 import { getAndroidAppName, getAndroidBundleId, readGradleProperties } from './utils'
 import path from 'path'
 import fs from 'fs'
 import { walkDir } from '../walk'
 import firebase from 'firebase-admin'
 import Keytool from 'node-keytool'
-import { parseFilePathData } from '@codeleap/common'
+
 import { AndroidConfigFile } from './keystore'
 
 type RenameAndroidOptions = {
