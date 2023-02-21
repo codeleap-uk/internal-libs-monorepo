@@ -191,9 +191,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
       style={getStyles('wrapper')}
       debugName={debugName}
       onPress={handlePress}
-      {...wrapperProps}
-      android_ripple={null}
       noFeedback
+      android_ripple={null}
+      {...wrapperProps}
     >
       <InputLabel
         label={label}

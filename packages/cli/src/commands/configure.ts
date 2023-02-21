@@ -1,4 +1,4 @@
-// import { waitFor } from '@codeleap/common'
+
 import { codeleapCommand } from '../lib/Command'
 import { fs, inquirer } from '../lib'
 import '../lib/firebase'

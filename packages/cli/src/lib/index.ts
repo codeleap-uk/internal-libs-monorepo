@@ -5,7 +5,7 @@ export { default as inquirer } from 'inquirer'
 import { Octokit } from 'octokit'
 import simpleGit from 'simple-git'
 import { cwd, USER_CONFIG } from '../constants'
-
+console.log(cwd)
 export const git = simpleGit({
   baseDir: cwd,
 })

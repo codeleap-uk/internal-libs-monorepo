@@ -1,7 +1,7 @@
 import { git, fs, path } from '..'
 
 export async function initRepoFromTemplate(templateUrl:string, location: string) {
-  await git.clone(templateUrl, location)
+  await git.raw('clone', templateUrl, location)
 
   fs.rmSync(
     path.join(location, '.git'),

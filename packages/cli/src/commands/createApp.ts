@@ -1,4 +1,4 @@
-// import { waitFor } from '@codeleap/common'
+
 import { codeleapCommand } from '../lib/Command'
 import { createMobileApp, inquirer } from '../lib'
 import '../lib/firebase'
@@ -41,7 +41,7 @@ export const createAppCommand = codeleapCommand(
     if (answer.Platform === 'Web') {
 
     } else if (answer.Platform === 'Mobile') {
-      createMobileApp({
+      await createMobileApp({
         name: appName,
       })
     }
