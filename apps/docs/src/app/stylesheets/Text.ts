@@ -74,6 +74,7 @@ export const AppTextStyles = {
 
         color: theme.colors.primary,
       },
+      cursor: 'pointer'
     },
   })),
   underlined: createTextStyle((theme) => ({
