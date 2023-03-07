@@ -1,7 +1,8 @@
 import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useState } from '@codeleap/common'
-import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler } from 'react-native'
+import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet } from 'react-native'
 // @ts-ignore
 import AsyncStorage from '@react-native-community/async-storage'
+import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -52,6 +53,10 @@ export function useAppState(filter?: AppStateStatus[]) {
   }
 }
 
+type SelectProperties<T extends Record<string|number|symbol, any>, K extends keyof T> = {
+  [P in K] : T[K]
+}
+
 export function useStaticAnimationStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(obj: T, keys: K[]) {
   const styles = useRef({})
 
@@ -61,10 +66,111 @@ export function useStaticAnimationStyles<T extends Record<string|number|symbol, 
     styles.current = Object.fromEntries(mappedStyles)
   }
 
-  return styles.current as {
-    [P in K] : T[K]
-  }
+  return styles.current as SelectProperties<T, K>
 }
+
+type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity'
+
+type VariantTransitionConfig = {
+  type: 'timing'
+  duration?: number
+  easing?: EasingFn
+} 
+
+type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
+
+
+type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
+  variantStyles: T
+  animatedProperties: K[]
+  updater: (states: SelectProperties<T, K>) => AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>
+  transition: TransitionConfig
+  dependencies?: any[]
+}
+
+const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle, applyFN = (v) => v) => {
+  'worklet';
+  const newStyle = {...currentStyle}
+  
+  switch(property){
+    case 'opacity':
+      newStyle.opacity = applyFN(value)
+      break
+    default:
+      if(!newStyle.transform){
+        newStyle.transform = []
+      }
+      newStyle.transform.push({
+        [property]: applyFN(value)
+      })
+  }
+
+  return newStyle
+
+}
+
+const transformProperties = (properties, transition) => {
+  'worklet';
+  let styles = {}
+
+  for(const [prop, value] of Object.entries(properties)){
+    let transitionConfig = transition[prop] || transition
+
+    const _transitionConfig = {
+      type:'timing',
+      duration: 100,
+      easing: Easing.linear,
+      ...transitionConfig
+    }
+
+    const { type, duration, easing } = _transitionConfig
+
+    let fn
+
+    switch(type){
+      case 'timing':
+        fn = (v) => withTiming(v, {
+          duration,
+          easing
+        })
+      default:
+        break
+    } 
+
+    styles = buildAnimatedStyle(
+      prop as AnimatableProperties,
+      value,
+      styles,
+      fn
+    )
+  }
+
+  return styles
+}
+
+
+export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>){
+  const { animatedProperties, updater, variantStyles, transition, dependencies = []} = config
+  
+  const _transition = useRef(null)
+
+  if(!_transition.current){
+    _transition.current = JSON.parse(JSON.stringify(transition))
+  }
+
+  const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
+  
+  const animated = useAnimatedStyle(() => {
+    const nextState = updater(staticStyles)
+
+    const formatted = transformProperties(nextState, _transition.current)
+
+    return formatted
+  }, [dependencies])
+
+  return animated
+}
+
 
 export type FeedbackConfig =
 | { type: 'opacity'; value?: number }

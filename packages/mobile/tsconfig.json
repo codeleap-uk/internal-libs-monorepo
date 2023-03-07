@@ -22,9 +22,11 @@
     "declaration": true,
     "sourceMap": true,
     // "baseUrl": ".",
-    // "paths": {
-    //   "@react-navigation/*": ["../../apps/mobile/node_modules/@react-navigation/*"] 
-    // }
+    "paths": {
+      "react-native-reanimated": [
+        "../../apps/mobile/node_modules/react-native-reanimated/react-native-reanimated.d.ts"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts",
@@ -43,5 +45,4 @@
     "out": "docs",
     "name": "CodeLeap web lib"
   },
-  
 }
