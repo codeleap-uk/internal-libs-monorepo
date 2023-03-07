@@ -13,7 +13,7 @@ import { View as NativeView } from 'react-native'
 import { MotiView, MotiProps } from 'moti'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 import {TransitionConfig} from '../../types'
-
+import Animated from 'react-native-reanimated'
 export * from './styles'
 
 type MotiViewProps =  Omit< Partial<MotiProps>, 'transition'|'children'>
@@ -67,6 +67,8 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewP
     </Component>
   )
 })
+
+export const AnimatedView = Animated.createAnimatedComponent(View)
 
 
 type GapProps = ViewProps & {
