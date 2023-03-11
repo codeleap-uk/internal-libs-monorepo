@@ -41,7 +41,7 @@ export const SegmentedControlStyles = {
         value: 0.5,
       },
       text: {
-        color: theme.colors.text,
+        color: theme.colors.black,
       },
       'text:selected': {
         color: theme.colors.white,

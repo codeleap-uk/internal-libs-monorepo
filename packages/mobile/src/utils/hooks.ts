@@ -2,7 +2,7 @@ import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useStat
 import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet } from 'react-native'
 
 import AsyncStorage from '@react-native-community/async-storage'
-import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -69,7 +69,7 @@ export function useStaticAnimationStyles<T extends Record<string|number|symbol, 
   return styles.current as SelectProperties<T, K>
 }
 
-type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity'
+type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity' | 'color' | 'backgroundColor'
 
 type VariantTransitionConfig = {
   type: 'timing'
@@ -77,7 +77,7 @@ type VariantTransitionConfig = {
   easing?: EasingFn
 } 
 
-type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
+export type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
 
 
 type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
@@ -96,6 +96,10 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
     case 'opacity':
       newStyle.opacity = applyFN(value)
       break
+    case 'backgroundColor':
+    case 'color':
+      newStyle[property] = value
+      break
     default:
       if(!newStyle.transform){
         newStyle.transform = []
@@ -109,10 +113,14 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
 
 }
 
-const transformProperties = (properties, transition) => {
-  'worklet';
-  let styles = {}
 
+const transformProperties = (properties, transition, previousStyle) => {
+  'worklet';
+  let styles = {
+    ...previousStyle
+  }
+
+  let fn
   for(const [prop, value] of Object.entries(properties)){
     let transitionConfig = transition[prop] || transition
 
@@ -125,7 +133,6 @@ const transformProperties = (properties, transition) => {
 
     const { type, duration, easing } = _transitionConfig
 
-    let fn
 
     switch(type){
       case 'timing':
@@ -133,6 +140,7 @@ const transformProperties = (properties, transition) => {
           duration,
           easing
         })
+        break
       default:
         break
     } 
@@ -141,11 +149,12 @@ const transformProperties = (properties, transition) => {
       prop as AnimatableProperties,
       value,
       styles,
-      fn
+      fn,
+      
     )
   }
 
-  return styles
+  return [styles, fn]
 }
 
 
@@ -158,15 +167,58 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
     _transition.current = JSON.parse(JSON.stringify(transition))
   }
 
+  const prevStyle = useAnimatedRef()
+
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
   
+  const currentColor = useRef(null)
+
+  const [color, setColor] = useState(0)
+  
+  const prevColor = usePrevious(color)
+  const _color = useSharedValue(0)
+
+
+  function onColorChange(to){
+    if(currentColor.current === to){
+      return
+    }
+    currentColor.current = to
+    _color.value = withTiming(color === 0 ? 1 : 0, {
+      duration: 2000
+    }, () => {
+      runOnJS(setColor)(to)
+    })
+
+  }
+
   const animated = useAnimatedStyle(() => {
     const nextState = updater(staticStyles)
 
-    const formatted = transformProperties(nextState, _transition.current)
+    
+    const [formatted, transitionFN] = transformProperties(
+      nextState, 
+      _transition.current, 
+      prevStyle.current,
+      
+    )
 
+    if(!!nextState.color){
+      runOnJS(onColorChange)(nextState.color)
+    }
+
+    prevStyle.current = nextState
+
+    if(!!prevColor && !!currentColor.current){
+      formatted.color = interpolateColor(
+        _color.value,
+        [0,1],
+        [prevColor, currentColor.current]
+      )
+    }
     return formatted
   }, [dependencies])
+
 
   return animated
 }

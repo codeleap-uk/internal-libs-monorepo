@@ -8,10 +8,8 @@ import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
 import { Text, TextProps } from '../Text'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
-import { AnimatedView, View } from '../View'
+import { View } from '../View'
 import { InputLabel } from '../InputLabel'
-import { useAnimatedVariantStyles, TransitionConfig } from '../../utils'
-import { SegmentedControlOption } from './Option'
 
 export * from './styles'
 export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrollView & {
@@ -24,7 +22,10 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
     onValueChange: (value: T) => any
     value: T
     debugName: string
-    animation?: TransitionConfig
+    animation?: {
+      duration?: number
+      easing?: EasingFunction
+    }
     textProps?: Partial<PropsOf<typeof Text>>
     touchableProps?: Partial<PropsOf<typeof Touchable>>
     styles?: StylesOf<SegmentedControlComposition>
@@ -44,8 +45,6 @@ const defaultAnimation = {
   duration: 200,
   easing: Easing.linear,
 }
-
-
 
 const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
 
@@ -95,7 +94,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const currentOptionIdx = options.findIndex(o => o.value === value) || 0
 
-
+  const translateX = widthStyle.width * currentOptionIdx
 
   const onPress = (txt:string, idx: number) => {
     return () => {
@@ -124,26 +123,11 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     hasScrolledInitially.current = true
   }
 
-  const BubbleView = RenderAnimatedView || AnimatedView
+  const AnimatedView = RenderAnimatedView || View
   variantStyles = JSON.parse(JSON.stringify(variantStyles))
-  
+  _animation = JSON.parse(JSON.stringify(_animation))
 
   const labelStyles = getNestedStylesByKey('label', variantStyles)
-
-  const bubbleAnimation = useAnimatedVariantStyles({
-    variantStyles,
-    animatedProperties: [],
-    updater: () => {
-      'worklet';
-      return {
-        translateX: currentOptionIdx * widthStyle.width
-      }
-    },
-    transition: _animation,
-    dependencies: [currentOptionIdx, widthStyle.width]
-  })
-
-
   return (<View style={variantStyles.wrapper}>
     <InputLabel label={label} styles={labelStyles} required={false}/>
     <Scroll
@@ -158,25 +142,61 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
       ref={scrollRef}
     >
       <View style={variantStyles.innerWrapper}>
-        <BubbleView
+        <AnimatedView
           options={options}
           styles={variantStyles}
-          style={[variantStyles.selectedBubble, widthStyle, bubbleAnimation]}
+
+          animated
+          style={[variantStyles.selectedBubble, widthStyle]}
+          animate={{
+            translateX,
+          }}
+          transition={{
+            translateX: _animation,
+          }}
 
         />
-        {options.map((o, idx) => (
-          <SegmentedControlOption 
-            debugName={debugName}
-            label={o.label}
-            value={o.value}
-            onPress={onPress(o.value, idx)}
-            key={idx}
-            style={widthStyle}
-            selected={value === o.value}
-            variantStyles={variantStyles}
-          />
+        {options.map((o, idx) => {
+          const selected = value === o.value
 
-        ))}
+          const touchableProps = {
+            key: idx,
+            debugName: `Segmented Control ${debugName}, option ${o.label}`,
+            onPress: onPress(o.value, idx),
+            style: [widthStyle, variantStyles.button, selected && variantStyles['button:selected']],
+            ...props.touchableProps,
+
+          }
+
+          const textProps:TextProps = {
+            text: o.label as string,
+            colorChangeConfig: _animation,
+            style: StyleSheet.flatten([variantStyles.text, selected && variantStyles['text:selected']]),
+            animated: true,
+            ...props.textProps,
+          }
+
+          if (RenderButton) {
+            return (
+              <RenderButton {...props} touchableProps={touchableProps} key={touchableProps.key} textProps={textProps} option={o}/>
+            )
+          }
+          return <Touchable
+            {...touchableProps}
+            noFeedback={selected}
+            key={touchableProps.key}
+            styles={{
+              feedback: variantStyles.buttonFeedback,
+            }}
+          >
+            <Text
+
+              {...textProps}
+            />
+
+          </Touchable>
+
+        })}
       </View>
     </Scroll>
   </View>
