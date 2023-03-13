@@ -51,5 +51,5 @@ jobs:
         if: always()
         run: |
           git pull
-          git add .
+          git add ./packages/**/*
           git push --follow-tags origin master
