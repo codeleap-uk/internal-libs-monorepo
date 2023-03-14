@@ -34,12 +34,12 @@ export * from './Router'
 export * from './Menu'
 export * from './MenuItem'
 
-type RouterPageProps = {
+type RouterPageProps = React.PropsWithChildren<{
   basePath: string
   styles?: StylesOf<RouterPageComposition>
   title?: string
-  renderContentWrapper?: React.FC<ContentProps>
-} & ComponentVariants<typeof RouterPageStyles>
+  renderContentWrapper?: React.FC<React.PropsWithChildren<ContentProps>>
+} & ComponentVariants<typeof RouterPageStyles>>
 
 export const RouterPage: React.FC<RouterPageProps> = (props) => {
   const {

@@ -22,7 +22,7 @@ const axisMap = {
   right: [1, 'X'],
 } as const
 
-export type DrawerProps = {
+export type DrawerProps = React.PropsWithChildren<{
   open: boolean
   toggle: AnyFunction
   darkenBackground?: boolean
@@ -34,7 +34,7 @@ export type DrawerProps = {
   styles?: StylesOf<DrawerComposition>
   animationDuration?: string
 } & ComponentVariants<typeof DrawerStyles>
-
+>
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],
 ): [string, string, CSSObject] => {

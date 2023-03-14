@@ -1,4 +1,3 @@
-
 import fs from 'fs'
 import dive from 'dive'
 import { parseFilePathData } from './utils'

@@ -110,5 +110,5 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
 export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
 
-export const List = ListCP as ListComponentType
+export const List = ListCP as  unknown as ListComponentType
 

@@ -21,7 +21,7 @@ export type PageProps = {
   isPrevious: boolean
 }
 
-export type PagerProps = {
+export type PagerProps = React.PropsWithChildren<{
   variants?: ComponentVariants<typeof PagerStyles>['variants']
   styles?: StylesOf<PagerComposition>
   children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
@@ -31,7 +31,7 @@ export type PagerProps = {
   returnEarly?: boolean
   renderPageWrapper?:React.FC<PageProps>
   pageWrapperProps?: any
-}
+}>
 
 export const Pager:React.FC<PagerProps> = (pagerProps) => {
   const {

@@ -151,6 +151,7 @@ export function useDefaultComponentStyle<
       // @ts-ignore
       responsiveVariants: props.responsiveVariants || {},
       rootElement: props.rootElement,
+      // @ts-ignore
       styles,
       size: windowSize,
     }, currentTheme as string), [props.variants, windowSize.height, windowSize.width, props.responsiveVariants, props.rootElement, styles, componentName])

@@ -20,7 +20,7 @@ import { Overlay } from '../Overlay'
 import { WebModalStyles as ModalStyles } from './styles'
 export * from './styles'
 
-export type ModalProps = {
+export type ModalProps = React.PropsWithChildren<{
   visible: boolean
   title?: React.ReactNode
   toggle: AnyFunction
@@ -32,7 +32,7 @@ export type ModalProps = {
   footer?: ReactNode
   debugName?: string
 } & ComponentVariants<typeof ModalStyles>
-
+>
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
   const modal = document.getElementById(id)

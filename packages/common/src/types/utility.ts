@@ -91,7 +91,7 @@ export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 }
 
-export type PropsOf<T> = T extends React.ComponentType<infer P> ? P : any
+export type PropsOf<T,Exclude extends string = ''> = T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
 
 export type Hashmap<T> = {
   [key: string]: T

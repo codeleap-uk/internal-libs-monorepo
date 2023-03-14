@@ -41,7 +41,6 @@
     "nanospinner": "^1.0.0",
     "node-keytool": "^0.0.3",
     "octokit": "^2.0.10",
-    "react-icons": "^4.3.1",
     "simple-git": "^3.15.0",
     "yup": "^0.32.11"
   }
