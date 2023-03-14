@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "2.3.25",
+  "version": "2.4.6",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -40,7 +40,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-text-input-mask": "3.1.4",
     "@react-native-community/async-storage": "*",
-    "react-native-device-info": "^10.3.0"
+    "react-native-device-info": "10.3.0"
   },
   "dependencies": {
     "@gorhom/portal": "^1.0.13",

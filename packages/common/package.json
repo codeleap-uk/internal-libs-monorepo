@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "2.3.25",
+  "version": "2.4.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
@@ -10,15 +10,13 @@
     "directory": "packages/common"
   },
   "devDependencies": {
-    "@codeleap/config": "^1.0.0",
-    "@emotion/css": "^11.7.1",
+    "@codeleap/config": "*",
+    "@emotion/css": "11.9.0",
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
     "@types/react": "17.0.44",
     "@types/tinycolor2": "^1.4.3",
     "chai": "^4.3.4",
-    "eslint": "^8.5.0",
-    "husky": "^7.0.4",
     "mocha": "^9.1.3",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.5.4",

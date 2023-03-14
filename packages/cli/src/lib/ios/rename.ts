@@ -3,11 +3,12 @@ import { getIosAppName, getIosBundleId } from './utils'
 import path from 'path'
 import fs from 'fs'
 import { walkDir } from '../walk'
-import firebase from 'firebase-admin'
-import { firebaseApp } from '../firebase'
+import _firebase from 'firebase-admin'
+
 
 type RenameiosOptions = {
     changeBundle?: boolean
+    firebase?: _firebase.app.App
 }
 
 export async function renameIos(
@@ -15,6 +16,7 @@ export async function renameIos(
   newName: string,
   options?: RenameiosOptions,
 ) {
+  const { firebase } = options  || {}
   const newBundleName = getNewBundleName(newName)
 
   const pbxProjPath = path.join(
@@ -93,7 +95,7 @@ export async function renameIos(
     fs.renameSync(i.from, i.to)
 
   })
-  if (!firebaseApp) return
+  if (!firebase) return
   const pm = firebase.projectManagement()
 
   const iosAppReqs = (await pm.listIosApps()).map(async a => {

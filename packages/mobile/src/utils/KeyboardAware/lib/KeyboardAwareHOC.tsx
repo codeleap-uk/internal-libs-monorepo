@@ -2,7 +2,7 @@
 /* @flow */
 
 import React from 'react'
-import PropTypes from 'prop-types'
+
 import {
   Keyboard,
   Platform,
@@ -45,13 +45,7 @@ const supportedKeyboardEvents: KeyboardEventName[] = [
   'keyboardDidChangeFrame',
 ]
 const keyboardEventToCallbackName = (eventName: string) => 'on' + eventName[0].toUpperCase() + eventName.substring(1)
-const keyboardEventPropTypes = supportedKeyboardEvents.reduce(
-  (acc: Object, eventName: string) => ({
-    ...acc,
-    [keyboardEventToCallbackName(eventName)]: PropTypes.func,
-  }),
-  {},
-)
+
 const keyboardAwareHOCTypeEvents = supportedKeyboardEvents.reduce(
   (acc: Object, eventName: string) => ({
     ...acc,
@@ -181,27 +175,7 @@ class KeyboardAwareScrollable extends React.Component<KeyboardAwareHOCProps, Key
 
     static displayName = `KeyboardAware`
 
-    static propTypes = {
-      viewIsInsideTabBar: PropTypes.bool,
-      resetScrollToCoords: PropTypes.shape({
-        x: PropTypes.number.isRequired,
-        y: PropTypes.number.isRequired,
-      }),
-      enableResetScrollToCoords: PropTypes.bool,
-      enableAutomaticScroll: PropTypes.bool,
-      extraHeight: PropTypes.number,
-      extraScrollHeight: PropTypes.number,
-      keyboardOpeningTime: PropTypes.number,
-      onScroll: PropTypes.oneOfType([
-        PropTypes.func, // Normal listener
-        PropTypes.object, // Animated.event listener
-      ]),
-      update: PropTypes.func,
-      contentContainerStyle: PropTypes.any,
-      enableOnAndroid: PropTypes.bool,
-      innerRef: PropTypes.func,
-      ...keyboardEventPropTypes,
-    }
+
 
     // HOC options are used to init default props, so that these options can be overriden with component props
     static defaultProps = {

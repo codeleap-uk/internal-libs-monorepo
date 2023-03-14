@@ -12,18 +12,26 @@ import {
 import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
 import { MotiView, MotiProps } from 'moti'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
-
+import {TransitionConfig} from '../../types'
+import Animated from 'react-native-reanimated'
 export * from './styles'
 
-export type ViewProps = RNViewProps &
-  ComponentVariants<typeof ViewStyles> & {
-    ref?: React.ClassAttributes<NativeView>['ref']
-    component?: any
-    animated?: boolean
-    keyboardAware?: GetKeyboardAwarePropsOptions
-  } & BaseViewProps
+type MotiViewProps =  Omit< Partial<MotiProps>, 'transition'|'children'>
 
-export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeView, ViewProps & Partial<MotiProps>>((viewProps, ref) => {
+type NativeViewProps =Omit<ComponentPropsWithoutRef<typeof NativeView>, 'children'>
+
+export type ViewProps = React.PropsWithChildren<{
+  ref?: any
+  component?: any
+  animated?: boolean
+  keyboardAware?: GetKeyboardAwarePropsOptions
+  transition?: Partial<TransitionConfig>
+} &
+  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps & MotiViewProps
+>
+
+
+export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -61,11 +69,8 @@ export const View: React.FC<ViewProps & Partial<MotiProps>> = forwardRef<NativeV
   )
 })
 
-export const AnimatedView = Animatable.createAnimatableComponent(
-  View,
-) as unknown as React.ForwardRefExoticComponent<
-  { transition?: any; animation?: any } & ViewProps
->
+export const AnimatedView = Animated.createAnimatedComponent(View)
+
 
 type GapProps = ViewProps & {
   value: number

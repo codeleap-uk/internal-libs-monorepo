@@ -1,6 +1,8 @@
 import { css } from '@emotion/react'
 import { Theme } from '../theme'
 import CodeThemes from './Code'
+import 'react-photo-view/dist/react-photo-view.css';
+
 
 export const globalStyle = css`
   * {

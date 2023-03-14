@@ -24,11 +24,13 @@ export const getPaginationKeys = <Data = any>(base:string, queryClient: Codeleap
   }
 }
 
-type GetPaginationDataParams<TItem = any, Arr extends TItem[]= TItem[]> = {
+type PaginationFilter<T> = (item: T, index: number, arr: T[], map: Record<string, T>, page: Record<string, [number, number]>) => boolean 
+
+export type GetPaginationDataParams<TItem = any> = {
   queryKeyOrList: UseInfiniteQueryResult<PaginationReturn<TItem>>['data'] | QueryKey
   queryClient?: QueryClient
   keyExtractor: (item: TItem) => string | number
-  filter: Parameters<Arr['filter']>[0]
+  filter: PaginationFilter<TItem>
   derive?: DeriveDataFn<TItem>
 }
 export function getPaginationData<TItem, TParams extends GetPaginationDataParams<TItem> = GetPaginationDataParams<TItem>>(params?: TParams) {
@@ -46,31 +48,38 @@ export function getPaginationData<TItem, TParams extends GetPaginationDataParams
 
   let pageIdx = 0
   let derivedData:ReturnType<TParams['derive']> = null
+
   for (const page of listVal.pages) {
 
     page.results.forEach((i, itemIdx) => {
       const flatIdx = flatItems.length
+      const itemId = params.keyExtractor(i)
+
       let include = true
       if (params?.filter) {
-        include = params?.filter(i, flatIdx, flatItems) as boolean
+        include = params?.filter(i, flatIdx, flatItems, itemMap, pagesById) as boolean
+      }else {
+        include = !itemMap[itemId]
       }
+      
+      
       if (params?.derive) {
         derivedData = params.derive?.({
           item: i,
           context: {
             passedFilter: include,
-
+            
           },
           index: flatIdx,
           arr: flatItems,
           currentData: derivedData,
-
+          
         }) as ReturnType<TParams['derive']>
       }
+
       if (include) {
         flatItems.push(i)
       }
-      const itemId = params.keyExtractor(i)
       pagesById[itemId] = [pageIdx, itemIdx]
       itemMap[itemId] = i
     })

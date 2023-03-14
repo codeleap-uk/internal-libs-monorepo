@@ -1,8 +1,14 @@
-{
-    "root": [
-        "index"
-    ],
-    "components": [
-        "button"
-    ]
-}
+[
+    {
+        "name": "root",
+        "items": [
+            "ïndex"
+        ]
+    },
+    {
+        "name": "components",
+        "items": [
+            "button"
+        ]
+    }
+]

@@ -1,17 +1,24 @@
-{
-    "root": [
-        "index",
-        "typescript"
-    ],
-    "workflow": [
-        "contributing",
-        "pr-template",
-        "management"
-    ],
-    "styling": [
-        "fundamentals",
-        "theme"
-    ]
-}
-    
-   
+[
+    {
+        "name": "root",
+        "items": [
+            "index",
+            "typescript"
+        ]
+    },
+    {
+        "name": "workflow",
+        "items": [
+            "contributing",
+            "pr-template",
+            "management"
+        ]
+    },
+    {
+        "name": "styling",
+        "items": [
+            "fundamentals",
+            "theme"
+        ]
+    }
+]

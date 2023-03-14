@@ -107,6 +107,12 @@
         "licenseUrl": "https://github.com:react-icons/react-icons/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "react-photo-view@1.2.3": {
+        "licenses": "Apache-2.0",
+        "repository": "https://github.com/MinJieLiu/react-photo-view",
+        "licenseUrl": "https://github.com/MinJieLiu/react-photo-view/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "react-redux@7.2.8": {
         "licenses": "MIT",
         "repository": "github:reduxjs/react-redux",

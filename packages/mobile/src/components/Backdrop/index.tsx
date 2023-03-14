@@ -10,12 +10,14 @@ import { useStaticAnimationStyles } from '../../utils'
 import { BackdropComposition, BackdropStyles } from './styles'
 
 export * from './styles'
-export type BackdropProps = PropsOf<typeof Touchable> & {
+export type BackdropProps = React.PropsWithChildren<
+
+  PropsOf<typeof Touchable> & {
     visible: boolean
     wrapperProps?: PropsOf<typeof View>
     variants?: ComponentVariants<typeof BackdropStyles>['variants']
     styles?: StylesOf<BackdropComposition>
-}
+}>
 
 export const Backdrop = (backdropProps:BackdropProps) => {
   const { variants = [], styles = {}, visible, children, wrapperProps = {}, ...props } = backdropProps
@@ -39,7 +41,7 @@ export const Backdrop = (backdropProps:BackdropProps) => {
 
   return <View pointerEvents={visible ? 'auto' : 'none' } animated style={variantStyles.wrapper} state={animation} {...wrapperProps}>
     {
-      props?.onPress ?
+      !!props?.onPress ?
         <Touchable style={variantStyles.touchable} {...props} noFeedback android_ripple={null}/>
         : null
     }

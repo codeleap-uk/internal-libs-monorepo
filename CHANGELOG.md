@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 2.4.6 (2023-02-21)
+
+### 2.4.5 (2023-02-15)
+
+### 2.4.4 (2023-02-09)
+
+### 2.4.3 (2023-02-09)
+
+### 2.4.2 (2023-02-09)
+
+
+### Bug Fixes
+
+* **mobile:** fixes image loading overlay displaying animation for fast loads, improves loading overlay perf ([456cfe7](https://github.com/codeleap-uk/internal-libs-monorepo/commit/456cfe7837917a07c2250056c1557827085d2160))
+
+### 2.4.1 (2023-02-08)
+
+## 2.4.0 (2023-02-06)
+
+
+### Features
+
+* **mobile:** adds (optional) LoadingOverlay to image ([851f262](https://github.com/codeleap-uk/internal-libs-monorepo/commit/851f26255962d8868a6e3f6478ba71b3be5f8ee4))
+
+### 2.3.28 (2023-01-19)
+
+### 2.3.27 (2023-01-19)
+
+### 2.3.26 (2023-01-12)
+
+
+### Bug Fixes
+
+* **mobile:** fixes permission state not updating after permission request ([f627a93](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f627a939d94d3ca74cf6ced13a6a999c6045f8be))
+
 ### 2.3.25 (2023-01-07)
 
 ### 2.3.24 (2023-01-06)

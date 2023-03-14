@@ -1,14 +1,20 @@
-{
-    "root": [
-        "index"
-    ],
-    "redux": [
-        "at_codeleap"
-    ],
-    "React Query" : [
-        "index"
-    ],
-    "__categories__" : ["root", "redux", "React Query"]
-}
-    
-   
+[
+    {
+        "name": "root",
+        "items": [
+            "index"
+        ]
+    },
+    {
+        "name": "redux",
+        "items": [
+            "at_codeleap"
+        ]
+    },
+    {
+        "name": "React Query",
+        "items": [
+            "index"
+        ]
+    }
+]

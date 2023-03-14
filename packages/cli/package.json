@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/cli",
-  "version": "2.3.25",
+  "version": "2.4.6",
   "main": "./dist/index.js",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
@@ -14,10 +14,11 @@
     "@types/inquirer": "^8.2.0",
     "@types/libsodium-wrappers": "^0.7.10",
     "cross-env": "^7.0.3",
+    "@codeleap/common": "*",
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
-    "@codeleap/common": "*"
+    "@codeleap/common": ""
   },
   "scripts": {
     "build": "tsc --build",
@@ -27,14 +28,13 @@
     "dev": "cross-env CODELEAP_CLI_DEV_MODE=true tsnd --transpile-only src/index.ts"
   },
   "dependencies": {
-    "@google-cloud/resource-manager": "^4.1.1",
     "axios": "^1.1.3",
     "chalk": "4.1.2",
     "chalk-animation": "^1.6.0",
     "cleye": "^1.1.0",
     "dive": "^0.5.0",
     "figlet": "^1.5.2",
-    "firebase-admin": "^11.0.1",
+    "firebase-admin": "^11.4.1",
     "generate-password": "^1.7.0",
     "inquirer": "^8.2.0",
     "libsodium-wrappers": "^0.7.10",

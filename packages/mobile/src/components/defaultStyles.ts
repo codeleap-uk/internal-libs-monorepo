@@ -27,6 +27,7 @@ import { ScrollStyles } from './Scroll'
 import { ActionIconStyles } from './ActionIcon'
 import { GridStyles } from './Grid'
 import { InputLabelStyles } from './InputLabel'
+import { LoadingOverlayStyles } from './LoadingOverlay'
 
 export const defaultStyles = {
   View: ViewStyles,
@@ -58,5 +59,6 @@ export const defaultStyles = {
   PaginationIndicator: PaginationIndicatorStyles,
   ActionIcon: ActionIconStyles,
   Grid: GridStyles,
+  LoadingOverlay: LoadingOverlayStyles,
   InputLabel: InputLabelStyles,
 }

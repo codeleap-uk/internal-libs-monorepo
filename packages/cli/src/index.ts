@@ -2,6 +2,7 @@
 import { cli } from 'cleye'
 import { configureCommand } from './commands/configure'
 import { createAppCommand } from './commands/createApp'
+import { downloadKeystores } from './commands/downloadKeystores'
 import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 
@@ -10,8 +11,15 @@ const packageJson = require('../package.json')
 
 cli({
   name: 'codeleap',
-  commands: [generateReleaseKey, renameMobileCommand, createAppCommand, configureCommand],
+  commands: [
+    generateReleaseKey, 
+    renameMobileCommand, 
+    createAppCommand, 
+    configureCommand,
+    downloadKeystores
+  ],
   version: packageJson.version,
+
 })
 
 export {}

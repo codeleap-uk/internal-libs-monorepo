@@ -1,4 +1,3 @@
-// import { parseFilePathData, TypeGuards } from '@codeleap/common'
 import fs from 'fs'
 import dive from 'dive'
 import { parseFilePathData } from './utils'
@@ -116,7 +115,7 @@ export async function walkDir(config: WalkDirConfig):Promise<void> {
         file: fileInfo,
       })
 
-      if (!newContent !== null && newContent !== undefined && !isDir) {
+      if (![undefined, null].includes(newContent) && !isDir) {
         fs.writeFileSync(file, newContent as string)
       }
     }, () => {

@@ -59,11 +59,13 @@ export class RequestClient implements IRequestClient {
   }
 
   setConfig(to:Partial<RequestClientConfig>) {
-    this.axios = axios.create({
+    this.config = {
       ...this.config,
       ...to,
-    })
+    }
 
+    this.axios = axios.create(this.config)
+    
     this.applyInterceptors()
   }
 

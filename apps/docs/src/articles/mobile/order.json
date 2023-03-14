@@ -1,13 +1,16 @@
-{
-    "root": [
-        "index",
-        "starting-a-project"
-    ],
-    "permissions": [
-        "problem",
-        "our_solution"
-    ],
-    "components": [
-        "button"
-    ]
-}
+[
+    {
+        "name": "root",
+        "items": [
+            "index",
+            "starting-a-project"
+        ]
+    },
+    {
+        "name": "permissions",
+        "items": [
+            "problem",
+            "our_solution"
+        ]
+    }
+]

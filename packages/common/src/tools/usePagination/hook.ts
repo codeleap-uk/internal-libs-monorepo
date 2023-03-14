@@ -1,5 +1,5 @@
 // import { queryClient } from '@/services/api'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { InfiniteData, QueryFunctionContext,
   QueryKey,
   useInfiniteQuery,
@@ -9,7 +9,7 @@ import { InfiniteData, QueryFunctionContext,
 } from '@tanstack/react-query'
 import { AppendToPagination, OperationKey, PaginationReturn, UsePaginationParams } from './types'
 import { getPaginationData, getPaginationKeys, getQueryKeys } from './utils'
-import { TypeGuards } from '../../utils'
+import { TypeGuards, useCounter } from '../../utils'
 
 export function usePagination<
  TItem = any,
@@ -92,6 +92,10 @@ export function usePagination<
 
   type TItems = TData['results']
 
+  const [retriveItemCounter, setRetrieveCount] = useCounter()
+  const addItemsToMap = useRef({})
+
+
   const {
     flatItems,
     derivedData,
@@ -104,14 +108,11 @@ export function usePagination<
       filter: params?.filter,
       derive: params?.deriveData,
     })
-
-    return {
-      ...flatData,
-    }
+    
+    return flatData
   }, [list.dataUpdatedAt])
 
   const retrieveParams = (params?.where || []).filter(x => typeof x !== 'undefined')
-
   const defaultRetrieveParams:OverrideParamType<'retrieve'> = {
     queryKey: [...QUERY_KEYS.retrieve, ...retrieveParams],
     queryFn: async () => {
@@ -125,19 +126,23 @@ export function usePagination<
     onSuccess(data) {
       if (!data) return
 
-      queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
-        const itemId = params.keyExtractor(data)
-        if (!itemMap[itemId]) {
-          old.pages[0].results.unshift(data)
-          // @ts-ignore
-          old.pageParams[0].limit += 1
-        } else {
-          const [itemPage, itemIdx] = pagesById[itemId]
-          old.pages[itemPage].results[itemIdx] = data
-        }
+      // queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+      //   const itemId = params.keyExtractor(data)
+      //   if (!itemMap[itemId]) {
+      //     old.pages[0].results.unshift(data)
+      //     // @ts-ignore
+      //     old.pageParams[0].limit += 1
+      //   } else {
+      //     const [itemPage, itemIdx] = pagesById[itemId]
+      //     old.pages[itemPage].results[itemIdx] = data
+      //   }
 
-        return old
-      })
+      //   return old
+      // })
+
+      const itemId = params.keyExtractor(data)
+      addItemsToMap.current[itemId] = data
+      setRetrieveCount()
     },
 
   }
@@ -146,17 +151,18 @@ export function usePagination<
 
   const append:AppendToPagination<TItem> = (args) => {
     return queryClient.setQueryData<ListQueryData>(QUERY_KEYS.list, old => {
+      const itemsToAppend = TypeGuards.isArray(args.item) ? args.item : [args.item]
       if (args.to == 'end') {
         const idx = old.pages.length - 1
-        old.pages[idx].results.push(args.item)
+        old.pages[idx].results.push(...itemsToAppend)
 
         // @ts-ignore
-        old.pageParams[idx].limit += 1
+        old.pageParams[idx].limit += itemsToAppend.length
 
       } else {
-        old.pages[0].results.unshift(args.item)
+        old.pages[0].results.unshift(...itemsToAppend)
         // @ts-ignore
-        old.pageParams[0].limit += 1
+        old.pageParams[0].limit += itemsToAppend.length
 
       }
       return old
@@ -286,7 +292,10 @@ export function usePagination<
   return {
     items: flatItems,
     pagesById,
-    itemMap,
+    itemMap: {
+      ...addItemsToMap.current,
+      ...itemMap,
+    },
     itemName,
     queries: {
       list: listQuery,
@@ -295,6 +304,7 @@ export function usePagination<
       create,
       retrieve,
     },
+    retrievedItem: retrieve.data,
     create: create.mutateAsync,
     remove: remove.mutateAsync,
     update: update.mutateAsync,

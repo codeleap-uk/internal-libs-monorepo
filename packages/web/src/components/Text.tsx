@@ -37,7 +37,8 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 
   const css = { ...variantStyles.text, ...props.style }
   return (
-    // @ts-ignore
+
+    //@ts-ignore
     <Component
       css={css}
       {...props}

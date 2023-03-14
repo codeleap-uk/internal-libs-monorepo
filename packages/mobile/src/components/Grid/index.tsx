@@ -6,7 +6,7 @@ import {
 } from '@codeleap/common'
 
 import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-grid'
-import { RefreshControl, StyleSheet, RefreshControlProps, FlatList } from 'react-native'
+import { RefreshControl, StyleSheet, RefreshControlProps, ScrollView } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { GridComposition, GridStyles } from './styles'
@@ -26,6 +26,7 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 ) => { length: number; offset: number; index: number })
 }
 
+
 export * from './styles'
 type GridRef = React.ClassAttributes<FlatGrid<any>>['ref']
 export type GridProps<
@@ -41,7 +42,7 @@ export type GridProps<
     refreshControlProps?: Partial<RefreshControlProps>
   } & ComponentVariants<typeof GridStyles>
 
-const GridCP = forwardRef<GridRef, GridProps>(
+const GridCP = forwardRef<ScrollView, GridProps>(
   (flatGridProps, ref) => {
     const {
       variants = [],
@@ -79,7 +80,7 @@ const GridCP = forwardRef<GridRef, GridProps>(
     const _gridProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
-      ref: ref as unknown as React.LegacyRef<GridRef>,
+      ref: ref ,
       ItemSeparatorComponent: separator,
       refreshControl:
           !!onRefresh && (

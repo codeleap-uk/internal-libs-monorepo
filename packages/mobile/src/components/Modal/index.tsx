@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { View, ViewProps } from '../View'
-import { Button, ButtonProps } from '../Button'
+import { AnimatedView, View, ViewProps } from '../View'
+import { ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'
 import {
   ComponentVariants,
   getNestedStylesByKey,
   IconPlaceholder,
-  onUpdate,
   PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
@@ -19,9 +18,8 @@ import {
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
-import { useDynamicAnimation } from 'moti'
 import { Backdrop } from '../Backdrop'
-import { useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
+import { useAnimatedVariantStyles, useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
@@ -124,13 +122,17 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
 
   const boxAnimationStates = useStaticAnimationStyles(variantStyles, ['box:hidden', 'box:visible'])
 
-  const boxAnimation = useDynamicAnimation(() => {
-    return visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden']
+  const boxAnimationStyles = useAnimatedVariantStyles({
+    updater: (states ) => {
+      'worklet';
+      return visible ? states['box:visible'] : states['box:hidden'] 
+    },
+    animatedProperties: ['box:hidden', 'box:visible'],
+    variantStyles,
+    transition:variantStyles['box:transition'],
+    dependencies: [visible]
   })
 
-  onUpdate(() => {
-    boxAnimation.animateTo(visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden'])
-  }, [visible])
   const wrapperStyle = getStyles('wrapper')
 
   const ScrollComponent = scroll ? Scroll : View
@@ -195,11 +197,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
             noFeedback
           />}
 
-        <View
-          animated
-          state={boxAnimation}
-          style={getStyles('box')}
-          transition={{ ...variantStyles['box:transition'] }}
+        <AnimatedView
+        
+          style={[getStyles('box'),boxAnimationStyles]}
+          // transition={{ ...variantStyles['box:transition'] }}
 
           {...props}
         >
@@ -212,7 +213,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
               {typeof footer === 'string' ? <Text text={footer} /> : footer}
             </View>
           )}
-        </View>
+        </AnimatedView>
 
       </ScrollComponent>
     </View>

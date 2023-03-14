@@ -1,4 +1,4 @@
-// import { waitFor } from '@codeleap/common'
+
 import { codeleapCommand } from '../lib/Command'
 
 import { spinWhileNotCompleted } from '../lib/spinner'

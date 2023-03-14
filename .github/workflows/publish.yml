@@ -5,13 +5,17 @@ on:
       - master
     paths:
       - "packages/**/*"
+      - ".github/workflows/publish.yml"
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
       - name: Clone current repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
 
   
       - uses: actions/setup-node@v3
@@ -38,8 +42,10 @@ jobs:
           yarn release
           chmod +x ./publish.sh
           ./publish.sh
+          yarn notifyVersion
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }} 
 
       - name: Git push
         if: always()

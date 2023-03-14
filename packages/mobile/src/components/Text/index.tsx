@@ -89,6 +89,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
     onPress: pressDisabled ? null : _onPress,
   } : {}
 
+
   return <Component {...props}
     onPressIn={handlePress(true)} onPressOut={handlePress(false)}
     style={[styles, colorStyle, feedbackStyle, !!onPress && pressDisabled ? variantStyles['text:disabled'] : null]}
