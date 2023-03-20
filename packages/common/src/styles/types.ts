@@ -19,24 +19,42 @@ export type IconPlaceholder = '__ICON__'
 export type BreakpointPlaceholder = '__BREAKPOINT__'
 
 export type DefaultColors =
-  | 'primary'
-  | 'secondary'
-  | 'background'
-  | 'backgroundSecondary'
-  | 'text'
-  | 'icon'
-  | 'border'
-  | 'positive'
-  | 'negative'
-  | 'placeholder'
-  | 'disabled'
-  | 'neutral'
-  | 'textH'
-  | 'textP'
-  | 'black'
-  | 'white'
+| 'primary-1'
+| 'primary-2'
+| 'primary-3'
+| 'primary-4'
+| 'primary-5'
+| 'secondary-1'
+| 'secondary-2'
+| 'secondary-3'
+| 'secondary-4'
+| 'secondary-5'
+| 'neutral-1'
+| 'neutral-2'
+| 'neutral-3'
+| 'neutral-4'
+| 'neutal-5'
+| 'neutral-6'
+| 'neutral-7'
+| 'neutral-8'
+| 'neutral-9'
+| 'neutral-10'
+| 'positive-1'
+| 'positive-2'
+| 'warning-1'
+| 'warning-2'
+| 'alert-1'
+| 'alert-2'
+| 'destructive-1'
+| 'destructive-2'
+| 'Background'
+| 'Card'
+| 'Separator'
+| 'Border'
+| 'Overlay'
 
 export type Fonts =
+  | 'hx'
   | 'h1'
   | 'h2'
   | 'h3'
@@ -47,21 +65,22 @@ export type Fonts =
   | 'p2'
   | 'p3'
   | 'p4'
+  | 'p5'
 
 export type TypographyStyle = {
   lineHeight?: number
   weight: number
-  color?: string
-  fontFamily?: string
-  sizeMultiplier?: number
   letterSpacing?: number
-  lineHeightMultiplier?: number
-  size?: {
-    multiplier: number
-    viewport: number
-    max: number
-    min: number
-  }
+  size: number
+}
+
+export type Typography = {
+  defaultFontFamily: string
+  styles: Record<Fonts, TypographyStyle>
+  resolveFontFamily?: FunctionType<[
+    name: string,
+    attrs: FontAttrs
+  ], string> | Record<string, string>
 }
 
 type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
@@ -82,31 +101,22 @@ export type AppTheme = {
     width: number
     height: number
     innerSpacing: Record<'X'|'Y', number>
+
   } & AnyProps<any>
 
   readonly borderRadius: {
-    large: number
-    medium: number
+    tiny: number
     small: number
-    modalOuter: number
-    round: number
+    medium: number
+    rounded: number
   }
 
-  readonly presets ?: Record<string, any>
+  readonly presets?: Record<string, any>
+  readonly effects?: Record<string, any>
 
   readonly icons: Record<string, any>
   readonly initialTheme: string
-  readonly typography : {
-    fontFamily: string
-    styles: Record<Fonts, TypographyStyle>
-    baseFontSize: number
-    pColor: string
-    hColor: string
-    resolveFontFamily?: FunctionType<[
-      name: string,
-      attrs: FontAttrs
-    ], string> | Record<string, string>
-  }
+  readonly typography : Record<string, Typography>
 }
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<

@@ -83,6 +83,7 @@ export const TextStyles = {
       ...assignTextStyle('p1')(theme).text,
     },
   })),
+  hx: assignTextStyle('hx'),
   h1: assignTextStyle('h1'),
   h2: assignTextStyle('h2'),
   h3: assignTextStyle('h3'),
@@ -93,6 +94,7 @@ export const TextStyles = {
   p2: assignTextStyle('p2'),
   p3: assignTextStyle('p3'),
   p4: assignTextStyle('p4'),
+  p5: assignTextStyle('p5'),
   link: assignTextStyle('p1'),
   OSAlertBody: createTextStyle((theme) => ({
     text: {

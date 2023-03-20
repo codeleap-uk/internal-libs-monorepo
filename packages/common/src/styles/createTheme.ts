@@ -2,6 +2,7 @@ import { createBorderHelpers } from './helpers'
 
 import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
 import { defaultPresets } from './presets'
+import { defaultEffects } from './effects'
 import { spacingFactory } from './Spacing'
 import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
 
@@ -51,6 +52,10 @@ export function createTheme<T extends ThemeValues>(
     presets: {
       ...defaultPresets,
       ...values.presets,
+    },
+    effects: {
+      ...defaultEffects,
+      ...values.effects,
     },
     semiCircle: (side) => ({
       width: side,
