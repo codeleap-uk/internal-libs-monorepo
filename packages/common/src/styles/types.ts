@@ -47,14 +47,18 @@ export type DefaultColors =
 | 'alert-2'
 | 'destructive-1'
 | 'destructive-2'
-| 'Background'
-| 'Card'
-| 'Separator'
-| 'Border'
-| 'Overlay'
+| 'background'
+| 'card'
+| 'separator'
+| 'border'
+| 'overlay'
+| 'headlines'
+| 'body'
+| 'caption'
 
 export type Fonts =
   | 'hx'
+  | 'h0'
   | 'h1'
   | 'h2'
   | 'h3'
@@ -66,6 +70,15 @@ export type Fonts =
   | 'p3'
   | 'p4'
   | 'p5'
+
+export type FontTokens =
+  | 'base'
+  | 'quotes'
+
+export type ItemHeight =
+  | 'default'
+  | 'small'
+  | 'tiny'
 
 export type TypographyStyle = {
   lineHeight?: number
@@ -81,6 +94,14 @@ export type Typography = {
     name: string,
     attrs: FontAttrs
   ], string> | Record<string, string>
+}
+
+export type RNShadow = {
+  shadowColor: string
+  shadowOffset: Record<'width' | 'height', number>
+  shadowOpacity: number
+  shadowRadius: number
+  elevation: number
 }
 
 type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
@@ -101,7 +122,8 @@ export type AppTheme = {
     width: number
     height: number
     innerSpacing: Record<'X'|'Y', number>
-
+    itemHeight: Record<ItemHeight, number>
+    iconSize: Record<number, number>
   } & AnyProps<any>
 
   readonly borderRadius: {
@@ -112,11 +134,11 @@ export type AppTheme = {
   }
 
   readonly presets?: Record<string, any>
-  readonly effects?: Record<string, any>
+  readonly effects?: Record<string, RNShadow>
 
   readonly icons: Record<string, any>
   readonly initialTheme: string
-  readonly typography : Record<string, Typography>
+  readonly typography : Record<FontTokens, Typography>
 }
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<

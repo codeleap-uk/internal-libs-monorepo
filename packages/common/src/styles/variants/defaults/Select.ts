@@ -30,8 +30,8 @@ export const SelectStyles = {
     },
     select: {
       minWidth: '100%',
-      fontSize: theme.typography.baseFontSize,
-      fontFamily: theme.typography.fontFamily,
+      fontSize: theme.typography.base.defaultStyles.size,
+      fontFamily: theme.typography.base.defaultFontFamily,
       display: 'flex',
       cursor: 'pointer',
       border: 'none',
@@ -45,8 +45,8 @@ export const SelectStyles = {
       ...theme.spacing.paddingRight(3),
     },
     label: {
-      fontSize: theme.typography.baseFontSize,
-      fontFamily: theme.typography.fontFamily,
+      fontSize: theme.typography.base.defaultStyles.size,
+      fontFamily: theme.typography.base.defaultFontFamily,
       color: theme.colors.secondary,
       ...theme.spacing.padding(1),
       ...theme.spacing.paddingLeft(0),

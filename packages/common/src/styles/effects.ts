@@ -2,10 +2,24 @@ import { AnyFunction, FunctionType } from '../types'
 
 export const defaultEffects = {
   light: {
-    boxShadow: '0px 8px 24px #99999933',
+    shadowColor: '#999',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 24,
+    elevation: 16,
   },
   heavy: {
-    boxShadow: '0px 5px 15px #00000059',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.35,
+    shadowRadius: 15,
+    elevation: 20,
   },
 } as const
 
