@@ -24,7 +24,10 @@
     // "baseUrl": ".",
     "paths": {
       "react-native-reanimated": [
-        "../../apps/mobile/node_modules/react-native-reanimated/react-native-reanimated.d.ts"
+        "../../apps/mobile/node_modules/react-native-reanimated/react-native-reanimated.d.ts",
+      ],
+      "@react-native-community/async-storage": [
+        "../../apps/mobile/node_modules/@react-native-community/async-storage/types/index.d.ts"
       ]
     }
   },

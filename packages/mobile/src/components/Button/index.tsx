@@ -31,7 +31,7 @@ type ChildProps = {
   props: Omit<ButtonProps, 'children'>
 }
 
-type BadgeProps = Partial<ViewProps> & {
+type BadgeProps = Omit<Partial<ViewProps>, 'ref'> & {
   text?: string
   children?: React.ReactElement | ((props: Partial<SmartOmit<BadgeProps, 'children'>>) => React.ReactElement)
   styles?: StylesOf<'text'|'wrapper'>

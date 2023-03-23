@@ -71,13 +71,13 @@ const tooltipPositionStyles = {
   }),
 }
 
-export type TooltipProps = {
+export type TooltipProps = React.PropsWithChildren<{
   position: TooltipPosition
   styles?: StylesOf<TooltipComposition>
   showOn?: 'click' | 'hover'
   content?: string | ReactNode
 } & ComponentVariants<typeof TooltipStyles>
-
+>
 const invert = (pos) => {
   switch (pos) {
     case 'left':

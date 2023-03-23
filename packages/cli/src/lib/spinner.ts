@@ -1,4 +1,3 @@
-
 import { createSpinner, Options } from 'nanospinner'
 
 type SpinWhileNotCompletedOpts = Options & {
