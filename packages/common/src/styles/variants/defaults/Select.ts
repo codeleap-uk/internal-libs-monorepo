@@ -1,5 +1,6 @@
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
+import { assignTextStyle } from './Text'
 
 export type SelectComposition = 'wrapper'
 const createSelectStyle = createDefaultVariantFactory()
@@ -29,9 +30,8 @@ export const SelectStyles = {
       },
     },
     select: {
+      ...assignTextStyle('p1')(theme).text,
       minWidth: '100%',
-      fontSize: theme.typography.base.defaultStyles.size,
-      fontFamily: theme.typography.base.defaultFontFamily,
       display: 'flex',
       cursor: 'pointer',
       border: 'none',
@@ -45,8 +45,7 @@ export const SelectStyles = {
       ...theme.spacing.paddingRight(3),
     },
     label: {
-      fontSize: theme.typography.base.defaultStyles.size,
-      fontFamily: theme.typography.base.defaultFontFamily,
+      ...assignTextStyle('p1')(theme).text,
       color: theme.colors.secondary,
       ...theme.spacing.padding(1),
       ...theme.spacing.paddingLeft(0),

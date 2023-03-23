@@ -65,7 +65,7 @@ export function createTheme<T extends ThemeValues>(
     circle: (side) => ({
       width: side,
       height: side,
-      borderRadius: values.borderRadius.large,
+      borderRadius: values.borderRadius.rounded,
     }),
     square: (side) => ({
       width: side,

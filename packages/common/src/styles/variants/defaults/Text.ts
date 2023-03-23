@@ -1,4 +1,4 @@
-import { Fonts, TypographyStyle } from '../..'
+import { Fonts } from '../..'
 import { TypeGuards } from '../../../utils'
 import { includePresets } from '../../presets'
 import { createDefaultVariantFactory } from '../createDefaults'
@@ -11,7 +11,7 @@ const presets = includePresets((styles) => createTextStyle(() => ({ text: styles
 export function assignTextStyle(name: Fonts, add = {}) {
   return createTextStyle((theme) => {
     const style = theme.typography.base.styles[name]
-    let fontFamily = theme?.typography?.base?.defaultFontFamily
+    let fontFamily = theme?.typography?.base?.fontFamily
     const fontWeight = style.weight.toString()
 
     const color = name.startsWith('h') ? theme?.colors.textH : theme?.colors.textP
@@ -56,7 +56,7 @@ export const TextStyles = {
   ...presets,
   default: createTextStyle((theme) => ({
     text: {
-      fontFamily: theme.typography.base.defaultFontFamily,
+      fontFamily: theme.typography.base.fontFamily,
       ...assignTextStyle('p1')(theme).text,
     },
   })),

@@ -71,14 +71,22 @@ export type Fonts =
   | 'p4'
   | 'p5'
 
-export type FontTokens =
-  | 'base'
-  | 'quotes'
-
 export type ItemHeight =
   | 'default'
   | 'small'
   | 'tiny'
+
+export type IconSizes =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+
+export type FontTokens =
+  | 'base'
+  | 'quotes'
 
 export type TypographyStyle = {
   lineHeight?: number
@@ -88,7 +96,7 @@ export type TypographyStyle = {
 }
 
 export type Typography = {
-  defaultFontFamily: string
+  fontFamily: string
   styles: Record<Fonts, TypographyStyle>
   resolveFontFamily?: FunctionType<[
     name: string,
@@ -123,7 +131,7 @@ export type AppTheme = {
     height: number
     innerSpacing: Record<'X'|'Y', number>
     itemHeight: Record<ItemHeight, number>
-    iconSize: Record<number, number>
+    iconSize: Record<IconSizes, number>
   } & AnyProps<any>
 
   readonly borderRadius: {
