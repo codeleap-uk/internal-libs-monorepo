@@ -1,4 +1,5 @@
 import {
+  assignTextStyle,
   createDefaultVariantFactory, includePresets,
 } from '@codeleap/common'
 import { InputLabelComposition } from '../InputLabel'
@@ -20,7 +21,7 @@ export const RadioInputStyles = {
   ...presets,
   default: createRadioStyle((theme) => {
 
-    const itemHeight = theme.typography.baseFontSize * 1.2
+    const itemHeight = assignTextStyle('p1')(theme).text.fontSize * 1.2
     const markHeight = itemHeight / 2
     const translateX = -(markHeight / 2)
     const translateY = -(markHeight / 2)
@@ -33,7 +34,7 @@ export const RadioInputStyles = {
         height: itemHeight,
         width: itemHeight,
         ...theme.border.primary(1),
-        borderRadius: theme.borderRadius.large,
+        borderRadius: theme.borderRadius.medium,
 
         position: 'relative',
         ...theme.spacing.marginRight(1),
@@ -48,7 +49,7 @@ export const RadioInputStyles = {
         width: markHeight,
 
         transform: [{ translateX }, { translateY }],
-        borderRadius: theme.borderRadius.large,
+        borderRadius: theme.borderRadius.medium,
         opacity: 0,
       },
       'buttonMark:checked': {

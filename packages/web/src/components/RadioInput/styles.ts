@@ -21,7 +21,7 @@ export const WebRadioInputStyles = {
       button: {
         height: '1em',
         width: '1em',
-        borderRadius: theme.borderRadius.large,
+        borderRadius: theme.borderRadius.medium,
         border: theme.border.primary(1),
 
         position: 'relative',
@@ -35,7 +35,7 @@ export const WebRadioInputStyles = {
         top: '50%',
 
         transform: 'translate(-50%,-50%)',
-        borderRadius: theme.borderRadius.large,
+        borderRadius: theme.borderRadius.medium,
         height: '50%',
         width: '50%',
         visibility: 'hidden',

@@ -2,6 +2,7 @@ import { createBorderHelpers } from './helpers'
 
 import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
 import { defaultPresets } from './presets'
+import { defaultEffects } from './effects'
 import { spacingFactory } from './Spacing'
 import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
 
@@ -52,6 +53,10 @@ export function createTheme<T extends ThemeValues>(
       ...defaultPresets,
       ...values.presets,
     },
+    effects: {
+      ...defaultEffects,
+      ...values.effects,
+    },
     semiCircle: (side) => ({
       width: side,
       height: side,
@@ -60,7 +65,7 @@ export function createTheme<T extends ThemeValues>(
     circle: (side) => ({
       width: side,
       height: side,
-      borderRadius: values.borderRadius.large,
+      borderRadius: values.borderRadius.rounded,
     }),
     square: (side) => ({
       width: side,

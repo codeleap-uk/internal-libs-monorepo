@@ -1,4 +1,4 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { assignTextStyle, createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { InputLabelComposition } from '../InputLabel'
 
 type CheckboxParts =
@@ -24,7 +24,7 @@ const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper:
 export const CheckboxStyles = {
   ...presets,
   default: createCheckboxStyle((theme) => {
-    const size = theme.typography.baseFontSize * 1.2
+    const size = assignTextStyle('p1')(theme).text.fontSize * 1.2
 
     const markHeight = size * 0.5
     const markWidth = size * 0.25

@@ -20,7 +20,7 @@ export const TextStyles = {
     const defaultStyle = assignTextStyle('p1')(theme).text
     return {
       text: {
-        fontFamily: theme.typography.fontFamily,
+        fontFamily: theme.typography.base.fontFamily,
         ...defaultStyle,
       },
       'text:disabled': {

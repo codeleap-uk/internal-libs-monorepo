@@ -92,7 +92,7 @@ export const ModalStyles = {
       box: {
         backgroundColor: theme.colors.background,
         width: theme.values.width - theme.spacing.value(theme.values.innerSpacing.X * 2),
-        borderRadius: theme.borderRadius.modalOuter,
+        borderRadius: theme.borderRadius.medium,
         ...theme.spacing.paddingHorizontal(theme.values.innerSpacing.X),
         ...theme.spacing.paddingVertical(theme.values.innerSpacing.Y),
       },

@@ -20,7 +20,7 @@ export const ActionIconStyles = {
       },
       touchableWrapper: {
         ...theme.sized(5),
-        borderRadius: theme.borderRadius.round,
+        borderRadius: theme.borderRadius.rounded,
         ...theme.presets.center,
       },
       'icon:disabled': {
