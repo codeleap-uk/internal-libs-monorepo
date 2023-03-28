@@ -8,12 +8,12 @@ import { StyleSheet } from 'react-native'
 import { View } from '../View'
 import {
   getNestedStylesByKey,
+  SliderStyles,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 
 import { SliderProps } from './types'
 import { InputLabel } from '../InputLabel'
-import { SliderStyles } from './styles'
 
 export * from './styles'
 

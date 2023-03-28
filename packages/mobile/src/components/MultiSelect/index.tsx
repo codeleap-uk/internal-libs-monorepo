@@ -8,7 +8,7 @@ import { List } from '../List'
 import { TextInput } from '../TextInput'
 import { MultiSelectProps } from './types'
 import { ModalManager } from '../../utils'
-import { MultiSelectStyles } from './styles'
+import { MultiSelectPresets } from './styles'
 import { SelectItem } from '../Select'
 
 export * from './styles'
@@ -36,7 +36,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     ...drawerProps
   } = selectProps
 
-  const variantStyles = useDefaultComponentStyle<'u:MultiSelect', typeof MultiSelectStyles>('u:MultiSelect', {
+  const variantStyles = useDefaultComponentStyle<'u:MultiSelect', typeof MultiSelectPresets>('u:MultiSelect', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,

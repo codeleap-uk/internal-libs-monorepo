@@ -3,7 +3,7 @@ import { Scroll, ScrollProps } from '../Scroll'
 
 import { Easing, EasingFunction, StyleSheet } from 'react-native'
 import { FormTypes, getNestedStylesByKey, PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
-import { SegmentedControlComposition, SegmentedControlStyles } from './styles'
+import { SegmentedControlComposition, SegmentedControlPresets } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
 import { Text, TextProps } from '../Text'
@@ -69,7 +69,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     ...defaultAnimation, ...animation,
   }
 
-  let variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlStyles>('u:SegmentedControl', {
+  let variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>('u:SegmentedControl', {
     styles,
     transform: StyleSheet.flatten,
     variants,

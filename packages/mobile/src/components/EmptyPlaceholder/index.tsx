@@ -13,7 +13,7 @@ import {
 
 import {
   EmptyPlaceholderComposition,
-  EmptyPlaceholderStyles,
+  EmptyPlaceholderPresets,
 } from './styles'
 
 import { ImageSourcePropType, StyleSheet, Image as RNImage } from 'react-native'
@@ -33,7 +33,7 @@ export type EmptyPlaceholderProps = {
   loading?: boolean
 
   styles?: StylesOf<EmptyPlaceholderComposition>
-  variants?: ComponentVariants<typeof EmptyPlaceholderStyles>['variants']
+  variants?: ComponentVariants<typeof EmptyPlaceholderPresets>['variants']
 
   renderEmpty?: (props: {
     emptyText:string | React.ReactElement
@@ -56,7 +56,7 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
   } = props
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
-  const componentStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderStyles>('u:EmptyPlaceholder', {
+  const componentStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderPresets>('u:EmptyPlaceholder', {
     variants,
     transform: StyleSheet.flatten,
     styles,

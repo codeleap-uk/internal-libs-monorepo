@@ -11,7 +11,7 @@ import { FlatListProps } from '../List'
 import { Text } from '../Text'
 import { TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { MultiSelectComposition, MultiSelectStyles } from './styles'
+import { MultiSelectComposition, MultiSelectPresets } from './styles'
 
 export type MultiSelectRenderFNProps<T> = {
   styles: StylesOf<MultiSelectComposition>
@@ -47,5 +47,5 @@ export type MultiSelectProps<T> = MultiSelectDrawerProps & {
     clearIconName?: IconPlaceholder
     validate?: TextInputProps['validate']
     itemProps?: Partial<Pick<MultiSelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'>>
-  } & ComponentVariants<typeof MultiSelectStyles>
+  } & ComponentVariants<typeof MultiSelectPresets>
 

@@ -16,11 +16,12 @@ import { ModalHeaderProps } from '../Modal'
 import { TextInput, TextInputProps } from '../TextInput'
 import { View, ViewProps } from '../View'
 import { CustomSelectProps, Select } from '../Select'
-import { AutoCompleteStyles, AutoCompleteComposition } from './styles'
+import { AutoCompletePresets, AutoCompleteComposition } from './styles'
 import { StylesOf } from '../../types'
 import { StyleSheet } from 'react-native'
 import { Text } from '../Text'
 import { Button } from '../Button'
+export * from './styles'
 
 export type AutoCompleteHeaderProps = ReactStateProps<'search', string> &
   Omit<PropsOf<typeof View>, 'style'|'styles'|'variants'>
@@ -43,7 +44,7 @@ export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
       <Button
         icon={'close' as IconPlaceholder}
         debugName={`Close Autocomplete ${debugName} button`}
-        onPress={toggle} variants={['icon']}
+        onPress={toggle}
         styles={styles.closeButton}/>
     </View>
     {
@@ -67,7 +68,7 @@ export type AutoCompleteProps<
     headerProps?: Partial<AutoCompleteHeaderProps>
     styles?: StylesOf<AutoCompleteComposition>
     filterFn?: (search?: string, option?:AutoCompleteOption<T>) => boolean
-  } & ComponentVariants<typeof AutoCompleteStyles>
+  } & ComponentVariants<typeof AutoCompletePresets>
 
 export const AutoComplete = <T extends string|number = string>(props: AutoCompleteProps<T>) => {
   const {
@@ -86,7 +87,7 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
   const [filteredOptions, setFilteredOptions] = useState(options)
 
   const [loading, setLoading] = useState(false)
-  const variantStyles = useDefaultComponentStyle<'u:AutoComplete', typeof AutoCompleteStyles>('u:AutoComplete', {
+  const variantStyles = useDefaultComponentStyle<'u:AutoComplete', typeof AutoCompletePresets>('u:AutoComplete', {
     variants,
     transform: StyleSheet.flatten,
     styles,

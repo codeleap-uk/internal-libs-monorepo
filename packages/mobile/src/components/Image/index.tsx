@@ -21,7 +21,7 @@ import {
 import { FastImage } from '../../modules/fastImage'
 import {
   ImageComposition,
-  ImageStyles,
+  ImagePresets,
 } from './styles'
 import { useImageSpotlight } from '../ImageView/Spotlight'
 import { Touchable } from '../Touchable'
@@ -31,7 +31,7 @@ import { StylesOf } from '../../types'
 export * from './styles'
 type NativeImageProps = ComponentPropsWithoutRef<typeof NativeImage>
 export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
-  variants?: ComponentVariants<typeof ImageStyles>['variants']
+  variants?: ComponentVariants<typeof ImagePresets>['variants']
   fast?: boolean
   styles?: StylesOf<ImageComposition>
   style?: StyleProp<ImageStyle | TextStyle | ViewStyle>
@@ -48,9 +48,6 @@ export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
   withLoadingOverlay?: boolean | React.FC<LoadingOverlayProps>
 }
 
-
-
-
 export const ImageComponent: React.FC<ImageProps> = (props) => {
   const {
     variants,
@@ -65,11 +62,11 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     ...imageProps
   } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImageStyles>('u:Image', { variants, styles: componentStyleSheet,transform: StyleSheet.flatten })
+  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImagePresets>('u:Image', { variants, styles: componentStyleSheet, transform: StyleSheet.flatten })
   const [loading, setLoading] = React.useState(false)
 
   const styles = StyleSheet.flatten([variantStyles.wrapper, style])
-  
+
   let imSource = source
   if (isFile(imSource)) {
     imSource = toMultipartFile(imSource)
@@ -86,7 +83,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
   }
 
   const aspectRatioStyle = React.useMemo(() => {
-    if (!maintainAspectRatio|| !imSource) return null
+    if (!maintainAspectRatio || !imSource) return null
     try {
       // @ts-ignore
       const assetSource = NativeImage.resolveAssetSource(imSource)
@@ -109,17 +106,17 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
 
   const loadProps = React.useRef({
     onLoadStart: () => {
-      if(withLoadingOverlay) {
+      if (withLoadingOverlay) {
         setTimeout(() => {
-          if(!loadEndedEarly.current){
+          if (!loadEndedEarly.current) {
             setLoading(true)
           }
-        },60)
+        }, 60)
       }
     }, onLoadEnd: () => {
       loadEndedEarly.current = true
-      if(withLoadingOverlay) setLoading(false)
-    }
+      if (withLoadingOverlay) setLoading(false)
+    },
   })
 
   const Loading = TypeGuards.isFunction(withLoadingOverlay) ? withLoadingOverlay : LoadingOverlay
@@ -127,14 +124,13 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
 
   const overlayStyle = React.useMemo(() => getNestedStylesByKey('overlay', variantStyles), [variantStyles])
 
-  const loadingElement = React.useMemo(() =>  {
+  const loadingElement = React.useMemo(() => {
     return showLoading ? (
       <Loading visible={loading} styles={overlayStyle}/>
-  
-      ) : null
+
+    ) : null
   }, [showLoading, loading])
-    
-  
+
   if (fast) {
     return (
       <Wrapper {...wrapperProps}>
@@ -153,10 +149,10 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     )
   }
   return <Wrapper {...wrapperProps}>
-    <NativeImage 
-      style={[aspectRatioStyle, styles]} 
-      resizeMode={resizeMode} 
-      source={imSource} {...(imageProps as any)}  
+    <NativeImage
+      style={[aspectRatioStyle, styles]}
+      resizeMode={resizeMode}
+      source={imSource} {...(imageProps as any)}
       {...loadProps.current}
     />
     {
