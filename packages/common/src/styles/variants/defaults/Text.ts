@@ -67,7 +67,6 @@ export const TextStyles = {
   h3: assignTextStyle('h3'),
   h4: assignTextStyle('h4'),
   h5: assignTextStyle('h5'),
-  h6: assignTextStyle('h6'),
   p1: assignTextStyle('p1'),
   p2: assignTextStyle('p2'),
   p3: assignTextStyle('p3'),
