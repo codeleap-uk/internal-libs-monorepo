@@ -25,7 +25,7 @@ export * from './styles'
 import {
   InputIconComposition,
   TextInputComposition,
-  TextInputStyles,
+  TextInputPresets,
 } from './styles'
 import { ActionIcon, ActionIconParts, ActionIconProps } from '../ActionIcon'
 
@@ -38,7 +38,7 @@ type SubtitleProps = {
 
 export type TextInputProps =
   Partial<TextInputMaskProps> &
-  ComponentVariants<typeof TextInputStyles> &
+  ComponentVariants<typeof TextInputPresets> &
   Omit<NativeProps, 'value'> &
   {
     multiline?: boolean
@@ -98,7 +98,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((rawprops, 
   const input = useRef<any>(null)
   const maskInputRef = useRef<any>(null)
   const [textIsVisible, setTextVisible] = useBooleanToggle(false)
-  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputStyles>('u:TextInput', {
+  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
     variants,
     styles,
     transform: StyleSheet.flatten,

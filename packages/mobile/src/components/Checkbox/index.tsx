@@ -14,8 +14,7 @@ import { FormError } from '../TextInput'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
 import {
-  CheckboxStyles,
-  CheckboxComposition,
+  CheckboxComposition, CheckboxPresets,
 } from './styles'
 import { InputLabel } from '../InputLabel'
 export * from './styles'
@@ -25,7 +24,7 @@ type NativeCheckboxProps = Omit<
   'thumbColor' | 'trackColor'
 >
 type CheckboxProps = NativeCheckboxProps & {
-  variants?: ComponentVariants<typeof CheckboxStyles>['variants']
+  variants?: ComponentVariants<typeof CheckboxPresets>['variants']
   label?: ReactNode
   styles?: StylesOf<CheckboxComposition>
   validate?: Form.ValidatorFunctionWithoutForm | string
@@ -46,7 +45,7 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
       ...props
     } = checkboxProps
 
-    const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxStyles>('u:Checkbox', {
+    const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
       variants,
       styles,
       transform: StyleSheet.flatten,

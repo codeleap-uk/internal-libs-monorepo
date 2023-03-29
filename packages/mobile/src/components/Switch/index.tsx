@@ -14,7 +14,7 @@ import { FormError } from '../TextInput'
 import { View } from '../View'
 
 import {
-  SwitchStyles,
+  SwitchPresets,
   SwitchComposition,
 } from './styles'
 import { InputLabel } from '../InputLabel'
@@ -24,7 +24,7 @@ type NativeSwitchProps = Omit<
   'thumbColor' | 'trackColor'
 >
 type SwitchProps = NativeSwitchProps & {
-  variants?: ComponentVariants<typeof SwitchStyles>['variants']
+  variants?: ComponentVariants<typeof SwitchPresets>['variants']
   label?: ReactNode
   styles?: StylesOf<SwitchComposition>
   validate?: FormTypes.ValidatorFunctionWithoutForm | string

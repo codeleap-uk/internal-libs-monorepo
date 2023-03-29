@@ -8,7 +8,7 @@ import React, {
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 import { View } from '../View'
-import { PagerStyles, PagerComposition } from './styles'
+import { PagerPresets, PagerComposition } from './styles'
 export * from './styles'
 
 export type PageProps = {
@@ -22,7 +22,7 @@ export type PageProps = {
 }
 
 export type PagerProps = React.PropsWithChildren<{
-  variants?: ComponentVariants<typeof PagerStyles>['variants']
+  variants?: ComponentVariants<typeof PagerPresets>['variants']
   styles?: StylesOf<PagerComposition>
   children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
   page?: number
@@ -46,7 +46,7 @@ export const Pager:React.FC<PagerProps> = (pagerProps) => {
     children,
   } = pagerProps
 
-  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerStyles>(
+  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
     {
       styles,
@@ -57,7 +57,6 @@ export const Pager:React.FC<PagerProps> = (pagerProps) => {
   const nChildren = React.Children.count(children)
 
   const lastPage = nChildren - 1
-
 
   const childArr = React.Children.toArray(children)
 

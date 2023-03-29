@@ -11,7 +11,7 @@ import { RefreshControl, RefreshControlProps, ScrollView, StyleSheet } from 'rea
 import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
-import { ScrollComposition, ScrollStyles } from './styles'
+import { ScrollComposition, ScrollPresets } from './styles'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 import { ScrollView as MotiScrollView } from 'moti'
 // import { KeyboardAwareScrollView } from '../../utils'
@@ -75,7 +75,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       }
     }, [refreshingDisplay, changeData])
 
-    const variantStyles = useDefaultComponentStyle<'u:Scroll', typeof ScrollStyles>('u:Scroll', {
+    const variantStyles = useDefaultComponentStyle<'u:Scroll', typeof ScrollPresets>('u:Scroll', {
       variants,
       styles,
       transform: StyleSheet.flatten,
@@ -109,7 +109,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       ...keyboardAware,
 
     })
-    const Component = (animated ? MotiScrollView : ScrollView ) as unknown as typeof ScrollView
+    const Component = (animated ? MotiScrollView : ScrollView) as unknown as typeof ScrollView
 
     return (
       <Component

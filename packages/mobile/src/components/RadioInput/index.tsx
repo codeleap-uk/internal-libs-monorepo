@@ -10,7 +10,7 @@ import {
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
-import { RadioInputComposition, RadioInputStyles } from './styles'
+import { RadioInputComposition, RadioInputPresets } from './styles'
 import { InputLabel } from '../InputLabel'
 
 export * from './styles'
@@ -20,7 +20,7 @@ type RadioItem<T extends unknown = any> = {
   label: ReactNode
 }
 
-const getRadioStyle = (props) => useDefaultComponentStyle<'u:RadioInput', typeof RadioInputStyles>('u:RadioInput', props)
+const getRadioStyle = (props) => useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', props)
 
 export type RadioButtonProps = Omit<
   ComponentPropsWithoutRef<typeof Touchable>,
@@ -40,7 +40,7 @@ export type RadioGroupProps<T> = {
   required?: boolean
   label: ReactNode
   styles?: StylesOf<RadioInputComposition>
-} & ComponentVariants<typeof RadioInputStyles>
+} & ComponentVariants<typeof RadioInputPresets>
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
   item,

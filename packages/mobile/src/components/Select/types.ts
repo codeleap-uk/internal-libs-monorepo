@@ -12,7 +12,7 @@ import { FlatListProps } from '../List'
 import { Text } from '../Text'
 import { TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { SelectComposition, SelectStyles } from './styles'
+import { SelectComposition, SelectPresets } from './styles'
 
 export type SelectRenderFNProps<T> = {
   styles: StylesOf<SelectComposition>
@@ -49,5 +49,5 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     itemProps?: Partial<
       Pick<SelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'
     >>
-  } & ComponentVariants<typeof SelectStyles>
+  } & ComponentVariants<typeof SelectPresets>
 

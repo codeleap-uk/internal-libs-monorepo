@@ -1,64 +1,64 @@
-import { ViewStyles } from './View'
-import { IconStyles } from './Icon'
-import { TouchableStyles } from './Touchable'
-import { TextStyles } from './Text'
-import { ImageStyles } from './Image'
-import { CheckboxStyles } from './Checkbox'
-import { TextInputStyles } from './TextInput'
-import { RadioInputStyles } from './RadioInput'
-import { SwitchStyles } from './Switch'
-import { SelectStyles } from './Select'
-import { FileInputStyles } from './FileInput'
-import { SliderStyles } from './Slider'
-import { SegmentedControlStyles } from './SegmentedControl'
-import { ActivityIndicatorStyles } from './ActivityIndicator'
-import { ButtonStyles } from './Button'
-import { ContentViewStyles } from './ContentView'
-import { ModalStyles } from './Modal'
-import { EmptyPlaceholderStyles } from './EmptyPlaceholder'
-import { BackdropStyles } from './Backdrop'
-import { PagerStyles } from './Pager'
-import { CalendarStyles } from './Calendar'
-import { DrawerStyles } from './Drawer/styles'
-import { ListStyles, PaginationIndicatorStyles } from './List'
-import { AutoCompleteStyles } from './AutoComplete'
-import { MultiSelectStyles } from './MultiSelect'
-import { ScrollStyles } from './Scroll'
-import { ActionIconStyles } from './ActionIcon'
+import { ViewPresets } from './View'
+import { IconPresets } from './Icon'
+import { TouchablePresets } from './Touchable'
+import { TextPresets } from './Text'
+import { ImagePresets } from './Image'
+import { CheckboxPresets } from './Checkbox'
+import { TextInputPresets } from './TextInput'
+import { RadioInputPresets } from './RadioInput'
+import { SwitchPresets } from './Switch'
+import { SelectPresets } from './Select'
+import { FileInputPresets } from './FileInput'
+import { SliderPresets } from './Slider'
+import { SegmentedControlPresets } from './SegmentedControl'
+import { ActivityIndicatorPresets } from './ActivityIndicator'
+import { ButtonPresets } from './Button'
+import { ContentViewPresets } from './ContentView'
+import { ModalPresets } from './Modal'
+import { EmptyPlaceholderPresets } from './EmptyPlaceholder'
+import { BackdropPresets } from './Backdrop'
+import { PagerPresets } from './Pager'
+import { CalendarPresets } from './Calendar'
+import { DrawerPresets } from './Drawer/styles'
+import { ListPresets, PaginationIndicatorStyles } from './List'
+import { AutoCompletePresets } from './AutoComplete'
+import { MultiSelectPresets } from './MultiSelect'
+import { ScrollPresets } from './Scroll'
+import { ActionIconPresets } from './ActionIcon'
 import { GridStyles } from './Grid'
-import { InputLabelStyles } from './InputLabel'
-import { LoadingOverlayStyles } from './LoadingOverlay'
+import { InputLabelPresets } from './InputLabel'
+import { LoadingOverlayPresets } from './LoadingOverlay'
 
 export const defaultStyles = {
-  View: ViewStyles,
-  Icon: IconStyles,
-  Touchable: TouchableStyles,
-  Text: TextStyles,
-  Image: ImageStyles,
-  Checkbox: CheckboxStyles,
-  TextInput: TextInputStyles,
-  RadioInput: RadioInputStyles,
-  Switch: SwitchStyles,
-  Select: SelectStyles,
-  FileInput: FileInputStyles,
-  List: ListStyles,
-  Slider: SliderStyles,
-  SegmentedControl: SegmentedControlStyles,
-  ActivityIndicator: ActivityIndicatorStyles,
-  Button: ButtonStyles,
-  ContentView: ContentViewStyles,
-  Modal: ModalStyles,
-  EmptyPlaceholder: EmptyPlaceholderStyles,
-  Backdrop: BackdropStyles,
-  Calendar: CalendarStyles,
-  Pager: PagerStyles,
-  Drawer: DrawerStyles,
-  AutoComplete: AutoCompleteStyles,
-  MultiSelect: MultiSelectStyles,
-  Scroll: ScrollStyles,
+  View: ViewPresets,
+  Icon: IconPresets,
+  Touchable: TouchablePresets,
+  Text: TextPresets,
+  Image: ImagePresets,
+  Checkbox: CheckboxPresets,
+  TextInput: TextInputPresets,
+  RadioInput: RadioInputPresets,
+  Switch: SwitchPresets,
+  Select: SelectPresets,
+  FileInput: FileInputPresets,
+  List: ListPresets,
+  Slider: SliderPresets,
+  SegmentedControl: SegmentedControlPresets,
+  ActivityIndicator: ActivityIndicatorPresets,
+  Button: ButtonPresets,
+  ContentView: ContentViewPresets,
+  Modal: ModalPresets,
+  EmptyPlaceholder: EmptyPlaceholderPresets,
+  Backdrop: BackdropPresets,
+  Calendar: CalendarPresets,
+  Pager: PagerPresets,
+  Drawer: DrawerPresets,
+  AutoComplete: AutoCompletePresets,
+  MultiSelect: MultiSelectPresets,
+  Scroll: ScrollPresets,
   PaginationIndicator: PaginationIndicatorStyles,
-  ActionIcon: ActionIconStyles,
+  ActionIcon: ActionIconPresets,
   Grid: GridStyles,
-  LoadingOverlay: LoadingOverlayStyles,
-  InputLabel: InputLabelStyles,
+  LoadingOverlay: LoadingOverlayPresets,
+  InputLabel: InputLabelPresets,
 }

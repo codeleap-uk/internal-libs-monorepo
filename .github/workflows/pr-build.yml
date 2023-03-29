@@ -5,6 +5,9 @@ on:
       - master
     paths:
       - "packages/**/*"
+concurrency:
+  group: ${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest

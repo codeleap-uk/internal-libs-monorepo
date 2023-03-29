@@ -10,13 +10,13 @@ import {
 import { Animated, Platform, StyleSheet, Text as NativeText } from 'react-native'
 import { MotiText as _MotiText, MotiProps } from 'moti'
 import { useAnimateColor, usePressableFeedback } from '../../utils'
-import { TextStyles } from './styles'
+import { TextPresets } from './styles'
 
 export * from './styles'
 
 export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   text?: React.ReactNode
-  variants?: ComponentVariants<typeof TextStyles>['variants']
+  variants?: ComponentVariants<typeof TextPresets>['variants']
   animated?: boolean
   colorChangeConfig?: Partial<Animated.TimingAnimationConfig>
   debugName?: string
@@ -61,7 +61,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
       }
     }
   }
-  const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextStyles>('u:Text', {
+  const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
     variants,
     transform: StyleSheet.flatten,
     rootElement: 'text',
@@ -88,7 +88,6 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const pressProps = !!onPress ? {
     onPress: pressDisabled ? null : _onPress,
   } : {}
-
 
   return <Component {...props}
     onPressIn={handlePress(true)} onPressOut={handlePress(false)}
