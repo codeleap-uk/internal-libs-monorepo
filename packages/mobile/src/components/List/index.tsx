@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { forwardRef } from 'react'
 import {
-
   useDefaultComponentStyle,
-
   ComponentVariants,
   useCallback,
 } from '@codeleap/common'
@@ -11,7 +9,7 @@ import {
 import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { ListComposition, ListStyles } from './styles'
+import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 
@@ -41,7 +39,7 @@ export type FlatListProps<
     keyboardAware?: GetKeyboardAwarePropsOptions
     styles?: StylesOf<ListComposition>
     refreshControlProps?: Partial<RefreshControlProps>
-  } & ComponentVariants<typeof ListStyles>
+  } & ComponentVariants<typeof ListPresets>
 
 const ListCP = forwardRef<FlatList, FlatListProps>(
   (flatListProps, ref) => {
@@ -58,7 +56,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ...props
     } = flatListProps
 
-    const variantStyles = useDefaultComponentStyle<'u:List', typeof ListStyles>('u:List', {
+    const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
       variants,
       styles,
       transform: StyleSheet.flatten,
@@ -110,5 +108,5 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
 export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
 
-export const List = ListCP as  unknown as ListComponentType
+export const List = ListCP as unknown as ListComponentType
 

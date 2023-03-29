@@ -12,7 +12,7 @@ import {
 } from '@codeleap/common'
 
 import {
-  ButtonStyles,
+  ButtonPresets,
   ButtonComposition,
   ButtonParts,
 } from './styles'
@@ -40,7 +40,7 @@ type BadgeProps = Omit<Partial<ViewProps>, 'ref'> & {
 }
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
-  ComponentVariants<typeof ButtonStyles> & {
+  ComponentVariants<typeof ButtonPresets> & {
     text?: string
     rightIcon?: IconPlaceholder
     icon?: IconPlaceholder

@@ -6,7 +6,7 @@ import {
 
 } from '@codeleap/common'
 import {
-  ContentViewStyles,
+  ContentViewPresets,
 } from './styles'
 import { ViewProps, View, ViewComposition } from '../View'
 import { Text } from '../Text'
@@ -23,7 +23,7 @@ export type ContentViewProps = Omit<
   message?: string
   loading?: boolean
   styles?: StylesOf<ViewComposition>
-} & ComponentVariants<typeof ContentViewStyles>
+} & ComponentVariants<typeof ContentViewPresets>
 
 const WrapContent = ({ children, ...props }) => (
   <View {...props}>{children}</View>

@@ -1,12 +1,13 @@
-import { ComponentVariants, Form } from '@codeleap/common'
+import { ComponentVariants, Form, SliderStyles } from '@codeleap/common'
 
 import {
-  SliderComposition, SliderStyles,
+  SliderComposition,
 } from './styles'
 
 import { SliderProps as RNSliderProps } from '@miblanchard/react-native-slider/lib/types'
 import { StylesOf } from '../../types'
 import { ViewProps } from '../View'
+
 export type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>> & {
     debounce?: number
     labels: string[]

@@ -13,7 +13,7 @@ import {
 import { Pressable, StyleSheet, View as RNView } from 'react-native'
 
 import { createAnimatableComponent } from 'react-native-animatable'
-import { TouchableComposition, TouchableStyles } from './styles'
+import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
@@ -22,7 +22,7 @@ export type TouchableProps = React.PropsWithChildren<
     ComponentPropsWithoutRef<typeof Pressable>,
     'onPress'|'children'
   > & {
-    variants?: ComponentVariants<typeof TouchableStyles>['variants']
+    variants?: ComponentVariants<typeof TouchablePresets>['variants']
     component?: any
     ref?: React.Ref<RNView>
     debugName: string
@@ -55,18 +55,17 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     ...props
   } = touchableProps
 
-  
   const pressed = React.useRef(!!leadingDebounce)
 
   onMount(() => {
-    if(!!leadingDebounce && !!debounce){
+    if (!!leadingDebounce && !!debounce) {
       setTimeout(() => {
         pressed.current = false
       }, debounce)
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchableStyles>('u:Touchable', {
+  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchablePresets>('u:Touchable', {
     variants,
     transform: StyleSheet.flatten,
     rootElement: 'wrapper',

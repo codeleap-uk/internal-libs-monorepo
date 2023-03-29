@@ -7,7 +7,7 @@ import { View } from '../View'
 import { StylesOf } from '../../types/utility'
 import { StyleSheet } from 'react-native'
 import { useStaticAnimationStyles } from '../../utils'
-import { BackdropComposition, BackdropStyles } from './styles'
+import { BackdropComposition, BackdropPresets } from './styles'
 
 export * from './styles'
 export type BackdropProps = React.PropsWithChildren<
@@ -15,14 +15,14 @@ export type BackdropProps = React.PropsWithChildren<
   PropsOf<typeof Touchable> & {
     visible: boolean
     wrapperProps?: PropsOf<typeof View>
-    variants?: ComponentVariants<typeof BackdropStyles>['variants']
+    variants?: ComponentVariants<typeof BackdropPresets>['variants']
     styles?: StylesOf<BackdropComposition>
 }>
 
 export const Backdrop = (backdropProps:BackdropProps) => {
   const { variants = [], styles = {}, visible, children, wrapperProps = {}, ...props } = backdropProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Backdrop', typeof BackdropStyles>('u:Backdrop', {
+  const variantStyles = useDefaultComponentStyle<'u:Backdrop', typeof BackdropPresets>('u:Backdrop', {
     variants,
     rootElement: 'wrapper',
     styles,

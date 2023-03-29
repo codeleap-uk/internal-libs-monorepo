@@ -6,14 +6,14 @@ import { format, formatISO } from 'date-fns'
 import { Calendar as RNCalendar, CalendarProps as RNCalendarProps, DateData } from 'react-native-calendars'
 
 import { View } from '../View'
-import { CalendarStyles } from './style'
 import { TCalendarStyles } from './types'
+import { CalendarPresets } from './style'
 export type CalendarProps = PropsOf<typeof View> & {
   styles?: TCalendarStyles
   onValueChange?: (date: Date|string) => any
   value?: Date|string
   calendarProps?: RNCalendarProps
-} & ComponentVariants<typeof CalendarStyles>
+} & ComponentVariants<typeof CalendarPresets>
 export * from './style'
 export * from './types'
 
@@ -27,7 +27,7 @@ export const Calendar = (props:CalendarProps) => {
     onValueChange,
     ...viewProps
   } = props
-  const variantStyles = useDefaultComponentStyle<'u:Calendar', typeof CalendarStyles>('u:Calendar', {
+  const variantStyles = useDefaultComponentStyle<'u:Calendar', typeof CalendarPresets>('u:Calendar', {
     variants,
     styles,
     transform: StyleSheet.flatten,

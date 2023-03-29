@@ -5,11 +5,4 @@ export type FileInputComposition = 'label' | 'wrapper' | 'input'
 const createFileInputStyle =
   createDefaultVariantFactory<FileInputComposition>()
 
-const presets = includePresets((styles) => createFileInputStyle(() => ({ wrapper: styles })),
-)
-
-export const FileInputStyles = {
-  ...presets,
-  default: createFileInputStyle((theme) => ({})),
-
-}
+export const FileInputPresets = includePresets((styles) => createFileInputStyle(() => ({ wrapper: styles })))

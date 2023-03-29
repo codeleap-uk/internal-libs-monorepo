@@ -14,8 +14,7 @@ export type PagerComposition =
 
 const createPagerStyle = createDefaultVariantFactory<PagerComposition>()
 
-const presets = includePresets((style) => createPagerStyle(() => ({ wrapper: style })),
-)
+export const PagerPresets = includePresets((style) => createPagerStyle(() => ({ wrapper: style })))
 export const defaultPagerTransition = {
   type: 'timing',
   duration: 300,
@@ -47,35 +46,4 @@ export function pagerAnimation(height, width, translate = 'X', transition = defa
       [translateProp]: -translateVal,
     },
   }
-}
-
-export const PagerStyles = {
-  ...presets,
-  default: createPagerStyle((theme) => {
-    const width = theme.values.width
-    const height = theme.values.window.height * 0.8
-    return {
-      ...pagerAnimation(height, width, 'X'),
-      page: {
-        width: '100%',
-        height: '100%',
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        top: 0,
-      },
-    }
-  }),
-  horizontal: createPagerStyle((theme) => {
-
-    const width = theme.values.width
-    const height = theme.values.window.height * 0.8
-    return pagerAnimation(height, width, 'X')
-  }),
-  vertical: createPagerStyle((theme) => {
-    const height = theme.values.window.height * 0.8
-    const width = theme.values.width
-    return pagerAnimation(height, width, 'Y')
-  }),
 }

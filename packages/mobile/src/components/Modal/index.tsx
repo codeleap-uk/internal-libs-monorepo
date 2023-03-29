@@ -12,7 +12,7 @@ import {
 } from '@codeleap/common'
 import {
   ModalComposition,
-  ModalStyles,
+  ModalPresets,
   ModalParts,
 } from './styles'
 import { StyleSheet } from 'react-native'
@@ -28,7 +28,7 @@ import { ActionIcon } from '../ActionIcon'
 export * from './styles'
 
 export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
-  variants?: ComponentVariants<typeof ModalStyles>['variants']
+  variants?: ComponentVariants<typeof ModalPresets>['variants']
   styles?: StylesOf<ModalComposition>
   dismissOnBackdrop?: boolean
   buttonProps?: ButtonProps
@@ -48,7 +48,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
   keyboardAware?: GetKeyboardAwarePropsOptions
-  scrollProps?: PropsOf<typeof Scroll,'ref'>
+  scrollProps?: PropsOf<typeof Scroll, 'ref'>
 }
 
 export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
@@ -123,14 +123,14 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   const boxAnimationStates = useStaticAnimationStyles(variantStyles, ['box:hidden', 'box:visible'])
 
   const boxAnimationStyles = useAnimatedVariantStyles({
-    updater: (states ) => {
-      'worklet';
-      return visible ? states['box:visible'] : states['box:hidden'] 
+    updater: (states) => {
+      'worklet'
+      return visible ? states['box:visible'] : states['box:hidden']
     },
     animatedProperties: ['box:hidden', 'box:visible'],
     variantStyles,
-    transition:variantStyles['box:transition'],
-    dependencies: [visible]
+    transition: variantStyles['box:transition'],
+    dependencies: [visible],
   })
 
   const wrapperStyle = getStyles('wrapper')
@@ -198,8 +198,8 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
           />}
 
         <AnimatedView
-        
-          style={[getStyles('box'),boxAnimationStyles]}
+
+          style={[getStyles('box'), boxAnimationStyles]}
           // transition={{ ...variantStyles['box:transition'] }}
 
           {...props}

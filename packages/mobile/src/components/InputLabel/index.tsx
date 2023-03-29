@@ -2,7 +2,7 @@ import React from 'react'
 import { ComponentVariants, FormTypes, useDefaultComponentStyle } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { View, ViewProps } from '../View'
-import { InputLabelComposition, InputLabelStyles } from './styles'
+import { InputLabelComposition, InputLabelPresets } from './styles'
 import { Text } from '../Text'
 import { StyleSheet } from 'react-native'
 
@@ -10,13 +10,13 @@ export type InputLabelProps = ViewProps & {
     styles?: StylesOf<InputLabelComposition>
     label?: FormTypes.Label
     required?: boolean
-} & ComponentVariants<typeof InputLabelStyles>
+} & ComponentVariants<typeof InputLabelPresets>
 
 export * from './styles'
 
 export const InputLabel:React.FC<InputLabelProps> = (props) => {
   const { label, required = false, variants = [], styles = {}, style, ...viewProps } = props
-  const variantStyles = useDefaultComponentStyle<'u:InputLabel', typeof InputLabelStyles>('u:InputLabel', {
+  const variantStyles = useDefaultComponentStyle<'u:InputLabel', typeof InputLabelPresets>('u:InputLabel', {
     variants, styles, transform: StyleSheet.flatten,
   })
 

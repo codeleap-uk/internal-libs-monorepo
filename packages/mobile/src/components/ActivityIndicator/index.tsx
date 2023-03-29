@@ -10,14 +10,14 @@ import {
 import { StylesOf } from '../../types'
 import {
   ActivityIndicatorComposition,
-  ActivityIndicatorStyles,
+  ActivityIndicatorPresets,
 } from './styles'
 
 export * from './styles'
 export type ActivityIndicatorProps =
   IndicatorProps
  & {
-  variants?: ComponentVariants<typeof ActivityIndicatorStyles>['variants']
+  variants?: ComponentVariants<typeof ActivityIndicatorPresets>['variants']
   styles?: StylesOf<ActivityIndicatorComposition>
 }
 
