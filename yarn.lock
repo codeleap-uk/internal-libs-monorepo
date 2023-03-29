@@ -8635,7 +8635,7 @@ babel-plugin-polyfill-regenerator@^0.4.1:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.3.3"
 
-babel-plugin-preval@^5.1.0:
+babel-plugin-preval@5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-preval/-/babel-plugin-preval-5.1.0.tgz#6efb89bf6b97af592cd1400c6df49c0e9e6ab027"
   integrity sha512-G5R+xmo5LS41A4UyZjOjV0mp9AvkuCyUOAJ6TOv/jTZS+VKh7L7HUDRcCSOb0YCM/u0fFarh7Diz0wjY8rFNFg==
@@ -23406,14 +23406,6 @@ react-window@1.8.5:
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
-
-react@17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
-  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 react@18.1.0:
   version "18.1.0"
