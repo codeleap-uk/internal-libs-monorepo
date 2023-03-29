@@ -23089,10 +23089,10 @@ react-native-pose@^0.9.1:
     animated-pose "^1.2.0"
     react-pose-core "^0.5.0"
 
-react-native-reanimated@2.14.4:
-  version "2.14.4"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.14.4.tgz#3fa3da4e7b99f5dfb28f86bcf24d9d1024d38836"
-  integrity sha512-DquSbl7P8j4SAmc+kRdd75Ianm8G+IYQ9T4AQ6lrpLVeDkhZmjWI0wkutKWnp6L7c5XNVUrFDUf69dwETLCItQ==
+react-native-reanimated@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.0.2.tgz#8f7284fab2b0cd949779429e48f32d19a966bbd6"
+  integrity sha512-8Et90yTI9yxchGbDP79k391XZqc/64zNbASbGy8X3Vgv4EbZ1M3IkKwcIbZmbVwpA804VJ6V9nJAGUh9fP0LrA==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"
@@ -23349,14 +23349,6 @@ react-window@1.8.5:
   dependencies:
     "@babel/runtime" "^7.0.0"
     memoize-one ">=3.1.1 <6"
-
-react@17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
-  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 react@18.1.0:
   version "18.1.0"
