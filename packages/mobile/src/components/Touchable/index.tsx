@@ -163,8 +163,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       pressableStyle.height = '100%'
     }
     wrapperStyle.overflow = 'hidden'
-    // wrapperStyle.flexDirection = 'row'
-    // wrapperStyle.alignItems = 'stretch'
 
     return {
       wrapperStyle,
@@ -175,10 +173,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   return (
     <Wrapper style={[wrapperStyle]}>
       <Pressable onPress={press} style={({ pressed }) => ([
-
-        // defaultPressableStyles,
         pressableStyle,
-        // !!rippleConfig && ripplePressableStyles,
         getFeedbackStyle(pressed),
         variantStyles.pressable,
       ])} android_ripple={rippleConfig} {...props} ref={ref}>

@@ -14,10 +14,11 @@ import {
   useReducer,
 } from 'react'
 import { deepMerge } from './object'
-import { AnyFunction, DeepPartial } from '../types'
+import { AnyFunction, DeepPartial, StylesOf } from '../types'
 
 import { uniqueId } from 'lodash'
 import { useUnmount } from 'react-use'
+import { getNestedStylesByKey } from './misc'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -395,3 +396,12 @@ export function useCounter(){
   return useReducer((x) => x+1, 0)
 
 }
+
+export function useNestedStylesByKey<T extends string, O extends StylesOf<T> = StylesOf<T>>(match: string, variantStyles: any): O {
+
+  return useMemo(() => {
+    return getNestedStylesByKey(match, variantStyles) as O
+  }, [])
+
+}
+
