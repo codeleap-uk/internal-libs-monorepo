@@ -3,12 +3,9 @@ import { onMount, onUpdate } from '../../utils'
 import { ValidatorFunctionWithoutForm } from './types'
 import { getValidator, yup } from '../..'
 
-
-
 const emptyValues = ['', null, undefined]
 
-
-export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm){
+export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm) {
 
   const isEmpty = emptyValues.includes(value)
 
@@ -19,9 +16,9 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
   const _validator = useMemo(() => getValidator(validator), [])
 
   onUpdate(() => {
-    if(!updateErrorOnChange.current) return
+    if (!updateErrorOnChange.current || !_validator) return
 
-    const {valid, message} = _validator(value, {})
+    const { valid, message } = _validator(value, {})
 
     setIsValid(valid)
     setMessage(message)
@@ -29,15 +26,17 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
   return {
     onInputBlurred: () => {
+      if (!_validator) return
+
       updateErrorOnChange.current = false
-      const {valid, message} = _validator(value, {})
+      const { valid, message } = _validator(value, {})
 
       setIsValid(valid)
       setMessage(message)
 
     },
     onInputFocused: () => {
-      if(isValid || isEmpty) return
+      if (isValid || isEmpty) return
       updateErrorOnChange.current = true
     },
     message,
