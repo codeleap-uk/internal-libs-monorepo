@@ -1,36 +1,49 @@
-import { useRef, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
 import { onMount, onUpdate } from '../../utils'
 import { ValidatorFunctionWithoutForm } from './types'
+import { getValidator, yup } from '../..'
 
-export function useValidate(
-  value,
-  validate: ValidatorFunctionWithoutForm | string,
-) {
-  const [error, setError] = useState<ReturnType<ValidatorFunctionWithoutForm>>({
-    valid: true,
-    message: '',
-  })
 
-  const mounted = useRef(false)
+
+const emptyValues = ['', null, undefined]
+
+
+export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm){
+
+  const isEmpty = emptyValues.includes(value)
+
+  const [message, setMessage] = useState<ReactNode>('')
+  const [isValid, setIsValid] = useState<boolean>(true)
+  const updateErrorOnChange = useRef(false)
+
+  const _validator = useMemo(() => getValidator(validator), [])
 
   onUpdate(() => {
-    const result =
-    typeof validate === 'function'
-      ? validate(value)
-      : { message: validate, valid: false }
-    setError(result)
-  }, [value, validate])
+    if(!updateErrorOnChange.current) return
 
-  const showError = !error.valid && !!error.message && mounted.current
-  onMount(() => {
-    if (!mounted.current) {
-      mounted.current = true
-    }
-  })
+    const {valid, message} = _validator(value, {})
+
+    setIsValid(valid)
+    setMessage(message)
+  }, [value])
 
   return {
-    showError,
-    error,
-    setError,
+    onInputBlurred: () => {
+      updateErrorOnChange.current = false
+      const {valid, message} = _validator(value, {})
+
+      setIsValid(valid)
+      setMessage(message)
+
+    },
+    onInputFocused: () => {
+      if(isValid || isEmpty) return
+      updateErrorOnChange.current = true
+    },
+    message,
+    isValid,
+
   }
+
 }
+

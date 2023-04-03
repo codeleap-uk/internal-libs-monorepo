@@ -75,6 +75,10 @@ export function getRenderedComponent<P = any>(
   DefaultComponent: React.FC<P>, 
   props?: P
 ): React.ReactNode {
+
+  if(TypeGuards.isNil(ComponentOrProps)) {
+    return null
+  }
   
   if (TypeGuards.isFunction(ComponentOrProps)) {
     return <ComponentOrProps {...props}/>

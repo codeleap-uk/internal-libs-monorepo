@@ -38,7 +38,6 @@
     "react-native-image-crop-picker": "*",
     "react-native-image-viewing": "^0.2.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-text-input-mask": "3.1.4",
     "@react-native-community/async-storage": "*",
     "react-native-device-info": "10.3.0"
   },

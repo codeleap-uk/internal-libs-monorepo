@@ -11,7 +11,7 @@ import {
 } from '.'
 import { AnyFunction, ComponentVariants, FunctionType, NestedKeys, StylesOf } from '..'
 import { silentLogger } from '../constants'
-import { onMount, onUpdate } from '../utils'
+import { deepMerge, onMount, onUpdate } from '../utils'
 import { StyleContextProps, StyleContextValue } from './types'
 
 export const StyleContext = createContext(
@@ -110,6 +110,27 @@ type useDefaultComponentStyleProps<
   transform?: AnyFunction
 }
 
+const getTransformedStyles = (styles, transform) => {
+  if(!transform) return styles
+
+  if(Array.isArray(styles)) {
+    return styles.reduce((acc, style) => {
+      return deepMerge(
+        acc,
+        getTransformedStyles(style, transform)
+      )
+    }, {} )
+  }
+
+
+  return Object.fromEntries(
+    Object.entries(styles || {}).map(([key, value]) => [
+      key,
+      transform(value),
+    ]),
+  )
+}
+
 export function useDefaultComponentStyle<
   K extends ComponentNameArg | `u:${string}`,
   S extends DefaultVariantBuilder<any>
@@ -124,14 +145,8 @@ export function useDefaultComponentStyle<
   const { ComponentVariants: CV, provider, currentTheme } = useCodeleapContext() || {}
   try {
 
-    const styles = props?.transform
-      ? Object.fromEntries(
-        Object.entries(props?.styles || {}).map(([key, value]) => [
-          key,
-          props.transform(value),
-        ]),
-      )
-      : props.styles
+    const styles = getTransformedStyles(props.styles, props.transform)
+
     let name = componentName as string
 
     if (componentName.startsWith('u:')) {
@@ -145,16 +160,19 @@ export function useDefaultComponentStyle<
       )
     }
 
-    const stylesheet = useMemo(() => provider.getStyles(v, {
-      // @ts-ignore
-      variants: props.variants || [],
-      // @ts-ignore
-      responsiveVariants: props.responsiveVariants || {},
-      rootElement: props.rootElement,
-      // @ts-ignore
-      styles,
-      size: windowSize,
-    }, currentTheme as string), [props.variants, windowSize.height, windowSize.width, props.responsiveVariants, props.rootElement, styles, componentName])
+    const stylesheet = useMemo(() => {
+      return provider.getStyles(v, {
+        // @ts-ignore
+        variants: props.variants || [],
+        // @ts-ignore
+        responsiveVariants: props.responsiveVariants || {},
+        rootElement: props.rootElement,
+        // @ts-ignore
+        styles,
+        size: windowSize,
+      }, currentTheme as string)
+
+    }, [...(props.variants ?? []), windowSize.height, windowSize.width, styles, props.rootElement, componentName])
     return stylesheet as any
   } catch (e) {
     throw new Error('useDefaultComponentStyle with args ' + arguments + e)
