@@ -33,6 +33,7 @@ export type TouchableProps = React.PropsWithChildren<
     debounce?: number
     leadingDebounce?: boolean
     styles?: StylesOf<TouchableComposition>
+    setButtonPressed?: (param: boolean) => void
 } & BaseViewProps
 >
 export * from './styles'
@@ -52,6 +53,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     leadingDebounce,
     noFeedback = false,
     styles,
+    setButtonPressed,
     ...props
   } = touchableProps
 
@@ -93,9 +95,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       if (pressed.current) {
         return
       }
+      setButtonPressed?.(true)
       pressed.current = true
       _onPress()
       setTimeout(() => {
+        setButtonPressed?.(false)
         pressed.current = false
       }, debounce)
     } else {
