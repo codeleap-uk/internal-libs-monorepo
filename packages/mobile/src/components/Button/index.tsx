@@ -91,7 +91,6 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     transform: StyleSheet.flatten,
     styles,
   })
-  const { logger } = useCodeleapContext()
 
   function getStyles(key: ButtonParts) {
     return [
@@ -121,17 +120,15 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   }
 
   const disableFeedback = !onPress || props?.noFeedback
-  const textStyles = StyleSheet.flatten([variantStyles.text])
-  const wrapperStyles = StyleSheet.flatten([variantStyles.wrapper])
 
-  const { getFeedbackStyle } = usePressableFeedback(textStyles, {
+  const { getFeedbackStyle } = usePressableFeedback(variantStyles.text, {
     hightlightPropertyIn: 'color',
     hightlightPropertyOut: 'color',
     feedbackConfig: variantStyles?.textFeedback,
     disabled: disableFeedback,
   })
 
-  const { getFeedbackStyle: getFeedbackWrapperStyle } = usePressableFeedback(wrapperStyles, {
+  const { getFeedbackStyle: getFeedbackWrapperStyle } = usePressableFeedback(variantStyles.wrapper, {
     hightlightPropertyIn: 'borderColor',
     hightlightPropertyOut: 'borderColor',
     disabled: disableFeedback,
@@ -164,7 +161,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       onPress={onPress}
       debugComponent={'Button'}
       noFeedback={!onPress}
-      setButtonPressed={setPressed}
+      setPressed={setPressed}
       {...props}
     >
       {_badge}

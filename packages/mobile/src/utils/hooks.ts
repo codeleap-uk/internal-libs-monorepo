@@ -199,8 +199,17 @@ export function usePressableFeedback(styles: any, config:UsePressableFeedbackCon
   const _feedbackConfig = {
     ...feedbackConfig,
   }
-  const disableFeedback = disabled
+  let style
 
+  if (TypeGuards.isObject(styles)) {
+    style = styles?.[hightlightPropertyIn]
+  } else if (TypeGuards.isArray(styles)) {
+    style = styles.reverse().find(s => s[hightlightPropertyIn])
+  } else {
+    style = StyleSheet.flatten(styles)[hightlightPropertyIn]
+  }
+
+  const disableFeedback = disabled
   const rippleEnabled = _feedbackConfig?.type === 'ripple' && !disableFeedback
   const rippleConfig = rippleEnabled ? _feedbackConfig?.config : null
 
@@ -214,7 +223,7 @@ export function usePressableFeedback(styles: any, config:UsePressableFeedbackCon
     switch (feedbackConfig.type) {
       case 'highlight':
         if (!pressed && hightlightPropertyIn !== hightlightPropertyOut) return {}
-        let highlightColorDefault = styles?.[hightlightPropertyIn] || '#0000'
+        let highlightColorDefault = style || '#0000'
         if (pressed) {
           if (feedbackConfig?.color) {
             highlightColorDefault = feedbackConfig?.color
