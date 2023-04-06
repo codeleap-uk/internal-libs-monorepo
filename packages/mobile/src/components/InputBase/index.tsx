@@ -39,12 +39,14 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
   const _styles = useInputBaseStyles(props)
  
   const _leftIcon = getRenderedComponent<ActionIconProps>(leftIcon, ActionIcon, {
+    debugName,
+    // @ts-ignore
     styles: _styles.leftIconStyles,
-    debugName
   })
-
+  
   const _rightIcon = getRenderedComponent<ActionIconProps>(rightIcon, ActionIcon, {
     debugName,
+    // @ts-ignore
     styles: _styles.rightIconStyles
   })
 
@@ -55,7 +57,13 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
 
 
   const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/>  : description
+  
 
+
+  console.log({
+    innerWrapperProps,
+    
+  })
 
   return <WrapperComponent 
     style={_styles.wrapperStyle} 

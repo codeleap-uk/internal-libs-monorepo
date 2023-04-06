@@ -106,7 +106,7 @@ type useDefaultComponentStyleProps<
   Comp extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
 > = ComponentVariants<C> & {
   rootElement?: Comp
-  styles?: StylesOf<Comp>
+  styles?: StylesOf<Comp> | StylesOf<Comp>[]
   transform?: AnyFunction
 }
 

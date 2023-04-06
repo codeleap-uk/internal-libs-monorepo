@@ -27,7 +27,7 @@ type CheckboxProps = NativeCheckboxProps & {
   variants?: ComponentVariants<typeof CheckboxPresets>['variants']
   label?: ReactNode
   styles?: StylesOf<CheckboxComposition>
-  validate?: Form.ValidatorFunctionWithoutForm | string
+  validate?: Form.ValidatorFunctionWithoutForm
   required?: boolean
 }
 
@@ -51,13 +51,13 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
       transform: StyleSheet.flatten,
     })
 
-    const { error, showError } = useValidate(value, validate)
+    const validation = useValidate(value, validate)
 
     function getStyles(key: CheckboxComposition, styleObj = variantStyles) {
       return [
         styleObj[key],
         value ? styleObj[key + ':checked'] : {},
-        showError ? styleObj[key + ':error'] : {},
+        validation. ? styleObj[key + ':error'] : {},
         checkboxProps.disabled ? styleObj[key + ':disabled'] : {},
       ]
     }
@@ -83,7 +83,7 @@ export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, Chec
           }} required={required}/>
 
         </Touchable>
-        <FormError text={error.message} style={getStyles('error')} />
+        <FormError text={validation.message} style={getStyles('error')} />
       </View>
     )
   },

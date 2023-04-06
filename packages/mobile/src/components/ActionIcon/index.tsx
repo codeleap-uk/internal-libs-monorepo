@@ -9,7 +9,7 @@ import { ActionIconComposition, ActionIconPresets } from './styles'
 export type ActionIconProps= {
     iconProps?: Partial<IconProps>
     icon?: IconProps['name']
-    styles?: StylesOf<ActionIconComposition>
+    styles?: StylesOf<ActionIconComposition> | StylesOf<ActionIconComposition>[]
 } & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {

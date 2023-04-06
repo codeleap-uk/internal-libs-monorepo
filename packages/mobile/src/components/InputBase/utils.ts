@@ -6,14 +6,15 @@ type OmitDiff<T1, T2> =  {
   [K in keyof T2]: T2[K]
 }
  
+type InputBaseKey = keyof InputBaseProps
 
 export function selectInputBaseProps<T extends InputBaseProps>(props: T ): {
   inputBaseProps: InputBaseProps
   others: OmitDiff<T, T>
 } {
-  const varList:(keyof InputBaseProps)[] = [
+  const varList:InputBaseKey[] = [
     'label', 
-    'debugName', 
+    
     'error', 
     'innerWrapper', 
     'leftIcon', 
@@ -30,8 +31,9 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T ): {
   const copy = { ...props }
 
   const result = varList.reduce((acc, key) => {
+    // @ts-ignore
     acc[key] = copy[key]
-    delete copy[key]
+    
     return acc
   }, {} as InputBaseProps)
 

@@ -31,6 +31,7 @@ export type TextInputProps =
   > &
   {
     styles?: StylesOf<TextInputComposition>
+    password?: boolean
     validate?: FormTypes.ValidatorFunctionWithoutForm | yup.SchemaOf<string>
     debugName: string
     visibilityToggle?: boolean
@@ -57,11 +58,13 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     debugName,
     visibilityToggle = false,
     masking,
+    password,
     onChangeMask,
+    onPress,
     ...textInputProps
   } = others
 
-  const [secureTextEntry, toggleSecureTextEntry] = useBooleanToggle(false)
+  const [secureTextEntry, toggleSecureTextEntry] = useBooleanToggle(true)
 
   const isMasked = !!masking
 
@@ -84,7 +87,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     }
   }, [!!innerInputRef?.current?.focus])
 
-  const isPressable = TypeGuards.isFunction(props.onPress)
+  const isPressable = TypeGuards.isFunction(onPress)
 
   const validation = useValidate(value, validate)
 
@@ -125,7 +128,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? 'input-visiblity:visible' : 'input-visiblity:hidden') as IconPlaceholder,
+    icon: (secureTextEntry ?   'input-visiblity:hidden' : 'input-visiblity:visible') as IconPlaceholder,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -145,9 +148,18 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     ...masking,
   } : {}
 
+  const buttonModeProps = isPressable ? {
+    // pointerEvents: 'none',
+    editable: false,
+    caretHidden: true
+  } : {}
+
+  console.log({debugName, isPressable, o: inputBaseProps.innerWrapperProps,  onPress, textInputProps})
+
   return <InputBase
     innerWrapper={isPressable ? Touchable : undefined}
     {...inputBaseProps}
+    debugName={debugName}
     error={validation.isValid ? null : validation.message}
     styles={{
       ...variantStyles,
@@ -157,22 +169,22 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       ],
     }}
     innerWrapperProps={{
-      onPress: props.onPress,
-      ...inputBaseProps.innerWrapperProps,
+      ...(inputBaseProps.innerWrapperProps  || {}),
+      onPress,
       debugName,
     }}
     rightIcon={rightIcon}
     focused={isFocused}
   >
     <InputElement
-      textAlignVertical='center'
+      
       allowFontScaling={false}
       editable={!isPressable && !isDisabled}
-      pointerEvents={isPressable ? 'none' : 'auto'}
+      {...buttonModeProps}
       placeholderTextColor={placeholderTextColor}
       value={value}
       selectionColor={selectionColor}
-      secureTextEntry={secureTextEntry}
+      secureTextEntry={password && secureTextEntry}
       {...textInputProps}
       onBlur={handleBlur}
       onFocus={handleFocus}
