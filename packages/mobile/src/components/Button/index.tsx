@@ -9,6 +9,8 @@ import {
   TypeGuards,
   deepMerge,
   PropsOf,
+  useCodeleapContext,
+  onUpdate,
 } from '@codeleap/common'
 
 import {
@@ -24,6 +26,7 @@ import { Icon } from '../Icon'
 import { View, ViewProps } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { StyleSheet } from 'react-native'
+import { usePressableFeedback } from '../../utils'
 export * from './styles'
 
 type ChildProps = {
@@ -82,7 +85,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     style,
     ...props
   } = buttonProps
-
+  const [pressed, setPressed] = React.useState(false)
   const variantStyles = useDefaultComponentStyle('u:Button', {
     variants,
     transform: StyleSheet.flatten,
@@ -116,6 +119,22 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   }
 
+  const disableFeedback = !onPress || props?.noFeedback
+
+  const { getFeedbackStyle } = usePressableFeedback(variantStyles.text, {
+    hightlightPropertyIn: 'color',
+    hightlightPropertyOut: 'color',
+    feedbackConfig: variantStyles?.textFeedback,
+    disabled: disableFeedback,
+  })
+
+  const { getFeedbackStyle: getFeedbackWrapperStyle } = usePressableFeedback(variantStyles.wrapper, {
+    hightlightPropertyIn: 'borderColor',
+    hightlightPropertyOut: 'borderColor',
+    disabled: disableFeedback,
+    feedbackConfig: variantStyles?.wrapperFeedback,
+  })
+
   const childrenContent = TypeGuards.isFunction(children) ?
     // @ts-ignore
     children({ styles: _styles, props: buttonProps })
@@ -133,7 +152,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   return (
     <Touchable
-      style={_styles.wrapper}
+      style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
       ref={ref}
       disabled={disabled}
       styles={{
@@ -142,14 +161,15 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       onPress={onPress}
       debugComponent={'Button'}
       noFeedback={!onPress}
+      setPressed={setPressed}
       {...props}
     >
       {_badge}
-      {loading && <ActivityIndicator style={_styles.loader} />}
-      {!loading && <Icon name={icon} style={_styles.leftIcon} renderEmptySpace={hasText && !!rightIcon}/>}
-      {text ? <Text text={text} style={_styles.text} /> : null}
+      {loading && <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} />}
+      {!loading && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} renderEmptySpace={hasText && !!rightIcon}/>}
+      {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
       {childrenContent}
-      <Icon name={rightIcon} style={_styles.rightIcon} renderEmptySpace={(hasText && !!icon) || loading} />
+      <Icon name={rightIcon} style={[_styles.rightIcon, getFeedbackStyle(pressed)]} renderEmptySpace={(hasText && !!icon) || loading} />
     </Touchable>
   )
 })
