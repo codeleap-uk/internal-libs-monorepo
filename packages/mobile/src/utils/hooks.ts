@@ -1,5 +1,5 @@
 import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useState } from '@codeleap/common'
-import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet } from 'react-native'
+import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
@@ -75,10 +75,9 @@ type VariantTransitionConfig = {
   type: 'timing'
   duration?: number
   easing?: EasingFn
-} 
+}
 
 type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
-
 
 type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
   variantStyles: T
@@ -89,19 +88,19 @@ type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>,
 }
 
 const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle, applyFN = (v) => v) => {
-  'worklet';
-  const newStyle = {...currentStyle}
-  
-  switch(property){
+  'worklet'
+  const newStyle = { ...currentStyle }
+
+  switch (property) {
     case 'opacity':
       newStyle.opacity = applyFN(value)
       break
     default:
-      if(!newStyle.transform){
+      if (!newStyle.transform) {
         newStyle.transform = []
       }
       newStyle.transform.push({
-        [property]: applyFN(value)
+        [property]: applyFN(value),
       })
   }
 
@@ -110,56 +109,55 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
 }
 
 const transformProperties = (properties, transition) => {
-  'worklet';
+  'worklet'
   let styles = {}
 
-  for(const [prop, value] of Object.entries(properties)){
-    let transitionConfig = transition[prop] || transition
+  for (const [prop, value] of Object.entries(properties)) {
+    const transitionConfig = transition[prop] || transition
 
     const _transitionConfig = {
-      type:'timing',
+      type: 'timing',
       duration: 100,
       easing: Easing.linear,
-      ...transitionConfig
+      ...transitionConfig,
     }
 
     const { type, duration, easing } = _transitionConfig
 
     let fn
 
-    switch(type){
+    switch (type) {
       case 'timing':
         fn = (v) => withTiming(v, {
           duration,
-          easing
+          easing,
         })
       default:
         break
-    } 
+    }
 
     styles = buildAnimatedStyle(
       prop as AnimatableProperties,
       value,
       styles,
-      fn
+      fn,
     )
   }
 
   return styles
 }
 
+export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>) {
+  const { animatedProperties, updater, variantStyles, transition, dependencies = [] } = config
 
-export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>){
-  const { animatedProperties, updater, variantStyles, transition, dependencies = []} = config
-  
   const _transition = useRef(null)
 
-  if(!_transition.current){
+  if (!_transition.current) {
     _transition.current = JSON.parse(JSON.stringify(transition))
   }
 
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
-  
+
   const animated = useAnimatedStyle(() => {
     const nextState = updater(staticStyles)
 
@@ -171,10 +169,10 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
   return animated
 }
 
-
 export type FeedbackConfig =
 | { type: 'opacity'; value?: number }
 | {type: 'highlight'; color?: string; brightness?: number; shiftOpacity?: number}
+| {type: 'styles'; styles: StyleProp<ViewStyle> }
 | {type: 'none'}
 
 type RippleConfig = {
@@ -201,8 +199,17 @@ export function usePressableFeedback(styles: any, config:UsePressableFeedbackCon
   const _feedbackConfig = {
     ...feedbackConfig,
   }
-  const disableFeedback = disabled
+  let style
 
+  if (TypeGuards.isObject(styles)) {
+    style = styles?.[hightlightPropertyIn]
+  } else if (TypeGuards.isArray(styles)) {
+    style = styles.reverse().find(s => s[hightlightPropertyIn])
+  } else {
+    style = StyleSheet.flatten(styles)[hightlightPropertyIn]
+  }
+
+  const disableFeedback = disabled
   const rippleEnabled = _feedbackConfig?.type === 'ripple' && !disableFeedback
   const rippleConfig = rippleEnabled ? _feedbackConfig?.config : null
 
@@ -216,7 +223,7 @@ export function usePressableFeedback(styles: any, config:UsePressableFeedbackCon
     switch (feedbackConfig.type) {
       case 'highlight':
         if (!pressed && hightlightPropertyIn !== hightlightPropertyOut) return {}
-        let highlightColorDefault = styles?.[hightlightPropertyIn] || '#0000'
+        let highlightColorDefault = style || '#0000'
         if (pressed) {
           if (feedbackConfig?.color) {
             highlightColorDefault = feedbackConfig?.color
@@ -240,7 +247,8 @@ export function usePressableFeedback(styles: any, config:UsePressableFeedbackCon
         return {
           opacity: pressed ? feedbackConfig?.value : 1,
         }
-
+      case 'styles':
+        return pressed ? feedbackConfig?.styles : {}
       case 'none':
         return {}
     }

@@ -19,6 +19,8 @@ export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
 export type ButtonStylesGen<TCSS = any> = StylesOf<ButtonComposition, TCSS> & {
   feedback?: TouchableStylesGen['feedback']
+  textFeedback?: TouchableStylesGen['feedback']
+  wrapperFeedback?: TouchableStylesGen['feedback']
 }
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition, ButtonStylesGen >()
