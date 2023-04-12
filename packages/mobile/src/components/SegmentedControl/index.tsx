@@ -147,7 +147,11 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
           styles={variantStyles}
 
           animated
-          style={[variantStyles.selectedBubble, widthStyle]}
+          style={[
+            variantStyles.selectedBubble,
+            props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'],
+            widthStyle,
+          ]}
           animate={{
             translateX,
           }}
@@ -171,7 +175,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
           const textProps:TextProps = {
             text: o.label as string,
             colorChangeConfig: _animation,
-            style: StyleSheet.flatten([variantStyles.text, selected && variantStyles['text:selected']]),
+            style: StyleSheet.flatten([variantStyles.text, selected && variantStyles['text:selected'], touchableProps?.disabled && variantStyles['text:disabled']]),
             animated: true,
             ...props.textProps,
           }
