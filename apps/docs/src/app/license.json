@@ -1,10 +1,4 @@
 {
-    "@emotion/react@11.10.6": {
-        "licenses": "MIT",
-        "repository": "https://github.com/emotion-js/emotion/tree/main/packages/react",
-        "licenseUrl": "https://github.com/emotion-js/emotion/tree/main/packages/react/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
     "@emotion/styled@11.10.6": {
         "licenses": "MIT",
         "repository": "https://github.com/emotion-js/emotion/tree/main/packages/styled",
@@ -27,18 +21,6 @@
         "licenses": "MIT",
         "repository": "https://github.com/reduxjs/redux-toolkit",
         "licenseUrl": "https://github.com/reduxjs/redux-toolkit/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "@sentry/browser@6.19.7": {
-        "licenses": "BSD-3-Clause",
-        "repository": "https://github.com/getsentry/sentry-javascript",
-        "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "axios@0.25.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/axios/axios",
-        "licenseUrl": "https://github.com/axios/axios/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
     "beautiful-react-hooks@1.2.0": {
@@ -129,12 +111,6 @@
         "licenses": "MIT",
         "repository": "https://github.com/fkhadra/react-toastify",
         "licenseUrl": "https://github.com/fkhadra/react-toastify/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "react@18.1.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/facebook/react",
-        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
         "parents": "codeleap-docs"
     }
 }

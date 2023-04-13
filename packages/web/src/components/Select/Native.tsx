@@ -5,11 +5,11 @@ import {
   ComponentVariants,
   useDefaultComponentStyle,
   StylesOf,
-  SelectComposition,
 } from '@codeleap/common'
 import { ComponentPropsWithRef, ReactNode } from 'react'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
+import { SelectComposition } from './styles'
 
 type HTMLSelectProps = ComponentPropsWithRef<'select'>
 type Option = {

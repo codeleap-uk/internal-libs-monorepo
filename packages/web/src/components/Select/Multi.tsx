@@ -10,8 +10,9 @@ import {
 import { useMemo } from 'react'
 import { useClickOutside } from '../../lib/hooks'
 import { MultiSelectProps } from './types'
-import { WebSelectComposition, WebSelectParts } from './styles'
+import { SelectComposition, SelectParts, SelectPresets } from './styles'
 import { InputWrapper, SelectItem } from './Custom'
+
 export const MultiSelect: React.FC<MultiSelectProps<any>> = (
   selectProps,
 ) => {
@@ -49,11 +50,11 @@ export const MultiSelect: React.FC<MultiSelectProps<any>> = (
       }
     },
   )
-  const variantStyles = useDefaultComponentStyle('Select', {
+  const variantStyles =  useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
     styles,
     variants,
     responsiveVariants,
-  }) as StylesOf<WebSelectComposition>
+  }) as StylesOf<SelectComposition>
 
   const CurrentContent = renderCurrentlySelected || SelectItem
   const Item = renderItem || SelectItem
@@ -69,7 +70,7 @@ export const MultiSelect: React.FC<MultiSelectProps<any>> = (
 
   const { showError, error } = useValidate(value, validate)
 
-  function getStyles(key: WebSelectParts, append = {}) {
+  function getStyles(key: SelectParts, append = {}) {
     return {
       ...variantStyles[key],
       ...optionalObject(isOpen, variantStyles[`${key}:open`], {}),

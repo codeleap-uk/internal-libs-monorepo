@@ -17,14 +17,9 @@ type DynamicQueryKeyClient<Data = any, BuilderParams extends any[] = any[]> = {
     refresh(...args: BuilderParams): void
   }
 
-const qcProxy = {
-  
-  
-}
-
 
 export class CodeleapQueryClient {
-    constructor(private client: ReactQuery.QueryClient) {
+    constructor(public client: ReactQuery.QueryClient) {
     }
 
     queryKey<Data>(k: ReactQuery.QueryKey):StaticQueryKeyClient<Data> {
