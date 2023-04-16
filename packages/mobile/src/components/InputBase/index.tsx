@@ -6,13 +6,22 @@ import { View } from "../View"
 import { InputBasePresets, useInputBaseStyles } from "./styles"
 import { InputBaseProps } from "./types"
 import { Text, TextProps } from '../Text'
+import { Touchable } from '../Touchable'
 
 
 export * from './styles'
 export * from './utils'
 export * from './types'
 
-
+export const InputBaseDefaultOrder:InputBaseProps['order'] = [
+  'label',
+  'description',
+  'innerWrapper',
+  'error'
+]
+const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
+  return <>{props.children}</>
+}
 
 export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
   const { 
@@ -30,6 +39,9 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     innerWrapperProps = {},
     wrapperProps = {},
     disabled = false,
+    order = InputBaseDefaultOrder,
+    style,
+    labelAsRow = false,
     ...otherProps
   } = props
 
@@ -57,28 +69,39 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
 
 
   const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/>  : description
-  
+   
 
-
-  console.log({
-    innerWrapperProps,
-    
-  })
-
-  return <WrapperComponent 
-    style={_styles.wrapperStyle} 
-    {...otherProps}
-    {...wrapperProps}
-  >
-    {_label}
-    {_description}
-    <InnerWrapperComponent style={[
+  const parts = {
+    label:labelAsRow ? <View style={_styles.labelRowStyle}>
+      {_label}
+      {_description}
+    </View>  :  _label,
+    description: labelAsRow ? null : _description,
+    innerWrapper:  <InnerWrapperComponent style={[
       _styles.innerWrapperStyle
     ]} {...innerWrapperProps}>
       {_leftIcon}
       {children}
       {_rightIcon}
-    </InnerWrapperComponent>
-    {_error || <Text text={''} style={_styles.errorStyle}/>}
+    </InnerWrapperComponent>,
+    error: _error || <Text text={''} style={_styles.errorStyle}/>
+  }
+
+  
+
+
+  return <WrapperComponent 
+    style={[_styles.wrapperStyle, style]} 
+    {...otherProps}
+    {...wrapperProps}
+  >
+    {
+      order.map((key) => <KeyPassthrough key={key}>
+        {parts[key]}
+      </KeyPassthrough>)
+
+    }
+   
+  
   </WrapperComponent>
 })   

@@ -96,13 +96,23 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
     case 'opacity':
       newStyle.opacity = applyFN(value)
       break
-    default:
+    case 'backgroundColor':
+      newStyle.backgroundColor = applyFN(value)
+      break
+    case 'scale':
+    case 'scaleX':
+    case 'scaleY':
+    case 'translateX':
+    case 'translateY':
       if(!newStyle.transform){
         newStyle.transform = []
       }
       newStyle.transform.push({
         [property]: applyFN(value)
       })
+    default:
+      newStyle[property] = value
+      break
   }
 
   return newStyle

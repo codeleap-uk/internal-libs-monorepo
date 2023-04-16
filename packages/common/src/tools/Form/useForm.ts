@@ -160,17 +160,13 @@ export function useForm<
           value = TypeGuards.isArray(value) && !!value.length ? value[0] : null
         }
 
-        if(config.validateOn === 'change'){
-          validateField(field, true, value)
-        }
-
         // @ts-ignore
         setFieldValue(field, value)
       }
     }
 
     if (type === 'text' || type === 'number') {
-      if (!Theme.IsBrowser) {
+      if (!Theme.IsBrowser && !staticProps.multiline) {
         dynamicProps.returnKeyType = 'next'
       }
 
@@ -181,21 +177,22 @@ export function useForm<
       }
       dynamicProps.ref = inputRefs.current[thisRefIdx]
       registeredTextRefsOnThisRender++
-      dynamicProps.onSubmitEditing = () => {
-        const nextRef = thisRefIdx + 1
-        if (inputRefs.current.length <= nextRef) return
-        focus(nextRef)
+      if(!Theme.IsBrowser && !staticProps.multiline){
+        dynamicProps.onSubmitEditing = () => {
+          const nextRef = thisRefIdx + 1
+          if (inputRefs.current.length <= nextRef) return
+          focus(nextRef)
+        }
       }
 
     }
 
-    if (validate) {
-      dynamicProps.validate = fieldErrors[field]
-    }
+
     registeredFields.current.push(type)
     return {
       ...staticProps,
       ...dynamicProps,
+      validate
     }
   }
 

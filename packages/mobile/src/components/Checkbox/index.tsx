@@ -1,90 +1,148 @@
 import * as React from 'react'
 import {
+
   ComponentVariants,
   useDefaultComponentStyle,
   StylesOf,
-  Form,
-  useValidate,
-  GetRefType,
   PropsOf,
 } from '@codeleap/common'
-import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
-import { StyleSheet, Switch as NativeCheckbox } from 'react-native'
-import { FormError } from '../TextInput'
+import { ReactNode } from 'react'
+import { StyleSheet } from 'react-native'
 import { View } from '../View'
-import { Touchable } from '../Touchable'
+
 import {
-  CheckboxComposition, CheckboxPresets,
+  CheckboxPresets,
+  CheckboxComposition,
 } from './styles'
-import { InputLabel } from '../InputLabel'
+import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { useAnimatedVariantStyles } from '../..'
+import { Touchable } from '../Touchable'
+import { Icon } from '../Icon'
+
+
 export * from './styles'
 
-type NativeCheckboxProps = Omit<
-  ComponentPropsWithRef<typeof NativeCheckbox>,
-  'thumbColor' | 'trackColor'
->
-type CheckboxProps = NativeCheckboxProps & {
+
+  
+export type CheckboxProps = Pick<
+  InputBaseProps,
+  'debugName' | 'disabled' | 'label'
+> &  {
   variants?: ComponentVariants<typeof CheckboxPresets>['variants']
-  label?: ReactNode
   styles?: StylesOf<CheckboxComposition>
-  validate?: Form.ValidatorFunctionWithoutForm
-  required?: boolean
+  value: boolean
+  onValueChange: (value: boolean) => void
+  style?: PropsOf<typeof View>['style']
+  checkboxOnLeft?: boolean
 }
 
-export const Checkbox = forwardRef<GetRefType<PropsOf<typeof View>['ref']>, CheckboxProps>(
-  (checkboxProps, ref) => {
+const reversedOrder = [...InputBaseDefaultOrder].reverse()
+
+
+
+export const Checkbox = (props: CheckboxProps) => {
+    const {
+      inputBaseProps,
+      others
+    } = selectInputBaseProps(props)
     const {
       variants = [],
       style = {},
       styles = {},
-      label,
       value,
+      disabled,
+      debugName,
       onValueChange,
-      validate,
-      required,
-      ...props
-    } = checkboxProps
+      checkboxOnLeft,
+    } = others
 
     const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
       variants,
-      styles,
-      transform: StyleSheet.flatten,
+      styles, 
+      rootElement: 'wrapper',
+      transform: StyleSheet.flatten
+    })
+    
+    const boxAnimation = useAnimatedVariantStyles({
+      variantStyles,
+      animatedProperties: ['box:unchecked','box:disabled', 'box:checked', 'box:disabled-checked', 'box:disabled-unchecked'],
+      transition: variantStyles['box:transition'],
+      updater: () =>{
+        'worklet'
+        let disabledStyle = {}
+        if(disabled){
+          disabledStyle =  value ? variantStyles['box:disabled-checked'] : variantStyles['box:disabled-unchecked']
+        }
+        const style =  value ? variantStyles['box:checked'] : variantStyles['box:unchecked']
+
+        return {
+          ...style,
+          ...disabledStyle
+        }
+        
+      },
+      dependencies: [value, disabled],
     })
 
-    const validation = useValidate(value, validate)
+    const checkmarkWrapperAnimation = useAnimatedVariantStyles({
+      variantStyles,
+      animatedProperties: ['checkmarkWrapper:unchecked','checkmarkWrapper:disabled', 'checkmarkWrapper:checked', 'checkmarkWrapper:disabled-unchecked', 'checkmarkWrapper:disabled-checked'],
+      transition: variantStyles['checkmarkWrapper:transition'],
+      updater: () =>{
+        'worklet'
+        let disabledStyle = {}
+        if(disabled){
+          disabledStyle = value ? variantStyles['checkmarkWrapper:disabled-checked'] : variantStyles['checkmarkWrapper:disabled-unchecked']
+        }
+        const style = value ? variantStyles['checkmarkWrapper:checked'] : variantStyles['checkmarkWrapper:unchecked']
+        return {
+          ...style,
+          ...disabledStyle
+        }
+        
+      },
+      dependencies: [value, disabled],
+    })
 
-    function getStyles(key: CheckboxComposition, styleObj = variantStyles) {
-      return [
-        styleObj[key],
-        value ? styleObj[key + ':checked'] : {},
-        validation. ? styleObj[key + ':error'] : {},
-        checkboxProps.disabled ? styleObj[key + ':disabled'] : {},
-      ]
-    }
+    const _checkboxOnLeft = checkboxOnLeft ?? variantStyles['__props']?.checkboxOnLeft
 
-    return (
-      <View style={[getStyles('wrapper'), style]} ref={ref} {...props}>
-        <Touchable
-          debugName={`Set checkbox value to ${!value}`}
-          style={getStyles('input')}
-          onPress={() => onValueChange(!value)}
-          styles={{
-            feedback: getStyles('inputFeedback'),
-          }}
+    return <InputBase
+      {...inputBaseProps}
+      debugName={debugName}
+      wrapper={Touchable}
+      styles={variantStyles}
+      wrapperProps={{
+        onPress: () => {
+          onValueChange(!value)
+        },
+        disabled,
+        rippleDisabled: true,
+      }}
+      order={_checkboxOnLeft ?  reversedOrder : InputBaseDefaultOrder}
+      style={style}
+    >
+      <View 
+        animated 
+        style={[
+          variantStyles.box, 
+          disabled && variantStyles['box:disabled'],
+          boxAnimation
+        ]}
         >
-          <View style={getStyles('checkmarkWrapper')}>
-            <View style={getStyles('checkmark')} />
-          </View>
-
-          <InputLabel label={label} styles={{
-            asterisk: getStyles('labelAsterisk'),
-            wrapper: getStyles('labelWrapper'),
-            text: getStyles('labelText'),
-          }} required={required}/>
-
-        </Touchable>
-        <FormError text={validation.message} style={getStyles('error')} />
+        <View 
+          animated 
+          style={[
+            variantStyles.checkmarkWrapper, 
+            disabled && variantStyles['checkmarkWrapper:disabled'],
+            checkmarkWrapperAnimation
+          ]}
+        > 
+          <Icon 
+            name={'checkbox-checkmark' as any}
+            style={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
+            
+          />
+        </View>
       </View>
-    )
-  },
-)
+    </InputBase>
+}

@@ -1,11 +1,19 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { InputLabelComposition } from '../InputLabel'
+import { InputBaseParts, InputBaseStates } from '../InputBase'
 
-export type SwitchParts = 'wrapper' | `label${Capitalize<InputLabelComposition>}` | 'input' | 'error' | 'inputWrapper'
+type AnimatableParts = 'track' | 'thumb'
+export type SwitchParts = InputBaseParts | AnimatableParts 
+
+export type AnimationStates = 'on' | 'off' | 'disabled-on' | 'disabled-off'
+
+export type SwitchStates = InputBaseStates
+
 export type SwitchComposition =
   | SwitchParts
-  | `${SwitchParts}:disabled`
-  | `${SwitchParts}:on`
+  | `${SwitchParts}:${SwitchStates}`
+  | `${AnimatableParts}:transition`
+  | `${AnimatableParts}:${AnimationStates}`
+  | '__props'
 
 const createSwitchStyle = createDefaultVariantFactory<SwitchComposition>()
 

@@ -33,6 +33,7 @@ export type TouchableProps = React.PropsWithChildren<
     debounce?: number
     leadingDebounce?: boolean
     styles?: StylesOf<TouchableComposition>
+    rippleDisabled?: boolean
 } & BaseViewProps
 >
 export * from './styles'
@@ -52,6 +53,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     leadingDebounce,
     noFeedback = false,
     styles,
+    rippleDisabled = false,
     ...props
   } = touchableProps
 
@@ -176,7 +178,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         pressableStyle,
         getFeedbackStyle(pressed),
         variantStyles.pressable,
-      ])} android_ripple={rippleConfig} {...props} ref={ref}>
+      ])} android_ripple={!rippleDisabled && rippleConfig} {...props} ref={ref}>
         {children}
       </Pressable>
     </Wrapper>

@@ -9,7 +9,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
   const isEmpty = emptyValues.includes(value)
 
-  const [message, setMessage] = useState<ReactNode>('')
+  const [_message, setMessage] = useState<ReactNode>('')
   const [isValid, setIsValid] = useState<boolean>(true)
   const updateErrorOnChange = useRef(false)
 
@@ -26,7 +26,9 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
   return {
     onInputBlurred: () => {
+      
       if (!_validator) return
+
 
       updateErrorOnChange.current = false
       const { valid, message } = _validator(value, {})
@@ -36,10 +38,11 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
     },
     onInputFocused: () => {
+      
       if (isValid || isEmpty) return
       updateErrorOnChange.current = true
     },
-    message,
+    message: _message,
     isValid,
 
   }

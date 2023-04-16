@@ -7,7 +7,7 @@ type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
 type IconParts = ActionIconParts
 
-type InputIconComposition = `${InputIcons}${Capitalize<IconParts>}`
+export type InputIconComposition = `${InputIcons}${Capitalize<IconParts>}`
 
 export type InputBaseStates = 'error' | 'focus' | 'disabled'
 
@@ -17,7 +17,10 @@ export type InputBaseParts =
   'label' |
   'errorMessage' |
   'description' |
+  'labelRow'|
   InputIconComposition 
+
+export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconComposition>
 
 export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | InputBaseParts
 
@@ -112,6 +115,13 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     disabled && variantStyles['innerWrapper:disabled'],
   ]
 
+  const labelRowStyle = [
+    variantStyles.labelRow,
+    focused && variantStyles['labelRow:focus'],
+    hasError && variantStyles['labelRow:error'],
+    disabled && variantStyles['labelRow:disabled'],
+  ]
+
  return {
     wrapperStyle,
     innerWrapperStyle,
@@ -120,6 +130,6 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     labelStyle,
     errorStyle,
     descriptionStyle,
-    
+    labelRowStyle
  }
 }

@@ -7,6 +7,7 @@ import { ActionIcon } from "../ActionIcon"
 
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
+type OrderedParts = 'label' | 'description' | 'innerWrapper' | 'error'
 
 export type InputBaseProps = React.PropsWithChildren<{
   label?: React.ReactNode 
@@ -22,4 +23,7 @@ export type InputBaseProps = React.PropsWithChildren<{
   debugName: string
   focused?: boolean
   disabled?: boolean
+  order?: OrderedParts[]
+  style?: any
+  labelAsRow?: boolean
 }>

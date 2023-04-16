@@ -120,8 +120,6 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   }
   const buttonStyles = React.useMemo(() => getNestedStylesByKey('closeButton', variantStyles), [variantStyles])
 
-  const boxAnimationStates = useStaticAnimationStyles(variantStyles, ['box:hidden', 'box:visible'])
-
   const boxAnimationStyles = useAnimatedVariantStyles({
     updater: (states) => {
       'worklet'

@@ -1,7 +1,7 @@
 import equals from 'deep-equal'
 import { LogFunctionArgs } from '../tools/Logger/types'
 import React from 'react'
-import { TypeGuards } from '.'
+import * as TypeGuards from './typeGuards'
 
 export const deepEqual = equals
 

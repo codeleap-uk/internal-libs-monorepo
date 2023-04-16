@@ -1,22 +1,21 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { InputLabelComposition } from '../InputLabel'
+import { InputBaseParts, InputBaseStates } from '../InputBase'
 
-type CheckboxParts =
-  | 'wrapper'
-  | 'input'
-  | 'inputFeedback'
-  | 'checkmark'
-  | 'checkmarkWrapper'
-  | 'error'
-  | `label${Capitalize<InputLabelComposition>}`
+type AnimatableParts = 'checkmarkWrapper' | 'box'
+export type CheckboxParts = InputBaseParts | AnimatableParts | 'checkmark'
+
+export type AnimationStates = 'checked' | 'unchecked' | 'disabled-checked' | 'disabled-unchecked'
+
+export type CheckboxStates = InputBaseStates
 
 export type CheckboxComposition =
   | CheckboxParts
-  | `${CheckboxParts}:checked`
-  | `${CheckboxParts}:disabled`
-  | `${CheckboxParts}:error`
+  | `${CheckboxParts}:${CheckboxStates}`
+  | `${AnimatableParts}:transition`
+  | `${AnimatableParts}:${AnimationStates}`
+  | '__props'
 
-const createCheckboxStyle =
-  createDefaultVariantFactory<CheckboxComposition>()
+const createCheckboxStyle = createDefaultVariantFactory<CheckboxComposition>()
 
 export const CheckboxPresets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })))
+

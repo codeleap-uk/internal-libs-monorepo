@@ -153,9 +153,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     editable: false,
     caretHidden: true
   } : {}
-
-  console.log({debugName, isPressable, o: inputBaseProps.innerWrapperProps,  onPress, textInputProps})
-
+  const hasMultipleLines = isMultiline && value?.includes('\n')
   return <InputBase
     innerWrapper={isPressable ? Touchable : undefined}
     {...inputBaseProps}
@@ -166,6 +164,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       innerWrapper: [
         variantStyles.innerWrapper,
         isMultiline && variantStyles['innerWrapper:multiline'],
+        hasMultipleLines && variantStyles['innerWrapper:hasMultipleLines'],
       ],
     }}
     innerWrapperProps={{
@@ -194,6 +193,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
         isFocused && variantStyles['input:focused'],
         !validation.isValid && variantStyles['input:error'],
         isDisabled && variantStyles['input:disabled'],
+        hasMultipleLines && variantStyles['input:hasMultipleLines'],
       ]}
       ref={innerInputRef}
       {...maskingExtraProps}
