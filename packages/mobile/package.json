@@ -40,7 +40,7 @@
     "@miblanchard/react-native-slider": "2.3.1",
     "date-fns": "^2.29.3",
     "react-native-masked-text": "1.13.0",
-    "react-native-super-grid": "4.6.1",
+    "react-native-super-grid": "4.4.2",
     "react-native-uuid": "2.0.1"
   }
 }

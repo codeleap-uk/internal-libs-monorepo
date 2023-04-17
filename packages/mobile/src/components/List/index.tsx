@@ -101,7 +101,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     })
     return (
       <Component
-        {...listProps}
+        {..._listProps}
       />
     )
   },

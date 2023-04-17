@@ -83,7 +83,7 @@ type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>,
   variantStyles: T
   animatedProperties: K[]
   updater: (states: SelectProperties<T, K>) => AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>
-  transition: TransitionConfig
+  transition?: TransitionConfig
   dependencies?: any[]
 }
 
@@ -158,7 +158,7 @@ const transformProperties = (properties, transition) => {
 }
 
 export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>) {
-  const { animatedProperties, updater, variantStyles, transition, dependencies = [] } = config
+  const { animatedProperties, updater, variantStyles, transition = {}, dependencies = [] } = config
 
   const _transition = useRef(null)
 

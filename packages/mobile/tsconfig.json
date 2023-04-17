@@ -41,6 +41,9 @@
       "react-native": [
         "../../apps/mobile/node_modules/@types/react-native/index.d.ts"
       ],
+      "react-native-device-info": [
+        "../../apps/mobile/node_modules/react-native-device-info/lib/typescript/index.d.ts"
+      ],
     }
   },
   "include": [
