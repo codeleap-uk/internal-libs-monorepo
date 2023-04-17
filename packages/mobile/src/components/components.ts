@@ -1,5 +1,4 @@
 export * from './View'
-export * from './Animated'
 export * from './Icon'
 export * from './Touchable'
 export * from './Text'

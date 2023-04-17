@@ -154,6 +154,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         <InputLabel label={label} style={getStyles('label')} />
         <InnerWrapper debugName={debugName} css={getStyles('innerWrapper')} {...innerWrapperProps}>
           <InputIcon {...leftIcon} style={leftIconStyle} />
+          {/* @ts-ignore */}
           <InputElement
             ref={input}
             type={password && !textIsVisible ? 'password' : 'text'}
