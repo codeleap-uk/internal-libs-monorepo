@@ -148,9 +148,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
           animated
           style={[variantStyles.selectedBubble, widthStyle]}
-          animate={{
-            translateX,
-          }}
+         
           transition={{
             translateX: _animation,
           }}

@@ -28,7 +28,7 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 
 
 export * from './styles'
-type GridRef = React.ClassAttributes<FlatGrid<any>>['ref']
+type GridRef = React.ClassAttributes<typeof FlatGrid>['ref']
 export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never

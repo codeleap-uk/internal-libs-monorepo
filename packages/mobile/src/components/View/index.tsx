@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as Animatable from 'react-native-animatable'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import {
   ComponentVariants,
@@ -10,13 +9,12 @@ import {
   useMemo,
 } from '@codeleap/common'
 import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
-import { MotiView, MotiProps } from 'moti'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 import {TransitionConfig} from '../../types'
 import Animated from 'react-native-reanimated'
 export * from './styles'
 
-type MotiViewProps =  Omit< Partial<MotiProps>, 'transition'|'children'>
+
 
 type NativeViewProps =Omit<ComponentPropsWithoutRef<typeof NativeView>, 'children'>
 
@@ -27,11 +25,12 @@ export type ViewProps = React.PropsWithChildren<{
   keyboardAware?: GetKeyboardAwarePropsOptions
   transition?: Partial<TransitionConfig>
 } &
-  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps & MotiViewProps
+  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps
 >
 
+export type ViewRefType = NativeView
 
-export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
+const _View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -47,7 +46,7 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewP
     responsiveVariants,
     variants,
   })
-  const Component = animated ? MotiView : (component || NativeView)
+  const Component = component || NativeView
   const keyboard = useKeyboardAwareView()
   const _props = keyboard.getKeyboardAwareProps(
     {
@@ -69,7 +68,15 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewP
   )
 })
 
-export const AnimatedView = Animated.createAnimatedComponent(View)
+export const AnimatedView = Animated.createAnimatedComponent(_View)
+
+export const View = forwardRef<NativeView,ViewProps>((props, ref) => {
+  if(props.animated){
+    return <AnimatedView {...props} ref={ref} />
+  }
+
+  return <_View {...props} ref={ref} />
+})
 
 
 type GapProps = ViewProps & {

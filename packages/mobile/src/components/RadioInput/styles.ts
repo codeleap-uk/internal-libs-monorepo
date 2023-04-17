@@ -1,13 +1,12 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { InputLabelComposition } from '../InputLabel'
-type RadioParts = 'button' | 'itemWrapper' | 'text' | 'buttonMark' | 'buttonFeedback'
+import { IconLessInputBaseParts } from '../InputBase'
 
-type RadioGroupParts = `label${Capitalize<InputLabelComposition>}` | 'wrapper' | 'list'
+type OptionParts = 'wrapper' | 'label' | 'indicator' | 'indicatorInner' | 'separator'
+type OptionStates = 'selected' | 'disabled' | 'selectedDisabled'
 
-export type RadioInputComposition =
-  | `${RadioParts}:checked`
-  | RadioParts
-  | RadioGroupParts
+type OptionComposition = `${OptionParts}:${OptionStates}` | OptionParts
+
+export type RadioInputComposition = IconLessInputBaseParts | `${IconLessInputBaseParts}:disabled` | `option${Capitalize<OptionComposition>}`
 
 const createRadioStyle =
   createDefaultVariantFactory<RadioInputComposition>()

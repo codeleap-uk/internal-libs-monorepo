@@ -11,7 +11,8 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
+import { useKeyboardAwareView, GetKeyboardAwarePropsOptions } from '../../utils'
+
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 

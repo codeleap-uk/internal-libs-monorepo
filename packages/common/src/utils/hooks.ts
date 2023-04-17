@@ -14,11 +14,10 @@ import {
   useReducer,
 } from 'react'
 import { deepMerge } from './object'
-import { AnyFunction, DeepPartial } from '../types'
+import { AnyFunction, DeepPartial, StylesOf} from '../types'
 
 import { uniqueId } from 'lodash'
 import { useUnmount } from 'react-use'
-import {StylesOf} from '../types'
 import { getNestedStylesByKey } from './misc'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'

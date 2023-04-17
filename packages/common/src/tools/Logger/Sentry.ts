@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@sentry/browser'
+import type { Breadcrumb } from '@sentry/browser'
 import { AppSettings } from '../../config/Settings'
 import {
   LogFunctionArgs,

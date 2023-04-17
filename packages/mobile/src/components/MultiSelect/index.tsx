@@ -110,7 +110,6 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
             onPress: onPressInputIcon,
           }}
           editable={false}
-          touchableWrapper
           wrapperProps={{
             debugName: 'Select',
             onPress: close,

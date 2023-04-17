@@ -73,18 +73,25 @@
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "release": "standard-version",
-    "notifyVersion": "node notifyVersion.js"
+    "notifyVersion": "node notifyVersion.js",
+    "lint-deps": "syncpack list-mismatches",
+    "fix-deps": "syncpack fix-mismatches"
+  },
+  "dependencies": {
+    "typescript": "4.5.4"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",
     "husky": "^8.0.2",
+    "install": "^0.13.0",
     "npm-license-crawler": "^0.2.1",
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
+    "syncpack": "^9.8.4",
+    "ts-node-dev": "^1.1.8",
     "turbo": "1.1.2",
     "typedoc": "^0.22.10",
-    "typescript": "4.5.4",
-    "ts-node-dev": "^1.1.8"
+    "typescript": "4.5.4"
   },
   "engines": {
     "npm": ">=7.0.0",

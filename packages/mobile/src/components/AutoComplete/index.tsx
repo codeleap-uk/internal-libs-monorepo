@@ -50,7 +50,7 @@ export const AutoCompleteHeader:React.FC<AutoCompleteHeaderProps> = (props) => {
     {
       description
     }
-    <TextInput subtitle={() => null} leftIcon={{
+    <TextInput  leftIcon={{
       icon: icon as IconPlaceholder,
     }} debugName={`AutoComplete ${debugName} search input`} value={search} onChangeText={setSearch} styles={styles.searchInput} {...searchInputProps}/>
   </View>

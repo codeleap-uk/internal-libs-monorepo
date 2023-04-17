@@ -25,6 +25,14 @@ export type Validator<T> = T extends boolean
       | yup.BooleanSchema<boolean, AnyObject, false>
   : ValidatorFunction<T> | yup.SchemaOf<T>
 
+export type ValidatorWithoutForm<T> = T extends boolean
+  ?
+      | ValidatorFunction<true>
+      | ValidatorFunction<false>
+      | yup.BooleanSchema<boolean, AnyObject, true>
+      | yup.BooleanSchema<boolean, AnyObject, false>
+  : ValidatorFunctionWithoutForm<T> | yup.SchemaOf<T>
+
 export type Options<T> = { label: Label; value: T }[]
 
 type FormValidateOn = 'change'

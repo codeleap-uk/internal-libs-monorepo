@@ -23,7 +23,7 @@ import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { View, ViewProps } from '../View'
+import { View, ViewProps, ViewRefType } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { StyleSheet } from 'react-native'
 import { usePressableFeedback } from '../../utils'
@@ -55,7 +55,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
 
-export const Badge = forwardRef<GetRefType<ViewProps['ref']>, BadgeProps>((props, ref) => {
+export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
   const {
     children = null,
     styles,

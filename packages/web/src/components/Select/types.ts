@@ -27,7 +27,7 @@ export type CustomSelectProps<T = any> = {
   renderCurrentlySelected?: SelectRenderFN<T>
   styles?: StylesOf<SelectComposition>
   disabled?: boolean
-  validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
+  validate?: FormTypes.ValidatorWithoutForm<any[]>
   arrowIconName?: IconPlaceholder
   autoClose?: boolean
 } & ComponentVariants<typeof SelectStyles>
@@ -43,7 +43,7 @@ export type MultiSelectProps<T = any> = {
   renderCurrentlySelected?: SelectRenderFN<T>
   styles?: StylesOf<SelectComposition>
   disabled?: boolean
-  validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
+  validate?: FormTypes.ValidatorWithoutForm<any[]>
   arrowIconName?: IconPlaceholder
 
 } & ComponentVariants<typeof SelectStyles>

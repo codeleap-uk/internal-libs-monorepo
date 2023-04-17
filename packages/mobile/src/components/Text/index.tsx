@@ -8,7 +8,6 @@ import {
   useState,
 } from '@codeleap/common'
 import { Animated, Platform, StyleSheet, Text as NativeText } from 'react-native'
-import { MotiText as _MotiText, MotiProps } from 'moti'
 import { useAnimateColor, usePressableFeedback } from '../../utils'
 import { TextPresets } from './styles'
 
@@ -22,9 +21,9 @@ export type TextProps = ComponentPropsWithoutRef<typeof NativeText> & {
   debugName?: string
   debounce?: number
   pressDisabled?: boolean
-} & BaseViewProps & MotiProps
+} & BaseViewProps 
 
-const MotiText = Animated.createAnimatedComponent(_MotiText)
+
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const { variants = [], text, children, onPress, style, colorChangeConfig, debounce = 1000, pressDisabled, ...props } = textProps
@@ -73,7 +72,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
 
   if (!!text && !TypeGuards.isString(text)) return <>{text}</>
 
-  const Component = textProps.animated ? MotiText : NativeText
+  const Component = textProps.animated ? Animated.Text : NativeText
 
   const colorStyle = { color: props.animated ? animatedColor : styles.color }
 

@@ -23,22 +23,16 @@
         "licenseUrl": "https://github.com/reach/router/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "@reduxjs/toolkit@1.9.3": {
+    "@reduxjs/toolkit@1.9.4": {
         "licenses": "MIT",
         "repository": "https://github.com/reduxjs/redux-toolkit",
         "licenseUrl": "https://github.com/reduxjs/redux-toolkit/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "@sentry/browser@6.19.7": {
-        "licenses": "BSD-3-Clause",
+    "@sentry/browser@7.48.0": {
+        "licenses": "MIT",
         "repository": "https://github.com/getsentry/sentry-javascript",
         "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "axios@0.25.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/axios/axios",
-        "licenseUrl": "https://github.com/axios/axios/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
     "beautiful-react-hooks@1.2.0": {
@@ -65,25 +59,19 @@
         "licenseUrl": "https://github.com/alexluong/gatsby-packages",
         "parents": "codeleap-docs"
     },
-    "gatsby-plugin-image@3.0.0": {
+    "gatsby-plugin-image@3.8.0": {
         "licenses": "MIT",
         "repository": "https://github.com/gatsbyjs/gatsby",
         "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "gatsby-plugin-mdx@3.20.0": {
+    "gatsby-plugin-mdx@5.8.0": {
         "licenses": "MIT",
         "repository": "https://github.com/gatsbyjs/gatsby",
         "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
     "gatsby-plugin-sitemap@6.8.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/gatsbyjs/gatsby",
-        "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "gatsby-transformer-remark@5.25.1": {
         "licenses": "MIT",
         "repository": "https://github.com/gatsbyjs/gatsby",
         "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
@@ -107,6 +95,12 @@
         "licenseUrl": "https://github.com/FormidableLabs/prism-react-renderer/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "react-dom@18.1.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/facebook/react",
+        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "react-helmet@6.1.0": {
         "licenses": "MIT",
         "repository": "https://github.com/nfl/react-helmet",
@@ -123,6 +117,12 @@
         "licenses": "Apache-2.0",
         "repository": "https://github.com/MinJieLiu/react-photo-view",
         "licenseUrl": "https://github.com/MinJieLiu/react-photo-view/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
+    "react-redux@8.0.5": {
+        "licenses": "MIT",
+        "repository": "github:reduxjs/react-redux",
+        "licenseUrl": "github:reduxjs/react-redux",
         "parents": "codeleap-docs"
     },
     "react-toastify@8.2.0": {

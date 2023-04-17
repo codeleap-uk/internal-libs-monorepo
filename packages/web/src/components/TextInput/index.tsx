@@ -11,6 +11,7 @@ import {
   useBooleanToggle,
   useDefaultComponentStyle,
   useValidate,
+
 } from '@codeleap/common'
 import React, {
   ComponentPropsWithoutRef,
@@ -46,7 +47,7 @@ export type TextInputProps = ComponentVariants<typeof TextInputStyles> &
     leftIcon?: IconProp
     rightIcon?: IconProp
     styles?: StylesOf<TextInputComposition>
-    validate?: FormTypes.ValidatorFunctionWithoutForm | string
+    validate?: FormTypes.ValidatorWithoutForm<string>
     value?: string
     password?: boolean
     visibilityToggle?: boolean
@@ -118,7 +119,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       input.current?.focus?.()
     }, isTextInput: true }))
 
-    const { showError, error } = useValidate(value, validate)
+    const validation = useValidate(value, validate)
+
+    const showError = !validation.isValid
+    const error = showError ? validation : { message: '' }
+    
     function getStyles(key: TextInputComposition) {
       const requestedStyles = {
         ...variantStyles[key],

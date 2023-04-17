@@ -1,29 +1,11 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { ActionIconParts } from '../ActionIcon'
-import { InputLabelComposition } from '../InputLabel'
+import { InputBaseComposition, InputBaseStates, InputBaseParts } from '../InputBase'
 
-export type IconParts = Exclude<ActionIconParts, 'icon' | 'icon:disabled'>
-type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
-export type InputIconComposition = `${InputIcons}${Capitalize<IconParts>}`
-| InputIcons
+type TextInputParts =  InputBaseParts | 'input'  | 'placeholder' | 'selection'
+export type TextInputStates = InputBaseStates | 'multiline' | 'hasMultipleLines'
 
-type TextInputParts =
-  | 'wrapper'
-  | InputIconComposition
-  | 'textField'
-  | 'innerWrapper'
-  | 'error'
-  | 'subtitle'
-  | 'subtitleWrapper'
-  | 'placeholder'
-  | 'selection'
-  | `label${Capitalize<InputLabelComposition>}`
-
-export type TextInputComposition =
-  | `${TextInputParts}:error`
-  | `${TextInputParts}:focus`
-  | TextInputParts
+export type TextInputComposition =  `${TextInputParts}:${TextInputStates}` | TextInputParts
 
 const createTextInputStyle =
   createDefaultVariantFactory<TextInputComposition>()

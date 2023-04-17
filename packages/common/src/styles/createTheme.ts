@@ -4,7 +4,7 @@ import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
 import { defaultPresets } from './presets'
 import { defaultEffects } from './effects'
 import { spacingFactory } from './Spacing'
-import { DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
+import { AppTheme, DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
 
 const defaultAccessors: DynamicValueAccessors = {
   screenSize: () => [0, 0],
@@ -77,4 +77,9 @@ export function createTheme<T extends ThemeValues>(
     }),
     IsBrowser: isBrowser,
   }
+}
+
+
+export function validateTheme<T extends AppTheme>(t: T){
+  return t
 }

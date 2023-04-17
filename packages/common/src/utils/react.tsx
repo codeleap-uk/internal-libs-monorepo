@@ -1,6 +1,7 @@
 import equals from 'deep-equal'
 import { LogFunctionArgs } from '../tools/Logger/types'
 import React from 'react'
+import * as TypeGuards from './typeGuards'
 
 export const deepEqual = equals
 
@@ -66,4 +67,29 @@ export const simplifyChildren = children => {
       key, ref, type, props,
     }),
   )
+}
+
+
+export function getRenderedComponent<P = any>(
+  ComponentOrProps: React.FC<P> | P | React.ReactNode,  
+  DefaultComponent: React.FC<P>, 
+  props?: P
+): React.ReactNode {
+
+  if(TypeGuards.isNil(ComponentOrProps)) {
+    return null
+  }
+  
+  if (TypeGuards.isFunction(ComponentOrProps)) {
+    return <ComponentOrProps {...props}/>
+  }
+
+  if(React.isValidElement(ComponentOrProps)) {
+    return ComponentOrProps
+  }
+
+  const _props = ComponentOrProps as P
+
+
+  return <DefaultComponent {...props} {..._props}/>
 }

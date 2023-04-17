@@ -69,7 +69,7 @@ export function useStaticAnimationStyles<T extends Record<string|number|symbol, 
   return styles.current as SelectProperties<T, K>
 }
 
-type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity'
+type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity' | 'backgroundColor'
 
 type VariantTransitionConfig = {
   type: 'timing'
@@ -95,13 +95,23 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
     case 'opacity':
       newStyle.opacity = applyFN(value)
       break
-    default:
-      if (!newStyle.transform) {
+    case 'backgroundColor':
+      newStyle.backgroundColor = applyFN(value)
+      break
+    case 'scale':
+    case 'scaleX':
+    case 'scaleY':
+    case 'translateX':
+    case 'translateY':
+      if(!newStyle.transform){
         newStyle.transform = []
       }
       newStyle.transform.push({
         [property]: applyFN(value),
       })
+    default:
+      newStyle[property] = value
+      break
   }
 
   return newStyle

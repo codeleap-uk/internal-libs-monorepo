@@ -4,7 +4,8 @@ export type BackdropComposition =
  'wrapper'|
 'touchable' |
 'wrapper:visible' |
-'wrapper:hidden'
+'wrapper:hidden' | 
+'transition'
 
 const createBackdropVariant = createDefaultVariantFactory<BackdropComposition>()
 
