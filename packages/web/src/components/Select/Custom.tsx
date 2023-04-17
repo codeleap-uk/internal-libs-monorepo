@@ -15,7 +15,7 @@ import { View } from '../View'
 import { Text } from '../Text'
 import { useClickOutside } from '../../lib/hooks'
 import { CustomSelectProps, MultiSelectProps } from './types'
-import { WebSelectComposition, WebSelectParts } from './styles'
+import { SelectComposition, SelectParts, SelectPresets } from './styles'
 import { SelectRenderFNProps } from '.'
 
 export const SelectItem: React.FC<
@@ -108,11 +108,11 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
       }
     },
   )
-  const variantStyles = useDefaultComponentStyle('Select', {
+  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
     styles,
     variants,
     responsiveVariants,
-  }) as StylesOf<WebSelectComposition>
+  }) as StylesOf<SelectComposition>
 
   const CurrentContent = renderCurrentlySelected || SelectItem
   const Item = renderItem || SelectItem
@@ -128,7 +128,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
 
   const { showError, error } = useValidate(value, validate)
 
-  function getStyles(key: WebSelectParts, append = {}) {
+  function getStyles(key: SelectParts, append = {}) {
     return {
       ...variantStyles[key],
       ...optionalObject(isOpen, variantStyles[`${key}:open`], {}),

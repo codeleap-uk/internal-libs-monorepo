@@ -11,13 +11,13 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@codeleap/config": "*",
-    "@emotion/react": "^11.9.0",
+    "@emotion/react": "11.10.6",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
     "@types/react-window": "1.8.5"
   },
   "scripts": {
-    "build": "tsc --build",
+    "build": "rm -rf ./dist && tsc --build",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {

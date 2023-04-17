@@ -358,7 +358,7 @@ class KeyboardAwareScrollable extends React.Component<KeyboardAwareHOCProps, Key
       }
     }
 
-    _measureElement = (element: React.ComponentClass): Promise<ElementLayout> => {
+    _measureElement = (element: any): Promise<ElementLayout> => {
       const node = findNodeHandle(element)
 
       return new Promise((resolve: (el: ElementLayout) => void) => {
