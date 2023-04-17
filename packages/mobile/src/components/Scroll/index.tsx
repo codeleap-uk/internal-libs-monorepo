@@ -12,9 +12,7 @@ import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollPresets } from './styles'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
-import Animated from 'react-native-reanimated'
-// import { KeyboardAwareScrollView } from '../../utils'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 
 type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
 
@@ -83,37 +81,27 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     })
 
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
-    const _scrollProps = {
-      style: [variantStyles.wrapper, style],
-      contentContainerStyle: [variantStyles.content, contentContainerStyle],
-      ref: ref as unknown as ScrollView,
-      refreshControl: hasRefresh && (
-        <RefreshControl
-          refreshing={refreshingDisplay}
-          onRefresh={onRefresh}
-          tintColor={refreshStyles?.color}
-          colors={[refreshStyles?.color]}
-          {...refreshControlProps}
-        />
-      ),
-      ...props,
-    }
-    const keyboard = useKeyboardAwareView({
-      debugName,
-    })
-
-    const customKeyboardProps = keyboard.getKeyboardAwareProps(_scrollProps, {
-      adapt: 'marginBottom',
-      baseStyleProp: 'style',
-      animated,
-      ...keyboardAware,
-    })
 
     const Component = (animated ? KeyboardAwareScrollView : KeyboardAwareScrollView) as unknown as typeof ScrollView
 
     return (
       <Component
-        {...(_scrollProps)}
+        style={[variantStyles.wrapper, style]}
+        contentContainerStyle={[variantStyles.content, contentContainerStyle]}
+        // @ts-expect-error - Refs suck
+        ref={ref}
+        refreshControl= {
+          hasRefresh && (
+            <RefreshControl
+              refreshing={refreshingDisplay}
+              onRefresh={onRefresh}
+              tintColor={refreshStyles?.color}
+              colors={[refreshStyles?.color]}
+              {...refreshControlProps}
+            />
+          )
+        } 
+        {...props}
       >
         {children}
       </Component>

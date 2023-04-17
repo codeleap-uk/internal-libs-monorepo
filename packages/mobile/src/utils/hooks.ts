@@ -163,7 +163,7 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
   const _transition = useRef(null)
 
   if (!_transition.current) {
-    _transition.current = JSON.parse(JSON.stringify(transition))
+    _transition.current = JSON.parse(JSON.stringify(transition||{}))
   }
 
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)

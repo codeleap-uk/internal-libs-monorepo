@@ -64,7 +64,12 @@ export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
     ...viewProps
   } = props
 
-  return <View style={[styles.wrapper]} {...viewProps} ref={ref}>
+  return <View 
+    style={[styles.wrapper]} 
+    {...viewProps} 
+    // @ts-expect-error - Refs are tricky
+    ref={ref}
+  >
     {text && <Text text={text} style={styles.text} {...textProps}/>}
     {(TypeGuards.isFunction(children) ? children({ ...viewProps, styles, text }) : children)}
   </View>

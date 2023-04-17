@@ -18,8 +18,9 @@ export * from './styles'
 
 type NativeViewProps =Omit<ComponentPropsWithoutRef<typeof NativeView>, 'children'>
 
+export type ViewRefType = NativeView | React.ForwardedRef<NativeView>
 export type ViewProps = React.PropsWithChildren<{
-  ref?: any
+  ref?: ViewRefType
   component?: any
   animated?: boolean
   keyboardAware?: GetKeyboardAwarePropsOptions
@@ -28,9 +29,8 @@ export type ViewProps = React.PropsWithChildren<{
   NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps
 >
 
-export type ViewRefType = NativeView
 
-const _View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
+export const View  = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -46,37 +46,14 @@ const _View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, 
     responsiveVariants,
     variants,
   })
-  const Component = component || NativeView
-  const keyboard = useKeyboardAwareView()
-  const _props = keyboard.getKeyboardAwareProps(
-    {
-      style: [variantStyles.wrapper, style], ref: ref, ...props,
-    },
-    {
-      adapt: 'paddingBottom',
-      baseStyleProp: 'style',
-
-      enabled: false,
-      ...keyboardAware,
-    },
-  )
+  const Component = animated ? Animated.View  : component || NativeView
 
   return (
-    <Component {..._props}>
+    <Component  {...props} style={[variantStyles.wrapper, style]}>
       {children}
     </Component>
   )
-})
-
-export const AnimatedView = Animated.createAnimatedComponent(_View)
-
-export const View = forwardRef<NativeView,ViewProps>((props, ref) => {
-  if(props.animated){
-    return <AnimatedView {...props} ref={ref} />
-  }
-
-  return <_View {...props} ref={ref} />
-})
+}) as unknown as React.FC<ViewProps>
 
 
 type GapProps = ViewProps & {

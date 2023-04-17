@@ -52,15 +52,6 @@ export const I18NProvider = (props: I18NContextProps) => {
     }
   })
 
-  console.log('Render I18NProvider', {
-      locale,
-      initialLocale,
-      persistor,
-      languageDictionary
-  })
-
-
-
   const t = React.useCallback((key: string, ...args: any):string => {
     const dict = languageDictionary?.[locale];
     if (!dict) return key;

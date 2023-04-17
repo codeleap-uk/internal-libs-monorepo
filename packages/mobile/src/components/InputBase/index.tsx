@@ -50,16 +50,17 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
   
   const _styles = useInputBaseStyles(props)
  
-  const _leftIcon = getRenderedComponent<ActionIconProps>({debugName: `${debugName} left icon`, ...leftIcon}, ActionIcon, {
-    debugName,
+  const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
     styles: _styles.leftIconStyles,
+    debugName: `${debugName} left icon`,
   })
   
-  const _rightIcon = getRenderedComponent<ActionIconProps>({debugName: `${debugName} right icon`, ...leftIcon}, ActionIcon, {
-    debugName,
+  const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
+    
     // @ts-ignore
-    styles: _styles.rightIconStyles
+    styles: _styles.rightIconStyles,
+    debugName: `${debugName} right icon`
   })
 
   const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle}/>  : label 

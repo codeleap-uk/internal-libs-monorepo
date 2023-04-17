@@ -74,7 +74,7 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
     return (
-      <SectionList
+      <KeyboardAwareSectionList
         style={[Theme.presets.full, style]}
         contentContainerStyle={[variantStyles.wrapper]}
         // @ts-ignore

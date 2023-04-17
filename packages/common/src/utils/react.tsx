@@ -71,12 +71,11 @@ export const simplifyChildren = children => {
 
 
 export function getRenderedComponent<P = any>(
-  ComponentOrProps: React.FC<P> | P | React.ReactNode,  
+  ComponentOrProps: React.FC<P> | P | React.ReactNode | null | undefined,  
   DefaultComponent: React.FC<P>, 
   props?: P
 ): React.ReactNode {
-
-  if(TypeGuards.isNil(ComponentOrProps)) {
+  if(TypeGuards.isNil(ComponentOrProps) || Object.keys(ComponentOrProps).length === 0 ) {
     return null
   }
   
