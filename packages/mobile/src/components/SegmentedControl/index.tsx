@@ -94,8 +94,6 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const currentOptionIdx = options.findIndex(o => o.value === value) || 0
 
-  const translateX = widthStyle.width * currentOptionIdx
-
   const onPress = (txt:string, idx: number) => {
     return () => {
       onValueChange(txt)
@@ -145,14 +143,15 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
         <AnimatedView
           options={options}
           styles={variantStyles}
-
+          
           animated
-          style={[variantStyles.selectedBubble, widthStyle]}
+          
          
-          transition={{
-            translateX: _animation,
-          }}
-
+          style={[
+            variantStyles.selectedBubble,
+            props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'],
+            widthStyle,
+          ]}
         />
         {options.map((o, idx) => {
           const selected = value === o.value
@@ -169,7 +168,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
           const textProps:TextProps = {
             text: o.label as string,
             colorChangeConfig: _animation,
-            style: StyleSheet.flatten([variantStyles.text, selected && variantStyles['text:selected']]),
+            style: StyleSheet.flatten([variantStyles.text, selected && variantStyles['text:selected'], touchableProps?.disabled && variantStyles['text:disabled']]),
             animated: true,
             ...props.textProps,
           }
