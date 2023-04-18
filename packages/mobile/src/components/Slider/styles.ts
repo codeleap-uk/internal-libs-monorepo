@@ -1,20 +1,10 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { InputLabelComposition } from '../InputLabel'
+import { IconLessInputBaseParts, InputBaseComposition, InputBaseParts, InputBaseStates } from '../InputBase'
 
-export type SliderComposition =
-  | 'wrapper'
-  | 'handle'
-  | 'track'
-  | `label${Capitalize<InputLabelComposition>}`
-  | 'selectedTrack'
-  | 'inputContainer'
-  | 'tooltip'
-  | 'tooltip:visible'
-  | 'tooltip:hidden'
-  | 'trackLabels'
-  | 'mark'
-  | 'tooltipArrow'
-  | 'tooltipText'
+type SliderParts = 'thumb' | 'track' | 'selectedTrack' | 'unselectedTrack' | 'trackMark' | 'firstTrackMark' | 'lastTrackMark' | 'trackMarkWrapper' | 'sliderContainer' | IconLessInputBaseParts
+type SliderStates = Exclude<InputBaseStates, 'focus'>
+
+export type SliderComposition = `${SliderParts}:${SliderStates}` | SliderParts
 
 const createSliderStyle = createDefaultVariantFactory<SliderComposition>()
 

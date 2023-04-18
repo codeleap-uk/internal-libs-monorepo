@@ -6,15 +6,13 @@ import {
   useDefaultComponentStyle,
   usePrevious,
 } from '@codeleap/common'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { RefreshControl, RefreshControlProps, ScrollView, StyleSheet } from 'react-native'
 import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollPresets } from './styles'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
-import { ScrollView as MotiScrollView } from 'moti'
-// import { KeyboardAwareScrollView } from '../../utils'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 
 type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
 
@@ -83,38 +81,27 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     })
 
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
-    const _scrollProps = {
-      style: [variantStyles.wrapper, style],
-      contentContainerStyle: [variantStyles.content, contentContainerStyle],
-      ref: ref as unknown as ScrollView,
-      refreshControl: hasRefresh && (
-        <RefreshControl
-          refreshing={refreshingDisplay}
-          onRefresh={onRefresh}
-          tintColor={refreshStyles?.color}
-          colors={[refreshStyles?.color]}
-          {...refreshControlProps}
-        />
-      ),
-      ...props,
-    }
-    const keyboard = useKeyboardAwareView({
-      debugName,
-    })
 
-    const rootProps = keyboard.getKeyboardAwareProps(_scrollProps, {
-      adapt: 'marginBottom',
-      baseStyleProp: 'style',
-      animated,
-      ...keyboardAware,
-
-    })
-    const Component = (animated ? MotiScrollView : ScrollView) as unknown as typeof ScrollView
+    const Component = (animated ? KeyboardAwareScrollView : KeyboardAwareScrollView) as unknown as typeof ScrollView
 
     return (
       <Component
-        {...rootProps}
-
+        style={[variantStyles.wrapper, style]}
+        contentContainerStyle={[variantStyles.content, contentContainerStyle]}
+        // @ts-expect-error - Refs suck
+        ref={ref}
+        refreshControl= {
+          hasRefresh && (
+            <RefreshControl
+              refreshing={refreshingDisplay}
+              onRefresh={onRefresh}
+              tintColor={refreshStyles?.color}
+              colors={[refreshStyles?.color]}
+              {...refreshControlProps}
+            />
+          )
+        } 
+        {...props}
       >
         {children}
       </Component>

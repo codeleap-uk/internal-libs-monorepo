@@ -2,7 +2,7 @@ import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useStat
 import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
 
 import AsyncStorage from '@react-native-community/async-storage'
-import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -69,7 +69,7 @@ export function useStaticAnimationStyles<T extends Record<string|number|symbol, 
   return styles.current as SelectProperties<T, K>
 }
 
-type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity'
+type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'translateY' | 'opacity' | 'backgroundColor'
 
 type VariantTransitionConfig = {
   type: 'timing'
@@ -77,13 +77,13 @@ type VariantTransitionConfig = {
   easing?: EasingFn
 }
 
-type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
+export type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
 
 type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
   variantStyles: T
   animatedProperties: K[]
   updater: (states: SelectProperties<T, K>) => AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>
-  transition: TransitionConfig
+  transition?: TransitionConfig
   dependencies?: any[]
 }
 
@@ -95,13 +95,23 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
     case 'opacity':
       newStyle.opacity = applyFN(value)
       break
-    default:
-      if (!newStyle.transform) {
+    case 'backgroundColor':
+      newStyle.backgroundColor = applyFN(value)
+      break
+    case 'scale':
+    case 'scaleX':
+    case 'scaleY':
+    case 'translateX':
+    case 'translateY':
+      if(!newStyle.transform){
         newStyle.transform = []
       }
       newStyle.transform.push({
         [property]: applyFN(value),
       })
+    default:
+      newStyle[property] = value
+      break
   }
 
   return newStyle
@@ -124,7 +134,7 @@ const transformProperties = (properties, transition) => {
 
     const { type, duration, easing } = _transitionConfig
 
-    let fn
+    let fn = (v) => v
 
     switch (type) {
       case 'timing':
@@ -132,6 +142,7 @@ const transformProperties = (properties, transition) => {
           duration,
           easing,
         })
+        break
       default:
         break
     }
@@ -148,23 +159,30 @@ const transformProperties = (properties, transition) => {
 }
 
 export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>) {
-  const { animatedProperties, updater, variantStyles, transition, dependencies = [] } = config
+  const { animatedProperties, updater, variantStyles, transition = {}, dependencies = [] } = config
 
   const _transition = useRef(null)
 
   if (!_transition.current) {
-    _transition.current = JSON.parse(JSON.stringify(transition))
+    _transition.current = JSON.parse(JSON.stringify(transition||{}))
   }
+
+  
 
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
 
   const animated = useAnimatedStyle(() => {
     const nextState = updater(staticStyles)
 
-    const formatted = transformProperties(nextState, _transition.current)
+    
+    const formatted = transformProperties(
+      nextState, 
+      _transition.current
+    )
 
     return formatted
-  }, [dependencies])
+  }, dependencies)
+
 
   return animated
 }

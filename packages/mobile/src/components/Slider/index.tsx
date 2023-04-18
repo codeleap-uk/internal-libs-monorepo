@@ -1,130 +1,187 @@
-import { SliderMark } from './Mark'
-import { ThumbTooltip } from './Thumb'
 import * as React from 'react'
 import { Slider as RNSlider } from '@miblanchard/react-native-slider'
-
-import { useRef } from 'react'
 import { StyleSheet } from 'react-native'
-import { View } from '../View'
 import {
-  getNestedStylesByKey,
-  SliderStyles,
+  TypeGuards,
   useDefaultComponentStyle,
+  onUpdate
 } from '@codeleap/common'
 
-import { SliderProps } from './types'
-import { InputLabel } from '../InputLabel'
+import { SliderProps, TrackMarkProps } from './types'
+import { InputBase, selectInputBaseProps } from '../InputBase'
+import {SliderPresets} from './styles'
+import { Text } from '../Text'
+import { View } from '../View'
 
 export * from './styles'
 
-export const Slider: React.FC<SliderProps> = (sliderProps) => {
-  const [tooltipVisible, setTooltipVisible] = React.useState(false)
+
+
+const DefaultSliderTrackMark = (props: TrackMarkProps) => {
+  const { index, content, style } = props
+
+  if(!TypeGuards.isString(props.content)){
+    return <>
+      {props.content}
+    </>
+  }
+
+  return <Text 
+    text={props.content}
+    style={style}
+  />
+}
+
+export const Slider = (props:SliderProps) => {
+  const {
+    inputBaseProps,
+    others
+  } = selectInputBaseProps(props)
 
   const {
-    debounce,
+    debounce = null,
     onValueChange,
-    labels,
     value,
     label,
-    valueOverThumb,
-    formatTooltip,
+    debugName,
     styles = {},
     style,
-    tooltipVisibilityWindow = 830,
+    disabled,
     variants,
-    ...props
-  } = sliderProps
+    trackMarks,
+    trackMarkComponent = DefaultSliderTrackMark,
+    ...sliderProps
+  } = others
 
-  const changeDebounce = typeof debounce === 'number' ? debounce : 100
+  const SliderTrackMark = trackMarkComponent
+  const [_value, _setValue] = React.useState(value)
 
-  const debounceTimeout = useRef(null)
-  const toggleTooltipTimeout = useRef(null)
-  const valueRef = useRef(value)
+  onUpdate(() => {
+    if(value !== _value){
+      _setValue(value)
+    }
+  }, [value])
 
-  const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderStyles>('u:Slider', {
+
+
+  const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
     variants,
     styles,
     transform: StyleSheet.flatten,
   })
 
-  function setValue() {
-    onValueChange(valueRef.current)
-  }
+  const thumbStyle = React.useMemo(() => {
+    return StyleSheet.flatten([
+      variantStyles.thumb,
+      disabled && variantStyles['thumb:disabled'],
+    ])  
+  }, []) 
 
-  function onChange(val) {
-    let eventValue = val
+  const trackStyle = React.useMemo(() => {
+    return StyleSheet.flatten([
+      variantStyles.track,
+      disabled && variantStyles['track:disabled'],
+    ])  
+  }, [disabled]) 
 
-    if (Array.isArray(val) && typeof value === 'number') {
-      eventValue = val[0]
+  const selectedTrackStyle = React.useMemo(() => {
+    return StyleSheet.flatten([
+      variantStyles.selectedTrack,
+      disabled && variantStyles['selectedTrack:disabled'],
+    ])  
+  }, [disabled]) 
+
+  const unselectedTrackStyle = React.useMemo(() => {
+    return StyleSheet.flatten([
+      variantStyles.unselectedTrack,
+      disabled && variantStyles['unselectedTrack:disabled'],
+    ])  
+  }, [disabled])
+  
+  const containerStyle = React.useMemo(() => {
+    return StyleSheet.flatten([
+      variantStyles.sliderContainer,
+      disabled && variantStyles['sliderContainer:disabled'],
+    ])
+  }, [disabled])
+
+  const trackMarksHaveContent = !(TypeGuards.isArray(trackMarks) || TypeGuards.isNil(trackMarks))
+
+  const trackMarksProp = React.useMemo(() => {
+    if(!trackMarksHaveContent){
+      return trackMarks
     }
+    return Object.keys(trackMarks).map((key) => Number(key))
+  },[trackMarksHaveContent])
 
-    if (eventValue === value) return
-
-    valueRef.current = eventValue as number
-
-    if (debounceTimeout.current) clearTimeout(debounceTimeout.current)
-
-    debounceTimeout.current = setTimeout(() => {
-      setValue()
-    }, changeDebounce)
-  }
+  const trackMarkStyle = React.useMemo(() => {
+    return StyleSheet.flatten([
+      variantStyles.trackMark,
+      disabled && variantStyles['trackMark:disabled'],
+    ])
+  }, [disabled])
 
   return (
-    <View style={[variantStyles.wrapper, style]}>
-      <InputLabel label={label} styles={getNestedStylesByKey('label', variantStyles)} />
-      <RNSlider
-        value={value}
-        onSlidingStart={() => {
-          if (toggleTooltipTimeout.current) { clearTimeout(toggleTooltipTimeout.current) }
-
-          setTooltipVisible(true)
-        }}
+    <InputBase
+      {...inputBaseProps}
+      disabled={disabled}
+      styles={variantStyles}
+      labelAsRow
+    >
+      <RNSlider 
+        value={_value}
+        onValueChange={_setValue}
+        // @ts-ignore
+        thumbStyle={thumbStyle}
+        // @ts-ignore
+        trackStyle={trackStyle}
+        minimumTrackStyle={selectedTrackStyle}
+        maximumTrackStyle={unselectedTrackStyle}
+        containerStyle={containerStyle}
+        minimumValue={0}
+        maximumValue={100}
         onSlidingComplete={() => {
-          toggleTooltipTimeout.current = setTimeout(
-            () => setTooltipVisible(false),
-            tooltipVisibilityWindow,
-          )
+          onValueChange(_value)
         }}
-        onValueChange={onChange}
-        renderAboveThumbComponent={(idx) => {
-          if (!valueOverThumb) return null
-          const thisValue = Array.isArray(value) ? value[idx] : value
-          return (
-            <ThumbTooltip
-              visible={tooltipVisible}
-              variantStyles={variantStyles}
-              styles={styles}
-            >
-              {formatTooltip ? formatTooltip(thisValue) : thisValue.toString()}
-            </ThumbTooltip>
-          )
-        }}
-        renderTrackMarkComponent={(idx) => (
-          <SliderMark
-            index={idx}
-            sliderProps={sliderProps}
-            styles={styles}
-            variantStyles={variantStyles}
-          />
-        )}
-        maximumValue={labels ? labels.length - 1 : 10}
-        trackMarks={labels ? Object.keys(labels).map((z) => parseInt(z)) : []}
-        containerStyle={
-            [variantStyles.inputContainer] as any
-        }
-        thumbStyle={
-            StyleSheet.flatten([variantStyles.handle]) as any
-        }
-        trackStyle={[variantStyles.track] as any}
-        minimumTrackTintColor={
-          StyleSheet.flatten([
-            variantStyles.selectedTrack,
-
-          ])?.backgroundColor
-        }
-        {...props}
+        disabled={disabled}
+        {...sliderProps}
+        trackMarks={trackMarksProp}
       />
-    </View>
+      {
+        trackMarksProp ? (
+          <View style={variantStyles.trackMarkWrapper}>
+          {
+            trackMarksProp.map((_, idx) => {
+              let idxStyle = {}
+
+              if(idx === 0){
+                idxStyle = variantStyles.firstTrackMark
+              } else if(idx === trackMarksProp.length - 1){
+                idxStyle = variantStyles.lastTrackMark
+              }
+              const style = [
+                trackMarkStyle,
+                idxStyle,
+              ]
+
+              if(!trackMarksHaveContent){
+                return <SliderTrackMark 
+                  index={idx} 
+                  style={style}
+                  key={idx}
+                />
+              }
+              
+              const relativeValue = trackMarksProp[idx]
+              const content = trackMarks[relativeValue]
+          
+              return <SliderTrackMark index={idx} content={content} style={style} key={idx}/>
+            })
+          }
+          </View>
+        ) : null
+      }
+    </InputBase>    
   )
 }
 

@@ -28,7 +28,22 @@
       ],
       "@react-native-community/async-storage": [
         "../../apps/mobile/node_modules/@react-native-community/async-storage/types/index.d.ts"
-      ]
+      ],
+      "react-native-keyboard-aware-scroll-view": [
+        "../../apps/mobile/node_modules/react-native-keyboard-aware-scroll-view/index.d.ts"
+      ],
+      "react-native-image-viewing": [
+        "../../apps/mobile/node_modules/react-native-image-viewing/dist/index.d.ts"
+      ],
+      "react": [
+        "../../apps/mobile/node_modules/@types/react/index.d.ts"
+      ],
+      "react-native": [
+        "../../apps/mobile/node_modules/@types/react-native/index.d.ts"
+      ],
+      "react-native-device-info": [
+        "../../apps/mobile/node_modules/react-native-device-info/lib/typescript/index.d.ts"
+      ],
     }
   },
   "include": [
@@ -37,9 +52,7 @@
   ],
   "exclude": [
     "node_modules",
-    "../../node_modules",
-    "**/*.stories.tsx",
-    "dist/**/*"
+    "dist"
   ],
   "typedocOptions": {
     "entryPoints": [
@@ -47,5 +60,5 @@
     ],
     "out": "docs",
     "name": "CodeLeap web lib"
-  },
+  }
 }
