@@ -2,9 +2,9 @@ name: Publish libraries
 on:
   push:
     branches:
-      - master
+      - none
     paths:
-      - "packages/**/*"
+      - "disabled/**/*"
 
 jobs:
   build:
