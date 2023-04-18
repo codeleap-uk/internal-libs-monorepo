@@ -39,7 +39,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
     },
     onInputFocused: () => {
       
-      if (isValid || isEmpty) return
+      if (isValid ) return
       updateErrorOnChange.current = true
     },
     message: _message,

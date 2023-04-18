@@ -47,10 +47,10 @@ export class Logger {
       const consoles = ['log', 'warn', 'error']
 
 
-      // consoles.forEach(t => {
-      //   const tmp = console[t]
-      //   console[t] = (...args) => newConsole(args, tmp)
-      // })
+      consoles.forEach(t => {
+        const tmp = console[t]
+        console[t] = (...args) => newConsole(args, tmp)
+      })
     }
 
     this.sentry = new SentryService(settings)

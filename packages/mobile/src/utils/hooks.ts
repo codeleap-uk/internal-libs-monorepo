@@ -2,7 +2,7 @@ import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useStat
 import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
 
 import AsyncStorage from '@react-native-community/async-storage'
-import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -77,7 +77,7 @@ type VariantTransitionConfig = {
   easing?: EasingFn
 }
 
-type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
+export type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
 
 type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
   variantStyles: T
@@ -134,7 +134,7 @@ const transformProperties = (properties, transition) => {
 
     const { type, duration, easing } = _transitionConfig
 
-    let fn
+    let fn = (v) => v
 
     switch (type) {
       case 'timing':
@@ -142,6 +142,7 @@ const transformProperties = (properties, transition) => {
           duration,
           easing,
         })
+        break
       default:
         break
     }
@@ -166,15 +167,22 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
     _transition.current = JSON.parse(JSON.stringify(transition||{}))
   }
 
+  
+
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
 
   const animated = useAnimatedStyle(() => {
     const nextState = updater(staticStyles)
 
-    const formatted = transformProperties(nextState, _transition.current)
+    
+    const formatted = transformProperties(
+      nextState, 
+      _transition.current
+    )
 
     return formatted
-  }, [dependencies])
+  }, dependencies)
+
 
   return animated
 }

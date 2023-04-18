@@ -1,6 +1,6 @@
 import { useCodeleapContext } from "../../styles";
 import { onMount, TypeGuards, useState } from "../../utils";
-import React from 'react'
+import React, { useRef } from 'react'
 import { I18NContextProps, I18NContextType } from "./types";
 
 
@@ -9,28 +9,62 @@ export const I18NRef = React.createRef<I18NContextType>();
 
 export const I18NContext = React.createContext<I18NContextType>({} as I18NContextType);
 
+export function formatStrWithArgs(str: string, ...args: any[]) {
+  let i = 0;
+  return str.replace(/%s/g, () => args[i++]);
+}
+
 // @ts-expect-error
 if(!I18NRef.current) I18NRef.current = {} as I18NContextType;
 
 export const I18NProvider = (props: I18NContextProps) => {
+  const subscribers = useRef([])
+
+  const subscribe = React.useCallback((callback) => {
+    subscribers.current.push(callback)
+    return () => {
+      subscribers.current = subscribers.current.filter((cb) => cb !== callback)
+    }
+  }, [])
+
+  I18NRef.current.subscribe = subscribe;
+
   const { initialLocale, children, persistor, languageDictionary } = props;
+
   const {logger} = useCodeleapContext()
 
+
+
+  const callSubscribers = React.useCallback((locale:string) => {
+    subscribers.current.forEach((cb) => cb(locale))
+  }, [])
+
+
   const [locale, _setLocale] = React.useState<string>(() => {
+    let _locale = initialLocale;
+    let isPromise = false;
     if (persistor) {
       const persistedLocale = persistor.getLocale();
+
       // @ts-expect-error - TS doesn't know that a Promise has a then method
-      const isPromise = persistedLocale instanceof Promise || !!persistedLocale.then
-      if(isPromise)  return initialLocale;
-      return persistedLocale || initialLocale;
+      isPromise = persistedLocale instanceof Promise || !!persistedLocale.then
+
+      if(!isPromise) {
+        // @ts-expect-error - TS doesn't know that a Promise has a then method
+        _locale =  persistedLocale;
+      }
     }
-    return initialLocale;
+    if(!isPromise) callSubscribers(_locale)
+    return _locale;
   });
   
   I18NRef.current.locale = locale;
   
+ 
+
   const setLocale = React.useCallback((locale: string) => {
     I18NRef.current.locale = locale;
+    callSubscribers(locale);
     _setLocale(locale);
     persistor?.setLocale?.(locale);
   }, [persistor?.setLocale]);
@@ -47,6 +81,7 @@ export const I18NProvider = (props: I18NContextProps) => {
       // @ts-expect-error - TS doesn't know that a Promise has a then method
         persistedLocale.then((locale) => {
           setLocale(locale || initialLocale);
+
         })
       }
     }
@@ -60,8 +95,9 @@ export const I18NProvider = (props: I18NContextProps) => {
       logger.warn(`Missing translation for key: ${key} in locale: ${locale}`);
       return key
     };
+    
     if (TypeGuards.isFunction(value)) return value(...args);
-    return value;
+    return formatStrWithArgs(value, ...args);
   }, [locale, languageDictionary]);
 
   I18NRef.current.t = t;
@@ -70,7 +106,8 @@ export const I18NProvider = (props: I18NContextProps) => {
   return <I18NContext.Provider value={{
     locale,
     setLocale,
-    t
+    t,
+    subscribe
   }}>
     {children}
   </I18NContext.Provider>

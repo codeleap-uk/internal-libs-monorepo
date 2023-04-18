@@ -42,7 +42,7 @@ export type FormOutput = 'json'
 export type CommonSliderTypes = {
   min?: number
   max?: number
-  labels?: string[]
+  trackMarks?: number[] | Record<string|number, string>
 }
 
 type Mask = Partial<RNMaskedTextTypes.TextInputMaskProps> &{
@@ -111,6 +111,7 @@ export type TextField = {
   validate?: Validator<string>
   required?: boolean
   masking?: Mask
+  multiline?: boolean
 } & WithTransformer<string>
 export type NumberField = {
   type: 'number'
@@ -192,8 +193,11 @@ export type FormField = {
   returnKeyType?: string
   textContentType?: string
   autoComplete?: string
-  subtitle?: Label
+  description?: Label
+  debugName?: string
+  required?: boolean
   debounce?: number
+  
 } & AllFields
 
 export type FieldsMap = Record<string, Partial<FormField>>

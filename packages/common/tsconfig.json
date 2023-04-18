@@ -27,7 +27,7 @@
         "../../apps/web/node_modules/@types/react-dom/index.d.ts"
       ],
       "react": [
-        "../../apps/mobile/node_modules/@types/react/index.d.ts"
+        "../../apps/web/node_modules/@types/react/index.d.ts"
       ]
     }
   },

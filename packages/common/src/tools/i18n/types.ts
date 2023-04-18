@@ -1,7 +1,10 @@
+type I18NSubscriber = (locale: string) => void | Promise<void>;
+
 export type I18NContextType = {
   locale: string;
   setLocale: (locale: string) => void;
   t: (key: string, ...args: any) => string;
+  subscribe: (callback: I18NSubscriber) => () => void;
 };
 
 export type Persistor = {
