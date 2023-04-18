@@ -1,0 +1,82 @@
+---
+title: 'Component structure'
+---
+
+> WARNING Make sure to have read the [Basics](/concepts/styling/fundamentals) page before continuing.
+
+To make a component support our variant system, `@codeleap/common` provides de `useDefaultComponentStyle` hook. This hook will return an object where each part of a composition has the style values associated with it.
+
+Let's create the button from the styling basics guide
+
+```tsx
+import { useDefaultComponentStyle } from '@codeleap/common'
+
+export const Button = (props) => {
+  const {
+    variants,
+    styles,
+    style,
+    text,
+    ...buttonProps
+  } = props
+
+  // variantStyles will contain the styles for each part of the composition, assigning variants and the styles override as needed
+  const variantStyles = useDefaultComponentStyle(
+    'Button', // This should correspond to the key of the component passed to the variants prop of StyleProvider
+    {
+      variants, // The variants prop is an array containing the variant names
+      styles, // This allows you to override the styles of each part of the composition through props
+    }
+  )
+
+  return (
+    <button
+      style={{
+        ...variantStyles.wrapper,
+        ...style,
+      }}
+      {...buttonProps}
+    >
+      <p
+        style={variantStyles.text}
+      >{text}</p>
+    </button>
+  )
+}
+```
+
+Just like a normal component, but it supports variants and styles overrides through the hook. This paradigm can be applied to any component.
+
+## Typing the variants and styles
+> TIP If you're not too familiar with typescript, read [this](/concepts/typescript)
+
+To make the variants and styles props type safe, we can use the `ComponentVariants` and `StylesOf` types.
+
+```tsx
+import { ComponentVariants, createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { StylesOf } from '@codeleap/web'
+
+type ButtonComposition = 'wrapper' | 'text'
+
+// Like variantProvider.createVariantFactory, but only exposes the parts theme that every project is guaranteed to have 
+const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
+
+/* 
+This object contains a variant for each of the presets, assigning the them to the wrapper part, 
+since that is the outer element of the button, on which properties such as margin should be applied when giver something like 'marginBottom:2'
+*/ 
+const ButtonPresets = includePresets(style => {
+  return createDefaultVariantFactory(() => ({ wrapper : style }))
+}) 
+
+// This is just the default props for the html button element
+type HTMLButtonProps = React.ComponentPropsWithoutRef<'button'>
+
+// This contains the type for the variants prop, and also adds types for project specific variants as needed
+type ButtonVariantsProps = ComponentVariants<typeof ButtonPresets>
+
+type ButtonProps = HTMLButtonProps & {
+  // This is the type for the styles prop
+  styles?: StylesOf<ButtonComposition>
+} & ButtonVariantsProps
+```

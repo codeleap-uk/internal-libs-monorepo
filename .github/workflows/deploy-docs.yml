@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - docs
     paths: 
       - apps/docs/package.json
 jobs:

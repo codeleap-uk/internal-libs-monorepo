@@ -7,9 +7,15 @@
         ]
     },
     {
+        "name": "contributing",
+        "items": [
+            "guides",
+            "faq"
+        ]
+    },
+    {
         "name": "workflow",
         "items": [
-            "contributing",
             "pr-template",
             "management"
         ]
@@ -18,7 +24,8 @@
         "name": "styling",
         "items": [
             "fundamentals",
-            "theme"
+            "components",
+            "adding-examples"
         ]
     }
 ]

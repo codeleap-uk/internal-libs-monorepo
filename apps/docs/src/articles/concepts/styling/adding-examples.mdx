@@ -1,0 +1,72 @@
+---
+title: 'Adding examples'
+---
+
+It's very useful to have a centralized page with examples of how to use each component. This has the added benefit of serving as a design review for the component, and a testing page for prop variations.
+
+Examples use a Widget system to control the props of the component in an example. For instance, this is a trimmed down version of the example for the `Button` component in the mobile template:
+
+```tsx
+import { Button, Text, ComponentShowcase, Gap, ModalManager, IconWidget, VariantsWidget, View } from '@/components'
+import { React, ComponentStyleSheets } from '@/app'
+import { useVariantSelector } from '@/utils'
+
+type ButtonExamplesProps = {
+  visible: boolean
+  toggle: () => void
+}
+
+function ButtonExamples({ visible, toggle }: ButtonExamplesProps) {
+  const { handle, Control } = useVariantSelector([
+    {
+      id: 'hierarchy',
+      label: 'Hierarchy',
+      widget: VariantsWidget,
+      args: {
+        options: ['default', 'outline', 'minimal'],
+        type: 'vertical',
+        defaultVariants: ['default'],
+      },
+    },
+    {
+      id: 'size',
+      label: 'Size',
+      widget: VariantsWidget,
+      args: {
+        options: ['small', 'large'],
+        type: 'horizontal',
+        defaultVariants: ['large'],
+      },
+    },
+    {
+      id: 'selectedIcon',
+      label: 'Select Icon',
+      widget: IconWidget,
+    },
+  ] as const)
+
+  const variants = [...handle.hierarchy.value, ...handle.size.value]
+
+  return (
+    <>
+      
+      <Button variants={variants} text='Default' onPress={() => {}} debugName={'Simple button test'} icon={handle.selectedIcon.icon}/>
+      
+
+      <ModalManager.Modal debugName={'Button variants modal'} visible={visible} toggle={toggle}>
+        <Gap value={2}>
+          {Control.map(({ Component, props }, key) => {
+            return <View key={key}><Component {...props}/></View>
+          })}
+        </Gap>
+      </ModalManager.Modal>
+    </>
+  )
+}
+
+export default (props) => <ComponentShowcase preview={ButtonExamples}  {...props}/>
+```
+
+The `useVariantSelector` hook takes each widget and aggregates it into a handle which we apply to the props of the component. It also returns an array of control components which we can use to render the widget which will have the options for the props.
+
+It's relatively simple to create widgets for each necessity, take a look at the already existing widgets to get an idea of how to create your own. 

@@ -1,10 +1,16 @@
 ---
-title: 'Styling Basics'
+title: 'Basics'
 ---
 
 At Codeleap, we use a styling system which aims to provide a fast development experience without compromising quality or flexibility. The base of this system is the concept of *variants*.
 
 Variants can be described as a set of styles for a component's *composition* (it's internal components). For instance, a simple Button component can be broken down into it's Wrapper, Text, and Icon. These three elements make up the Button's composition. 
+
+We express compositions using Typescript unions. Our example Button's composition can be expressed as:
+
+```typescript
+type ButtonComposition = 'wrapper' | 'text' | 'icon'
+```
 
 A *variant* of such a Button will modify one or more of the composition's elements, resulting in a different style which can be applied to the Button by referencing it's name in the variants prop.
 
@@ -52,7 +58,7 @@ Notice only the background has changed. That's because every variant inherits th
 
 # The theme
 
-Themes provide values to be applied across a design. The themes we use are no different, they expose values and functions (which return values of course) to be used when defining the styles of variants or individual application stylesheets in a way that can applied on both the web and react native.
+Themes provide values to be applied across a design. Our themes are javascript objects which expose values and functions to be used when defining the styles of variants or individual application stylesheets.
 
 For example, applying padding and color to a variant looks roughly like this
 
@@ -85,8 +91,7 @@ const ButtonStyles = {
 
 The `spacing` property of the `Theme` object groups spacing values and functions such as `paddingVertical`, which use base configuration values of the `spacing` property defined when creating a theme.
 
-### TODO Create the theme spec page
-You can find the full model for the themes [here](somelink)
+You can find the full design model for the theme [here](https://www.figma.com/file/nS6DYObG1hyOUrEIiZsinI/Project-Template?node-id=1-4)
 
 # Themed variants
 
@@ -98,9 +103,9 @@ For that, we use a helper class called `VariantProvider`. Example usage:
 // styles.ts
 import {
     createTheme,
-    VariantProvider,
-    ButtonComposition
+    VariantProvider
 } from '@codeleap/common' 
+import { ButtonComposition, ButtonPresets } from '@codeleap/web'
 
 export const Theme = createTheme({
     colors: {
@@ -113,13 +118,11 @@ export const Theme = createTheme({
             background: 'black'
         }
     },
-    initialTheme: 'light'
+    initialTheme: 'light',
+    spacing: 8
 })
 
 export const variantProvider = new VariantProvider(Theme)
-
-// Gets the default styles for the button from the library
-const defaultStyles = variantProvider.getDefaultVariants('Button')
 
 // This function provides the color scheme for the current theme, 
 // and ensures we know which elements of the composition can be altered 
@@ -127,16 +130,12 @@ const defaultStyles = variantProvider.getDefaultVariants('Button')
 const createButtonVariant = variantProvider.createVariantFactory<ButtonComposition>()
 
 const ButtonStyles = {
-    ...defaultStyles,
+    // Presets are variants such as 'marginLeft:2', spread this to make them available in this component
+    ...ButtonPresets,
     // `theme` is given to the function during the app's execution with the colors for either dark 
     // or light mode.
     default: createButtonVariant((theme) => ({ 
-
-        // Merge the default library styles with our own
-        ...defaultStyles.default(theme), 
         wrapper: {
-            ...defaultStyles.default(theme).wrapper,
-
             // The color already has the correct value for the current theme
             backgroundColor: theme.colors.background, 
 
@@ -183,7 +182,10 @@ const MyApp = () => {
 
     return <>
         <Button onPress={toggleTheme} /> {/* This uses the styles of the default variant */}
-        <Button variants={['primary']}/> {/* This uses the styles of the primary variant */}
+        <Button variants={[
+            'primary', /* This uses the styles of the primary variant */
+            'marginTop:2' // This uses the styles of the marginTop preset, applying marginTop = theme.spacing * 2 
+            ]}/>
         <View style={{
             ...Theme.spading.marginTop(2) // The imported uppercase Theme can be used on it's own
         }}> 
@@ -199,3 +201,5 @@ const MyAppRoot = () => {
 }
 
 ```
+
+The `StyleProvider` is what makes the variants available to the components inside our libraries, as well as to any components inside the application. This allows for a great deal of flexibility when it comes to styling and makes reusing and/or overriding the components easy.

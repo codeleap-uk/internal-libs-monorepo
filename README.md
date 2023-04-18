@@ -25,7 +25,7 @@ git clone https://github.com/codeleap-uk/internal-libs-monorepo
 
 cd internal-libs-monorepo
 
-# Pulls git submodules for templates
+# Pulls git submodules for templates. Check if apps/web and apps/mobile are populated after this
 git submodule update --init --recursive
 
 # Install dependencies
