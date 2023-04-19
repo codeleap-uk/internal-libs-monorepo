@@ -16,58 +16,63 @@ type DynamicQueryKeyClient<Data = any, BuilderParams extends any[] = any[]> = {
     setData(keyParams: BuilderParams, updater: Updater<Data, Data>): Data
     refresh(...args: BuilderParams): void
   }
-export class CodeleapQueryClient extends ReactQuery.QueryClient {
-  dynamicQueryKey<Data, BuilderArgs extends any[] = any[]>(k: QueryKeyBuilder<BuilderArgs>):DynamicQueryKeyClient<Data, BuilderArgs> {
 
-    return {
-      key: k,
-      getData: (...params) => {
 
-        return this.getQueryData<Data>(k(...params))
-      },
-      setData: (params, updater) => {
-        const _updater = (prev:Data) => {
-          if (TypeGuards.isFunction(updater)) {
-            return updater(prev)
-          }
-          return updater
-        }
-        return this.setQueryData(k(...params), _updater)
-      },
-      refresh: (...params) => {
-        return this.invalidateQueries({
-          exact: true,
-          queryKey: k(...params),
-          refetchPage: () => true,
-        })
-      },
+export class CodeleapQueryClient {
+    constructor(public client: ReactQuery.QueryClient) {
     }
-  }
 
-  queryKey<Data>(k: ReactQuery.QueryKey):StaticQueryKeyClient<Data> {
+    queryKey<Data>(k: ReactQuery.QueryKey):StaticQueryKeyClient<Data> {
 
-    return {
-      key: k,
-      getData: () => {
-        return this.getQueryData<Data>(k)
-      },
-      setData: (updater) => {
-        const _updater = (prev:Data) => {
-          if (TypeGuards.isFunction(updater)) {
-            return updater(prev)
+      return {
+        key: k,
+        getData: () => {
+          return this.client.getQueryData(k) as Data
+        },
+        setData: (updater) => {
+          const _updater = (prev:Data) => {
+            if (TypeGuards.isFunction(updater)) {
+              return updater(prev)
+            }
+            return updater
           }
-          return updater
-        }
-        return this.setQueryData(k, _updater)
-      },
-      refresh: () => {
-        return this.invalidateQueries({
-          exact: true,
-          queryKey: k,
-          refetchPage: () => true,
-        })
-      },
+          return this.client.setQueryData(k, _updater)
+        },
+        refresh: () => {
+          return this.client.invalidateQueries({
+            exact: true,
+            queryKey: k,
+            refetchPage: () => true,
+          })
+        },
+      }
     }
-  }
+
+    dynamicQueryKey<Data, BuilderArgs extends any[] = any[]>(k: QueryKeyBuilder<BuilderArgs>):DynamicQueryKeyClient<Data, BuilderArgs> {
+
+      return {
+        key: k,
+        getData: (...params) => {
+  
+          return this.client.getQueryData(k(...params)) as Data
+        },
+        setData: (params, updater) => {
+          const _updater = (prev:Data) => {
+            if (TypeGuards.isFunction(updater)) {
+              return updater(prev)
+            }
+            return updater
+          }
+          return this.client.setQueryData(k(...params), _updater)
+        },
+        refresh: (...params) => {
+          return this.client.invalidateQueries({
+            exact: true,
+            queryKey: k(...params),
+            refetchPage: () => true,
+          })
+        },
+      }
+    }
 
 }

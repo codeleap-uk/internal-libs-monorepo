@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@sentry/browser'
+import type { Breadcrumb, ClientOptions } from '@sentry/types'
 import { AppSettings } from '../../config/Settings'
 import {
   LogFunctionArgs,
@@ -18,11 +18,13 @@ export class SentryService {
     if (this.use) {
       const isDebug = settings?.Sentry?.debug || false
       if (isDebug) console.log('> > > Initializing Sentry', settings.Sentry)
-      const initObj = {
+      // @ts-expect-error - These are provided by platform specific Sentry providers
+      const initObj:ClientOptions = {
         dsn: settings.Sentry.dsn,
         debug: isDebug,
+        integrations: [],
         ...settings?.Sentry?.initArgs,
-      } as AppSettings['Sentry']
+      } 
       if (settings?.Sentry?.beforeBreadcrumb) {
         initObj.beforeBreadcrumb = settings?.Sentry?.beforeBreadcrumb
       }

@@ -2,6 +2,7 @@ import { createDefaultVariantFactory, includePresets, TextInputComposition } fro
 import { ListComposition } from '../List'
 import { ModalComposition } from '../Modal'
 type ItemStates = '' | ':selected'
+
 export type SelectComposition =
   ModalComposition |
   `input${TextInputComposition}` |

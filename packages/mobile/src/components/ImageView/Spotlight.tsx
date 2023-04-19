@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { deepEqual, onUpdate, ReactState, TypeGuards, usePrevious, useUnmount } from '@codeleap/common'
-// @ts-ignore
-import { ImageSource } from 'react-native-image-viewing/dist/@types'
+
 import uuid from 'react-native-uuid'
 import { ImageView } from './component'
 import { ImageProps } from '../Image'
+import {ImageURISource, ImageRequireSource} from 'react-native'
+type ImageSource = ImageURISource | ImageRequireSource
+
 type TImage = {
     source: ImageSource
     created: number

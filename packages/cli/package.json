@@ -14,11 +14,11 @@
     "@types/inquirer": "^8.2.0",
     "@types/libsodium-wrappers": "^0.7.10",
     "cross-env": "^7.0.3",
-    "@codeleap/common": "*",
-    "typescript": "^4.5.5"
+    "@codeleap/common": "*"
   },
   "peerDependencies": {
-    "@codeleap/common": ""
+    "@codeleap/common": "",
+    "typescript": "4.5.4"
   },
   "scripts": {
     "build": "tsc --build",

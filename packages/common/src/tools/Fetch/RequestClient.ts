@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { RequestQueueItem } from '.'
+import { InternalRequestClientConfig, RequestQueueItem } from '.'
 import { Logger } from '..'
 import { CancellablePromise } from '../..'
 import { silentLogger } from '../../constants'
@@ -30,16 +30,12 @@ export class RequestClient implements IRequestClient {
 
   applyInterceptors() {
     this.axios.interceptors.request.use(async (c) => {
-      let reqConfig = c as RequestClientConfig
+      let reqConfig = c as InternalRequestClientConfig
 
       if (reqConfig.multipart && this.config.automaticMultipartParsing) {
         reqConfig.data = this.toMultipart(reqConfig.data)
 
-        reqConfig.headers = {
-          ...reqConfig?.headers,
-          'Content-Type': 'multipart/form-data',
-        }
-
+        reqConfig.headers.set('Content-Type', 'multipart/form-data') 
       }
 
       if (this.config.requestMiddleware) {

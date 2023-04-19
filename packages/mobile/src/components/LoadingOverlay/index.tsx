@@ -1,12 +1,11 @@
 import React, { useRef } from 'react'
 import { ComponentVariants, getNestedStylesByKey, onUpdate, useDefaultComponentStyle, useMemo } from '@codeleap/common'
-import { useDynamicAnimation } from 'moti'
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { View } from '../View'
 import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
-import { useStaticAnimationStyles } from '../../utils'
+import { useAnimatedVariantStyles } from '../../utils'
 
 export * from './styles'
 
@@ -33,20 +32,23 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
 
   const loaderStyles = useMemo(() => getNestedStylesByKey('loader', variantStyles), [variantStyles])
 
-  const wrapperAnimationStates = useStaticAnimationStyles(variantStyles, ['wrapper:hidden', 'wrapper:visible'])
-  const wrapperAnimation = useDynamicAnimation(() => {
-    return visible ? wrapperAnimationStates['wrapper:visible'] : wrapperAnimationStates['wrapper:hidden']
+  const wrapperAnimation = useAnimatedVariantStyles({
+    variantStyles,
+    animatedProperties: ['wrapper:visible', 'wrapper:hidden'],
+    updater: (s) => {
+      'worklet'
+      return visible ? s['wrapper:visible'] : s['wrapper:hidden']
+    },
+    transition: variantStyles.transition,
+    dependencies: [visible],
   })
-
-  onUpdate(() => {
-    wrapperAnimation.animateTo(visible ? wrapperAnimationStates['wrapper:visible'] : wrapperAnimationStates['wrapper:hidden'])
-  }, [visible])
+ 
 
   const transition = useRef(null)
   if (!transition.current) {
     transition.current = JSON.parse(JSON.stringify(variantStyles['wrapper:transition']))
   }
-  return <View style={variantStyles.wrapper} animated state={wrapperAnimation} transition={transition.current}>
+  return <View style={[variantStyles.wrapper, wrapperAnimation]} animated  transition={transition.current}>
     <ActivityIndicator styles={loaderStyles}/>
     {children}
   </View>

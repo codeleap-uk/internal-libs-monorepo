@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-// import firebase from 'gatsby-plugin-firebase'
 import { api, logger } from '@/app'
 
 import FirebaseAuthTypes from '@firebase/auth-types'

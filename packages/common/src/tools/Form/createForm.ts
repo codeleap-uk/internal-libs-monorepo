@@ -26,7 +26,7 @@ export function getValidator(validate: Form.Validator<any>): Form.ValidatorFunct
   return (value) => {
     try {
       yupModel.validateSync(value)
-      return { valid: true }
+      return { valid: true, message: '' }
     } catch (e) {
       return { valid: false, message: e?.errors?.join(' ') || '' }
     }

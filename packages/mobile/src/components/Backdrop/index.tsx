@@ -1,12 +1,11 @@
 import React from 'react'
 import { ComponentVariants, onUpdate, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
-import { useDynamicAnimation } from 'moti'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
 
 import { StylesOf } from '../../types/utility'
 import { StyleSheet } from 'react-native'
-import { useStaticAnimationStyles } from '../../utils'
+import { useAnimatedVariantStyles } from '../../utils'
 import { BackdropComposition, BackdropPresets } from './styles'
 
 export * from './styles'
@@ -29,17 +28,19 @@ export const Backdrop = (backdropProps:BackdropProps) => {
     transform: StyleSheet.flatten,
   })
 
-  const animationStates = useStaticAnimationStyles(variantStyles, ['wrapper:hidden', 'wrapper:visible'])
-
-  const animation = useDynamicAnimation(() => {
-    return visible ? animationStates['wrapper:visible'] : animationStates['wrapper:hidden']
+  const animation = useAnimatedVariantStyles({
+    variantStyles,
+    animatedProperties: ['wrapper:hidden', 'wrapper:visible'],
+    updater: (s) => {
+      'worklet'
+      return visible ? s['wrapper:visible'] :  s['wrapper:hidden']
+    },
+    dependencies: [visible],
+    transition: variantStyles.transition,
   })
 
-  onUpdate(() => {
-    animation.animateTo(visible ? animationStates['wrapper:visible'] : animationStates['wrapper:hidden'])
-  }, [visible, animationStates])
 
-  return <View pointerEvents={visible ? 'auto' : 'none' } animated style={variantStyles.wrapper} state={animation} {...wrapperProps}>
+  return <View pointerEvents={visible ? 'auto' : 'none' } animated style={[variantStyles.wrapper, animation]} {...wrapperProps}>
     {
       !!props?.onPress ?
         <Touchable style={variantStyles.touchable} {...props} noFeedback android_ripple={null}/>

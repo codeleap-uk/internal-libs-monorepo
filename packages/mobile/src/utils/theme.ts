@@ -1,5 +1,5 @@
 import { Platform, Dimensions, StatusBar, StyleSheet } from 'react-native'
-import {DeviceInfo} from '../modules/rnDeviceInfo'
+import  DeviceInfo  from 'react-native-device-info'
 
 type AppValues = {
   headerHeight: number
@@ -20,7 +20,6 @@ export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
   const safeAreaBottom = (hasNotch && !prefersConstantNavigationBar ? 20 : 0)
   return {
     ...screenDimensions,
-
     pixel: StyleSheet.hairlineWidth,
     hasNotch,
     hasIsland,
@@ -28,31 +27,12 @@ export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
     safeAreaTop,
     safeAreaBottom,
     keyboardVerticalOffset: Platform.OS === 'ios' ? 57 : 47,
-    get headerHeight() { return values.headerHeight + safeAreaTop },
-    get tabBarHeight() { return values.tabBarHeight + (prefersConstantNavigationBar ? 0 : this.safeAreaBottom) },
     bottomNavHeight,
     get window() {
       return {
         height: screenDimensions.height - (bottomNavHeight + safeAreaTop),
         width: screenDimensions.width,
       }
-    },
-    transitions: {
-      modal: {
-        duration: 100,
-        type: 'timing',
-      },
-    },
-    buttons: {
-      small: {
-        height: 40,
-      },
-      default: {
-        height: 50,
-      },
-      large: {
-        height: 60,
-      },
     },
   }
 }

@@ -1,5 +1,4 @@
 export * from './View'
-export * from './Animated'
 export * from './Icon'
 export * from './Touchable'
 export * from './Text'
@@ -34,6 +33,7 @@ export * from './Grid'
 export * from './InputLabel'
 export * from './LoadingOverlay'
 export * from './ActionIcon'
+export * from './InputBase'
 
 
 

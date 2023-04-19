@@ -11,6 +11,7 @@ import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
 import { SpacingFunction } from '.'
+import { defaultEffects } from './effects'
 
 type AnyProps<T = any> = {
   [x: string]: T
@@ -33,7 +34,7 @@ export type DefaultColors =
 | 'neutral-2'
 | 'neutral-3'
 | 'neutral-4'
-| 'neutral-5'
+| 'neutal-5'
 | 'neutral-6'
 | 'neutral-7'
 | 'neutral-8'
@@ -64,6 +65,7 @@ export type Fonts =
   | 'h3'
   | 'h4'
   | 'h5'
+  | 'h6'
   | 'p1'
   | 'p2'
   | 'p3'
@@ -150,7 +152,7 @@ export type AppTheme = {
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   T,
-  'spacing'
+  'spacing' | 'effects'
 > & {
   spacing: {
     base: number
@@ -161,6 +163,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   media: MediaQueries<keyof T['breakpoints'], string>
   presets: typeof defaultPresets & T['presets']
   border: BorderHelpers<T>
+  effects: T['effects'] & typeof defaultEffects
   readonly circle: (size: number) => any
 
   readonly semiCircle: (side: number) => any

@@ -74,6 +74,7 @@ export type ApplyVariantsArgs = {
   computedStyles: any
   rootElement: any
   theme: EnhancedTheme<any>
+  wrapStyle?: (style: any) => any
 }
 export type CT<StyleType> = [
   Component: FunctionType<[any], ReactElement | null>,

@@ -1,5 +1,6 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-export type WebCheckboxComposition =
+
+export type CheckboxComposition =
   | 'wrapper'
   | 'label'
   | 'input'
@@ -7,13 +8,12 @@ export type WebCheckboxComposition =
   | 'checkmarkWrapper'
 
 const createCheckboxStyle =
-  createDefaultVariantFactory<WebCheckboxComposition>()
+  createDefaultVariantFactory<CheckboxComposition>()
 
-const presets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })),
-)
+export const CheckboxPresets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })))
 
-export const WebCheckboxStyles = {
-  ...presets,
+export const CheckboxStyles = {
+  ...CheckboxPresets,
   default: createCheckboxStyle((theme) => ({
     wrapper: {
       display: 'flex',

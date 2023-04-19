@@ -1,19 +1,11 @@
-import {
-  ActivityIndicatorComposition,
-  ActivityIndicatorStyles,
-  createDefaultVariantFactory,
-} from '@codeleap/common'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-const createActivityIndicatorStyle =
-  createDefaultVariantFactory<ActivityIndicatorComposition>()
+export type ActivityIndicatorComposition =
+  | 'wrapper'
+  | 'backCircle'
+  | 'frontCircle'
+  | 'circle'
 
-const getDefault = ActivityIndicatorStyles.default
+const createActivityIndicatorStyle = createDefaultVariantFactory<ActivityIndicatorComposition>()
 
-export const WebActivityIndicatorStyles = {
-  ...ActivityIndicatorStyles,
-  default: createActivityIndicatorStyle((theme) => {
-    const defaults = getDefault(theme)
-
-    return defaults
-  }),
-}
+export const ActivityIndicatorPresets = includePresets((styles) => createActivityIndicatorStyle(() => ({ wrapper: styles })))

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AnimatedView, View, ViewProps } from '../View'
+import { View, ViewProps } from '../View'
 import { ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'
 import {
@@ -120,8 +120,6 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   }
   const buttonStyles = React.useMemo(() => getNestedStylesByKey('closeButton', variantStyles), [variantStyles])
 
-  const boxAnimationStates = useStaticAnimationStyles(variantStyles, ['box:hidden', 'box:visible'])
-
   const boxAnimationStyles = useAnimatedVariantStyles({
     updater: (states) => {
       'worklet'
@@ -197,10 +195,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
             noFeedback
           />}
 
-        <AnimatedView
-
+        <View
+          animated
           style={[getStyles('box'), boxAnimationStyles]}
-          // transition={{ ...variantStyles['box:transition'] }}
+          
 
           {...props}
         >
@@ -213,7 +211,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
               {typeof footer === 'string' ? <Text text={footer} /> : footer}
             </View>
           )}
-        </AnimatedView>
+        </View>
 
       </ScrollComponent>
     </View>

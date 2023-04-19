@@ -191,15 +191,12 @@ export class VariantProvider<
 
       if (responsiveVariants) {
         for (const breakpoint in responsiveVariants) {
-          const max = this.theme.breakpoints[breakpoint]
-          const currentSize = [this.theme.values?.width, this.theme.values?.height]
-
-          const shouldApplyResponsiveVariants = (size?.width || 0) < max
-
-          if (shouldApplyResponsiveVariants) {
+        
             const responseVariantList = standardizeVariants(
               responsiveVariants[breakpoint],
             )
+            let breakPointStyle = {} as Record<string, CSSOut>
+            const mediaQuery = this.theme.media.down(breakpoint)
 
             for (const variant of responseVariantList) {
               computedStyles = applyVariants({
@@ -209,9 +206,16 @@ export class VariantProvider<
                 // @ts-ignore
                 theme: this.withColorScheme(useTheme),
                 variantName: variant,
+                wrapStyle: (s) => ({
+                  [mediaQuery]: s,
+                })
               })
             }
-          }
+            
+            // @ts-ignore
+            // computedStyles[mediaQuery] =  breakPointStyle
+            
+        
         }
       }
       const styleKeys = uniqueArrayByProperty([...Object.keys(computedStyles), ...Object.keys(override || {})], (a) => a)

@@ -11,8 +11,8 @@ import { ComponentPropsWithRef } from 'react'
 import { View } from '../View'
 import { Text } from '../Text'
 import {
-  WebCheckboxComposition,
-  WebCheckboxStyles as CheckboxStyles,
+  CheckboxComposition,
+  CheckboxPresets
 } from './styles'
 type NativeCheckboxProps = ComponentPropsWithRef<'input'>
 export * from './styles'
@@ -20,8 +20,8 @@ export type CheckboxProps = NativeCheckboxProps & {
   checked?: boolean
   onValueChange?: (checked: boolean) => any
   label?: React.ReactNode
-  styles?: StylesOf<WebCheckboxComposition>
-} & ComponentVariants<typeof CheckboxStyles>
+  styles?: StylesOf<CheckboxComposition>
+} & ComponentVariants<typeof CheckboxPresets>
 
 export const Checkbox = (checkboxProps: CheckboxProps) => {
   const {
@@ -47,7 +47,7 @@ export const Checkbox = (checkboxProps: CheckboxProps) => {
     responsiveVariants,
     variants,
     styles,
-  } as any) as StylesOf<WebCheckboxComposition>
+  } as any) as StylesOf<CheckboxComposition>
 
   return (
     <View component='label' css={{ ...variantStyles.wrapper }}>

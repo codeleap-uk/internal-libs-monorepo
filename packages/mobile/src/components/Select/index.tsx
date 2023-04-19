@@ -134,21 +134,21 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     {
       !hideInput && (
         <TextInput
-          caretHidden
+          
           value={selectedLabel}
           rightIcon={{
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
             noFeedback: true,
           }}
-          editable={false}
-          touchableWrapper
+        
+        
           onPress={close}
           wrapperProps={{
             debugName: 'Select',
 
           }}
-          pointerEvents={'none'}
+          
           label={label}
           debugName={'Select input'}
           styles={inputStyles}

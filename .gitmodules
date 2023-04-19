@@ -4,4 +4,4 @@
 	url = ../mobile-template.git
 [submodule "apps/web"]
 	path = apps/web
-	url = ../new-web-template.git
+	url = ../web-template.git

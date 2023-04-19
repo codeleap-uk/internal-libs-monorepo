@@ -44,6 +44,7 @@ export function applyVariants({
   styles,
   theme,
   variantName,
+  wrapStyle = (style) => style,
 }: ApplyVariantsArgs) {
   if (typeof variantName !== 'string') return {}
   if (!styles[variantName]) {
@@ -55,9 +56,9 @@ export function applyVariants({
       }
 
       return deepMerge(computedStyles, {
-        [rootElement]: {
+        [rootElement]: wrapStyle({
           ...theme.spacing[spacingFunction](arg),
-        },
+        }),
       })
     } else if (variantName.startsWith('d:') && styles.dynamicHandler) {
       return deepMerge(
@@ -83,14 +84,19 @@ export function applyVariants({
       const dim = dimension === 'w' ? 'width' : 'height'
 
       return deepMerge(computedStyles, {
-        [rootElement]: {
+        [rootElement]: wrapStyle({
           [dim]: value,
-        },
+        }),
       })
     }
 
     return computedStyles
   } else {
-    return deepMerge(computedStyles, styles[variantName](theme))
+    const wrapped = {}
+    const overWriteStyles = styles[variantName](theme)
+    for(const [key,val] of Object.entries(overWriteStyles)) {
+      wrapped[key] = wrapStyle(val)
+    }
+    return deepMerge(computedStyles, wrapped)
   }
 }

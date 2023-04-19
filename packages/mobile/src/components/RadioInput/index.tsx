@@ -5,102 +5,153 @@ import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import {
   ComponentVariants,
+  FormTypes,
   getNestedStylesByKey,
   StylesOf,
+  TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
 import { RadioInputComposition, RadioInputPresets } from './styles'
 import { InputLabel } from '../InputLabel'
-
+import { StyleSheet } from 'react-native'
+import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 export * from './styles'
 
-type RadioItem<T extends unknown = any> = {
-  value: T
-  label: ReactNode
-}
+type WrapperProps = InputBaseProps
 
-const getRadioStyle = (props) => useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', props)
-
-export type RadioButtonProps = Omit<
-  ComponentPropsWithoutRef<typeof Touchable>,
-  'style'
-> & {
-  item: RadioItem
-  select: () => void
-  style: StylesOf<RadioInputComposition>
-  checked: boolean
-  defaultValue?: number
-}
-
-export type RadioGroupProps<T> = {
-  options: RadioItem<T>[]
+type RadioOption<T> = FormTypes.Options<T>[number] & {
+  disabled?: boolean
+} 
+export type RadioGroupProps<T extends string|number> = WrapperProps & {
+  options: RadioOption<T>[]
   value: T
   onValueChange(value: T): void
-  required?: boolean
   label: ReactNode
   styles?: StylesOf<RadioInputComposition>
-} & ComponentVariants<typeof RadioInputPresets>
-
-export const RadioButton: React.FC<RadioButtonProps> = ({
-  item,
-  select,
-  style,
-  checked,
-  ...props
-}) => {
-  return (
-    <Touchable onPress={select} style={style.itemWrapper} debugName={'Change radioButton value'} styles={{
-      feedback: style.buttonFeedback,
-    }}>
-      <View style={[style.button, checked && style['button:checked']]}>
-        <View
-          style={[style.buttonMark, checked && style['buttonMark:checked']]}
-        />
-      </View>
-      {typeof item.label === 'string' ? (
-        <Text text={item.label} style={style.text} />
-      ) : (
-        item.label
-      )}
-    </Touchable>
-  )
+  variants?: ComponentVariants<typeof RadioInputPresets>['variants']
 }
 
-export const RadioGroup = <T extends unknown>(
-  radioGroupProps: RadioGroupProps<T>,
+
+type OptionProps<T extends string|number> = {
+  item: RadioOption<T>
+  selected: boolean
+  onSelect(): void
+  styles?: StylesOf<RadioInputComposition>
+  debugName?: string
+  disabled?: boolean
+  separator?: boolean
+}
+
+const Option = <T extends string|number>(props: OptionProps<T>) => {
+  const {
+    debugName,
+    item,
+    disabled,
+    styles,
+    selected,
+    onSelect,
+    separator = false,
+  } = props
+
+  const isDisabled = disabled || item.disabled
+
+  const getStyle = (key) => {
+    if(isDisabled && selected) {
+      return styles[`${key}:selectedDisabled`]
+    }
+    if(isDisabled) {
+      return styles[`${key}:disabled`]
+    }
+    if(selected) {
+      return styles[`${key}:selected`]
+    }
+    return styles[key]
+  }
+
+  const label = TypeGuards.isString(item.label) ? <Text 
+    style={[
+      styles.optionLabel,
+      getStyle('optionLabel'),
+    ]}
+    text={item.label}
+  /> : item.label 
+
+  return <>
+    <Touchable 
+      debugName={`${debugName} option ${item.value}`}
+      style={[
+        styles.optionWrapper,
+        getStyle('optionWrapper'),
+      ]}
+      rippleDisabled
+      onPress={onSelect}
+      disabled={isDisabled}
+    > 
+      <View 
+        style={[
+          styles.optionIndicator,
+        getStyle('optionIndicator'),
+        ]}
+
+      >
+        <View
+          style={[
+            styles.optionIndicatorInner,
+            getStyle('optionIndicatorInner'),
+          ]}
+        />
+      </View>
+      {label}
+      
+    </Touchable>
+    {separator && <View style={styles.optionSeparator} />}
+  </>
+}
+
+
+export const RadioGroup = <T extends string|number>(
+  props: RadioGroupProps<T>,
 ) => {
+  const {
+    inputBaseProps,
+    others
+  } = selectInputBaseProps(props)
+
   const {
     options,
     value,
     onValueChange,
-    label,
-    responsiveVariants,
-    required = false,
     variants,
     styles,
-  } = radioGroupProps
+    disabled,
+    debugName,
+  } = others
 
-  const radioStyle = getRadioStyle({
-    responsiveVariants,
+  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', { 
     variants,
     styles,
+    transform: StyleSheet.flatten
   })
-  return (
-    <View style={radioStyle.wrapper}>
-      <InputLabel required={required} label={label} styles={getNestedStylesByKey('label', radioStyle)}/>
-      <View style={radioStyle.list}>
-        {options?.map((item, idx) => (
-          <RadioButton
-            debugName={'RadioButton'}
-            item={item}
-            key={idx}
-            style={radioStyle}
-            checked={value === item.value}
-            select={() => onValueChange(item.value)}
-          />
-        ))}
-      </View>
-    </View>
-  )
+
+  return <InputBase 
+    {...inputBaseProps}
+    disabled={disabled}
+    styles={variantStyles}
+    debugName={debugName}
+  > 
+    {options?.map((item, idx) => (
+      <Option
+        debugName={debugName}
+        item={item}
+        key={idx}
+        disabled={disabled} 
+        styles={variantStyles}
+        selected={value === item.value}
+        onSelect={() => onValueChange(item.value)}
+        separator={idx < options.length - 1}
+      />
+    ))}
+  </InputBase>
+
 }

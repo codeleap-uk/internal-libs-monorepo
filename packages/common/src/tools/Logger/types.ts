@@ -2,7 +2,8 @@ import { FunctionType } from '../..'
 import { colors, foregroundColors } from './constants'
 import { AppSettings } from '../../config/Settings'
 
-import * as Sentry from '@sentry/browser'
+import type { SeverityLevel, Client, ClientOptions, Breadcrumb } from '@sentry/types'
+
 
 export type LogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'silent'
 
@@ -27,18 +28,19 @@ export type LogToTerminalArgs = [
 ]
 export type LogToTerminal = FunctionType<LogToTerminalArgs, void>
 
-export const SentrySeverityMap: Record<LogType, Sentry.Severity> = {
-  debug: Sentry.Severity.Debug,
-  error: Sentry.Severity.Error,
-  info: Sentry.Severity.Info,
-  log: Sentry.Severity.Log,
-  warn: Sentry.Severity.Warning,
-  silent: Sentry.Severity.Log,
+export const SentrySeverityMap: Record<LogType, SeverityLevel> = {
+  debug: 'debug',
+  error: 'error' ,
+  info: 'info' ,
+  log: 'log' ,
+  warn: 'warning' ,
+  silent: 'log' ,
 }
 
-export type SentryProvider = Pick<
-  typeof Sentry,
-  'addBreadcrumb' | 'captureException' | 'init' | 'captureMessage'
->
+export type SentryProvider = {
+  addBreadcrumb: FunctionType<[Breadcrumb], void>
+  init(options: ClientOptions): Client
+  captureException(err: any): void
+}
 
 export type LoggerMiddleware = FunctionType<LogToTerminalArgs, any>

@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as Animatable from 'react-native-animatable'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import {
   ComponentVariants,
@@ -10,28 +9,28 @@ import {
   useMemo,
 } from '@codeleap/common'
 import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
-import { MotiView, MotiProps } from 'moti'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 import {TransitionConfig} from '../../types'
 import Animated from 'react-native-reanimated'
 export * from './styles'
 
-type MotiViewProps =  Omit< Partial<MotiProps>, 'transition'|'children'>
+
 
 type NativeViewProps =Omit<ComponentPropsWithoutRef<typeof NativeView>, 'children'>
 
+export type ViewRefType = NativeView | React.ForwardedRef<NativeView>
 export type ViewProps = React.PropsWithChildren<{
-  ref?: any
+  ref?: ViewRefType
   component?: any
   animated?: boolean
   keyboardAware?: GetKeyboardAwarePropsOptions
   transition?: Partial<TransitionConfig>
 } &
-  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps & MotiViewProps
+  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps
 >
 
 
-export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
+export const View  = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -47,29 +46,14 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewP
     responsiveVariants,
     variants,
   })
-  const Component = animated ? MotiView : (component || NativeView)
-  const keyboard = useKeyboardAwareView()
-  const _props = keyboard.getKeyboardAwareProps(
-    {
-      style: [variantStyles.wrapper, style], ref: ref, ...props,
-    },
-    {
-      adapt: 'paddingBottom',
-      baseStyleProp: 'style',
-
-      enabled: false,
-      ...keyboardAware,
-    },
-  )
+  const Component = animated ? Animated.View  : component || NativeView
 
   return (
-    <Component {..._props}>
+    <Component  {...props} style={[variantStyles.wrapper, style]}>
       {children}
     </Component>
   )
-})
-
-export const AnimatedView = Animated.createAnimatedComponent(View)
+}) as unknown as React.FC<ViewProps>
 
 
 type GapProps = ViewProps & {

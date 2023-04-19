@@ -64,13 +64,8 @@ export function buildMediaQueries<T extends ThemeBreakpoints>(
     } else if (props?.down) {
       mediaString = queries.up(props.down)
     }
+
     return mediaString
-      ? {
-        [`${mediaString}`]: {
-          display: 'none',
-        },
-      }
-      : {}
   }
 
   return {

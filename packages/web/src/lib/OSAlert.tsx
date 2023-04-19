@@ -1,5 +1,5 @@
 import { AnyFunction, onMount, onUpdate, StyleContextProps, StyleProvider, useBooleanToggle, usePrevious } from '@codeleap/common'
-import { Modal, Text, Button, View } from '../components'
+import { Modal, Text, Button } from '../components/components'
 import ReactDOM from 'react-dom'
 
 type AlertButton = {
@@ -41,7 +41,7 @@ function RenderModal(props: {args:OSAlertArgs; contextProps:AlertContext ; remov
       title={title}
       showClose={false}
       closable={false}
-      variants={['OSAlert']}
+      
       footer={<>
         {
           options.map((o, idx) => <Button key={idx} {...o} onPress={() => {
@@ -52,7 +52,7 @@ function RenderModal(props: {args:OSAlertArgs; contextProps:AlertContext ; remov
         }
       </>}
     >
-      <Text text={body || ''} variants={['OSAlertBody']}/>
+      <Text text={body || ''} />
 
     </Modal>
   </StyleProvider>

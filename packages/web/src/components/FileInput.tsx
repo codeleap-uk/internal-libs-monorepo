@@ -9,7 +9,7 @@ export type FileInputRef = {
   openFilePicker: () => void
 }
 
-type FileInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
+export type FileInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
   onFileSelect(files: WebInputFile[]): void
 }
 

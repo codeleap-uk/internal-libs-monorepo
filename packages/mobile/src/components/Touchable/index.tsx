@@ -11,8 +11,6 @@ import {
   onMount,
 } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView } from 'react-native'
-
-import { createAnimatableComponent } from 'react-native-animatable'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
@@ -34,6 +32,7 @@ export type TouchableProps = React.PropsWithChildren<
     leadingDebounce?: boolean
     styles?: StylesOf<TouchableComposition>
     setPressed?: (param: boolean) => void
+    rippleDisabled?: boolean
 } & BaseViewProps
 >
 export * from './styles'
@@ -54,6 +53,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     noFeedback = false,
     styles,
     setPressed,
+    rippleDisabled = false,
     ...props
   } = touchableProps
 
@@ -167,8 +167,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       pressableStyle.height = '100%'
     }
     wrapperStyle.overflow = 'hidden'
-    // wrapperStyle.flexDirection = 'row'
-    // wrapperStyle.alignItems = 'stretch'
 
     return {
       wrapperStyle,
@@ -179,17 +177,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   return (
     <Wrapper style={[wrapperStyle]}>
       <Pressable onPress={press} style={({ pressed }) => ([
-
-        // defaultPressableStyles,
         pressableStyle,
-        // !!rippleConfig && ripplePressableStyles,
         getFeedbackStyle(pressed),
         variantStyles.pressable,
-      ])} android_ripple={rippleConfig} {...props} ref={ref}>
+      ])} android_ripple={!rippleDisabled && rippleConfig} {...props} ref={ref}>
         {children}
       </Pressable>
     </Wrapper>
   )
 })
-
-export const AnimatedTouchable = createAnimatableComponent(Touchable) as unknown as typeof Touchable
