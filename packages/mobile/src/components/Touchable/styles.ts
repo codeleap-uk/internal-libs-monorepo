@@ -13,16 +13,5 @@ const createTouchableStyle = createDefaultVariantFactory<
   TouchableStylesGen
 >()
 
-const presets = includePresets((styles) => createTouchableStyle(() => ({ wrapper: styles, pressable: styles })),
-)
+export const TouchablePresets = includePresets((styles) => createTouchableStyle(() => ({ wrapper: styles, pressable: styles })))
 
-export const TouchableStyles = {
-  ...presets,
-  default: createTouchableStyle((t) => ({
-    feedback: {
-      type: 'opacity',
-      value: 0.5,
-    },
-  })),
-
-}

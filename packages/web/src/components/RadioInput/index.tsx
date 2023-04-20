@@ -11,7 +11,6 @@ import {
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
-export { WebRadioInputStyles } from './styles'
 
 type RadioItem<T extends unknown = any> = {
   value: T
@@ -105,3 +104,5 @@ export const RadioGroup = <T extends unknown>(
     </View>
   )
 }
+
+export * from './styles'

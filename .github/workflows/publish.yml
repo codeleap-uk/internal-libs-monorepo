@@ -2,16 +2,20 @@ name: Publish libraries
 on:
   push:
     branches:
-      - master
+      - none
     paths:
-      - "packages/**/*"
+      - "disabled/**/*"
+
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
       - name: Clone current repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
 
   
       - uses: actions/setup-node@v3
@@ -47,5 +51,5 @@ jobs:
         if: always()
         run: |
           git pull
-          git add .
+          git add packages
           git push --follow-tags origin master

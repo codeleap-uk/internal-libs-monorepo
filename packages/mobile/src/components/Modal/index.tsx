@@ -1,27 +1,25 @@
 import * as React from 'react'
 import { View, ViewProps } from '../View'
-import { Button, ButtonProps } from '../Button'
+import { ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'
 import {
   ComponentVariants,
   getNestedStylesByKey,
   IconPlaceholder,
-  onUpdate,
   PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import {
   ModalComposition,
-  ModalStyles,
+  ModalPresets,
   ModalParts,
 } from './styles'
 import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
-import { useDynamicAnimation } from 'moti'
 import { Backdrop } from '../Backdrop'
-import { useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
+import { useAnimatedVariantStyles, useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
@@ -30,7 +28,7 @@ import { ActionIcon } from '../ActionIcon'
 export * from './styles'
 
 export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
-  variants?: ComponentVariants<typeof ModalStyles>['variants']
+  variants?: ComponentVariants<typeof ModalPresets>['variants']
   styles?: StylesOf<ModalComposition>
   dismissOnBackdrop?: boolean
   buttonProps?: ButtonProps
@@ -50,7 +48,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
   keyboardAware?: GetKeyboardAwarePropsOptions
-  scrollProps?: PropsOf<typeof Scroll>
+  scrollProps?: PropsOf<typeof Scroll, 'ref'>
 }
 
 export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
@@ -122,15 +120,17 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
   }
   const buttonStyles = React.useMemo(() => getNestedStylesByKey('closeButton', variantStyles), [variantStyles])
 
-  const boxAnimationStates = useStaticAnimationStyles(variantStyles, ['box:hidden', 'box:visible'])
-
-  const boxAnimation = useDynamicAnimation(() => {
-    return visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden']
+  const boxAnimationStyles = useAnimatedVariantStyles({
+    updater: (states) => {
+      'worklet'
+      return visible ? states['box:visible'] : states['box:hidden']
+    },
+    animatedProperties: ['box:hidden', 'box:visible'],
+    variantStyles,
+    transition: variantStyles['box:transition'],
+    dependencies: [visible],
   })
 
-  onUpdate(() => {
-    boxAnimation.animateTo(visible ? boxAnimationStates['box:visible'] : boxAnimationStates['box:hidden'])
-  }, [visible])
   const wrapperStyle = getStyles('wrapper')
 
   const ScrollComponent = scroll ? Scroll : View
@@ -197,9 +197,8 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
 
         <View
           animated
-          state={boxAnimation}
-          style={getStyles('box')}
-          transition={{ ...variantStyles['box:transition'] }}
+          style={[getStyles('box'), boxAnimationStyles]}
+          
 
           {...props}
         >

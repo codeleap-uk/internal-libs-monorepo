@@ -14,7 +14,7 @@ import {
 import { StylesOf } from '../../types/utility'
 import { ScrollProps } from '../Scroll'
 import { View } from '../View'
-import { PagerStyles, PagerComposition } from './styles'
+import { PagerPresets, PagerComposition } from './styles'
 export * from './styles'
 
 export type PageProps = {
@@ -27,8 +27,8 @@ export type PageProps = {
   isPrevious: boolean
 }
 
-export type PagerProps = {
-  variants?: ComponentVariants<typeof PagerStyles>['variants']
+export type PagerProps = React.PropsWithChildren<{
+  variants?: ComponentVariants<typeof PagerPresets>['variants']
   styles?: StylesOf<PagerComposition>
   children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
   page?: number
@@ -39,7 +39,7 @@ export type PagerProps = {
   pageWrapperProps?: any
   width?: number
   onScroll: ScrollProps['onScroll']
-}
+}>
 
 export const Pager: React.FC<PagerProps> = (pagerProps) => {
   const {
@@ -58,7 +58,7 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
 
-  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerStyles>(
+  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
     {
       styles,

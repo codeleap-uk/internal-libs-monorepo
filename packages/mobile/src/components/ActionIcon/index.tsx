@@ -4,17 +4,17 @@ import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
-import { ActionIconComposition, ActionIconStyles } from './styles'
+import { ActionIconComposition, ActionIconPresets } from './styles'
 
 export type ActionIconProps= {
     iconProps?: Partial<IconProps>
     icon?: IconProps['name']
-    styles?: StylesOf<ActionIconComposition>
-} & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconStyles>
+    styles?: StylesOf<ActionIconComposition> | StylesOf<ActionIconComposition>[]
+} & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
   const { icon, iconProps, variants, styles, children, ...touchableProps } = props
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconStyles>('u:ActionIcon', {
+  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
     variants, styles, transform: StyleSheet.flatten,
   })
   const touchableStyles = getNestedStylesByKey('touchable', variantStyles)

@@ -8,10 +8,11 @@ import { List } from '../List'
 import { Text } from '../Text'
 import { TextInput } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { SelectStyles } from './styles'
+import { SelectPresets } from './styles'
 import { CustomSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Icon } from '../Icon'
+export * from './styles'
 
 export const SelectItem = ({
   item,
@@ -73,7 +74,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     ...drawerProps
   } = selectProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectStyles>('u:Select', {
+  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,
@@ -133,21 +134,21 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     {
       !hideInput && (
         <TextInput
-          caretHidden
+          
           value={selectedLabel}
           rightIcon={{
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
             noFeedback: true,
           }}
-          editable={false}
-          touchableWrapper
+        
+        
           onPress={close}
           wrapperProps={{
             debugName: 'Select',
 
           }}
-          pointerEvents={'none'}
+          
           label={label}
           debugName={'Select input'}
           styles={inputStyles}

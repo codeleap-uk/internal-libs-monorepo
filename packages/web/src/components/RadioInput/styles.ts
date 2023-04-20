@@ -1,58 +1,10 @@
 import {
-  createDefaultVariantFactory,
-  RadioInputComposition,
-  RadioInputStyles,
+  createDefaultVariantFactory, includePresets
 } from '@codeleap/common'
+
+export type RadioInputComposition = "button" | "text" | "wrapper" | "itemText" | "button:checked" | "button:unchecked" | "itemWrapper" | "listWrapper" | "button:mark"
 
 const createRadioStyle = createDefaultVariantFactory<RadioInputComposition>()
 
-const defaultStyles = RadioInputStyles.default
+export const RadioInputPresets = includePresets((styles) => createRadioStyle(() => ({ wrapper: styles })))
 
-export const WebRadioInputStyles = {
-  ...RadioInputStyles,
-  default: createRadioStyle((theme) => {
-    const style = defaultStyles(theme)
-    return {
-      ...style,
-      itemWrapper: {
-        ...style.itemWrapper,
-        cursor: 'pointer',
-      },
-      button: {
-        height: '1em',
-        width: '1em',
-        borderRadius: theme.borderRadius.large,
-        border: theme.border.primary(1),
-
-        position: 'relative',
-        ...theme.spacing.marginRight(1),
-      },
-      'button:mark': {
-        background: theme.colors.primary,
-        content: '""',
-        position: 'absolute',
-        left: '50%',
-        top: '50%',
-
-        transform: 'translate(-50%,-50%)',
-        borderRadius: theme.borderRadius.large,
-        height: '50%',
-        width: '50%',
-        visibility: 'hidden',
-      },
-      'button:checked': {
-        '&:after': {
-          visibility: 'visible',
-        },
-      },
-    }
-  }),
-  square: createRadioStyle(() => ({
-    'button:mark': {
-      borderRadius: '1px',
-    },
-    button: {
-      borderRadius: '1px',
-    },
-  })),
-}

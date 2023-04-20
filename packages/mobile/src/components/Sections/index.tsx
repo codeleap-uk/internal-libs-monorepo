@@ -11,7 +11,7 @@ import {
 import { RefreshControl, SectionList } from 'react-native'
 import { View, ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
-import { KeyboardAwareSectionList } from '../../utils'
+import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
 
 export type SectionListProps = KeyboardAwareScrollViewTypes.KeyboardAwareSectionListProps<any> &
   ViewProps & {
@@ -77,7 +77,8 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       <KeyboardAwareSectionList
         style={[Theme.presets.full, style]}
         contentContainerStyle={[variantStyles.wrapper]}
-        ref={ref as unknown as SectionList}
+        // @ts-ignore
+        ref={ref}
         ItemSeparatorComponent={separator}
         {...props}
         refreshControl={

@@ -1,10 +1,10 @@
 import { ReactNode } from 'react'
 import { StyleProp } from 'react-native'
-import { EasingFunction } from 'react-native-animatable'
+import { EasingFn } from 'react-native-reanimated'
 
 export type StylesOf<C extends string> = Partial<Record<C, StyleProp<any>>>
 type TransitionBase = {
-  easing?: EasingFunction
+  easing?: EasingFn
   type?: string
   duration?: number
 }

@@ -1,8 +1,6 @@
 import * as React from 'react'
 
 import { onUpdate, PropsOf } from '@codeleap/common'
-
-// @ts-ignore
 import _ImageView from 'react-native-image-viewing'
 import { StatusBar } from 'react-native'
 import { View } from '../View'
@@ -24,7 +22,6 @@ export type ImageViewProps = PropsOf<typeof _ImageView>
 export const ImageView: React.FC<ImageViewProps> = (props) => {
   onUpdate(() => {
     StatusBar.setHidden(props.visible)
-    // StatusBar.setBarStyle(`${props.visible ? 'light' : 'dark'}-content`)
   }, [props.visible])
 
   return (

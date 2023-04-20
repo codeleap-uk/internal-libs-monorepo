@@ -28,7 +28,7 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 
 
 export * from './styles'
-
+type GridRef = React.ClassAttributes<typeof FlatGrid>['ref']
 export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
@@ -96,17 +96,12 @@ const GridCP = forwardRef<ScrollView, GridProps>(
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
     }
-    const keyboard = useKeyboardAwareView({
-      debugName,
-    })
-    const gridProps = keyboard.getKeyboardAwareProps(_gridProps, {
-      baseStyleProp: 'contentContainerStyle',
-      adapt: 'paddingBottom',
-      ...keyboardAware,
-    })
+
     return (
+      // @ts-ignore 
       <Component
-        {...gridProps}
+        {..._gridProps}
+        
       />
     )
   },

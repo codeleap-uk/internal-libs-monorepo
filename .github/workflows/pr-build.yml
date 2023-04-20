@@ -1,0 +1,35 @@
+name: Test build
+on:   
+  pull_request:
+    branches: 
+      - master
+    paths:
+      - "packages/**/*"
+concurrency:
+  group: ${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Clone current repo
+        uses: actions/checkout@v3
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
+          
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.15.0'
+          cache: 'yarn'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: |
+          yarn
+
+      - name: Build libraries
+        run: |
+          yarn build
+      

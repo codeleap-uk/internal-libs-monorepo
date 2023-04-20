@@ -11,9 +11,7 @@ import {
   onMount,
 } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView } from 'react-native'
-
-import { createAnimatableComponent } from 'react-native-animatable'
-import { TouchableComposition, TouchableStyles } from './styles'
+import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
@@ -22,7 +20,7 @@ export type TouchableProps = React.PropsWithChildren<
     ComponentPropsWithoutRef<typeof Pressable>,
     'onPress'|'children'
   > & {
-    variants?: ComponentVariants<typeof TouchableStyles>['variants']
+    variants?: ComponentVariants<typeof TouchablePresets>['variants']
     component?: any
     ref?: React.Ref<RNView>
     debugName: string
@@ -33,6 +31,8 @@ export type TouchableProps = React.PropsWithChildren<
     debounce?: number
     leadingDebounce?: boolean
     styles?: StylesOf<TouchableComposition>
+    setPressed?: (param: boolean) => void
+    rippleDisabled?: boolean
 } & BaseViewProps
 >
 export * from './styles'
@@ -52,21 +52,22 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     leadingDebounce,
     noFeedback = false,
     styles,
+    setPressed,
+    rippleDisabled = false,
     ...props
   } = touchableProps
 
-  
   const pressed = React.useRef(!!leadingDebounce)
 
   onMount(() => {
-    if(!!leadingDebounce && !!debounce){
+    if (!!leadingDebounce && !!debounce) {
       setTimeout(() => {
         pressed.current = false
       }, debounce)
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchableStyles>('u:Touchable', {
+  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchablePresets>('u:Touchable', {
     variants,
     transform: StyleSheet.flatten,
     rootElement: 'wrapper',
@@ -94,9 +95,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       if (pressed.current) {
         return
       }
+      setPressed?.(true)
       pressed.current = true
       _onPress()
       setTimeout(() => {
+        setPressed?.(false)
         pressed.current = false
       }, debounce)
     } else {
@@ -164,8 +167,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       pressableStyle.height = '100%'
     }
     wrapperStyle.overflow = 'hidden'
-    // wrapperStyle.flexDirection = 'row'
-    // wrapperStyle.alignItems = 'stretch'
 
     return {
       wrapperStyle,
@@ -176,17 +177,12 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   return (
     <Wrapper style={[wrapperStyle]}>
       <Pressable onPress={press} style={({ pressed }) => ([
-
-        // defaultPressableStyles,
         pressableStyle,
-        // !!rippleConfig && ripplePressableStyles,
         getFeedbackStyle(pressed),
         variantStyles.pressable,
-      ])} android_ripple={rippleConfig} {...props} ref={ref}>
+      ])} android_ripple={!rippleDisabled && rippleConfig} {...props} ref={ref}>
         {children}
       </Pressable>
     </Wrapper>
   )
 })
-
-export const AnimatedTouchable = createAnimatableComponent(Touchable) as unknown as typeof Touchable

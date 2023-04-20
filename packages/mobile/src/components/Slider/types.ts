@@ -1,30 +1,28 @@
-import { ComponentVariants, Form } from '@codeleap/common'
+import { ComponentVariants, Form, PropsOf, SliderStyles } from '@codeleap/common'
 
 import {
-  SliderComposition, SliderStyles,
+  SliderComposition,
 } from './styles'
 
 import { SliderProps as RNSliderProps } from '@miblanchard/react-native-slider/lib/types'
 import { StylesOf } from '../../types'
-import { ViewProps } from '../View'
-export type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>> & {
-    debounce?: number
-    labels: string[]
-    value: number
-    valueOverThumb?: boolean
-    showMarks?: boolean
-    onValueChange: (val: number) => void
-    label: Form.Label
-    formatTooltip?: (val: number) => React.ReactNode
+import { View } from '../View'
+import { InputBaseProps } from '../InputBase'
+
+export type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>> & Pick<InputBaseProps, 'disabled' | 'debugName' | 'description' | 'label'> & {
+    debounce?: number | null
+    trackMarklabels: string[]
+    value: number | number[]
+    onValueChange: (val: number| number[]) => void
     variants?: ComponentVariants<typeof SliderStyles>['variants']
     styles?: StylesOf<SliderComposition>
-    style?: ViewProps['style']
-    tooltipVisibilityWindow?: number
+    style?: PropsOf<typeof View>['style']
+    trackMarks?: RNSliderProps['trackMarks'] | Record<number, string>
+    trackMarkComponent?: React.ComponentType<TrackMarkProps>
 }
 
-export type SliderMarkProps = {
-    sliderProps: SliderProps
-    index: number
-    styles: SliderProps['styles']
-    variantStyles: SliderProps['styles']
+export type TrackMarkProps = {
+  index: number
+  content?: string | React.ReactNode
+  style?: any
 }

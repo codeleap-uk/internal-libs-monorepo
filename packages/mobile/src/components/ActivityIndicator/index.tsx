@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
-import { ActivityIndicator as Indicator, StyleSheet } from 'react-native'
+import { ActivityIndicator as Indicator, ActivityIndicatorProps as IndicatorProps, StyleSheet } from 'react-native'
 import {
 
   useDefaultComponentStyle,
@@ -10,14 +10,14 @@ import {
 import { StylesOf } from '../../types'
 import {
   ActivityIndicatorComposition,
-  ActivityIndicatorStyles,
+  ActivityIndicatorPresets,
 } from './styles'
 
 export * from './styles'
-export type ActivityIndicatorProps = ComponentPropsWithoutRef<
-  typeof Indicator
-> & {
-  variants?: ComponentVariants<typeof ActivityIndicatorStyles>['variants']
+export type ActivityIndicatorProps =
+  IndicatorProps
+ & {
+  variants?: ComponentVariants<typeof ActivityIndicatorPresets>['variants']
   styles?: StylesOf<ActivityIndicatorComposition>
 }
 

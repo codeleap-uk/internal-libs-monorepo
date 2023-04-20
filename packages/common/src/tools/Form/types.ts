@@ -25,6 +25,14 @@ export type Validator<T> = T extends boolean
       | yup.BooleanSchema<boolean, AnyObject, false>
   : ValidatorFunction<T> | yup.SchemaOf<T>
 
+export type ValidatorWithoutForm<T> = T extends boolean
+  ?
+      | ValidatorFunction<true>
+      | ValidatorFunction<false>
+      | yup.BooleanSchema<boolean, AnyObject, true>
+      | yup.BooleanSchema<boolean, AnyObject, false>
+  : ValidatorFunctionWithoutForm<T> | yup.SchemaOf<T>
+
 export type Options<T> = { label: Label; value: T }[]
 
 type FormValidateOn = 'change'
@@ -34,7 +42,7 @@ export type FormOutput = 'json'
 export type CommonSliderTypes = {
   min?: number
   max?: number
-  labels?: string[]
+  trackMarks?: number[] | Record<string|number, string>
 }
 
 type Mask = Partial<RNMaskedTextTypes.TextInputMaskProps> &{
@@ -103,6 +111,7 @@ export type TextField = {
   validate?: Validator<string>
   required?: boolean
   masking?: Mask
+  multiline?: boolean
 } & WithTransformer<string>
 export type NumberField = {
   type: 'number'
@@ -184,8 +193,11 @@ export type FormField = {
   returnKeyType?: string
   textContentType?: string
   autoComplete?: string
-  subtitle?: Label
+  description?: Label
+  debugName?: string
+  required?: boolean
   debounce?: number
+  
 } & AllFields
 
 export type FieldsMap = Record<string, Partial<FormField>>
@@ -222,7 +234,7 @@ export type MapValues<T extends FieldsMap> = {
 
 export type CreateFormReturn<T extends FieldsMap> = {
   config: T
-  defaultValue: MapValues<T>
+  defaultValue: MapValues<ValidateFieldsMap<T>>
   staticFieldProps: Record<string, any>
   name: string
   numberOfTextFields: number

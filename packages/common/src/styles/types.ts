@@ -11,6 +11,7 @@ import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
 import { SpacingFunction } from '.'
+import { defaultEffects } from './effects'
 
 type AnyProps<T = any> = {
   [x: string]: T
@@ -19,24 +20,46 @@ export type IconPlaceholder = '__ICON__'
 export type BreakpointPlaceholder = '__BREAKPOINT__'
 
 export type DefaultColors =
-  | 'primary'
-  | 'secondary'
-  | 'background'
-  | 'backgroundSecondary'
-  | 'text'
-  | 'icon'
-  | 'border'
-  | 'positive'
-  | 'negative'
-  | 'placeholder'
-  | 'disabled'
-  | 'neutral'
-  | 'textH'
-  | 'textP'
-  | 'black'
-  | 'white'
+| 'primary-1'
+| 'primary-2'
+| 'primary-3'
+| 'primary-4'
+| 'primary-5'
+| 'secondary-1'
+| 'secondary-2'
+| 'secondary-3'
+| 'secondary-4'
+| 'secondary-5'
+| 'neutral-1'
+| 'neutral-2'
+| 'neutral-3'
+| 'neutral-4'
+| 'neutal-5'
+| 'neutral-6'
+| 'neutral-7'
+| 'neutral-8'
+| 'neutral-9'
+| 'neutral-10'
+| 'positive-1'
+| 'positive-2'
+| 'warning-1'
+| 'warning-2'
+| 'alert-1'
+| 'alert-2'
+| 'destructive-1'
+| 'destructive-2'
+| 'background'
+| 'card'
+| 'separator'
+| 'border'
+| 'overlay'
+| 'headlines'
+| 'body'
+| 'caption'
 
 export type Fonts =
+  | 'hx'
+  | 'h0'
   | 'h1'
   | 'h2'
   | 'h3'
@@ -47,21 +70,47 @@ export type Fonts =
   | 'p2'
   | 'p3'
   | 'p4'
+  | 'p5'
+
+export type ItemHeight =
+  | 'default'
+  | 'small'
+  | 'tiny'
+
+export type IconSizes =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+
+export type FontTokens =
+  | 'base'
+  | 'quotes'
 
 export type TypographyStyle = {
   lineHeight?: number
   weight: number
-  color?: string
-  fontFamily?: string
-  sizeMultiplier?: number
   letterSpacing?: number
-  lineHeightMultiplier?: number
-  size?: {
-    multiplier: number
-    viewport: number
-    max: number
-    min: number
-  }
+  size: number
+}
+
+export type Typography = {
+  fontFamily: string
+  styles: Record<Fonts, TypographyStyle>
+  resolveFontFamily?: FunctionType<[
+    name: string,
+    attrs: FontAttrs
+  ], string> | Record<string, string>
+}
+
+export type RNShadow = {
+  shadowColor: string
+  shadowOffset: Record<'width' | 'height', number>
+  shadowOpacity: number
+  shadowRadius: number
+  elevation: number
 }
 
 type FreeThemeColors = AnyProps<Record<DefaultColors, string> & AnyProps<string>>
@@ -82,36 +131,28 @@ export type AppTheme = {
     width: number
     height: number
     innerSpacing: Record<'X'|'Y', number>
+    itemHeight: Record<ItemHeight, number>
+    iconSize: Record<IconSizes, number>
   } & AnyProps<any>
 
   readonly borderRadius: {
-    large: number
-    medium: number
+    tiny: number
     small: number
-    modalOuter: number
-    round: number
+    medium: number
+    rounded: number
   }
 
-  readonly presets ?: Record<string, any>
+  readonly presets?: Record<string, any>
+  readonly effects?: Record<string, RNShadow>
 
   readonly icons: Record<string, any>
   readonly initialTheme: string
-  readonly typography : {
-    fontFamily: string
-    styles: Record<Fonts, TypographyStyle>
-    baseFontSize: number
-    pColor: string
-    hColor: string
-    resolveFontFamily?: FunctionType<[
-      name: string,
-      attrs: FontAttrs
-    ], string> | Record<string, string>
-  }
+  readonly typography : Record<FontTokens, Typography>
 }
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   T,
-  'spacing'
+  'spacing' | 'effects'
 > & {
   spacing: {
     base: number
@@ -122,6 +163,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   media: MediaQueries<keyof T['breakpoints'], string>
   presets: typeof defaultPresets & T['presets']
   border: BorderHelpers<T>
+  effects: T['effects'] & typeof defaultEffects
   readonly circle: (size: number) => any
 
   readonly semiCircle: (side: number) => any

@@ -4,88 +4,140 @@ import {
   ComponentVariants,
   useDefaultComponentStyle,
   StylesOf,
-  useCodeleapContext,
-  FormTypes,
-  useValidate,
+  PropsOf,
 } from '@codeleap/common'
-import { ComponentPropsWithRef, forwardRef, ReactNode } from 'react'
-import { StyleSheet, Switch as NativeSwitch } from 'react-native'
-import { FormError } from '../TextInput'
+import { ReactNode } from 'react'
+import { StyleSheet } from 'react-native'
 import { View } from '../View'
 
 import {
-  SwitchStyles,
+  SwitchPresets,
   SwitchComposition,
 } from './styles'
-import { InputLabel } from '../InputLabel'
+import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { useAnimatedVariantStyles } from '../..'
+import { Touchable } from '../Touchable'
+
+
 export * from './styles'
-type NativeSwitchProps = Omit<
-  ComponentPropsWithRef<typeof NativeSwitch>,
-  'thumbColor' | 'trackColor'
->
-type SwitchProps = NativeSwitchProps & {
-  variants?: ComponentVariants<typeof SwitchStyles>['variants']
-  label?: ReactNode
+
+
+  
+export type SwitchProps = Pick<
+  InputBaseProps,
+  'debugName' | 'disabled' | 'label'
+> &  {
+  variants?: ComponentVariants<typeof SwitchPresets>['variants']
   styles?: StylesOf<SwitchComposition>
-  validate?: FormTypes.ValidatorFunctionWithoutForm | string
+  value: boolean
+  onValueChange: (value: boolean) => void
+  style?: PropsOf<typeof View>['style']
+  switchOnLeft?: boolean
 }
 
-export const Switch = forwardRef<NativeSwitch, SwitchProps>(
-  (switchProps, ref) => {
+const reversedOrder = [...InputBaseDefaultOrder].reverse()
+
+
+
+export const Switch = (props: SwitchProps) => {
+    const {
+      inputBaseProps,
+      others
+    } = selectInputBaseProps(props)
     const {
       variants = [],
       style = {},
       styles = {},
-      validate,
-      label,
       value,
-      ...props
-    } = switchProps
+      disabled,
+      debugName,
+      onValueChange,
+      switchOnLeft,
+    } = others
 
-    const variantStyles = useDefaultComponentStyle('Switch', {
+    const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
       variants,
+      styles, 
+      rootElement: 'wrapper',
+      transform: StyleSheet.flatten
     })
-    const { error, showError } = useValidate(switchProps.value, validate)
-    function getStyles(key: SwitchComposition) {
-      return [
-        variantStyles[key],
-        styles[key],
-        key === 'wrapper' ? style : {},
-        showError ? variantStyles[key + ':error'] : {},
-        showError ? styles[key + ':error'] : {},
-        value ? variantStyles[key + ':on'] : {},
-        value ? styles[key + ':on'] : {},
-        switchProps.disabled ? variantStyles[key + ':disabled'] : {},
-        switchProps.disabled ? styles[key + ':disabled'] : {},
-      ]
-    }
+    
+    const trackAnimation = useAnimatedVariantStyles({
+      variantStyles,
+      animatedProperties: ['track:off','track:disabled', 'track:on', 'track:disabled-on', 'track:disabled-off'],
+      transition: variantStyles['track:transition'],
+      updater: () =>{
+        'worklet'
+        let disabledStyle = {}
+        if(disabled){
+          disabledStyle =  value ? variantStyles['track:disabled-on'] : variantStyles['track:disabled-off']
+        }
+        const style =  value ? variantStyles['track:on'] : variantStyles['track:off']
 
-    const inputStyles = getStyles('input')
+        return {
+          ...style,
+          ...disabledStyle
+        }
+        
+      },
+      dependencies: [value, disabled],
+    })
 
-    const { color, backgroundColor } = StyleSheet.flatten(inputStyles)
-    const { Theme } = useCodeleapContext()
+    const thumbAnimation = useAnimatedVariantStyles({
+      variantStyles,
+      animatedProperties: ['thumb:off','thumb:disabled', 'thumb:on', 'thumb:disabled-off', 'thumb:disabled-on'],
+      transition: variantStyles['thumb:transition'],
+      updater: () =>{
+        'worklet'
+        let disabledStyle = {}
+        if(disabled){
+          disabledStyle = value ? variantStyles['thumb:disabled-on'] : variantStyles['thumb:disabled-off']
+        }
+        const style = value ? variantStyles['thumb:on'] : variantStyles['thumb:off']
+        return {
+          ...style,
+          ...disabledStyle
+        }
+        
+      },
+      dependencies: [value, disabled],
+    })
 
-    const thumbColor = color || Theme.colors.primary
-    const trackColor = backgroundColor || Theme.colors.gray
-    return (
-      <View style={getStyles('wrapper')}>
-        <View style={getStyles('inputWrapper')}>
-          <NativeSwitch
-            thumbColor={thumbColor}
-            trackColor={{ false: trackColor, true: trackColor }}
-            ios_backgroundColor={trackColor}
-            value={value}
-            ref={ref}
-            {...props}
-          />
-          <InputLabel label={label} styles={{
-            asterisk: getStyles('labelAsterisk'),
-            text: getStyles('labelText'),
-            wrapper: getStyles('labelWrapper'),
-          }} />
-        </View>
-        <FormError text={error.message} style={getStyles('error')} />
+    const _switchOnLeft = switchOnLeft ?? variantStyles['__props']?.switchOnLeft
+
+    return <InputBase
+      {...inputBaseProps}
+      debugName={debugName}
+      wrapper={Touchable}
+      styles={variantStyles}
+      wrapperProps={{
+        onPress: () => {
+          onValueChange(!value)
+        },
+        disabled,
+        rippleDisabled: true
+      }}
+      order={_switchOnLeft ?  reversedOrder : InputBaseDefaultOrder}
+      style={style}
+      disabled={disabled} 
+      
+    >
+      <View 
+        animated 
+        style={[
+          variantStyles.track, 
+          disabled && variantStyles['track:disabled'],
+          trackAnimation
+        ]}
+        >
+        <View 
+          animated 
+          style={[
+            variantStyles.thumb, 
+            disabled && variantStyles['thumb:disabled'],
+            thumbAnimation
+          ]}
+        />
       </View>
-    )
-  },
-) as React.FC<SwitchProps>
+    </InputBase>
+}

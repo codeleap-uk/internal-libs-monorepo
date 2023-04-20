@@ -4,10 +4,10 @@ import {
   IconPlaceholder,
 } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
-import { WebSelectComposition, WebSelectStyles } from './styles'
+import { SelectComposition, SelectStyles } from './styles'
 
 export type SelectRenderFNProps<T> = CustomSelectProps<T>['options'][number] & {
-  styles: StylesOf<WebSelectComposition>
+  styles: StylesOf<SelectComposition>
   onPress: () => void
   selected?: boolean
   inList?: boolean
@@ -25,12 +25,12 @@ export type CustomSelectProps<T = any> = {
   onValueChange?: (value: T) => void
   renderItem?: SelectRenderFN<T>
   renderCurrentlySelected?: SelectRenderFN<T>
-  styles?: StylesOf<WebSelectComposition>
+  styles?: StylesOf<SelectComposition>
   disabled?: boolean
-  validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
+  validate?: FormTypes.ValidatorWithoutForm<any[]>
   arrowIconName?: IconPlaceholder
   autoClose?: boolean
-} & ComponentVariants<typeof WebSelectStyles>
+} & ComponentVariants<typeof SelectStyles>
 
 export type MultiSelectProps<T = any> = {
   value: T[]
@@ -41,9 +41,9 @@ export type MultiSelectProps<T = any> = {
   onValueChange?: (value: T[]) => void
   renderItem?: SelectRenderFN<T>
   renderCurrentlySelected?: SelectRenderFN<T>
-  styles?: StylesOf<WebSelectComposition>
+  styles?: StylesOf<SelectComposition>
   disabled?: boolean
-  validate?: FormTypes.ValidatorFunctionWithoutForm<any> | string
+  validate?: FormTypes.ValidatorWithoutForm<any[]>
   arrowIconName?: IconPlaceholder
 
-} & ComponentVariants<typeof WebSelectStyles>
+} & ComponentVariants<typeof SelectStyles>

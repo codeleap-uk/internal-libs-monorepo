@@ -9,10 +9,12 @@ import {
   TypeGuards,
   deepMerge,
   PropsOf,
+  useCodeleapContext,
+  onUpdate,
 } from '@codeleap/common'
 
 import {
-  ButtonStyles,
+  ButtonPresets,
   ButtonComposition,
   ButtonParts,
 } from './styles'
@@ -21,9 +23,10 @@ import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { View, ViewProps } from '../View'
+import { View, ViewProps, ViewRefType } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { StyleSheet } from 'react-native'
+import { usePressableFeedback } from '../../utils'
 export * from './styles'
 
 type ChildProps = {
@@ -31,7 +34,7 @@ type ChildProps = {
   props: Omit<ButtonProps, 'children'>
 }
 
-type BadgeProps = Partial<ViewProps> & {
+type BadgeProps = Omit<Partial<ViewProps>, 'ref'> & {
   text?: string
   children?: React.ReactElement | ((props: Partial<SmartOmit<BadgeProps, 'children'>>) => React.ReactElement)
   styles?: StylesOf<'text'|'wrapper'>
@@ -40,7 +43,7 @@ type BadgeProps = Partial<ViewProps> & {
 }
 
 export type ButtonProps = Omit<TouchableProps, 'variants'> &
-  ComponentVariants<typeof ButtonStyles> & {
+  ComponentVariants<typeof ButtonPresets> & {
     text?: string
     rightIcon?: IconPlaceholder
     icon?: IconPlaceholder
@@ -52,7 +55,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
 
-export const Badge = forwardRef<GetRefType<ViewProps['ref']>, BadgeProps>((props, ref) => {
+export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
   const {
     children = null,
     styles,
@@ -61,7 +64,12 @@ export const Badge = forwardRef<GetRefType<ViewProps['ref']>, BadgeProps>((props
     ...viewProps
   } = props
 
-  return <View style={[styles.wrapper]} {...viewProps} ref={ref}>
+  return <View 
+    style={[styles.wrapper]} 
+    {...viewProps} 
+    // @ts-expect-error - Refs are tricky
+    ref={ref}
+  >
     {text && <Text text={text} style={styles.text} {...textProps}/>}
     {(TypeGuards.isFunction(children) ? children({ ...viewProps, styles, text }) : children)}
   </View>
@@ -82,7 +90,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     style,
     ...props
   } = buttonProps
-
+  const [pressed, setPressed] = React.useState(false)
   const variantStyles = useDefaultComponentStyle('u:Button', {
     variants,
     transform: StyleSheet.flatten,
@@ -116,6 +124,22 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   }
 
+  const disableFeedback = !onPress || props?.noFeedback
+
+  const { getFeedbackStyle } = usePressableFeedback(variantStyles.text, {
+    hightlightPropertyIn: 'color',
+    hightlightPropertyOut: 'color',
+    feedbackConfig: variantStyles?.textFeedback,
+    disabled: disableFeedback,
+  })
+
+  const { getFeedbackStyle: getFeedbackWrapperStyle } = usePressableFeedback(variantStyles.wrapper, {
+    hightlightPropertyIn: 'borderColor',
+    hightlightPropertyOut: 'borderColor',
+    disabled: disableFeedback,
+    feedbackConfig: variantStyles?.wrapperFeedback,
+  })
+
   const childrenContent = TypeGuards.isFunction(children) ?
     // @ts-ignore
     children({ styles: _styles, props: buttonProps })
@@ -133,7 +157,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   return (
     <Touchable
-      style={_styles.wrapper}
+      style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
       ref={ref}
       disabled={disabled}
       styles={{
@@ -142,14 +166,15 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       onPress={onPress}
       debugComponent={'Button'}
       noFeedback={!onPress}
+      setPressed={setPressed}
       {...props}
     >
       {_badge}
-      {loading && <ActivityIndicator style={_styles.loader} />}
-      {!loading && <Icon name={icon} style={_styles.leftIcon} renderEmptySpace={hasText && !!rightIcon}/>}
-      {text ? <Text text={text} style={_styles.text} /> : null}
+      {loading && <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} />}
+      {!loading && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} renderEmptySpace={hasText && !!rightIcon}/>}
+      {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
       {childrenContent}
-      <Icon name={rightIcon} style={_styles.rightIcon} renderEmptySpace={(hasText && !!icon) || loading} />
+      <Icon name={rightIcon} style={[_styles.rightIcon, getFeedbackStyle(pressed)]} renderEmptySpace={(hasText && !!icon) || loading} />
     </Touchable>
   )
 })

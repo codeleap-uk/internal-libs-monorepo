@@ -1,5 +1,4 @@
 import * as React from 'react'
-import * as Animatable from 'react-native-animatable'
 import { ComponentPropsWithoutRef, forwardRef } from 'react'
 import {
   ComponentVariants,
@@ -9,29 +8,29 @@ import {
   useCodeleapContext,
   useMemo,
 } from '@codeleap/common'
-import { View as NativeView } from 'react-native'
-import { MotiView, MotiProps } from 'moti'
+import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
 import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
 import {TransitionConfig} from '../../types'
-
+import Animated from 'react-native-reanimated'
 export * from './styles'
 
-type MotiViewProps =  Omit< Partial<MotiProps>, 'transition'|'children'>
+
 
 type NativeViewProps =Omit<ComponentPropsWithoutRef<typeof NativeView>, 'children'>
 
+export type ViewRefType = NativeView | React.ForwardedRef<NativeView>
 export type ViewProps = React.PropsWithChildren<{
-  ref?: any
+  ref?: ViewRefType
   component?: any
   animated?: boolean
   keyboardAware?: GetKeyboardAwarePropsOptions
   transition?: Partial<TransitionConfig>
 } &
-  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps & MotiViewProps
+  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps
 >
 
 
-export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
+export const View  = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -47,26 +46,14 @@ export const View: React.FC<ViewProps> = forwardRef<NativeView,ViewProps>((viewP
     responsiveVariants,
     variants,
   })
-  const Component = animated ? MotiView : (component || NativeView)
-  const keyboard = useKeyboardAwareView()
-  const _props = keyboard.getKeyboardAwareProps(
-    {
-      style: [variantStyles.wrapper, style], ref: ref, ...props,
-    },
-    {
-      adapt: 'paddingBottom',
-      baseStyleProp: 'style',
+  const Component = animated ? Animated.View  : component || NativeView
 
-      enabled: false,
-      ...keyboardAware,
-    },
-  )
   return (
-    <Component {..._props}>
+    <Component  {...props} style={[variantStyles.wrapper, style]}>
       {children}
     </Component>
   )
-})
+}) as unknown as React.FC<ViewProps>
 
 
 type GapProps = ViewProps & {
@@ -75,7 +62,7 @@ type GapProps = ViewProps & {
   defaultProps?: any
 }
 
-export const Gap:React.FC<GapProps> = ({ children, value, defaultProps = {}, ...props }) => {
+export const Gap:React.FC<React.PropsWithChildren<GapProps>> = ({ children, value, defaultProps = {}, ...props }) => {
   const { Theme } = useCodeleapContext()
   const childArr = React.Children.toArray(children)
 

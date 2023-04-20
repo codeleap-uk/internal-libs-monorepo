@@ -51,8 +51,7 @@ export const renameMobileCommand = codeleapCommand(
   },
   async (argv) => {
     const { flags, _ } = argv
-    let name = _.new_name
-
+    let name = _.newName
     if (!name) {
       const answers = await inquirer.prompt([
         {

@@ -5,22 +5,26 @@ import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
-  ModalComposition,
   onUpdate,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import { ReactNode, useEffect, useLayoutEffect, useRef } from 'react'
+
+import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
+
 import { v4 } from 'uuid'
+
 import { StylesOf } from '../../types/utility'
 import { Button } from '../Button'
 import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
-import { WebModalStyles as ModalStyles } from './styles'
+
+import {ModalComposition,ModalPresets} from './styles'
+
 export * from './styles'
 
-export type ModalProps = {
+export type ModalProps = React.PropsWithChildren<{
   visible: boolean
   title?: React.ReactNode
   toggle: AnyFunction
@@ -31,8 +35,8 @@ export type ModalProps = {
   scroll?: boolean
   footer?: ReactNode
   debugName?: string
-} & ComponentVariants<typeof ModalStyles>
-
+} & ComponentVariants<typeof ModalPresets>
+>
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
   const modal = document.getElementById(id)
@@ -49,7 +53,6 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     visible,
     title = '',
     toggle,
-    id,
     responsiveVariants,
     variants,
     styles,
@@ -57,6 +60,8 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     footer,
     ...props
   } = modalProps
+
+  const id = useId()
 
   const variantStyles = useDefaultComponentStyle('u:Modal', {
     responsiveVariants,

@@ -14,14 +14,14 @@ import { View } from '../View'
 export * from './styles'
 
 import {
-  IconStyles,
+  IconPresets,
 } from './styles'
 
 export type IconProps = {
   name: IconPlaceholder
   style?: any
   color?: string
-  variants?: ComponentVariants<typeof IconStyles>['variants']
+  variants?: ComponentVariants<typeof IconPresets>['variants']
   renderEmptySpace?: boolean
   size?: number
 }
@@ -29,7 +29,7 @@ export type IconProps = {
 export const IconComponent: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()
 
-  const variantStyles = useDefaultComponentStyle<'u:Icon', typeof IconStyles>('u:Icon', {
+  const variantStyles = useDefaultComponentStyle<'u:Icon', typeof IconPresets>('u:Icon', {
     variants,
     transform: StyleSheet.flatten,
     styles: {

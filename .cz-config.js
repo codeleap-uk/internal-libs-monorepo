@@ -28,7 +28,17 @@ module.exports = {
       { value: 'WIP', name: 'WIP: Work in progress', hidden: true },
     ],
   
-    scopes: [{ name: 'mobile' }, { name: 'web' }, { name: 'common' }, { name: 'cli' }, { name: "mobile-template"}, {name: "web-template"}, {name: "documentation"},{name: 'tooling'}],
+    scopes: [
+      { name: 'mobile' },
+      { name: 'web' },
+      { name: 'common' },
+      { name: 'cli' },
+      { name: "mobile-template"},
+      { name: "web-template" },
+      { name: "documentation"} ,
+      { name: 'tooling' },
+      { name: 'general' }
+    ],
   
     usePreparedCommit: false, // to re-use commit from ./.git/COMMIT_EDITMSG
     allowTicketNumber: false,
