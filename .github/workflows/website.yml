@@ -5,6 +5,7 @@ on:
       - master
     paths: 
       - apps/web
+      - .github/workflows/website.yml
 concurrency:
   group: ${ GIT_BRANCH_NAME }
   cancel-in-progress: true
@@ -51,7 +52,7 @@ jobs:
         SOURCE_DIR: "apps/web/public"
 
     
-       - name: Slack Notification Success
+    - name: Slack Notification Success
       if: ${{ success() }}
       uses: rtCamp/action-slack-notify@v2
       env:
