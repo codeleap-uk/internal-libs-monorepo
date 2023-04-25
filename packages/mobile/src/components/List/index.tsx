@@ -13,13 +13,13 @@ import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
 import { useKeyboardAwareView, GetKeyboardAwarePropsOptions } from '../../utils'
 
-
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
 export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & {
   data: T[]
   keyExtractor?: (item: T, index: number) => string
   renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
+  renderHeader: () => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
@@ -35,6 +35,7 @@ export type FlatListProps<
   Data = T extends Array<infer D> ? D : never
 > =RNFlatListProps<Data> &
   Omit<ViewProps, 'variants'> & {
+    renderHeader?: () => React.ReactElement
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
     keyboardAware?: GetKeyboardAwarePropsOptions
@@ -70,8 +71,17 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       )
     }, [])
 
+    const renderHeader = useCallback(() => {
+      return (
+        <View style={variantStyles.header}>
+          {props?.renderHeader()}
+        </View>
+      )
+    }, [])
+
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && props?.separators && renderSeparator
+    const header = !isEmpty && renderHeader
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
@@ -80,6 +90,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
       ref: ref as unknown as FlatList,
+      ListHeaderComponent: header,
       ItemSeparatorComponent: separator,
       refreshControl: !!onRefresh && (
         <RefreshControl
