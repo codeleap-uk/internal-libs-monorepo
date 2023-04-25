@@ -19,7 +19,7 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
   data: T[]
   keyExtractor?: (item: T, index: number) => string
   renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
-  renderHeader: () => React.ReactElement
+  renderHeader?: () => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
@@ -81,7 +81,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && props?.separators && renderSeparator
-    const header = !isEmpty && renderHeader
+    const header = !isEmpty && (props?.renderHeader && renderHeader) || props?.ListHeaderComponent
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
