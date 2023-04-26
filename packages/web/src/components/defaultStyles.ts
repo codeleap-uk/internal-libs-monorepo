@@ -14,10 +14,12 @@ import { OverlayPresets } from './Overlay/styles'
 import { TextInputPresets } from './TextInput/styles'
 import { RadioInputPresets } from './RadioInput/styles'
 import { SelectPresets } from './Select/styles'
+import { MultiSelectPresets } from './MultiSelect/styles'
 import { TooltipPresets } from './Tooltip/styles'
 import { ListPresets } from './List/styles'
 import { LinkPresets } from './Link/styles'
 import { SliderPresets } from './Slider/styles'
+import { AutoCompletePresets } from './AutoComplete/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 
 export const defaultStyles = {
@@ -42,6 +44,6 @@ export const defaultStyles = {
   Tooltip: TooltipPresets,
   List: ListPresets,
   Slider: SliderPresets,
-  MultiSelect: SelectPresets,
+  MultiSelect: MultiSelectPresets,
   LoadingOverlay: LoadingOverlayPresets,
 }

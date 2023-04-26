@@ -1,0 +1,110 @@
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+
+export type SelectParts =
+  | 'wrapper'
+  | 'label'
+  | 'inputWrapper'
+  | 'list'
+  | 'itemWrapper'
+  | 'itemWrapper:selected'
+  | 'itemText'
+  | 'itemText:selected'
+  | 'buttonWrapper'
+  | 'buttonText'
+  | 'buttonIcon'
+  | 'error'
+
+export type SelectComposition =
+  | `${SelectParts}:hover`
+  | `${SelectParts}:open`
+  | `${SelectParts}:error`
+  | `${SelectParts}:disabled`
+  | SelectParts
+
+const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
+
+export const MultiSelectPresets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })),
+)
+
+export const SelectStyles = {
+  default: createSelectStyle((Theme) => ({
+    wrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    label: {
+      ...Theme.spacing.marginBottom(1),
+    },
+    inputWrapper: {
+      position: 'relative',
+    },
+
+    list: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      display: 'flex',
+      top: '110%',
+      backgroundColor: Theme.colors.gray,
+
+      ...Theme.presets.column,
+      overflowY: 'hidden',
+
+      transition: 'all 0.5s ease',
+      maxHeight: 0,
+      ...Theme.border.create({
+        width: 0,
+        color: 'transparent',
+      }),
+      borderRadius: Theme.borderRadius.small,
+    },
+    'list:open': {
+      maxHeight: '500%',
+      overflowY: 'auto',
+      ...Theme.border.primary(1),
+    },
+    itemText: {},
+    itemWrapper: {
+      ...Theme.spacing.padding(0.5),
+      cursor: 'pointer',
+      display: 'flex',
+      '&:hover': {
+        backgroundColor: '#0002',
+      },
+    },
+    'itemText:selected': {},
+    'itemWrapper:selected': {
+      backgroundColor: Theme.colors.primary,
+      '&:hover': {
+        backgroundColor: Theme.colors.primary,
+      },
+    },
+    buttonWrapper: {
+      ...Theme.border.primary(1),
+      ...Theme.presets.fullWidth,
+      ...Theme.presets.alignCenter,
+      ...Theme.spacing.padding(0.5),
+      backgroundColor: Theme.colors.gray,
+      borderRadius: Theme.borderRadius.small,
+      cursor: 'pointer',
+      display: 'flex',
+    },
+    'button:open': {},
+    buttonText: {
+      flex: 1,
+    },
+    buttonIcon: {
+      height: 24,
+      width: 24,
+      color: Theme.colors.white,
+      transition: 'all 0.2s ease',
+      ...Theme.spacing.marginLeft('auto'),
+    },
+    'buttonIcon:open': {
+      transform: 'rotate(180deg)',
+    },
+    error: {
+      color: Theme.colors.negative,
+    },
+  })),
+}
