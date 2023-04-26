@@ -20,22 +20,19 @@ import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
 
-import { ModalComposition, ModalPresets } from './styles'
-
 export * from './styles'
 
 export type MultiSelectProps = React.PropsWithChildren<{
   visible: boolean
   title?: React.ReactNode
   toggle: AnyFunction
-  styles?: StylesOf<ModalComposition>
   accessible?: boolean
   showClose?: boolean
   closable?: boolean
   scroll?: boolean
   footer?: ReactNode
   debugName?: string
-} & ComponentVariants<typeof ModalPresets>
+}
 >
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
@@ -53,30 +50,12 @@ export const ModalContent: React.FC<MultiSelectProps & { id: string }> = (
     visible,
     title = '',
     toggle,
-    responsiveVariants,
-    variants,
-    styles,
     showClose = true,
     footer,
     ...props
   } = modalProps
 
   const id = useId()
-
-  const variantStyles = useDefaultComponentStyle('u:Modal', {
-    responsiveVariants,
-    variants,
-    styles,
-  })
-
-  onUpdate(() => {
-    if (visible) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-
-    }
-  }, [visible])
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Escape') {
@@ -94,20 +73,17 @@ export const ModalContent: React.FC<MultiSelectProps & { id: string }> = (
   return (
     <View
       aria-hidden={!visible}
-      css={variantStyles.wrapper}
+
       className={visible ? 'visible' : ''}
     >
       <Overlay
         visible={visible}
         onPress={closable ? toggle : () => {}}
-        css={variantStyles.overlay}
+
       />
       <View
         component='section'
-        css={{
-          ...variantStyles.box,
-          // visibility: visible ? 'visible' : 'hidden',
-        }}
+
         className='content'
         onKeyDown={closeOnEscPress}
         tabIndex={0}
@@ -123,24 +99,23 @@ export const ModalContent: React.FC<MultiSelectProps & { id: string }> = (
             component='header'
             className='modal-header header'
             id={`${id}-title`}
-            css={variantStyles.header}
+
           >
-            {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
+            {typeof title === 'string' ? <Text text={title} /> : title}
 
             {showClose && closable && (
               <Button
                 rightIcon={'close' as IconPlaceholder}
                 variants={['icon']}
                 onPress={toggle}
-                css={variantStyles.closeButton}
               />
             )}
           </View>
         )}
 
-        <View css={variantStyles.body}>{children}</View>
+        <View>{children}</View>
         {footer && (
-          <View component='footer' css={variantStyles.footer}>
+          <View component='footer'>
             {footer}
           </View>
         )}
