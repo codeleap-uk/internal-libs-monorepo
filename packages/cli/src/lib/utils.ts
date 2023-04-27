@@ -1,6 +1,6 @@
 import cp from 'child_process'
 
-export const getNewBundleName = (newName:string) => `uk.co.codeleap.${newName.trim()}`
+export const getNewBundleName = (newName:string) => `uk.co.codeleap.${newName.trim().toLowerCase()}`
 
 export function subprocess(name:string, ...params: Parameters<typeof cp.spawn>) {
   return new Promise<void|number|null>((resolve, reject) => {

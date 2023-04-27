@@ -5,9 +5,12 @@ import { createAppCommand } from './commands/createApp'
 import { downloadKeystores } from './commands/downloadKeystores'
 import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
+import { logger, LogLevel, LogLevels,  } from './lib/log'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const packageJson = require('../package.json')
+
+
 
 cli({
   name: 'codeleap',
@@ -19,7 +22,15 @@ cli({
     downloadKeystores
   ],
   version: packageJson.version,
-
+  flags: {
+    logs: {
+      type: LogLevel,
+      default: 'info' as LogLevels,
+      description: 'Set the log level. Options: error, warning, info, verbose',
+    }
+  },
+}, (a) => {
+  logger.setLevel(a.flags.logs)
 })
 
 export {}

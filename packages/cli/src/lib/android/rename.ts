@@ -8,11 +8,26 @@ import firebase from 'firebase-admin'
 import Keytool from 'node-keytool'
 
 import { AndroidConfigFile } from './keystore'
+import { logger } from '../log'
 
 type RenameAndroidOptions = {
     changeBundle?: boolean
     firebase?: firebase.app.App
 }
+
+const androidRenameLogger = logger.branch({
+  prefixes: ['android rename: '],
+})
+
+const callAsPromise = (fn: Function, ...args: any[]) => new Promise((resolve, reject) => {
+  fn(...args, (err: any, data: any) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve(data)
+    }
+  })
+})
 
 export async function renameAndroid(
   androidFolder: string,
@@ -30,6 +45,42 @@ export async function renameAndroid(
   ).toString()
   const bundleId = getAndroidBundleId(androidManifest)
   const currentName = getAndroidAppName(stringsXml)
+
+  androidRenameLogger.verbose('currentName', currentName)
+  androidRenameLogger.verbose('newName', newName)
+
+  androidRenameLogger.verbose('bundleId', bundleId)
+  androidRenameLogger.verbose('newBundleName', newBundleName)
+
+
+  if (options.changeBundle && newBundleName !== bundleId) {
+    const javaFolder = path.join(androidFolder, 'app', 'src', 'main', 'java')
+    const mainActivityFolder = path.join(javaFolder, ...bundleId.split('.'))
+
+    let scan = javaFolder
+
+    for (const part of newBundleName.split('.')) {
+      const folder = path.join(scan, part)
+      if (!fs.existsSync(
+        folder,
+      )) {
+        fs.mkdirSync(folder)
+      }
+      scan = folder
+    }
+
+    for (const file of fs.readdirSync(mainActivityFolder)) {
+      fs.copyFileSync(
+        path.join(mainActivityFolder, file),
+        path.join(scan, file),
+      )
+    }
+    fs.rmSync(mainActivityFolder, {
+      recursive: true,
+      force: true,
+    })
+
+  }
 
   await walkDir({
     action: (info) => {
@@ -72,65 +123,56 @@ export async function renameAndroid(
         },
       ],
     },
-  }).then(() => {
-    if (options.changeBundle && newBundleName !== bundleId) {
-      const javaFolder = path.join(androidFolder, 'app', 'src', 'main', 'java')
-      const mainActivityFolder = path.join(javaFolder, ...bundleId.split('.'))
+  }, androidRenameLogger)
 
-      let scan = javaFolder
+  const mainactivitySearchStr = "protected String getMainComponentName() {"
 
-      for (const part of newBundleName.split('.')) {
-        const folder = path.join(scan, part)
-        if (!fs.existsSync(
-          folder,
-        )) {
-          fs.mkdirSync(folder)
-        }
-        scan = folder
-      }
+  const mainActivityPath = path.join(androidFolder, 'app', 'src', 'main', 'java', ...newBundleName.split('.'), 'MainActivity.java')
 
-      for (const file of fs.readdirSync(mainActivityFolder)) {
-        fs.copyFileSync(
-          path.join(mainActivityFolder, file),
-          path.join(scan, file),
-        )
-      }
-      fs.rmSync(mainActivityFolder, {
-        recursive: true,
-        force: true,
-      })
+  const mainActivityContent = fs.readFileSync(mainActivityPath).toString()
 
-    }
-  })
+  const mainActivityContentArr = mainActivityContent.indexOf(mainactivitySearchStr)
+
+  const nextSemicolon = mainActivityContent.indexOf(';', mainActivityContentArr)
+
+  const newFileContent = mainActivityContent.slice(0, mainActivityContentArr) + mainactivitySearchStr + `\n     return "${newName}"` + mainActivityContent.slice(nextSemicolon)
+
+  fs.writeFileSync(mainActivityPath, newFileContent)
+
+
   if (!firebase) return
   const pm = firebase.projectManagement()
-  console.log(pm.app.options,pm.app.name)
+  androidRenameLogger.verbose('Firebase app ' + pm.app.name + ' options', pm.app.options )
   const androidAppReqs = (await pm.listAndroidApps()).map(async a => {
     return {
       ...a,
       meta: (await a.getMetadata()),
     }
   })
-  console.log(androidAppReqs)
+  androidRenameLogger.verbose('apps metadata',androidAppReqs)
   const androidApps = await Promise.all(androidAppReqs)
   const googleServiceFile = path.join(androidFolder, 'app', 'google-services.json')
   if (!androidApps.some(a => a.meta.packageName === newBundleName)) {
-    console.log(`Creating new android app on firebase and updating google-services.json`)
+    androidRenameLogger.verbose(`Creating new android app on firebase and updating google-services.json`)
     const newApp = await pm.createAndroidApp(newBundleName, newName.trim())
     const newGoogleServicesFile = await newApp.getConfig()
     fs.writeFileSync(googleServiceFile, newGoogleServicesFile, {
       encoding: 'utf-8',
     })
+    androidRenameLogger.verbose(`New google-services.json created`)
     const keystoresFolder = path.join(androidFolder, 'app', 'keystores')
     const keystores = fs.readdirSync(keystoresFolder, {
       withFileTypes: true,
     })
+    androidRenameLogger.verbose(`Keystores found`, keystores)
 
     const gradleProperties = new AndroidConfigFile(
       path.join(
         androidFolder, 'app','keystores','config.json'
       )
     )
+    androidRenameLogger.verbose(`Keystore config found`, gradleProperties)
+
 
     for (const keystore of keystores) {
       const keyPathData = parseFilePathData(keystore.name)
@@ -143,22 +185,23 @@ export async function renameAndroid(
         'keystore': 'PKCS12',
         'jks': 'JKS',
       }
-
+      androidRenameLogger.verbose(`Keystore found`, keystore.name)
       const key = Keytool(
         path.join(keystoresFolder, keystore.name),
-        gradleProperties[keystore.name].storePassword,
+        gradleProperties.data[keystore.name].storePassword,
         { debug: false, storeType: storeTypeMap[keyPathData.extension] },
       )
+      const vals = await callAsPromise(key.list)
+      
+      const certs = vals.certs.map(c => {
+        return newApp.addShaCertificate({
+          certType: c.algorithm.toLowerCase().replace('-', ''),
+          shaHash: c.fingerprint,
 
-      key.list((err, vals) => {
-        return vals.certs.forEach(c => {
-          newApp.addShaCertificate({
-            certType: c.algorithm.toLowerCase().replace('-', ''),
-            shaHash: c.fingerprint,
-
-          })
         })
       })
+
+      await Promise.all(certs)
     }
 
   }

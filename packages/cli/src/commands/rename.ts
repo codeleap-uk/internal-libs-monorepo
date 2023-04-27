@@ -5,11 +5,14 @@ import { spinWhileNotCompleted } from '../lib/spinner'
 import fs from 'fs'
 import path from 'path'
 import dive from 'dive'
-import { chalk, inquirer, figlet, getAndroidBundleId, walkDir, getAndroidAppName, renameAndroid } from '../lib'
+import { chalk, inquirer, figlet, getAndroidBundleId, walkDir, getAndroidAppName, renameAndroid, getNewBundleName } from '../lib'
 import { renameIos } from '../lib/ios'
 import '../lib/firebase'
 import { cwd } from '../constants'
+import { logger } from '../lib/log'
+import { getFirebaseAdmin } from '../lib/firebase'
 const commandName = 'rename-mobile'
+
 
 export const renameMobileCommand = codeleapCommand(
   {
@@ -23,7 +26,7 @@ export const renameMobileCommand = codeleapCommand(
         `codeleap ${commandName} myAppName --ios # renames only ios folder`,
         `codeleap ${commandName} myAppName --android # renames only android folder`,
         `codeleap ${commandName} myAppName --android --ios # renames both folders`,
-        `codeleap ${commandName} myAppName --android --ios # Will show the diff in "previous -> new" format`,
+        `codeleap ${commandName} myAppName --android --ios --dry  # Will show the new display and bundle names`,
       ],
     },
 
@@ -46,6 +49,10 @@ export const renameMobileCommand = codeleapCommand(
         type: Boolean,
         description: 'Will not alter the bundle identifier',
       },
+      updateFirebase: {
+        type: Boolean,
+        description: 'Will update the firebase app and bundle ids, and copy keystores for android',
+      }
     },
 
   },
@@ -62,6 +69,23 @@ export const renameMobileCommand = codeleapCommand(
       name = answers.name
     }
 
+    if(flags.dry){
+      logger.info(`Dry run, no changes will be made`)
+      
+      const bundleName = getNewBundleName(name)
+
+      logger.info(`Bundle name: ${bundleName}`)
+      logger.info(`App name: ${name}`)
+
+      return
+    }
+
+    let firebase = null 
+
+    if(flags.updateFirebase){
+      firebase = await getFirebaseAdmin()
+    }
+
     if (flags.android) {
       const androidFolder = path.join(cwd, 'android')
       spinWhileNotCompleted(
@@ -71,6 +95,7 @@ export const renameMobileCommand = codeleapCommand(
             name,
             {
               changeBundle: !flags.displayOnly,
+              firebase
             },
           )
         },
@@ -90,6 +115,7 @@ export const renameMobileCommand = codeleapCommand(
             name,
             {
               changeBundle: !flags.displayOnly,
+              firebase
             },
           )
         },

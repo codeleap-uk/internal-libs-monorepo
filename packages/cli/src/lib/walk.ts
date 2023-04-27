@@ -1,6 +1,8 @@
 import fs from 'fs'
 import dive from 'dive'
 import { parseFilePathData } from './utils'
+import { Logger } from './log'
+import {inspect} from 'util'
 
 type WalkDirInfo = {
     parentPath: string
@@ -78,7 +80,7 @@ const matchFile = (path:string, stat:fs.Stats, config:FileMatch) => {
   return conditions.every(a => a)
 }
 
-export async function walkDir(config: WalkDirConfig):Promise<void> {
+export async function walkDir(config: WalkDirConfig, logger?: Logger):Promise<void> {
   const options:WalkDirConfig['options'] = {
     directories: true,
     recursive: true,
@@ -93,7 +95,10 @@ export async function walkDir(config: WalkDirConfig):Promise<void> {
 
       if (options.ignore) {
         const ignore = options.ignore.some((i) => matchFile(file, stat, i))
-        if (ignore) return
+        if (ignore) {
+          logger?.verbose?.(`Ignoring ${file}...\n`)
+          return
+        }
       }
 
       const fileInfo:WalkDirInfo['file'] = isDir ? null : {
