@@ -2,6 +2,7 @@
 import { jsx } from '@emotion/react'
 import {
   ComponentVariants,
+  useCodeleapContext,
   useDefaultComponentStyle,
   useI18N,
 } from '@codeleap/common'
@@ -16,6 +17,8 @@ export type TextProps<T extends ElementType> = {
   text?: string
   message?: string // is required
   styles?: StylesOf<TextComposition>
+  debug?: boolean
+  debugName?: string
 } & ComponentPropsWithoutRef<T> &
   ComponentVariants<typeof TextPresets>
 
@@ -28,6 +31,8 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     component = 'p',
     styles,
     message = null,
+    debug = false,
+    debugName,
     ...props
   } = textProps
 
@@ -38,11 +43,17 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     styles,
   })
 
+  const { logger } = useCodeleapContext()
+
   const { t } = useI18N()
 
   const content = !!text ? text : t(String(message))
 
   const Component = component
+
+  if (debug) {
+    logger.log(`Text ${debugName}`, { variantStyles, content })
+  }
 
   return (
     //@ts-ignore
