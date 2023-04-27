@@ -18,7 +18,7 @@ export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor'
 export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & {
   data: T[]
   keyExtractor?: (item: T, index: number) => string
-  renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
+  renderItem: (data: ListRenderItemInfo<T> & {isFirst: boolean; isLast: boolean}) => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
@@ -39,6 +39,7 @@ export type FlatListProps<
     keyboardAware?: GetKeyboardAwarePropsOptions
     styles?: StylesOf<ListComposition>
     refreshControlProps?: Partial<RefreshControlProps>
+    renderItem: (data: ListRenderItemInfo<T> & {isFirst: boolean; isLast: boolean}) => React.ReactElement
   } & ComponentVariants<typeof ListPresets>
 
 const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
@@ -71,6 +72,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     // const isEmpty = !props.data || !props.data.length
     const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
+    const RenderItem = props.renderItem
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
@@ -92,6 +94,12 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ),
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
+      renderItem: (defaultProps) => {
+        const idx = defaultProps.index
+        const isFirst = idx === 0
+        const isLast = idx === props.data.length - 1
+        return <RenderItem {...defaultProps} isFirst={isFirst} isLast={isLast} />
+      },
     }
 
     return (
