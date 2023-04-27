@@ -43,6 +43,20 @@ export type FlatListProps<
     refreshControlProps?: Partial<RefreshControlProps>
   } & ComponentVariants<typeof ListPresets>
 
+const RenderHeader = (props: {headerStyles: ViewProps['style']; renderHeader: FlatListProps['renderHeader']}) => {
+  return (
+    <View style={props.headerStyles}>
+      {props.renderHeader()}
+    </View>
+  )
+}
+
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
+  return (
+    <View style={props.separatorStyles}></View>
+  )
+}
+
 const ListCP = forwardRef<FlatList, FlatListProps>(
   (flatListProps, ref) => {
     const {
@@ -65,23 +79,9 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     })
 
-    const renderSeparator = useCallback(() => {
-      return (
-        <View style={variantStyles.separator}></View>
-      )
-    }, [])
-
-    const renderHeader = useCallback(() => {
-      return (
-        <View style={variantStyles.header}>
-          {props?.renderHeader()}
-        </View>
-      )
-    }, [])
-
     const isEmpty = !props.data || !props.data.length
-    const separator = !isEmpty && props?.separators && renderSeparator
-    const header = !isEmpty && (props?.renderHeader && renderHeader) || props?.ListHeaderComponent
+    const separator = !isEmpty && props?.separators && RenderSeparator({ separatorStyles: variantStyles.separator })
+    const header = !isEmpty && props?.renderHeader && RenderHeader({ headerStyles: variantStyles.header, renderHeader: props.renderHeader })
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
