@@ -19,7 +19,6 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
   data: T[]
   keyExtractor?: (item: T, index: number) => string
   renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
-  renderHeader?: () => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
@@ -35,21 +34,12 @@ export type FlatListProps<
   Data = T extends Array<infer D> ? D : never
 > =RNFlatListProps<Data> &
   Omit<ViewProps, 'variants'> & {
-    renderHeader?: () => React.ReactElement
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
     keyboardAware?: GetKeyboardAwarePropsOptions
     styles?: StylesOf<ListComposition>
     refreshControlProps?: Partial<RefreshControlProps>
   } & ComponentVariants<typeof ListPresets>
-
-const RenderHeader = (props: {headerStyles: ViewProps['style']; renderHeader: FlatListProps['renderHeader']}) => {
-  return (
-    <View style={props.headerStyles}>
-      {props.renderHeader()}
-    </View>
-  )
-}
 
 const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return (
@@ -79,9 +69,8 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     })
 
-    const isEmpty = !props.data || !props.data.length
-    const separator = !isEmpty && props?.separators && RenderSeparator({ separatorStyles: variantStyles.separator })
-    const header = !isEmpty && props?.renderHeader && RenderHeader({ headerStyles: variantStyles.header, renderHeader: props.renderHeader })
+    // const isEmpty = !props.data || !props.data.length
+    const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
@@ -90,7 +79,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
       ref: ref as unknown as FlatList,
-      ListHeaderComponent: header,
+      ListHeaderComponentStyle: variantStyles.header,
       ItemSeparatorComponent: separator,
       refreshControl: !!onRefresh && (
         <RefreshControl
