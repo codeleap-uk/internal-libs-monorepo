@@ -4,26 +4,22 @@ import {
 } from '@codeleap/common'
 import { ActionIconComposition } from '../ActionIcon'
 
-export type AnimatableParts = 'box' | 'backdrop'
+export type AnimatableParts = 'box' | 'backdrop' | 'wrapper'
 
 export type ModalParts =
   | AnimatableParts
-  | 'wrapper'
-  | 'innerWrapper'
-  | 'scrollContent'
-  | 'scroll'
   | 'body'
   | 'footer'
   | 'header'
-  | 'backdropTouchable'
   | 'title'
+  | 'innerWrapper'
+  | 'backdropPressable'
   | `closeButton${Capitalize<ActionIconComposition>}`
 
 export type ModalComposition =
   | ModalParts
   | `${AnimatableParts}:visible`
   | `${AnimatableParts}:hidden`
-  | `${AnimatableParts}:transition`
 
 const createModalStyle = createDefaultVariantFactory<ModalComposition>()
 
