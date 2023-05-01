@@ -14,7 +14,7 @@ import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { Text } from '../Text'
 import { useClickOutside } from '../../lib/hooks'
-import { CustomSelectProps, MultiSelectProps } from './types'
+import { CustomSelectProps } from './types'
 import { SelectComposition, SelectParts, SelectPresets } from './styles'
 import { SelectRenderFNProps } from '.'
 

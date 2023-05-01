@@ -1,6 +1,6 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type SelectParts =
+export type MultiSelectParts =
   | 'wrapper'
   | 'label'
   | 'inputWrapper'
@@ -14,19 +14,19 @@ export type SelectParts =
   | 'buttonIcon'
   | 'error'
 
-export type SelectComposition =
-  | `${SelectParts}:hover`
-  | `${SelectParts}:open`
-  | `${SelectParts}:error`
-  | `${SelectParts}:disabled`
-  | SelectParts
+export type MultiSelectComposition =
+  | `${MultiSelectParts}:hover`
+  | `${MultiSelectParts}:open`
+  | `${MultiSelectParts}:error`
+  | `${MultiSelectParts}:disabled`
+  | MultiSelectParts
 
-const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
+const createSelectStyle = createDefaultVariantFactory<MultiSelectComposition>()
 
 export const MultiSelectPresets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })),
 )
 
-export const SelectStyles = {
+export const MultiSelectStyles = {
   default: createSelectStyle((Theme) => ({
     wrapper: {
       display: 'flex',

@@ -32,18 +32,3 @@ export type CustomSelectProps<T = any> = {
   autoClose?: boolean
 } & ComponentVariants<typeof SelectStyles>
 
-export type MultiSelectProps<T = any> = {
-  value: T[]
-  placeholder?: string
-  label?: FormTypes.Label
-  options?: {value: T; label?: FormTypes.Label ; icon?: IconPlaceholder}[]
-  onDropdownToggle?: (isOpen?: boolean) => void
-  onValueChange?: (value: T[]) => void
-  renderItem?: SelectRenderFN<T>
-  renderCurrentlySelected?: SelectRenderFN<T>
-  styles?: StylesOf<SelectComposition>
-  disabled?: boolean
-  validate?: FormTypes.ValidatorWithoutForm<any[]>
-  arrowIconName?: IconPlaceholder
-
-} & ComponentVariants<typeof SelectStyles>

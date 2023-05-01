@@ -10,7 +10,7 @@ import {
 } from '@codeleap/common'
 
 import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
-import ReactDOM from 'react-dom'
+// import _Select, { StylesConfig } from 'react-select'
 
 import { v4 } from 'uuid'
 
@@ -34,128 +34,16 @@ export type MultiSelectProps = React.PropsWithChildren<{
   debugName?: string
 }
 >
-function focusModal(event: FocusEvent, id: string) {
-  event.preventDefault()
-  const modal = document.getElementById(id)
-  if (modal) {
-    modal.focus()
-  }
-}
-export const ModalContent: React.FC<MultiSelectProps & { id: string }> = (
-  modalProps,
-) => {
-  const {
-    children,
-    closable = true,
-    visible,
-    title = '',
-    toggle,
-    showClose = true,
-    footer,
-    ...props
-  } = modalProps
-
-  const id = useId()
-
-  function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Escape') {
-      toggle()
-    }
-  }
-
-  useLayoutEffect(() => {
-    const modal = document.getElementById(id)
-    if (modal) {
-      modal.focus()
-    }
-  }, [id])
-
-  return (
-    <View
-      aria-hidden={!visible}
-
-      className={visible ? 'visible' : ''}
-    >
-      <Overlay
-        visible={visible}
-        onPress={closable ? toggle : () => {}}
-
-      />
-      <View
-        component='section'
-
-        className='content'
-        onKeyDown={closeOnEscPress}
-        tabIndex={0}
-        id={id}
-        aria-modal={true}
-        role='dialog'
-        aria-describedby={`${id}-title`}
-        aria-label='Close the modal by presing Escape key'
-        {...props}
-      >
-        {(title || showClose) && (
-          <View
-            component='header'
-            className='modal-header header'
-            id={`${id}-title`}
-
-          >
-            {typeof title === 'string' ? <Text text={title} /> : title}
-
-            {showClose && closable && (
-              <Button
-                rightIcon={'close' as IconPlaceholder}
-                variants={['icon']}
-                onPress={toggle}
-              />
-            )}
-          </View>
-        )}
-
-        <View>{children}</View>
-        {footer && (
-          <View component='footer'>
-            {footer}
-          </View>
-        )}
-      </View>
-    </View>
-  )
-}
 
 export const MultiSelect: React.FC<MultiSelectProps> = ({ accessible, ...props }) => {
-  const modalId = useRef(v4())
 
-  useEffect(() => {
-    if (accessible) {
-      const currentId = modalId.current
-      const appRoot = document.body
-      appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
-      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
-    }
-  }, [])
+  console.log('RENDERIZOU')
 
-  useEffect(() => {
-    if (accessible) {
-      const appRoot = document.body
-      appRoot.setAttribute('aria-hidden', `${props.visible}`)
-      appRoot.setAttribute('tabindex', `${-1}`)
-    }
-  }, [props.visible])
+  return (
+  // <View>
 
-  if (accessible) {
-    if (props.visible) {
-      document.body.style.overflow = 'hidden'
-      return ReactDOM.createPortal(
-        <ModalContent {...props} id={modalId.current} />,
-        document.body,
-      )
-    } else {
-      document.body.style.overflow = 'visible'
-      return null
-    }
-  }
+    <Text css={{ color: 'red' }} text={'hello worldsmmmsssuusszzzuzzzsBBBsm'} />
 
-  return <ModalContent {...props} id={modalId.current} />
+  // </View>
+  )
 }

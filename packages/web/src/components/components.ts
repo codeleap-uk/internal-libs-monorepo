@@ -22,8 +22,6 @@ export * from './Tooltip'
 export * from './List'
 export * from './Link'
 export * from './LoadingOverlay'
-
-
-
+export * from './MultiSelect'
 
 export * from './defaultStyles'
