@@ -9,7 +9,7 @@ import {
   ComponentVariants,
   useCodeleapContext,
 } from '@codeleap/common'
-import { DatePickerModalComposition, DatePickerModalStyles } from './styles'
+import { DatePickerModalComposition, DatePickerModalPresets } from './styles'
 import { Button } from '../Button'
 import { Text } from '../Text'
 import { DatePickerProps } from 'react-native-date-picker'
@@ -17,14 +17,15 @@ import DatePicker from 'react-native-date-picker'
 import { StyleSheet } from 'react-native'
 
 type DatePickerModalProps = {
-  value: Date
+  value: any
   visible?: boolean
   label: string
   toggle?: () => void
   buttonProps?: Partial<PropsOf<typeof Button>>
   labelTextProps?: Partial<PropsOf<typeof Text>>
   styles?: StylesOf<DatePickerModalComposition>
-}& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalStyles>
+  variants?: string[]
+}& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets>
 
 export * from './styles'
 
@@ -36,7 +37,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
 
-  const variantStyles = useDefaultComponentStyle<'u:DatePickerModal', typeof DatePickerModalStyles>('u:DatePickerModal', {
+  const variantStyles = useDefaultComponentStyle<'u:DatePickerModal', typeof DatePickerModalPresets>('u:DatePickerModal', {
     styles,
     variants,
     transform: StyleSheet.flatten,
@@ -54,13 +55,14 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   return (
     <>
 
-      <Text text={label} variants={['p2', 'marginBottom:1']} {...labelTextProps} />
+      <Text text={label} variants={['marginBottom:1']} {...labelTextProps} />
 
       <Button
         debugName={'open date picker'}
         onPress={() => setOpen(true)}
-        children={(props) => <Text style={props.styles.text} text={value} />}
+        children={<Text text={value} />}
         styles={buttonStyles}
+        variants={variants}
         {...buttonProps}
       />
 
