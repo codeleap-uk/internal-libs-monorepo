@@ -6,12 +6,15 @@ import {
   useDefaultComponentStyle,
   usePrevious,
   useCodeleapContext,
+  StylesOf,
 } from '@codeleap/common'
 
 import { RefreshControl, SectionList } from 'react-native'
 import { View, ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
+import { SectionsComposition, SectionsPresets } from './styles'
+export * from './styles'
 
 export type SectionListProps = KeyboardAwareScrollViewTypes.KeyboardAwareSectionListProps<any> &
   ViewProps & {
@@ -19,6 +22,7 @@ export type SectionListProps = KeyboardAwareScrollViewTypes.KeyboardAwareSection
     refreshTimeout?: number
     changeData?: any
     separators?: boolean
+    styles?: StylesOf<SectionsComposition>
   }
 
 export const Sections = forwardRef<SectionList, SectionListProps>(
@@ -28,6 +32,7 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       style,
       refreshTimeout = 3000,
       changeData,
+      styles,
       ...props
     } = flatListProps
     const hasRefresh = !!props.onRefresh
@@ -59,13 +64,14 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
     }, [refreshing, changeData])
     const { Theme } = useCodeleapContext()
 
-    const variantStyles = useDefaultComponentStyle('View', {
+    const variantStyles = useDefaultComponentStyle<'u:Sections', typeof SectionsPresets>('u:Sections', {
       variants,
+      styles,
     })
 
     const renderSeparator = () => {
       return (
-        <View variants={['separator']}></View>
+        <View style={variantStyles.separator}></View>
       )
     }
 
@@ -75,8 +81,8 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
 
     return (
       <KeyboardAwareSectionList
-        style={[Theme.presets.full, style]}
-        contentContainerStyle={[variantStyles.wrapper]}
+        style={[Theme.presets.full, style, variantStyles.wrapper]}
+        contentContainerStyle={[variantStyles.content]}
         // @ts-ignore
         ref={ref}
         ItemSeparatorComponent={separator}

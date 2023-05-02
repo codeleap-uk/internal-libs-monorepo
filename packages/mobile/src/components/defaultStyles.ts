@@ -25,10 +25,11 @@ import { AutoCompletePresets } from './AutoComplete'
 import { MultiSelectPresets } from './MultiSelect'
 import { ScrollPresets } from './Scroll'
 import { ActionIconPresets } from './ActionIcon'
-import { GridStyles } from './Grid'
+import { GridPresets } from './Grid'
 import { InputLabelPresets } from './InputLabel'
 import { LoadingOverlayPresets } from './LoadingOverlay'
 import { InputBasePresets } from './InputBase'
+import { SectionsPresets } from './Sections'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -57,10 +58,11 @@ export const defaultStyles = {
   AutoComplete: AutoCompletePresets,
   MultiSelect: MultiSelectPresets,
   Scroll: ScrollPresets,
+  Sections: SectionsPresets,
   PaginationIndicator: PaginationIndicatorStyles,
   ActionIcon: ActionIconPresets,
-  Grid: GridStyles,
+  Grid: GridPresets,
   LoadingOverlay: LoadingOverlayPresets,
   InputLabel: InputLabelPresets,
-  InputBase: InputBasePresets
+  InputBase: InputBasePresets,
 }
