@@ -21,6 +21,8 @@ type DatePickerModalProps = {
   visible?: boolean
   label: string
   toggle?: () => void
+  minAge: number
+  maxAge: number
   buttonProps?: Partial<PropsOf<typeof Button>>
   labelTextProps?: Partial<PropsOf<typeof Text>>
   styles?: StylesOf<DatePickerModalComposition>
@@ -33,7 +35,20 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const { Theme } = useCodeleapContext()
 
-  const { buttonProps = [], labelTextProps = [], value, visible, label, toggle, onConfirm, styles, variants, ...datePickerProps } = props
+  const {
+    buttonProps = [],
+    labelTextProps = [],
+    value,
+    visible,
+    label,
+    toggle,
+    minAge,
+    maxAge,
+    onConfirm,
+    styles,
+    variants,
+    ...datePickerProps
+  } = props
 
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
 
@@ -51,6 +66,20 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const initialDate = date => new Date(date.split('/').reverse().join('-'))
 
   const date = value ? initialDate(value) : new Date(1990, 0o2, 0o2)
+
+  const getMaxDate = () => {
+    const now = new Date()
+    const maxDate = new Date()
+    maxDate.setFullYear(now.getFullYear() - minAge)
+    return maxDate
+  }
+
+  const getMinDate = () => {
+    const now = new Date()
+    const minDate = new Date()
+    minDate.setFullYear(now.getFullYear() - maxAge)
+    return minDate
+  }
 
   return (
     <>
@@ -72,13 +101,14 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         date={date}
         mode={'date'}
         textColor={Theme.colors.light.text}
+        locale={'en-GB'}
         onConfirm={(date) => {
           setOpen(false)
           onConfirm(date)
         }}
-        onCancel={() => {
-          setOpen(false)
-        }}
+        onCancel={() => setOpen(false)}
+        maximumDate={getMaxDate()}
+        minimumDate={getMinDate()}
         {...datePickerProps}
       />
 
