@@ -1,0 +1,75 @@
+name: Dev(master)
+on:
+  push:
+    branches:
+      - master
+    paths: 
+      - apps/web
+      - .github/workflows/website.yml
+concurrency:
+  group: ${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.16.0]
+        
+    steps:
+    - name: Clone current repo
+      uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+        token: ${{ secrets.GH_PAT }}
+
+    - name:  Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'yarn'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Yarn Install
+      run: |
+        yarn install
+        yarn build
+
+    - name: Production Build
+      run: |
+        yarn web gatsby build
+
+    - name: Deploy to S3
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read --delete
+      env:
+        AWS_S3_BUCKET: ${{ secrets.WEB_AWS_BUCKET_NAME }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        SOURCE_DIR: "apps/web/public"
+
+    
+    - name: Slack Notification Success
+      if: ${{ success() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.WEB_SLACK_WEBHOOK }}
+        SLACK_USERNAME: 'Template Website'
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: "Dev deploy succeeded"
+        SLACK_ICON: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+        SLACK_FOOTER: 'Dev'
+
+    - name: Slack Notification Failure
+      if: ${{ failure() }}
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.WEB_SLACK_WEBHOOK }}
+        SLACK_USERNAME: 'Template Website'
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_TITLE: "Dev deploy failed"
+        SLACK_ICON: 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+        SLACK_FOOTER: 'Dev'

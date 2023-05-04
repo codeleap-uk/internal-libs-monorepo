@@ -7,6 +7,7 @@ import {
   IconPlaceholder,
   onUpdate,
   useDefaultComponentStyle,
+  useNestedStylesByKey,
 } from '@codeleap/common'
 
 import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
@@ -21,6 +22,7 @@ import { Text } from '../Text'
 import { Overlay } from '../Overlay'
 
 import {ModalComposition,ModalPresets} from './styles'
+import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
 
@@ -63,7 +65,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   const id = useId()
 
-  const variantStyles = useDefaultComponentStyle('u:Modal', {
+  const variantStyles = useDefaultComponentStyle<'u:Modal', typeof ModalPresets>('u:Modal', {
     responsiveVariants,
     variants,
     styles,
@@ -91,59 +93,60 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     }
   }, [id])
 
+  const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
+  const close = closable ? toggle : () => {}
   return (
     <View
       aria-hidden={!visible}
-      css={variantStyles.wrapper}
-      className={visible ? 'visible' : ''}
+      css={[variantStyles.wrapper, visible ? variantStyles['wrapper:visible'] : variantStyles['wrapper:hidden']]}
     >
       <Overlay
         visible={visible}
-        onPress={closable ? toggle : () => {}}
-        css={variantStyles.overlay}
+        
+        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden'] ]}
       />
-      <View
-        component='section'
-        css={{
-          ...variantStyles.box,
-          // visibility: visible ? 'visible' : 'hidden',
-        }}
-        className='content'
-        onKeyDown={closeOnEscPress}
-        tabIndex={0}
-        id={id}
-        aria-modal={true}
-        role='dialog'
-        aria-describedby={`${id}-title`}
-        aria-label='Close the modal by presing Escape key'
-        {...props}
-      >
-        {(title || showClose) && (
-          <View
-            component='header'
-            className='modal-header header'
-            id={`${id}-title`}
-            css={variantStyles.header}
-          >
-            {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
+      <View css={variantStyles.innerWrapper} >
+        <View css={variantStyles.backdropPressable} onClick={close}/>
+        <View
+          component='section'
+          css={[variantStyles.box, visible ? variantStyles['box:visible'] : variantStyles['box:hidden']]}
+          className='content'
+          onKeyDown={closeOnEscPress}
+          tabIndex={0}
+          id={id}
+          aria-modal={true}
+          role='dialog'
+          aria-describedby={`${id}-title`}
+          aria-label='Close the modal by presing Escape key'
+          {...props}
+        >
+          {(title || showClose) && (
+            <View
+              component='header'
+              className='modal-header header'
+              id={`${id}-title`}
+              css={variantStyles.header}
+            >
+              {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
 
-            {showClose && closable && (
-              <Button
-                rightIcon={'close' as IconPlaceholder}
-                variants={['icon']}
-                onPress={toggle}
-                css={variantStyles.closeButton}
-              />
-            )}
-          </View>
-        )}
+              {showClose && closable && (
+                <ActionIcon
+                  icon={'close' as IconPlaceholder}
+                  
+                  onPress={toggle}
+                  styles={closeButtonStyles}
+                />
+              )}
+            </View>
+          )}
 
-        <View css={variantStyles.body}>{children}</View>
-        {footer && (
-          <View component='footer' css={variantStyles.footer}>
-            {footer}
-          </View>
-        )}
+          <View css={variantStyles.body}>{children}</View>
+          {footer && (
+            <View component='footer' css={variantStyles.footer}>
+              {footer}
+            </View>
+          )}
+        </View>
       </View>
     </View>
   )

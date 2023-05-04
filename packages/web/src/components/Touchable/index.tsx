@@ -45,7 +45,11 @@ export const TouchableCP = <T extends ElementType = typeof View>(
 
     if (!propagate) stopPropagation(event)
 
-    if (!onPress) { throw { message: 'No onPress passed to touchable', touchableProps } }
+    if (!onPress) { 
+      logger.warn('No onPress passed to touchable', touchableProps)
+      return
+     }
+
     logger.log(
       `<${debugComponent || 'Touchable'}/>  pressed`,
       { debugName, debugComponent },
