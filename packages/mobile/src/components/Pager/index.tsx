@@ -25,6 +25,7 @@ export type PageProps = {
   page: number
   index: number
   isPrevious: boolean
+
 }
 
 export type PagerProps = React.PropsWithChildren<{
@@ -39,6 +40,8 @@ export type PagerProps = React.PropsWithChildren<{
   pageWrapperProps?: any
   width?: number
   onScroll: ScrollProps['onScroll']
+   /** If TRUE render page, nextPage and prevPage only */
+   windowing?:boolean
 }>
 
 export const Pager: React.FC<PagerProps> = (pagerProps) => {
@@ -52,6 +55,7 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
     renderPageWrapper,
     pageWrapperProps = {},
     children,
+    windowing = false,
     setPage,
   } = pagerProps
   const childArr = React.Children.toArray(children)
@@ -117,7 +121,7 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
         const isFirst = index === 0
         const isNext = index === page + 1
         const isPrevious = index === page - 1
-        const shouldRender = isActive || isNext || isPrevious
+        const shouldRender = windowing ? (isActive || isNext || isPrevious) : true
         if (!shouldRender && returnEarly) {
           return <View style={{ height: '100%', width }} />
         }
