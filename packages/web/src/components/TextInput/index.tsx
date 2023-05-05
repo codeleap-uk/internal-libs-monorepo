@@ -102,6 +102,12 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     props?.onFocus?.(e)
   }, [validation?.onInputFocused, props?.onFocus])
 
+  const handleChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const _text = event.target.value
+
+    props?.onChange(_text)
+  }, [props.onChange])
+
   const isDisabled = !!inputBaseProps.disabled
 
   const placeholderTextColor = [
@@ -160,10 +166,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         editable={!isPressable && !isDisabled}
         {...buttonModeProps}
         placeholderTextColor={placeholderTextColor}
-        value={value}
         selectionColor={selectionColor}
         secureTextEntry={password && secureTextEntry}
         {...textInputProps}
+        value={value}
+        onChange={(e) => handleChange(e)}
         onBlur={handleBlur}
         onFocus={handleFocus}
         style={[
