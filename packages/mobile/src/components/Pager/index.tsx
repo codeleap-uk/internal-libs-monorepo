@@ -86,8 +86,6 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
     
   }
 
-  console.log(variantStyles)
-
   useWarning(
     !validWidth,
     'Pager',
