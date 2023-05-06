@@ -34,7 +34,7 @@ export type DefaultColors =
 | 'neutral-2'
 | 'neutral-3'
 | 'neutral-4'
-| 'neutal-5'
+| 'neutral-5'
 | 'neutral-6'
 | 'neutral-7'
 | 'neutral-8'
