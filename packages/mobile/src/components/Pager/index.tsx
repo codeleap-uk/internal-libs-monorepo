@@ -1,7 +1,9 @@
 import {
   ComponentVariants,
   onUpdate,
+  TypeGuards,
   useDefaultComponentStyle,
+  useWarning
 } from '@codeleap/common'
 import React, { ReactNode, useCallback, useRef } from 'react'
 import {
@@ -48,7 +50,7 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
   const {
     styles,
     variants,
-    width = Dimensions.get('screen').width,
+    width: widthProp,
     page,
     style = {},
     returnEarly = true,
@@ -58,10 +60,12 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
     windowing = false,
     setPage,
   } = pagerProps
+
+  
   const childArr = React.Children.toArray(children)
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
-
+  
   let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
     {
@@ -70,14 +74,32 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
       variants,
     },
   )
+
+  
+  const windowWidth = Dimensions.get('window').width
+  let width = widthProp ?? variantStyles.wrapper.width
+
+  const validWidth = TypeGuards.isNumber(width)
+  
+  if (!validWidth) {
+    width = windowWidth
+    
+  }
+
+  console.log(variantStyles)
+
+  useWarning(
+    !validWidth,
+    'Pager',
+    'provided width is not a number, using default width',
+  )
+
   const nChildren = React.Children.count(children)
 
   const lastPage = nChildren - 1
 
   const WrapperComponent = renderPageWrapper || View
 
-  // Reamimated seems to glitch if this is not done
-  variantStyles = JSON.parse(JSON.stringify(variantStyles))
 
   const handleScrollEnd = useCallback(
     ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -116,26 +138,21 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
       style={[variantStyles.wrapper, style]}
     >
       {childArr.map((child: PagerProps['children'][number], index) => {
+
         const isActive = index === page
         const isLast = index === lastPage
         const isFirst = index === 0
         const isNext = index === page + 1
         const isPrevious = index === page - 1
+        
         const shouldRender = windowing ? (isActive || isNext || isPrevious) : true
+
         if (!shouldRender && returnEarly) {
           return <View style={{ height: '100%', width }} />
         }
-        let pos = 0
 
-        if (isActive) {
-          pos = 1
-        } else if (index > page) {
-          pos = 2
-        } else {
-          pos = 0
-        }
 
-        const pageProps = {
+        const pageProps:PageProps = {
           isLast,
           isActive,
           isFirst,
@@ -149,7 +166,7 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
 
         const wrapperProps = {
           key: index,
-          style: { height: '100%', width },
+          style: [{ height: '100%', width }, variantStyles.page],
           ...pageWrapperProps,
         }
 
