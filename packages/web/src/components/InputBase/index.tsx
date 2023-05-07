@@ -46,7 +46,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
   const InnerWrapperComponent = innerWrapper || View
   
   const _styles = useInputBaseStyles(props)
- 
+
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
     styles: _styles.leftIconStyles,
@@ -59,39 +59,44 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     debugName: `${debugName} right icon`
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle}/>  : label 
-  
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle}/>  : error
+  console.log(_leftIcon)
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/>  : description
+  const _label = TypeGuards.isString(label) ? <Text text={label} css={_styles.labelStyle}/>  : label 
+  
+  const _error = TypeGuards.isString(error) ? <Text text={error} css={_styles.errorStyle}/>  : error
+
+  const _description = TypeGuards.isString(description) ? <Text text={description} css={_styles.descriptionStyle}/>  : description
+
+  console.log(_styles.innerWrapperStyle)
 
   const parts = {
-    label: labelAsRow ? <View style={_styles.labelRowStyle}>
+    label: labelAsRow ? <View css={_styles.labelRowStyle}>
       {_label}
       {_description}
     </View> :  _label,
     description: labelAsRow ? null : _description,
-    innerWrapper:  <InnerWrapperComponent style={[
+    innerWrapper:  <InnerWrapperComponent css={[
       _styles.innerWrapperStyle
     ]} {...innerWrapperProps}>
       {_leftIcon}
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
-    error: _error || <Text text={''} style={_styles.errorStyle}/>
+    error: _error || <Text text={''} css={_styles.errorStyle}/>
   }
 
   return (
     <WrapperComponent 
-      style={[_styles.wrapperStyle, style]} 
+      css={[_styles.wrapperStyle, style]}
       {...otherProps}
       {...wrapperProps}
     >
       {
-        order.map((key) => <KeyPassthrough key={key}>
-          {parts[key]}
-        </KeyPassthrough>)
-
+        order.map((key) => (
+          <KeyPassthrough key={key}>
+            {parts[key]}
+          </KeyPassthrough>
+        ))
       }
     </WrapperComponent>
   )

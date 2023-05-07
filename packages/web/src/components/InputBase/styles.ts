@@ -107,7 +107,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
   ]
 
   const innerWrapperStyle = [
-    variantStyles.innerWrapper,
+    variantStyles['innerWrapper'][0],
     focused && variantStyles['innerWrapper:focus'],
     hasError && variantStyles['innerWrapper:error'],
     disabled && variantStyles['innerWrapper:disabled'],

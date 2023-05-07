@@ -25,8 +25,7 @@ import { TextInputPresets } from './styles'
 
 export * from './styles'
 
-type NativeTextInputProps = ComponentPropsWithoutRef<'input'> &
-  ComponentPropsWithoutRef<'textarea'>
+type NativeTextInputProps = ComponentPropsWithoutRef<'input'>
 
 export type TextInputProps = 
   Omit<InputBaseProps, 'styles' | 'variants'> &
@@ -40,6 +39,7 @@ export type TextInputProps =
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
+    onChangeText?: NativeTextInputProps['onChange']
   }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
@@ -71,7 +71,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const InputElement = isMultiline ? TextareaAutosize : 'input'
 
-  const variantStyles = useDefaultComponentStyle<'TextInput', typeof TextInputPresets>('TextInput', {
+  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
     variants,
     styles,
   })
@@ -105,24 +105,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
   const handleChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const _text = event.target.value
 
-    props?.onChange(_text)
+    if (props?.onChange) props?.onChange(_text)
+    if (props?.onChangeText) props?.onChangeText(_text)
   }, [props.onChange])
 
   const isDisabled = !!inputBaseProps.disabled
-
-  const placeholderTextColor = [
-    [isDisabled, variantStyles['placeholder:disabled']],
-    [!validation.isValid, variantStyles['placeholder:error']],
-    [isFocused, variantStyles['placeholder:focus']],
-    [true, variantStyles.placeholder],
-  ].find(([x]) => x)?.[1]?.color
-
-  const selectionColor = [
-    [isDisabled, variantStyles['selection:disabled']],
-    [!validation.isValid, variantStyles['selection:error']],
-    [isFocused, variantStyles['selection:focus']],
-    [true, variantStyles.selection],
-  ].find(([x]) => x)?.[1]?.color
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
@@ -138,6 +125,20 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
   } : {}
 
   const hasMultipleLines = isMultiline && String(value)?.includes('\n')
+
+  const placeholderStyles = [
+    variantStyles.placeholder,
+    isFocused && variantStyles['placeholder:focus'],
+    !validation.isValid &&variantStyles['placeholder:error'],
+    isDisabled && variantStyles['placeholder:disabled']
+  ]
+
+  const selectionStyles = [
+    variantStyles.selection,
+    isFocused && variantStyles['selection:focus'],
+    !validation.isValid &&variantStyles['selection:error'],
+    isDisabled && variantStyles['selection:disabled']
+  ]
 
   return (
     <InputBase
@@ -162,24 +163,33 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       focused={isFocused}
     >
       <InputElement
-        allowFontScaling={false}
-        editable={!isPressable && !isDisabled}
+        editable={`${!isPressable && !isDisabled}`}
         {...buttonModeProps}
-        placeholderTextColor={placeholderTextColor}
-        selectionColor={selectionColor}
-        secureTextEntry={password && secureTextEntry}
+        // secureTextEntry={password && secureTextEntry}
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        style={[
-          variantStyles.textField,
+        css={[
+          variantStyles.input,
           isMultiline && variantStyles['input:multiline'],
           isFocused && variantStyles['input:focused'],
           !validation.isValid && variantStyles['input:error'],
           isDisabled && variantStyles['input:disabled'],
           hasMultipleLines && variantStyles['input:hasMultipleLines'],
+          {
+            '&::placeholder': placeholderStyles
+          },
+          {
+            '&::selection': selectionStyles
+          },
+          {
+            '&:focus':  [
+              { outline: 'none', borderWidth: 0, borderColor: 'transparent' },
+              isFocused && variantStyles['input:focused']
+            ],
+          }
         ]}
         ref={innerInputRef}
       />
