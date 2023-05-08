@@ -127,7 +127,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     caretHidden: true
   } : {}
 
-  const hasMultipleLines = isMultiline && String(value)?.includes('\n')
+  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || textInputProps?.rows)
 
   const placeholderStyles = [
     variantStyles.placeholder,
