@@ -1,61 +1,34 @@
-import { View } from '../View'
-import { CSSObject, keyframes } from '@emotion/react'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
-  useDefaultComponentStyle,
-  ComponentVariants,
-  ActivityIndicatorStyles,
-  ActivityIndicatorComposition,
+  AnyFunction,
 } from '@codeleap/common'
-import { StylesOf } from '../../types/utility'
+import _Select, { StylesConfig } from 'react-select'
+import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
 
 export * from './styles'
 
-const spin = keyframes`
-    from {
-        transform: rotate(0deg);
-    }
-    to{ 
-        transform: rotate(360deg);
-    }
-`
+export type AutoCompleteProps = React.PropsWithChildren<{
+  visible: boolean
+  title?: React.ReactNode
+  toggle: AnyFunction
+  accessible?: boolean
+  showClose?: boolean
+  closable?: boolean
+  scroll?: boolean
+  footer?: ReactNode
+  debugName?: string
+}
+>
 
-export type ActivityIndicatorProps = {
-  animating?: boolean
-  hidesWhenStopped?: boolean
-  styles?: StylesOf<ActivityIndicatorComposition>
-  css?: CSSObject
-} & ComponentVariants<typeof ActivityIndicatorStyles>
+export const AutoComplete: React.FC<AutoCompleteProps> = ({ accessible, ...props }) => {
 
-export const AutoComplete: React.FC<ActivityIndicatorProps> = (
-  indicatorProps,
-) => {
-  const {
-    animating = true,
-    hidesWhenStopped = true,
-
-    variants,
-    responsiveVariants,
-    styles,
-    ...viewProps
-  } = indicatorProps
-
-  const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
-    styles,
-    responsiveVariants,
-    variants,
-  })
+  console.log('RENDERIZOU')
 
   return (
-    <View {...viewProps} css={[variantStyles.wrapper, (!animating && hidesWhenStopped) && { visibility: 'hidden' }]}>
-      <View css={{ ...variantStyles.circle, ...variantStyles.backCircle }} />
-      <View
-        css={{
-          ...variantStyles.circle,
-          ...variantStyles.frontCircle,
-          animation: `${spin} 1s infinite`,
-          animationPlayState: animating ? 'running' : 'paused',
-        }}
-      />
-    </View>
+    <_Select onChange={(e) => console.log({ e })} maxMenuHeight={300}
+      menuPlacement='auto' />
+
   )
 }

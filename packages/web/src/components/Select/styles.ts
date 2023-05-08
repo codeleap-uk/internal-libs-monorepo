@@ -23,8 +23,7 @@ export type SelectComposition =
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 
-export const SelectPresets = includePresets((styles) =>
-  createSelectStyle(() => ({ wrapper: styles })),
+export const SelectPresets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })),
 )
 
 export const SelectStyles = {

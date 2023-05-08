@@ -23,5 +23,6 @@ export * from './List'
 export * from './Link'
 export * from './LoadingOverlay'
 export * from './MultiSelect'
+export * from './AutoComplete'
 
 export * from './defaultStyles'

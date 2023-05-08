@@ -37,6 +37,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-helmet": "^6.1.0",
+    "react-select": "*",
     "typescript": "4.5.4"
   }
 }

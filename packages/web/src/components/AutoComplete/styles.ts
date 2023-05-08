@@ -1,30 +1,110 @@
-import {
-  createDefaultVariantFactory,
-  includePresets,
-} from '@codeleap/common'
-import { ActionIconComposition } from '../ActionIcon'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type AnimatableParts = 'box' | 'backdrop'
-
-export type ModalParts =
-  | AnimatableParts
+export type AutoCompleteParts =
   | 'wrapper'
-  | 'innerWrapper'
-  | 'scrollContent'
-  | 'scroll'
-  | 'body'
-  | 'footer'
-  | 'header'
-  | 'backdropTouchable'
-  | 'title'
-  | `closeButton${Capitalize<ActionIconComposition>}`
+  | 'label'
+  | 'inputWrapper'
+  | 'list'
+  | 'itemWrapper'
+  | 'itemWrapper:selected'
+  | 'itemText'
+  | 'itemText:selected'
+  | 'buttonWrapper'
+  | 'buttonText'
+  | 'buttonIcon'
+  | 'error'
 
-export type ModalComposition =
-  | ModalParts
-  | `${AnimatableParts}:visible`
-  | `${AnimatableParts}:hidden`
-  | `${AnimatableParts}:transition`
+export type AutoCompleteComposition =
+  | `${AutoCompleteParts}:hover`
+  | `${AutoCompleteParts}:open`
+  | `${AutoCompleteParts}:error`
+  | `${AutoCompleteParts}:disabled`
+  | AutoCompleteParts
 
-const createModalStyle = createDefaultVariantFactory<ModalComposition>()
+const createSelectStyle = createDefaultVariantFactory<AutoCompleteComposition>()
 
-export const AutoCompletePresets = includePresets((style) => createModalStyle(() => ({ body: style })))
+export const AutoCompletePresets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })),
+)
+
+export const AutoCompleteStyles = {
+  default: createSelectStyle((Theme) => ({
+    wrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    label: {
+      ...Theme.spacing.marginBottom(1),
+    },
+    inputWrapper: {
+      position: 'relative',
+    },
+
+    list: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      display: 'flex',
+      top: '110%',
+      backgroundColor: Theme.colors.gray,
+
+      ...Theme.presets.column,
+      overflowY: 'hidden',
+
+      transition: 'all 0.5s ease',
+      maxHeight: 0,
+      ...Theme.border.create({
+        width: 0,
+        color: 'transparent',
+      }),
+      borderRadius: Theme.borderRadius.small,
+    },
+    'list:open': {
+      maxHeight: '500%',
+      overflowY: 'auto',
+      ...Theme.border.primary(1),
+    },
+    itemText: {},
+    itemWrapper: {
+      ...Theme.spacing.padding(0.5),
+      cursor: 'pointer',
+      display: 'flex',
+      '&:hover': {
+        backgroundColor: '#0002',
+      },
+    },
+    'itemText:selected': {},
+    'itemWrapper:selected': {
+      backgroundColor: Theme.colors.primary,
+      '&:hover': {
+        backgroundColor: Theme.colors.primary,
+      },
+    },
+    buttonWrapper: {
+      ...Theme.border.primary(1),
+      ...Theme.presets.fullWidth,
+      ...Theme.presets.alignCenter,
+      ...Theme.spacing.padding(0.5),
+      backgroundColor: Theme.colors.gray,
+      borderRadius: Theme.borderRadius.small,
+      cursor: 'pointer',
+      display: 'flex',
+    },
+    'button:open': {},
+    buttonText: {
+      flex: 1,
+    },
+    buttonIcon: {
+      height: 24,
+      width: 24,
+      color: Theme.colors.white,
+      transition: 'all 0.2s ease',
+      ...Theme.spacing.marginLeft('auto'),
+    },
+    'buttonIcon:open': {
+      transform: 'rotate(180deg)',
+    },
+    error: {
+      color: Theme.colors.negative,
+    },
+  })),
+}
