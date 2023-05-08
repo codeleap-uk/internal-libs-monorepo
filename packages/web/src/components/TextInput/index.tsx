@@ -193,7 +193,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
             '&::placeholder': placeholderStyles
           },
           {
-            '&::selection': !isDisabled && selectionStyles
+            '&::selection': selectionStyles
           },
           {
             '&:focus':  [
