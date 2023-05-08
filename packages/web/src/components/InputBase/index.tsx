@@ -59,15 +59,11 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     debugName: `${debugName} right icon`
   })
 
-  console.log(_leftIcon)
-
   const _label = TypeGuards.isString(label) ? <Text text={label} css={_styles.labelStyle}/>  : label 
   
   const _error = TypeGuards.isString(error) ? <Text text={error} css={_styles.errorStyle}/>  : error
 
   const _description = TypeGuards.isString(description) ? <Text text={description} css={_styles.descriptionStyle}/>  : description
-
-  console.log(_styles.innerWrapperStyle)
 
   const parts = {
     label: labelAsRow ? <View css={_styles.labelRowStyle}>

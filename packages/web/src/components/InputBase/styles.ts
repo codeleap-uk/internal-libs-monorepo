@@ -27,23 +27,21 @@ const createTextInputBaseComposition = createDefaultVariantFactory<InputBaseComp
 
 export const InputBasePresets = includePresets((styles) => createTextInputBaseComposition(() => ({ wrapper: styles })))
 
-
 const getIconStyles = (obj, state) => {
   return {
-    icon: [
-      obj.icon, 
-      state.focused && obj['icon:focus'],
-      state.hasError && obj['icon:error'], 
-      state.disabled && obj['icon:disabled']
-    ],
-    touchableWrapper: [
-      obj.touchableWrapper, 
-      state.focused && obj['touchableWrapper:focus'],
-      state.hasError && obj['touchableWrapper:error'], 
-      state.disabled && obj['touchableWrapper:disabled']
-    ],
+    icon: {
+      ...obj.icon, 
+      ...(state.focused && obj['icon:focus']),
+      ...(state.hasError && obj['icon:error']), 
+      ...(state.disabled && obj['icon:disabled'])
+    },
+    wrapper: {
+      ...obj.touchableWrapper, 
+      ...(state.focused && obj['touchableWrapper:focus']),
+      ...(state.hasError && obj['touchableWrapper:error']), 
+      ...(state.disabled && obj['touchableWrapper:disabled'])
+    },
   }
-
 }
 
 export const useInputBaseStyles = (props: InputBaseProps) => {
@@ -65,24 +63,37 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
   const _rightIconStyles = useNestedStylesByKey<ActionIconComposition>('rightIcon', variantStyles)
   const _generalIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', variantStyles)
 
-  const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled })
+  const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled, focused })
+  const leftIconStylesCompose = getIconStyles(_leftIconStyles, { hasError, disabled, focused })
+  const rightIconStylesCompose = getIconStyles(_rightIconStyles, { hasError, disabled, focused })
 
-  const leftIconStyles = [
-    generalIconStyles, 
-   getIconStyles(_leftIconStyles, { hasError, disabled, focused })
-  ]
+  const leftIconStyles = {
+    icon: {
+      ...generalIconStyles.icon,
+      ...leftIconStylesCompose.icon,
+    },
+    wrapper: {
+      ...generalIconStyles.wrapper,
+      ...leftIconStylesCompose.wrapper,
+    }
+  }
 
-  const rightIconStyles = [
-    generalIconStyles,
-    getIconStyles(_rightIconStyles, { hasError, disabled, focused })
-  ]
+  const rightIconStyles = {
+    icon: {
+      ...generalIconStyles.icon,
+      ...rightIconStylesCompose.icon,
+    },
+    wrapper: {
+      ...generalIconStyles.wrapper,
+      ...rightIconStylesCompose.wrapper,
+    }
+  }
 
   const labelStyle = [
     variantStyles.label,
     focused && variantStyles['label:focus'],
     hasError && variantStyles['label:error'],
     disabled && variantStyles['label:disabled'],
-    
   ]
 
   const errorStyle = [

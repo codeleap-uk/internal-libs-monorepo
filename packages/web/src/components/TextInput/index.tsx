@@ -2,6 +2,7 @@ import {
   ComponentVariants,
   FormTypes,
   IconPlaceholder,
+  onUpdate,
   TextInputComposition,
   TypeGuards,
   useBooleanToggle,
@@ -40,6 +41,7 @@ export type TextInputProps =
     multiline?: boolean
     onPress?: TouchableProps['onPress']
     onChangeText?: NativeTextInputProps['onChange']
+    caretColor?: string
   }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
@@ -62,6 +64,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     password,
     onPress,
     multiline,
+    caretColor,
     ...textInputProps
   } = others
   
@@ -102,12 +105,12 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     props?.onFocus?.(e)
   }, [validation?.onInputFocused, props?.onFocus])
 
-  const handleChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const _text = event.target.value
-
+    
     if (props?.onChange) props?.onChange(_text)
     if (props?.onChangeText) props?.onChangeText(_text)
-  }, [props.onChange])
+  }
 
   const isDisabled = !!inputBaseProps.disabled
 
@@ -140,6 +143,14 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     isDisabled && variantStyles['selection:disabled']
   ]
 
+  const secureTextProps = password && secureTextEntry && {
+    type: 'password'
+  }
+
+  const caretColorStyle = (caretColor || buttonModeProps.caretHidden) && {
+    caretColor: buttonModeProps.caretHidden ? 'transparent' : caretColor,
+  }
+
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -165,7 +176,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       <InputElement
         editable={`${!isPressable && !isDisabled}`}
         {...buttonModeProps}
-        // secureTextEntry={password && secureTextEntry}
+        {...secureTextProps}
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
@@ -174,7 +185,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         css={[
           variantStyles.input,
           isMultiline && variantStyles['input:multiline'],
-          isFocused && variantStyles['input:focused'],
+          isFocused && variantStyles['input:focus'],
           !validation.isValid && variantStyles['input:error'],
           isDisabled && variantStyles['input:disabled'],
           hasMultipleLines && variantStyles['input:hasMultipleLines'],
@@ -182,12 +193,13 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
             '&::placeholder': placeholderStyles
           },
           {
-            '&::selection': selectionStyles
+            '&::selection': !isDisabled && selectionStyles
           },
           {
             '&:focus':  [
               { outline: 'none', borderWidth: 0, borderColor: 'transparent' },
-              isFocused && variantStyles['input:focused']
+              isFocused && variantStyles['input:focus'],
+              caretColorStyle,
             ],
           }
         ]}

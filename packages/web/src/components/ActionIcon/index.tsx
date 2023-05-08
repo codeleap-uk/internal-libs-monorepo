@@ -21,8 +21,6 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
     styles
   })
   
-  console.log('action icon styles', variantStyles.icon)
-  
   return (
     <Touchable 
       styles={{
@@ -35,7 +33,7 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
         css={[
           variantStyles.icon,
           touchableProps?.disabled && variantStyles['icon:disabled'],
-        ]} 
+        ]}
         {...iconProps}
       />
       {children}
