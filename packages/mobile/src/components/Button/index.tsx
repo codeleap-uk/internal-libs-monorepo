@@ -160,7 +160,6 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   const rightFeedback = getFeedbackStyle(pressed)
 
-  console.log({ rightIconStyle: _styles.rightIcon, rightFeedback })
   return (
     <Touchable
       style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
