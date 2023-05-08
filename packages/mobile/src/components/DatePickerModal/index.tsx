@@ -1,33 +1,23 @@
 import React from 'react'
-import {
-  PropsOf,
-  useState,
-  useMemo,
-  getNestedStylesByKey,
-  useDefaultComponentStyle,
-  StylesOf,
-  ComponentVariants,
-  useCodeleapContext,
-} from '@codeleap/common'
-import { DatePickerModalComposition, DatePickerModalPresets } from './styles'
-import { Button } from '../Button'
-import { Text } from '../Text'
+import { useState, ComponentVariants, useCodeleapContext } from '@codeleap/common'
+import { DatePickerModalPresets } from './styles'
+import { useCallback } from '@codeleap/common'
 import { DatePickerProps } from 'react-native-date-picker'
 import DatePicker from 'react-native-date-picker'
-import { StyleSheet } from 'react-native'
+import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
+import { ModalManager } from '../../utils'
+import { ModalPresets } from '../Modal'
 
 type DatePickerModalProps = {
-  value: any
+  modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
   visible?: boolean
-  label: string
   toggle?: () => void
+  textColor?: string
+  locale?: string
+  mode?: string
   minAge: number
   maxAge: number
-  buttonProps?: Partial<PropsOf<typeof Button>>
-  labelTextProps?: Partial<PropsOf<typeof Text>>
-  styles?: StylesOf<DatePickerModalComposition>
-  variants?: string[]
-}& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets>
+} & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
 export * from './styles'
 
@@ -36,32 +26,21 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const { Theme } = useCodeleapContext()
 
   const {
-    buttonProps = [],
-    labelTextProps = [],
     value,
     visible,
-    label,
     toggle,
+    textColor,
     minAge,
     maxAge,
     onConfirm,
-    styles,
-    variants,
-    ...datePickerProps
+    locale,
+    mode,
+    modal,
+    modalVariant,
+    ...textInputProps
   } = props
 
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
-
-  const variantStyles = useDefaultComponentStyle<'u:DatePickerModal', typeof DatePickerModalPresets>('u:DatePickerModal', {
-    styles,
-    variants,
-    transform: StyleSheet.flatten,
-  })
-
-  const buttonStyles = useMemo(
-    () => getNestedStylesByKey('button', variantStyles),
-    [variantStyles],
-  )
 
   const initialDate = date => new Date(date.split('/').reverse().join('-'))
 
@@ -81,27 +60,15 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     return minDate
   }
 
-  return (
-    <>
-
-      <Text text={label} variants={['marginBottom:1']} {...labelTextProps} />
-
-      <Button
-        debugName={'open date picker'}
-        onPress={() => setOpen(true)}
-        children={<Text text={value} />}
-        styles={buttonStyles}
-        variants={variants}
-        {...buttonProps}
-      />
-
+  const NativePickerModal = () => {
+    return (
       <DatePicker
         modal
         open={open}
         date={date}
-        mode={'date'}
-        textColor={Theme.colors.light.text}
-        locale={'en-GB'}
+        mode={mode || 'date'}
+        textColor={textColor || Theme.colors.light.text}
+        locale={locale || 'en-GB'}
         onConfirm={(date) => {
           setOpen(false)
           onConfirm(date)
@@ -109,9 +76,33 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         onCancel={() => setOpen(false)}
         maximumDate={getMaxDate()}
         minimumDate={getMinDate()}
-        {...datePickerProps}
+
+      />
+    )
+  }
+
+  const CustomModal = useCallback((visible, toggle) => {
+    return (
+      <ModalManager.Modal
+        variants={modalVariant}
+        debugName='date picker modal manager'
+        visible={visible}
+        toggle={toggle}>
+        <NativePickerModal />
+      </ModalManager.Modal>
+    )
+  }, [])
+
+  return (
+    <>
+      <TextInput
+        debugName={'debug name'}
+        value={'1980/02/02'}
+        onPress={() => setOpen(true)}
+        {...textInputProps}
       />
 
+      {modal ? <CustomModal /> : <NativePickerModal />}
     </>
   )
 }
