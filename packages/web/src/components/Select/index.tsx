@@ -8,7 +8,7 @@ import {
   onUpdate,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import _Select, { StylesConfig } from 'react-select'
+import _Select, { StylesConfig, SelectComponentsConfig, Props } from 'react-select'
 import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
 // import _Select, { StylesConfig } from 'react-select'
 
@@ -32,15 +32,20 @@ export type SelectProps = React.PropsWithChildren<{
   scroll?: boolean
   footer?: ReactNode
   debugName?: string
-}
+} & Props
 >
+
+const ReactSelect = (props: Props) => {
+  return (
+    <_Select {...props} />
+  )
+}
 
 export const Select: React.FC<SelectProps> = ({ accessible, ...props }) => {
 
   console.log('RENDERIZOU')
 
   return (
-    <_Select onChange={(e) => console.log({ e })} />
-
+    <ReactSelect />
   )
 }
