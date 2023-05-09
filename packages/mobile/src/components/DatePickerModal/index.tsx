@@ -45,7 +45,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
 
   const initialDate = date => new Date(date.split('/').reverse().join('-'))
-
   const date = value ? initialDate(value) : new Date(1990, 0o2, 0o2)
 
   const getMaxDate = () => {
@@ -100,7 +99,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     <>
       <TextInput
         debugName={'debug name'}
-        value={date.toString()}
+        value={value}
         onPress={() => setOpen(true)}
         {...textInputProps}
       />
