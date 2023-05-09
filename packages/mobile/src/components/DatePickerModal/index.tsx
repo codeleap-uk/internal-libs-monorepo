@@ -1,14 +1,13 @@
 import React from 'react'
 import { useState, ComponentVariants, useCodeleapContext } from '@codeleap/common'
 import { DatePickerModalPresets } from './styles'
-import { useCallback } from '@codeleap/common'
 import { DatePickerProps } from 'react-native-date-picker'
 import DatePicker from 'react-native-date-picker'
 import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
 import { ModalManager } from '../../utils'
 import { ModalPresets } from '../Modal'
 
-type DatePickerModalProps = {
+export type DatePickerModalProps = {
   value?: any
   visible?: boolean
   toggle?: () => void
@@ -86,17 +85,17 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     )
   }
 
-  const CustomModal = useCallback((visible, toggle) => {
+  const CustomModal = () => {
     return (
       <ModalManager.Modal
         variants={modalVariant}
         debugName='date picker modal manager'
-        visible={visible}
-        toggle={toggle}>
+        visible={open}
+        toggle={setOpen}>
         <NativePickerModal />
       </ModalManager.Modal>
     )
-  }, [])
+  }
 
   return (
     <>
