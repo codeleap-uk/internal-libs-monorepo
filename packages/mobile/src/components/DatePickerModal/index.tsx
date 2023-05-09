@@ -9,15 +9,17 @@ import { ModalManager } from '../../utils'
 import { ModalPresets } from '../Modal'
 
 type DatePickerModalProps = {
-  modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
+  value?: any
   visible?: boolean
   toggle?: () => void
-  textColor?: string
-  locale?: string
-  mode?: string
   minAge: number
   maxAge: number
+  modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
 } & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+
+type NativePickerModalProps = {
+  modal?: boolean
+}
 
 export * from './styles'
 
@@ -26,16 +28,16 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const { Theme } = useCodeleapContext()
 
   const {
-    value,
-    visible,
-    toggle,
     textColor,
-    minAge,
-    maxAge,
     onConfirm,
     locale,
     mode,
     modal,
+    value,
+    visible,
+    toggle,
+    minAge,
+    maxAge,
     modalVariant,
     ...textInputProps
   } = props
@@ -60,10 +62,11 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     return minDate
   }
 
-  const NativePickerModal = () => {
+  const NativePickerModal = (params : NativePickerModalProps) => {
+    const { modal } = params
     return (
       <DatePicker
-        modal
+        modal={!!modal}
         open={open}
         date={date}
         mode={mode || 'date'}
@@ -97,12 +100,12 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     <>
       <TextInput
         debugName={'debug name'}
-        value={'1980/02/02'}
+        value={date.toString()}
         onPress={() => setOpen(true)}
         {...textInputProps}
       />
 
-      {modal ? <CustomModal /> : <NativePickerModal />}
+      {modal ? <CustomModal /> : <NativePickerModal modal={true} />}
     </>
   )
 }
