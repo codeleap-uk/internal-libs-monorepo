@@ -23,6 +23,22 @@ type NativePickerModalProps = {
 
 export * from './styles'
 
+const GetMaxDate = (minAge: number) => {
+  const now = new Date()
+  const maxDate = new Date()
+  maxDate.setFullYear(now.getFullYear() - minAge)
+  return maxDate
+}
+
+const GetMinDate = (maxAge: number) => {
+  const now = new Date()
+  const minDate = new Date()
+  minDate.setFullYear(now.getFullYear() - maxAge)
+  return minDate
+}
+
+const FormatCurrentDate = (date: string) => new Date(date.split('/').reverse().join('-'))
+
 export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const { Theme } = useCodeleapContext()
@@ -44,22 +60,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
 
-  const initialDate = date => new Date(date.split('/').reverse().join('-'))
-  const date = value ? initialDate(value) : new Date(1990, 0o2, 0o2)
-
-  const getMaxDate = () => {
-    const now = new Date()
-    const maxDate = new Date()
-    maxDate.setFullYear(now.getFullYear() - minAge)
-    return maxDate
-  }
-
-  const getMinDate = () => {
-    const now = new Date()
-    const minDate = new Date()
-    minDate.setFullYear(now.getFullYear() - maxAge)
-    return minDate
-  }
+  const initialDate = new Date(1990, 0o2, 0o2)
+  const date = value ? FormatCurrentDate(value) : initialDate
+  const inputValue = value.split('-').reverse().join('/')
 
   const NativePickerModal = (params : NativePickerModalProps) => {
     const { modal } = params
@@ -76,8 +79,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           onConfirm(date)
         }}
         onCancel={() => setOpen(false)}
-        maximumDate={getMaxDate()}
-        minimumDate={getMinDate()}
+        maximumDate={GetMaxDate(minAge)}
+        minimumDate={GetMinDate(maxAge)}
 
       />
     )
@@ -99,7 +102,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     <>
       <TextInput
         debugName={'debug name'}
-        value={value}
+        value={inputValue}
         onPress={() => setOpen(true)}
         {...textInputProps}
       />
