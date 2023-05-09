@@ -1,7 +1,8 @@
 import { IconPlaceholder,
   getNestedStylesByKey,
   useDefaultComponentStyle,
-  TypeGuards } from '@codeleap/common'
+  TypeGuards, 
+  useNestedStylesByKey} from '@codeleap/common'
 import React, { useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
@@ -9,7 +10,7 @@ import { TextInput } from '../TextInput'
 import { MultiSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { MultiSelectPresets } from './styles'
-import { SelectItem } from '../Select'
+import { Button } from '../Button'
 
 export * from './styles'
 export const MultiSelect = <T extends string|number = string>(selectProps:MultiSelectProps<T>) => {
@@ -33,6 +34,8 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     limit = null,
     validate = null,
     itemProps = {},
+    debugName,
+    description,
     ...drawerProps
   } = selectProps
 
@@ -43,10 +46,11 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     variants,
   })
 
-  const inputStyles = useMemo(
-    () => getNestedStylesByKey('input', variantStyles),
-    [variantStyles],
-  )
+  const inputStyles = useNestedStylesByKey('input', variantStyles)
+
+  const itemStyles = useNestedStylesByKey('item', variantStyles)
+
+  const listStyles = useNestedStylesByKey('list', variantStyles)
 
   const close = () => drawerProps?.toggle?.()
 
@@ -73,15 +77,19 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     return TypeGuards.isString(display) ? display : ''
   }, [value, placeholder, options])
 
-  const Item = renderItem || SelectItem
+  const Item = renderItem || Button
 
   const renderListItem = ({ item }) => {
     return <Item
-      isSelected={value.includes(item.value)}
+      debugName={`${debugName} item ${item.value}`}
+      selected={value.includes(item.value)}
+      text={item.label}
       item={item}
       onPress={() => select(item.value)}
-      styles={variantStyles}
+      
+      rightIcon={selectedIcon as IconPlaceholder}
       icon={selectedIcon as IconPlaceholder}
+      styles={itemStyles}
       {...itemProps}
 
     />
@@ -103,37 +111,36 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     {
       !hideInput && (
         <TextInput
-          caretHidden
+          
           value={selectedLabel}
           rightIcon={{
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
           }}
-          editable={false}
-          wrapperProps={{
-            debugName: 'Select',
-            onPress: close,
-          }}
-          pointerEvents={'none'}
+          onPress={close}
+          
           label={label}
-          debugName={'Select input'}
+          debugName={`${debugName} multiselect input`}
           styles={inputStyles}
           style={style}
-          validate={validate}
           {...inputProps}
         />
       )
     }
 
-    <ModalManager.Modal title={label} {...drawerProps} styles={variantStyles} id={null}>
+    <ModalManager.Modal 
+      title={label} 
+      description={description}
+      {...drawerProps} 
+      debugName={`${debugName} modal`} 
+      styles={variantStyles} 
+      id={null}
+    >
       <List<MultiSelectProps<any>['options']>
         data={options}
-        styles={getNestedStylesByKey('list', variantStyles)}
+        styles={listStyles}
         keyExtractor={(i) => i.value}
         separators
-        keyboardAware={{
-          enabled: false,
-        }}
         renderItem={renderListItem}
         {...listProps}
       />
