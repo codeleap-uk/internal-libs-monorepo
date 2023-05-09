@@ -8,7 +8,7 @@ import {
   onUpdate,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import _Select, { StylesConfig, SelectComponentsConfig } from 'react-select'
+import Select, { StylesConfig, SelectComponentsConfig } from 'react-select'
 import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
 // import _Select, { StylesConfig } from 'react-select'
 
@@ -40,8 +40,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ accessible, ...props }
   console.log('RENDERIZOU')
 
   return (
-    <_Select<string, false> options={[{ value: 1, label: 'Hello World' }]} onChange={(e) => console.log({ e })} maxMenuHeight={300}
-      menuPlacement='auto' />
+    <Select />
 
   )
 }

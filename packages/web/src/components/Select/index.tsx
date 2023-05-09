@@ -32,6 +32,7 @@ export type SelectProps = React.PropsWithChildren<{
   scroll?: boolean
   footer?: ReactNode
   debugName?: string
+  onValueChange?: () => void
 } & Props
 >
 
@@ -43,9 +44,7 @@ const ReactSelect = (props: Props) => {
 
 export const Select: React.FC<SelectProps> = ({ accessible, ...props }) => {
 
-  console.log('RENDERIZOU')
-
   return (
-    <ReactSelect />
+    <ReactSelect onChange={(e) => props.onValueChange(e?.value)} {...props} />
   )
 }
