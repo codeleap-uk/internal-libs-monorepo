@@ -57,7 +57,7 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
 
   console.log({ className: props.className })
 
-  const reactSelectStyles = {
+  const reactSelectStyles: StylesConfig = {
     container: (baseStyles, state) => ({
       ...baseStyles,
       ...variantStyles.wrapper,
