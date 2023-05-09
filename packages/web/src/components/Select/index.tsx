@@ -1,12 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-
+import { Fragment } from 'react'
 import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
   onUpdate,
   useDefaultComponentStyle,
+  useValidate,
 } from '@codeleap/common'
 import _Select, { StylesConfig, SelectComponentsConfig, Props } from 'react-select'
 import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
@@ -44,7 +45,12 @@ const ReactSelect = (props: Props) => {
 
 export const Select: React.FC<SelectProps> = ({ accessible, ...props }) => {
 
+  const { showError, error } = useValidate(props.value, props?.validate)
+
   return (
-    <ReactSelect onChange={(e) => props.onValueChange(e?.value)} {...props} />
+    <Fragment>
+      <ReactSelect onChange={(e) => props.onValueChange(e?.value)} {...props} />
+      {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} css={styles.errorText} />}
+    </Fragment>
   )
 }
