@@ -43,14 +43,33 @@ const ReactSelect = (props: Props) => {
   )
 }
 
-export const Select: React.FC<SelectProps> = ({ accessible, ...props }) => {
+export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, styles, ...props }) => {
 
-  const { showError, error } = useValidate(props.value, props?.validate)
+  const { showError, error } = useValidate(props.value, validate)
+
+  const variantStyles = useDefaultComponentStyle(
+    'Select', // This should correspond to the key of the component passed to the variants prop of StyleProvider
+    {
+      variants, // The variants prop is an array containing the variant names
+      styles, // This allows you to override the styles of each part of the composition through props
+    },
+  )
+
+  console.log({ className: props.className })
+
+  const reactSelectStyles = {
+    container: (baseStyles, state) => ({
+      ...baseStyles,
+      ...variantStyles.wrapper,
+      ...props.css,
+    }),
+  }
 
   return (
     <Fragment>
-      <ReactSelect onChange={(e) => props.onValueChange(e?.value)} {...props} />
-      {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} css={styles.errorText} />}
+      <ReactSelect
+        styles={reactSelectStyles} onChange={(e) => props.onValueChange(e?.value)} {...props} />
+      {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} />}
     </Fragment>
   )
 }
