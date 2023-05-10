@@ -2,7 +2,6 @@ import {
   ComponentVariants,
   FormTypes,
   IconPlaceholder,
-  onUpdate,
   TextInputComposition,
   TypeGuards,
   useBooleanToggle,
@@ -19,7 +18,6 @@ import React, {
 } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { Touchable, TouchableProps } from '../Touchable'
-
 import { StylesOf } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
@@ -160,6 +158,12 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     caretColor: buttonModeProps.caretHidden ? 'transparent' : caretColor,
   }
 
+  const _wrapperOnInputFocus = {
+    [isPressable ? 'onPress' : 'onClick']: () => {
+      innerInputRef.current?.focus?.()
+    },
+  }
+
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -176,11 +180,18 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       }}
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps  || {}),
-        onPress,
+        onPress: () => {
+          innerInputRef.current?.focus?.()
+          if (isPressable) onPress?.()
+        },
         debugName,
       }}
       rightIcon={rightIcon}
       focused={isFocused}
+      wrapperProps={{
+        ...(inputBaseProps.wrapperProps  || {}),
+        ..._wrapperOnInputFocus,
+      }}
     >
       <InputElement
         editable={`${!isPressable && !isDisabled}`}
