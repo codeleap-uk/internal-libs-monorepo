@@ -44,6 +44,21 @@ const getIconStyles = (obj, state) => {
   }
 }
 
+function concatStyles(unstyles: Record<number, {}>) {
+  let styles = {}
+  
+  Object.values(unstyles).forEach(style => {
+    if (style) {
+      styles = {
+        ...styles,
+        ...style
+      }
+    }
+  })
+
+  return styles
+}
+
 export const useInputBaseStyles = (props: InputBaseProps) => {
   const {
     focused,
@@ -118,7 +133,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
   ]
 
   const innerWrapperStyle = [
-    variantStyles['innerWrapper'][0],
+    concatStyles(variantStyles['innerWrapper']),
     focused && variantStyles['innerWrapper:focus'],
     hasError && variantStyles['innerWrapper:error'],
     disabled && variantStyles['innerWrapper:disabled'],

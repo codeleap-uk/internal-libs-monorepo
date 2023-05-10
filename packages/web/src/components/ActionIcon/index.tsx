@@ -1,9 +1,10 @@
-import { ComponentVariants, getNestedStylesByKey, useDefaultComponentStyle } from '@codeleap/common'
+import { ComponentVariants, getNestedStylesByKey, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import React from 'react'
 
 import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
+import { View } from '../View'
 import { ActionIconComposition, ActionIconPresets } from './styles'
 
 export type ActionIconProps= {
@@ -14,18 +15,28 @@ export type ActionIconProps= {
 } & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
-  const { icon, name, iconProps, variants, styles, children, ...touchableProps } = props
+  const { icon, name, iconProps, action, onPress, variants, styles, children, ...touchableProps } = props
   
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
     variants, 
     styles
   })
+
+  const isPressable = TypeGuards.isFunction(onPress) || TypeGuards.isFunction(action)
+
+  const WrapperComponent = isPressable ? Touchable : View
   
   return (
-    <Touchable 
+    <WrapperComponent 
       styles={{
         wrapper: variantStyles.wrapper,
       }}
+      onPress={onPress ?? action}
+      css={[
+        variantStyles.wrapper,
+        touchableProps?.disabled && variantStyles['wrapper:disabled'],
+        isPressable && variantStyles['wrapper:cursor']
+      ]}
       {...touchableProps}
     >
       <Icon 
@@ -37,7 +48,7 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
         {...iconProps}
       />
       {children}
-    </Touchable>
+    </WrapperComponent>
   )
 }
 

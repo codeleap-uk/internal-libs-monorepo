@@ -42,12 +42,12 @@ export type TextInputProps =
     onPress?: TouchableProps['onPress']
     onChangeText?: NativeTextInputProps['onChange']
     caretColor?: string
+    focused?: boolean
+    _error?: boolean
   }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
   const innerInputRef = useRef<HTMLInputElement>(null)
-
-  const [isFocused, setIsFocused] = useState(false)
 
   const {
     inputBaseProps,
@@ -65,8 +65,14 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     onPress,
     multiline,
     caretColor,
+    focused,
+    _error,
     ...textInputProps
   } = others
+
+  const [_isFocused, setIsFocused] = useState(false)
+
+  const isFocused = _isFocused || focused
   
   const [secureTextEntry, toggleSecureTextEntry] = useBooleanToggle(true)
 
@@ -127,23 +133,26 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     caretHidden: true
   } : {}
 
-  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || textInputProps?.rows)
+  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || !!textInputProps?.rows)
+
+  const hasError = !validation.isValid || _error
+  const errorMessage = validation.message || _error
 
   const placeholderStyles = [
     variantStyles.placeholder,
     isFocused && variantStyles['placeholder:focus'],
-    !validation.isValid &&variantStyles['placeholder:error'],
+    hasError &&variantStyles['placeholder:error'],
     isDisabled && variantStyles['placeholder:disabled']
   ]
 
   const selectionStyles = [
     variantStyles.selection,
     isFocused && variantStyles['selection:focus'],
-    !validation.isValid &&variantStyles['selection:error'],
+    hasError &&variantStyles['selection:error'],
     isDisabled && variantStyles['selection:disabled']
   ]
 
-  const secureTextProps = password && secureTextEntry && {
+  const secureTextProps = (password && secureTextEntry) && {
     type: 'password'
   }
 
@@ -156,7 +165,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       innerWrapper={isPressable ? Touchable : undefined}
       {...inputBaseProps}
       debugName={debugName}
-      error={validation.isValid ? null : validation.message}
+      error={hasError ? errorMessage : null}
       styles={{
         ...variantStyles,
         innerWrapper: [
@@ -186,7 +195,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
           variantStyles.input,
           isMultiline && variantStyles['input:multiline'],
           isFocused && variantStyles['input:focus'],
-          !validation.isValid && variantStyles['input:error'],
+          hasError && variantStyles['input:error'],
           isDisabled && variantStyles['input:disabled'],
           hasMultipleLines && variantStyles['input:hasMultipleLines'],
           {
