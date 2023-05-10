@@ -5,29 +5,21 @@ import { DatePickerProps } from 'react-native-date-picker'
 import DatePicker from 'react-native-date-picker'
 import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
 import { ModalManager } from '../../utils'
-import { View } from '../View'
 import { ModalPresets } from '../Modal'
 
 export type DatePickerModalProps = {
   value?: any
   visible?: boolean
   toggle?: () => void
+  setOpen?: (status: boolean) => void
   minAge: number
   maxAge: number
   modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
-}
-& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets>
-& Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
-& Partial<CustomModalProps>
-
-type NativePickerModalProps = {
-  modal?: boolean
-}
-
-export type CustomModalProps = {
   Header?: ReactElement
   Footer?: ReactElement
 }
+& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets>
+& Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
 export * from './styles'
 
@@ -46,6 +38,54 @@ const GetMinDate = (maxAge: number) => {
 }
 
 const FormatCurrentDate = (date: string) => new Date(date.split('/').reverse().join('-'))
+
+const NativePickerModal = (params : DatePickerModalProps) => {
+  const { open, date, mode, textColor, locale, setOpen, onConfirm, minAge, maxAge } = params
+  return (
+    <DatePicker
+      modal={true}
+      open={open}
+      date={date}
+      mode={mode}
+      textColor={textColor}
+      locale={locale}
+      onConfirm={(date) => {
+        setOpen(false)
+        onConfirm(date)
+      }}
+      onCancel={() => setOpen(false)}
+      maximumDate={GetMaxDate(minAge)}
+      minimumDate={GetMinDate(maxAge)}
+
+    />
+  )
+}
+
+const CustomPickerModal = (params: DatePickerModalProps) => {
+  const { Header, Footer, modalVariant, open, date, setOpen, textColor, onConfirm, locale, mode, minAge, maxAge } = params
+  return (
+    <ModalManager.Modal
+      variants={modalVariant}
+      debugName='date picker modal manager'
+      visible={open}
+      toggle={() => setOpen(true)}
+      header={Header}
+      footer={Footer}
+    >
+      <NativePickerModal
+        open={open}
+        date={date}
+        setOpen={setOpen}
+        textColor={textColor}
+        onConfirm={onConfirm}
+        locale={locale}
+        mode={mode}
+        minAge={minAge}
+        maxAge={maxAge}
+      />
+    </ModalManager.Modal>
+  )
+}
 
 export const DatePickerModal = (props: DatePickerModalProps) => {
 
@@ -71,43 +111,27 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
 
   const initialDate = new Date(1990, 0o2, 0o2)
-  const date = value ? FormatCurrentDate(value) : initialDate
+  const openingModalDate = value ? FormatCurrentDate(value) : initialDate
   const inputValue = value.split('-').reverse().join('/')
 
-  const NativePickerModal = (params : NativePickerModalProps) => {
-    const { modal } = params
+  const RenderModal = () => {
+    const Component = modal ? CustomPickerModal : NativePickerModal
     return (
-      <DatePicker
-        modal={!!modal}
+      <Component
+        modal={modal}
+        modalVariant={modalVariant}
         open={open}
-        date={date}
-        mode={mode || 'date'}
+        date={openingModalDate}
+        setOpen={setOpen}
         textColor={textColor || Theme.colors.light.text}
+        onConfirm={onConfirm}
         locale={locale || 'en-GB'}
-        onConfirm={(date) => {
-          setOpen(false)
-          onConfirm(date)
-        }}
-        onCancel={() => setOpen(false)}
-        maximumDate={GetMaxDate(minAge)}
-        minimumDate={GetMinDate(maxAge)}
-
+        mode={mode || 'date'}
+        minAge={minAge}
+        maxAge={maxAge}
+        Header={Header}
+        Footer={Footer}
       />
-    )
-  }
-
-  const CustomModal = (params: CustomModalProps) => {
-    const { Header, Footer } = params
-    return (
-      <ModalManager.Modal variants={modalVariant} debugName='date picker modal manager' visible={open} toggle={() => setOpen(true)}>
-        <View variants={['padding:2', 'center']}>
-          {Header}
-        </View>
-        <NativePickerModal />
-        <View>
-          {Footer}
-        </View>
-      </ModalManager.Modal>
     )
   }
 
@@ -120,7 +144,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         {...textInputProps}
       />
 
-      {modal ? <CustomModal Header={Header} Footer={Footer} /> : <NativePickerModal modal={true} />}
+      <RenderModal />
+
     </>
   )
 }
