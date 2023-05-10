@@ -17,9 +17,8 @@ export type DatePickerModalProps = {
   modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
   Header?: ReactElement
   Footer?: ReactElement
-}
-& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets>
-& Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+} & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> &
+ Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
 export * from './styles'
 
@@ -92,7 +91,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     onConfirm,
     locale,
     mode,
-    modal,
+    modal: customModal,
     value,
     visible,
     toggle,
@@ -110,11 +109,11 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const openingModalDate = value ? FormatCurrentDate(value) : initialDate
   const inputValue = value.split('-').reverse().join('/')
 
-  const RenderModal = () => {
-    const Component = modal ? CustomPickerModal : NativePickerModal
+  const Modal = () => {
+    const Component = customModal ? CustomPickerModal : NativePickerModal
     return (
       <Component
-        modal={!modal}
+        modal={!customModal}
         modalVariant={modalVariant}
         open={open}
         date={openingModalDate}
@@ -140,7 +139,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         {...textInputProps}
       />
 
-      <RenderModal />
+      <Modal />
 
     </>
   )
