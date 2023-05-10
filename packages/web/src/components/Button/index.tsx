@@ -89,17 +89,19 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       <LoadingOverlay 
         visible={loading}
         styles={loaderStyle}
+
       />
       {!loading && (
         <Icon
           name={icon}
           style={{ ...iconStyle, ...getStyles('leftIcon') }}
-          
+
           />
           )}
       {children || (
         <Text
-        text={text}
+        // text={text}
+
         styles={{
             text: getStyles('text'),
           }}
@@ -109,6 +111,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       <Icon
         name={rightIcon}
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
+        
         
         />
         {loading && <ActivityIndicator styles={{

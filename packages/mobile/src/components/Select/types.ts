@@ -33,7 +33,7 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     placeholder?: FormTypes.Label
     label?: FormTypes.Label
     options?: FormTypes.Options<T>
-    onValueChange?: (value: T) => void
+    onValueChange: (value: T) => void
     renderItem?: SelectRenderFN<T>
     styles?: StylesOf<SelectComposition>
     style?: any
@@ -46,6 +46,7 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     clearable?: boolean
     clearIconName?: IconPlaceholder
     keyboardAware?: GetKeyboardAwarePropsOptions
+    multiple?: boolean
     itemProps?: Partial<
       Pick<SelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'
     >>

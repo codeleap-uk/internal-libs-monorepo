@@ -18,7 +18,6 @@ export type MultiSelectRenderFNProps<T> = {
   onPress: () => void
   isSelected?: boolean
   item: FormTypes.Options<T>[number]
-  icon?: IconPlaceholder
   touchableProps?: Partial<PropsOf<typeof Touchable>>
   textProps?: Partial<PropsOf<typeof Text>>
   iconProps?: Partial<PropsOf<typeof Icon>>

@@ -1,16 +1,18 @@
-import { createDefaultVariantFactory, includePresets, TextInputComposition } from '@codeleap/common'
+import { ButtonComposition, createDefaultVariantFactory, includePresets, TextInputComposition } from '@codeleap/common'
 import { ListComposition } from '../List'
 import { ModalComposition } from '../Modal'
 type ItemStates = '' | ':selected'
+
+
+type ItemParts = ButtonComposition
+
+type ItemComposition = `${ItemParts}${ItemStates}` | ItemParts
 
 export type SelectComposition =
   ModalComposition |
   `input${TextInputComposition}` |
   `list${Capitalize<ListComposition>}` |
-  'listContent' |
-  `itemWrapper${ItemStates}` |
-  `itemText${ItemStates}` |
-  `itemIcon${ItemStates}`
+  `item${Capitalize<ItemComposition>}` 
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 

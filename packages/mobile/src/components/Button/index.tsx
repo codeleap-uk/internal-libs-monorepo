@@ -51,6 +51,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     loading?: boolean
     debounce?: number
     debugName: string
+    selected?: boolean
     badge?: React.ReactElement | BadgeProps
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
@@ -85,6 +86,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     styles = {},
     onPress,
     disabled,
+    selected,
     badge = null,
     rightIcon,
     style,
@@ -103,6 +105,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       key === 'wrapper' && style,
       disabled && variantStyles[key + ':disabled'],
       styles[key],
+      selected && variantStyles[key + ':selected'],
       disabled && styles[key + ':disabled'],
     ]
   }
@@ -155,6 +158,8 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   }
 
+  const rightFeedback = getFeedbackStyle(pressed)
+
   return (
     <Touchable
       style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
@@ -171,10 +176,10 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     >
       {_badge}
       {loading && <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} />}
-      {!loading && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} renderEmptySpace={hasText && !!rightIcon}/>}
+      {!loading && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} />}
       {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
       {childrenContent}
-      <Icon name={rightIcon} style={[_styles.rightIcon, getFeedbackStyle(pressed)]} renderEmptySpace={(hasText && !!icon) || loading} />
+      <Icon name={rightIcon} style={[_styles.rightIcon, rightFeedback]} />
     </Touchable>
   )
 })

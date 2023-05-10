@@ -2,7 +2,7 @@ import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
 import { TouchableStylesGen } from '../Touchable'
 
-export type ButtonStates = 'disabled'
+export type ButtonStates = 'disabled' | 'selected'
 export type ButtonParts =
 | 'text'
 | 'inner'

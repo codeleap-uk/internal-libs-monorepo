@@ -1,8 +1,8 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { SelectComposition } from '../Select'
-type ItemStates = '' | ':selected'
+
 export type MultiSelectComposition =
-  SelectComposition | `itemIcon${ItemStates}`
+  SelectComposition 
 
 const createMultiSelectStyle = createDefaultVariantFactory<MultiSelectComposition>()
 

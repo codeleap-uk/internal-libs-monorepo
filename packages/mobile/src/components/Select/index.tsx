@@ -1,54 +1,18 @@
 import { IconPlaceholder,
   getNestedStylesByKey,
   useDefaultComponentStyle,
-  TypeGuards } from '@codeleap/common'
+  TypeGuards,
+  useNestedStylesByKey
+} from '@codeleap/common'
 import React, { useCallback, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
-import { Text } from '../Text'
 import { TextInput } from '../TextInput'
-import { Touchable } from '../Touchable'
 import { SelectPresets } from './styles'
 import { CustomSelectProps } from './types'
 import { ModalManager } from '../../utils'
-import { Icon } from '../Icon'
+import { Button } from  '../Button'
 export * from './styles'
-
-export const SelectItem = ({
-  item,
-  icon = null,
-  isSelected,
-  styles,
-  onPress,
-  iconProps = {},
-  textProps = {},
-  ...touchableProps
-}) => {
-  return <Touchable
-    style={[
-      styles.itemWrapper,
-      isSelected && styles['itemWrapper:selected'],
-    ]}
-    onPress={onPress}
-    debugName={`Select ${item.value}`}
-    debounce={null}
-    {...touchableProps}
-  >
-    <Text
-      text={item.label}
-      style={[
-        styles.itemText,
-        isSelected && styles['itemText:selected'],
-      ]}
-      {...textProps}
-    />
-    {icon ? <Icon
-      name={icon}
-      style={[styles?.itemIcon, isSelected && styles?.['itemIcon:selected']]}
-      {...iconProps}
-    /> : null}
-  </Touchable>
-}
 
 export * from './styles'
 export const Select = <T extends string|number = string>(selectProps:CustomSelectProps<T>) => {
@@ -60,9 +24,11 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     options,
     style,
     variants,
+    description,
     renderItem,
     closeOnSelect = true,
     listProps,
+    debugName,
     placeholder = 'Select',
     arrowIconName = 'selectArrow',
     clearIconName = 'close',
@@ -81,10 +47,12 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     variants,
   })
 
-  const inputStyles = useMemo(
-    () => getNestedStylesByKey('input', variantStyles),
-    [variantStyles],
-  )
+  const itemStyles = useNestedStylesByKey('item', variantStyles)
+
+  const listStyles = useNestedStylesByKey('list', variantStyles)
+
+  const inputStyles = useNestedStylesByKey('input', variantStyles)
+
 
   const close = () => drawerProps?.toggle?.()
 
@@ -103,16 +71,21 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
     return TypeGuards.isString(display) ? display : ''
   }, [value, placeholder, options])
-  const Item = renderItem || SelectItem
+  const Item = renderItem || Button
 
   const renderListItem = useCallback(({ item }) => {
 
     return <Item
-      isSelected={value === item.value}
+      debugName={`${debugName} item ${item.value}`}
+      selected={value === item.value}
+      text={item.label}
       item={item}
       onPress={() => select(item.value)}
+      // @ts-ignore 
       icon={selectedIcon}
-      styles={variantStyles}
+      // @ts-ignore 
+      rightIcon={selectedIcon}
+      styles={itemStyles}
       {...itemProps}
     />
   }, [value, select])
@@ -139,18 +112,11 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
           rightIcon={{
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
-            noFeedback: true,
           }}
-        
-        
           onPress={close}
-          wrapperProps={{
-            debugName: 'Select',
-
-          }}
           
           label={label}
-          debugName={'Select input'}
+          debugName={`${debugName} select input`}
           styles={inputStyles}
           style={style}
           {...inputProps}
@@ -160,25 +126,21 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
 
     <ModalManager.Modal
       title={label}
-      keyboardAware={{
-
-        enabled: false,
-      }}
+      description={description}
       {...drawerProps}
+      debugName={`${debugName} modal`} 
       styles={variantStyles}
       id={null}
+      
     >
       <List<CustomSelectProps<any>['options']>
         data={options}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
-        styles={getNestedStylesByKey('list', variantStyles)}
+        styles={listStyles}
         keyExtractor={(i) => i.value}
         renderItem={renderListItem}
-        keyboardAware={{
-          enabled: false,
-          enableOnAndroid: false,
-        }}
+        
         separators
         {...listProps}
       />

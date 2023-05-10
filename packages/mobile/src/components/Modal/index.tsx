@@ -19,7 +19,7 @@ import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
 import { Backdrop } from '../Backdrop'
-import { useAnimatedVariantStyles, useBackButton, useStaticAnimationStyles } from '../../utils/hooks'
+import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
@@ -54,7 +54,9 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
 export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
   styles: {
     wrapper: ViewProps['style']
+    titleWrapper: ViewProps['style']
     title: TextProps['style']
+    description: TextProps['style']
     closeButton: ButtonProps['styles']
   }
   description?: React.ReactElement
@@ -65,19 +67,29 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
   return <>
     {(title || showClose || description) && (
       <View style={styles.wrapper}>
-        {typeof title === 'string' ? (
-          <Text text={title} style={styles.title} />
-        ) : (
-          title
-        )}
+        <View style={styles.titleWrapper}>
+          {TypeGuards.isString(title) ? (
+            <Text text={title} style={styles.title} />
+          ) : (
+            title
+          )}
 
-        {(showClose && closable) && (
-          <ActionIcon
-            debugName={`${debugName} modal close button`}
-            icon={closeIconName as IconPlaceholder}
-            onPress={toggle}
-            styles={styles.closeButton}
-          />
+        
+
+          {(showClose && closable) && (
+            <ActionIcon
+              debugName={`${debugName} modal close button`}
+              icon={closeIconName as IconPlaceholder}
+              onPress={toggle}
+              styles={styles.closeButton}
+            />
+          )}
+        </View>
+
+        {TypeGuards.isString(description) ? (
+          <Text text={description} style={styles.description} />
+        ) : (
+          description
         )}
       </View>
     )}</>
@@ -143,7 +155,9 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     styles: {
       wrapper: getStyles('header'),
       title: getStyles('title'),
+      description: getStyles('description'),
       closeButton: buttonStyles,
+      titleWrapper: getStyles('titleWrapper'),
     },
   }
   const Header = renderHeader || DefaultHeader

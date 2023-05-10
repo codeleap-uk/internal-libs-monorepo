@@ -22,11 +22,11 @@ export type IconProps = {
   style?: any
   color?: string
   variants?: ComponentVariants<typeof IconPresets>['variants']
-  renderEmptySpace?: boolean
+
   size?: number
 }
 
-export const IconComponent: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
+export const IconComponent: React.FC<IconProps> = ({ name, style, variants,  ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:Icon', typeof IconPresets>('u:Icon', {
@@ -49,7 +49,7 @@ export const IconComponent: React.FC<IconProps> = ({ name, style, variants, rend
   }, [name])
 
   if (!name) {
-    return renderEmptySpace ? <View style={variantStyles.icon}/> : null
+    return  null
   }
 
   if (!Component) {
