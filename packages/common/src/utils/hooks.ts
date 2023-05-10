@@ -12,6 +12,7 @@ import {
   useLayoutEffect,
   useDebugValue,
   useReducer,
+  useId as useReactId,
 } from 'react'
 import { deepMerge } from './object'
 import { AnyFunction, DeepPartial, StylesOf} from '../types'
@@ -19,6 +20,7 @@ import { AnyFunction, DeepPartial, StylesOf} from '../types'
 import { uniqueId } from 'lodash'
 import { useUnmount } from 'react-use'
 import { getNestedStylesByKey } from './misc'
+import { useCodeleapContext } from '../styles/StyleProvider'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -381,8 +383,8 @@ export function useUncontrolled<T>({
 }
 
 export function useId(prefix?: string) {
-  const id = useRef(uniqueId(prefix))
-  return id.current
+  const _id = useReactId()
+  return prefix ? `${prefix}${_id}` : _id
 }
 
 
@@ -403,4 +405,14 @@ export function useNestedStylesByKey<T extends string, O extends StylesOf<T> = S
     return getNestedStylesByKey(match, variantStyles) as O
   }, [])
 
+}
+
+export function useWarning(condition: boolean, ...logArgs: any[]) {
+  const logged = useRef(false)
+  const {logger} = useCodeleapContext()
+
+  if(!logged.current && condition){
+    logged.current = true
+    logger?.warn(...logArgs)
+  }
 }

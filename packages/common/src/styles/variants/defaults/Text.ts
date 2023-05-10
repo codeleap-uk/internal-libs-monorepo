@@ -14,7 +14,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
     let fontFamily = theme?.typography?.base?.fontFamily
     const fontWeight = style.weight.toString()
 
-    const color = name.startsWith('h') ? theme?.colors.textH : theme?.colors.textP
+    
 
     const fontSize = style.size
     // console.log('name', name)
@@ -41,7 +41,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
     return {
       text: {
         fontWeight,
-        color,
+        // color,
         fontFamily,
         fontSize,
         lineHeight: style.lineHeight ?? null,

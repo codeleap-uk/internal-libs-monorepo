@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { InternalRequestClientConfig, RequestQueueItem } from '.'
+import { ExternalRequestClientConfig, InternalRequestClientConfig, RequestQueueItem } from '.'
 import { Logger } from '..'
 import { CancellablePromise } from '../..'
 import { silentLogger } from '../../constants'
@@ -33,7 +33,7 @@ export class RequestClient implements IRequestClient {
       let reqConfig = c as InternalRequestClientConfig
 
       if (reqConfig.multipart && this.config.automaticMultipartParsing) {
-        reqConfig.data = this.toMultipart(reqConfig.data)
+        reqConfig.data = await this.toMultipart(reqConfig.data)
 
         reqConfig.headers.set('Content-Type', 'multipart/form-data') 
       }
@@ -98,7 +98,7 @@ export class RequestClient implements IRequestClient {
     }
   }
 
-  private onRequest<T = any>(data: RequestClientConfig<T>):CancellablePromise<AxiosResponse<T>> {
+  private onRequest<T = any>(data: ExternalRequestClientConfig<T>):CancellablePromise<AxiosResponse<T>> {
 
     const requestId = `${data.baseURL || this.config?.baseURL || ''}${data.url}`
 
@@ -160,7 +160,7 @@ export class RequestClient implements IRequestClient {
     return promise
   }
 
-  patch<T = any>(url:string, data: any, config?: RequestClientConfig) {
+  patch<T = any>(url:string, data: any, config?: ExternalRequestClientConfig) {
     return this.onRequest<T>({
       url,
       data,
@@ -169,7 +169,7 @@ export class RequestClient implements IRequestClient {
     })
   }
 
-  put<T = any>(url:string, data: any, config?: RequestClientConfig) {
+  put<T = any>(url:string, data: any, config?: ExternalRequestClientConfig) {
     return this.onRequest<T>({
       url,
       data,
@@ -178,7 +178,7 @@ export class RequestClient implements IRequestClient {
     })
   }
 
-  get<T = any>(url:string, config?: RequestClientConfig) {
+  get<T = any>(url:string, config?: ExternalRequestClientConfig) {
     return this.onRequest<T>({
       url,
       method: 'GET',
@@ -186,7 +186,7 @@ export class RequestClient implements IRequestClient {
     })
   }
 
-  delete<T = any>(url:string, config?: RequestClientConfig) {
+  delete<T = any>(url:string, config?: ExternalRequestClientConfig) {
     return this.onRequest<T>({
       url,
       method: 'DELETE',
@@ -194,7 +194,7 @@ export class RequestClient implements IRequestClient {
     })
   }
 
-  post<T = any>(url:string, data: any, config?: RequestClientConfig) {
+  post<T = any>(url:string, data: any, config?: ExternalRequestClientConfig) {
     return this.onRequest<T>({
       url,
       data,

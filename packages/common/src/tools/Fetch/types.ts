@@ -36,7 +36,7 @@ type ExtraProperties = {
   logger?: Logger
   debug?: boolean
   automaticMultipartParsing?: boolean
-  multipartParser?: (body:any) => FormData
+  multipartParser?: (body:any) => FormData | Promise<FormData>
   silent?: boolean
   onError?: (e: AxiosError) => void
 }
@@ -46,3 +46,4 @@ type ReqConfig<D = any, Extending = AxiosRequestConfig, T = Extending & ExtraPro
 export type RequestClientConfig<D = any> = ReqConfig<D, InternalAxiosRequestConfig>
 export type InternalRequestClientConfig<D = any> = ReqConfig<D,InternalAxiosRequestConfig> 
 
+export type ExternalRequestClientConfig<D = any> =  AxiosRequestConfig<D> & ExtraProperties
