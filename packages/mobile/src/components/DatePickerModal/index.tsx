@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useState, ComponentVariants, useCodeleapContext } from '@codeleap/common'
 import { DatePickerModalPresets } from './styles'
 import { DatePickerProps } from 'react-native-date-picker'
 import DatePicker from 'react-native-date-picker'
 import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
 import { ModalManager } from '../../utils'
+import { View } from '../View'
 import { ModalPresets } from '../Modal'
 
 export type DatePickerModalProps = {
@@ -14,10 +15,18 @@ export type DatePickerModalProps = {
   minAge: number
   maxAge: number
   modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
-} & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+}
+& Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets>
+& Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+& Partial<CustomModalProps>
 
 type NativePickerModalProps = {
   modal?: boolean
+}
+
+export type CustomModalProps = {
+  Header?: ReactElement
+  Footer?: ReactElement
 }
 
 export * from './styles'
@@ -54,6 +63,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     minAge,
     maxAge,
     modalVariant,
+    Header,
+    Footer,
     ...textInputProps
   } = props
 
@@ -85,14 +96,17 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     )
   }
 
-  const CustomModal = () => {
+  const CustomModal = (params: CustomModalProps) => {
+    const { Header, Footer } = params
     return (
-      <ModalManager.Modal
-        variants={modalVariant}
-        debugName='date picker modal manager'
-        visible={open}
-        toggle={setOpen}>
+      <ModalManager.Modal variants={modalVariant} debugName='date picker modal manager' visible={open} toggle={() => setOpen(true)}>
+        <View variants={['padding:2', 'center']}>
+          {Header}
+        </View>
         <NativePickerModal />
+        <View>
+          {Footer}
+        </View>
       </ModalManager.Modal>
     )
   }
@@ -106,7 +120,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         {...textInputProps}
       />
 
-      {modal ? <CustomModal /> : <NativePickerModal modal={true} />}
+      {modal ? <CustomModal Header={Header} Footer={Footer} /> : <NativePickerModal modal={true} />}
     </>
   )
 }
