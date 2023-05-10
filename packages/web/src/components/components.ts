@@ -23,7 +23,7 @@ export * from './List'
 export * from './Link'
 export * from './LoadingOverlay'
 export * from './InputBase'
-
+export * from './Switch'
 
 
 export * from './defaultStyles'

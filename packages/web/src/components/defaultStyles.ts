@@ -20,6 +20,7 @@ import { LinkPresets } from './Link/styles'
 import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
+import { SwitchPresets } from './Switch/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -45,4 +46,5 @@ export const defaultStyles = {
   MultiSelect:SelectPresets,
   LoadingOverlay: LoadingOverlayPresets,
   InputBase: InputBasePresets,
+  Switch: SwitchPresets,
 }
