@@ -40,10 +40,10 @@ const GetMinDate = (maxAge: number) => {
 const FormatCurrentDate = (date: string) => new Date(date.split('/').reverse().join('-'))
 
 const NativePickerModal = (params : DatePickerModalProps) => {
-  const { open, date, mode, textColor, locale, setOpen, onConfirm, minAge, maxAge } = params
+  const { open, modal, date, mode, textColor, locale, setOpen, onConfirm, minAge, maxAge } = params
   return (
     <DatePicker
-      modal={true}
+      modal={modal}
       open={open}
       date={date}
       mode={mode}
@@ -62,7 +62,7 @@ const NativePickerModal = (params : DatePickerModalProps) => {
 }
 
 const CustomPickerModal = (params: DatePickerModalProps) => {
-  const { Header, Footer, modalVariant, open, date, setOpen, textColor, onConfirm, locale, mode, minAge, maxAge } = params
+  const { Header, Footer, modalVariant, open, setOpen, onConfirm, minAge, maxAge, ...datePickerProps } = params
   return (
     <ModalManager.Modal
       variants={modalVariant}
@@ -73,15 +73,11 @@ const CustomPickerModal = (params: DatePickerModalProps) => {
       footer={Footer}
     >
       <NativePickerModal
-        open={open}
-        date={date}
         setOpen={setOpen}
-        textColor={textColor}
         onConfirm={onConfirm}
-        locale={locale}
-        mode={mode}
         minAge={minAge}
         maxAge={maxAge}
+        {...datePickerProps}
       />
     </ModalManager.Modal>
   )
@@ -118,7 +114,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     const Component = modal ? CustomPickerModal : NativePickerModal
     return (
       <Component
-        modal={modal}
+        modal={!modal}
         modalVariant={modalVariant}
         open={open}
         date={openingModalDate}
