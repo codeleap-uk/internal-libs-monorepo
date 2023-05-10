@@ -1,6 +1,8 @@
 import { AnyFunction, onMount, onUpdate, range, useUncontrolled } from '@codeleap/common'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { v4 } from 'uuid'
+import { easeInOut, EasingFunction, AnimationProps, useAnimate, useAnimation, animate } from 'framer-motion'
+
 export function useWindowSize() {
   const [size, setSize] = useState([])
 
@@ -294,4 +296,43 @@ export function useMediaQuery(
   }, [_query]);
 
   return matches;
+}
+
+type SelectProperties<T extends Record<string|number|symbol, any>, K extends keyof T> = {
+  [P in K] : T[K]
+}
+
+export function useStaticAnimationStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(obj: T, keys: K[]) {
+  const styles = useRef({})
+
+  if (Object.keys(styles.current).length === 0) {
+    const mappedStyles = keys.map((k) => [k, { ...obj[k] }])
+
+    styles.current = Object.fromEntries(mappedStyles)
+  }
+
+  return styles.current as SelectProperties<T, K>
+}
+
+type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
+  variantStyles: T
+  animatedProperties: K[]
+  updater: (states: SelectProperties<T, K>) => AnimationProps
+  dependencies?: any[]
+}
+
+export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>) {
+  const { animatedProperties, updater, variantStyles, dependencies = [] } = config
+
+  const [animated, setAnimated] = useState({})
+
+  const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
+
+  onUpdate(() => {
+    const nextState = updater(staticStyles)
+    
+    setAnimated(nextState)
+  }, dependencies)
+
+  return animated
 }

@@ -25,7 +25,8 @@
     "react-window": "1.8.5",
     "url-parse": "^1.5.10",
     "uuid": "^8.3.2",
-    "js-cookie": "^3.0.1"
+    "js-cookie": "^3.0.1",
+    "framer-motion": "^10.10.0"
   },
   "peerDependencies": {
     "@codeleap/common": "*",
