@@ -94,6 +94,7 @@ export const Checkbox = (props: CheckboxProps) => {
     const _checkboxOnLeft = checkboxOnLeft ?? variantStyles['__props']?.checkboxOnLeft
 
     const handleChange = () => {
+      if (disabled) return
       if(onValueChange) onValueChange?.(!value)
     }
 

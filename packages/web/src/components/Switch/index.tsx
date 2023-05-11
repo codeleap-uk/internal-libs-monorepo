@@ -87,6 +87,7 @@ export const Switch = (props: SwitchProps) => {
     const _switchOnLeft = switchOnLeft ?? variantStyles['__props']?.switchOnLeft
 
     const handleChange = () => {
+      if (disabled) return
       if(onValueChange) onValueChange?.(!value)
       if(onChange) onChange?.(!value)
     }
