@@ -10,6 +10,10 @@ export type InspectRenderOptions = {
   throttleInterval: number
 }
 
+export type Performancer = {
+  inspectRender: (name: string, options?: InspectRenderOptions) => void
+}
+
 export function makePerformancer(settings: AppSettings) {
   const renderCounter: Record<string, number> = {}
 
