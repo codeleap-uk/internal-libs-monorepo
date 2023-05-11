@@ -44,7 +44,7 @@ const getIconStyles = (obj, state) => {
   }
 }
 
-function concatStyles(unstyles: Record<number, {}>) {
+export function concatStyles(unstyles: Record<number, {}>) {
   let styles = {}
   
   Object.values(unstyles).forEach(style => {
