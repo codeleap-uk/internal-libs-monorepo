@@ -1,7 +1,9 @@
 import { DeepPartial, Matcher } from '..'
 import { LogType, SentryProvider } from '../tools/Logger/types'
 
-export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider> = DeepPartial<{
+export type AppSettings<
+  _SentryProvider extends SentryProvider = SentryProvider
+> = DeepPartial<{
   AppName: string
   CompanyName: string
   CompanySuffix: string
@@ -22,6 +24,10 @@ export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider>
     debug?: boolean
     initArgs?: Partial<Parameters<_SentryProvider['init']>[0]>
     beforeBreadcrumb?: any
+  }
+  Performancer: {
+    enable: boolean
+    maxRenders: number
   }
   Logger: {
     Level: LogType | LogType[]
@@ -66,6 +72,6 @@ export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider>
 }>
 
 export type ConfigurableSettings = Pick<
-AppSettings,
-'Fetch' | 'Logger' | 'ApiCredentials'
+  AppSettings,
+  'Fetch' | 'Logger' | 'ApiCredentials'
 >

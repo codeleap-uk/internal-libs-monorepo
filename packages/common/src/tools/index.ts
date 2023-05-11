@@ -1,5 +1,6 @@
 export * from './Fetch'
 export * from './Logger'
+export * from './performancer'
 export * from './Redux'
 export * from './Form'
 export * from './useQuery'
@@ -7,3 +8,4 @@ export * from './PermissionManager'
 export * from './useSearchParams'
 export * from './usePagination'
 export * from './i18n'
+
