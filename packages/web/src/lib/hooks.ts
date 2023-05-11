@@ -326,7 +326,9 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
 
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
 
-  const [animated, setAnimated] = useState({})
+  const initialState = updater(staticStyles)
+
+  const [animated, setAnimated] = useState(initialState)
 
   onUpdate(() => {
     const nextState = updater(staticStyles)

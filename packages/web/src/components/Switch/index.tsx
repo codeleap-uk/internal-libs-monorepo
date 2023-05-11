@@ -109,6 +109,7 @@ export const Switch = (props: SwitchProps) => {
           variantStyles.track, 
           disabled && variantStyles['track:disabled'],
         ]}
+        initial={trackAnimation}
         animate={trackAnimation}
         transition={variantStyles['track:transition']}
         onClick={handleChange}
@@ -118,6 +119,7 @@ export const Switch = (props: SwitchProps) => {
             variantStyles.thumb, 
             disabled && variantStyles['thumb:disabled'],
           ]}
+          initial={thumbAnimation}
           animate={thumbAnimation}
           transition={variantStyles['thumb:transition']}
         />

@@ -93,21 +93,18 @@ export const Checkbox = (props: CheckboxProps) => {
 
     const _checkboxOnLeft = checkboxOnLeft ?? variantStyles['__props']?.checkboxOnLeft
 
+    const handleChange = () => {
+      if(onValueChange) onValueChange?.(!value)
+    }
+
     return <InputBase
       {...inputBaseProps}
       debugName={debugName}
-      wrapper={Touchable}
       styles={{
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
         ],
-      }}
-      wrapperProps={{
-        onPress: () => {
-          onValueChange(!value)
-        },
-        disabled,
       }}
       order={_checkboxOnLeft ?  reversedOrder : InputBaseDefaultOrder}
       style={style}
@@ -117,14 +114,17 @@ export const Checkbox = (props: CheckboxProps) => {
           variantStyles.box, 
           disabled && variantStyles['box:disabled'],
         ]}
+        initial={boxAnimation}
         animate={boxAnimation}
         transition={variantStyles['box:transition']}
+        onClick={handleChange}
       >
         <motion.div
           css={[
             variantStyles.checkmarkWrapper, 
             disabled && variantStyles['checkmarkWrapper:disabled'],
           ]}
+          initial={checkmarkWrapperAnimation}
           animate={checkmarkWrapperAnimation}
           transition={variantStyles['checkmarkWrapper:transition']}
         > 
