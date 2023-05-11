@@ -81,7 +81,6 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
         styles.optionWrapper,
         getStyle('optionWrapper'),
       ]}
-      rippleDisabled
       onPress={onSelect}
       disabled={isDisabled}
     > 

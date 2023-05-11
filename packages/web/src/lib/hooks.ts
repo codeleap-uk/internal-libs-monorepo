@@ -324,9 +324,9 @@ type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>,
 export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>) {
   const { animatedProperties, updater, variantStyles, dependencies = [] } = config
 
-  const [animated, setAnimated] = useState({})
-
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
+
+  const [animated, setAnimated] = useState({})
 
   onUpdate(() => {
     const nextState = updater(staticStyles)
