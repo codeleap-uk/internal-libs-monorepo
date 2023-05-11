@@ -17,6 +17,7 @@ export type SwitchProps = Pick<
   styles?: StylesOf<SwitchComposition>
   value: boolean
   onValueChange: (value: boolean) => void
+  onChange?:  (value: boolean) => void
   style?: PropsOf<typeof View>['style']
   switchOnLeft?: boolean
 }
@@ -36,6 +37,7 @@ export const Switch = (props: SwitchProps) => {
       disabled,
       debugName,
       onValueChange,
+      onChange,
       switchOnLeft,
     } = others
 
@@ -84,21 +86,19 @@ export const Switch = (props: SwitchProps) => {
 
     const _switchOnLeft = switchOnLeft ?? variantStyles['__props']?.switchOnLeft
 
+    const handleChange = () => {
+      if(onValueChange) onValueChange?.(!value)
+      if(onChange) onChange?.(!value)
+    }
+
     return <InputBase
       {...inputBaseProps}
       debugName={debugName}
-      wrapper={Touchable}
       styles={{
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
         ],
-      }}
-      wrapperProps={{
-        onPress: () => {
-          onValueChange(!value)
-        },
-        disabled,
       }}
       order={_switchOnLeft ?  reversedOrder : InputBaseDefaultOrder}
       style={style}
@@ -111,6 +111,7 @@ export const Switch = (props: SwitchProps) => {
         ]}
         animate={trackAnimation}
         transition={variantStyles['track:transition']}
+        onClick={handleChange}
       >
         <motion.div 
           css={[
