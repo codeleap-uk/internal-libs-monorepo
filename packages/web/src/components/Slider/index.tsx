@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ComponentVariants, onMount, PropsOf, TypeGuards, useDefaultComponentStyle, useState } from '@codeleap/common'
+import { ComponentVariants, onMount, PropsOf, TypeGuards, useDefaultComponentStyle, useRef } from '@codeleap/common'
 import { SliderComposition } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
@@ -22,7 +22,7 @@ export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueC
   indicatorLabel?: {
     order?: number[]
     separator?: string
-    transformer?: (value: number[], breakpoints: Record<number, number>) => string
+    transformer?: (value: number[], defaultValue: PrimitiveSliderProps['defaultValue']) => string
   }
   value: number[]
   onValueChange: (val: number[]) => void
@@ -77,53 +77,24 @@ export const Slider = (props: SliderProps) => {
     min = 0,
     indicatorLabel = null,
     description = null,
+    minStepsBetweenThumbs = 8,
+    step = 1,
     ...sliderProps
   } = others
 
-  const [defaultValue, _setDefaultValue] = useState(_defaultValue)
+  const defaultValueRef = useRef<PrimitiveSliderProps['defaultValue']>(_defaultValue)
+  const defaultValue = defaultValueRef.current
 
   onMount(() => {
     if (_defaultValue?.length <= 0) {
-      _setDefaultValue(value)
+      defaultValueRef.current = value
     }
   })
 
   const SliderTrackMark = trackMarkComponent
 
-  const breakpoints = React.useMemo(() => {
-    if (defaultValue.length === 1) {
-      return null
-    }
-
-    let _breakpoints = {}
-
-    defaultValue.forEach((_value, i) => {
-      const breakpoint = defaultValue[i + 1]
-      
-      _breakpoints = {
-        ..._breakpoints,
-        [i]: breakpoint ?? max
-      }
-    })
-
-    return _breakpoints
-  }, [defaultValue])
-
   const handleChange: SliderProps['onValueChange'] = (newValue) => {
-    if (TypeGuards.isNil(breakpoints)) {
-      onValueChange(newValue)
-      return
-    }
-
-    const transformedValue = newValue?.map((value, i) => {
-      if (Number(value) >= breakpoints[i]) {
-        return breakpoints[i]
-      } else {
-        return value
-      }
-    })
-
-    onValueChange(transformedValue)
+    onValueChange(newValue)
   }
 
   const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
@@ -190,7 +161,7 @@ export const Slider = (props: SliderProps) => {
     }
 
     if (TypeGuards.isFunction(indicatorLabel?.transformer)) {
-      const str = indicatorLabel?.transformer(value, breakpoints)
+      const str = indicatorLabel?.transformer(value, defaultValue)
       return str
     } else if (TypeGuards.isArray(indicatorLabel?.order)) {
       let str = ''
@@ -223,8 +194,9 @@ export const Slider = (props: SliderProps) => {
       description={sliderLabel}
     >
       <SliderContainer
-        step={1}
         {...sliderProps}
+        step={step}
+        minStepsBetweenThumbs={minStepsBetweenThumbs}
         style={containerStyle}
         defaultValue={defaultValue}
         value={value}
@@ -239,7 +211,7 @@ export const Slider = (props: SliderProps) => {
         </SliderTrack>
 
         {defaultValue.map((_thumbValue, i) => (
-          <SliderThumb key={i} index={i} style={thumbStyle}/>
+          <SliderThumb key={i} index={i} style={thumbStyle} />
         ))}
       </SliderContainer>
 
