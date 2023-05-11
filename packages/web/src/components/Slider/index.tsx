@@ -260,7 +260,7 @@ export const Slider = (props: SliderProps) => {
                 } else if(idx === trackMarksProp.length - 1){
                   idxStyle = variantStyles.lastTrackMark
                 } else {
-                  const markerPosition = relativeValue >= max ? 100 : (relativeValue / max) * 100
+                  const markerPosition = (relativeValue / max) * 100
 
                   idxStyle = { 
                     position: 'absolute', 

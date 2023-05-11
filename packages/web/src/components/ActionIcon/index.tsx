@@ -15,28 +15,36 @@ export type ActionIconProps= {
 } & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
-  const { icon, name, iconProps, action, onPress, variants, styles, children, ...touchableProps } = props
+  const { icon, name, iconProps, action, onPress, variants, styles, children, disabled, ...touchableProps } = props
   
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
     variants, 
     styles
   })
 
-  const isPressable = TypeGuards.isFunction(onPress) || TypeGuards.isFunction(action)
+  const isPressable = (TypeGuards.isFunction(onPress) || TypeGuards.isFunction(action)) && !disabled
 
   const WrapperComponent = isPressable ? Touchable : View
+
+  const handlePress = () => {
+    if (!isPressable) return
+
+    if (onPress) onPress?.()
+    if (action) action?.()
+  }
   
   return (
     <WrapperComponent 
       styles={{
         wrapper: variantStyles.wrapper,
       }}
-      onPress={onPress ?? action}
+      onPress={handlePress}
       css={[
         variantStyles.wrapper,
         touchableProps?.disabled && variantStyles['wrapper:disabled'],
         isPressable && variantStyles['wrapper:cursor']
       ]}
+      disabled={disabled}
       {...touchableProps}
     >
       <Icon 

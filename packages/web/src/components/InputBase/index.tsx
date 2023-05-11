@@ -50,12 +50,14 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
     styles: _styles.leftIconStyles,
+    disabled,
     debugName: `${debugName} left icon`,
   })
   
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
     // @ts-ignore
     styles: _styles.rightIconStyles,
+    disabled,
     debugName: `${debugName} right icon`
   })
 
