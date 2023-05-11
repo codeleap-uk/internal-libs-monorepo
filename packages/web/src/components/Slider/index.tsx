@@ -93,8 +93,34 @@ export const Slider = (props: SliderProps) => {
 
   const SliderTrackMark = trackMarkComponent
 
+  const currentThumbRef = useRef(null)
+
   const handleChange: SliderProps['onValueChange'] = (newValue) => {
-    onValueChange(newValue)
+    if (newValue.length <= 1) {
+      onValueChange(newValue)
+      return
+    }
+
+    const copyValue = [...value]
+
+    const i = currentThumbRef.current
+    const _newValue = newValue[currentThumbRef.current]
+
+    const hasLeftThumb = i !== 0
+    const hasRightThumb = i + 1 < newValue.length
+
+    const previousThumbValue = hasLeftThumb ? (copyValue[i -1] + minStepsBetweenThumbs) : null
+    const nextThumbValue = hasRightThumb ? (copyValue[i + 1] - minStepsBetweenThumbs) : null
+
+    if (previousThumbValue && _newValue <= previousThumbValue) {
+      copyValue[i] = previousThumbValue
+    } else if (nextThumbValue && _newValue >= nextThumbValue) {
+      copyValue[i] = nextThumbValue
+    } else {
+      copyValue[i] = _newValue
+    }
+
+    onValueChange(copyValue)
   }
 
   const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
@@ -211,7 +237,13 @@ export const Slider = (props: SliderProps) => {
         </SliderTrack>
 
         {defaultValue.map((_thumbValue, i) => (
-          <SliderThumb key={i} index={i} style={thumbStyle} />
+          <SliderThumb 
+            key={i} 
+            index={i} 
+            style={thumbStyle}
+            onClick={() => currentThumbRef.current = i}
+            onMouseEnter={() => currentThumbRef.current = i}
+          />
         ))}
       </SliderContainer>
 
