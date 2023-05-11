@@ -1,6 +1,6 @@
 export * from './Fetch'
 export * from './Logger'
-export * from './performancer'
+export * from './performance'
 export * from './Redux'
 export * from './Form'
 export * from './useQuery'

@@ -18,9 +18,9 @@ const defineError = (errorName: ErrorNames, args: Partial<ErrorArgs>) => {
   }
 }
 
-export class PerformancerErrors extends Error {
+export class PerformanceError extends Error {
   constructor(errorName: ErrorNames, args: Partial<ErrorArgs>) {
     super(defineError(errorName, args))
-    this.name = 'Codeleap:Performancer'
+    this.name = 'Codeleap:Perf'
   }
 }

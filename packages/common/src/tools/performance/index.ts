@@ -2,7 +2,7 @@ import { onMount, useUnmount } from '../../utils'
 import { AppSettings } from '../../config'
 import { useCodeleapContext } from '../../styles'
 import { throttle } from 'lodash'
-import { PerformancerErrors } from './errors'
+import { PerformanceError } from './errors'
 
 export type InspectRenderOptions = {
   noHooks?: boolean
@@ -10,11 +10,11 @@ export type InspectRenderOptions = {
   throttleInterval: number
 }
 
-export type Performancer = {
+export type PerformanceInspector = {
   inspectRender: (name: string, options?: InspectRenderOptions) => void
 }
 
-export function makePerformancer(settings: AppSettings) {
+export function makePerformanceInspector(settings: AppSettings) {
   const renderCounter: Record<string, number> = {}
 
   const inspectRender = (
@@ -28,7 +28,7 @@ export function makePerformancer(settings: AppSettings) {
     const { logger } = useCodeleapContext()
     const { noHooks, logMode, throttleInterval } = options
 
-    if (!settings?.Performancer.enable || !settings?.Environment.IsDev) return
+    if (!settings?.PerformanceInspector.enable || !settings?.Environment.IsDev) return
 
     if (noHooks) {
       onMount(() => {
@@ -46,9 +46,9 @@ export function makePerformancer(settings: AppSettings) {
     renderCounter[name] = renderCounter[name] ? renderCounter[name] + 1 : 1
     function logSummary() {
       const renders = renderCounter[name]
-      const maxRenders = settings?.Performancer?.maxRenders
+      const maxRenders = settings?.PerformanceInspector?.maxRenders
       if (renders >= maxRenders) {
-        throw new PerformancerErrors('maxRenders', {
+        throw new PerformanceError('maxRenders', {
           name,
           throttleInterval,
           maxRenders,

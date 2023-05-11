@@ -25,7 +25,7 @@ export type AppSettings<
     initArgs?: Partial<Parameters<_SentryProvider['init']>[0]>
     beforeBreadcrumb?: any
   }
-  Performancer: {
+  PerformanceInspector: {
     enable: boolean
     maxRenders: number
   }
