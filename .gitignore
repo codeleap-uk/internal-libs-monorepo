@@ -36,3 +36,4 @@ yarn-error.log*
 dist
 public
 test_area
+apps/web

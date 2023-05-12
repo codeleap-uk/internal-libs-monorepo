@@ -34,6 +34,7 @@ export type SelectProps = React.PropsWithChildren<{
   footer?: ReactNode
   debugName?: string
   onValueChange?: () => void
+  label?: string
 } & Props
 >
 
@@ -43,7 +44,7 @@ const ReactSelect = (props: Props) => {
   )
 }
 
-export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, styles, ...props }) => {
+export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, styles, label, ...props }) => {
 
   const { showError, error } = useValidate(props.value, validate)
 
@@ -66,10 +67,11 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
   }
 
   return (
-    <Fragment>
+    <View variants={['column']}>
+      {label && <Text text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
       <ReactSelect
         styles={reactSelectStyles} onChange={(e) => props.onValueChange(e?.value)} {...props} />
       {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} />}
-    </Fragment>
+    </View>
   )
 }
