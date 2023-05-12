@@ -63,6 +63,13 @@ export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider>
       AppId: string
     }
   }
+
+  EchoSlack: {
+    channel?: string
+    icon: string
+    token: string
+    baseURL?: string
+  }
 }>
 
 export type ConfigurableSettings = Pick<
