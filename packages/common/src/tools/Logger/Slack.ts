@@ -12,6 +12,7 @@ type EchoSlack = {
   label: string
   data: object
   options?: EchoSlackOptions
+  module?: string
 }
 
 type OptionInclude = 'version'
@@ -26,43 +27,45 @@ type EchoSlackOptions = {
 const DEFAULT_CHANNEL = '#_dev_logs'
 const DEFAULT_BASE_URL = 'https://slack.com/api/chat.postMessage'
 
-export class EchoSlackService {
-  private config: EchoSlackConfig
+export class SlackService {
+  private echoConfig: EchoSlackConfig
 
-  private dev: boolean
+  private isDev: boolean
 
   private appName: string
 
+  public api: RequestClient
+
   constructor(settings: AppSettings) {
-    this.config = settings?.EchoSlack as EchoSlackConfig
-    this.dev = settings?.Environment?.IsDev
+    this.echoConfig = settings?.Slack?.echo as EchoSlackConfig
+    this.isDev = settings?.Environment?.IsDev
     this.appName = settings?.AppName
   }
 
-  async send(
-    api: RequestClient,
+  async echo(
     label: EchoSlack['label'],
     slackData: EchoSlack['data'],
-    messageOptions: EchoSlack['options'] = {},
+    moduleName: EchoSlack['module'] = null,
+    messageOptions: EchoSlack['options'] = {}
   ) {
     const options = this.parseOptions(messageOptions)
-    const slack = this.parseData(label, slackData, options.info)
+    const slack = this.parseData(label, slackData, options.info, moduleName)
   
-    if (!options.send) return
+    if (!options.send || !this.api || !this.echoConfig) return
   
     try {
       const data = {
-        'channel': this?.config?.channel ?? DEFAULT_CHANNEL,
+        'channel': this?.echoConfig?.channel ?? DEFAULT_CHANNEL,
         text: slack,
         'as_user': false,
         'username': `${this.appName} Log`,
-        'icon_url': this?.config?.icon,
+        'icon_url': this?.echoConfig?.icon,
       }
   
-      await api.post('', data, {
-        baseURL: this?.config?.baseURL ?? DEFAULT_BASE_URL,
+      await this.api.post('', data, {
+        baseURL: this?.echoConfig?.baseURL ?? DEFAULT_BASE_URL,
         headers: {
-          Authorization: `Bearer ${this?.config?.token}`,
+          Authorization: `Bearer ${this?.echoConfig?.token}`,
         },
       })
     } catch (err) {
@@ -86,7 +89,7 @@ export class EchoSlackService {
     const isDebug = hasSendIn ? sendIn.includes('debug') : true
     const isRelease = hasSendIn ? sendIn.includes('release') : true
   
-    if (!isDebug && this.dev || !isRelease && !this.dev) {
+    if (!isDebug && this.isDev || !isRelease && !this.isDev) {
       return {
         info: '',
         send: false,
@@ -97,7 +100,7 @@ export class EchoSlackService {
     const separator = ' - '
   
     include.forEach(k => {
-      const data = this.serializers[k]?.(this.dev)
+      const data = this.serializers[k]?.(this.isDev)
       str = `${str}${str.length > 0 ? separator : ''}[${data}]`
     })
   
@@ -107,13 +110,13 @@ export class EchoSlackService {
     }
   }
   
-  private parseData(label: string, data: object, info: string) {
+  private parseData(label: string, data: object, info: string, module?: string) {
     const obj = !info ? data : {
       ...data,
       info,
     }
   
-    const args = [`${label}: `, obj]
+    const args = [`${!module ? '' : `(${module}) `}${label}: `, obj]
   
     const slack = args.map(i => {
       if (typeof i === 'object') {

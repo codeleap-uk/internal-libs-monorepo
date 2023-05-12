@@ -2,7 +2,7 @@ import { AppSettings } from '../../config/Settings'
 import { TypeGuards } from '../../utils'
 import { Analytics } from './Analytics'
 import { SentryService } from './Sentry'
-import { EchoSlackService } from './EchoSlack'
+import { SlackService } from './Slack'
 import {
   LogToTerminal,
   LogFunctionArgs,
@@ -32,7 +32,7 @@ export class Logger {
 
   sentry: SentryService
 
-  echoSlack: EchoSlackService
+  slack: SlackService
 
   middleware:LoggerMiddleware[] = []
 
@@ -58,7 +58,7 @@ export class Logger {
 
     this.sentry = new SentryService(settings)
 
-    this.echoSlack = new EchoSlackService(settings)
+    this.slack = new SlackService(settings)
 
     if (!analytics) {
       this.analytics = hollowAnalytics
