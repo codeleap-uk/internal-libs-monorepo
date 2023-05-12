@@ -63,7 +63,57 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
       ...baseStyles,
       ...variantStyles.wrapper,
       ...props.css,
+      height: 800,
+
+      overflow: 'visible',
+
     }),
+    control: (baseStyles, state) => ({
+      ...baseStyles,
+      ...variantStyles.innerWrapper,
+      background: 'red',
+      // height: 800,
+      overflow: 'visible',
+
+    }),
+    menuList: (baseStyles, state) => ({
+      ...baseStyles,
+      // ...variantStyles.list,
+      backgroundColor: 'red',
+      height: 800,
+      overflow: 'visible',
+      zIndex: 99999,
+
+    }),
+    menu: (baseStyles, state) => ({
+      ...baseStyles,
+      backgroundColor: 'red',
+      height: 400,
+      overflow: 'visible',
+      zIndex: 99999,
+      top: 35,
+    }),
+
+    group: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+      backgroundColor: 'red',
+      height: 400,
+    }),
+    option: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+
+      backgroundColor: 'red',
+      height: 400,
+    }),
+    menuPortal: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+      backgroundColor: 'red',
+      height: 400,
+    }),
+
   }
 
   return (
