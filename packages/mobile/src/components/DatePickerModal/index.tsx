@@ -15,8 +15,6 @@ export type DatePickerModalProps = {
   inputValue?: any
   visible?: boolean
   toggle?: () => void
-  setOpen?: (status: boolean) => void
-  setValue?: (date: Date) => void
   date?: Date
   setDate?: (date: Date) => void
   styles: StylesOf<DatePickerModalComposition>
@@ -25,8 +23,13 @@ export type DatePickerModalProps = {
   modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
   Header?: ReactElement
   Footer?: ReactElement
-} & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> &
- Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+} & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+
+type InternalModalProps = DatePickerModalProps & {
+  value?: any
+  setValue?: (date: Date) => void
+  setOpen: (status: boolean) => void
+}
 
 type onConfirmDateProps = {
   date: Date
@@ -66,7 +69,7 @@ const onConfirmDate = (params: onConfirmDateProps) => {
 
 const FormatCurrentDate = (date: string) => new Date(date.split('/').reverse().join('-'))
 
-const NativePickerModal = (params : DatePickerModalProps) => {
+const NativePickerModal = (params : InternalModalProps) => {
   const { open, modal, date, mode, textColor, locale, setOpen, onConfirm, minAge, maxAge, setValue, theme } = params
   return (
     <DatePicker
@@ -86,7 +89,7 @@ const NativePickerModal = (params : DatePickerModalProps) => {
   )
 }
 
-const CustomPickerModal = (params: DatePickerModalProps) => {
+const CustomPickerModal = (params: InternalModalProps) => {
   const { Header, date, Footer, modalVariant, open, setOpen, minAge, maxAge, ...datePickerProps } = params
   return (
     <ModalManager.Modal
