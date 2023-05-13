@@ -112,7 +112,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const _text = event.target.value
     
-    if (props?.onChange) props?.onChange(_text)
+    if (props?.onChange) props?.onChange(event)
     if (props?.onChangeText) props?.onChangeText(_text)
   }
 
@@ -130,8 +130,10 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     editable: false,
     caretHidden: true
   } : {}
-
-  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || !!textInputProps?.rows)
+  const rows = textInputProps?.rows ?? (
+    isMultiline ? 2 : undefined
+  )
+  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || !!rows)
 
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
