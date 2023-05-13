@@ -80,7 +80,9 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
-    error: _error || <Text text={''} css={_styles.errorStyle}/>
+    error: _error || <Text children={<>
+      &nbsp;
+    </>} css={_styles.errorStyle}/>
   }
 
   return (
