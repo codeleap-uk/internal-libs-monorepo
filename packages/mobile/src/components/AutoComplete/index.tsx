@@ -148,6 +148,7 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
           title: variantStyles.title,
           searchInput: searchInputStyles,
           titleWrapper: variantStyles.titleWrapper,
+          description: variantStyles.description,
         }}
 
         {...headerProps}

@@ -151,8 +151,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   } : {}
   const hasMultipleLines = isMultiline && value?.includes('\n')
   return <InputBase
-    innerWrapper={isPressable ? Touchable : undefined}
     {...inputBaseProps}
+    innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
     error={validation.isValid ? null : validation.message}
     styles={{
@@ -192,6 +192,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
         hasMultipleLines && variantStyles['input:hasMultipleLines'],
       ]}
       ref={innerInputRef}
+      pointerEvents={isPressable ? 'none' : undefined}
       {...maskingExtraProps}
     />
   </InputBase>
