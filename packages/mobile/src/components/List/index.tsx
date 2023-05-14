@@ -80,6 +80,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const _listProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
+      showsVerticalScrollIndicator: false,
       ref: ref as unknown as FlatList,
       ListHeaderComponentStyle: variantStyles.header,
       ItemSeparatorComponent: separator,

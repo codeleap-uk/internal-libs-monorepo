@@ -83,6 +83,7 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       <KeyboardAwareSectionList
         style={[Theme.presets.full, style, variantStyles.wrapper]}
         contentContainerStyle={[variantStyles.content]}
+        showsVerticalScrollIndicator={false}
         // @ts-ignore
         ref={ref}
         ItemSeparatorComponent={separator}

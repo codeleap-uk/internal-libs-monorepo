@@ -79,6 +79,7 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     const _gridProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
+      showsVerticalScrollIndicator: false,
       ref: ref,
       ItemSeparatorComponent: separator,
       refreshControl:
