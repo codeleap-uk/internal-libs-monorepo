@@ -13,6 +13,7 @@ import { StyleSheet } from 'react-native'
 
 export type DatePickerModalProps = {
   inputValue: string
+  isCustomModal?: string
   visible?: boolean
   toggle?: () => void
   date?: Date
@@ -149,7 +150,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     textColor,
     locale,
     mode,
-    modal: isCustomModal,
+    isCustomModal,
     inputValue,
     visible,
     toggle,
@@ -184,7 +185,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
       <Component
         modal={!isCustomModal}
         open={open}
-        date={value}
+        date={isCustomModal ? value : FormatCurrentDate(inputValue)}
         textColor={textColor || Theme.colors.light.text}
         onConfirm={date => onConfirmDate({ date, onConfirm: props.onConfirm, setOpen })}
         onDateChange={date => setValue(date)}
