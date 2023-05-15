@@ -141,12 +141,14 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         name: 'plus',
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
+        component: 'button',
         ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
         name: 'minus',
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
+        component: 'button',
         ...inputBaseProps.leftIcon,
       }}
       style={style}
