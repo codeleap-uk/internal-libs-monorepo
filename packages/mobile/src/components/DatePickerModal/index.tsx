@@ -174,8 +174,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   })
 
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
-  const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue) || new Date())
-  const dateValue = inputValue.split('-').reverse().join('/')
+  const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue))
+  const dateValue = isCustomModal ? value : FormatCurrentDate(inputValue)
+  const inputDateValue = inputValue.split('-').reverse().join('/')
   const onOpenModal = () => setOpen(true)
   const onCloseModal = () => setOpen(false)
 
@@ -185,7 +186,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
       <Component
         modal={!isCustomModal}
         open={open}
-        date={isCustomModal ? value : FormatCurrentDate(inputValue)}
+        date={dateValue}
         textColor={textColor || Theme.colors.light.text}
         onConfirm={date => onConfirmDate({ date, onConfirm: props.onConfirm, setOpen })}
         onDateChange={date => setValue(date)}
@@ -213,7 +214,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     <>
       <TextInput
         debugName={'debug name'}
-        value={dateValue}
+        value={inputDateValue}
         onPress={onOpenModal}
         {...textInputProps}
       />
