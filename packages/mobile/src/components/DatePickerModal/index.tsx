@@ -12,7 +12,7 @@ import { ModalPresets } from '../Modal'
 import { StyleSheet } from 'react-native'
 
 export type DatePickerModalProps = {
-  inputValue?: any
+  inputValue: string
   visible?: boolean
   toggle?: () => void
   date?: Date
@@ -26,10 +26,8 @@ export type DatePickerModalProps = {
   headerTitle?: string
 } & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
-type InternalModalProps = DatePickerModalProps & {
-  value?: any
-  setValue?: (date: Date) => void
-  setOpen: (status: boolean) => void
+type InternalModalProps = Omit<DatePickerModalProps, 'inputValue'> & {
+  onOpenModal?: () => void
 }
 
 type onConfirmDateProps = {
@@ -40,7 +38,9 @@ type onConfirmDateProps = {
 
 type CustomPickerModalFooter = {
   styles: StylesOf<DatePickerModalComposition>
-} & Required<onConfirmDateProps>
+  onConfirm: () => void
+  onCancel: () => void
+}
 
 type CustomPickerModalHeader = {
   styles: StylesOf<DatePickerModalComposition>
@@ -71,8 +71,8 @@ const onConfirmDate = (params: onConfirmDateProps) => {
 
 const FormatCurrentDate = (date: string) => new Date(date.split('/').reverse().join('-'))
 
-const NativePickerModal = (params : InternalModalProps) => {
-  const { open, modal, date, mode, textColor, locale, setOpen, onConfirm, minAge, maxAge, setValue, theme } = params
+const NativePickerModal = (params: InternalModalProps) => {
+  const { open, modal, date, mode, textColor, locale, onConfirm, onCancel, onDateChange, minAge, maxAge, theme } = params
   return (
     <DatePicker
       modal={modal}
@@ -82,9 +82,9 @@ const NativePickerModal = (params : InternalModalProps) => {
       textColor={textColor}
       locale={locale}
       theme={theme}
-      onConfirm={(date) => onConfirmDate({ date, onConfirm, setOpen })}
-      onDateChange={(date) => setValue(date)}
-      onCancel={() => setOpen(false)}
+      onConfirm={onConfirm}
+      onDateChange={onDateChange}
+      onCancel={onCancel}
       maximumDate={GetMaxDate(minAge)}
       minimumDate={GetMinDate(maxAge)}
     />
@@ -92,19 +92,18 @@ const NativePickerModal = (params : InternalModalProps) => {
 }
 
 const CustomPickerModal = (params: InternalModalProps) => {
-  const { Header, date, Footer, modalVariant, open, setOpen, minAge, maxAge, ...datePickerProps } = params
+  const { Header, date, Footer, modalVariant, open, onOpenModal, minAge, maxAge, ...datePickerProps } = params
   return (
     <ModalManager.Modal
       variants={modalVariant}
       debugName='date picker modal manager'
       visible={open}
-      toggle={() => setOpen(true)}
+      toggle={onOpenModal}
       header={Header}
       footer={Footer}
     >
       <NativePickerModal
         date={date}
-        setOpen={setOpen}
         minAge={minAge}
         maxAge={maxAge}
         {...datePickerProps}
@@ -114,7 +113,7 @@ const CustomPickerModal = (params: InternalModalProps) => {
 }
 
 const CustomPickerModalFooter = (params: CustomPickerModalFooter) => {
-  const { date, onConfirm, setOpen, styles } = params
+  const { onConfirm, onCancel, styles } = params
   return (
     <Gap style={styles.fotterButtonWrapper} value={2} variants={['row', 'padding:2']}>
       <Button
@@ -122,19 +121,19 @@ const CustomPickerModalFooter = (params: CustomPickerModalFooter) => {
         style={styles.footerCancelButton}
         variants={['flex']}
         text={`Cancel`}
-        onPress={() => setOpen(false)}/>
+        onPress={onCancel}/>
       <Button
         debugName={'custom modal footer confirm button '}
         variants={['flex']}
         style={styles.footerConfirmButton}
         text={`Confirm`}
-        onPress={() => onConfirmDate({ date, onConfirm, setOpen })}/>
+        onPress={onConfirm}/>
     </Gap>
   )
 }
 
 const CustomPickerModalHeader = (params: CustomPickerModalHeader) => {
-  const { styles, headerTitle = '' } = params
+  const { styles, headerTitle } = params
   return (
     <View style={styles.headerWrapper}>
       <Text style={styles.headerText} text={headerTitle || 'Date Picker Header'} />
@@ -148,7 +147,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const {
     textColor,
-    onConfirm,
     locale,
     mode,
     modal: isCustomModal,
@@ -162,7 +160,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     modalVariant,
     Header,
     Footer,
-    headerTitle,
+    headerTitle = '',
     variants = [],
     styles = {},
     ...textInputProps
@@ -177,6 +175,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
   const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue) || new Date())
   const dateValue = inputValue.split('-').reverse().join('/')
+  const onOpenModal = () => setOpen(true)
+  const onCloseModal = () => setOpen(false)
 
   const Modal = () => {
     const Component = isCustomModal ? CustomPickerModal : NativePickerModal
@@ -185,17 +185,24 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         modal={!isCustomModal}
         open={open}
         date={value}
-        setOpen={setOpen}
-        setValue={setValue}
         textColor={textColor || Theme.colors.light.text}
-        onConfirm={onConfirm}
+        onConfirm={date => onConfirmDate({ date, onConfirm: props.onConfirm, setOpen })}
+        onDateChange={date => setValue(date)}
+        onCancel={onCloseModal}
+        onOpenModal={onOpenModal}
         mode={mode || 'date'}
         modalVariant={modalVariant}
         locale={locale || 'en-GB'}
         maxAge={maxAge}
         minAge={minAge}
         Header={Header || <CustomPickerModalHeader styles={variantStyles} headerTitle={headerTitle} /> }
-        Footer={Footer || <CustomPickerModalFooter styles={variantStyles} date={value} onConfirm={onConfirm} setOpen={setOpen}/>}
+        Footer={Footer || (
+          <CustomPickerModalFooter
+            styles={variantStyles}
+            onConfirm={() => onConfirmDate({ date: value, onConfirm: props.onConfirm, setOpen })}
+            onCancel={onCloseModal}
+          />
+        )}
         styles={variantStyles}
       />
     )
@@ -206,7 +213,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
       <TextInput
         debugName={'debug name'}
         value={dateValue}
-        onPress={() => setOpen(true)}
+        onPress={onOpenModal}
         {...textInputProps}
       />
 
