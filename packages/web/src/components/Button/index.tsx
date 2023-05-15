@@ -101,7 +101,6 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       {children || (
         <Text
           text={text}
-
           styles={{
             text: getStyles('text'),
           }}

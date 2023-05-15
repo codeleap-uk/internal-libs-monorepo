@@ -24,5 +24,7 @@ export * from './Link'
 export * from './LoadingOverlay'
 export * from './MultiSelect'
 export * from './AutoComplete'
+export * from './InputBase'
+export * from './Switch'
 
 export * from './defaultStyles'

@@ -25,8 +25,9 @@
     "react-window": "1.8.5",
     "url-parse": "^1.5.10",
     "uuid": "^8.3.2",
-    "react-select": "^5.7.3",
-    "js-cookie": "^3.0.1"
+    "js-cookie": "^3.0.1",
+    "framer-motion": "^10.10.0",
+    "@radix-ui/react-slider": "1.1.1"
   },
   "peerDependencies": {
     "@codeleap/common": "*",
