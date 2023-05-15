@@ -71,15 +71,14 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
     control: (baseStyles, state) => ({
       ...baseStyles,
       ...variantStyles.innerWrapper,
-      background: 'red',
-      // height: 800,
+      width: 500,
       overflow: 'visible',
 
     }),
     menuList: (baseStyles, state) => ({
       ...baseStyles,
       // ...variantStyles.list,
-      backgroundColor: 'red',
+      // backgroundColor: 'red',
       height: 800,
       overflow: 'visible',
       zIndex: 99999,
@@ -87,7 +86,7 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
     }),
     menu: (baseStyles, state) => ({
       ...baseStyles,
-      backgroundColor: 'red',
+      // backgroundColor: 'red',
       height: 400,
       overflow: 'visible',
       zIndex: 99999,
@@ -112,6 +111,10 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
       overflow: 'visible',
       backgroundColor: 'red',
       height: 400,
+    }),
+    indicatorSeparator: (baseStyles, state) => ({
+      ...baseStyles,
+      display: 'none',
     }),
 
   }
