@@ -1,12 +1,7 @@
 import { AppSettings } from '../../config/Settings'
 import { RequestClient } from '../Fetch'
 
-type EchoSlackConfig = {
-  channel?: string
-  icon: string
-  token: string
-  baseURL?: string
-}
+type EchoSlackConfig = AppSettings['Slack']['echo']
 
 type EchoSlack = {
   label: string
