@@ -122,6 +122,8 @@ export type NumberField = {
   required?: boolean
   precision?: number
   masking?: Mask
+  min?: number
+  max?: number
 
 } & WithTransformer<number>
 export type SelectField<T = any> = {

@@ -79,8 +79,16 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
   const _generalIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', variantStyles)
 
   const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled, focused })
-  const leftIconStylesCompose = getIconStyles(_leftIconStyles, { hasError, disabled, focused })
-  const rightIconStylesCompose = getIconStyles(_rightIconStyles, { hasError, disabled, focused })
+  const leftIconStylesCompose = getIconStyles(_leftIconStyles, { 
+    hasError, 
+    disabled: disabled || props?.leftIcon?.disabled, 
+    focused 
+  })
+  const rightIconStylesCompose = getIconStyles(_rightIconStyles, { 
+    hasError, 
+    disabled: disabled || props?.rightIcon?.disabled,
+    focused 
+  })
 
   const leftIconStyles = {
     icon: {

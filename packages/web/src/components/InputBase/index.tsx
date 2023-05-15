@@ -39,6 +39,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     order = InputBaseDefaultOrder,
     style,
     labelAsRow = false,
+    wrapperRef,
     ...otherProps
   } = props
 
@@ -89,6 +90,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     <WrapperComponent 
       css={[_styles.wrapperStyle, style]}
       {...otherProps}
+      ref={wrapperRef}
       {...wrapperProps}
     >
       {
