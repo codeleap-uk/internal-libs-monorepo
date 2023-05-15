@@ -1,8 +1,6 @@
-import { ButtonComposition, createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { ModalComposition } from '@codeleap/mobile'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 export type DatePickerModalComposition =
-    `modal${Capitalize<ModalComposition>}` |
     'headerWrapper' |
     'headerText' |
     'fotterButtonWrapper' |

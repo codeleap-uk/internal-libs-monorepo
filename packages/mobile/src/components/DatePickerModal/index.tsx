@@ -23,6 +23,7 @@ export type DatePickerModalProps = {
   modalVariant?: ComponentVariants<typeof ModalPresets>['variants']
   Header?: ReactElement
   Footer?: ReactElement
+  headerTitle?: string
 } & Partial<DatePickerProps>& ComponentVariants<typeof DatePickerModalPresets> & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
 type InternalModalProps = DatePickerModalProps & {
@@ -43,6 +44,7 @@ type CustomPickerModalFooter = {
 
 type CustomPickerModalHeader = {
   styles: StylesOf<DatePickerModalComposition>
+  headerTitle?: string
 }
 
 export * from './styles'
@@ -132,10 +134,10 @@ const CustomPickerModalFooter = (params: CustomPickerModalFooter) => {
 }
 
 const CustomPickerModalHeader = (params: CustomPickerModalHeader) => {
-  const { styles } = params
+  const { styles, headerTitle = '' } = params
   return (
     <View style={styles.headerWrapper}>
-      <Text style={styles.headerText} text={`Date Picker Header`} />
+      <Text style={styles.headerText} text={headerTitle || 'Date Picker Header'} />
     </View>
   )
 }
@@ -160,6 +162,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     modalVariant,
     Header,
     Footer,
+    headerTitle,
     variants = [],
     styles = {},
     ...textInputProps
@@ -173,7 +176,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
   const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue) || new Date())
-
   const dateValue = inputValue.split('-').reverse().join('/')
 
   const Modal = () => {
@@ -192,7 +194,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         locale={locale || 'en-GB'}
         maxAge={maxAge}
         minAge={minAge}
-        Header={Header || <CustomPickerModalHeader styles={variantStyles} /> }
+        Header={Header || <CustomPickerModalHeader styles={variantStyles} headerTitle={headerTitle} /> }
         Footer={Footer || <CustomPickerModalFooter styles={variantStyles} date={value} onConfirm={onConfirm} setOpen={setOpen}/>}
         styles={variantStyles}
       />
