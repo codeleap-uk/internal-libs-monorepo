@@ -1,22 +1,28 @@
-import { onMount, useUnmount } from '../../utils'
+import { onMount, throttle, useUnmount } from '../../utils'
 import { AppSettings } from '../../config'
 import { useCodeleapContext } from '../../styles'
-import { throttle } from 'lodash'
 import { PerformanceError } from './errors'
 
 export type InspectRenderOptions = {
   noHooks?: boolean
-  logMode: 'raw' | 'summarized'
-  throttleInterval: number
+  logMode?: 'raw' | 'summarized'
+  throttleInterval?: number
 }
 
 export type PerformanceInspector = {
   inspectRender: (name: string, options?: InspectRenderOptions) => void
 }
 
-export function makePerformanceInspector(settings: AppSettings) {
-  const renderCounter: Record<string, number> = {}
+const renderCounter: Record<string, number> = {}
 
+export function makePerformanceInspector(settings: AppSettings) {
+  /**
+   * inspectRender monitors how much time a component render per second.
+   * Use perf.inspectRender('ComponentName') inside a component to monitor it.
+   * @param {string} name - Component name
+   * @param {PerformanceInspector} options - Some options for the inspector
+   * @returns
+   */
   const inspectRender = (
     name: string,
     options: InspectRenderOptions = {
@@ -28,9 +34,14 @@ export function makePerformanceInspector(settings: AppSettings) {
     const { logger } = useCodeleapContext()
     const { noHooks, logMode, throttleInterval } = options
 
-    if (!settings?.PerformanceInspector.enable || !settings?.Environment.IsDev) return
+    if (
+      !settings?.PerformanceInspector.enable ||
+      !settings?.Environment.IsDev
+    ) {
+      return
+    }
 
-    if (noHooks) {
+    if (!noHooks) {
       onMount(() => {
         logger.log(`Mounted -> ${name}`)
       })
@@ -44,22 +55,25 @@ export function makePerformanceInspector(settings: AppSettings) {
     }
 
     renderCounter[name] = renderCounter[name] ? renderCounter[name] + 1 : 1
+
+    const maxRenders = settings?.PerformanceInspector?.maxRenders
+    if (renderCounter[name] > maxRenders) {
+      throw new PerformanceError('maxRenders', {
+        name,
+        throttleInterval,
+        maxRenders,
+      })
+    }
+
     function logSummary() {
       const renders = renderCounter[name]
-      const maxRenders = settings?.PerformanceInspector?.maxRenders
-      if (renders >= maxRenders) {
-        throw new PerformanceError('maxRenders', {
-          name,
-          throttleInterval,
-          maxRenders,
-        })
-      }
+      if (renders <= 0) return
 
       logger.log(`Render summary -> ${name}: ${renders}`)
       renderCounter[name] = 0
     }
 
-    throttle(logSummary, throttleInterval)()
+    throttle(logSummary, name, throttleInterval)
   }
 
   return { inspectRender }
