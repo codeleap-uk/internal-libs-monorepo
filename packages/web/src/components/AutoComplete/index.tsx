@@ -34,6 +34,7 @@ export type AutoCompleteProps = React.PropsWithChildren<{
   footer?: ReactNode
   debugName?: string
   onValueChange?: () => void
+  label?: string
 } & Props
 >
 
@@ -43,7 +44,7 @@ const ReactSelect = (props: Props) => {
   )
 }
 
-export const AutoComplete: React.FC<AutoCompleteProps> = ({ accessible, variants, validate, styles, ...props }) => {
+export const AutoComplete: React.FC<AutoCompleteProps> = ({ accessible, variants, validate, styles, label, ...props }) => {
 
   const { showError, error } = useValidate(props.value, validate)
 
@@ -55,21 +56,73 @@ export const AutoComplete: React.FC<AutoCompleteProps> = ({ accessible, variants
     },
   )
 
-  console.log({ className: props.className })
-
   const reactSelectStyles: StylesConfig = {
     container: (baseStyles, state) => ({
       ...baseStyles,
       ...variantStyles.wrapper,
       ...props.css,
+      height: 800,
+      // overflow: 'visible',
+
     }),
+    control: (baseStyles, state) => ({
+      ...baseStyles,
+      ...variantStyles.innerWrapper,
+      width: 500,
+      // overflow: 'visible',
+
+    }),
+    menuList: (baseStyles, state) => ({
+      ...baseStyles,
+      // ...variantStyles.list,
+      // backgroundColor: 'red',
+      // height: 800,
+      overflow: 'visible',
+      zIndex: 99999,
+
+    }),
+    menu: (baseStyles, state) => ({
+      ...baseStyles,
+      // backgroundColor: 'red',
+      // height: 400,
+      overflow: 'visible',
+      zIndex: 99999,
+      top: 35,
+    }),
+
+    group: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+      backgroundColor: 'red',
+      // height: 400,
+    }),
+    option: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+
+    }),
+    menuPortal: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+
+    }),
+    indicatorSeparator: (baseStyles, state) => ({
+      ...baseStyles,
+      display: 'none',
+    }),
+
   }
 
   return (
-    <Fragment>
+    <View variants={['column']}>
+      {label && <Text text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
       <ReactSelect
-        styles={reactSelectStyles} onChange={(e) => props.onValueChange(e?.value)} {...props} />
+        styles={reactSelectStyles}
+        onChange={(e) => props.onValueChange(e?.value)}
+        isMulti
+        {...props}
+      />
       {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} />}
-    </Fragment>
+    </View>
   )
 }
