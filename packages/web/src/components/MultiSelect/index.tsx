@@ -1,25 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import { Fragment } from 'react'
-import {
-  AnyFunction,
-  ComponentVariants,
-  IconPlaceholder,
-  onUpdate,
-  useDefaultComponentStyle,
-  useValidate,
-} from '@codeleap/common'
+import { AnyFunction, useDefaultComponentStyle, useValidate } from '@codeleap/common'
 import _Select, { StylesConfig, SelectComponentsConfig, Props } from 'react-select'
-import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
-// import _Select, { StylesConfig } from 'react-select'
-
-import { v4 } from 'uuid'
-
-import { StylesOf } from '../../types/utility'
-import { Button } from '../Button'
+import { ReactNode } from 'react'
 import { View } from '../View'
 import { Text } from '../Text'
-import { Overlay } from '../Overlay'
 
 export * from './styles'
 
@@ -38,87 +24,73 @@ export type MultiSelectProps = React.PropsWithChildren<{
 } & Props
 >
 
-const ReactSelect = (props: Props) => {
+export const ReactSelect = (props: Props) => {
   return (
     <_Select {...props} />
   )
 }
 
-export const MultiSelect: React.FC<MultiSelectProps> = ({ accessible, variants, validate, styles, label, ...props }) => {
+export const MultiSelect: React.FC<MultiSelectProps> = ({ accessible, variants, validate, styles, label, onValueChange, ...props }) => {
 
   const { showError, error } = useValidate(props.value, validate)
 
   const variantStyles = useDefaultComponentStyle(
-    'Select', // This should correspond to the key of the component passed to the variants prop of StyleProvider
+    'Select',
     {
-      variants, // The variants prop is an array containing the variant names
-      styles, // This allows you to override the styles of each part of the composition through props
+      variants,
+      styles,
     },
   )
-
   const reactSelectStyles: StylesConfig = {
     container: (baseStyles, state) => ({
       ...baseStyles,
       ...variantStyles.wrapper,
       ...props.css,
-      height: 800,
-      // overflow: 'visible',
-
     }),
     control: (baseStyles, state) => ({
       ...baseStyles,
       ...variantStyles.innerWrapper,
       width: 500,
-      // overflow: 'visible',
-
+      borderRadius: 8,
     }),
     menuList: (baseStyles, state) => ({
       ...baseStyles,
-      // ...variantStyles.list,
-      // backgroundColor: 'red',
-      // height: 800,
+      ...variantStyles.list,
       overflow: 'visible',
       zIndex: 99999,
-
-    }),
-    menu: (baseStyles, state) => ({
-      ...baseStyles,
-      // backgroundColor: 'red',
-      // height: 400,
-      overflow: 'visible',
-      zIndex: 99999,
-      top: 35,
-    }),
-
-    group: (baseStyles, state) => ({
-      ...baseStyles,
-      overflow: 'visible',
-      backgroundColor: 'red',
-      // height: 400,
-    }),
-    option: (baseStyles, state) => ({
-      ...baseStyles,
-      overflow: 'visible',
-
+      borderRadius: 8,
     }),
     menuPortal: (baseStyles, state) => ({
       ...baseStyles,
       overflow: 'visible',
-
+      zIndex: 99999,
+    }),
+    menu: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+      zIndex: 99999,
+    }),
+    group: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
     }),
     indicatorSeparator: (baseStyles, state) => ({
       ...baseStyles,
+      ...variantStyles.separator,
       display: 'none',
     }),
-
   }
 
   return (
     <View variants={['column']}>
-      {label && <Text text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
+      {label && <Text css={variantStyles.label} text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
       <ReactSelect
-        styles={reactSelectStyles} onChange={(e) => props.onValueChange(e?.value)} {...props} />
-      {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} />}
+        styles={reactSelectStyles}
+        onChange={onValueChange}
+        isMulti
+        {...props}
+      />
+      {showError && <Text css={variantStyles.erroText} text={error?.message} variants={['p2', 'marginTop:1']} />}
     </View>
   )
 }

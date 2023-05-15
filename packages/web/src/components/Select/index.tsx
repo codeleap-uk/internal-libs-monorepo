@@ -1,18 +1,9 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import { Fragment } from 'react'
-import {
-  AnyFunction,
-
-  useDefaultComponentStyle,
-  useValidate,
-} from '@codeleap/common'
+import { AnyFunction, useDefaultComponentStyle, useValidate } from '@codeleap/common'
 import _Select, { StylesConfig, SelectComponentsConfig, Props } from 'react-select'
-import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
-// import _Select, { StylesConfig } from 'react-select'
-
-import { StylesOf } from '../../types/utility'
-
+import { ReactNode } from 'react'
 import { View } from '../View'
 import { Text } from '../Text'
 
@@ -33,7 +24,7 @@ export type SelectProps = React.PropsWithChildren<{
 } & Props
 >
 
-const ReactSelect = (props: Props) => {
+export const ReactSelect = (props: Props) => {
   return (
     <_Select {...props} />
   )
@@ -44,13 +35,12 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
   const { showError, error } = useValidate(props.value, validate)
 
   const variantStyles = useDefaultComponentStyle(
-    'Select', // This should correspond to the key of the component passed to the variants prop of StyleProvider
+    'Select',
     {
-      variants, // The variants prop is an array containing the variant names
-      styles, // This allows you to override the styles of each part of the composition through props
+      variants,
+      styles,
     },
   )
-
   const reactSelectStyles: StylesConfig = {
     container: (baseStyles, state) => ({
       ...baseStyles,
@@ -74,21 +64,19 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
       ...baseStyles,
       overflow: 'visible',
       zIndex: 99999,
-      // top: 35,
     }),
     menu: (baseStyles, state) => ({
       ...baseStyles,
       overflow: 'visible',
       zIndex: 99999,
-      // top: 35,
     }),
     group: (baseStyles, state) => ({
       ...baseStyles,
       overflow: 'visible',
-      // height: 400,
     }),
     indicatorSeparator: (baseStyles, state) => ({
       ...baseStyles,
+      ...variantStyles.separator,
       display: 'none',
     }),
   }
