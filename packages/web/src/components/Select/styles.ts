@@ -12,7 +12,7 @@ export type SelectParts =
   | 'buttonWrapper'
   | 'buttonText'
   | 'buttonIcon'
-  | 'error'
+  | 'errorText'
 
 export type SelectComposition =
   | `${SelectParts}:hover`

@@ -3,9 +3,7 @@ import { jsx } from '@emotion/react'
 import { Fragment } from 'react'
 import {
   AnyFunction,
-  ComponentVariants,
-  IconPlaceholder,
-  onUpdate,
+
   useDefaultComponentStyle,
   useValidate,
 } from '@codeleap/common'
@@ -13,13 +11,10 @@ import _Select, { StylesConfig, SelectComponentsConfig, Props } from 'react-sele
 import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
 // import _Select, { StylesConfig } from 'react-select'
 
-import { v4 } from 'uuid'
-
 import { StylesOf } from '../../types/utility'
-import { Button } from '../Button'
+
 import { View } from '../View'
 import { Text } from '../Text'
-import { Overlay } from '../Overlay'
 
 export * from './styles'
 
@@ -44,7 +39,7 @@ const ReactSelect = (props: Props) => {
   )
 }
 
-export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, styles, label, ...props }) => {
+export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, styles, label, onValueChange, ...props }) => {
 
   const { showError, error } = useValidate(props.value, validate)
 
@@ -61,64 +56,52 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
       ...baseStyles,
       ...variantStyles.wrapper,
       ...props.css,
-      height: 800,
-      // overflow: 'visible',
-
     }),
     control: (baseStyles, state) => ({
       ...baseStyles,
       ...variantStyles.innerWrapper,
       width: 500,
-      // overflow: 'visible',
-
+      borderRadius: 8,
     }),
     menuList: (baseStyles, state) => ({
       ...baseStyles,
-      // ...variantStyles.list,
-      // backgroundColor: 'red',
-      // height: 800,
+      ...variantStyles.list,
       overflow: 'visible',
       zIndex: 99999,
-
-    }),
-    menu: (baseStyles, state) => ({
-      ...baseStyles,
-      // backgroundColor: 'red',
-      // height: 400,
-      overflow: 'visible',
-      zIndex: 99999,
-      top: 35,
-    }),
-
-    group: (baseStyles, state) => ({
-      ...baseStyles,
-      overflow: 'visible',
-      backgroundColor: 'red',
-      // height: 400,
-    }),
-    option: (baseStyles, state) => ({
-      ...baseStyles,
-      overflow: 'visible',
-
+      borderRadius: 8,
     }),
     menuPortal: (baseStyles, state) => ({
       ...baseStyles,
       overflow: 'visible',
-
+      zIndex: 99999,
+      // top: 35,
+    }),
+    menu: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+      zIndex: 99999,
+      // top: 35,
+    }),
+    group: (baseStyles, state) => ({
+      ...baseStyles,
+      overflow: 'visible',
+      // height: 400,
     }),
     indicatorSeparator: (baseStyles, state) => ({
       ...baseStyles,
       display: 'none',
     }),
-
   }
 
   return (
     <View variants={['column']}>
-      {label && <Text text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
+      {label && <Text css={variantStyles.label} text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
       <ReactSelect
-        styles={reactSelectStyles} onChange={(e) => props.onValueChange(e?.value)} {...props} />
-      {showError && <Text text={error?.message} variants={['p2', 'marginTop:1']} />}
+        styles={reactSelectStyles}
+        onChange={onValueChange}
+        {...props}
+      />
+      {showError && <Text css={variantStyles.erroText} text={error?.message} variants={['p2', 'marginTop:1']} />}
     </View>
   )
 }
