@@ -34,6 +34,13 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ accessible, variants, 
 
   const { showError, error } = useValidate(props.value, validate)
 
+  const selectedOption = props?.options?.find?.(o => {
+    if (typeof props.value === 'object') {
+      return o.value === props.value?.value
+    }
+    return o.value === props.value
+  })
+
   const variantStyles = useDefaultComponentStyle(
     'Select',
     {
@@ -86,8 +93,9 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({ accessible, variants, 
       {label && <Text css={variantStyles.label} text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
       <ReactSelect
         styles={reactSelectStyles}
-        onChange={onValueChange}
+        onChange={(e) => props.onValueChange(e?.value)}
         isMulti
+        value={selectedOption}
         {...props}
       />
       {showError && <Text css={variantStyles.erroText} text={error?.message} variants={['p2', 'marginTop:1']} />}

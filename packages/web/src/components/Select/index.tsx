@@ -52,6 +52,7 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
       ...variantStyles.innerWrapper,
       width: 500,
       borderRadius: 8,
+      minHeight: 50,
     }),
     menuList: (baseStyles, state) => ({
       ...baseStyles,
@@ -81,15 +82,23 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
     }),
   }
 
+  const selectedOption = props?.options?.find?.(o => {
+    if (typeof props.value === 'object') {
+      return o.value === props.value
+    }
+    return o.value === props.value
+  })
+
   return (
     <View variants={['column']}>
       {label && <Text css={variantStyles.label} text={label} variants={['p2', 'marginTop:1', 'marginBottom:2']} />}
       <ReactSelect
         styles={reactSelectStyles}
-        onChange={onValueChange}
+        value={selectedOption}
+        onChange={(e) => onValueChange(e)}
         {...props}
       />
-      {showError && <Text css={variantStyles.erroText} text={error?.message} variants={['p2', 'marginTop:1']} />}
+      {showError && <Text css={variantStyles.errorText} text={error?.message} variants={['p2', 'marginTop:1']} />}
     </View>
   )
 }
