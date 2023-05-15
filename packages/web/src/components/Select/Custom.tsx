@@ -8,7 +8,7 @@ import {
   useValidate,
 } from '@codeleap/common'
 import { forwardRef, useMemo, useRef } from 'react'
-import { InputLabel, FormError } from '../TextInput'
+// import { InputLabel, FormError } from '../TextInput'
 import { Icon } from '../Icon'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
@@ -57,13 +57,13 @@ export const InputWrapper = forwardRef<any, any>((props, ref) => {
 
   return (
     <View css={styles.wrapper} ref={ref} {...wrapperProps}>
-      <InputLabel label={label} style={styles.label} />
+      {/* <InputLabel label={label} style={styles.label} /> */}
       <View css={styles.inputWrapper} >
         {currentContent}
 
         <View css={styles.list}>{children}</View>
       </View>
-      <FormError message={error.message} style={styles.error} />
+      {/* <FormError message={error.message} style={styles.error} /> */}
     </View>
   )
 })
