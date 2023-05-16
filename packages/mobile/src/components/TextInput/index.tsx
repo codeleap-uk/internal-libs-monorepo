@@ -193,6 +193,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       ]}
       ref={innerInputRef}
       pointerEvents={isPressable ? 'none' : undefined}
+      textAlignVertical={isMultiline ? 'top' : undefined}
       {...maskingExtraProps}
     />
   </InputBase>
