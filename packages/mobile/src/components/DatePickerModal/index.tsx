@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { useState, ComponentVariants, useCodeleapContext, useDefaultComponentStyle, StylesOf } from '@codeleap/common'
+import { useState, ComponentVariants, useCodeleapContext, useDefaultComponentStyle, StylesOf, TypeGuards } from '@codeleap/common'
 import { DatePickerModalComposition, DatePickerModalPresets } from './styles'
 import { DatePickerProps } from 'react-native-date-picker'
 import DatePicker from 'react-native-date-picker'
@@ -176,7 +176,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     transform: StyleSheet.flatten,
   })
 
-  const [open, setOpen] = visible && toggle ? [visible, toggle] : useState(false)
+  const [open, setOpen] = !TypeGuards.isNil(visible) && !!toggle ? [visible, toggle] : useState(false)
   const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue))
 
   const inputDateValue = inputValue.split('-').reverse().join('/')
