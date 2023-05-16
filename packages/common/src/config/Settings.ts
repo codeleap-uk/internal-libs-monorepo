@@ -69,6 +69,15 @@ export type AppSettings<
       AppId: string
     }
   }
+
+  Slack: {
+    echo: {
+      channel?: string
+      icon: string
+      token: string
+      baseURL?: string
+    }
+  }
 }>
 
 export type ConfigurableSettings = Pick<
