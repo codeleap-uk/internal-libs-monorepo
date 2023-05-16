@@ -126,11 +126,18 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   const inputTextStyle = React.useMemo(() => {
     return [
       variantStyles.input,
-      disabled && variantStyles['input:disabled'],
       isFocused && variantStyles['input:focus'],
       hasError && variantStyles['input:error'],
+      disabled && variantStyles['input:disabled'],
     ]
   }, [disabled, isFocused, hasError])
+
+  const placeholderStyles = [
+    variantStyles.placeholder,
+    isFocused && variantStyles['placeholder:focus'],
+    hasError &&variantStyles['placeholder:error'],
+    disabled && variantStyles['placeholder:disabled']
+  ]
 
   onUpdate(() => {
     function handleKeyboardEvent(event: KeyboardEvent) {
@@ -236,6 +243,9 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
           displayType='input'
           css={[
             ...inputTextStyle,
+            {
+              '&::placeholder': placeholderStyles
+            },
             {
               '&:focus':  [
                 { 
