@@ -15,9 +15,10 @@ export type ActionIconProps= {
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
   const { name, icon, iconProps, variants, styles, children, ...touchableProps } = props
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
+  const variantStyles = useDefaultComponentStyle<typeof ActionIconPresets>('ActionIcon', {
     variants, styles, transform: StyleSheet.flatten,
   })
+  variantStyles.icon.
   const touchableStyles = getNestedStylesByKey('touchable', variantStyles)
 
   return <Touchable styles={touchableStyles} {...touchableProps}>

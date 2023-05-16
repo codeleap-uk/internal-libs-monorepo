@@ -64,7 +64,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ...props
     } = flatListProps
 
-    const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
+    const variantStyles = useDefaultComponentStyle< typeof ListPresets>('List', {
       variants,
       styles,
       transform: StyleSheet.flatten,

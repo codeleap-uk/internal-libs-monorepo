@@ -116,7 +116,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     closeOnHardwareBackPress = true,
     ...props
   } = modalProps
-  const variantStyles = useDefaultComponentStyle('u:Modal', {
+  const variantStyles = useDefaultComponentStyle<typeof ModalPresets>('Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
     styles,

@@ -78,7 +78,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const InputElement = isMultiline ? TextareaAutosize : 'input'
 
-  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
+  const variantStyles = useDefaultComponentStyle<typeof TextInputPresets>('TextInput', {
     variants,
     styles,
   })

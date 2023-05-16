@@ -1,12 +1,12 @@
 import { React, Text, View } from '@/app'
 import { ComponentVariants, StylesOf, useDefaultComponentStyle } from '@codeleap/common'
 
-import { MyComponentComposition, _MyComponentStyle } from '../app/stylesheets/MyComponent'
+import { MyComponentComposition, MyComponentStyle } from '../app/stylesheets/MyComponent'
 
 export const MyComponent:React.FC<{
     styles?: StylesOf<MyComponentComposition>
-} & ComponentVariants<typeof _MyComponentStyle>> = ({ styles, variants }) => {
-  const variantStyles = useDefaultComponentStyle<'u:MyComponent', typeof _MyComponentStyle >('u:MyComponent', {
+} & ComponentVariants<typeof MyComponentStyle>> = ({ styles, variants }) => {
+  const variantStyles = useDefaultComponentStyle<typeof MyComponentStyle >('MyComponent', {
     styles,
     variants,
   })

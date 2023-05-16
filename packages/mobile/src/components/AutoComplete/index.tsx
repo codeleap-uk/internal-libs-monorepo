@@ -87,7 +87,7 @@ export const AutoComplete = <T extends string|number = string>(props: AutoComple
   const [filteredOptions, setFilteredOptions] = useState(options)
 
   const [loading, setLoading] = useState(false)
-  const variantStyles = useDefaultComponentStyle<'u:AutoComplete', typeof AutoCompletePresets>('u:AutoComplete', {
+  const variantStyles = useDefaultComponentStyle<typeof AutoCompletePresets>('AutoComplete', {
     variants,
     transform: StyleSheet.flatten,
     styles,

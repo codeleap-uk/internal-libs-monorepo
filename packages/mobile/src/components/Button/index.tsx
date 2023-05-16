@@ -93,7 +93,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     ...props
   } = buttonProps
   const [pressed, setPressed] = React.useState(false)
-  const variantStyles = useDefaultComponentStyle('u:Button', {
+  const variantStyles = useDefaultComponentStyle('Button', {
     variants,
     transform: StyleSheet.flatten,
     styles,

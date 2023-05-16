@@ -29,7 +29,7 @@ export type IconProps = {
 export const IconComponent: React.FC<IconProps> = ({ name, style, variants,  ...otherProps }) => {
   const { Theme, logger } = useCodeleapContext()
 
-  const variantStyles = useDefaultComponentStyle<'u:Icon', typeof IconPresets>('u:Icon', {
+  const variantStyles = useDefaultComponentStyle<typeof IconPresets>('Icon', {
     variants,
     transform: StyleSheet.flatten,
     styles: {

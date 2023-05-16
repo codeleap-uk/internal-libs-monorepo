@@ -21,7 +21,7 @@ export type BackdropProps = React.PropsWithChildren<
 export const Backdrop = (backdropProps:BackdropProps) => {
   const { variants = [], styles = {}, visible, children, wrapperProps = {}, ...props } = backdropProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Backdrop', typeof BackdropPresets>('u:Backdrop', {
+  const variantStyles = useDefaultComponentStyle<typeof BackdropPresets>('Backdrop', {
     variants,
     rootElement: 'wrapper',
     styles,

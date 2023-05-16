@@ -70,7 +70,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     ...defaultAnimation, ...animation,
   }
 
-  let variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>('u:SegmentedControl', {
+  let variantStyles = useDefaultComponentStyle<typeof SegmentedControlPresets>('SegmentedControl', {
     styles,
     transform: StyleSheet.flatten,
     variants,

@@ -57,7 +57,7 @@ const GridCP = forwardRef<ScrollView, GridProps>(
       ...props
     } = flatGridProps
 
-    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridStyles>('u:Grid', {
+    const variantStyles = useDefaultComponentStyle<typeof GridStyles>('Grid', {
       variants,
       styles,
       transform: StyleSheet.flatten,

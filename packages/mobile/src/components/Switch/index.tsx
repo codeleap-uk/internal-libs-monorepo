@@ -55,7 +55,7 @@ export const Switch = (props: SwitchProps) => {
       switchOnLeft,
     } = others
 
-    const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
+    const variantStyles = useDefaultComponentStyle< typeof SwitchPresets>('Switch', {
       variants,
       styles, 
       rootElement: 'wrapper',

@@ -10,7 +10,7 @@ export type DrawerProps = Omit<ModalProps, 'variants'> & ComponentVariants<typeo
 export const Drawer:React.FC<DrawerProps> = (props) => {
   const { variants, styles, scrollProps, ...modalProps } = props
 
-  const variantStyles = useDefaultComponentStyle('u:Drawer', {
+  const variantStyles = useDefaultComponentStyle('Drawer', {
     variants,
     styles,
     transform: StyleSheet.flatten,

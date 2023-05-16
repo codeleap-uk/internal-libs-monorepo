@@ -17,7 +17,7 @@ export type ActionIconProps= {
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
   const { icon, name, iconProps, action, onPress, variants, styles, children, disabled, ...touchableProps } = props
   
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
+  const variantStyles = useDefaultComponentStyle<typeof ActionIconPresets>('ActionIcon', {
     variants, 
     styles
   })

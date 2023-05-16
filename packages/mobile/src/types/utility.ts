@@ -1,6 +1,8 @@
 import { ReactNode } from 'react'
-import { StyleProp } from 'react-native'
+import { StyleProp, ViewStyle, ImageStyle, TextStyle } from 'react-native'
 import { EasingFn } from 'react-native-reanimated'
+
+export type TCSS = ViewStyle & ImageStyle & TextStyle & {size?: number}
 
 export type StylesOf<C extends string> = Partial<Record<C, StyleProp<any>>>
 type TransitionBase = {

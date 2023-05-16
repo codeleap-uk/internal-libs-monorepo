@@ -60,7 +60,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
       }
     }
   }
-  const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
+  const variantStyles = useDefaultComponentStyle< typeof TextPresets>('Text', {
     variants,
     transform: StyleSheet.flatten,
     rootElement: 'text',

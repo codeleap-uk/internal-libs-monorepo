@@ -16,7 +16,7 @@ export * from './styles'
 
 export const InputLabel:React.FC<InputLabelProps> = (props) => {
   const { label, required = false, variants = [], styles = {}, style, ...viewProps } = props
-  const variantStyles = useDefaultComponentStyle<'u:InputLabel', typeof InputLabelPresets>('u:InputLabel', {
+  const variantStyles = useDefaultComponentStyle<typeof InputLabelPresets>('InputLabel', {
     variants, styles, transform: StyleSheet.flatten,
   })
 

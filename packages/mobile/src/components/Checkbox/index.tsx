@@ -56,7 +56,7 @@ export const Checkbox = (props: CheckboxProps) => {
       checkboxOnLeft,
     } = others
 
-    const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
+    const variantStyles = useDefaultComponentStyle< typeof CheckboxPresets>('Checkbox', {
       variants,
       styles, 
       rootElement: 'wrapper',

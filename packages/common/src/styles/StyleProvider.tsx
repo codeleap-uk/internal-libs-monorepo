@@ -132,16 +132,13 @@ const getTransformedStyles = (styles, transform) => {
 }
 
 export function useDefaultComponentStyle<
-  K extends ComponentNameArg | `u:${string}`,
   S extends DefaultVariantBuilder<any>
 >(
-  componentName: K,
-  props: useDefaultComponentStyleProps<K extends keyof DEFAULT_VARIANTS ? K : any>,
-): K extends ComponentNameArg
-  ? Record<NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[K]>>, any>
-  : Record<NestedKeys<FromVariantsBuilder<any, S>>, any> {
+  componentName: string,
+  props: useDefaultComponentStyleProps<any>,
+): Record<NestedKeys<FromVariantsBuilder<any, S>>, any> {
 
-  const windowSize = useWindowSize()
+
   const { ComponentVariants: CV, provider, currentTheme } = useCodeleapContext() || {}
   try {
 
@@ -149,9 +146,6 @@ export function useDefaultComponentStyle<
 
     let name = componentName as string
 
-    if (componentName.startsWith('u:')) {
-      name = componentName.replace('u:', '')
-    }
 
     const v = CV?.[name]
     if (!v) {
@@ -169,10 +163,10 @@ export function useDefaultComponentStyle<
         rootElement: props.rootElement,
         // @ts-ignore
         styles,
-        size: windowSize,
+        
       }, currentTheme as string)
 
-    }, [...(props.variants ?? []), windowSize.height, windowSize.width, styles, props.rootElement, componentName])
+    }, [...(props.variants ?? []),  styles, props.rootElement, componentName])
     return stylesheet as any
   } catch (e) {
     throw new Error('useDefaultComponentStyle with args ' + arguments + e)

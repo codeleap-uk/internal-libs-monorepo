@@ -123,7 +123,7 @@ export const RadioGroup = <T extends string|number>(
     debugName,
   } = others
 
-  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', { 
+  const variantStyles = useDefaultComponentStyle< typeof RadioInputPresets>('RadioInput', { 
     variants,
     styles,
   })

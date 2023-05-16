@@ -14,7 +14,7 @@ export type LoadingOverlayProps = React.PropsWithChildren<{
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
   const { visible, children, styles, variants,responsiveVariants } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
+  const variantStyles = useDefaultComponentStyle<typeof LoadingOverlayPresets>('LoadingOverlay', {
     variants, styles, responsiveVariants, rootElement: 'wrapper'
   })
 

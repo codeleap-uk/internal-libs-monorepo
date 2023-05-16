@@ -108,7 +108,7 @@ export const CustomSelect: React.FC<CustomSelectProps<any>> = <
       }
     },
   )
-  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
+  const variantStyles = useDefaultComponentStyle< typeof SelectPresets>('Select', {
     styles,
     variants,
     responsiveVariants,

@@ -62,7 +62,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     ...imageProps
   } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImagePresets>('u:Image', { variants, styles: componentStyleSheet, transform: StyleSheet.flatten })
+  const variantStyles = useDefaultComponentStyle<typeof ImagePresets>('Image', { variants, styles: componentStyleSheet, transform: StyleSheet.flatten })
   const [loading, setLoading] = React.useState(false)
 
   const styles = StyleSheet.flatten([variantStyles.wrapper, style])

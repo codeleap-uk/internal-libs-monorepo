@@ -65,7 +65,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   const id = useId()
 
-  const variantStyles = useDefaultComponentStyle<'u:Modal', typeof ModalPresets>('u:Modal', {
+  const variantStyles = useDefaultComponentStyle<typeof ModalPresets>('Modal', {
     responsiveVariants,
     variants,
     styles,

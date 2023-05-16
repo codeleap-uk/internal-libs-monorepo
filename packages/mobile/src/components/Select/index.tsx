@@ -40,7 +40,7 @@ export const Select = <T extends string|number = string>(selectProps:CustomSelec
     ...drawerProps
   } = selectProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
+  const variantStyles = useDefaultComponentStyle< typeof SelectPresets>('Select', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,

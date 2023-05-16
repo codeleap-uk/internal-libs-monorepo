@@ -27,7 +27,7 @@ export const Calendar = (props:CalendarProps) => {
     onValueChange,
     ...viewProps
   } = props
-  const variantStyles = useDefaultComponentStyle<'u:Calendar', typeof CalendarPresets>('u:Calendar', {
+  const variantStyles = useDefaultComponentStyle<typeof CalendarPresets>('Calendar', {
     variants,
     styles,
     transform: StyleSheet.flatten,

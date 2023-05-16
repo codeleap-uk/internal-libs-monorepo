@@ -56,7 +56,7 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
   } = props
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
-  const componentStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderPresets>('u:EmptyPlaceholder', {
+  const componentStyles = useDefaultComponentStyle<typeof EmptyPlaceholderPresets>('EmptyPlaceholder', {
     variants,
     transform: StyleSheet.flatten,
     styles,

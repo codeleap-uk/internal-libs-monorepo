@@ -47,7 +47,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
     [isExternal ? 'href' : 'to']: to,
   }
 
-  const variantStyles = useDefaultComponentStyle<'u:Link', typeof LinkPresets>('u:Link', {
+  const variantStyles = useDefaultComponentStyle< typeof LinkPresets>('Link', {
     responsiveVariants,
     variants,
     rootElement: 'text',

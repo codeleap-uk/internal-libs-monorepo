@@ -66,8 +66,8 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
   
-  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
-    'u:Pager',
+  let variantStyles = useDefaultComponentStyle<typeof PagerPresets>(
+    'Pager',
     {
       styles,
       transform: StyleSheet.flatten,

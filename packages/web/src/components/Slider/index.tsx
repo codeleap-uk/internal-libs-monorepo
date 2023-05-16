@@ -123,7 +123,7 @@ export const Slider = (props: SliderProps) => {
     onValueChange(copyValue)
   }
 
-  const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
+  const variantStyles = useDefaultComponentStyle<typeof SliderPresets>('Slider', {
     variants,
     styles,
   })

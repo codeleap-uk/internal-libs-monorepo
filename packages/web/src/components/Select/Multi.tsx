@@ -50,7 +50,7 @@ export const MultiSelect: React.FC<MultiSelectProps<any>> = (
       }
     },
   )
-  const variantStyles =  useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
+  const variantStyles =  useDefaultComponentStyle<typeof SelectPresets>('Select', {
     styles,
     variants,
     responsiveVariants,

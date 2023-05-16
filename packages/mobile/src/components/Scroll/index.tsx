@@ -73,7 +73,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       }
     }, [refreshingDisplay, changeData])
 
-    const variantStyles = useDefaultComponentStyle<'u:Scroll', typeof ScrollPresets>('u:Scroll', {
+    const variantStyles = useDefaultComponentStyle< typeof ScrollPresets>('Scroll', {
       variants,
       styles,
       transform: StyleSheet.flatten,

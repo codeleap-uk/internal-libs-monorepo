@@ -67,7 +67,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchablePresets>('u:Touchable', {
+  const variantStyles = useDefaultComponentStyle< typeof TouchablePresets>('Touchable', {
     variants,
     transform: StyleSheet.flatten,
     rootElement: 'wrapper',

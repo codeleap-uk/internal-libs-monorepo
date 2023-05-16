@@ -66,7 +66,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
-  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
+  const variantStyles = useDefaultComponentStyle<typeof TextInputPresets>('TextInput', {
     variants,
     styles,
     transform: StyleSheet.flatten,

@@ -39,7 +39,7 @@ export const MultiSelect = <T extends string|number = string>(selectProps:MultiS
     ...drawerProps
   } = selectProps
 
-  const variantStyles = useDefaultComponentStyle<'u:MultiSelect', typeof MultiSelectPresets>('u:MultiSelect', {
+  const variantStyles = useDefaultComponentStyle< typeof MultiSelectPresets>('MultiSelect', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,

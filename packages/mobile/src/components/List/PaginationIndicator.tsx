@@ -48,9 +48,8 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const { hasMore, isFetching, noMoreItemsText, style, activityIndicator, styles = {}, variants = [] } = props
 
   const variantStyles = useDefaultComponentStyle<
-    'u:PaginationIndicator',
     typeof PaginationIndicatorStyles
-    >('u:PaginationIndicator', {
+    >('PaginationIndicator', {
       variants,
       styles,
       transform: StyleSheet.flatten,

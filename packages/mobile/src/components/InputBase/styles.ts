@@ -57,7 +57,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const hasError = !TypeGuards.isNil(error)
 
-  const variantStyles = useDefaultComponentStyle<'u:InputBase', typeof InputBasePresets>('u:InputBase', {
+  const variantStyles = useDefaultComponentStyle<typeof InputBasePresets>('InputBase', {
     styles,
     transform: StyleSheet.flatten,
     rootElement: 'wrapper'

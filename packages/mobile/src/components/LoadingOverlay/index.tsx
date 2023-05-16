@@ -23,7 +23,7 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
     visible,
   } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
+  const variantStyles = useDefaultComponentStyle<typeof LoadingOverlayPresets>('LoadingOverlay', {
     variants,
     rootElement: 'wrapper',
     styles,
