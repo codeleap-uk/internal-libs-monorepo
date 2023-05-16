@@ -259,6 +259,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
               ],
             }
           ]}
+          inputMode='numeric'
           onValueChange={handleChangeInput}
           onBlur={handleBlur}
           onFocus={handleFocus}
