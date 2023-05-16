@@ -73,7 +73,7 @@ const onConfirmDate = (params: onConfirmDateProps) => {
 }
 
 const FormatCurrentDate = (date: string) => {
-  const [year, month, day] = date.split('-')
+  const [year, month, day] = date.includes('-') ? date.split('-') : date.split('/')
   return new Date(+year, +month - 1, +day)
 }
 
@@ -180,7 +180,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const [open, setOpen] = !TypeGuards.isNil(visible) && !!toggle ? [visible, toggle] : useState(false)
   const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue))
-
   const inputDateValue = inputValue.split('-').reverse().join('/')
 
   const onOpenModal = () => setOpen(true)
