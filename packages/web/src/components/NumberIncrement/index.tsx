@@ -139,6 +139,23 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     disabled && variantStyles['placeholder:disabled']
   ]
 
+  const handleBlur = React.useCallback((args) => {
+    if (TypeGuards.isNumber(max) && (value >= max)) {
+      onChange(max)
+      return
+    } else if (TypeGuards.isNumber(min) && (value <= min) || !value) {
+      onChange(min)
+      return
+    }
+
+    validation?.onInputBlurred()
+  }, [validation?.onInputBlurred, value])
+
+  const handleFocus = React.useCallback(() => {
+    validation?.onInputFocused()
+    setIsFocused(true)
+  }, [validation?.onInputFocused])
+
   onUpdate(() => {
     function handleKeyboardEvent(event: KeyboardEvent) {
       if (!isFocused) return
@@ -177,23 +194,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     onChange(Number(floatValue))
   }
 
-  const handleBlur = React.useCallback(() => {
-    if (TypeGuards.isNumber(max) && (value >= max)) {
-      onChange(max)
-      return
-    } else if (TypeGuards.isNumber(min) && (value <= min)) {
-      onChange(min)
-      return
-    }
-
-    validation?.onInputBlurred()
-  }, [validation?.onInputBlurred])
-
-  const handleFocus = React.useCallback(() => {
-    validation?.onInputFocused()
-    setIsFocused(true)
-  }, [validation?.onInputFocused])
-
   const InputFormat = TypeGuards.isString(format) || TypeGuards.isString(mask)
     ? PatternFormat
     : NumericFormat
@@ -210,6 +210,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
+          editable && variantStyles['innerWrapper:cursor']
         ],
       }}
       rightIcon={{

@@ -8,6 +8,7 @@ export type NumberIncrementStates = 'disabled' | 'focus' | 'error'
 export type NumberIncrementComposition =
   | NumberIncrementParts
   | `${NumberIncrementParts}:${NumberIncrementStates}`
+  | `innerWrapper:cursor`
 
 const createNumberIncrementStyle = createDefaultVariantFactory<NumberIncrementComposition>()
 
