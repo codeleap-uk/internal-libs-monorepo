@@ -35,7 +35,7 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
   const {
     debugName,
     name = '',
-    firstNameOnly,
+    firstNameOnly = true,
     image,
     variants = [],
     styles,
