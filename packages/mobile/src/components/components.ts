@@ -34,7 +34,6 @@ export * from './InputLabel'
 export * from './LoadingOverlay'
 export * from './ActionIcon'
 export * from './InputBase'
-
-
+export * from './Avatar'
 
 export * from './defaultStyles'

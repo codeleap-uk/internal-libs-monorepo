@@ -29,10 +29,12 @@ import { GridStyles } from './Grid'
 import { InputLabelPresets } from './InputLabel'
 import { LoadingOverlayPresets } from './LoadingOverlay'
 import { InputBasePresets } from './InputBase'
+import { AvatarPresets } from './Avatar'
 
 export const defaultStyles = {
   View: ViewPresets,
   Icon: IconPresets,
+  Avatar: AvatarPresets,
   Touchable: TouchablePresets,
   Text: TextPresets,
   Image: ImagePresets,
@@ -62,5 +64,5 @@ export const defaultStyles = {
   Grid: GridStyles,
   LoadingOverlay: LoadingOverlayPresets,
   InputLabel: InputLabelPresets,
-  InputBase: InputBasePresets
+  InputBase: InputBasePresets,
 }
