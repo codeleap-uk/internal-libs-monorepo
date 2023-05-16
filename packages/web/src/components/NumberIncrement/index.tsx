@@ -38,6 +38,7 @@ export type NumberIncrementProps = Pick<
   hasSeparator?: boolean
   _error?: string
   formatter?: FormatInputValueFunction
+  placeholder?: string
 }
 
 export const NumberIncrement = (props: NumberIncrementProps) => {
@@ -67,6 +68,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     validate,
     _error,
     formatter = null,
+    placeholder,
   } = others
 
   const [isFocused, setIsFocused] = useState(false)
@@ -267,6 +269,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
           prefix={prefix}
           format={TypeGuards.isFunction(formatter) ? formatter : format}
           mask={mask}
+          placeholder={placeholder}
           getInputRef={innerInputRef}
         />
       ) : <Text text={String(value)} css={inputTextStyle} />}
