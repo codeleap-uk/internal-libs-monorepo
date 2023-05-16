@@ -11,7 +11,7 @@ const defineError = (errorName: ErrorNames, args: Partial<ErrorArgs>) => {
   switch (errorName) {
     case 'maxRenders':
       return `${args.name} is rendering more than ${args.maxRenders}time per ${
-        1000 / 1000
+        args.throttleInterval / 1000
       }second!
       If you aware of this, you can disable it in the Settings.ts > Performancer.
       `

@@ -7,6 +7,7 @@ export type InspectRenderOptions = {
   noHooks?: boolean
   logMode?: 'raw' | 'summarized'
   throttleInterval?: number
+  maxRenders?: number
 }
 
 export type PerformanceInspector = {
@@ -29,10 +30,14 @@ export function makePerformanceInspector(settings: AppSettings) {
       noHooks: false,
       logMode: 'summarized',
       throttleInterval: 1000,
+      maxRenders: settings?.PerformanceInspector.maxRenders,
     },
   ) => {
+    const blacklist = settings?.PerformanceInspector.blacklist || []
+    if (blacklist.some((item) => name.startsWith(item))) return
+
     const { logger } = useCodeleapContext()
-    const { noHooks, logMode, throttleInterval } = options
+    const { noHooks, logMode, throttleInterval, maxRenders } = options
 
     if (
       !settings?.PerformanceInspector.enable ||
@@ -50,14 +55,11 @@ export function makePerformanceInspector(settings: AppSettings) {
       })
     }
 
-    if (logMode === 'raw') {
-      logger.log(`Rendered -> ${name}`)
-    }
-
     renderCounter[name] = renderCounter[name] ? renderCounter[name] + 1 : 1
+    const renders = renderCounter[name]
 
-    const maxRenders = settings?.PerformanceInspector?.maxRenders
-    if (renderCounter[name] > maxRenders) {
+    if (renders > maxRenders) {
+      renderCounter[name] = 0
       throw new PerformanceError('maxRenders', {
         name,
         throttleInterval,
@@ -65,8 +67,12 @@ export function makePerformanceInspector(settings: AppSettings) {
       })
     }
 
+    if (logMode === 'raw') {
+      logger.log(`Rendered -> ${name}: ${renders}`)
+      return
+    }
+
     function logSummary() {
-      const renders = renderCounter[name]
       if (renders <= 0) return
 
       logger.log(`Render summary -> ${name}: ${renders}`)

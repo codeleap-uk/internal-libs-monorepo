@@ -28,6 +28,7 @@ export type AppSettings<
   PerformanceInspector: {
     enable: boolean
     maxRenders: number
+    blacklist?: string[]
   }
   Logger: {
     Level: LogType | LogType[]
