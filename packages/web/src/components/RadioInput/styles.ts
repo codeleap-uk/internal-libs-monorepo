@@ -1,10 +1,14 @@
-import {
-  createDefaultVariantFactory, includePresets
-} from '@codeleap/common'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { IconLessInputBaseParts } from '../InputBase'
 
-export type RadioInputComposition = "button" | "text" | "wrapper" | "itemText" | "button:checked" | "button:unchecked" | "itemWrapper" | "listWrapper" | "button:mark"
+type OptionParts = 'wrapper' | 'label' | 'indicator' | 'indicatorInner' | 'separator'
+type OptionStates = 'selected' | 'disabled' | 'selectedDisabled'
 
-const createRadioStyle = createDefaultVariantFactory<RadioInputComposition>()
+type OptionComposition = `${OptionParts}:${OptionStates}` | OptionParts
 
-export const RadioInputPresets = includePresets((styles) => createRadioStyle(() => ({ wrapper: styles })))
+export type RadioInputComposition = IconLessInputBaseParts | `${IconLessInputBaseParts}:disabled` | `option${Capitalize<OptionComposition>}`
 
+const createRadioStyle =
+  createDefaultVariantFactory<RadioInputComposition>()
+
+export const RadioInputPresets = includePresets(style => createRadioStyle(() => ({ wrapper: style })))
