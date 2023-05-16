@@ -16,10 +16,16 @@ import { useKeyboardAwareView, GetKeyboardAwarePropsOptions } from '../../utils'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
+export type AugmentedRenderItemInfo<T> = ListRenderItemInfo<T> & {
+  isFirst: boolean
+  isLast: boolean
+  isOnly: boolean
+}
+
 export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & {
   data: T[]
   keyExtractor?: (item: T, index: number) => string
-  renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
+  renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
@@ -30,10 +36,11 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
 export * from './styles'
 export * from './PaginationIndicator'
 
+
 export type FlatListProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
-> =RNFlatListProps<Data> &
+> = ReplaceFlatlistProps<RNFlatListProps<Data>, Data> &
   Omit<ViewProps, 'variants'> & {
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
@@ -76,6 +83,26 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
+    const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
+      if (!props?.renderItem) return null
+      
+      const listLength = props?.data?.length || 0
+
+      const isFirst = data.index === 0
+      const isLast = data.index === listLength - 1
+
+      const isOnly = isFirst && isLast
+
+      return props?.renderItem({
+        ...data,
+        isFirst,
+        isLast,
+        isOnly,
+      })
+
+
+    }, [props?.renderItem, props?.data?.length])
+
     const _listProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
@@ -92,6 +119,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ),
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
+      renderItem
     }
 
     return (
