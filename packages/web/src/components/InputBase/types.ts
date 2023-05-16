@@ -24,5 +24,5 @@ export type InputBaseProps = React.PropsWithChildren<{
   order?: OrderedParts[]
   style?: any
   labelAsRow?: boolean
-  wrapperRef?: React.MutableRefObject<HTMLDivElement | null>
+  innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
 }>

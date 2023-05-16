@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ComponentVariants, useDefaultComponentStyle, StylesOf, PropsOf, TypeGuards, onUpdate, useState, useRef } from '@codeleap/common'
+import { ComponentVariants, yup, useDefaultComponentStyle, StylesOf, PropsOf, TypeGuards, onUpdate, useState, useRef, useValidate, FormTypes } from '@codeleap/common'
 import { View } from '../View'
 import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
@@ -9,7 +9,9 @@ import {
   PatternFormatProps as PFProps,
   NumericFormat,
   NumericFormatProps as NFProps,
+  NumberFormatBase,
 } from 'react-number-format'
+import { FormatInputValueFunction } from 'react-number-format/types/types'
 
 export * from './styles'
 
@@ -22,6 +24,7 @@ export type NumberIncrementProps = Pick<
   value: number
   onValueChange: (value: number) => void
   onChangeText?: (value: number) => void
+  validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
   style?: PropsOf<typeof View>['style']
   max?: number
   min?: number
@@ -33,6 +36,8 @@ export type NumberIncrementProps = Pick<
   format?: PFProps['format']
   mask?: PFProps['mask']
   hasSeparator?: boolean
+  _error?: string
+  formatter?: FormatInputValueFunction
 }
 
 export const NumberIncrement = (props: NumberIncrementProps) => {
@@ -55,14 +60,24 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     editable = true,
     hasSeparator = false,
     format = null,
-    mask = null,
+    mask = undefined,
     suffix,
     separator = null,
     prefix,
+    validate,
+    _error,
+    formatter = null,
   } = others
 
   const [isFocused, setIsFocused] = useState(false)
-  const wrapperRef = useRef(null)
+
+  const innerWrapperRef = useRef(null)
+  const innerInputRef = useRef<HTMLInputElement>(null)
+
+  const validation = useValidate(value, validate)
+
+  const hasError = !validation.isValid || _error
+  const errorMessage = validation.message || _error
 
   const incrementDisabled = React.useMemo(() => {
     if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
@@ -93,7 +108,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   }
 
   const handleChange = React.useCallback((action: 'increment' | 'decrement') => {
-    setIsFocused(true)
+    validation?.onInputFocused()
 
     if (action === 'increment' && !incrementDisabled) {
       const newValue = Number(value) + step
@@ -104,14 +119,18 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       onChange(newValue)
       return
     }
-  }, [value])
+
+    validation?.onInputBlurred()
+  }, [validation?.onInputBlurred, validation?.onInputFocused, value])
 
   const inputTextStyle = React.useMemo(() => {
     return [
       variantStyles.input,
       disabled && variantStyles['input:disabled'],
+      isFocused && variantStyles['input:focus'],
+      hasError && variantStyles['input:error'],
     ]
-  }, [disabled])
+  }, [disabled, isFocused, hasError])
 
   onUpdate(() => {
     function handleKeyboardEvent(event: KeyboardEvent) {
@@ -133,7 +152,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
 
   onUpdate(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      if (innerWrapperRef.current && !innerWrapperRef.current.contains(event.target)) {
         setIsFocused(false)
       }
     }
@@ -143,23 +162,15 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [wrapperRef])
-
-  const handleClickInside = () => {
-    setIsFocused(true)
-  }
+  }, [innerWrapperRef])
 
   const handleChangeInput: NFProps['onValueChange'] = (values) => {
-    if (!editable) return
+    const { floatValue } = values
 
-    const { value } = values
-
-    onChange(Number(value))
+    onChange(Number(floatValue))
   }
 
-  const onBlur: NFProps['onBlur'] = React.useCallback(() => {
-    if (!editable) return
-
+  const handleBlur = React.useCallback(() => {
     if (TypeGuards.isNumber(max) && (value >= max)) {
       onChange(max)
       return
@@ -167,15 +178,27 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       onChange(min)
       return
     }
-  }, [value])
 
-  const Input = TypeGuards.isString(format) || TypeGuards.isString(mask)
+    validation?.onInputBlurred()
+  }, [validation?.onInputBlurred])
+
+  const handleFocus = React.useCallback(() => {
+    validation?.onInputFocused()
+    setIsFocused(true)
+  }, [validation?.onInputFocused])
+
+  const InputFormat = TypeGuards.isString(format) || TypeGuards.isString(mask)
     ? PatternFormat
     : NumericFormat
+
+  const Input = TypeGuards.isFunction(formatter) 
+    ? NumberFormatBase
+    : InputFormat
 
   return (
     <InputBase
       {...inputBaseProps}
+      error={hasError ? errorMessage : null}
       styles={{
         ...variantStyles,
         innerWrapper: [
@@ -199,33 +222,41 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       style={style}
       disabled={disabled}
       focused={isFocused}
-      wrapperProps={{
-        ...(inputBaseProps.wrapperProps  || {}),
-        onClick: handleClickInside,
+      innerWrapperProps={{
+        ...(inputBaseProps.innerWrapperProps  || {}),
+        onClick: () => {
+          setIsFocused(true)
+          innerInputRef.current?.focus?.()
+        },
       }}
-      wrapperRef={wrapperRef}
+      innerWrapperRef={innerWrapperRef}
     >
-      {editable ? (
+      {editable && !disabled ? (
         <Input
           displayType='input'
           css={[
             ...inputTextStyle,
             {
               '&:focus':  [
-                { outline: 'none', borderWidth: 0, borderColor: 'transparent' },
-                isFocused && variantStyles['input:focus'],
+                { 
+                  outline: 'none', 
+                  borderWidth: 0, 
+                  borderColor: 'transparent' 
+                },
               ],
             }
           ]}
           onValueChange={handleChangeInput}
-          onBlur={onBlur}
+          onBlur={handleBlur}
+          onFocus={handleFocus}
           value={value}
           thousandSeparator={separator}
           thousandsGroupStyle={hasSeparator || TypeGuards.isString(separator) ? 'thousand' : 'none'}
-          format={format}
-          mask={mask}
           suffix={suffix}
           prefix={prefix}
+          format={TypeGuards.isFunction(formatter) ? formatter : format}
+          mask={mask}
+          getInputRef={innerInputRef}
         />
       ) : <Text text={String(value)} css={inputTextStyle} />}
     </InputBase>

@@ -39,7 +39,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     order = InputBaseDefaultOrder,
     style,
     labelAsRow = false,
-    wrapperRef,
+    innerWrapperRef,
     ...otherProps
   } = props
 
@@ -74,7 +74,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
       {_description}
     </View> :  _label,
     description: labelAsRow ? null : _description,
-    innerWrapper:  <InnerWrapperComponent css={[
+    innerWrapper:  <InnerWrapperComponent ref={innerWrapperRef} css={[
       _styles.innerWrapperStyle
     ]} {...innerWrapperProps}>
       {_leftIcon}
@@ -90,7 +90,6 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     <WrapperComponent 
       css={[_styles.wrapperStyle, style]}
       {...otherProps}
-      ref={wrapperRef}
       {...wrapperProps}
     >
       {
