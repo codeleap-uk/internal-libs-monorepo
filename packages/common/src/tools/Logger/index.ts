@@ -29,6 +29,8 @@ const hollowAnalytics = new Analytics({
  * [[include:Logger.md]]
  */
 export class Logger {
+  static settings: AppSettings
+
   settings: AppSettings
 
   sentry: SentryService
@@ -40,6 +42,9 @@ export class Logger {
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
     this.middleware = middleware || []
+    if(settings.Logger.isMain){
+      Logger.settings = settings
+    }
 
     if (settings?.Logger?.IgnoreWarnings?.length) {
       const newConsole = (args, oldConsole) => {
@@ -86,10 +91,13 @@ export class Logger {
     const logValue = nArgs === 1 ? descriptionOrValue : value
 
     const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue) 
+    const inspectOptions = Logger.settings.Logger?.inspect || {}
 
+    // @ts-expect-error interface merging sucks
     const displayValue = shouldStringify ? inspect(logValue, {
       depth: 5,
-      showHidden: true
+      showHidden: true,
+      ...inspectOptions,
     }) : logValue
 
     if (nArgs === 3) {
