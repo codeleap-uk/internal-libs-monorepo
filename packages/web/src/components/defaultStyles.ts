@@ -14,12 +14,10 @@ import { OverlayPresets } from './Overlay/styles'
 import { TextInputPresets } from './TextInput/styles'
 import { RadioInputPresets } from './RadioInput/styles'
 import { SelectPresets } from './Select/styles'
-import { MultiSelectPresets } from './MultiSelect/styles'
 import { TooltipPresets } from './Tooltip/styles'
 import { ListPresets } from './List/styles'
 import { LinkPresets } from './Link/styles'
 import { SliderPresets } from './Slider/styles'
-import { AutoCompletePresets } from './AutoComplete/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
@@ -29,7 +27,6 @@ export const defaultStyles = {
   Icon: IconPresets,
   Touchable: TouchablePresets,
   Text: TextPresets,
-  AutoComplete: AutoCompletePresets,
   ActivityIndicator: ActivityIndicatorPresets,
   ActionIcon: ActionIconPresets,
   Scroll: ScrollPresets,
@@ -46,7 +43,6 @@ export const defaultStyles = {
   Tooltip: TooltipPresets,
   List: ListPresets,
   Slider: SliderPresets,
-  MultiSelect: MultiSelectPresets,
   LoadingOverlay: LoadingOverlayPresets,
   InputBase: InputBasePresets,
   Switch: SwitchPresets,
