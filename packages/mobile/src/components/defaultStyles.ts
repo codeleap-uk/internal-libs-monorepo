@@ -30,11 +30,13 @@ import { InputLabelPresets } from './InputLabel'
 import { LoadingOverlayPresets } from './LoadingOverlay'
 import { InputBasePresets } from './InputBase'
 import { AvatarPresets } from './Avatar'
+import { AvatarGroupPresets } from './AvatarGroup'
 
 export const defaultStyles = {
   View: ViewPresets,
   Icon: IconPresets,
   Avatar: AvatarPresets,
+  AvatarGroup: AvatarGroupPresets,
   Touchable: TouchablePresets,
   Text: TextPresets,
   Image: ImagePresets,

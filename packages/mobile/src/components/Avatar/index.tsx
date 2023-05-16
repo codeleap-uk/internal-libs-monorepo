@@ -25,8 +25,10 @@ export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
   text?: string
   description?: string
   icon?: IconPlaceholder
+  badge?: IconPlaceholder
   style?: ViewProps['style']
   onPress?: () => void
+  noFeedback?: boolean
 }
 
 export const Avatar: React.FC<AvatarProps> = (props) => {
@@ -39,9 +41,11 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
     styles,
     style,
     icon,
+    badge,
     text,
     description,
     onPress,
+    noFeedback,
     ...viewProps
   } = props
 
@@ -67,24 +71,26 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
     }
   }, [name, firstNameOnly])
 
+  const renderContent = () => {
+    if (hasImage) return <Image source={image} style={variantStyles.image} />
+    if (icon) return <Icon name={icon} style={variantStyles.icon} />
+    return <Text text={text || initials} style={variantStyles.initials} />
+  }
+
   return (
     <View style={[variantStyles.wrapper, style]} {...viewProps}>
       <Touchable
         debugName={'Avatar ' + debugName}
         onPress={() => onPress?.()}
         style={[
-          variantStyles.touchable,
           {
-            backgroundColor: hasImage ? '#0002' : randomColor,
+            backgroundColor: hasImage || icon ? '#F2F2F2' : randomColor,
           },
+          variantStyles.touchable,
         ]}
-        noFeedback={!onPress}
+        noFeedback={noFeedback || !onPress}
       >
-        {hasImage ? (
-          <Image source={image} style={variantStyles.image} />
-        ) : (
-          <Text text={text || initials} style={variantStyles.initials} />
-        )}
+        {renderContent()}
 
         {!!description && (
           <View style={variantStyles.descriptionOverlay}>
@@ -93,9 +99,9 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
         )}
       </Touchable>
 
-      {icon && (
-        <View style={variantStyles.iconWrapper}>
-          <Icon name={icon} style={variantStyles.icon} />
+      {badge && (
+        <View style={variantStyles.badgeWrapper}>
+          <Icon name={badge} style={variantStyles.badge} />
         </View>
       )}
     </View>
