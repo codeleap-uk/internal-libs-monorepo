@@ -80,6 +80,51 @@ export const Select: React.FC<SelectProps> = ({ accessible, variants, validate, 
       ...variantStyles.separator,
       display: 'none',
     }),
+    groupHeading: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    clearIndicator: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    dropdownIndicator: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    indicatorsContainer: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    input: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    loadingIndicator: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    loadingMessage: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    multiValue: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    multiValueLabel: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    multiValueRemove: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    noOptionsMessage: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    option: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    placeholder: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    singleValue: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
+    valueContainer: (baseStyles, state) => ({
+      ...baseStyles,
+    }),
   }
 
   const selectedOption = props?.options?.find?.(o => {
