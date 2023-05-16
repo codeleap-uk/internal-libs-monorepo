@@ -34,6 +34,7 @@ type InternalModalProps = Omit<DatePickerModalProps, 'inputValue'> & {
 type onConfirmDateProps = {
   date: Date
   setOpen: (status: boolean) => void
+  setValue?: (value: Date) => void
   onConfirm: (date: Date) => void
 }
 
@@ -65,8 +66,9 @@ const GetMinDate = (maxAge: number) => {
 }
 
 const onConfirmDate = (params: onConfirmDateProps) => {
-  const { date, onConfirm, setOpen } = params
+  const { date, onConfirm, setOpen, setValue } = params
   setOpen(false)
+  setValue?.(date)
   onConfirm(date)
 }
 
@@ -192,7 +194,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         open={open}
         date={value}
         textColor={textColor || Theme.colors.light.text}
-        onConfirm={date => onConfirmDate({ date, onConfirm: props.onConfirm, setOpen })}
+        onConfirm={date => onConfirmDate({ date, onConfirm: props.onConfirm, setOpen, setValue })}
         onDateChange={date => setValue(date)}
         onCancel={onCloseModal}
         onOpenModal={onOpenModal}
