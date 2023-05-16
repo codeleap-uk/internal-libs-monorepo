@@ -2,10 +2,12 @@ import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 export type SelectParts =
   | 'wrapper'
+  | 'innerWrapper'
   | 'inputWrapper'
   | 'label'
   | 'listWrapper'
   | 'list'
+  | 'listPortal'
   | 'itemWrapper'
   | 'input'
   | 'inputValue'
@@ -17,7 +19,7 @@ export type SelectParts =
   | 'item'
   | 'errorText'
   | 'loadingText'
-  | 'noItemsText'
+  | 'noItems'
   | 'iconsWrapper'
   | 'clearIcon'
   | 'dropdownIcon'
@@ -26,8 +28,6 @@ export type SelectParts =
   | 'placeholder'
 
 export type SelectComposition =
-  | `${SelectParts}:hover`
-  | `${SelectParts}:open`
   | `${SelectParts}:error`
   | `${SelectParts}:disabled`
   | SelectParts
