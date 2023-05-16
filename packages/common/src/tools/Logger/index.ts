@@ -12,6 +12,7 @@ import {
 
 export * as LoggerTypes from './types'
 export * as LoggerAnalytics from './Analytics'
+import {inspect} from 'util'
 
 const logLevels: LogType[] = ['debug', 'info', 'log', 'warn', 'error']
 
@@ -83,7 +84,13 @@ export class Logger {
     let logContent = logArgs[1]
 
     const logValue = nArgs === 1 ? descriptionOrValue : value
-    const displayValue = stringify && !!logValue && typeof logValue === 'object' ? JSON.stringify(logValue, null, 2) : logValue
+
+    const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue) 
+
+    const displayValue = shouldStringify ? inspect(logValue, {
+      depth: 5,
+      showHidden: true
+    }) : logValue
 
     if (nArgs === 3) {
       logContent = [
