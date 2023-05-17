@@ -178,9 +178,10 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     transform: StyleSheet.flatten,
   })
 
-  const [open, setOpen] = !TypeGuards.isNil(visible) && !!toggle ? [visible, toggle] : useState(false)
-  const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputValue))
   const inputDateValue = inputValue.split('-').reverse().join('/')
+
+  const [open, setOpen] = !TypeGuards.isNil(visible) && !!toggle ? [visible, toggle] : useState(false)
+  const [value, setValue] = date && setDate ? [date, setDate] : useState(FormatCurrentDate(inputDateValue))
 
   const onOpenModal = () => setOpen(true)
   const onCloseModal = () => setOpen(false)
