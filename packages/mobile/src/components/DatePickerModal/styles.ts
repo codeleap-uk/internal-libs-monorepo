@@ -3,7 +3,7 @@ import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 export type DatePickerModalComposition =
     'headerWrapper' |
     'headerText' |
-    'fotterButtonWrapper' |
+    'fotterButtonsWrapper' |
     'footerCancelButton' |
     'footerConfirmButton'
 

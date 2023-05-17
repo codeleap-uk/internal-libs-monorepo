@@ -98,7 +98,7 @@ const NativePickerModal = (params: InternalModalProps) => {
 }
 
 const CustomPickerModal = (params: InternalModalProps) => {
-  const { Header, date, Footer, modalVariant, open, onOpenModal, minAge, maxAge, ...datePickerProps } = params
+  const { Header, Footer, modalVariant, open, onOpenModal, minAge, maxAge, ...datePickerProps } = params
   return (
     <ModalManager.Modal
       variants={modalVariant}
@@ -109,7 +109,6 @@ const CustomPickerModal = (params: InternalModalProps) => {
       footer={Footer}
     >
       <NativePickerModal
-        date={date}
         minAge={minAge}
         maxAge={maxAge}
         {...datePickerProps}
@@ -121,7 +120,7 @@ const CustomPickerModal = (params: InternalModalProps) => {
 const CustomPickerModalFooter = (params: CustomPickerModalFooter) => {
   const { onConfirm, onCancel, styles } = params
   return (
-    <Gap style={styles.fotterButtonWrapper} value={2} variants={['row', 'padding:2']}>
+    <Gap style={styles.fotterButtonsWrapper} value={2} variants={['row', 'padding:2']}>
       <Button
         debugName={'custom modal footer cancel button'}
         style={styles.footerCancelButton}
@@ -219,7 +218,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   return (
     <>
       <TextInput
-        debugName={'debug name'}
+        debugName={'Date of birth picker input'}
         value={inputDateValue}
         onPress={onOpenModal}
         {...textInputProps}
