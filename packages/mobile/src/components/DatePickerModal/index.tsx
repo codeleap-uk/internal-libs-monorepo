@@ -120,7 +120,7 @@ const CustomPickerModal = (params: InternalModalProps) => {
 const CustomPickerModalFooter = (params: CustomPickerModalFooter) => {
   const { onConfirm, onCancel, styles } = params
   return (
-    <Gap style={styles.fotterButtonsWrapper} value={2} variants={['row', 'padding:2']}>
+    <Gap value={2} variants={['row', 'padding:2']} style={styles.fotterButtonsWrapper}>
       <Button
         debugName={'custom modal footer cancel button'}
         style={styles.footerCancelButton}
@@ -185,6 +185,19 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const onOpenModal = () => setOpen(true)
   const onCloseModal = () => setOpen(false)
 
+  const pickerTextColor = textColor || Theme.colors.light.text
+  const pickerMode = mode || 'date'
+  const pickerLocale = locale || 'en-GB'
+  const pickerHeader = Header || <CustomPickerModalHeader styles={variantStyles} headerTitle={headerTitle} />
+
+  const pickerFooter = Footer || (
+    <CustomPickerModalFooter
+      styles={variantStyles}
+      onConfirm={() => onConfirmDate({ date: value, onConfirm: props.onConfirm, setOpen })}
+      onCancel={onCloseModal}
+    />
+  )
+
   const Modal = () => {
     const Component = isCustomModal ? CustomPickerModal : NativePickerModal
     return (
@@ -192,24 +205,18 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         modal={!isCustomModal}
         open={open}
         date={value}
-        textColor={textColor || Theme.colors.light.text}
+        textColor={pickerTextColor}
         onConfirm={date => onConfirmDate({ date, onConfirm: props.onConfirm, setOpen, setValue })}
         onDateChange={date => setValue(date)}
         onCancel={onCloseModal}
         onOpenModal={onOpenModal}
-        mode={mode || 'date'}
+        mode={pickerMode}
         modalVariant={modalVariant}
-        locale={locale || 'en-GB'}
+        locale={pickerLocale}
         maxAge={maxAge}
         minAge={minAge}
-        Header={Header || <CustomPickerModalHeader styles={variantStyles} headerTitle={headerTitle} /> }
-        Footer={Footer || (
-          <CustomPickerModalFooter
-            styles={variantStyles}
-            onConfirm={() => onConfirmDate({ date: value, onConfirm: props.onConfirm, setOpen })}
-            onCancel={onCloseModal}
-          />
-        )}
+        Header={pickerHeader}
+        Footer={pickerFooter}
         styles={variantStyles}
       />
     )
