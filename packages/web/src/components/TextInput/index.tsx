@@ -17,20 +17,21 @@ import React, {
   useState,
 } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
+import InputMask from 'react-input-mask'
 import { Touchable, TouchableProps } from '../Touchable'
 import { StylesOf } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
-import { InputMask, InputMaskProps } from './mask'
+import { getMaskInputProps, TextInputMaskingProps } from './mask'
 
 export * from './styles'
+export * from './mask'
 
 type NativeTextInputProps = ComponentPropsWithoutRef<'input'>
 
 export type TextInputProps = 
   Omit<InputBaseProps, 'styles' | 'variants'> &
-  Omit<NativeTextInputProps, 'value'|'crossOrigin'> &
-  InputMaskProps & {
+  Omit<NativeTextInputProps, 'value'|'crossOrigin'> & {
     styles?: StylesOf<TextInputComposition>
     password?: boolean
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
@@ -44,6 +45,7 @@ export type TextInputProps =
     caretColor?: string
     focused?: boolean
     _error?: boolean
+    masking?: TextInputMaskingProps
   }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
@@ -67,8 +69,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     caretColor,
     focused,
     _error,
-    mask = null,
-    alwaysShowMask = false,
+    masking = null,
     ...textInputProps
   } = others
 
@@ -79,8 +80,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
   const [secureTextEntry, toggleSecureTextEntry] = useBooleanToggle(true)
 
   const isMultiline = multiline
-
-  const isMasked = !TypeGuards.isNil(mask)
+  
+  const isMasked = !TypeGuards.isNil(masking)
+  const maskProps = isMasked ? getMaskInputProps({ masking }) : null
 
   const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
 
@@ -101,7 +103,10 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const isPressable = TypeGuards.isFunction(onPress)
 
-  const validation = useValidate(value, validate)
+  const validation = useValidate(
+    value, 
+    TypeGuards.isFunction(maskProps?.validator) ? maskProps?.validator : validate
+  )
 
   const handleBlur = React.useCallback((e: React.FocusEvent<HTMLInputElement, Element>) => {
     validation?.onInputBlurred()
@@ -116,10 +121,14 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
   }, [validation?.onInputFocused, props?.onFocus])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const _text = event.target.value
-    
+    const _text = event?.target?.value
+
+    const _value = isMasked && maskProps?.notSaveFormatted 
+      ? maskProps?.getRawValue(_text)
+      : _text
+
     if (props?.onChange) props?.onChange(event)
-    if (props?.onChangeText) props?.onChangeText(_text)
+    if (props?.onChangeText) props?.onChangeText(_value)
   }
 
   const isDisabled = !!inputBaseProps.disabled
@@ -162,17 +171,14 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     type: 'password'
   }
 
-  const maskInputProps = (isMasked) && {
-    mask,
-    alwaysShowMask,
-  }
-
   const caretColorStyle = (caretColor || buttonModeProps.caretHidden) && {
     caretColor: buttonModeProps.caretHidden ? 'transparent' : caretColor,
   }
 
+  const inputBaseAction = isPressable ? 'onPress' : 'onClick'
+
   const _wrapperOnInputFocus = {
-    [isPressable ? 'onPress' : 'onClick']: () => {
+    [inputBaseAction]: () => {
       innerInputRef.current?.focus?.()
     },
   }
@@ -193,7 +199,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       }}
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps  || {}),
-        onPress: () => {
+        [inputBaseAction]: () => {
+          if (isMasked) innerInputRef.current?.onFocus?.()
           innerInputRef.current?.focus?.()
           if (isPressable) onPress?.()
         },
@@ -211,7 +218,6 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...buttonModeProps}
         {...secureTextProps}
         {...textInputProps}
-        {...maskInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
         onBlur={handleBlur}
@@ -237,6 +243,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
             ],
           }
         ]}
+        {...maskProps}
         ref={innerInputRef}
       />
     </InputBase>
