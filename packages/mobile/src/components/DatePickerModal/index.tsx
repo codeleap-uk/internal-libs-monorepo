@@ -78,7 +78,23 @@ const FormatCurrentDate = (date: string) => {
 }
 
 const NativePickerModal = (params: InternalModalProps) => {
-  const { open, modal, date, mode, textColor, locale, onConfirm, onCancel, onDateChange, minAge, maxAge, theme } = params
+
+  const {
+    open,
+    modal,
+    date, mode,
+    textColor,
+    locale,
+    onConfirm,
+    onCancel,
+    onDateChange,
+    minAge,
+    maxAge,
+    theme,
+    androidVariant,
+    minuteInterval,
+  } = params
+
   return (
     <DatePicker
       modal={modal}
@@ -88,6 +104,8 @@ const NativePickerModal = (params: InternalModalProps) => {
       textColor={textColor}
       locale={locale}
       theme={theme}
+      androidVariant={androidVariant}
+      minuteInterval={minuteInterval}
       onConfirm={onConfirm}
       onDateChange={onDateChange}
       onCancel={onCancel}
@@ -154,6 +172,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     textColor,
     locale,
     mode,
+    theme,
+    androidVariant,
+    minuteInterval,
     isCustomModal,
     inputValue,
     visible,
@@ -211,6 +232,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         onCancel={onCloseModal}
         onOpenModal={onOpenModal}
         mode={pickerMode}
+        theme={theme}
+        androidVariant={androidVariant}
+        minuteInterval={minuteInterval}
         modalVariant={modalVariant}
         locale={pickerLocale}
         maxAge={maxAge}
