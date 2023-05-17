@@ -21,6 +21,7 @@ import { Touchable, TouchableProps } from '../Touchable'
 import { StylesOf } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
+import { InputMask, InputMaskProps } from './mask'
 
 export * from './styles'
 
@@ -28,7 +29,8 @@ type NativeTextInputProps = ComponentPropsWithoutRef<'input'>
 
 export type TextInputProps = 
   Omit<InputBaseProps, 'styles' | 'variants'> &
-  Omit<NativeTextInputProps, 'value'|'crossOrigin'> & {
+  Omit<NativeTextInputProps, 'value'|'crossOrigin'> &
+  InputMaskProps & {
     styles?: StylesOf<TextInputComposition>
     password?: boolean
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
@@ -65,6 +67,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     caretColor,
     focused,
     _error,
+    mask = null,
+    alwaysShowMask = false,
     ...textInputProps
   } = others
 
@@ -76,7 +80,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const isMultiline = multiline
 
-  const InputElement = isMultiline ? TextareaAutosize : 'input'
+  const isMasked = !TypeGuards.isNil(mask)
+
+  const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
 
   const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
     variants,
@@ -156,6 +162,11 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     type: 'password'
   }
 
+  const maskInputProps = (isMasked) && {
+    mask,
+    alwaysShowMask,
+  }
+
   const caretColorStyle = (caretColor || buttonModeProps.caretHidden) && {
     caretColor: buttonModeProps.caretHidden ? 'transparent' : caretColor,
   }
@@ -200,6 +211,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...buttonModeProps}
         {...secureTextProps}
         {...textInputProps}
+        {...maskInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
         onBlur={handleBlur}
