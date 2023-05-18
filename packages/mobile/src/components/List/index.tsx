@@ -78,7 +78,6 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     // const isEmpty = !props.data || !props.data.length
     const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
-    const RenderItem = props.renderItem
 
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
