@@ -19,10 +19,6 @@ export const textStyles = {
     sizeMultiplier: 0.8,
     weight: 700,
   },
-  h6: {
-    sizeMultiplier: 0.65,
-    weight: 700,
-  },
   p1: {
     // lineHeightMultiplier: 1,
     sizeMultiplier: 1,

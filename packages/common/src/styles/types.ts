@@ -65,7 +65,6 @@ export type Fonts =
   | 'h3'
   | 'h4'
   | 'h5'
-  | 'h6'
   | 'p1'
   | 'p2'
   | 'p3'
@@ -130,7 +129,10 @@ export type AppTheme = {
    values?: {
     width: number
     height: number
-    innerSpacing: Record<'X'|'Y', number>
+    innerSpacing: Record<'X'|'Y'|'value', number>
+    outerSpacing: Record<'X'|'Y'|'value', number>
+    gap: number
+    smallGap: number
     itemHeight: Record<ItemHeight, number>
     iconSize: Record<IconSizes, number>
   } & AnyProps<any>
