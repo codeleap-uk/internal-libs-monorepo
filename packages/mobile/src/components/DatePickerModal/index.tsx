@@ -157,9 +157,10 @@ const CustomPickerModalFooter = (params: CustomPickerModalFooter) => {
 
 const CustomPickerModalHeader = (params: CustomPickerModalHeader) => {
   const { styles, headerTitle } = params
+  const standardTitle = 'Select a Date'
   return (
     <View style={styles.headerWrapper}>
-      <Text style={styles.headerText} text={headerTitle || 'Date Picker Header'} />
+      <Text style={styles.headerText} text={headerTitle ?? standardTitle} />
     </View>
   )
 }
@@ -186,7 +187,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     modalVariant,
     Header,
     Footer,
-    headerTitle = '',
+    headerTitle,
     variants = [],
     styles = {},
     ...textInputProps
@@ -206,12 +207,12 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const onOpenModal = () => setOpen(true)
   const onCloseModal = () => setOpen(false)
 
-  const pickerTextColor = textColor || Theme.colors.light.text
-  const pickerMode = mode || 'date'
+  const pickerTextColor = textColor ?? Theme.colors.light.text
+  const pickerMode = mode ?? 'date'
   const pickerLocale = locale || 'en-GB'
-  const pickerHeader = Header || <CustomPickerModalHeader styles={variantStyles} headerTitle={headerTitle} />
+  const pickerHeader = Header ?? <CustomPickerModalHeader styles={variantStyles} headerTitle={headerTitle} />
 
-  const pickerFooter = Footer || (
+  const pickerFooter = Footer ?? (
     <CustomPickerModalFooter
       styles={variantStyles}
       onConfirm={() => onConfirmDate({ date: value, onConfirm: props.onConfirm, setOpen })}
