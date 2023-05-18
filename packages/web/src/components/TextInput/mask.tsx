@@ -12,12 +12,14 @@ type beforeMaskedValueChangeArgs = {
   userInput: null | string
 }
 
+type FormatChar = `[${string}]`
+
 export type MaskProps = {
   obfuscated?: boolean
   mask?: string
   placeholder?: string
   maskChar?: string
-  formatChars?: Record<string, `[${string}]`>
+  formatChars?: Record<string, FormatChar>
   alwaysShowMask?: boolean
   validator?: FormTypes.ValidatorFunctionWithoutForm
   maskType?: 'BRL' | 'INTERNATIONAL'
@@ -30,7 +32,6 @@ export type TextInputMaskTypeProp =
   | 'cnpj'
   | 'zip-code'
   | 'cel-phone'
-  | 'cel-phone-brl'
   | 'custom'
 
 export interface TextInputMaskingProps {
@@ -84,20 +85,20 @@ export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { no
   }
 }
 
-const format: Record<any, `[${string}]`> = {
+const format: Record<string, FormatChar> = {
   number: "['0123456789']"
 }
 
-const validatorRegExp = (value: string | number, regex: RegExp, message: string) => {
+const validatorRegExp = (value: string | number, regex: RegExp, error: string) => {
   const isValid = regex.test(String(value))
   
   return {
     valid: isValid,
-    message,
+    message: error,
   }
 }
 
-export const maskPreset: Record<TextInputMaskTypeProp, MaskProps> = {
+export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskProps> = {
   'credit-card': {
     mask: '9999 9999 9999 9999',
     placeholder: 'xxxx xxxx xxxx xxxx',
