@@ -268,7 +268,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
           thousandsGroupStyle={hasSeparator || TypeGuards.isString(separator) ? 'thousand' : 'none'}
           suffix={suffix}
           prefix={prefix}
-          format={TypeGuards.isFunction(formatter) ? formatter : format}
+          format={TypeGuards.isFunction(formatter) ? formatter as any : format}
           mask={mask}
           placeholder={placeholder}
           getInputRef={innerInputRef}
