@@ -15,6 +15,8 @@ export * from './styles'
 export type IconProps = {
   name: IconPlaceholder
   style?: any
+  size?: string | number
+  color?: string
   renderEmptySpace?: boolean
 } & ComponentVariants<typeof IconStyles>
 
@@ -46,5 +48,5 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
     )
     return null
   }
-  return <Component  css={variantStyles.icon} {...otherProps}/>
+  return <Component css={variantStyles.icon} {...otherProps}/>
 }
