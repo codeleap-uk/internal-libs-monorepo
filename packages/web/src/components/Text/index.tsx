@@ -14,6 +14,36 @@ export type TextProps<T extends ElementType> = {
 } & ComponentPropsWithoutRef<T> &
   ComponentVariants<typeof TextPresets>
 
+const getTextContent = (msg: TextProps<any>['msg'], text: TextProps<any>['text'], logger: any) => {
+  const { t: translate } = useI18N()
+
+  let content = ''
+
+  const hasMsg = !TypeGuards.isNil(msg)
+
+  if (TypeGuards.isArray(msg)) {
+    msg.forEach((message, i) => {
+      const space = (i !== 0 ? ' ' : '')
+
+      try {
+        const translatedMessage = translate(String(message))
+        content = content + space + translatedMessage
+      } catch {
+        content = content + space + message
+      }
+    })
+  } else {
+    try {
+      content = !hasMsg ? text : translate(String(msg))
+    } catch (err) {
+      content = !hasMsg ? text : translate(String(msg))
+      logger.error(err)
+    }
+  }
+
+  return content
+}
+
 export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   const {
     variants = [],
@@ -35,9 +65,8 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   })
 
   const { logger } = useCodeleapContext()
-  const { t } = useI18N()
 
-  const content = TypeGuards.isNil(msg) ? text : t(String(msg))
+  let content = getTextContent(msg, text, logger)
 
   const Component = component
 
