@@ -59,7 +59,7 @@ export type InputValueTypes = {
   multipleFile: AnyFile[]
   composite: any
   'range-slider': number[]
-  slider: number
+  slider: number[]
   list: any[]
   number: number
 }

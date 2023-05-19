@@ -1,5 +1,7 @@
 import { DeepPartial, Matcher } from '..'
 import { LogType, SentryProvider } from '../tools/Logger/types'
+import { inspect } from 'util'
+type InspectOptions = Parameters<typeof inspect>[1]
 
 export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider> = DeepPartial<{
   AppName: string
@@ -28,6 +30,8 @@ export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider>
     DeviceIdentifier?: string
     IgnoreWarnings?: string[]
     StringifyObjects?: boolean
+    isMain?: boolean
+    inspect?: InspectOptions,
     Obfuscate: {
       keys: Matcher<'key'>[]
       values: Matcher<'value'>[]
@@ -61,6 +65,15 @@ export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider>
     }
     FacebookSDK: {
       AppId: string
+    }
+  }
+
+  Slack: {
+    echo: {
+      channel?: string
+      icon: string
+      token: string
+      baseURL?: string
     }
   }
 }>
