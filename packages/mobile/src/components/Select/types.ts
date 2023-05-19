@@ -26,17 +26,35 @@ export type SelectRenderFNProps<T> = {
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
 
-type SelectDrawerProps = Omit<DrawerProps, 'variants' | 'styles'>
+type SelectModalProps = Omit<DrawerProps, 'variants' | 'styles'>
 
-export type CustomSelectProps<T> = SelectDrawerProps & {
-    value: T
+type SelectValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
+
+type SelectHeaderProps = {
+  searchComponent?: React.ReactNode
+}
+
+type ValueBoundSelectProps<T, Multi  extends boolean = false> = {
+  options?: FormTypes.Options<T>
+  defaultOptions?: FormTypes.Options<T>
+  loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
+  value: SelectValue<T,Multi>
+  renderItem?: SelectRenderFN<SelectValue<T,Multi>>
+  onValueChange: (value: SelectValue<T,Multi>) => void
+  filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
+  onLoadOptionsError?: (error: any) => void
+}
+
+export type ReplaceSelectProps<Props, T, Multi extends boolean = false> =  Omit<
+  Props,
+  keyof ValueBoundSelectProps<T, Multi>
+> & ValueBoundSelectProps<T, Multi>
+
+export type SelectProps<T, Multi  extends boolean = false> = {
     placeholder?: FormTypes.Label
     label?: FormTypes.Label
-    options?: FormTypes.Options<T>
-    onValueChange: (value: T) => void
-    renderItem?: SelectRenderFN<T>
     styles?: StylesOf<SelectComposition>
-    style?: any
+    style?: TextInputProps['style']
     hideInput?: boolean
     selectedIcon?: IconPlaceholder
     arrowIconName?: IconPlaceholder
@@ -46,9 +64,12 @@ export type CustomSelectProps<T> = SelectDrawerProps & {
     clearable?: boolean
     clearIconName?: IconPlaceholder
     keyboardAware?: GetKeyboardAwarePropsOptions
-    multiple?: boolean
+    multiple?: Multi
     itemProps?: Partial<
       Pick<SelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'
     >>
-  } & ComponentVariants<typeof SelectPresets>
+    searchable?: boolean
+    limit?: number
+    ListHeaderComponent: React.ComponentType<SelectHeaderProps>
+  } & ComponentVariants<typeof SelectPresets> & SelectModalProps & ValueBoundSelectProps<T, Multi>
 

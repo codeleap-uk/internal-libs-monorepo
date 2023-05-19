@@ -30,7 +30,8 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
   getItemLayout?: ((
     data:T,
     index: number,
-) => { length: number; offset: number; index: number })
+  ) => { length: number; offset: number; index: number })
+  fakeEmpty?: boolean
 }
 
 export * from './styles'
@@ -47,6 +48,7 @@ export type FlatListProps<
     keyboardAware?: GetKeyboardAwarePropsOptions
     styles?: StylesOf<ListComposition>
     refreshControlProps?: Partial<RefreshControlProps>
+    fakeEmpty?: boolean
   } & ComponentVariants<typeof ListPresets>
 
 const ListCP = forwardRef<FlatList, FlatListProps>(
@@ -61,6 +63,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       placeholder,
       keyboardAware,
       refreshControlProps = {},
+      fakeEmpty,
       ...props
     } = flatListProps
 
@@ -110,15 +113,16 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ItemSeparatorComponent: separator,
       refreshControl: !!onRefresh && (
         <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor={refreshStyles?.color}
-          colors={[refreshStyles?.color]}
-          {...refreshControlProps}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        tintColor={refreshStyles?.color}
+        colors={[refreshStyles?.color]}
+        {...refreshControlProps}
         />
       ),
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
+      data: fakeEmpty ? [] : props.data,
       renderItem
     }
 
