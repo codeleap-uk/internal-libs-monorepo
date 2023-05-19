@@ -6,12 +6,13 @@ import {
 } from '@codeleap/common'
 
 import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-grid'
-import { RefreshControl, StyleSheet, RefreshControlProps, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
+import { RefreshControl, RefreshControlProps } from '../RefreshControl'
 import { GridComposition, GridStyles } from './styles'
 import { StylesOf } from '../../types'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -25,7 +26,6 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
     index: number,
 ) => { length: number; offset: number; index: number })
 }
-
 
 export * from './styles'
 type GridRef = React.ClassAttributes<typeof FlatGrid>['ref']
@@ -74,21 +74,18 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
     const Component = FlatGrid
 
     const _gridProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
-      ref: ref ,
+      ref: ref,
       ItemSeparatorComponent: separator,
       refreshControl:
           !!onRefresh && (
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor={refreshStyles?.color}
-              colors={[refreshStyles?.color]}
               {...refreshControlProps}
             />
           ),
@@ -98,10 +95,10 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     }
 
     return (
-      // @ts-ignore 
+      // @ts-ignore
       <Component
         {..._gridProps}
-        
+
       />
     )
   },

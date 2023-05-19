@@ -8,8 +8,9 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 
-import { RefreshControl, SectionList } from 'react-native'
+import { SectionList } from 'react-native'
 import { View, ViewProps } from '../View'
+import { RefreshControl } from '../RefreshControl'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
 

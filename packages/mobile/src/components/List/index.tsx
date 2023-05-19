@@ -6,13 +6,13 @@ import {
   useCallback,
 } from '@codeleap/common'
 
-import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
+import { FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
+import { RefreshControl, RefreshControlProps } from '../RefreshControl'
 import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
-import { useKeyboardAwareView, GetKeyboardAwarePropsOptions } from '../../utils'
-
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -35,7 +35,6 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
 
 export * from './styles'
 export * from './PaginationIndicator'
-
 
 export type FlatListProps<
   T = any[],
@@ -81,11 +80,10 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const separator = !isEmpty && props?.separators && renderSeparator
 
     const Component:any = component || FlatList
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null
-      
+
       const listLength = props?.data?.length || 0
 
       const isFirst = data.index === 0
@@ -100,7 +98,6 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         isOnly,
       })
 
-
     }, [props?.renderItem, props?.data?.length])
 
     const _listProps = {
@@ -112,14 +109,12 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          tintColor={refreshStyles?.color}
-          colors={[refreshStyles?.color]}
           {...refreshControlProps}
         />
       ),
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
-      renderItem
+      renderItem,
     }
 
     return (

@@ -29,6 +29,7 @@ import { GridStyles } from './Grid'
 import { InputLabelPresets } from './InputLabel'
 import { LoadingOverlayPresets } from './LoadingOverlay'
 import { InputBasePresets } from './InputBase'
+import { RefreshControlPresets } from './RefreshControl'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -62,5 +63,6 @@ export const defaultStyles = {
   Grid: GridStyles,
   LoadingOverlay: LoadingOverlayPresets,
   InputLabel: InputLabelPresets,
-  InputBase: InputBasePresets
+  InputBase: InputBasePresets,
+  RefreshControl: RefreshControlPresets,
 }
