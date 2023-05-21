@@ -1,11 +1,10 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
   useCodeleapContext,
   BaseViewProps,
-  useMemo
+  useMemo,
+  TypeGuards
 } from '@codeleap/common'
 import {
   ComponentPropsWithRef,
@@ -27,6 +26,7 @@ export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
     css?: any
     scroll?: boolean
     debug?: boolean
+    debugName?: string
   } & BaseViewProps
 
 export const ViewCP = <T extends ElementType = 'div'>(
@@ -44,20 +44,25 @@ export const ViewCP = <T extends ElementType = 'div'>(
     onHover,
     styles,
     down,
-    css: cssProp,
     scroll = false,
     debug = false,
+    debugName = 'View component',
+    style,
+    css = [],
     ...props
   } = viewProps
-  const variantStyles = useDefaultComponentStyle('View', {
+
+  const variantStyles = useDefaultComponentStyle<'u:View', typeof ViewPresets>('u:View', {
     responsiveVariants,
     variants,
     styles,
+    rootElement: 'wrapper'
   })
+
   const { Theme, logger } = useCodeleapContext()
 
   function handleHover(isMouseOverElement: boolean) {
-    onHover && onHover(isMouseOverElement)
+    onHover(isMouseOverElement)
   }
 
   const platformMediaQuery = useMemo(() => {
@@ -71,18 +76,31 @@ export const ViewCP = <T extends ElementType = 'div'>(
 
   const matches = useMediaQuery(platformMediaQuery)
 
-  if(debug){
-    logger.log('View', {variantStyles, platformMediaQuery, matches})
+  const componentStyles = useMemo(() => {
+    return [
+      variantStyles.wrapper,
+      scroll && { overflowY: 'scroll' },
+      matches && { display: 'none' },
+      style,
+      css
+    ]
+  }, [scroll, matches, css])
+
+  const onHoverProps = TypeGuards.isFunction(onHover) && {
+    onMouseEnter: () => handleHover(true),
+    onMouseLeave: () => handleHover(false),
+  }
+
+  if (debug){
+    logger.log(debugName, { componentStyles, platformMediaQuery, matches })
   }
 
   return (
     <Component
-      // className={cx(css([variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]), cssProp)}
-      css={[variantStyles.wrapper, scroll && { overflowY: 'scroll' }, matches && { display: 'none' }]}
       ref={ref}
-      onMouseEnter={() => handleHover(true)}
-      onMouseLeave={() => handleHover(false)}
+      {...onHoverProps}
       {...props}
+      css={componentStyles}
     >
       {children}
     </Component>
