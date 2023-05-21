@@ -329,7 +329,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         setLoading(isTyping)
       }
     }}
-    debounce={!!loadOptions ? 200 : null}
+    debounce={!!loadOptions ? 800 : null}
     onSearchChange={onChangeSearch}
     styles={searchInputStyles}
     {...searchInputProps}
