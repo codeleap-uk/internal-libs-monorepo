@@ -37,7 +37,6 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
 export * from './styles'
 export * from './PaginationIndicator'
 
-
 export type FlatListProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
@@ -88,7 +87,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null
-      
+
       const listLength = props?.data?.length || 0
 
       const isFirst = data.index === 0

@@ -1,12 +1,7 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common";
-import { ListComposition } from "../List";
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type SectionsComposition = ListComposition
+export type SectionsComposition = 'wrapper' |'content' | 'separator'
 
-const createSectionStyle = createDefaultVariantFactory<SectionsComposition>()
+const createSectionsStyle = createDefaultVariantFactory<SectionsComposition>()
 
-export const SectionsPresets = includePresets(s => {
-  return createSectionStyle(() => ({
-    content: s,
-  }))
-})
+export const SectionsPresets = includePresets(style => createSectionsStyle(() => ({ content: style })))

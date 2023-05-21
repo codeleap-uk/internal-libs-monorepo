@@ -14,12 +14,14 @@ import {
   SectionListProps as RNSectionListProps,
 } from 'react-native'
 import { View, ViewProps } from '../View'
-import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { SectionsComposition, SectionsPresets } from './styles'
+import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { StylesOf } from '../../types'
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
+import { SectionsComposition, SectionsPresets } from './styles'
+export * from './styles'
 
 export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
+
 
 export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & {
   isFirst: boolean
@@ -54,11 +56,6 @@ export type SectionListProps<
     fakeEmpty?: boolean
   } & ComponentVariants<typeof SectionsPresets>
 
-const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
-    return (
-      <View style={props.separatorStyles}></View>
-    )
-}
 
 export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
   (sectionsProps, ref) => {
@@ -73,6 +70,7 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       keyboardAware,
       refreshControlProps = {},
       fakeEmpty,
+      refreshControl,
       ...props
     } = sectionsProps
 
@@ -82,72 +80,73 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       transform: StyleSheet.flatten,
 
     })
+    
+    const renderSeparator = () => {
+      return (
+        <View style={variantStyles.separator}></View>
+      )
+    }
 
-    // const isEmpty = !props.data || !props.data.length
-    const separator = props?.separators && (() => <RenderSeparator separatorStyles={variantStyles.separator}/>)
+    const getItemPosition = (section, itemIdx) => {
+      const listLength = section?.length || 0
 
-
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
-
-    const flatSectionsData = props?.sections?.flatMap(x => x.data) || []
-
-
-
-    const renderItem = useCallback((data: SectionListRenderItemInfo<any>) => {
-      if (!props?.renderItem) return null
-      
-      const listLength = data.section?.data?.length || 0
-
-      const isFirst = data.index === 0
-      const isLast = data.index === listLength - 1
-
+      const isFirst = itemIdx === 0
+      const isLast = itemIdx === listLength - 1
       const isOnly = isFirst && isLast
 
-      return props?.renderItem({
-        ...data,
-        isFirst,
-        isLast,
-        isOnly,
-      })
+      return { isFirst, isLast, isOnly }
+    }
+
+    const getSectionPosition = (data) => {
+      const listLength = props.sections?.length || 0
+
+      const isFirst = data.section.key === props.sections[0].key
+      const isLast = data.section.key === props.sections[listLength - 1].key
+      const isOnly = isFirst && isLast
+
+      return { isFirst, isLast, isOnly }
+    }
+
+    const renderSectionHeader = useCallback((data) => {
+      if (!props?.renderSectionHeader) return null
+
+      return props?.renderSectionHeader({ ...data, ...getSectionPosition(data) })
+    }, [props?.renderSectionHeader, props?.sections?.length])
+
+    const renderSectionFooter = useCallback((data) => {
+      if (!props?.renderSectionFooter) return null
+
+      return props?.renderSectionFooter({ ...data, ...getSectionPosition(data) })
+    }, [props?.renderSectionFooter, props?.sections?.length])
+
+    const renderItem = useCallback((data) => {
+      if (!props?.renderItem) return null
+
+      return props?.renderItem({ ...data, ...getItemPosition(data.section?.data, data?.index) })
+
     }, [props?.renderItem, props?.sections?.length])
 
-    const isEmpty = !props.sections || !props.sections.length || props.sections.some(x => {
-      return !x.data || !x.data.length
-    })
+    const separatorProp = props.separators
+    const isEmpty = !props.sections || !props.sections.length
+    const separator = !isEmpty && separatorProp == true && renderSeparator
 
     return (
       <KeyboardAwareSectionList
-       style={[
-          variantStyles.wrapper, 
-          style,
-          isEmpty && variantStyles['wrapper:empty']
-        ]}
-        contentContainerStyle={[
-          variantStyles.content,
-          isEmpty && variantStyles['content:empty']
-        ]}
-        
-        ItemSeparatorComponent={separator}
-        ListHeaderComponentStyle={variantStyles.header}
-        
-        refreshControl={!!onRefresh && (
-          <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          tintColor={refreshStyles?.color}
-          colors={[refreshStyles?.color]}
-          {...refreshControlProps}
-          />
-          )}
-          
-        ListEmptyComponent={<EmptyPlaceholder {...placeholder}/>}
-          {...props}
-        data={fakeEmpty ? [] : props.sections}
-
+        style={[variantStyles.wrapper,style]}
+        contentContainerStyle={[variantStyles.content]}
+        showsVerticalScrollIndicator={false}
         // @ts-ignore
-        ref={ ref as React.LegacyRef<KeyboardAwareSectionList> }
+        ref={ref}
+        ItemSeparatorComponent={separator}
+        {...props}
+        refreshControl={
+          !!onRefresh && (
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          )
+        }
         renderItem={renderItem}
-        
+        renderSectionHeader={renderSectionHeader}
+        renderSectionFooter={renderSectionFooter}
       />
     )
   },

@@ -9,9 +9,9 @@ import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-
 import { RefreshControl, StyleSheet, RefreshControlProps, ScrollView } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { GridComposition, GridStyles } from './styles'
+import { GridComposition, GridPresets } from './styles'
 import { StylesOf } from '../../types'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -26,7 +26,6 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 ) => { length: number; offset: number; index: number })
 }
 
-
 export * from './styles'
 type GridRef = React.ClassAttributes<typeof FlatGrid>['ref']
 export type GridProps<
@@ -40,7 +39,7 @@ export type GridProps<
     debugName?: string
     styles?: StylesOf<GridComposition>
     refreshControlProps?: Partial<RefreshControlProps>
-  } & ComponentVariants<typeof GridStyles>
+  } & ComponentVariants<typeof GridPresets>
 
 const GridCP = forwardRef<ScrollView, GridProps>(
   (flatGridProps, ref) => {
@@ -57,7 +56,7 @@ const GridCP = forwardRef<ScrollView, GridProps>(
       ...props
     } = flatGridProps
 
-    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridStyles>('u:Grid', {
+    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
       variants,
       styles,
       transform: StyleSheet.flatten,
@@ -80,7 +79,8 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     const _gridProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
-      ref: ref ,
+      showsVerticalScrollIndicator: false,
+      ref: ref,
       ItemSeparatorComponent: separator,
       refreshControl:
           !!onRefresh && (
@@ -98,10 +98,10 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     }
 
     return (
-      // @ts-ignore 
+      // @ts-ignore
       <Component
         {..._gridProps}
-        
+
       />
     )
   },
