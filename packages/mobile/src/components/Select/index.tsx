@@ -171,19 +171,20 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     setSearch(searchValue)
 
     if(!!loadOptions) {
+      setLoading(true)
       try {
-        setLoading(true)
   
         const _opts = await loadOptions(searchValue)
 
         setFilteredOptions(_opts)
-        setTimeout(() => {
-          setLoading(false)
-        }, 0)
       }catch(e){
         console.error(`Error loading select options [${debugName}]`, e)
         onLoadOptionsError?.(e)
+      
       }
+      setTimeout(() => {
+        setLoading(false)
+      }, 0)
 
       return
 

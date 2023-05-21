@@ -9,6 +9,7 @@ import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { DrawerProps } from '../Drawer'
 import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
+import { ModalProps } from '../Modal'
 import { Text } from '../Text'
 import { TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
@@ -26,7 +27,7 @@ export type SelectRenderFNProps<T> = {
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
 
-type SelectModalProps = Omit<DrawerProps, 'variants' | 'styles'>
+type SelectModalProps = Omit<ModalProps, 'variants' | 'styles'>
 
 type SelectValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
@@ -43,6 +44,7 @@ type ValueBoundSelectProps<T, Multi  extends boolean = false> = {
   onValueChange: (value: SelectValue<T,Multi>) => void
   filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
   onLoadOptionsError?: (error: any) => void
+  multiple?: Multi
 }
 
 export type ReplaceSelectProps<Props, T, Multi extends boolean = false> =  Omit<
@@ -50,7 +52,7 @@ export type ReplaceSelectProps<Props, T, Multi extends boolean = false> =  Omit<
   keyof ValueBoundSelectProps<T, Multi>
 > & ValueBoundSelectProps<T, Multi>
 
-export type SelectProps<T, Multi  extends boolean = false> = {
+export type SelectProps<T = any, Multi  extends boolean = false> = {
     placeholder?: FormTypes.Label
     label?: FormTypes.Label
     styles?: StylesOf<SelectComposition>
@@ -70,6 +72,7 @@ export type SelectProps<T, Multi  extends boolean = false> = {
     >>
     searchable?: boolean
     limit?: number
-    ListHeaderComponent: React.ComponentType<SelectHeaderProps>
+    ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
+    searchInputProps?: Partial<TextInputProps>
   } & ComponentVariants<typeof SelectPresets> & SelectModalProps & ValueBoundSelectProps<T, Multi>
 
