@@ -6,25 +6,32 @@ import {
   useCallback,
 } from '@codeleap/common'
 
-import { RefreshControl, FlatList, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
+import { RefreshControl, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
-import { useKeyboardAwareView, GetKeyboardAwarePropsOptions } from '../../utils'
 
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
+
+export type AugmentedRenderItemInfo<T> = ListRenderItemInfo<T> & {
+  isFirst: boolean
+  isLast: boolean
+  isOnly: boolean
+}
 
 export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & {
   data: T[]
   keyExtractor?: (item: T, index: number) => string
-  renderItem: (data: ListRenderItemInfo<T>) => React.ReactElement
+  renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
     data:T,
     index: number,
-) => { length: number; offset: number; index: number })
+  ) => { length: number; offset: number; index: number })
+  fakeEmpty?: boolean
 }
 
 export * from './styles'
@@ -33,16 +40,23 @@ export * from './PaginationIndicator'
 export type FlatListProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
-> =RNFlatListProps<Data> &
+> = ReplaceFlatlistProps<RNFlatListProps<Data>, Data> &
   Omit<ViewProps, 'variants'> & {
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
-    keyboardAware?: GetKeyboardAwarePropsOptions
     styles?: StylesOf<ListComposition>
     refreshControlProps?: Partial<RefreshControlProps>
+    fakeEmpty?: boolean
   } & ComponentVariants<typeof ListPresets>
 
-const ListCP = forwardRef<FlatList, FlatListProps>(
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
+  return (
+    <View style={props.separatorStyles}></View>
+  )
+}
+
+
+const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
   (flatListProps, ref) => {
     const {
       variants = [],
@@ -54,6 +68,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       placeholder,
       keyboardAware,
       refreshControlProps = {},
+      fakeEmpty,
       ...props
     } = flatListProps
 
@@ -64,39 +79,63 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     })
 
-    const renderSeparator = useCallback(() => {
-      return (
-        <View style={variantStyles.separator}></View>
-      )
-    }, [])
+    // const isEmpty = !props.data || !props.data.length
+    const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
 
-    const isEmpty = !props.data || !props.data.length
-    const separator = !isEmpty && props?.separators && renderSeparator
 
-    const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
-    const _listProps = {
-      style: [variantStyles.wrapper, style],
-      contentContainerStyle: variantStyles.content,
-      ref: ref as unknown as FlatList,
-      ItemSeparatorComponent: separator,
-      refreshControl: !!onRefresh && (
-        <RefreshControl
+    const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
+      if (!props?.renderItem) return null
+
+      const listLength = props?.data?.length || 0
+
+      const isFirst = data.index === 0
+      const isLast = data.index === listLength - 1
+
+      const isOnly = isFirst && isLast
+
+      return props?.renderItem({
+        ...data,
+        isFirst,
+        isLast,
+        isOnly,
+      })
+    }, [props?.renderItem, props?.data?.length])
+
+    const isEmpty = !props.data || !props.data.length
+
+    return (
+      <KeyboardAwareFlatList
+        style={[
+          variantStyles.wrapper, 
+          style,
+          isEmpty && variantStyles['wrapper:empty']
+        ]}
+        contentContainerStyle={[
+          variantStyles.content,
+          isEmpty && variantStyles['content:empty']
+        ]}
+        // @ts-expect-error React's refs suck
+        ItemSeparatorComponent={separator}
+        ListHeaderComponentStyle={variantStyles.header}
+        
+        refreshControl={!!onRefresh && (
+          <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
           tintColor={refreshStyles?.color}
           colors={[refreshStyles?.color]}
           {...refreshControlProps}
-        />
-      ),
-      ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
-      ...props,
-    }
-
-    return (
-      <Component
-        {..._listProps}
+          />
+          )}
+          
+        ListEmptyComponent={<EmptyPlaceholder {...placeholder}/>}
+          {...props}
+        data={fakeEmpty ? [] : props.data}
+        ref={ ref as React.LegacyRef<KeyboardAwareFlatList> }
+        renderItem={renderItem}
+        
       />
     )
   },

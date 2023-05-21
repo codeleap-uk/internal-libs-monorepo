@@ -1,5 +1,7 @@
 import { DeepPartial, Matcher } from '..'
 import { LogType, SentryProvider } from '../tools/Logger/types'
+import { inspect } from 'util'
+type InspectOptions = Parameters<typeof inspect>[1]
 
 export type AppSettings<
   _SentryProvider extends SentryProvider = SentryProvider
@@ -35,6 +37,8 @@ export type AppSettings<
     DeviceIdentifier?: string
     IgnoreWarnings?: string[]
     StringifyObjects?: boolean
+    isMain?: boolean
+    inspect?: InspectOptions,
     Obfuscate: {
       keys: Matcher<'key'>[]
       values: Matcher<'value'>[]

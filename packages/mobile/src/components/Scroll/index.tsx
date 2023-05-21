@@ -88,6 +88,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       <Component
         style={[variantStyles.wrapper, style]}
         contentContainerStyle={[variantStyles.content, contentContainerStyle]}
+        showsVerticalScrollIndicator={false}
         // @ts-expect-error - Refs suck
         ref={ref}
         refreshControl= {
@@ -100,7 +101,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
               {...refreshControlProps}
             />
           )
-        } 
+        }
         {...props}
       >
         {children}
