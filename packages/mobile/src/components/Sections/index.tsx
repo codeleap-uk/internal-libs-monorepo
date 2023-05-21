@@ -1,91 +1,153 @@
 import * as React from 'react'
-import { forwardRef, useState } from 'react'
+import { forwardRef } from 'react'
 import {
-  deepEqual,
-  onUpdate,
   useDefaultComponentStyle,
-  usePrevious,
-  useCodeleapContext,
+  ComponentVariants,
+  useCallback,
 } from '@codeleap/common'
 
-import { RefreshControl, SectionList } from 'react-native'
+import { 
+  RefreshControl, 
+  StyleSheet, 
+  RefreshControlProps, 
+  SectionListRenderItemInfo,
+  SectionListProps as RNSectionListProps,
+} from 'react-native'
 import { View, ViewProps } from '../View'
-import { KeyboardAwareScrollViewTypes } from '../../modules'
+import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
+import { SectionsComposition, SectionsPresets } from './styles'
+import { StylesOf } from '../../types'
 import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
 
-export type SectionListProps = KeyboardAwareScrollViewTypes.KeyboardAwareSectionListProps<any> &
-  ViewProps & {
-    onRefresh?: () => void
-    refreshTimeout?: number
-    changeData?: any
-    separators?: boolean
-  }
+export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
-export const Sections = forwardRef<SectionList, SectionListProps>(
-  (flatListProps, ref) => {
+export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & {
+  isFirst: boolean
+  isLast: boolean
+  isOnly: boolean
+}
+
+export type ReplaceSectionListProps<P, T> = Omit<P, DataboundSectionListPropsTypes> & {
+  sections: T[]
+  keyExtractor?: (item: T, index: number) => string
+  renderItem: (data: AugmentedSectionRenderItemInfo<T>) => React.ReactElement
+  onRefresh?: () => void
+  getItemLayout?: ((
+    data:T,
+    index: number,
+  ) => { length: number; offset: number; index: number })
+  fakeEmpty?: boolean
+}
+
+export * from './styles'
+
+
+export type SectionListProps<
+  T = any[],
+  Data = T extends Array<infer D> ? D : never
+> = ReplaceSectionListProps<RNSectionListProps<Data>, Data> &
+  Omit<ViewProps, 'variants'> & {
+    separators?: boolean
+    placeholder?: EmptyPlaceholderProps
+    styles?: StylesOf<SectionsComposition>
+    refreshControlProps?: Partial<RefreshControlProps>
+    fakeEmpty?: boolean
+  } & ComponentVariants<typeof SectionsPresets>
+
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
+    return (
+      <View style={props.separatorStyles}></View>
+    )
+}
+
+export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
+  (sectionsProps, ref) => {
     const {
       variants = [],
       style,
-      refreshTimeout = 3000,
-      changeData,
+      styles = {},
+      onRefresh,
+      component,
+      refreshing,
+      placeholder,
+      keyboardAware,
+      refreshControlProps = {},
+      fakeEmpty,
       ...props
-    } = flatListProps
-    const hasRefresh = !!props.onRefresh
-    const [refreshing, setRefreshing] = useState(false)
+    } = sectionsProps
 
-    const timer = React.useRef(null)
-    const previousData = usePrevious(changeData)
-
-    const onRefresh = () => {
-      if (timer.current) {
-        clearTimeout(timer.current)
-      }
-
-      setRefreshing(true)
-
-      props.onRefresh()
-
-      timer.current = setTimeout(() => {
-        setRefreshing(false)
-      }, refreshTimeout)
-    }
-    onUpdate(() => {
-      if (refreshing && !deepEqual(previousData, changeData)) {
-        setRefreshing(false)
-        if (timer.current) {
-          clearTimeout(timer.current)
-        }
-      }
-    }, [refreshing, changeData])
-    const { Theme } = useCodeleapContext()
-
-    const variantStyles = useDefaultComponentStyle('View', {
+    const variantStyles = useDefaultComponentStyle<'u:Sections', typeof SectionsPresets>('u:Sections', {
       variants,
+      styles,
+      transform: StyleSheet.flatten,
+
     })
 
-    const renderSeparator = () => {
-      return (
-        <View variants={['separator']}></View>
-      )
-    }
+    // const isEmpty = !props.data || !props.data.length
+    const separator = props?.separators && (() => <RenderSeparator separatorStyles={variantStyles.separator}/>)
 
-    const separatorProp = props.separators
-    const isEmpty = !props.data || !props.data.length
-    const separator = !isEmpty && separatorProp == true && renderSeparator
+
+    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
+
+    const flatSectionsData = props?.sections?.flatMap(x => x.data) || []
+
+
+
+    const renderItem = useCallback((data: SectionListRenderItemInfo<any>) => {
+      if (!props?.renderItem) return null
+      
+      const listLength = data.section?.data?.length || 0
+
+      const isFirst = data.index === 0
+      const isLast = data.index === listLength - 1
+
+      const isOnly = isFirst && isLast
+
+      return props?.renderItem({
+        ...data,
+        isFirst,
+        isLast,
+        isOnly,
+      })
+    }, [props?.renderItem, props?.sections?.length])
+
+    const isEmpty = !props.sections || !props.sections.length || props.sections.some(x => {
+      return !x.data || !x.data.length
+    })
 
     return (
       <KeyboardAwareSectionList
-        style={[Theme.presets.full, style]}
-        contentContainerStyle={[variantStyles.wrapper]}
-        // @ts-ignore
-        ref={ref}
+       style={[
+          variantStyles.wrapper, 
+          style,
+          isEmpty && variantStyles['wrapper:empty']
+        ]}
+        contentContainerStyle={[
+          variantStyles.content,
+          isEmpty && variantStyles['content:empty']
+        ]}
+        
         ItemSeparatorComponent={separator}
-        {...props}
-        refreshControl={
-          hasRefresh && (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          )
-        }
+        ListHeaderComponentStyle={variantStyles.header}
+        
+        refreshControl={!!onRefresh && (
+          <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={refreshStyles?.color}
+          colors={[refreshStyles?.color]}
+          {...refreshControlProps}
+          />
+          )}
+          
+        ListEmptyComponent={<EmptyPlaceholder {...placeholder}/>}
+          {...props}
+        data={fakeEmpty ? [] : props.sections}
+
+        // @ts-ignore
+        ref={ ref as React.LegacyRef<KeyboardAwareSectionList> }
+        renderItem={renderItem}
+        
       />
     )
   },

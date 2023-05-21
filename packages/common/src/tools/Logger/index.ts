@@ -2,6 +2,7 @@ import { AppSettings } from '../../config/Settings'
 import { TypeGuards } from '../../utils'
 import { Analytics } from './Analytics'
 import { SentryService } from './Sentry'
+import { SlackService } from './Slack'
 import {
   LogToTerminal,
   LogFunctionArgs,
@@ -11,6 +12,7 @@ import {
 
 export * as LoggerTypes from './types'
 export * as LoggerAnalytics from './Analytics'
+import { inspect } from 'util'
 
 const logLevels: LogType[] = ['debug', 'info', 'log', 'warn', 'error']
 
@@ -27,15 +29,22 @@ const hollowAnalytics = new Analytics({
  * [[include:Logger.md]]
  */
 export class Logger {
+  static settings: AppSettings
+
   settings: AppSettings
 
   sentry: SentryService
+
+  slack: SlackService
 
   middleware:LoggerMiddleware[] = []
 
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
     this.middleware = middleware || []
+    if (settings.Logger.isMain) {
+      Logger.settings = settings
+    }
 
     if (settings?.Logger?.IgnoreWarnings?.length) {
       const newConsole = (args, oldConsole) => {
@@ -46,7 +55,6 @@ export class Logger {
       }
       const consoles = ['log', 'warn', 'error']
 
-
       consoles.forEach(t => {
         const tmp = console[t]
         console[t] = (...args) => newConsole(args, tmp)
@@ -54,6 +62,8 @@ export class Logger {
     }
 
     this.sentry = new SentryService(settings)
+
+    this.slack = new SlackService(settings)
 
     if (!analytics) {
       this.analytics = hollowAnalytics
@@ -78,7 +88,16 @@ export class Logger {
     let logContent = logArgs[1]
 
     const logValue = nArgs === 1 ? descriptionOrValue : value
-    const displayValue = stringify && !!logValue && typeof logValue === 'object' ? JSON.stringify(logValue, null, 2) : logValue
+
+    const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue)
+    const inspectOptions = Logger?.settings?.Logger?.inspect || {}
+
+    // @ts-expect-error interface merging sucks
+    const displayValue = shouldStringify ? inspect(logValue, {
+      depth: 5,
+      showHidden: true,
+      ...inspectOptions,
+    }) : logValue
 
     if (nArgs === 3) {
       logContent = [

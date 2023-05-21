@@ -17,6 +17,8 @@ export type ModalParts =
   | 'header'
   | 'backdropTouchable'
   | 'title'
+  | 'description'
+  | 'titleWrapper'
   | `closeButton${Capitalize<ActionIconComposition>}`
 
 export type ModalComposition =

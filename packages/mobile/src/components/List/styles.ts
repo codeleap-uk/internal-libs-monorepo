@@ -1,7 +1,12 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ScrollComposition } from '../Scroll/styles'
 
-export type ListComposition = ScrollComposition | 'separator' | 'header'
+
+type ListStates = 'empty' | 'loading' 
+
+type ListParts = ScrollComposition | 'separator' | 'header'
+
+export type ListComposition = `${ListParts}:${ListStates}` | ListParts
 
 const createListStyle = createDefaultVariantFactory<ListComposition>()
 

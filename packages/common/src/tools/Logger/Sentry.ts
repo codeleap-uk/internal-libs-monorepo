@@ -18,10 +18,10 @@ export class SentryService {
     if (this.use) {
       const isDebug = settings?.Sentry?.debug || false
       if (isDebug) console.log('> > > Initializing Sentry', settings.Sentry)
-      // @ts-expect-error - These are provided by platform specific Sentry providers
       const initObj:ClientOptions = {
         dsn: settings.Sentry.dsn,
         debug: isDebug,
+        // @ts-expect-error - These are provided by platform specific Sentry providers and plugins
         integrations: [],
         ...settings?.Sentry?.initArgs,
       } 

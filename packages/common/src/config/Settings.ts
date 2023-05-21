@@ -1,7 +1,9 @@
 import { DeepPartial, Matcher } from '..'
 import { LogType, SentryProvider } from '../tools/Logger/types'
+import { inspect } from 'util'
+type InspectOptions = Parameters<typeof inspect>[1]
 
-export type AppSettings<_SentryProvider extends SentryProvider = any> = DeepPartial<{
+export type AppSettings<_SentryProvider extends SentryProvider = SentryProvider> = DeepPartial<{
   AppName: string
   CompanyName: string
   CompanySuffix: string
@@ -28,6 +30,8 @@ export type AppSettings<_SentryProvider extends SentryProvider = any> = DeepPart
     DeviceIdentifier?: string
     IgnoreWarnings?: string[]
     StringifyObjects?: boolean
+    isMain?: boolean
+    inspect?: InspectOptions,
     Obfuscate: {
       keys: Matcher<'key'>[]
       values: Matcher<'value'>[]
@@ -63,4 +67,18 @@ export type AppSettings<_SentryProvider extends SentryProvider = any> = DeepPart
       AppId: string
     }
   }
+
+  Slack: {
+    echo: {
+      channel?: string
+      icon: string
+      token: string
+      baseURL?: string
+    }
+  }
 }>
+
+export type ConfigurableSettings = Pick<
+AppSettings,
+'Fetch' | 'Logger' | 'ApiCredentials'
+>
