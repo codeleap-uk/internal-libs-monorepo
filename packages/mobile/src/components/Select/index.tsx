@@ -60,7 +60,6 @@ const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (p
 const defaultProps:Partial<SelectProps<any, boolean>> = {
   getLabel(option){
 
-    console.log('option', option)
     if(TypeGuards.isArray(option)){
 
       if(option.length === 0) return null
@@ -245,8 +244,6 @@ export const Select = <T extends string|number = string, Multi extends boolean =
       setLabelOptions([newOption])
     }
     
-
-
     if (closeOnSelect) {
       close?.()
     }
