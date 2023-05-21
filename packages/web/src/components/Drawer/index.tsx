@@ -3,6 +3,7 @@ import {
   ComponentVariants,
   IconPlaceholder,
   onUpdate,
+  TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
@@ -119,21 +120,25 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
           ...variantStyles.box,
         }}
       >
-        <View
-          component='header'
-          variants={['justifySpaceBetween']}
-          css={variantStyles.header}
-        >
-          {typeof title === 'string' ? <Text text={title} /> : title}
-          {showCloseButton && (
-            <Button
-              onPress={toggle}
-              icon={'close' as IconPlaceholder}
-              variants={['icon']}
-              css={variantStyles.headerCloseButton}
-            />
-          )}
-        </View>
+        {
+          !TypeGuards.isNil(title) || showCloseButton && (
+            <View
+              component='header'
+              variants={['justifySpaceBetween']}
+              css={variantStyles.header}
+            >
+              {typeof title === 'string' ? <Text text={title} /> : title}
+              {showCloseButton && (
+                <Button
+                  onPress={toggle}
+                  icon={'close' as IconPlaceholder}
+                  variants={['icon']}
+                  css={variantStyles.headerCloseButton}
+                />
+              )}
+            </View>
+          )
+        }
         <View css={variantStyles.body}>{children}</View>
         {footer && (
           <View component='footer' css={variantStyles.footer}>
