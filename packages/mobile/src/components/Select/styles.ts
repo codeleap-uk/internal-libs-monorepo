@@ -12,7 +12,8 @@ export type SelectComposition =
   ModalComposition |
   `input${Capitalize<TextInputComposition>}` |
   `list${Capitalize<ListComposition>}` |
-  `item${Capitalize<ItemComposition>}` 
+  `item${Capitalize<ItemComposition>}` |
+  `searchInput${Capitalize<TextInputComposition>}`
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 

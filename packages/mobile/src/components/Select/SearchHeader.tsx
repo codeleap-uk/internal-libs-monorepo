@@ -1,7 +1,7 @@
 import { IconPlaceholder, TypeGuards } from "@codeleap/common"
 import { useRef, useState } from "react"
 import { ComponentWithDefaultProps } from "../../types"
-import { TextInput } from "../TextInput"
+import { TextInput, TextInputProps } from "../TextInput"
 
 
 
@@ -13,7 +13,7 @@ export type SearchHeaderProps = {
   debounce?: number
   clearIcon?: IconPlaceholder
   searchIcon?: IconPlaceholder
-}
+} & Partial<TextInputProps>
 
 export const SearchHeader:ComponentWithDefaultProps<SearchHeaderProps> = (props) => {
   const {

@@ -1,17 +1,19 @@
 import { IconPlaceholder,
-  getNestedStylesByKey,
   useDefaultComponentStyle,
   TypeGuards,
   useNestedStylesByKey,
   useBooleanToggle,
-  FormTypes
+  FormTypes,
+  onMount,
+  onUpdate,
+  usePrevious
 } from '@codeleap/common'
 import React, { useCallback, useMemo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
 import { TextInput } from '../TextInput'
 import { SelectPresets } from './styles'
-import { SelectProps } from './types'
+import { SelectProps, ValueBoundSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Button } from  '../Button'
 import { SearchHeader } from './SearchHeader'
@@ -29,13 +31,63 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
   })
 }
 
+const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (props) => {
+  const {
+    currentValueLabel,
+    debugName,
+    clearIcon,
+    label,
+    toggle,
+    styles,
+    style
+  } = props
+
+  return  <TextInput
+    value={TypeGuards.isString(currentValueLabel) ?  currentValueLabel : ''}
+    rightIcon={clearIcon}
+    onPress={() => toggle()}
+    label={label}
+    debugName={debugName}
+    styles={styles}
+    style={style}
+    innerWrapperProps={{
+      rippleDisabled: true,
+    }}
+ 
+  />
+}
+
+const defaultProps:Partial<SelectProps<any, boolean>> = {
+  getLabel(option){
+
+    console.log('option', option)
+    if(TypeGuards.isArray(option)){
+
+      if(option.length === 0) return null
+      
+      return option.map(o => o.label).join(', ')
+    
+    }else{
+      if(!option) return null
+      return option?.label
+    }
+  },
+  outerInputComponent: OuterInput,
+}
+
+
+
 export const Select = <T extends string|number = string, Multi extends boolean = false>(selectProps:SelectProps<T,Multi>) => {
+  const allProps =  {
+    ...defaultProps,
+    ...selectProps
+  }
   const {
     value,
     onValueChange,
     label,
     styles = {},
-    options,
+    options = [],
     style,
     variants,
     description,
@@ -60,17 +112,73 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     toggle: _toggle,
     ListHeaderComponent,
     onLoadOptionsError,
+    loadOptionsOnMount = defaultOptions.length === 0,
+    loadOptionsOnOpen = false,
     filterItems = defaultFilterFunction,
+    getLabel,
+    searchInputProps,
+    outerInputComponent,
     ...modalProps
-  } = selectProps
+  } = allProps
 
   const [loading, setLoading] = useBooleanToggle(false)
   const [, setSearch] = useState('')
+  const isValueArray = TypeGuards.isArray(value) &&  multiple
+
+  const [labelOptions,setLabelOptions] = useState<FormTypes.Options<T>>(() => {
+    if( isValueArray){
+      return defaultOptions.filter(o => value.includes(o.value))
+    }
+
+    const _option = defaultOptions.find(o => o.value === value)
+
+    if(!_option){
+      return []
+    }
+
+    return [_option]
+  })
+
+  
+  const currentValueLabel = useMemo(() => {
+    const _options = (multiple ? labelOptions : labelOptions?.[0] ) as Multi extends true  ? FormTypes.Options<T> : FormTypes.Options<T>[number]
+    
+    const label = getLabel(
+      _options,
+    ) || placeholder
+
+    return label
+  }, [labelOptions])
 
   const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle]  :   useBooleanToggle(false) 
 
 
   const [filteredOptions, setFilteredOptions] = useState(defaultOptions)
+
+  async function load(){
+    setLoading(true)
+    try{
+      const options = await loadOptions('')
+      setFilteredOptions(options)
+    }catch(e){
+      onLoadOptionsError(e)
+    }
+    setLoading(false)
+  }
+
+  onMount(() => {
+    if(loadOptionsOnMount && !!loadOptions){
+      load()
+    }
+  })
+
+  const prevVisible = usePrevious(visible)
+
+  onUpdate(() => {
+    if(visible && !prevVisible && loadOptionsOnOpen && !!loadOptions){
+      load()
+    }
+  }, [visible, prevVisible])
 
   const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>('u:Select', {
     transform: StyleSheet.flatten,
@@ -84,34 +192,60 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   const listStyles = useNestedStylesByKey('list', variantStyles)
 
   const inputStyles = useNestedStylesByKey('input', variantStyles)
+  
+  const searchInputStyles = useNestedStylesByKey('searchInput', variantStyles)
 
+  const currentOptions = searchable ? filteredOptions : defaultOptions
 
   const close = () => toggle?.()
   
-  const isValueArray = TypeGuards.isArray(value)
 
   const select = (selectedValue) => {
+
+    let newValue = null
+
+    let newOption = null
+    let removedIndex = null
 
     if(multiple && isValueArray){
       
     
       if(value.includes(selectedValue)){
-        const newValue = value.filter(v => v !== selectedValue)
-        onValueChange(newValue as any)
+        removedIndex = value.findIndex(v => v === selectedValue)
+        
+        newValue = value.filter((v, i) => i !== removedIndex)
+        
       }else{
         
         if(TypeGuards.isNumber(limit) && value.length >= limit){
           return
         }
+        
+        newOption = currentOptions.find(o => o.value === selectedValue)
 
-        const newValue = [...value, selectedValue]
-        onValueChange(newValue as any)
+        newValue = [...value, selectedValue]
       }
-
-    }else{
-      onValueChange(selectedValue)
       
+    }else{
+      newValue = selectedValue
+      newOption = currentOptions.find(o => o.value === selectedValue)
     }
+    
+    onValueChange(newValue)
+
+    if(isValueArray){
+      if(removedIndex !== null){
+        const newOptions = [...labelOptions]
+        newOptions.splice(removedIndex, 1)
+        setLabelOptions(newOptions)
+      }else{
+        setLabelOptions([...labelOptions, newOption])
+      }
+    }else{
+      setLabelOptions([newOption])
+    }
+    
+
 
     if (closeOnSelect) {
       close?.()
@@ -119,13 +253,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   }
 
-  const selectedLabel:string = useMemo(() => {
-    const current = options.find(o => o.value === value)
 
-    const display = current?.label ?? placeholder
-
-    return TypeGuards.isString(display) ? display : ''
-  }, [value, placeholder, options])
   const Item = renderItem || Button
 
   const renderListItem = useCallback(({ item }) => {
@@ -206,6 +334,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     }}
     debounce={!!loadOptions ? 200 : null}
     onSearchChange={onChangeSearch}
+    styles={searchInputStyles}
+    {...searchInputProps}
   /> : null
 
   const _ListHeaderComponent = useMemo(() => {
@@ -219,26 +349,30 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   }, [searchable, ListHeaderComponent]) 
 
+
+  const Input = outerInputComponent
+
+
   return <>
     {
       !hideInput && (
-        <TextInput
+        // @ts-ignore
+        <Input
           
-          value={selectedLabel}
-          rightIcon={{
+          clearIcon={{
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
           }}
           onPress={close}
+          currentValueLabel={currentValueLabel}
           
-          label={label}
           debugName={`${debugName} select input`}
           styles={inputStyles}
           style={style}
-          innerWrapperProps={{
-            rippleDisabled: true,
-          }}
+          {...allProps}
           {...inputProps}
+          visible={visible}
+          toggle={toggle}
         />
       )
     }
@@ -277,3 +411,6 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
 export * from './styles'
 export * from './types'
+
+
+Select.defaultProps = defaultProps

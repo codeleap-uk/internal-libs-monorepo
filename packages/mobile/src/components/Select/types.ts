@@ -6,12 +6,12 @@ import {
 } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
-import { DrawerProps } from '../Drawer'
+import { ActionIconProps } from '../ActionIcon'
 import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { ModalProps } from '../Modal'
 import { Text } from '../Text'
-import { TextInputProps } from '../TextInput'
+import { TextInputComposition, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { SelectComposition, SelectPresets } from './styles'
 
@@ -29,13 +29,19 @@ export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
 
 type SelectModalProps = Omit<ModalProps, 'variants' | 'styles'>
 
-type SelectValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
+export type SelectValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
 type SelectHeaderProps = {
   searchComponent?: React.ReactNode
 }
 
-type ValueBoundSelectProps<T, Multi  extends boolean = false> = {
+type OuterInputProps<T = any, Multi  extends boolean = false> = Omit<SelectProps<T, Multi>, 'variants'| 'styles'> & {
+  currentValueLabel: FormTypes.Label
+  styles?: StylesOf<TextInputComposition>
+  clearIcon?: Partial<ActionIconProps>
+}
+
+export type ValueBoundSelectProps<T, Multi  extends boolean = false> = {
   options?: FormTypes.Options<T>
   defaultOptions?: FormTypes.Options<T>
   loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
@@ -45,6 +51,8 @@ type ValueBoundSelectProps<T, Multi  extends boolean = false> = {
   filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
+  getLabel?: (forOption: Multi extends true  ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
+  outerInputComponent?: React.ComponentType<OuterInputProps<T, Multi>>
 }
 
 export type ReplaceSelectProps<Props, T, Multi extends boolean = false> =  Omit<
@@ -74,5 +82,8 @@ export type SelectProps<T = any, Multi  extends boolean = false> = {
     limit?: number
     ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
     searchInputProps?: Partial<TextInputProps>
+    loadOptionsOnMount?: boolean
+    loadOptionsOnOpen?: boolean
+    
   } & ComponentVariants<typeof SelectPresets> & SelectModalProps & ValueBoundSelectProps<T, Multi>
 
