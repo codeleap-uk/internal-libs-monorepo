@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { ActivityIndicator as Indicator, ActivityIndicatorProps as IndicatorProps, StyleSheet } from 'react-native'
 import {
 
@@ -19,11 +19,22 @@ export type ActivityIndicatorProps =
  & {
   variants?: ComponentVariants<typeof ActivityIndicatorPresets>['variants']
   styles?: StylesOf<ActivityIndicatorComposition>
+  component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<Indicator>}, 'component'>>
 }
 
 export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {
-    const { variants = [], style, styles: propStyles, ...props } = activityIndicatorProps
+    const { 
+      variants = [], 
+      style, 
+      styles: propStyles, 
+      component, 
+      ...props 
+    } = {
+      ...ActivityIndicator.defaultProps,
+      ...activityIndicatorProps,
+
+    }
 
     const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
       variants,
@@ -37,14 +48,22 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
     const color = styles?.color || Theme.colors.gray
     const size = styles?.height || styles?.width || 'large'
 
+    const Component = component
+   
+
     return (
-      <Indicator
+      <Component
         size={size}
         ref={ref}
         color={color}
         style={styles}
+        styles={styles}
         {...props}
       />
     )
   },
 )
+
+ActivityIndicator.defaultProps = {
+  component: Indicator,
+}

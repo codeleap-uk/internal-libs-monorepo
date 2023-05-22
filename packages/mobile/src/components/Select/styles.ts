@@ -10,9 +10,10 @@ type ItemComposition = `${ItemParts}${ItemStates}` | ItemParts
 
 export type SelectComposition =
   ModalComposition |
-  `input${TextInputComposition}` |
+  `input${Capitalize<TextInputComposition>}` |
   `list${Capitalize<ListComposition>}` |
-  `item${Capitalize<ItemComposition>}` 
+  `item${Capitalize<ItemComposition>}` |
+  `searchInput${Capitalize<TextInputComposition>}`
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 

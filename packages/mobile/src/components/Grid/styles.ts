@@ -1,7 +1,8 @@
-import { ListComposition, ListPresets } from '../List'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ListComposition } from '../List'
 
 export type GridComposition = ListComposition
 
-export const GridStyles = {
-  ...ListPresets,
-}
+const createGridStyle = createDefaultVariantFactory<GridComposition>()
+
+export const GridPresets = includePresets(style => createGridStyle(() => ({ content: style })))
