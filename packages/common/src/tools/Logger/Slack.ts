@@ -1,5 +1,6 @@
 import { AppSettings } from '../../config/Settings'
 import { RequestClient } from '../Fetch'
+import {inspect} from 'util'
 
 type EchoSlackConfig = AppSettings['Slack']['echo']
 
@@ -116,7 +117,11 @@ export class SlackService {
     const slack = args.map(i => {
       if (typeof i === 'object') {
         try {
-          return JSON.stringify(i, null, 2)
+          return inspect(i, {
+            depth: 5,
+            compact: false,
+            showHidden: true,
+          })
         } catch (e) {
           return `${i} (Unserializable value)`
         }
