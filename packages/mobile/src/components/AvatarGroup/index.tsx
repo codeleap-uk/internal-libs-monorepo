@@ -13,19 +13,30 @@ import { Avatar, AvatarProps } from '../Avatar'
 export type AvatarGroupProps = ComponentVariants<typeof AvatarGroupPresets> & {
   styles?: StylesOf<AvatarGroupComposition>
   style?: ViewProps['style']
-  avatares: AvatarProps[]
+  avatars: AvatarProps[]
+  displacement?: number
   avatarVariants?: AvatarProps['variants']
 }
+
+const defaultProps:Partial<AvatarGroupProps> = {
+  displacement: 20.5,
+}
+
+
 
 export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
   const {
     variants = [],
-    avatares = [],
+    avatars = [],
     avatarVariants,
     styles,
     style,
+    displacement,
     ...viewProps
-  } = props
+  } = {
+    ...defaultProps,
+    ...props
+  }
 
   const variantStyles = useDefaultComponentStyle('u:AvatarGroup', {
     variants,
@@ -39,16 +50,15 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
     <View
       style={[variantStyles.wrapper, style]}
       variants={['row']}
-
       {...viewProps}
     >
-      {avatares.map((avatar, index) => (
+      {avatars.map((avatar, index) => (
         <Avatar
           firstNameOnly
+          key={avatar.debugName || index}
           {...avatar}
           variants={avatar.variants || avatarVariants}
-          key={avatar.debugName}
-          style={getAvatarStyle(index)}
+          style={getAvatarStyle(index,displacement)}
           styles={avatarStyles}
         />
       ))}
@@ -56,7 +66,9 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
   )
 }
 
-const getAvatarStyle = (index: number) => {
+AvatarGroup.defaultProps = defaultProps
+
+const getAvatarStyle = (index: number,displacementPixels: number) => {
   const displacement = index * 20.5
   return { right: `${displacement}%` }
 }
