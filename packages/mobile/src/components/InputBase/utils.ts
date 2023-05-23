@@ -14,7 +14,7 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T ): {
 } {
   const varList:InputBaseKey[] = [
     'label', 
-    
+    'style',
     'error', 
     'innerWrapper', 
     'leftIcon', 

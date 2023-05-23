@@ -9,10 +9,10 @@ import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-
 import { StyleSheet, ScrollView } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { RefreshControl, RefreshControlProps } from '../RefreshControl'
-import { GridComposition, GridStyles } from './styles'
+import { GridComposition, GridPresets } from './styles'
 import { StylesOf } from '../../types'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
+import { RefreshControlProps, RefreshControl } from '../RefreshControl'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -40,7 +40,7 @@ export type GridProps<
     debugName?: string
     styles?: StylesOf<GridComposition>
     refreshControlProps?: Partial<RefreshControlProps>
-  } & ComponentVariants<typeof GridStyles>
+  } & ComponentVariants<typeof GridPresets>
 
 const GridCP = forwardRef<ScrollView, GridProps>(
   (flatGridProps, ref) => {
@@ -57,7 +57,7 @@ const GridCP = forwardRef<ScrollView, GridProps>(
       ...props
     } = flatGridProps
 
-    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridStyles>('u:Grid', {
+    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
       variants,
       styles,
       transform: StyleSheet.flatten,
@@ -79,6 +79,7 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     const _gridProps = {
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
+      showsVerticalScrollIndicator: false,
       ref: ref,
       ItemSeparatorComponent: separator,
       refreshControl:
