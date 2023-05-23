@@ -1,6 +1,7 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 export type SelectParts =
+  | 'selectWrapper'
   | 'wrapper'
   | 'innerWrapper'
   | 'inputWrapper'
@@ -30,6 +31,7 @@ export type SelectParts =
 export type SelectComposition =
   | `${SelectParts}:error`
   | `${SelectParts}:disabled`
+  | `${SelectParts}:focused`
   | SelectParts
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
