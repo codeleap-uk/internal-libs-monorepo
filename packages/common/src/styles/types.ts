@@ -83,6 +83,10 @@ export type IconSizes =
   | '5'
   | '6'
 
+export type BorderWidth =
+  | 'small'
+  | 'medium'
+
 export type FontTokens =
   | 'base'
   | 'quotes'
@@ -134,6 +138,7 @@ export type AppTheme = {
     smallGap: number
     itemHeight: Record<ItemHeight, number>
     iconSize: Record<IconSizes, number>
+    borderWidth: Record<BorderWidth, number>
   } & AnyProps<any>
 
   readonly borderRadius: {
