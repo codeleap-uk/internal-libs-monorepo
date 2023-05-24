@@ -28,6 +28,7 @@ import { GridPresets } from './Grid'
 import { InputLabelPresets } from './InputLabel'
 import { LoadingOverlayPresets } from './LoadingOverlay'
 import { InputBasePresets } from './InputBase'
+import { RefreshControlPresets } from './RefreshControl'
 import { AvatarPresets } from './Avatar'
 import { AvatarGroupPresets } from './AvatarGroup'
 import { SectionsPresets } from './Sections'
@@ -66,4 +67,5 @@ export const defaultStyles = {
   LoadingOverlay: LoadingOverlayPresets,
   InputLabel: InputLabelPresets,
   InputBase: InputBasePresets,
+  RefreshControl: RefreshControlPresets,
 }

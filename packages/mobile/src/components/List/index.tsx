@@ -6,9 +6,10 @@ import {
   useCallback,
 } from '@codeleap/common'
 
-import { RefreshControl, FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, RefreshControlProps } from 'react-native'
+import {  FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
+import { RefreshControl, RefreshControlProps } from '../RefreshControl'
 import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
 
@@ -124,8 +125,6 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
           <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
-          tintColor={refreshStyles?.color}
-          colors={[refreshStyles?.color]}
           {...refreshControlProps}
           />
           )}
