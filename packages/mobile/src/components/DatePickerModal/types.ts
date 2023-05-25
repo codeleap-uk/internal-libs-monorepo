@@ -30,17 +30,16 @@ export type DatePickerModalProps = Omit<ModalProps, 'styles' | 'variants' | 'ref
   placeholder?: FormTypes.Label
 
   onValueChange?: (date: Date) => void
-  
+
   styles?: StylesOf<DatePickerModalComposition>
-  
+
   isCustomModal?: boolean
   mode?: DatePickerProps['mode']
-  // modalProps?: Partial<ModalProps>
-  
+
   cancelButtonProps?: Partial<ButtonProps>
   confirmButtonProps?: Partial<ButtonProps>
 
-  datePickerProps?:  Partial<DatePickerProps>
+  datePickerProps?: Partial<DatePickerProps>
 
   outerInputComponent?: React.ComponentType<DatePickerModalOuterInputProps>
 
@@ -51,6 +50,5 @@ export type DatePickerModalProps = Omit<ModalProps, 'styles' | 'variants' | 'ref
   showDoneButton?: boolean
 
   footerComponent?: React.ComponentType<DatePickerModalFooterProps>
-
 
 } & ComponentVariants<typeof DatePickerModalPresets>
