@@ -61,6 +61,7 @@ export type InputValueTypes = {
   'range-slider': number[]
   slider: number[]
   list: any[]
+  date: Date
   number: number
 }
 export type Label = string | ReactNode
@@ -163,6 +164,13 @@ export type MultipleFileField = {
   required?: boolean
 } & WithTransformer<AnyFile[]>
 
+export type DateField = {
+  type: 'date'
+  defaultValue: Date
+  validate?: Validator<Date>
+  required?: boolean
+} & WithTransformer<Date>
+
 export type CompositeField = {
   type: 'composite'
   fields?: FieldsMap
@@ -184,6 +192,7 @@ export type AllFields =
   | ListField
   | NumberField
   | MultipleFileField
+  | DateField
 
 export type FormField = {
   disabled?: boolean
