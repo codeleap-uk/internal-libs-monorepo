@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
+import { CSSObject, jsx } from '@emotion/react'
 import { Fragment } from 'react'
-import { AnyFunction, FormTypes, useDefaultComponentStyle, useValidate } from '@codeleap/common'
+import { AnyFunction, FormTypes, useDefaultComponentStyle, useValidate, yup } from '@codeleap/common'
 import _Select, { StylesConfig, Props, GroupBase } from 'react-select'
 import Async, { AsyncProps } from 'react-select/async'
 import { ReactNode } from 'react'
@@ -24,9 +24,9 @@ export type SelectProps = React.PropsWithChildren<{
   searchable?: boolean
   onValueChange?: () => void
   label?: string
-  variants: any
-  validate: any
-  css: any
+  variants: string[]
+  validate: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
+  css?: CSSObject
 } & Props<OptionType, false, GroupBase<OptionType>>
 >
 
