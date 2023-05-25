@@ -24,6 +24,9 @@ export type SelectProps = React.PropsWithChildren<{
   searchable?: boolean
   onValueChange?: () => void
   label?: string
+  variants: any
+  validate: any
+  css: any
 } & Props<OptionType, false, GroupBase<OptionType>>
 >
 
