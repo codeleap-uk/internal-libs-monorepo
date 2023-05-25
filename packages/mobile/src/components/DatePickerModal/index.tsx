@@ -10,7 +10,6 @@ import { DatePickerModalProps } from './types'
 
 export * from './styles'
 
-
 const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) => {
   const {
     debugName,
@@ -19,15 +18,17 @@ const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) 
     visible,
     toggle,
     valueLabel,
+    placeholder,
     ...otherProps
   } = props
 
 
   return <TextInput
     debugName={`${debugName} outer input`}
-    value={TypeGuards.isString(valueLabel) ? valueLabel : ''}
     onPress={toggle}
     {...otherProps}
+    value={TypeGuards.isString(valueLabel) ? valueLabel : ''}
+    placeholder={TypeGuards.isString(placeholder) ? placeholder : ''}
   />
 }
 
