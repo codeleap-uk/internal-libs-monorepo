@@ -20,7 +20,7 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <>{props.children}</>
 }
 
-export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
+export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) => {
   const { 
     children,
     error = null,
@@ -83,7 +83,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     error: _error || <Text children={<>
       &nbsp;
     </>} css={_styles.errorStyle}/>
-  }
+  } 
 
   return (
     <WrapperComponent 
