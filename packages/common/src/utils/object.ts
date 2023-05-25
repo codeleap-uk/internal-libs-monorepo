@@ -13,7 +13,7 @@ export function deepMerge(base = {}, changes = {}): any {
   }
   for (const [key, value] of changeEntries) {
     obj[key] =
-      typeof value === 'object' && !Array.isArray(value)
+      typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date || value instanceof File)
         ? deepMerge(obj[key], changes[key])
         : value
   }
