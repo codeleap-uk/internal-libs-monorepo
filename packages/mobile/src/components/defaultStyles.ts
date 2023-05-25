@@ -28,12 +28,17 @@ import { GridPresets } from './Grid'
 import { InputLabelPresets } from './InputLabel'
 import { LoadingOverlayPresets } from './LoadingOverlay'
 import { InputBasePresets } from './InputBase'
+import { RefreshControlPresets } from './RefreshControl'
+import { AvatarPresets } from './Avatar'
+import { AvatarGroupPresets } from './AvatarGroup'
 import { SectionsPresets } from './Sections'
 import { DatePickerModalPresets } from './DatePickerModal'
 
 export const defaultStyles = {
   View: ViewPresets,
   Icon: IconPresets,
+  Avatar: AvatarPresets,
+  AvatarGroup: AvatarGroupPresets,
   Touchable: TouchablePresets,
   Text: TextPresets,
   Image: ImagePresets,
@@ -64,4 +69,5 @@ export const defaultStyles = {
   InputLabel: InputLabelPresets,
   InputBase: InputBasePresets,
   DatePickerModal: DatePickerModalPresets,
+  RefreshControl: RefreshControlPresets,
 }
