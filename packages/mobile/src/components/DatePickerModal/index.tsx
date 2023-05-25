@@ -14,20 +14,18 @@ export * from './types'
 const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) => {
   const {
     debugName,
-    onValueChange,
-    value,
-    visible,
     toggle,
     valueLabel,
+    placeholder,
     ...otherProps
   } = props
 
-  // @ts-expect-error
   return <TextInput
     debugName={`${debugName} outer input`}
-    value={TypeGuards.isString(valueLabel) ? valueLabel : ''}
     onPress={toggle}
     {...otherProps}
+    value={TypeGuards.isString(valueLabel) ? valueLabel : ''}
+    placeholder={TypeGuards.isString(placeholder) ? placeholder : ''}
   />
 }
 
@@ -206,8 +204,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         style={style}
 
       />}
-
-      <Wrapper {...wrapperProps}>
+      {/* @ts-expect-error */}
+      <Wrapper {...wrapperProps} >
         <DatePicker
           modal={!isCustomModal}
           open={visible}
