@@ -98,22 +98,22 @@ export function applyVariants({
         }),
       })
     } else if (variantName.startsWith('border')) {
-      const [property, value] = variantName.split(':')
-      const [_, identifier] = property.split('-')
+      const [properties, value] = variantName.split(':')
+      const [property, type] = properties.split('-')
 
       let borderStyle = {}
-      switch (identifier as BorderIdentifiers) {
+      switch (type as BorderIdentifiers) {
         case 'width':
-          borderStyle = { borderWidth: theme.values.borderWidth[value] }
+          borderStyle = { [`${property}Width`]: theme.values.borderWidth[value] }
           break
         case 'style':
-          borderStyle = { borderStyle: value }
+          borderStyle = { [`${property}Style`]: value }
           break
         case 'radius':
-          borderStyle = { borderRadius: theme.borderRadius[value] }
+          borderStyle = { [`${property}Radius`]: theme.borderRadius[value] }
           break
         case 'color':
-          borderStyle = { borderColor: theme.colors[value] }
+          borderStyle = { [`${property}Color`]: theme.colors[value] }
           break
         default:
           break

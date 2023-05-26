@@ -100,6 +100,7 @@ export type BorderDirections =
   | 'right'
   | 'bottom'
   | 'left'
+  | ''
 
 export type BorderStyle =
   | 'solid'
@@ -258,12 +259,10 @@ export type Spacing =
 type GetBorder<T> = Extract<BorderIdentifiers, T>
 
 export type Border =
-  | `border-${GetBorder<'width'>}:${BorderWidth}`
+  | `border${Capitalize<BorderDirections>}-${GetBorder<'width'>}:${BorderWidth}`
   | `border-${GetBorder<'style'>}:${BorderStyle}`
-  | `border-${GetBorder<'radius'>}:${BorderRadius}`
-  | `border-${GetBorder<'color'>}:${DefaultColors}`
-  // | `border-${BorderDirections}-${ GetBorder<'radius'>}:${BorderRadius}`
-  // | `border-${BorderDirections}-${GetBorder<'color'>}:${DefaultColors}`
+  | `border${Capitalize<BorderDirections>}-${GetBorder<'radius'>}:${BorderRadius}`
+  | `border${Capitalize<BorderDirections>}-${GetBorder<'color'>}:${DefaultColors}`
 
 export type BaseViewProps = {
   css?: any
