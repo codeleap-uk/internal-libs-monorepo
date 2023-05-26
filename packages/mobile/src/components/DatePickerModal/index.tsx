@@ -210,7 +210,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           modal={!isCustomModal}
           open={visible}
           onCancel={toggle}
-          date={value}
+          date={value ?? new Date()}
           onDateChange={(date) => {
             if (commitDate === 'onChange') {
               setValue(date)
