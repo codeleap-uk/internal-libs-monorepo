@@ -1,7 +1,7 @@
 import { AnyFunction } from 'callsites'
 import { CSSProperties } from 'react'
 import { VariantProp } from '.'
-import { EnhancedTheme } from '..'
+import { AppTheme, BorderIdentifiers, EnhancedTheme } from '..'
 import { VariantList, VariantsOf } from '../../types'
 import { deepMerge } from '../../utils/object'
 import {
@@ -88,13 +88,45 @@ export function applyVariants({
           [dim]: value,
         }),
       })
+    } else if (variantName.startsWith('backgroundColor') || variantName.startsWith('color')) {
+      const [property, themeColor] = variantName.split(':')
+
+      const value = theme.colors[themeColor]
+      return deepMerge(computedStyles, {
+        [rootElement]: wrapStyle({
+          [property]: value,
+        }),
+      })
+    } else if (variantName.startsWith('border')) {
+      const [property, value] = variantName.split(':')
+      const [_, identifier] = property.split('-')
+
+      let borderStyle = {}
+      switch (identifier as BorderIdentifiers) {
+        case 'width':
+          borderStyle = { borderWidth: theme.values.borderWidth[value] }
+          break
+        case 'style':
+          borderStyle = { borderStyle: value }
+          break
+        case 'radius':
+          borderStyle = { borderRadius: theme.borderRadius[value] }
+          break
+        case 'color':
+          borderStyle = { borderColor: theme.colors[value] }
+          break
+        default:
+          break
+      }
+
+      return deepMerge(computedStyles, { [rootElement]: wrapStyle(borderStyle) })
     }
 
     return computedStyles
   } else {
     const wrapped = {}
     const overWriteStyles = styles[variantName](theme)
-    for(const [key,val] of Object.entries(overWriteStyles)) {
+    for (const [key, val] of Object.entries(overWriteStyles)) {
       wrapped[key] = wrapStyle(val)
     }
     return deepMerge(computedStyles, wrapped)

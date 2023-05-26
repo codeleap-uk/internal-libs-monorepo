@@ -85,6 +85,33 @@ export type IconSizes =
   | '5'
   | '6'
 
+export type BorderWidth =
+  | 'small'
+  | 'medium'
+
+export type BorderRadius =
+  | 'tiny'
+  | 'small'
+  | 'medium'
+  | 'rounded'
+
+export type BorderDirections =
+  | 'top'
+  | 'right'
+  | 'bottom'
+  | 'left'
+
+export type BorderStyle =
+  | 'solid'
+  | 'dotted'
+  | 'dashed'
+
+export type BorderIdentifiers =
+  | 'width'
+  | 'style'
+  | 'radius'
+  | 'color'
+
 export type FontTokens =
   | 'base'
   | 'quotes'
@@ -133,14 +160,10 @@ export type AppTheme = {
     innerSpacing: Record<'X'|'Y', number>
     itemHeight: Record<ItemHeight, number>
     iconSize: Record<IconSizes, number>
+    borderWidth: Record<BorderWidth, number>
   } & AnyProps<any>
 
-  readonly borderRadius: {
-    tiny: number
-    small: number
-    medium: number
-    rounded: number
-  }
+  readonly borderRadius: Record<BorderRadius, number>
 
   readonly presets?: Record<string, any>
   readonly effects?: Record<string, RNShadow>
@@ -231,6 +254,16 @@ export type Spacing =
   | `gap:${SpacingMultiplier}`
   | `w:${SpacingMultiplier}`
   | `h:${SpacingMultiplier}`
+
+type GetBorder<T> = Extract<BorderIdentifiers, T>
+
+export type Border =
+  | `border-${GetBorder<'width'>}:${BorderWidth}`
+  | `border-${GetBorder<'style'>}:${BorderStyle}`
+  | `border-${GetBorder<'radius'>}:${BorderRadius}`
+  | `border-${GetBorder<'color'>}:${DefaultColors}`
+  // | `border-${BorderDirections}-${ GetBorder<'radius'>}:${BorderRadius}`
+  // | `border-${BorderDirections}-${GetBorder<'color'>}:${DefaultColors}`
 
 export type BaseViewProps = {
   css?: any

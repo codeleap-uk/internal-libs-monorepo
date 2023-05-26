@@ -4,7 +4,9 @@ import { ReactElement } from 'react'
 import { QueryKey } from '../MediaQuery'
 import {
   BaseViewProps,
+  Border,
   BreakpointPlaceholder,
+  DefaultColors,
   EnhancedTheme,
   IconPlaceholder,
   Spacing,
@@ -41,7 +43,7 @@ export type ComponentVariantsDefinition = Record<string, VariantStyleSheet<strin
 
 export type VariantProp<T = CommonVariantObject> =
   | string
-  | (keyof T | Spacing | `d:${string}` | boolean | null | undefined | '')[]
+  | (keyof T | Spacing | Border | `backgroundColor:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}` | boolean | null | undefined | '')[]
 export type ResponsiveVariantsProp<
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
   Styles = CommonVariantObject<any>,
