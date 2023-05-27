@@ -1,5 +1,7 @@
 import * as ReactQuery from '@tanstack/react-query'
 import { TypeGuards } from '../../utils'
+import { QueryManager, QueryManagerOptions, QueryManagerItem } from '../Crud'
+
 type Updater<Prev, Next> = Next | ((prev: Prev) => Next)
 
 type StaticQueryKeyClient<Data = any> = {
@@ -73,6 +75,17 @@ export class CodeleapQueryClient {
           })
         },
       }
+    }
+
+    queryManager<T extends QueryManagerItem,Args>(name:string, options: Partial<QueryManagerOptions<T,Args>>){
+      const m = new QueryManager<T,Args>({
+        name,
+        queryClient: this.client,
+        ...options
+
+      })
+
+      return m
     }
 
 }
