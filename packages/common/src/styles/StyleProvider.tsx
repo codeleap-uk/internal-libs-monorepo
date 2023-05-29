@@ -1,23 +1,21 @@
 import React, { createContext, useContext, useMemo, useState } from 'react'
+import { AppTheme, EnhancedTheme } from './types'
 import {
-  AppTheme,
   CommonVariantObject,
   DefaultVariantBuilder,
   DefaultVariants,
   DEFAULT_VARIANTS,
-  EnhancedTheme,
   FromVariantsBuilder,
   VariantProvider,
-} from '.'
-import { AnyFunction, ComponentVariants, FunctionType, NestedKeys, StylesOf } from '..'
+} from './variants'
+
+import { AnyFunction, ComponentVariants, FunctionType, NestedKeys, StylesOf } from '../types/utility'
 import { silentLogger } from '../constants'
 import { deepMerge, onMount, onUpdate } from '../utils'
 import { StyleContextProps, StyleContextValue } from './types'
 
 export const StyleContext = createContext(
-  {} as StyleContextValue<
-    Record<string, DefaultVariantBuilder>
-  >,
+  {} as StyleContextValue<Record<string, DefaultVariantBuilder>>,
 )
 
 function useWindowSize() {
@@ -27,7 +25,6 @@ function useWindowSize() {
 
   onMount(() => {
     if (isBrowser) {
-
       // @ts-ignore
       setSize([window.innerWidth, window.innerWidth])
     }
@@ -35,7 +32,6 @@ function useWindowSize() {
 
   function handleResize() {
     if (isBrowser) {
-
       // @ts-ignore
       setSize([window.innerWidth, window.innerHeight])
     }
@@ -43,7 +39,6 @@ function useWindowSize() {
 
   onUpdate(() => {
     if (isBrowser) {
-
       // @ts-ignore
       window.addEventListener('resize', handleResize)
       return () => {
@@ -69,14 +64,12 @@ export const StyleProvider = <
     logger,
     settings,
   }: StyleContextProps<S, V>) => {
-
   const [theme, setTheme] = useState(variantProvider.theme.theme)
 
   onMount(() => {
     variantProvider.onColorSchemeChange((t) => {
       setTheme(t.theme as string)
     })
-
   })
 
   return (
@@ -103,7 +96,9 @@ type ComponentNameArg = keyof DEFAULT_VARIANTS
 type useDefaultComponentStyleProps<
   ComponentName extends ComponentNameArg,
   C extends CommonVariantObject<any> = DefaultVariants[ComponentName],
-  Comp extends NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>> = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
+  Comp extends NestedKeys<
+    FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>
+  > = NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[ComponentName]>>
 > = ComponentVariants<C> & {
   rootElement?: Comp
   styles?: StylesOf<Comp> | StylesOf<Comp>[]
@@ -111,23 +106,16 @@ type useDefaultComponentStyleProps<
 }
 
 const getTransformedStyles = (styles, transform) => {
-  if(!transform) return styles
+  if (!transform) return styles
 
-  if(Array.isArray(styles)) {
+  if (Array.isArray(styles)) {
     return styles.reduce((acc, style) => {
-      return deepMerge(
-        acc,
-        getTransformedStyles(style, transform)
-      )
-    }, {} )
+      return deepMerge(acc, getTransformedStyles(style, transform))
+    }, {})
   }
 
-
   return Object.fromEntries(
-    Object.entries(styles || {}).map(([key, value]) => [
-      key,
-      transform(value),
-    ]),
+    Object.entries(styles || {}).map(([key, value]) => [key, transform(value)]),
   )
 }
 
@@ -136,15 +124,19 @@ export function useDefaultComponentStyle<
   S extends DefaultVariantBuilder<any>
 >(
   componentName: K,
-  props: useDefaultComponentStyleProps<K extends keyof DEFAULT_VARIANTS ? K : any>,
+  props: useDefaultComponentStyleProps<
+    K extends keyof DEFAULT_VARIANTS ? K : any
+  >,
 ): K extends ComponentNameArg
   ? Record<NestedKeys<FromVariantsBuilder<any, DEFAULT_VARIANTS[K]>>, any>
   : Record<NestedKeys<FromVariantsBuilder<any, S>>, any> {
-
   const windowSize = useWindowSize()
-  const { ComponentVariants: CV, provider, currentTheme } = useCodeleapContext() || {}
+  const {
+    ComponentVariants: CV,
+    provider,
+    currentTheme,
+  } = useCodeleapContext() || {}
   try {
-
     const styles = getTransformedStyles(props.styles, props.transform)
 
     let name = componentName as string
@@ -161,29 +153,43 @@ export function useDefaultComponentStyle<
     }
 
     const stylesheet = useMemo(() => {
-      return provider.getStyles(v, {
-        // @ts-ignore
-        variants: props.variants || [],
-        // @ts-ignore
-        responsiveVariants: props.responsiveVariants || {},
-        rootElement: props.rootElement,
-        // @ts-ignore
-        styles,
-        size: windowSize,
-      }, currentTheme as string)
-
-    }, [...(props.variants ?? []), windowSize.height, windowSize.width, styles, props.rootElement, componentName])
+      return provider.getStyles(
+        v,
+        {
+          // @ts-ignore
+          variants: props.variants || [],
+          // @ts-ignore
+          responsiveVariants: props.responsiveVariants || {},
+          rootElement: props.rootElement,
+          // @ts-ignore
+          styles,
+          size: windowSize,
+        },
+        currentTheme as string,
+      )
+    }, [
+      ...(props.variants ?? []),
+      windowSize.height,
+      windowSize.width,
+      styles,
+      props.rootElement,
+      componentName,
+    ])
     return stylesheet as any
   } catch (e) {
     throw new Error('useDefaultComponentStyle with args ' + arguments + e)
   }
 }
 
-export function useComponentStyle<T extends FunctionType<[EnhancedTheme<any>], any>>(styler:T):ReturnType<T> {
+export function useComponentStyle<
+  T extends FunctionType<[EnhancedTheme<any>], any>
+>(styler: T): ReturnType<T> {
   const { currentTheme, provider } = useCodeleapContext()
   try {
-
-    const styles = useMemo(() => styler(provider.withColorScheme(currentTheme as string)), [currentTheme])
+    const styles = useMemo(
+      () => styler(provider.withColorScheme(currentTheme as string)),
+      [currentTheme],
+    )
 
     return styles
   } catch (e) {

@@ -12,7 +12,7 @@ import {
 
 export * as LoggerTypes from './types'
 export * as LoggerAnalytics from './Analytics'
-import {inspect} from 'util'
+import { inspect } from 'util'
 
 const logLevels: LogType[] = ['debug', 'info', 'log', 'warn', 'error']
 
@@ -42,7 +42,7 @@ export class Logger {
   constructor(settings: AppSettings, middleware?: LoggerMiddleware[], public analytics?: Analytics) {
     this.settings = settings
     this.middleware = middleware || []
-    if(settings.Logger.isMain){
+    if (settings.Logger.isMain) {
       Logger.settings = settings
     }
 
@@ -54,7 +54,6 @@ export class Logger {
         else return oldConsole.apply(console, args)
       }
       const consoles = ['log', 'warn', 'error']
-
 
       consoles.forEach(t => {
         const tmp = console[t]
@@ -90,8 +89,8 @@ export class Logger {
 
     const logValue = nArgs === 1 ? descriptionOrValue : value
 
-    const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue) 
-    const inspectOptions = Logger.settings.Logger?.inspect || {}
+    const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue)
+    const inspectOptions = Logger?.settings?.Logger?.inspect || {}
 
     // @ts-expect-error interface merging sucks
     const displayValue = shouldStringify ? inspect(logValue, {
