@@ -181,13 +181,13 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const wrapperProps = isCustomModal ? {
     title: label,
     description: description,
-    id: null,
     debugName: `${debugName} Modal`,
     visible: visible,
     toggle: toggle,
     styles: variantStyles,
     footer: modalFooter,
     ...modalProps,
+    id: null,
   } : {}
 
   return (
