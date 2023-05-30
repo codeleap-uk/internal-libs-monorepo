@@ -1,0 +1,125 @@
+---
+title: Walkthrough Codeleap Monorepo
+---
+
+The Internal-libs is a monorepo that contains component and utility abstractions to make our work on projects easier, as well as templates for getting started with new projects or for reference on how to use a certain feature.
+
+Inside the monorepo, you'll find several packages containing our libraries, which include components and configurations for our projects. These packages are divided into three main categories:
+- **@codeleap/cli:** contains helpful commands for development;
+
+- **@codeleap/config:** contains our common configuration for eslint;
+
+- **@codeleap/common:** includes the styling system, redux, api, form and permission APIs as well as some miscellaneous utilities;
+
+- **@codeleap/mobile:** contains components for react-native, along with some systems specific to mobile platforms such as the permission and OSAlert modules;
+
+- **@codeleap/web:** contains components for websites, with various APIs for DOM manipulation and simplifying the process of making a Gatsby website.
+
+Inside the apps folder you'll find our docs website and two submodules that our app templates for mobile and web. These templates can be easily adapted to our project's specific needs.
+
+After cloning the monorepo, take a look at the README file for instructions on how to get started. But to give you a brief introduction you will need to run the following commands
+
+```
+cd internal-libs-monorepo
+```
+
+**Pulls git submodules for templates**
+```
+git submodule update --init --recursive
+```
+
+**Must use node 18+**
+```
+nvm use 18.15.0
+```
+
+**Install dependencies**
+```
+yarn 
+```
+
+**Builds local versions of libraries. Substitute android for 'ios' to run on apple devices**
+```
+yarn build
+```
+
+**To run the mobile template**
+```
+yarn mobile android
+yarn mobile dev
+```
+
+**To run the web template**
+```
+yarn web dev
+```
+
+Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save](https://marketplace.visualstudio.com/items?itemName=pucelle.run-on-save) extension for a smoother development experience. You can also just run `yarn build` again.
+
+### Our Submodules
+
+Git submodules are a feature of Git that allow you to include one repository inside another repository as a subdirectory. This is useful when you have code that is shared across multiple projects or when you want to manage dependencies between different repositories. For more information [click here](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+
+In the case of the Internal-libs monorepo, the submodules are used to include the app templates for mobile and web inside the repo. This allows developers to easily create new projects based on these templates without having to copy and paste code from another repository.
+
+It's important to note that when you clone a repository with submodules, the submodules will not be included by default. You need to use the `--recursive` option when cloning the repository in order to also clone the submodules. Alternatively, you can use the `git submodule init` and `git submodule update` commands after cloning to fetch the submodules or you can do the fool thing that fetchs and checkout any nested submodules `git submodule update --init --recursive`.
+
+When you make changes to a submodule, you need to commit those changes in the submodule repository and then update the reference to the submodule in your main repository. To do this, you can use the `git submodule update --remote` command, which will fetch the latest version of the submodule from the remote repository and update the reference in your main repository.
+
+If you've made changes to both a submodule and a package in the Internal-libs monorepo, the best option is to create a new branch with the same name in the monorepo repository. This will allow you to work on both the submodule and other things in the monorepo, simultaneously, while keeping them separated in different branches.
+
+Once you've made your changes, it's important to push your changes to the submodule repository first, before updating the reference to the monorepo. This ensures that the submodule is up-to-date with your changes before you integrate it into the monorepo.
+
+#### Before monorepo and template changes
+**feat/my-branch-mobile-template**
+```
+cd apps/mobile
+git branch feat/my-branch-mobile-template
+git checkout feat/my-branch-mobile-template
+```
+
+**feat/my-branch-internalLibs**
+```
+cd apps/mobile
+git branch feat/my-branch-internalLibs
+git checkout feat/my-branch-internalLibs
+```
+
+#### After monorepo and template changes
+**feat/my-branch-mobile-template**
+```
+cd apps/mobile
+git add .
+git commit -m "my changes" // update internalibs reference
+git push origin feat/my-branch-mobile-template
+```
+
+**feat/my-branch-internalLibs**
+```
+cd ../..
+git add . 
+yarn commit // commit with updated mobile-template reference
+git push origin feat/my-branch-internalLibs
+```
+
+
+If you've only made changes to a submodule and not the package, there's no need to create a new branch in the monorepo. Just push your changes to the submodule repository and after the merge to master the reference to the submodule in the monorepo will be updated automatically.
+
+#### Before monorepo and template changes
+**feat/my-branch-mobile-template**
+```
+cd apps/mobile
+git branch feat/my-branch-mobile-template
+git checkout feat/my-branch-mobile-template
+```
+
+#### After monorepo and template changes
+**feat/my-branch-mobile-template**
+```
+cd apps/mobile
+git add .
+git commit -m "my changes" // update internalibs reference - when merged, will be the new reference for internalLibs
+git push origin feat/my-branch-mobile-template
+```
+
+By following these best practices, you can ensure that your changes to submodules and packages in the Internal-libs monorepo are tracked and managed effectively, while minimizing the risk of conflicts and other issues.
