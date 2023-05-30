@@ -22,8 +22,6 @@ type DynamicSelectProps<T, Multi extends boolean> =
     Props<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>>
   >)
  
-
-
 export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps , 'styles' | 'variants'> &{
   options: FormTypes.Options<T>
   value: SelectValue<T,Multi>
@@ -36,11 +34,9 @@ export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseP
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
   {
-    debugName?: string 
+    debugName?: string
     css?: CSSObject
+    focused?: boolean
+    _error?: string
   } & ReactSelectProps<T, Multi> & ComponentVariants<typeof SelectPresets>
 >
-
-export type SelectState = {
-  showError?: boolean
-}
