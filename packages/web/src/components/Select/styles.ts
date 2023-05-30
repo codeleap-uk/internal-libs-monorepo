@@ -25,12 +25,12 @@ export type SelectParts =
   // | 'errorText'
   | 'loadingText'
   | 'noItems'
-  // | 'iconsWrapper'
-  // | 'clearIcon'
-  // | 'dropdownIcon'
+  | 'iconsWrapper'
+  | 'clearIcon'
+  | 'dropdownIcon'
   | 'loadingIcon'
   | 'separatorIcon'
-  // | 'placeholder'
+  | 'placeholder'
 
 export type SelectComposition =
   | `${SelectParts}:error`

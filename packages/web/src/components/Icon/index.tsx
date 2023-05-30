@@ -8,7 +8,7 @@ import {
   useDefaultComponentStyle,
   useCodeleapContext,
 } from '@codeleap/common'
-import { View } from '../View'
+import { View, ViewProps } from '../View'
 
 export * from './styles'
 
@@ -16,6 +16,7 @@ export type IconProps = {
   name: IconPlaceholder
   style?: any
   renderEmptySpace?: boolean
+  css?: Array<React.CSSProperties>
 } & ComponentVariants<typeof IconStyles>
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {

@@ -9,7 +9,6 @@ import { View } from '../View'
 import { CheckboxPresets, CheckboxComposition } from './styles'
 import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
-import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
 import { motion } from 'framer-motion'
 
@@ -115,7 +114,7 @@ export const Checkbox = (props: CheckboxProps) => {
           variantStyles.box, 
           disabled && variantStyles['box:disabled'],
         ]}
-        initial={boxAnimation}
+        initial={false}
         animate={boxAnimation}
         transition={variantStyles['box:transition']}
         onClick={handleChange}
@@ -125,7 +124,7 @@ export const Checkbox = (props: CheckboxProps) => {
             variantStyles.checkmarkWrapper, 
             disabled && variantStyles['checkmarkWrapper:disabled'],
           ]}
-          initial={checkmarkWrapperAnimation}
+          initial={false}
           animate={checkmarkWrapperAnimation}
           transition={variantStyles['checkmarkWrapper:transition']}
         > 

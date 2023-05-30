@@ -56,14 +56,16 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   const handleChange = (opt: Multi extends true ? Option[] : Option)   => {
     
     if(TypeGuards.isArray(opt)){
+      // @ts-ignore
       setSelectedOption(opt)
 
-      // @ts-expect-error
+      // @ts-ignore
       onValueChange?.(opt.map((o) => o.value))
     }else{
+      // @ts-ignore
       setSelectedOption(opt)
 
-      // @ts-expect-error
+      // @ts-ignore
       onValueChange?.(opt.value)
     }
   }

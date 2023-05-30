@@ -38,10 +38,11 @@ export type TextInputProps =
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: NativeTextInputProps['onChange']
+    onChangeText?: (value: string) => void
     caretColor?: string
     focused?: boolean
     _error?: boolean
+    rows?: number
   }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
@@ -76,7 +77,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const isMultiline = multiline
 
-  const InputElement = isMultiline ? TextareaAutosize : 'input'
+  const InputElement: any = isMultiline ? TextareaAutosize : 'input'
 
   const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
     variants,
@@ -202,8 +203,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        onBlur={handleBlur as any}
+        onFocus={handleFocus as any}
         css={[
           variantStyles.input,
           isMultiline && variantStyles['input:multiline'],
@@ -225,7 +226,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
             ],
           }
         ]}
-        ref={innerInputRef}
+        ref={innerInputRef as any}
       />
     </InputBase>
   )
