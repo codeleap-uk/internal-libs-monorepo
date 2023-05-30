@@ -14,6 +14,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   type Option = FormTypes.Option<T>
 
   const innerInputRef = useRef<any>(null)
+  const innerWrapperRef = useRef(null)
 
   const {
     inputBaseProps,
@@ -108,6 +109,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
           innerInputRef.current?.focus?.()
         },
       }}
+      innerWrapperRef={innerWrapperRef}
     >
       <SelectComponent
         {...otherProps}
@@ -121,6 +123,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         loadOptions={onLoadOptions as any}
         ref={innerInputRef}
         openMenuOnFocus={true}
+        menuPortalTarget={innerWrapperRef.current}
       />
     </InputBase>
   )
