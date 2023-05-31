@@ -1,9 +1,7 @@
-import { IconPlaceholder, TypeGuards } from "@codeleap/common"
-import { useRef, useState } from "react"
-import { ComponentWithDefaultProps } from "../../types"
-import { TextInput, TextInputProps } from "../TextInput"
-
-
+import { IconPlaceholder, TypeGuards } from '@codeleap/common'
+import { useRef, useState } from 'react'
+import { ComponentWithDefaultProps } from '../../types'
+import { TextInput, TextInputProps } from '../TextInput'
 
 export type SearchHeaderProps = {
   onTypingChange: (isTyping: boolean) => void
@@ -26,30 +24,28 @@ export const SearchHeader:ComponentWithDefaultProps<SearchHeaderProps> = (props)
     debounce,
   } = {
     ...SearchHeader.defaultProps,
-    ...props
+    ...props,
   }
-  
+
   const [search, setSearch] = useState('')
   // const [isTyping, setIsTyping] = useState(false)
 
   const setSearchTimeout = useRef<NodeJS.Timeout|null>(null)
 
   const handleChangeSearch = (value: string) => {
-      setSearch(value)
-      
+    setSearch(value)
 
-      if(TypeGuards.isNil(debounce)) {
-        onSearchChange?.(value)
-      }else{
-        if (setSearchTimeout.current) {
-          clearTimeout(setSearchTimeout.current)
-        }
-  
-        setSearchTimeout.current = setTimeout(() => {
-          onSearchChange(value)
-        }, debounce ?? 0)
+    if (TypeGuards.isNil(debounce)) {
+      onSearchChange?.(value)
+    } else {
+      if (setSearchTimeout.current) {
+        clearTimeout(setSearchTimeout.current)
       }
 
+      setSearchTimeout.current = setTimeout(() => {
+        onSearchChange(value)
+      }, debounce ?? 0)
+    }
 
   }
 
@@ -60,9 +56,9 @@ export const SearchHeader:ComponentWithDefaultProps<SearchHeaderProps> = (props)
   }
 
   return <>
-    <TextInput 
+    <TextInput
       value={search}
-      onChangeText={(value) =>{
+      onChangeText={(value) => {
         onTypingChange?.(true)
         handleChangeSearch(value)
       }}
@@ -70,22 +66,22 @@ export const SearchHeader:ComponentWithDefaultProps<SearchHeaderProps> = (props)
         // setIsTyping(false)
         onTypingChange?.(false)
       }}
-      placeholder="Search"
+      placeholder='Search'
       debugName={`Search ${debugName}`}
       rightIcon={{
         name: clearIcon,
-        onPress: handleClear
+        onPress: handleClear,
       }}
       leftIcon={{
-        name: searchIcon
+        name: searchIcon,
       }}
     />
-  
+
   </>
 }
 
 SearchHeader.defaultProps = {
   debounce: null,
-  clearIcon: 'searchHeaderClear' as IconPlaceholder,
-  searchIcon: 'searchHeaderSearch' as IconPlaceholder,
+  clearIcon: 'x' as IconPlaceholder,
+  searchIcon: 'search' as IconPlaceholder,
 }
