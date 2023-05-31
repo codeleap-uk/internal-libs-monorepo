@@ -1,14 +1,43 @@
 
 import React, { useRef } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
-import _Select from 'react-select'
+import _Select, { components, MenuListProps } from 'react-select'
 import Async  from 'react-select/async'
 import { useSelectStyles } from './styles'
-import { SelectProps } from './types'
+import { SelectProps, TCustomOption } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
+import { Button } from '../Button'
 
 export * from './styles'
 export * from './types'
+
+const CustomOption = (props: TCustomOption) => {
+  const { isSelected, optionsStyles, label } = props
+
+  const styles = optionsStyles({ isSelected })
+
+  return (
+    <components.Option {...props}>
+      <Button
+        text={label}
+        // @ts-ignore
+        rightIcon={isSelected && 'checkmark'} 
+        styles={{ wrapper: styles?.item, rightIcon: styles?.icon, text: styles?.text }} 
+      />
+    </components.Option>
+  )
+}
+
+const CustomMenu = (props: MenuListProps & { Footer: () => JSX.Element }) => {
+  const { Footer, children } = props
+
+  return <>
+    <components.MenuList {...props}>
+      {children}
+      {!!Footer && <Footer />}
+    </components.MenuList>
+  </>
+}
 
 export const Select = <T extends string|number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
   type Option = FormTypes.Option<T>
@@ -33,6 +62,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     multiple,
     focused,
     _error,
+    Option = CustomOption,
+    Footer = null,
     ...otherProps
   } = selectProps
 
@@ -49,7 +80,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
 
-  const { reactSelectStyles, variantStyles } = useSelectStyles(props, {
+  const { reactSelectStyles, variantStyles, optionsStyles } = useSelectStyles(props, {
     error: !!hasError,
     focused: isFocused,
     disabled: isDisabled,
@@ -124,6 +155,11 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         ref={innerInputRef}
         openMenuOnFocus={true}
         menuPortalTarget={innerWrapperRef.current}
+        components={{
+          ...otherProps.components,
+          MenuList: props => <CustomMenu {...props} Footer={Footer} />,
+          Option: props => <Option {...props} focused={focused} error={!!hasError} disabled={isDisabled} optionsStyles={optionsStyles} />,
+        }}
       />
     </InputBase>
   )

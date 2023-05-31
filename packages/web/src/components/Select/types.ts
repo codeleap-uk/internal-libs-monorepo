@@ -1,6 +1,7 @@
-import { AnyFunction, ComponentVariants, FormTypes, StylesOf, yup } from "@codeleap/common"
+import { ComponentVariants, FormTypes, StylesOf, yup } from "@codeleap/common"
+import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from "@emotion/react"
-import { GroupBase, Props } from "react-select"
+import { GroupBase, OptionProps, Props } from "react-select"
 import { AsyncProps } from "react-select/async"
 import { InputBaseProps } from "../InputBase"
 import { SelectPresets,SelectComposition } from "./styles"
@@ -31,6 +32,16 @@ export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseP
   styles?: StylesOf<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 
+export type TCustomOption = OptionProps & { 
+  optionsStyles: (state: { isSelected: boolean }) => { 
+    item: CSSInterpolation
+    icon: CSSInterpolation
+    text: CSSInterpolation
+  }
+  focused: boolean
+  error: boolean
+  disabled: boolean
+}
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
   {
@@ -38,5 +49,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     css?: CSSObject
     focused?: boolean
     _error?: string
+    Option: (props: TCustomOption) => JSX.Element
+    Footer: () => JSX.Element
   } & ReactSelectProps<T, Multi> & ComponentVariants<typeof SelectPresets>
 >

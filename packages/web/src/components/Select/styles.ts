@@ -22,6 +22,10 @@ export type SelectParts =
   | 'inputValueWrapper'
   | 'itemWrapper:selected'
   | 'item'
+  | 'itemIcon'
+  | 'item:selected'
+  | 'itemText'
+  | 'itemText:selected'
   | 'loadingText'
   | 'noItems'
   | 'iconsWrapper'
@@ -73,13 +77,25 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     ...(error ? variantStyles[key + ':error'] : {}),
   })
 
+  const optionsStyles = (state: { isSelected: boolean }) => ({
+    item: {
+      ...stylesKey('item'),
+      ...(state?.isSelected ? variantStyles['item:selected'] : {}),
+    },
+    icon: stylesKey('itemIcon'),
+    text: {
+      ...stylesKey('itemText'),
+      ...(state?.isSelected ? variantStyles['itemText:selected'] : {}),
+    },
+  })
+
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
     container: (baseStyles) => stylesKey('container', baseStyles),
     control: () => stylesKey('container'),
     menuPortal: (baseStyles) => stylesKey('listPortal', baseStyles),
     menu: (baseStyles) => stylesKey('listWrapper', baseStyles),
     menuList: (baseStyles) => stylesKey('list', baseStyles),
-    group: (baseStyles) => stylesKey('group', baseStyles),
+    group: () => stylesKey('group'),
     indicatorSeparator: (baseStyles) => stylesKey('separatorIcon', baseStyles),
     groupHeading: (baseStyles) => stylesKey('groupHeading', baseStyles),
     clearIndicator: () => ({
@@ -98,7 +114,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     multiValueLabel: (baseStyles) => stylesKey('inputMultiValueLabel', baseStyles),
     multiValueRemove: (baseStyles) => stylesKey('inputMultiValueRemove', baseStyles),
     noOptionsMessage: (baseStyles) => stylesKey('noItems', baseStyles),
-    option: (baseStyles) => stylesKey('item', baseStyles),
+    option: () => ({}),
     placeholder: (baseStyles) => stylesKey('placeholder', baseStyles),
     singleValue: (baseStyles) => stylesKey('inputValue', baseStyles),
     valueContainer: (baseStyles) => stylesKey('inputValueWrapper', baseStyles),
@@ -106,6 +122,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
 
   return {
     variantStyles,
-    reactSelectStyles
+    reactSelectStyles,
+    optionsStyles
   }
 }
