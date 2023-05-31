@@ -95,12 +95,17 @@ export type BorderRadius =
   | 'medium'
   | 'rounded'
 
-export type BorderDirections =
-  | 'top'
-  | 'right'
-  | 'bottom'
-  | 'left'
-  | ''
+type DirectionPrefix = 'top' | 'bottom'
+type DirectionSufix = 'right' | 'left'
+type DirectionConcat = `${Capitalize<DirectionPrefix>}${Capitalize<DirectionSufix>}`
+export type BorderDirections = DirectionPrefix | DirectionSufix | ''
+export type BorderColorsDirections = Capitalize<'start' | 'end' | BorderDirections>
+export type BorderRadiusDirections = Capitalize<
+  | `${DirectionPrefix}End`
+  | `${DirectionPrefix}Start`
+  | BorderDirections
+  | DirectionConcat
+>
 
 export type BorderStyle =
   | 'solid'
@@ -261,8 +266,8 @@ type GetBorder<T> = Extract<BorderIdentifiers, T>
 export type Border =
   | `border${Capitalize<BorderDirections>}-${GetBorder<'width'>}:${BorderWidth}`
   | `border-${GetBorder<'style'>}:${BorderStyle}`
-  | `border${Capitalize<BorderDirections>}-${GetBorder<'radius'>}:${BorderRadius}`
-  | `border${Capitalize<BorderDirections>}-${GetBorder<'color'>}:${DefaultColors}`
+  | `border${BorderRadiusDirections}-${GetBorder<'radius'>}:${BorderRadius}`
+  | `border${BorderColorsDirections}-${GetBorder<'color'>}:${DefaultColors}`
 
 export type BaseViewProps = {
   css?: any
