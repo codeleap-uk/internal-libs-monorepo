@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
-import _Select, { components, MenuListProps, NoticeProps } from 'react-select'
+import _Select, { components, MenuListProps, MultiValueProps, NoticeProps, ValueContainerProps } from 'react-select'
 import Async  from 'react-select/async'
 import { useSelectStyles } from './styles'
 import { PlaceholderProps, SelectProps, TCustomOption } from './types'
@@ -11,6 +11,7 @@ import { Text } from '../Text'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
+import { TextInput } from '../TextInput'
 
 export * from './styles'
 export * from './types'
@@ -63,6 +64,31 @@ const LoadingIndicator = (props: NoticeProps & { defaultStyles: { wrapper: CSSIn
   )
 }
 
+const separator = ', '
+
+const getMultiValue = (values: { label: string }[]) => {
+  let value = ''
+  const hasMulti = values?.length > 1
+
+  values.forEach(({ label }) => {
+    const txt = hasMulti ? label + separator : label
+
+    value = value + txt
+  })
+
+  return value
+}
+
+const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSInterpolation } }) => {
+  const { selectProps, index, defaultStyles } = props
+
+  if (index !== 0 || selectProps.inputValue.length > 0) return null
+
+  const text = getMultiValue(selectProps?.value)
+
+  return <Text text={text} css={[defaultStyles.text]} />
+}
+
 export const Select = <T extends string|number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
   type Option = FormTypes.Option<T>
 
@@ -112,6 +138,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     optionsStyles,
     placeholderStyles,
     loadingStyles,
+    inputMultiValueStyles,
   } = useSelectStyles(props, {
     error: !!hasError,
     focused: isFocused,
@@ -126,17 +153,17 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     })
   }
 
-  const handleChange = (opt: Multi extends true ? Option[] : Option)   => {
+  const handleChange = (opt: Multi extends true ? Option[] : Option) => {
     if(TypeGuards.isArray(opt)){
       // @ts-ignore
       setSelectedOption(opt)
       // @ts-ignore
-      onValueChange?.(opt.map((o) => o.value))
+      onValueChange?.(opt?.map((o) => o?.value))
     }else{
       // @ts-ignore
       setSelectedOption(opt)
       // @ts-ignore
-      onValueChange?.(opt.value)
+      onValueChange?.(opt?.value)
     }
   }
 
@@ -193,16 +220,19 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         loadOptions={onLoadOptions as any}
         ref={innerInputRef}
         openMenuOnFocus={true}
+        closeMenuOnSelect={false}
         menuPortalTarget={innerWrapperRef.current}
         hideSelectedOptions={false}
+        isClearable
         components={{
           LoadingIndicator: null,
           LoadingMessage: props => <LoadingIndicator {...props} defaultStyles={loadingStyles} />,
-          MultiValueRemove: () => null,
           ...otherProps.components,
+          MultiValueRemove: () => null,
           NoOptionsMessage: props => <Placeholder {...props} {...componentProps} text={noItemsText} defaultStyles={placeholderStyles} />,
           MenuList: props => <CustomMenu {...props} Footer={Footer} />,
           Option: props => <Option {...props} {...componentProps} optionsStyles={optionsStyles} />,
+          MultiValue: props => <CustomMultiValue {...props} defaultStyles={inputMultiValueStyles} />,
         }}
       />
     </InputBase>

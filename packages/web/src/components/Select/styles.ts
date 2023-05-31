@@ -17,7 +17,6 @@ export type SelectParts =
   | 'input'
   | 'inputValue'
   | 'inputMultiValue'
-  | 'inputMultiValueLabel'
   | 'inputValueWrapper'
   | 'itemWrapper:selected'
   | 'item'
@@ -102,6 +101,10 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     wrapper: stylesKey('loadingIndicator'),
   }
 
+  const inputMultiValueStyles = {
+    text: stylesKey('inputMultiValue')
+  }
+
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
     container: (baseStyles) => stylesKey('container', baseStyles),
     control: () => stylesKey('container'),
@@ -123,8 +126,8 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     input: (baseStyles) => stylesKey('input', baseStyles),
     loadingIndicator: (baseStyles) => stylesKey('loadingIcon', baseStyles),
     loadingMessage: (baseStyles) => stylesKey('loadingText', baseStyles),
-    multiValue: (baseStyles) => stylesKey('inputMultiValue', baseStyles),
-    multiValueLabel: (baseStyles) => stylesKey('inputMultiValueLabel', baseStyles),
+    multiValue: () => ({}),
+    multiValueLabel: () => ({}),
     noOptionsMessage: (baseStyles) => stylesKey('noItems', baseStyles),
     option: () => ({}),
     placeholder: (baseStyles) => stylesKey('placeholder', baseStyles),
@@ -138,5 +141,6 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     optionsStyles,
     placeholderStyles,
     loadingStyles,
+    inputMultiValueStyles,
   }
 }
