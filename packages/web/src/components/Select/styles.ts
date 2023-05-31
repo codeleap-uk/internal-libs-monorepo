@@ -130,7 +130,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     multiValueLabel: () => ({}),
     noOptionsMessage: (baseStyles) => stylesKey('noItems', baseStyles),
     option: () => ({}),
-    placeholder: (baseStyles) => stylesKey('placeholder', baseStyles),
+    placeholder: (baseStyles) => stylesKey('placeholder'),
     singleValue: (baseStyles) => stylesKey('inputValue', baseStyles),
     valueContainer: (baseStyles) => stylesKey('inputValueWrapper', baseStyles),
   }
