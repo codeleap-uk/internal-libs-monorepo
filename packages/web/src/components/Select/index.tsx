@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
-import _Select, { components, MenuListProps, MultiValueProps, NoticeProps } from 'react-select'
+import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async  from 'react-select/async'
 import { useSelectStyles } from './styles'
 import { PlaceholderProps, SelectProps, TCustomOption } from './types'
@@ -32,15 +32,27 @@ const DefaultOption = (props: TCustomOption) => {
   )
 }
 
-const CustomMenu = (props: MenuListProps & { Footer: () => JSX.Element }) => {
+const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
   const { Footer, children } = props
 
   return <>
-    <components.MenuList {...props}>
+    <components.Menu {...props}>
       {children}
       {!!Footer && <Footer />}
-    </components.MenuList>
+    </components.Menu>
   </>
+}
+
+const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: CSSInterpolation } }) => {
+  const { children, defaultStyles } = props
+
+  return (
+    <components.MenuList {...props}>
+      <View style={defaultStyles.wrapper}>
+        {children}
+      </View>
+    </components.MenuList>
+  )
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
@@ -138,6 +150,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     placeholderStyles,
     loadingStyles,
     inputMultiValueStyles,
+    menuWrapperStyles,
   } = useSelectStyles(props, {
     error: !!hasError,
     focused: isFocused,
@@ -229,7 +242,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
           ...otherProps.components,
           MultiValueRemove: () => null,
           NoOptionsMessage: props => <Placeholder {...props} {...componentProps} text={noItemsText} defaultStyles={placeholderStyles} />,
-          MenuList: props => <CustomMenu {...props} Footer={Footer} />,
+          Menu: props => <CustomMenu {...props} Footer={Footer} />,
+          MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
           Option: props => <Option {...props} {...componentProps} optionsStyles={optionsStyles} />,
           MultiValue: props => <CustomMultiValue {...props} defaultStyles={inputMultiValueStyles} />,
         }}

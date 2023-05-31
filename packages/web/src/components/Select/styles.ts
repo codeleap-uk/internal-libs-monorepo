@@ -34,7 +34,8 @@ export type SelectParts =
 export type SelectUnStateParts =  
   'item:selected' 
   | 'itemText:selected' 
-  | 'menuPlaceholder' 
+  | 'menuPlaceholder'
+  | 'menuWrapper' 
   | 'menuPlaceholderText'
   | 'loadingIndicator'
 
@@ -105,6 +106,10 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     text: stylesKey('inputMultiValue')
   }
 
+  const menuWrapperStyles = {
+    wrapper: stylesKey('menuWrapper')
+  }
+
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
     container: (baseStyles) => stylesKey('container', baseStyles),
     control: () => stylesKey('container'),
@@ -142,5 +147,6 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     placeholderStyles,
     loadingStyles,
     inputMultiValueStyles,
+    menuWrapperStyles,
   }
 }
