@@ -194,9 +194,11 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         ref={innerInputRef}
         openMenuOnFocus={true}
         menuPortalTarget={innerWrapperRef.current}
+        hideSelectedOptions={false}
         components={{
           LoadingIndicator: null,
           LoadingMessage: props => <LoadingIndicator {...props} defaultStyles={loadingStyles} />,
+          MultiValueRemove: () => null,
           ...otherProps.components,
           NoOptionsMessage: props => <Placeholder {...props} {...componentProps} text={noItemsText} defaultStyles={placeholderStyles} />,
           MenuList: props => <CustomMenu {...props} Footer={Footer} />,

@@ -17,7 +17,6 @@ export type SelectParts =
   | 'input'
   | 'inputValue'
   | 'inputMultiValue'
-  | 'inputMultiValueRemove'
   | 'inputMultiValueLabel'
   | 'inputValueWrapper'
   | 'itemWrapper:selected'
@@ -126,7 +125,6 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     loadingMessage: (baseStyles) => stylesKey('loadingText', baseStyles),
     multiValue: (baseStyles) => stylesKey('inputMultiValue', baseStyles),
     multiValueLabel: (baseStyles) => stylesKey('inputMultiValueLabel', baseStyles),
-    multiValueRemove: (baseStyles) => stylesKey('inputMultiValueRemove', baseStyles),
     noOptionsMessage: (baseStyles) => stylesKey('noItems', baseStyles),
     option: () => ({}),
     placeholder: (baseStyles) => stylesKey('placeholder', baseStyles),
