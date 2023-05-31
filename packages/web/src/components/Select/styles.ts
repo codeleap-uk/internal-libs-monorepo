@@ -65,8 +65,8 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     },
   )
 
-  const stylesKey = (key: SelectParts, styles: CSSObjectWithLabel = {}) => ({
-    ...styles,
+  const stylesKey = (key: SelectParts, _styles: CSSObjectWithLabel = {}) => ({
+    ..._styles,
     ...variantStyles[key],
     ...(focused ? variantStyles[key + ':focused'] : {}),
     ...(disabled ? variantStyles[key + ':disabled'] : {}),
@@ -82,8 +82,14 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     group: (baseStyles) => stylesKey('group', baseStyles),
     indicatorSeparator: (baseStyles) => stylesKey('separatorIcon', baseStyles),
     groupHeading: (baseStyles) => stylesKey('groupHeading', baseStyles),
-    clearIndicator: (baseStyles) => stylesKey('clearIcon', baseStyles),
-    dropdownIndicator: (baseStyles) => stylesKey('dropdownIcon', baseStyles),
+    clearIndicator: () => ({
+      ...stylesKey('iconIcon'),
+      ...stylesKey('clearIcon'),
+    }),
+    dropdownIndicator: () => ({
+      ...stylesKey('iconIcon'),
+      ...stylesKey('dropdownIcon'),
+    }),
     indicatorsContainer: (baseStyles) => stylesKey('iconsWrapper', baseStyles),
     input: (baseStyles) => stylesKey('input', baseStyles),
     loadingIndicator: (baseStyles) => stylesKey('loadingIcon', baseStyles),
