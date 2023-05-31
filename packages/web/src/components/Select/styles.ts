@@ -33,7 +33,12 @@ export type SelectParts =
   | 'separatorIcon'
   | 'placeholder'
 
-export type SelectUnStateParts =  'item:selected' | 'itemText:selected' | 'menuPlaceholder' | 'menuPlaceholderText'
+export type SelectUnStateParts =  
+  'item:selected' 
+  | 'itemText:selected' 
+  | 'menuPlaceholder' 
+  | 'menuPlaceholderText'
+  | 'loadingIndicator'
 
 export type SelectState = 'error' | 'focused' | 'disabled'
 
@@ -94,6 +99,10 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     text: stylesKey('menuPlaceholderText'),
   }
 
+  const loadingStyles = {
+    wrapper: stylesKey('loadingIndicator'),
+  }
+
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
     container: (baseStyles) => stylesKey('container', baseStyles),
     control: () => stylesKey('container'),
@@ -130,5 +139,6 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     reactSelectStyles,
     optionsStyles,
     placeholderStyles,
+    loadingStyles,
   }
 }

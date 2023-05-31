@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
-import _Select, { components, MenuListProps } from 'react-select'
+import _Select, { components, MenuListProps, NoticeProps } from 'react-select'
 import Async  from 'react-select/async'
 import { useSelectStyles } from './styles'
 import { PlaceholderProps, SelectProps, TCustomOption } from './types'
@@ -9,6 +9,8 @@ import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Button } from '../Button'
 import { Text } from '../Text'
 import { View } from '../View'
+import { ActivityIndicator } from '../ActivityIndicator'
+import { CSSInterpolation } from '@emotion/css'
 
 export * from './styles'
 export * from './types'
@@ -47,6 +49,16 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
   return (
     <View css={[defaultStyles.wrapper]}>
       <Text text={text} css={[defaultStyles.text]} />
+    </View>
+  )
+}
+
+const LoadingIndicator = (props: NoticeProps & { defaultStyles: { wrapper: CSSInterpolation } }) => {
+  const { defaultStyles } = props
+  
+  return (
+    <View css={[defaultStyles.wrapper]}>
+      <ActivityIndicator />
     </View>
   )
 }
@@ -98,7 +110,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     reactSelectStyles, 
     variantStyles, 
     optionsStyles,
-    placeholderStyles
+    placeholderStyles,
+    loadingStyles,
   } = useSelectStyles(props, {
     error: !!hasError,
     focused: isFocused,
@@ -182,6 +195,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         openMenuOnFocus={true}
         menuPortalTarget={innerWrapperRef.current}
         components={{
+          LoadingIndicator: null,
+          LoadingMessage: props => <LoadingIndicator {...props} defaultStyles={loadingStyles} />,
           ...otherProps.components,
           NoOptionsMessage: props => <Placeholder {...props} {...componentProps} text={noItemsText} defaultStyles={placeholderStyles} />,
           MenuList: props => <CustomMenu {...props} Footer={Footer} />,
