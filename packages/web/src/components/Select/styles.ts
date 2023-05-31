@@ -23,9 +23,7 @@ export type SelectParts =
   | 'itemWrapper:selected'
   | 'item'
   | 'itemIcon'
-  | 'item:selected'
   | 'itemText'
-  | 'itemText:selected'
   | 'loadingText'
   | 'noItems'
   | 'iconsWrapper'
@@ -35,9 +33,11 @@ export type SelectParts =
   | 'separatorIcon'
   | 'placeholder'
 
+export type SelectUnStateParts =  'item:selected' | 'itemText:selected' | 'menuPlaceholder' | 'menuPlaceholderText'
+
 export type SelectState = 'error' | 'focused' | 'disabled'
 
-export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}`
+export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}` | SelectUnStateParts
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 
@@ -69,7 +69,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     },
   )
 
-  const stylesKey = (key: SelectParts, _styles: CSSObjectWithLabel = {}) => ({
+  const stylesKey = (key: SelectParts | SelectUnStateParts, _styles: CSSObjectWithLabel = {}) => ({
     ..._styles,
     ...variantStyles[key],
     ...(focused ? variantStyles[key + ':focused'] : {}),
@@ -88,6 +88,11 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
       ...(state?.isSelected ? variantStyles['itemText:selected'] : {}),
     },
   })
+
+  const placeholderStyles = {
+    wrapper: stylesKey('menuPlaceholder'),
+    text: stylesKey('menuPlaceholderText'),
+  }
 
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
     container: (baseStyles) => stylesKey('container', baseStyles),
@@ -123,6 +128,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   return {
     variantStyles,
     reactSelectStyles,
-    optionsStyles
+    optionsStyles,
+    placeholderStyles,
   }
 }

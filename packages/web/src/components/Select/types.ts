@@ -1,7 +1,7 @@
 import { ComponentVariants, FormTypes, StylesOf, yup } from "@codeleap/common"
 import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from "@emotion/react"
-import { GroupBase, OptionProps, Props } from "react-select"
+import { GroupBase, NoticeProps, OptionProps, Props } from "react-select"
 import { AsyncProps } from "react-select/async"
 import { InputBaseProps } from "../InputBase"
 import { SelectPresets,SelectComposition } from "./styles"
@@ -32,15 +32,27 @@ export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseP
   styles?: StylesOf<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 
-export type TCustomOption = OptionProps & { 
+export type ComponentPartProps = {
+  focused: boolean
+  error: boolean
+  disabled: boolean
+  variantStyles: Record<SelectComposition, React.CSSProperties>
+}
+
+export type TCustomOption = OptionProps & ComponentPartProps & { 
   optionsStyles: (state: { isSelected: boolean }) => { 
     item: CSSInterpolation
     icon: CSSInterpolation
     text: CSSInterpolation
   }
-  focused: boolean
-  error: boolean
-  disabled: boolean
+}
+
+export type PlaceholderProps = NoticeProps & ComponentPartProps & { 
+  text: string
+  defaultStyles: {
+    wrapper: CSSInterpolation
+    text: CSSInterpolation
+  }
 }
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
@@ -49,7 +61,9 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     css?: CSSObject
     focused?: boolean
     _error?: string
-    Option: (props: TCustomOption) => JSX.Element
-    Footer: () => JSX.Element
+    Option?: (props: TCustomOption) => JSX.Element
+    Footer?: () => JSX.Element
+    Placeholder?: (props: PlaceholderProps) => JSX.Element
+    noItemsText?: string
   } & ReactSelectProps<T, Multi> & ComponentVariants<typeof SelectPresets>
 >

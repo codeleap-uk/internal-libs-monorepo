@@ -4,14 +4,16 @@ import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
 import _Select, { components, MenuListProps } from 'react-select'
 import Async  from 'react-select/async'
 import { useSelectStyles } from './styles'
-import { SelectProps, TCustomOption } from './types'
+import { PlaceholderProps, SelectProps, TCustomOption } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Button } from '../Button'
+import { Text } from '../Text'
+import { View } from '../View'
 
 export * from './styles'
 export * from './types'
 
-const CustomOption = (props: TCustomOption) => {
+const DefaultOption = (props: TCustomOption) => {
   const { isSelected, optionsStyles, label } = props
 
   const styles = optionsStyles({ isSelected })
@@ -39,6 +41,16 @@ const CustomMenu = (props: MenuListProps & { Footer: () => JSX.Element }) => {
   </>
 }
 
+const DefaultPlaceholder = (props: PlaceholderProps) => {
+  const { text, defaultStyles } = props
+
+  return (
+    <View css={[defaultStyles.wrapper]}>
+      <Text text={text} css={[defaultStyles.text]} />
+    </View>
+  )
+}
+
 export const Select = <T extends string|number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
   type Option = FormTypes.Option<T>
 
@@ -62,8 +74,10 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     multiple,
     focused,
     _error,
-    Option = CustomOption,
+    Option = DefaultOption,
     Footer = null,
+    Placeholder = DefaultPlaceholder,
+    noItemsText = 'No items',
     ...otherProps
   } = selectProps
 
@@ -80,7 +94,12 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
 
-  const { reactSelectStyles, variantStyles, optionsStyles } = useSelectStyles(props, {
+  const { 
+    reactSelectStyles, 
+    variantStyles, 
+    optionsStyles,
+    placeholderStyles
+  } = useSelectStyles(props, {
     error: !!hasError,
     focused: isFocused,
     disabled: isDisabled,
@@ -122,6 +141,13 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   const SelectComponent = !!loadOptions ? Async : _Select
 
+  const componentProps = {
+    focused: isFocused, 
+    error: !!hasError, 
+    disabled: isDisabled,
+    variantStyles,
+  }
+
   return (
     <InputBase
       {...inputBaseProps}
@@ -157,8 +183,9 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         menuPortalTarget={innerWrapperRef.current}
         components={{
           ...otherProps.components,
+          NoOptionsMessage: props => <Placeholder {...props} {...componentProps} text={noItemsText} defaultStyles={placeholderStyles} />,
           MenuList: props => <CustomMenu {...props} Footer={Footer} />,
-          Option: props => <Option {...props} focused={focused} error={!!hasError} disabled={isDisabled} optionsStyles={optionsStyles} />,
+          Option: props => <Option {...props} {...componentProps} optionsStyles={optionsStyles} />,
         }}
       />
     </InputBase>
