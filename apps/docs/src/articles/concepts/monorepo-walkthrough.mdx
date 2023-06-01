@@ -29,6 +29,7 @@ git submodule update --init --recursive
 ```
 
 **Must use node 18+**
+*We recommend using nvm for a better experience, [click here](https://github.com/nvm-sh/nvm)*
 ```
 nvm use 18.15.0
 ```
@@ -66,7 +67,7 @@ It's important to note that when you clone a repository with submodules, the sub
 
 When you make changes to a submodule, you need to commit those changes in the submodule repository and then update the reference to the submodule in your main repository. To do this, you can use the `git submodule update --remote` command, which will fetch the latest version of the submodule from the remote repository and update the reference in your main repository.
 
-If you've made changes to both a submodule and a package in the Internal-libs monorepo, the best option is to create a new branch with the same name in the monorepo repository. This will allow you to work on both the submodule and other things in the monorepo, simultaneously, while keeping them separated in different branches.
+If you've made changes to both a submodule and a package in the Internal-libs monorepo, the best option is to create a new branch with the same name, as the template, in the monorepo repository. This will allow you to work on both the submodule and other things in the monorepo, simultaneously, while keeping them separated in different branches.
 
 Once you've made your changes, it's important to push your changes to the submodule repository first, before updating the reference to the monorepo. This ensures that the submodule is up-to-date with your changes before you integrate it into the monorepo.
 
