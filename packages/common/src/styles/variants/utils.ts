@@ -92,9 +92,11 @@ export function applyVariants({
       const [property, themeColor] = variantName.split(':')
 
       const value = theme.colors[themeColor]
+      const browserOnly = theme.IsBrowser && { fill: value, stroke: value }
       return deepMerge(computedStyles, {
         [rootElement]: wrapStyle({
           [property]: value,
+          ...browserOnly,
         }),
       })
     } else if (variantName.startsWith('border')) {
@@ -125,7 +127,9 @@ export function applyVariants({
 
       return deepMerge(computedStyles, {
         [rootElement]: wrapStyle({
-          transform: theme.IsBrowser ? `${property}(${value})` : [{ [property]: value }],
+          transform: theme.IsBrowser ? `${property}(${value})` : [{
+            [property]: property !== 'rotate' ? Number(value) : value,
+          }],
         }),
       })
     } else if (theme.IsBrowser) {
