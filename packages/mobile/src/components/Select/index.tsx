@@ -92,7 +92,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     listProps,
     debugName,
     placeholder = 'Select',
-    arrowIconName = 'selectArrow',
+    arrowIconName = 'chevrons-up-down',
     clearIconName = 'x',
     clearable = false,
     selectedIcon = 'check',
