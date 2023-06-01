@@ -36,7 +36,7 @@ export type SelectUnStateParts =
   | 'loadingIndicator'
   | 'innerWrapper:searchable'
 
-export type SelectState = 'error' | 'focused' | 'disabled'
+export type SelectState = 'error' | 'focus' | 'disabled'
 
 export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}` | SelectUnStateParts
 
@@ -73,7 +73,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   const stylesKey = (key: SelectParts | SelectUnStateParts, _styles: CSSObjectWithLabel = {}) => ({
     ..._styles,
     ...variantStyles[key],
-    ...(focused ? variantStyles[key + ':focused'] : {}),
+    ...(focused ? variantStyles[key + ':focus'] : {}),
     ...(disabled ? variantStyles[key + ':disabled'] : {}),
     ...(error ? variantStyles[key + ':error'] : {}),
   })

@@ -81,7 +81,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      {icon ? <Icon name={icon as any} style={defaultStyles.icon} /> : null}
+      {icon ? <Icon name={icon as any} forceStyle={defaultStyles.icon} /> : null}
       <_Text />
     </View>
   )
@@ -97,14 +97,15 @@ const LoadingIndicator = (props: LoadingIndicatorProps) => {
   )
 }
 
-const separator = ', '
-
-const getMultiValue = (values: { label: string }[]) => {
+const getMultiValue = (values: { label: string }[], separator: string, state: { searchable: boolean }) => {
   let value = ''
   const hasMulti = values?.length > 1
 
-  values.forEach(({ label }) => {
-    const txt = hasMulti ? label + separator : label
+  values.forEach(({ label }, i) => {
+    const isLast = values?.length - 1 === i
+    const txt = (hasMulti && separator) 
+      ? label + (isLast && !state?.searchable ? '' : separator)
+      : label
 
     value = value + txt
   })
@@ -112,13 +113,15 @@ const getMultiValue = (values: { label: string }[]) => {
   return value
 }
 
-const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSInterpolation } }) => {
-  const { selectProps, index, defaultStyles } = props
+const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSInterpolation }; separator: string }) => {
+  const { selectProps, index, defaultStyles, separator } = props
+
+  const searchable = selectProps?.isSearchable
 
   if (index !== 0 || selectProps.inputValue.length > 0) return null
 
   // @ts-ignore
-  const text = getMultiValue(selectProps?.value)
+  const text = getMultiValue(selectProps?.value, separator, { searchable })
 
   return <Text text={text} css={[defaultStyles.text]} />
 }
@@ -180,6 +183,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     filterItems = defaultFilterFunction,
     defaultOptions = options,
     searchable = false,
+    separatorMultiValue = ', ',
     ...otherProps
   } = selectProps
 
@@ -366,7 +370,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
           Option: props => <DefaultOption {...props} {...componentProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} component={OptionComponent} />,
-          MultiValue: props => <CustomMultiValue {...props} defaultStyles={inputMultiValueStyles} />,
+          MultiValue: props => <CustomMultiValue {...props} separator={separatorMultiValue} defaultStyles={inputMultiValueStyles} />,
         }}
       />
     </InputBase>

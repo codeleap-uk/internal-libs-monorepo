@@ -85,6 +85,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     loadOptionsOnMount?: boolean
     defaultOptions?: ReactSelectProps<T, Multi>['options']
     searchable?: boolean
+    separatorMultiValue?: string
   } & Omit<
     ReactSelectProps<T, Multi>, 
     'isSearchable' | 'isClearable' | 'isDisabled' |
