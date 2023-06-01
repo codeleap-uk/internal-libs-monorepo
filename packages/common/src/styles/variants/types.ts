@@ -6,10 +6,13 @@ import {
   BaseViewProps,
   Border,
   BreakpointPlaceholder,
+  Cursor,
   DefaultColors,
   EnhancedTheme,
   IconPlaceholder,
+  RotateDirections,
   Spacing,
+  Translate,
 } from '../types'
 import {
   ComponentVariants,
@@ -43,7 +46,10 @@ export type ComponentVariantsDefinition = Record<string, VariantStyleSheet<strin
 
 export type VariantProp<T = CommonVariantObject> =
   | string
-  | (keyof T | Spacing | Border | `backgroundColor:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}` | boolean | null | undefined | '')[]
+  | (keyof T | Spacing | Border | `backgroundColor:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}`
+    | `scale:${number}` | `rotate${RotateDirections}:${number}deg` | Translate
+    | `cursor:${Cursor}`
+    | boolean | null | undefined | '')[]
 export type ResponsiveVariantsProp<
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
   Styles = CommonVariantObject<any>,

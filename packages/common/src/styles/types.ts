@@ -95,6 +95,9 @@ export type BorderRadius =
   | 'medium'
   | 'rounded'
 
+export type TransformDirections = 'X' | 'Y'
+export type RotateDirections = TransformDirections | 'Z'
+
 type DirectionPrefix = 'top' | 'bottom'
 type DirectionSufix = 'right' | 'left'
 type DirectionConcat = `${Capitalize<DirectionPrefix>}${Capitalize<DirectionSufix>}`
@@ -117,6 +120,14 @@ export type BorderIdentifiers =
   | 'style'
   | 'radius'
   | 'color'
+
+export type Cursor =
+  | 'help'
+  | 'wait'
+  | 'crosshair'
+  | 'not-allowed'
+  | 'zoom-in'
+  | 'grab'
 
 export type FontTokens =
   | 'base'
@@ -268,6 +279,8 @@ export type Border =
   | `border-${GetBorder<'style'>}:${BorderStyle}`
   | `border${BorderRadiusDirections}-${GetBorder<'radius'>}:${BorderRadius}`
   | `border${BorderColorsDirections}-${GetBorder<'color'>}:${DefaultColors}`
+
+export type Translate = `translate${TransformDirections | ''}:` & (number | `${number},${number}`)
 
 export type BaseViewProps = {
   css?: any

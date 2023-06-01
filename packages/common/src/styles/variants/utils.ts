@@ -120,6 +120,24 @@ export function applyVariants({
       }
 
       return deepMerge(computedStyles, { [rootElement]: wrapStyle(borderStyle) })
+    } else if (variantName.startsWith('scale') || variantName.startsWith('rotate') || variantName.startsWith('translate')) {
+      const [property, value] = variantName.split(':')
+
+      return deepMerge(computedStyles, {
+        [rootElement]: wrapStyle({
+          transform: theme.IsBrowser ? `${property}(${value})` : [{ [property]: value }],
+        }),
+      })
+    } else if (theme.IsBrowser) {
+      if (variantName.startsWith('cursor')) {
+        const [property, value] = variantName.split(':')
+
+        return deepMerge(computedStyles, {
+          [rootElement]: wrapStyle({
+            [property]: value,
+          }),
+        })
+      }
     }
 
     return computedStyles
