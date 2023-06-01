@@ -47,5 +47,5 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
     )
     return null
   }
-  return <Component  css={variantStyles.icon} {...otherProps}/>
+  return <Component style={variantStyles.icon} css={variantStyles.icon} {...otherProps}/>
 }

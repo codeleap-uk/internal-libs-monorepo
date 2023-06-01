@@ -48,11 +48,13 @@ export type TCustomOption = OptionProps & ComponentPartProps & {
 }
 
 export type PlaceholderProps = NoticeProps & ComponentPartProps & { 
-  text: string
+  text: string | ((props: PlaceholderProps) => JSX.Element)
   defaultStyles: {
     wrapper: CSSInterpolation
     text: CSSInterpolation
+    icon: CSSInterpolation
   }
+  icon: string
 }
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
@@ -61,9 +63,15 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     css?: CSSObject
     focused?: boolean
     _error?: string
-    Option?: (props: TCustomOption) => JSX.Element
-    Footer?: () => JSX.Element
-    Placeholder?: (props: PlaceholderProps) => JSX.Element
-    noItemsText?: string
+    OptionComponent?: (props: TCustomOption) => JSX.Element
+    FooterComponent?: () => JSX.Element
+    PlaceholderComponent?: (props: PlaceholderProps) => JSX.Element
+    PlaceholderNoItemsComponent?: (props: PlaceholderProps) => JSX.Element
+    noItemsText?: string | ((props: PlaceholderProps) => JSX.Element)
+    noItemsIcon?: string
+    placeholderText?: string | ((props: PlaceholderProps) => JSX.Element)
+    placeholderIcon?: string
+    showDropdownIcon?: boolean
+    formatPlaceholderNoItems?: (props: PlaceholderProps & { text: string }) => string
   } & ReactSelectProps<T, Multi> & ComponentVariants<typeof SelectPresets>
 >

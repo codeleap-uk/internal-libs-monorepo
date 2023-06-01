@@ -11,6 +11,7 @@ import { Text } from '../Text'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
+import { Icon } from '../Icon'
 
 export * from './styles'
 export * from './types'
@@ -43,7 +44,7 @@ const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
   </>
 }
 
-const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: CSSInterpolation } }) => {
+const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React.CSSProperties } }) => {
   const { children, defaultStyles } = props
 
   return (
@@ -56,11 +57,22 @@ const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: CSSIn
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
-  const { text, defaultStyles } = props
+  const { text: TextPlaceholder, defaultStyles, icon } = props
+
+  const _Text = () => {
+    if (!TextPlaceholder) return null
+
+    if (TypeGuards.isString(TextPlaceholder)) {
+      return <Text text={TextPlaceholder} css={[defaultStyles.text]} />
+    } else {
+      return <TextPlaceholder {...props} />
+    }
+  }
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      <Text text={text} css={[defaultStyles.text]} />
+      {icon ? <Icon name={icon as any} style={defaultStyles.icon} /> : null}
+      <_Text />
     </View>
   )
 }
@@ -95,9 +107,14 @@ const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSI
 
   if (index !== 0 || selectProps.inputValue.length > 0) return null
 
+  // @ts-ignore
   const text = getMultiValue(selectProps?.value)
 
   return <Text text={text} css={[defaultStyles.text]} />
+}
+
+const _formatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) => {
+  return props.text + `"${props.selectProps.inputValue}"`
 }
 
 export const Select = <T extends string|number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
@@ -123,10 +140,16 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     multiple,
     focused,
     _error,
-    Option = DefaultOption,
-    Footer = null,
-    Placeholder = DefaultPlaceholder,
-    noItemsText = 'No items',
+    OptionComponent = DefaultOption,
+    FooterComponent = null,
+    PlaceholderComponent = DefaultPlaceholder,
+    PlaceholderNoItemsComponent = DefaultPlaceholder,
+    noItemsText = 'No results for ',
+    noItemsIcon = 'placeholderNoItems-select',
+    placeholderText = 'Search items',
+    placeholderIcon = 'placeholder-select',
+    showDropdownIcon = true,
+    formatPlaceholderNoItems = _formatPlaceholderNoItems,
     ...otherProps
   } = selectProps
 
@@ -241,10 +264,29 @@ export const Select = <T extends string|number = string, Multi extends boolean =
           LoadingMessage: props => <LoadingIndicator {...props} defaultStyles={loadingStyles} />,
           ...otherProps.components,
           MultiValueRemove: () => null,
-          NoOptionsMessage: props => <Placeholder {...props} {...componentProps} text={noItemsText} defaultStyles={placeholderStyles} />,
-          Menu: props => <CustomMenu {...props} Footer={Footer} />,
+          DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,
+          NoOptionsMessage: props => {
+            const hasInputValue = !!props.selectProps.inputValue
+            const styles = placeholderStyles[hasInputValue ? 'noItems' : 'default']
+            const icon = hasInputValue ? noItemsIcon : placeholderIcon
+
+            const placeholderProps = {
+              ...props,
+              ...componentProps,
+              icon,
+              defaultStyles: styles,
+            }
+
+            if (!hasInputValue) {
+              return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
+            } else {
+              const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText
+              return <PlaceholderNoItemsComponent {...placeholderProps} text={_Text} />
+            }
+          },
+          Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
-          Option: props => <Option {...props} {...componentProps} optionsStyles={optionsStyles} />,
+          Option: props => <OptionComponent {...props} {...componentProps} optionsStyles={optionsStyles} />,
           MultiValue: props => <CustomMultiValue {...props} defaultStyles={inputMultiValueStyles} />,
         }}
       />

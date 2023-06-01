@@ -35,8 +35,13 @@ export type SelectUnStateParts =
   'item:selected' 
   | 'itemText:selected' 
   | 'menuPlaceholder'
-  | 'menuWrapper' 
+  | 'menuPlaceholderIcon'
   | 'menuPlaceholderText'
+  | 'menuPlaceholderNoItems'
+  | 'menuPlaceholderNoItemsIcon'
+  | 'menuPlaceholderNoItemsText'
+  | 'menuWrapper' 
+  
   | 'loadingIndicator'
 
 export type SelectState = 'error' | 'focused' | 'disabled'
@@ -94,8 +99,16 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   })
 
   const placeholderStyles = {
-    wrapper: stylesKey('menuPlaceholder'),
-    text: stylesKey('menuPlaceholderText'),
+    ['default']: {
+      wrapper: stylesKey('menuPlaceholder'),
+      icon: stylesKey('menuPlaceholderIcon'),
+      text: stylesKey('menuPlaceholderText'),
+    },
+    ['noItems']: {
+      wrapper: stylesKey('menuPlaceholderNoItems'),
+      icon: stylesKey('menuPlaceholderNoItemsIcon'),
+      text: stylesKey('menuPlaceholderNoItemsText'),
+    },
   }
 
   const loadingStyles = {
