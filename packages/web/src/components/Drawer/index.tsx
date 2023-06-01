@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   AnyFunction,
   ComponentVariants,
@@ -54,7 +57,7 @@ const resolveHiddenDrawerPosition = (
   return [css, translateAxis, positioning]
 }
 
-export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
+export const Drawer = ({ ...rawProps }:DrawerProps) => {
   const {
     open,
     toggle,
@@ -131,6 +134,7 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
               icon={'close' as IconPlaceholder}
               variants={['icon']}
               css={variantStyles.headerCloseButton}
+              debugName='DrawerCloseButton'
             />
           )}
         </View>

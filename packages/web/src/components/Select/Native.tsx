@@ -35,6 +35,7 @@ export const NativeSelect = (selectProps: NativeSelectProps) => {
     onValueChange,
     wrapperProps,
     value,
+    is,
     ...props
   } = selectProps
 

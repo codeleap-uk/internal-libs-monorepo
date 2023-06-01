@@ -46,8 +46,8 @@ function focusModal(event: FocusEvent, id: string) {
     modal.focus()
   }
 }
-export const ModalContent: React.FC<ModalProps & { id: string }> = (
-  modalProps,
+export const ModalContent = (
+  modalProps:ModalProps & { id: string },
 ) => {
   const {
     children,

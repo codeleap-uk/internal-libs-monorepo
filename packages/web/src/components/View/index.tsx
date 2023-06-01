@@ -4,35 +4,39 @@ import {
   ComponentVariants,
   useDefaultComponentStyle,
   useCodeleapContext,
-  BaseViewProps,
-  useMemo
+  useMemo,
+  BreakpointPlaceholder,
 } from '@codeleap/common'
 import {
-  ComponentPropsWithRef,
-  ElementType,
   forwardRef,
-  ReactElement,
-  ReactNode,
   Ref,
 } from 'react'
 import { ViewPresets } from './styles'
 import { useMediaQuery } from '../../lib/hooks'
+import { HTMLProps,NativeHTMLElement } from '../../types'
 
 export * from './styles'
 
-export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
-  ComponentVariants<typeof ViewPresets> & {
+export type ViewProps<T extends NativeHTMLElement> =  
+  HTMLProps<T>  &
+  ComponentVariants<typeof ViewPresets> &
+   {
     component?: T
-    children?: ReactNode
-    css?: any
     scroll?: boolean
+    debugName?: string
     debug?: boolean
-  } & BaseViewProps
+    is?: BreakpointPlaceholder
+    not?: BreakpointPlaceholder
+    up?: BreakpointPlaceholder
+    down?: BreakpointPlaceholder
+    onHover?: (isMouseOverElement: boolean) => void
+  } 
 
-export const ViewCP = <T extends ElementType = 'div'>(
-  viewProps: ViewProps<T>,
+export const ViewCP = (
+  viewProps: ViewProps<'div'>,
   ref: Ref<any>,
 ) => {
+  
   const {
     responsiveVariants = {},
     variants = [],
@@ -42,17 +46,18 @@ export const ViewCP = <T extends ElementType = 'div'>(
     not,
     up,
     onHover,
-    styles,
+    debugName,
+    
     down,
-    css: cssProp,
     scroll = false,
     debug = false,
     ...props
   } = viewProps
+
   const variantStyles = useDefaultComponentStyle('View', {
     responsiveVariants,
     variants,
-    styles,
+    rootElement: 'wrapper'
   })
   const { Theme, logger } = useCodeleapContext()
 
@@ -72,12 +77,11 @@ export const ViewCP = <T extends ElementType = 'div'>(
   const matches = useMediaQuery(platformMediaQuery)
 
   if(debug){
-    logger.log('View', {variantStyles, platformMediaQuery, matches})
+    logger.log('View', {variantStyles, platformMediaQuery, matches, debugName, className: props.className})
   }
 
   return (
     <Component
-      // className={cx(css([variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]), cssProp)}
       css={[variantStyles.wrapper, scroll && { overflowY: 'scroll' }, matches && { display: 'none' }]}
       ref={ref}
       onMouseEnter={() => handleHover(true)}
@@ -89,6 +93,6 @@ export const ViewCP = <T extends ElementType = 'div'>(
   )
 }
 
-export const View = forwardRef(ViewCP) as <T extends ElementType = 'div'>(
+export const View = forwardRef(ViewCP) as  unknown as <T extends NativeHTMLElement = 'div'>(
   props: ViewProps<T>
-) => ReactElement
+) => JSX.Element

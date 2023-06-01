@@ -1,3 +1,30 @@
-import { CSSInterpolation, CSSObject } from '@emotion/css'
+import React, { InputHTMLAttributes } from 'react'
+import { CSSInterpolation } from '@emotion/css'
+import { PropsOf } from '@codeleap/common'
 
-export type StylesOf<C extends string> = Partial<Record<C, CSSInterpolation | CSSInterpolation[]>>
+export type StylesOf<C extends string> = Partial<Record<C, CSSInterpolation>>
+
+type WithChildren<T> =  T & { children?: React.ReactNode }
+
+// You're right, this is not standard or very clean. But for some reason all the types provided by ComponentPropsWithoutRef<T> become any when imported outside the package, while this keeps working. 
+// It's important that the elements used are defined explicitly, otherwise typescript will throw JavascriptHeapOutOfMemory when building the package.
+export type ElementMap = {
+  'select': WithChildren<JSX.IntrinsicElements['select']>
+  'input': WithChildren<JSX.IntrinsicElements['input']>
+  'textarea': WithChildren<JSX.IntrinsicElements['textarea']>
+  'button': WithChildren<JSX.IntrinsicElements['button']>
+  'form': WithChildren<JSX.IntrinsicElements['form']>
+  'label': WithChildren<JSX.IntrinsicElements['label']>
+  'a': WithChildren<JSX.IntrinsicElements['a']>
+  'img': WithChildren<JSX.IntrinsicElements['img']>
+  'div': WithChildren<JSX.IntrinsicElements['div']>
+  'span': WithChildren<JSX.IntrinsicElements['span']>
+  'p': WithChildren<JSX.IntrinsicElements['p']>
+  'section': WithChildren<JSX.IntrinsicElements['section']>
+  'header': WithChildren<JSX.IntrinsicElements['header']>
+  'footer': WithChildren<JSX.IntrinsicElements['footer']>
+}
+
+export type NativeHTMLElement = keyof ElementMap 
+ 
+export type HTMLProps<T extends NativeHTMLElement> = ElementMap[T] 

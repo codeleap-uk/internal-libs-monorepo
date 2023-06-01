@@ -9,8 +9,6 @@ import {
   TypeGuards,
   deepMerge,
   PropsOf,
-  useCodeleapContext,
-  onUpdate,
 } from '@codeleap/common'
 
 import {
@@ -52,7 +50,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     debounce?: number
     debugName: string
     selected?: boolean
-    badge?: React.ReactElement | BadgeProps
+    badge?: ((props:BadgeProps) => JSX.Element) | BadgeProps
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
 
@@ -65,9 +63,9 @@ export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
     ...viewProps
   } = props
 
-  return <View 
-    style={[styles.wrapper]} 
-    {...viewProps} 
+  return <View
+    style={[styles.wrapper]}
+    {...viewProps}
     // @ts-expect-error - Refs are tricky
     ref={ref}
   >
@@ -151,10 +149,12 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   let _badge = null
 
   if (badge) {
+    const badgeStyle = TypeGuards.isFunction(badge) ? {} : badge?.styles || {}
+
     _badge = React.isValidElement(badge) ? badge : <Badge {...badge} styles={deepMerge({
       text: variantStyles.badgeText,
       wrapper: variantStyles.badgeWrapper,
-    }, badge?.styles || {})}/>
+    }, badgeStyle)}/>
 
   }
 

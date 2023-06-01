@@ -1,4 +1,6 @@
-import * as React from 'react'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import { ReactNode } from 'react'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
@@ -74,7 +76,7 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
     text={item.label}
   /> : item.label 
 
-  return <>
+  return <React.Fragment>
     <Touchable 
       debugName={`${debugName} option ${item.value}`}
       css={[
@@ -102,7 +104,7 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       
     </Touchable>
     {separator && <View style={styles.optionSeparator} />}
-  </>
+  </React.Fragment>
 }
 
 export const RadioGroup = <T extends string|number>(

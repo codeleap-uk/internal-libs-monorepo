@@ -1,4 +1,5 @@
-import * as React from 'react'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
 import { ComponentVariants, useDefaultComponentStyle, StylesOf, PropsOf } from '@codeleap/common'
 import { View } from '../View'
 import { SwitchPresets, SwitchComposition } from './styles'
@@ -110,6 +111,7 @@ export const Switch = (props: SwitchProps) => {
           variantStyles.track, 
           disabled && variantStyles['track:disabled'],
         ]}
+        // @ts-ignore
         initial={trackAnimation}
         animate={trackAnimation}
         transition={variantStyles['track:transition']}
@@ -120,6 +122,7 @@ export const Switch = (props: SwitchProps) => {
             variantStyles.thumb, 
             disabled && variantStyles['thumb:disabled'],
           ]}
+          // @ts-ignore
           initial={thumbAnimation}
           animate={thumbAnimation}
           transition={variantStyles['thumb:transition']}

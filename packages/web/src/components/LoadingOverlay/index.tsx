@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import { ComponentVariants, useDefaultComponentStyle } from "@codeleap/common"
 import React from "react"
 import { StylesOf } from "../.."

@@ -16,7 +16,7 @@ import {RadioInputPresets} from './RadioInput/styles'
 import {SelectPresets} from './Select/styles'
 import {TooltipPresets} from './Tooltip/styles'
 import {ListPresets} from './List/styles'
-import { LinkPresets } from './Link/styles'
+
 import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
@@ -30,7 +30,7 @@ export const defaultStyles = {
   ActivityIndicator: ActivityIndicatorPresets,
   ActionIcon: ActionIconPresets,
   Scroll: ScrollPresets,
-  Link: LinkPresets,
+  
   Button: ButtonPresets,
   Modal: ModalPresets,
   Checkbox: CheckboxPresets,

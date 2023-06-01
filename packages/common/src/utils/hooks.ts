@@ -15,7 +15,7 @@ import {
   useId as useReactId,
 } from 'react'
 import { deepMerge } from './object'
-import { AnyFunction, DeepPartial, StylesOf} from '../types'
+import { AnyFunction, DeepPartial, StylesOf } from '../types'
 
 import { uniqueId } from 'lodash'
 import { useUnmount } from 'react-use'
@@ -387,15 +387,14 @@ export function useId(prefix?: string) {
   return prefix ? `${prefix}${_id}` : _id
 }
 
-
-export function useForceRender(){
-  const [_, forceRender] = useReducer((x) => x+1, 0)
+export function useForceRender() {
+  const [_, forceRender] = useReducer((x) => x + 1, 0)
 
   return forceRender
 }
 
-export function useCounter(){
-  return useReducer((x) => x+1, 0)
+export function useCounter() {
+  return useReducer((x) => x + 1, 0)
 
 }
 
@@ -409,9 +408,9 @@ export function useNestedStylesByKey<T extends string, O extends StylesOf<T> = S
 
 export function useWarning(condition: boolean, ...logArgs: any[]) {
   const logged = useRef(false)
-  const {logger} = useCodeleapContext()
+  const { logger } = useCodeleapContext()
 
-  if(!logged.current && condition){
+  if (!logged.current && condition) {
     logged.current = true
     logger?.warn(...logArgs)
   }

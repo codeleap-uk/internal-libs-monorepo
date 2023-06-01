@@ -1,27 +1,35 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import React, {
-  ComponentPropsWithoutRef,
   useImperativeHandle,
   useRef,
 } from 'react'
-import { WebInputFile } from '@codeleap/common'
+import {  WebInputFile } from '@codeleap/common'
+import { HTMLProps } from '../types'
 
 export type FileInputRef = {
-  openFilePicker: () => void
+  openFilePicker: () => Promise<WebInputFile[]>
 }
 
-export type FileInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'type'> & {
-  onFileSelect(files: WebInputFile[]): void
+export type FileInputProps = Omit<HTMLProps<'input'>, 'type'> & {
+  onFileSelect?: (files: WebInputFile[]) => void
 }
 
-export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(
-  (inputProps, ref) => {
+export const _FileInput = (inputProps: FileInputProps, ref:React.Ref<FileInputRef>) => {
     const inputRef = useRef<HTMLInputElement>(null)
 
     const { onFileSelect, ...props } = inputProps
 
+    const resolveWithFile = useRef<(file:WebInputFile[]) => any>()
+
     useImperativeHandle(ref, () => ({
       openFilePicker: () => {
         inputRef.current.click()
+
+        return new Promise<WebInputFile[]>((resolve) => {
+          resolveWithFile.current = resolve
+        })
       },
     }))
 
@@ -36,6 +44,11 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(
       }))
 
       onFileSelect && onFileSelect(files)
+
+      if(resolveWithFile.current) {
+        resolveWithFile.current(files)
+        resolveWithFile.current = undefined
+      }
     }
 
     return (
@@ -47,5 +60,22 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(
         onChange={handleChange}
       />
     )
-  },
+}
+
+export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(_FileInput) as unknown as (
+  (props: FileInputProps & { ref?: React.MutableRefObject<FileInputRef> | React.Ref<FileInputRef> }) => JSX.Element
 )
+
+
+export const useFileInput = () => {
+    const inputRef = useRef<FileInputRef|null>(null)
+
+    const openFilePicker = () => {
+      return inputRef.current?.openFilePicker()
+    }
+
+    return {
+      openFilePicker,
+      ref: inputRef,
+    }
+}

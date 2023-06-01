@@ -1,4 +1,5 @@
-import * as React from 'react'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
@@ -115,6 +116,7 @@ export const Checkbox = (props: CheckboxProps) => {
           variantStyles.box, 
           disabled && variantStyles['box:disabled'],
         ]}
+        // @ts-ignore
         initial={boxAnimation}
         animate={boxAnimation}
         transition={variantStyles['box:transition']}
@@ -125,6 +127,7 @@ export const Checkbox = (props: CheckboxProps) => {
             variantStyles.checkmarkWrapper, 
             disabled && variantStyles['checkmarkWrapper:disabled'],
           ]}
+          // @ts-ignore
           initial={checkmarkWrapperAnimation}
           animate={checkmarkWrapperAnimation}
           transition={variantStyles['checkmarkWrapper:transition']}

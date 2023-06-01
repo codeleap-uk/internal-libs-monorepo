@@ -1,6 +1,7 @@
-import React from 'react'
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
+import {  jsx } from '@emotion/react'
+
+
 import {
   ComponentVariants,
   IconPlaceholder,
@@ -16,9 +17,10 @@ export type IconProps = {
   name: IconPlaceholder
   style?: any
   renderEmptySpace?: boolean
+  className?: string
 } & ComponentVariants<typeof IconStyles>
 
-export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
+export const Icon = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconProps) => {
   const { Theme, logger } = useCodeleapContext()
   const Component = Theme?.icons?.[name]
 

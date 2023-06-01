@@ -17,12 +17,11 @@ export type FunctionType<Args extends any[], Return> = (
 ) => Return
 
 export type ComponentVariants<
-  Styles extends CommonVariantObject<any, any> = CommonVariantObject<any, any>,
-  Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
-  VP = VariantProp<Styles>
+  Styles extends Record<string, any>,
+  Theme extends EnhancedTheme<any> = EnhancedTheme<any>
 > = {
-  variants?: VP
-  responsiveVariants?: ResponsiveVariantsProp<Theme, Styles, VP>
+  variants?: VariantProp<Styles>
+  responsiveVariants?: ResponsiveVariantsProp<Theme, Styles, VariantProp<Styles>>
 }
 
 export type ComponentWithVariants<
@@ -86,7 +85,10 @@ export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 }
 
-export type PropsOf<T, Exclude extends string = ''> = T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
+export type PropsOf<T, Exclude extends string = ''> = T extends (keyof JSX.IntrinsicElements) ?
+  JSX.IntrinsicElements[T]
+:
+   T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
 
 export type Hashmap<T> = {
   [key: string]: T

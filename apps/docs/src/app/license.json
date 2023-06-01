@@ -41,7 +41,7 @@
         "licenseUrl": "https://github.com/antonioru/beautiful-react-hooks/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "framer-motion@6.5.1": {
+    "framer-motion@10.12.10": {
         "licenses": "MIT",
         "repository": "https://github.com/framer/motion/",
         "licenseUrl": "https://github.com/framer/motion//raw/master/LICENSE.md",
@@ -93,12 +93,6 @@
         "licenses": "MIT",
         "repository": "https://github.com/FormidableLabs/prism-react-renderer",
         "licenseUrl": "https://github.com/FormidableLabs/prism-react-renderer/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "react-dom@18.1.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/facebook/react",
-        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
     "react-helmet@6.1.0": {

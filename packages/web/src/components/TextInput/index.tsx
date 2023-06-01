@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   ComponentVariants,
   FormTypes,
@@ -7,10 +10,9 @@ import {
   useBooleanToggle,
   useDefaultComponentStyle,
   useValidate,
-  yup,
+  yup
 } from '@codeleap/common'
 import React, {
-  ComponentPropsWithoutRef,
   forwardRef,
   useImperativeHandle,
   useRef,
@@ -18,13 +20,13 @@ import React, {
 } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import { Touchable, TouchableProps } from '../Touchable'
-import { StylesOf } from '../../types/utility'
+import { StylesOf , HTMLProps } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 
 export * from './styles'
 
-type NativeTextInputProps = ComponentPropsWithoutRef<'input'>
+type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps = 
   Omit<InputBaseProps, 'styles' | 'variants'> &
@@ -38,10 +40,11 @@ export type TextInputProps =
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: NativeTextInputProps['onChange']
+    onChangeText?: (text:string) => void
     caretColor?: string
     focused?: boolean
     _error?: boolean
+    rows?: number
   }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
@@ -202,7 +205,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
+        // @ts-ignore
         onBlur={handleBlur}
+        // @ts-ignore
         onFocus={handleFocus}
         css={[
           variantStyles.input,
@@ -225,6 +230,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
             ],
           }
         ]}
+        // @ts-ignore
         ref={innerInputRef}
       />
     </InputBase>

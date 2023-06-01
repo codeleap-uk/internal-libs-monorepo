@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
 import { View } from '../View'
 import { CSSObject, keyframes } from '@emotion/react'
 import {
@@ -26,8 +28,8 @@ export type ActivityIndicatorProps = {
   css?: CSSObject
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 
-export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
-  indicatorProps,
+export const ActivityIndicator = (
+  indicatorProps:ActivityIndicatorProps,
 ) => {
   const {
     animating = true,

@@ -1,7 +1,9 @@
-import { ComponentVariants, getNestedStylesByKey, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+import { ComponentVariants,  PropsOf,  TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import React from 'react'
 
-import { StylesOf } from '../../types'
+import { StylesOf, HTMLProps } from '../../types'
 import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
 import { View } from '../View'
@@ -11,10 +13,11 @@ export type ActionIconProps= {
     iconProps?: Partial<IconProps>
     icon?: IconProps['name']
     name?: IconProps['name']
+    action?: () => void
     styles?: StylesOf<ActionIconComposition>
-} & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
+} & Omit<PropsOf<typeof Touchable>, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
 
-export const ActionIcon:React.FC<ActionIconProps> = (props) => {
+export const ActionIcon = (props:ActionIconProps) => {
   const { icon, name, iconProps, action, onPress, variants, styles, children, disabled, ...touchableProps } = props
   
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
@@ -34,24 +37,27 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
   }
   
   return (
+    // @ts-ignore
     <WrapperComponent 
-      styles={{
-        wrapper: variantStyles.wrapper,
-      }}
-      onPress={handlePress}
+      style={variantStyles.wrapper}
       css={[
         variantStyles.wrapper,
-        touchableProps?.disabled && variantStyles['wrapper:disabled'],
+        disabled && variantStyles['wrapper:disabled'],
         isPressable && variantStyles['wrapper:cursor']
       ]}
       disabled={disabled}
+      {
+        ...(isPressable && {
+          onPress: handlePress
+        })
+      }
       {...touchableProps}
     >
       <Icon 
         name={icon ?? name} 
         css={[
           variantStyles.icon,
-          touchableProps?.disabled && variantStyles['icon:disabled'],
+          disabled && variantStyles['icon:disabled'],
         ]}
         {...iconProps}
       />

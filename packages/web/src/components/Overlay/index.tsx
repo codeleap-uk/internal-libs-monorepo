@@ -1,23 +1,26 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   ComponentVariants,
-  SmartOmit,
   StylesOf,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { Touchable, TouchableProps } from '../Touchable'
 import { View, ViewProps } from '../View'
 import { OverlayComposition, OverlayPresets } from './styles'
+import { NativeHTMLElement } from '../../types'
 
-export type OverlayProps = {
+export type OverlayProps<T extends NativeHTMLElement> = {
   visible?: boolean
   styles?: StylesOf<OverlayComposition>
   onPress?: TouchableProps<'div'>['onClick']
-} & ComponentVariants<typeof OverlayPresets> &
-  Partial<SmartOmit<ViewProps<'div'>, 'variants' | 'responsiveVariants'>>
+} & ComponentVariants<typeof OverlayPresets> & Omit<ViewProps<T>, 'variants' | 'responsiveVariants'>
+  
 
 export * from './styles'
 
-export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
+export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T>) => {
   const { visible, responsiveVariants, variants, styles, ...props } =
     overlayProps
 
@@ -30,12 +33,13 @@ export const Overlay: React.FC<OverlayProps> = (overlayProps) => {
   const Component = props.onClick || props.onPress ? Touchable : View
 
   return (
+    // @ts-ignore
     <Component
-      css={{
-        ...variantStyles.wrapper,
-        transition: 'opacity 0.2s ease',
-        ...(visible ? variantStyles['wrapper:visible'] : {}),
-      }}
+      css={[
+        {transition: 'opacity 0.2s ease'},
+        variantStyles.wrapper,
+        visible ? variantStyles['wrapper:visible'] : {}
+      ]}
       {...props}
     />
   )
