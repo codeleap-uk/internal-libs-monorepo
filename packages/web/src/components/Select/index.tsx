@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
+import { FormTypes, useValidate, useState, TypeGuards, onUpdate } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -17,9 +17,9 @@ export * from './styles'
 export * from './types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
-  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} } = props
+  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {}, isFocused } = props
 
-  const styles = optionsStyles({ isSelected })
+  const styles = optionsStyles({ isSelected, isFocused })
 
   let _Component = null
 
@@ -183,6 +183,8 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const [_isFocused, setIsFocused] = useState(false)
 
+  const [keyDownActive, setKeyDownActive] = useState(false)
+
   const isFocused = _isFocused || focused
 
   const validation = useValidate(value, validate)
@@ -282,6 +284,16 @@ export const Select = <T extends string | number = string, Multi extends boolean
     ...(!filterItems ? {} : { filterOption: filterItems  })
   }
 
+  onUpdate(() => {
+    if (!_isFocused) {
+      setKeyDownActive(false)
+    }
+  }, [_isFocused])
+
+  const handleKeyDown = () => {
+    setKeyDownActive(true)
+  }
+
   return (
     <InputBase
       {...inputBaseProps}
@@ -308,6 +320,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
         hideSelectedOptions={false}
         {...otherProps}
         {..._props}
+        onKeyDown={isFocused ? handleKeyDown : null}
         onBlur={handleBlur}
         onFocus={handleFocus}
         onChange={handleChange}
@@ -333,7 +346,17 @@ export const Select = <T extends string | number = string, Multi extends boolean
           NoOptionsMessage: props => <_Placeholder {...props} />,
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
-          Option: props => <DefaultOption {...props} {...componentProps} itemProps={itemProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} component={OptionComponent} />,
+          Option: props => (
+            <DefaultOption 
+              {...props} 
+              {...componentProps} 
+              itemProps={itemProps} 
+              selectedIcon={selectedIcon}
+              optionsStyles={optionsStyles} 
+              component={OptionComponent}
+              isFocused={props?.isFocused && keyDownActive}
+            />
+          ),
           MultiValue: props => <CustomMultiValue {...props} separator={separatorMultiValue} defaultStyles={inputMultiValueStyles} />,
         }}
       />

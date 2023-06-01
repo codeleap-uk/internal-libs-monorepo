@@ -41,7 +41,7 @@ export type ComponentPartProps = {
 }
 
 export type TCustomOption = OptionProps & ComponentPartProps & { 
-  optionsStyles: (state: { isSelected: boolean }) => { 
+  optionsStyles: (state: { isSelected: boolean; isFocused: boolean }) => { 
     item: CSSInterpolation
     icon: CSSInterpolation
     text: CSSInterpolation

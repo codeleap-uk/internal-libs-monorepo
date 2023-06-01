@@ -21,10 +21,12 @@ export type SelectParts =
   | 'clearIcon'
   | 'dropdownIcon'
 
+type ItemState = 'focused' | 'selected' | 'selectedFocused'
+
 export type SelectUnStateParts =  
-  'item:selected' 
-  | 'itemText:selected'
-  | 'itemIcon:selected' 
+  `item:${ItemState}` 
+  | `itemText:${ItemState}`
+  | `itemIcon:${ItemState}`
   | 'listPlaceholder'
   | 'listPlaceholderIcon'
   | 'listPlaceholderText'
@@ -77,18 +79,24 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     ...(error ? variantStyles[key + ':error'] : {}),
   })
 
-  const optionsStyles = (state: { isSelected: boolean }) => ({
+  const optionsStyles = (state: { isSelected: boolean; isFocused: boolean }) => ({
     item: {
       ...stylesKey('item'),
       ...(state?.isSelected ? variantStyles['item:selected'] : {}),
+      ...(state?.isFocused ? variantStyles['item:focused'] : {}),
+      ...(state?.isFocused && state?.isSelected ? variantStyles['item:selectedFocused'] : {}),
     },
     icon: {
       ...stylesKey('itemIcon'),
       ...(state?.isSelected ? variantStyles['itemIcon:selected'] : {}),
+      ...(state?.isFocused ? variantStyles['itemIcon:focused'] : {}),
+      ...(state?.isFocused && state?.isSelected ? variantStyles['itemIcon:selectedFocused'] : {}),
     },
     text: {
       ...stylesKey('itemText'),
       ...(state?.isSelected ? variantStyles['itemText:selected'] : {}),
+      ...(state?.isFocused ? variantStyles['itemText:focused'] : {}),
+      ...(state?.isFocused && state?.isSelected ? variantStyles['itemText:selectedFocused'] : {}),
     },
   })
 
