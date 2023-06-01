@@ -3,6 +3,7 @@ import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from "@emotion/react"
 import { GroupBase, NoticeProps, OptionProps, Props } from "react-select"
 import { AsyncProps } from "react-select/async"
+import { ButtonProps } from '../Button'
 import { InputBaseProps } from "../InputBase"
 import { SelectPresets,SelectComposition } from "./styles"
 
@@ -27,8 +28,8 @@ export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseP
   options: FormTypes.Options<T>
   value: SelectValue<T,Multi>
   onValueChange?: (value: SelectValue<T,Multi>) => void
-  multiple: Multi
-  validate: FormTypes.ValidatorWithoutForm<SelectValue<T,Multi>> | yup.SchemaOf<SelectValue<T,Multi>>
+  multiple?: Multi
+  validate?: FormTypes.ValidatorWithoutForm<SelectValue<T,Multi>> | yup.SchemaOf<SelectValue<T,Multi>>
   styles?: StylesOf<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 
@@ -46,6 +47,7 @@ export type TCustomOption = OptionProps & ComponentPartProps & {
     text: CSSInterpolation
   }
   selectedIcon?: string
+  itemProps?: ButtonProps
 }
 
 export type PlaceholderProps = NoticeProps & ComponentPartProps & { 
@@ -58,7 +60,10 @@ export type PlaceholderProps = NoticeProps & ComponentPartProps & {
   icon: string
 }
 
-export type LoadingIndicatorProps = NoticeProps & { defaultStyles: { wrapper: CSSInterpolation } }
+export type LoadingIndicatorProps = NoticeProps & { 
+  defaultStyles: { wrapper: CSSInterpolation }
+  size?: number
+}
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
   {
@@ -73,22 +78,23 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     PlaceholderComponent?: (props: PlaceholderProps) => JSX.Element
     PlaceholderNoItemsComponent?: (props: PlaceholderProps) => JSX.Element
     LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => JSX.Element
-    noItemsText?: string | ((props: PlaceholderProps) => JSX.Element)
-    noItemsIcon?: string
-    placeholderText?: string | ((props: PlaceholderProps) => JSX.Element)
-    placeholderIcon?: string
+    noItemsText?: string | ((props: PlaceholderProps) => JSX.Element) | null
+    noItemsIcon?: string | null
+    placeholderText?: string | ((props: PlaceholderProps) => JSX.Element) | null
+    placeholderIcon?: string | null
     showDropdownIcon?: boolean
     formatPlaceholderNoItems?: (props: PlaceholderProps & { text: string }) => string
     selectedIcon?: string
-    filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
     onLoadOptionsError?: (error: any) => void
     loadOptionsOnMount?: boolean
-    defaultOptions?: ReactSelectProps<T, Multi>['options']
     searchable?: boolean
     separatorMultiValue?: string
+    filterItems?: Props['filterOption']
+    itemProps?: ButtonProps
+    loadingIndicatorSize?: number
   } & Omit<
     ReactSelectProps<T, Multi>, 
-    'isSearchable' | 'isClearable' | 'isDisabled' |
+    'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |
     'isLoading' | 'menuPortalTarget' | 'closeMenuOnSelect' | 'isMulti'> 
     & ComponentVariants<typeof SelectPresets>
 >

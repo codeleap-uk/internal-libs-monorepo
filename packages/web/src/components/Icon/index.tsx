@@ -1,6 +1,6 @@
 import React from 'react'
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
+import { CSSObject, jsx } from '@emotion/react'
 import {
   ComponentVariants,
   IconPlaceholder,
@@ -9,6 +9,7 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 import { View, ViewProps } from '../View'
+import { CSSInterpolation } from '@emotion/css'
 
 export * from './styles'
 
@@ -17,6 +18,7 @@ export type IconProps = {
   style?: any
   renderEmptySpace?: boolean
   css?: Array<React.CSSProperties>
+  forceStyle?: CSSObject | CSSInterpolation | React.CSSProperties
 } & ComponentVariants<typeof IconStyles>
 
 export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {

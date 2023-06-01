@@ -1,8 +1,8 @@
 
 import React, { useRef } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards, onMount } from '@codeleap/common'
-import _Select, { components, MenuListProps, MenuProps, MultiValueProps } from 'react-select'
-import Async  from 'react-select/async'
+import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
+import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
+import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
 import { LoadingIndicatorProps, PlaceholderProps, SelectProps, TCustomOption } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
@@ -17,7 +17,9 @@ export * from './styles'
 export * from './types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
-  const { isSelected, optionsStyles, label, selectedIcon, component = null } = props
+  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} } = props
+
+  const styles = optionsStyles({ isSelected })
 
   let _Component = null
 
@@ -26,15 +28,14 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
       <Button
         text={label}
         // @ts-ignore
-        rightIcon={isSelected && selectedIcon} 
-        styles={{ wrapper: styles?.item, rightIcon: styles?.icon, text: styles?.text }} 
+        rightIcon={isSelected && selectedIcon}
+        styles={{ wrapper: styles?.item, rightIcon: styles?.icon, text: styles?.text }}
+        {...itemProps}
       />
     )
   } else {
     _Component = component
   }
-
-  const styles = optionsStyles({ isSelected })
 
   return (
     <components.Option {...props}>
@@ -70,7 +71,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
   const { text: TextPlaceholder, defaultStyles, icon } = props
 
   const _Text = () => {
-    if (!TextPlaceholder) return null
+    if (TypeGuards.isNil(TextPlaceholder)) return null
 
     if (TypeGuards.isString(TextPlaceholder)) {
       return <Text text={TextPlaceholder} css={[defaultStyles.text]} />
@@ -88,11 +89,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 }
 
 const LoadingIndicator = (props: LoadingIndicatorProps) => {
-  const { defaultStyles } = props
-  
+  const { defaultStyles, size } = props
+
   return (
     <View css={[defaultStyles.wrapper]}>
-      <ActivityIndicator />
+      <ActivityIndicator size={size} />
     </View>
   )
 }
@@ -103,7 +104,7 @@ const getMultiValue = (values: { label: string }[], separator: string, state: { 
 
   values.forEach(({ label }, i) => {
     const isLast = values?.length - 1 === i
-    const txt = (hasMulti && separator) 
+    const txt = (hasMulti && separator)
       ? label + (isLast && !state?.searchable ? '' : separator)
       : label
 
@@ -126,25 +127,12 @@ const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSI
   return <Text text={text} css={[defaultStyles.text]} />
 }
 
-const _formatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) => {
+const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) => {
   return props.text + `"${props.selectProps.inputValue}"`
 }
 
-const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
-  return options.filter((option) => {
-    if(TypeGuards.isString(option?.label)){
-      return option?.label?.toLowerCase()?.includes(search?.toLowerCase())
-    }
-
-    return option?.label === search
-  })
-}
-
-export const Select = <T extends string|number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
+export const Select = <T extends string | number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
   type Option = FormTypes.Option<T>
-
-  const innerInputRef = useRef<any>(null)
-  const innerWrapperRef = useRef(null)
 
   const {
     inputBaseProps,
@@ -152,12 +140,12 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   } = selectInputBaseProps(props)
 
   const {
-    variants, 
-    validate, 
-    styles, 
+    variants,
+    validate,
+    styles,
     debugName,
-    onValueChange, 
-    options = [], 
+    onValueChange,
+    options = [],
     value,
     loadOptions,
     multiple,
@@ -175,24 +163,25 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     showDropdownIcon = true,
     placeholder = 'Select',
     clearable = false,
-    formatPlaceholderNoItems = _formatPlaceholderNoItems,
+    formatPlaceholderNoItems = defaultFormatPlaceholderNoItems,
     closeOnSelect = !multiple,
     selectedIcon = 'checkmark',
     onLoadOptionsError,
     loadOptionsOnMount = options?.length === 0,
-    filterItems = defaultFilterFunction,
-    defaultOptions = options,
     searchable = false,
     separatorMultiValue = ', ',
+    filterItems = null,
+    itemProps = {},
+    loadingIndicatorSize = 20,
     ...otherProps
   } = selectProps
+
+  const innerInputRef = useRef<any>(null)
+  const innerWrapperRef = useRef(null)
 
   const [selectedOption, setSelectedOption] = useState(value)
 
   const [_isFocused, setIsFocused] = useState(false)
-
-  const [loading, setLoading] = useState(false)
-  const [filteredOptions, setFilteredOptions] = useState(defaultOptions)
 
   const isFocused = _isFocused || focused
 
@@ -203,29 +192,9 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
 
-  async function load(){
-    setLoading(true)
-
-    try{
-      const _options = await loadOptions('')
-
-      setFilteredOptions(_options)
-    } catch(err) {
-      onLoadOptionsError(err)
-    }
-
-    setLoading(false)
-  }
-
-  onMount(() => {
-    if(loadOptionsOnMount && !!loadOptions){
-      load()
-    }
-  })
-
-  const { 
-    reactSelectStyles, 
-    variantStyles, 
+  const {
+    reactSelectStyles,
+    variantStyles,
     optionsStyles,
     placeholderStyles,
     loadingStyles,
@@ -239,8 +208,6 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   const onLoadOptions = async (inputValue, cb) => {
     if (!!loadOptions) {
-      setLoading(true)
-
       try {
         const _options = await loadOptions(inputValue).then((options) => {
           cb(options)
@@ -248,30 +215,21 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         })
 
         return _options
-      } catch(err) {
+      } catch (err) {
         onLoadOptionsError?.(err)
       }
 
-      setTimeout(() => {
-        setLoading(false)
-      }, 0)
-
       return
     }
-
-    const _opts = filterItems(inputValue, options)
-
-    setFilteredOptions(_opts)
-    cb(_opts)
   }
 
   const handleChange = (opt: Multi extends true ? Option[] : Option) => {
-    if(TypeGuards.isArray(opt)){
+    if (TypeGuards.isArray(opt)) {
       // @ts-ignore
       setSelectedOption(opt)
       // @ts-ignore
       onValueChange?.(opt?.map((o) => o?.value))
-    }else{
+    } else {
       // @ts-ignore
       setSelectedOption(opt)
       // @ts-ignore
@@ -294,10 +252,34 @@ export const Select = <T extends string|number = string, Multi extends boolean =
   const SelectComponent = !!loadOptions ? Async : _Select
 
   const componentProps = {
-    focused: isFocused, 
-    error: !!hasError, 
+    focused: isFocused,
+    error: !!hasError,
     disabled: isDisabled,
     variantStyles,
+  }
+
+  const _Placeholder = (props: NoticeProps) => {
+    const hasInputValue = !!props.selectProps.inputValue
+    const styles = placeholderStyles[hasInputValue ? 'noItems' : 'empty']
+    const icon = hasInputValue ? noItemsIcon : placeholderIcon
+
+    const placeholderProps = {
+      ...props,
+      ...componentProps,
+      icon,
+      defaultStyles: styles,
+    }
+
+    if (!hasInputValue) {
+      return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
+    } else {
+      const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText
+      return <PlaceholderNoItemsComponent {...placeholderProps} text={_Text} />
+    }
+  }
+
+  const _props = {
+    ...(!filterItems ? {} : { filterOption: filterItems  })
   }
 
   return (
@@ -314,7 +296,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         ],
       }}
       innerWrapperProps={{
-        ...(inputBaseProps.innerWrapperProps  || {}),
+        ...(inputBaseProps.innerWrapperProps || {}),
         onClick: () => {
           innerInputRef.current?.focus?.()
         },
@@ -322,54 +304,36 @@ export const Select = <T extends string|number = string, Multi extends boolean =
       innerWrapperRef={innerWrapperRef}
     >
       <SelectComponent
+        openMenuOnFocus={true}
+        hideSelectedOptions={false}
         {...otherProps}
+        {..._props}
         onBlur={handleBlur}
         onFocus={handleFocus}
         onChange={handleChange}
         styles={reactSelectStyles}
         value={selectedOption as any}
         isMulti={multiple}
-        options={options ?? filteredOptions}
+        options={options}
         loadOptions={onLoadOptions as any}
         defaultOptions={loadOptionsOnMount}
         ref={innerInputRef}
-        openMenuOnFocus={true}
         closeMenuOnSelect={closeOnSelect}
         menuPortalTarget={innerWrapperRef.current}
-        hideSelectedOptions={false}
         placeholder={placeholder}
         isDisabled={isDisabled}
         isClearable={clearable}
         isSearchable={searchable}
-        isLoading={loading}
         components={{
           LoadingIndicator: () => null,
-          LoadingMessage: props => <LoadingIndicatorComponent {...props} defaultStyles={loadingStyles} />,
           ...otherProps.components,
           MultiValueRemove: () => null,
+          LoadingMessage: props => <LoadingIndicatorComponent {...props} defaultStyles={loadingStyles} size={loadingIndicatorSize} />,
           DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,
-          NoOptionsMessage: props => {
-            const hasInputValue = !!props.selectProps.inputValue
-            const styles = placeholderStyles[hasInputValue ? 'noItems' : 'empty']
-            const icon = hasInputValue ? noItemsIcon : placeholderIcon
-
-            const placeholderProps = {
-              ...props,
-              ...componentProps,
-              icon,
-              defaultStyles: styles,
-            }
-
-            if (!hasInputValue) {
-              return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
-            } else {
-              const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText
-              return <PlaceholderNoItemsComponent {...placeholderProps} text={_Text} />
-            }
-          },
+          NoOptionsMessage: props => <_Placeholder {...props} />,
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
-          Option: props => <DefaultOption {...props} {...componentProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} component={OptionComponent} />,
+          Option: props => <DefaultOption {...props} {...componentProps} itemProps={itemProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} component={OptionComponent} />,
           MultiValue: props => <CustomMultiValue {...props} separator={separatorMultiValue} defaultStyles={inputMultiValueStyles} />,
         }}
       />

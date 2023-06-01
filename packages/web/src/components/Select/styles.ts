@@ -5,34 +5,33 @@ import { SelectProps } from './types'
 
 export type SelectParts =
   InputBaseParts
-  | 'container'
-  | 'groupHeading'
+  | 'listPortal'
+  | 'listHeader'
   | 'listWrapper'
   | 'list'
-  | 'listPortal'
-  | 'itemWrapper'
+  | 'inputContainer'
   | 'input'
-  | 'inputValue'
-  | 'inputMultiValue'
-  | 'inputValueWrapper'
+  | 'placeholder'
+  | 'value'
+  | 'valueMultiple'
+  | 'valueWrapper'
   | 'item'
   | 'itemIcon'
   | 'itemText'
   | 'clearIcon'
   | 'dropdownIcon'
-  | 'placeholder'
 
 export type SelectUnStateParts =  
   'item:selected' 
-  | 'itemText:selected' 
-  | 'itemWrapper:selected'
-  | 'menuPlaceholder'
-  | 'menuPlaceholderIcon'
-  | 'menuPlaceholderText'
-  | 'menuPlaceholderNoItems'
-  | 'menuPlaceholderNoItemsIcon'
-  | 'menuPlaceholderNoItemsText'
-  | 'menuWrapper' 
+  | 'itemText:selected'
+  | 'itemIcon:selected' 
+  | 'listPlaceholder'
+  | 'listPlaceholderIcon'
+  | 'listPlaceholderText'
+  | 'listPlaceholderNoItems'
+  | 'listPlaceholderNoItemsIcon'
+  | 'listPlaceholderNoItemsText'
+  | 'itemsWrapper' 
   | 'loadingIndicator'
   | 'innerWrapper:searchable'
 
@@ -83,7 +82,10 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
       ...stylesKey('item'),
       ...(state?.isSelected ? variantStyles['item:selected'] : {}),
     },
-    icon: stylesKey('itemIcon'),
+    icon: {
+      ...stylesKey('itemIcon'),
+      ...(state?.isSelected ? variantStyles['itemIcon:selected'] : {}),
+    },
     text: {
       ...stylesKey('itemText'),
       ...(state?.isSelected ? variantStyles['itemText:selected'] : {}),
@@ -92,14 +94,14 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
 
   const placeholderStyles = {
     ['empty']: {
-      wrapper: stylesKey('menuPlaceholder'),
-      icon: stylesKey('menuPlaceholderIcon'),
-      text: stylesKey('menuPlaceholderText'),
+      wrapper: stylesKey('listPlaceholder'),
+      icon: stylesKey('listPlaceholderIcon'),
+      text: stylesKey('listPlaceholderText'),
     },
     ['noItems']: {
-      wrapper: stylesKey('menuPlaceholderNoItems'),
-      icon: stylesKey('menuPlaceholderNoItemsIcon'),
-      text: stylesKey('menuPlaceholderNoItemsText'),
+      wrapper: stylesKey('listPlaceholderNoItems'),
+      icon: stylesKey('listPlaceholderNoItemsIcon'),
+      text: stylesKey('listPlaceholderNoItemsText'),
     },
   }
 
@@ -108,22 +110,22 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   }
 
   const inputMultiValueStyles = {
-    text: stylesKey('inputMultiValue')
+    text: stylesKey('valueMultiple')
   }
 
   const menuWrapperStyles = {
-    wrapper: stylesKey('menuWrapper')
+    wrapper: stylesKey('itemsWrapper')
   }
 
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
-    container: (baseStyles) => stylesKey('container', baseStyles),
-    control: () => stylesKey('container'),
+    container: (baseStyles) => stylesKey('inputContainer', baseStyles),
+    control: () => stylesKey('inputContainer'),
     menuPortal: (baseStyles) => stylesKey('listPortal', baseStyles),
     menu: (baseStyles) => stylesKey('listWrapper', baseStyles),
     menuList: (baseStyles) => stylesKey('list', baseStyles),
     group: () => ({}),
     indicatorSeparator: () => ({}),
-    groupHeading: (baseStyles) => stylesKey('groupHeading', baseStyles),
+    groupHeading: (baseStyles) => stylesKey('listHeader', baseStyles),
     clearIndicator: () => ({
       ...stylesKey('iconIcon'),
       ...stylesKey('clearIcon'),
@@ -141,8 +143,8 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     noOptionsMessage: () => ({}),
     option: () => ({}),
     placeholder: () => stylesKey('placeholder'),
-    singleValue: (baseStyles) => stylesKey('inputValue', baseStyles),
-    valueContainer: (baseStyles) => stylesKey('inputValueWrapper', baseStyles),
+    singleValue: (baseStyles) => stylesKey('value', baseStyles),
+    valueContainer: (baseStyles) => stylesKey('valueWrapper', baseStyles),
   }
 
   return {
