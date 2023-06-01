@@ -5158,6 +5158,10 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-native@link:apps/mobile/node_modules/@types/react-native":
+  version "0.0.0"
+  uid ""
+
 "@types/react-window@1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@types/react-window/-/react-window-1.8.5.tgz#285fcc5cea703eef78d90f499e1457e9b5c02fc1"
@@ -19612,6 +19616,10 @@ react-native@0.70.6:
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
 
+"react-native@link:apps/mobile/node_modules/react-native":
+  version "0.0.0"
+  uid ""
+
 react-photo-view@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/react-photo-view/-/react-photo-view-1.2.3.tgz#436f81ad0a611dfaa43bbc72a4fef26a057b5aef"
@@ -19713,9 +19721,14 @@ react@18.1.0:
   dependencies:
     loose-envify "^1.1.0"
 
-"react@link:apps/web/node_modules/react":
+"react@link:apps/mobile/node_modules/react":
   version "0.0.0"
   uid ""
+
+"react@link:apps/web/node_modules/react":
+  version "18.1.0"
+  dependencies:
+    loose-envify "^1.1.0"
 
 read-chunk@^3.2.0:
   version "3.2.0"
