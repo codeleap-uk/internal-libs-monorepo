@@ -45,6 +45,7 @@ export type TCustomOption = OptionProps & ComponentPartProps & {
     icon: CSSInterpolation
     text: CSSInterpolation
   }
+  selectedIcon?: string
 }
 
 export type PlaceholderProps = NoticeProps & ComponentPartProps & { 
@@ -57,21 +58,36 @@ export type PlaceholderProps = NoticeProps & ComponentPartProps & {
   icon: string
 }
 
+export type LoadingIndicatorProps = NoticeProps & { defaultStyles: { wrapper: CSSInterpolation } }
+
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
   {
     debugName?: string
+    clearable?: boolean
+    closeOnSelect?: boolean
     css?: CSSObject
     focused?: boolean
     _error?: string
-    OptionComponent?: (props: TCustomOption) => JSX.Element
+    renderItem?: (props: TCustomOption) => JSX.Element
     FooterComponent?: () => JSX.Element
     PlaceholderComponent?: (props: PlaceholderProps) => JSX.Element
     PlaceholderNoItemsComponent?: (props: PlaceholderProps) => JSX.Element
+    LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => JSX.Element
     noItemsText?: string | ((props: PlaceholderProps) => JSX.Element)
     noItemsIcon?: string
     placeholderText?: string | ((props: PlaceholderProps) => JSX.Element)
     placeholderIcon?: string
     showDropdownIcon?: boolean
     formatPlaceholderNoItems?: (props: PlaceholderProps & { text: string }) => string
-  } & ReactSelectProps<T, Multi> & ComponentVariants<typeof SelectPresets>
+    selectedIcon?: string
+    filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
+    onLoadOptionsError?: (error: any) => void
+    loadOptionsOnMount?: boolean
+    defaultOptions?: ReactSelectProps<T, Multi>['options']
+    searchable?: boolean
+  } & Omit<
+    ReactSelectProps<T, Multi>, 
+    'isSearchable' | 'isClearable' | 
+    'isLoading' | 'menuPortalTarget' | 'closeMenuOnSelect' | 'isMulti'> 
+    & ComponentVariants<typeof SelectPresets>
 >

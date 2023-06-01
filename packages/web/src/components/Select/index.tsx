@@ -1,10 +1,10 @@
 
 import React, { useRef } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards } from '@codeleap/common'
-import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
+import { FormTypes, useValidate, useState, TypeGuards, onMount } from '@codeleap/common'
+import _Select, { components, MenuListProps, MenuProps, MultiValueProps } from 'react-select'
 import Async  from 'react-select/async'
 import { useSelectStyles } from './styles'
-import { PlaceholderProps, SelectProps, TCustomOption } from './types'
+import { LoadingIndicatorProps, PlaceholderProps, SelectProps, TCustomOption } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Button } from '../Button'
 import { Text } from '../Text'
@@ -17,7 +17,7 @@ export * from './styles'
 export * from './types'
 
 const DefaultOption = (props: TCustomOption) => {
-  const { isSelected, optionsStyles, label } = props
+  const { isSelected, optionsStyles, label, selectedIcon } = props
 
   const styles = optionsStyles({ isSelected })
 
@@ -26,7 +26,7 @@ const DefaultOption = (props: TCustomOption) => {
       <Button
         text={label}
         // @ts-ignore
-        rightIcon={isSelected && 'checkmark'} 
+        rightIcon={isSelected && selectedIcon} 
         styles={{ wrapper: styles?.item, rightIcon: styles?.icon, text: styles?.text }} 
       />
     </components.Option>
@@ -77,7 +77,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
   )
 }
 
-const LoadingIndicator = (props: NoticeProps & { defaultStyles: { wrapper: CSSInterpolation } }) => {
+const LoadingIndicator = (props: LoadingIndicatorProps) => {
   const { defaultStyles } = props
   
   return (
@@ -117,6 +117,16 @@ const _formatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) =
   return props.text + `"${props.selectProps.inputValue}"`
 }
 
+const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
+  return options.filter((option) => {
+    if(TypeGuards.isString(option?.label)){
+      return option?.label?.toLowerCase()?.includes(search?.toLowerCase())
+    }
+
+    return option?.label === search
+  })
+}
+
 export const Select = <T extends string|number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
   type Option = FormTypes.Option<T>
 
@@ -134,28 +144,41 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     styles, 
     debugName,
     onValueChange, 
-    options, 
+    options = [], 
     value,
     loadOptions,
     multiple,
     focused,
     _error,
-    OptionComponent = DefaultOption,
+    renderItem: OptionComponent = DefaultOption,
     FooterComponent = null,
     PlaceholderComponent = DefaultPlaceholder,
     PlaceholderNoItemsComponent = DefaultPlaceholder,
+    LoadingIndicatorComponent = LoadingIndicator,
     noItemsText = 'No results for ',
     noItemsIcon = 'placeholderNoItems-select',
     placeholderText = 'Search items',
     placeholderIcon = 'placeholder-select',
     showDropdownIcon = true,
+    placeholder = 'Select',
+    clearable = false,
     formatPlaceholderNoItems = _formatPlaceholderNoItems,
+    closeOnSelect = !multiple,
+    selectedIcon = 'checkmark',
+    onLoadOptionsError,
+    loadOptionsOnMount = options?.length === 0,
+    filterItems = defaultFilterFunction,
+    defaultOptions = options,
+    searchable = false,
     ...otherProps
   } = selectProps
 
   const [selectedOption, setSelectedOption] = useState(value)
 
   const [_isFocused, setIsFocused] = useState(false)
+
+  const [loading, setLoading] = useState(false)
+  const [filteredOptions, setFilteredOptions] = useState(defaultOptions)
 
   const isFocused = _isFocused || focused
 
@@ -165,6 +188,26 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
+
+  async function load(){
+    setLoading(true)
+
+    try{
+      const _options = await loadOptions('')
+
+      setFilteredOptions(_options)
+    } catch(err) {
+      onLoadOptionsError(err)
+    }
+
+    setLoading(false)
+  }
+
+  onMount(() => {
+    if(loadOptionsOnMount && !!loadOptions){
+      load()
+    }
+  })
 
   const { 
     reactSelectStyles, 
@@ -180,12 +223,32 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     disabled: isDisabled,
   })
 
-  const onLoadOptions = (inputValue, cb) => {
-    if(!loadOptions) return []
-    
-    loadOptions(inputValue).then((options) => {
-      cb(options)
-    })
+  const onLoadOptions = async (inputValue, cb) => {
+    if (!!loadOptions) {
+      setLoading(true)
+
+      try {
+        const _options = await loadOptions(inputValue).then((options) => {
+          cb(options)
+          return options
+        })
+
+        return _options
+      } catch(err) {
+        onLoadOptionsError?.(err)
+      }
+
+      setTimeout(() => {
+        setLoading(false)
+      }, 0)
+
+      return
+    }
+
+    const _opts = filterItems(inputValue, options)
+
+    setFilteredOptions(_opts)
+    cb(_opts)
   }
 
   const handleChange = (opt: Multi extends true ? Option[] : Option) => {
@@ -251,23 +314,27 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         styles={reactSelectStyles}
         value={selectedOption as any}
         isMulti={multiple}
-        options={options}
+        options={options ?? filteredOptions}
         loadOptions={onLoadOptions as any}
+        defaultOptions={loadOptionsOnMount}
         ref={innerInputRef}
         openMenuOnFocus={true}
-        closeMenuOnSelect={false}
+        closeMenuOnSelect={closeOnSelect}
         menuPortalTarget={innerWrapperRef.current}
         hideSelectedOptions={false}
-        isClearable
+        placeholder={placeholder}
+        isClearable={clearable}
+        isSearchable={searchable}
+        isLoading={loading}
         components={{
           LoadingIndicator: () => null,
-          LoadingMessage: props => <LoadingIndicator {...props} defaultStyles={loadingStyles} />,
+          LoadingMessage: props => <LoadingIndicatorComponent {...props} defaultStyles={loadingStyles} />,
           ...otherProps.components,
           MultiValueRemove: () => null,
           DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,
           NoOptionsMessage: props => {
             const hasInputValue = !!props.selectProps.inputValue
-            const styles = placeholderStyles[hasInputValue ? 'noItems' : 'default']
+            const styles = placeholderStyles[hasInputValue ? 'noItems' : 'empty']
             const icon = hasInputValue ? noItemsIcon : placeholderIcon
 
             const placeholderProps = {
@@ -286,7 +353,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
           },
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
-          Option: props => <OptionComponent {...props} {...componentProps} optionsStyles={optionsStyles} />,
+          Option: props => <OptionComponent {...props} {...componentProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} />,
           MultiValue: props => <CustomMultiValue {...props} defaultStyles={inputMultiValueStyles} />,
         }}
       />

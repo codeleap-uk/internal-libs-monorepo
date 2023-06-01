@@ -6,10 +6,7 @@ import { SelectProps } from './types'
 export type SelectParts =
   InputBaseParts
   | 'container'
-  | 'control'
-  | 'group'
   | 'groupHeading'
-  | 'listWrapper'
   | 'listWrapper'
   | 'list'
   | 'listPortal'
@@ -18,22 +15,17 @@ export type SelectParts =
   | 'inputValue'
   | 'inputMultiValue'
   | 'inputValueWrapper'
-  | 'itemWrapper:selected'
   | 'item'
   | 'itemIcon'
   | 'itemText'
-  | 'loadingText'
-  | 'noItems'
-  | 'iconsWrapper'
   | 'clearIcon'
   | 'dropdownIcon'
-  | 'loadingIcon'
-  | 'separatorIcon'
   | 'placeholder'
 
 export type SelectUnStateParts =  
   'item:selected' 
   | 'itemText:selected' 
+  | 'itemWrapper:selected'
   | 'menuPlaceholder'
   | 'menuPlaceholderIcon'
   | 'menuPlaceholderText'
@@ -41,7 +33,6 @@ export type SelectUnStateParts =
   | 'menuPlaceholderNoItemsIcon'
   | 'menuPlaceholderNoItemsText'
   | 'menuWrapper' 
-  
   | 'loadingIndicator'
 
 export type SelectState = 'error' | 'focused' | 'disabled'
@@ -99,7 +90,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   })
 
   const placeholderStyles = {
-    ['default']: {
+    ['empty']: {
       wrapper: stylesKey('menuPlaceholder'),
       icon: stylesKey('menuPlaceholderIcon'),
       text: stylesKey('menuPlaceholderText'),
@@ -129,8 +120,8 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     menuPortal: (baseStyles) => stylesKey('listPortal', baseStyles),
     menu: (baseStyles) => stylesKey('listWrapper', baseStyles),
     menuList: (baseStyles) => stylesKey('list', baseStyles),
-    group: () => stylesKey('group'),
-    indicatorSeparator: (baseStyles) => stylesKey('separatorIcon', baseStyles),
+    group: () => ({}),
+    indicatorSeparator: () => ({}),
     groupHeading: (baseStyles) => stylesKey('groupHeading', baseStyles),
     clearIndicator: () => ({
       ...stylesKey('iconIcon'),
@@ -140,15 +131,15 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
       ...stylesKey('iconIcon'),
       ...stylesKey('dropdownIcon'),
     }),
-    indicatorsContainer: (baseStyles) => stylesKey('iconsWrapper', baseStyles),
+    indicatorsContainer: (baseStyles) => baseStyles,
     input: (baseStyles) => stylesKey('input', baseStyles),
-    loadingIndicator: (baseStyles) => stylesKey('loadingIcon', baseStyles),
-    loadingMessage: (baseStyles) => stylesKey('loadingText', baseStyles),
+    loadingIndicator: () => ({}),
+    loadingMessage: () => ({}),
     multiValue: () => ({}),
     multiValueLabel: () => ({}),
-    noOptionsMessage: (baseStyles) => stylesKey('noItems', baseStyles),
+    noOptionsMessage: () => ({}),
     option: () => ({}),
-    placeholder: (baseStyles) => stylesKey('placeholder'),
+    placeholder: () => stylesKey('placeholder'),
     singleValue: (baseStyles) => stylesKey('inputValue', baseStyles),
     valueContainer: (baseStyles) => stylesKey('inputValueWrapper', baseStyles),
   }
