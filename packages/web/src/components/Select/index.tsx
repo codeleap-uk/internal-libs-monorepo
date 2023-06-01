@@ -16,19 +16,29 @@ import { Icon } from '../Icon'
 export * from './styles'
 export * from './types'
 
-const DefaultOption = (props: TCustomOption) => {
-  const { isSelected, optionsStyles, label, selectedIcon } = props
+const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
+  const { isSelected, optionsStyles, label, selectedIcon, component = null } = props
 
-  const styles = optionsStyles({ isSelected })
+  let _Component = null
 
-  return (
-    <components.Option {...props}>
+  if (TypeGuards.isNil(component)) {
+    _Component = () => (
       <Button
         text={label}
         // @ts-ignore
         rightIcon={isSelected && selectedIcon} 
         styles={{ wrapper: styles?.item, rightIcon: styles?.icon, text: styles?.text }} 
       />
+    )
+  } else {
+    _Component = component
+  }
+
+  const styles = optionsStyles({ isSelected })
+
+  return (
+    <components.Option {...props}>
+      <_Component {...props} />
     </components.Option>
   )
 }
@@ -150,7 +160,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     multiple,
     focused,
     _error,
-    renderItem: OptionComponent = DefaultOption,
+    renderItem: OptionComponent = null,
     FooterComponent = null,
     PlaceholderComponent = DefaultPlaceholder,
     PlaceholderNoItemsComponent = DefaultPlaceholder,
@@ -296,6 +306,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
+          searchable && variantStyles['innerWrapper:searchable']
         ],
       }}
       innerWrapperProps={{
@@ -323,6 +334,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         menuPortalTarget={innerWrapperRef.current}
         hideSelectedOptions={false}
         placeholder={placeholder}
+        isDisabled={isDisabled}
         isClearable={clearable}
         isSearchable={searchable}
         isLoading={loading}
@@ -353,7 +365,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
           },
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
-          Option: props => <OptionComponent {...props} {...componentProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} />,
+          Option: props => <DefaultOption {...props} {...componentProps} selectedIcon={selectedIcon} optionsStyles={optionsStyles} component={OptionComponent} />,
           MultiValue: props => <CustomMultiValue {...props} defaultStyles={inputMultiValueStyles} />,
         }}
       />

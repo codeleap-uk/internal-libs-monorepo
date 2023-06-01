@@ -34,6 +34,7 @@ export type SelectUnStateParts =
   | 'menuPlaceholderNoItemsText'
   | 'menuWrapper' 
   | 'loadingIndicator'
+  | 'innerWrapper:searchable'
 
 export type SelectState = 'error' | 'focused' | 'disabled'
 

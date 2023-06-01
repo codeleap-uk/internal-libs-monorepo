@@ -87,7 +87,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     searchable?: boolean
   } & Omit<
     ReactSelectProps<T, Multi>, 
-    'isSearchable' | 'isClearable' | 
+    'isSearchable' | 'isClearable' | 'isDisabled' |
     'isLoading' | 'menuPortalTarget' | 'closeMenuOnSelect' | 'isMulti'> 
     & ComponentVariants<typeof SelectPresets>
 >
