@@ -1,13 +1,12 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-type BadgeParts =  'wrapper'  | 'innerWrapper' | 'counter'
+type BadgeParts =  'wrapper'  | 'innerWrapper' | 'count'
 
 type BadgeStates =  'disabled'
 
 export type BadgeComposition =  
   `${BadgeParts}:${BadgeStates}` 
   | BadgeParts
-  | '__props'
 
 const createBadgeStyle =
   createDefaultVariantFactory<BadgeComposition>()

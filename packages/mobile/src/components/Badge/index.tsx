@@ -10,12 +10,9 @@ export * from './styles'
 export type BadgeProps = ComponentVariants<typeof BadgePresets> & ViewProps & {
   styles?: StylesOf<BadgeComposition>
   visible?: boolean
-  counter?: number
-  borderSize?: number
-  size?: number
-  hasBorder?: boolean
-  maxCounter?: number
-  minCounter?: number
+  count?: number
+  maxCount?: number
+  minCount?: number
   debugName: string
   innerWrapperProps?: Partial<PropsOf<typeof View>>
   textProps?: Partial<PropsOf<typeof Text>>
@@ -24,30 +21,22 @@ export type BadgeProps = ComponentVariants<typeof BadgePresets> & ViewProps & {
   debug?: boolean
 }
 
-// count
-
-const defaultBorderSize = 4
-const defaultSize = 2
-
-const defaultGetBadgeContent = ({ counter, maxCounter }: BadgeProps) => {
-  if (Number(counter) > maxCounter) {
-    return `${maxCounter}+`
+const defaultGetBadgeContent = ({ count, maxCount }: BadgeProps) => {
+  if (Number(count) > maxCount) {
+    return `${maxCount}+`
   } else {
-    return String(counter)
+    return String(count)
   }
 }
 
 export const Badge = (props: BadgeProps) => {
   const {
     debugName,
-    borderSize = defaultBorderSize,
-    size = defaultSize,
     innerWrapperProps = {},
     textProps = {},
-    maxCounter = 9,
-    hasBorder,
-    minCounter = 1,
-    counter = null,
+    maxCount = 9,
+    minCount = 1,
+    count = null,
     visible = true,
     getBadgeContent = defaultGetBadgeContent,
     styles,
@@ -58,7 +47,7 @@ export const Badge = (props: BadgeProps) => {
     ...rest
   } = props
 
-  const { Theme, logger } = useCodeleapContext()
+  const { logger } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {
     variants,
@@ -68,51 +57,32 @@ export const Badge = (props: BadgeProps) => {
 
   if (!visible) return null
 
-  const _size = Number(variantStyles['__props']?.size ?? size)
-  const _borderSize = Number(variantStyles['__props']?.borderSize ?? borderSize)
-  const _hasBorder = variantStyles['__props']?.hasBorder || hasBorder
-
-  const content = React.useMemo(() => getBadgeContent({ ...props, maxCounter, minCounter }), [counter])
-
-  const { width, height } = Theme.sized(Number(_size))
-
-  const borderSized = _hasBorder ? _borderSize : 0
+  const content = React.useMemo(() => getBadgeContent({ ...props, maxCount, minCount }), [count])
 
   const wrapperStyles: ViewProps['style'] = React.useMemo(() => ([
-    {
-      width: width + borderSized,
-      height: height + borderSized,
-    },
     variantStyles?.wrapper,
     variantStyles?.['wrapper:disabled'],
     style,
-  ]), [disabled, _size])
+  ]), [disabled])
 
   const innerWrapperStyles: ViewProps['style'] = React.useMemo(() => ([
     variantStyles?.innerWrapper,
     variantStyles?.['innerWrapper:disabled'],
     innerWrapperProps?.style,
-    {
-      width: width - borderSized,
-      height: height - borderSized,
-    },
-  ]), [disabled, borderSized])
+  ]), [disabled])
 
-  const counterStyles = React.useMemo(() => ([
-    variantStyles?.counter,
-    variantStyles?.['counter:disabled'],
+  const countStyles = React.useMemo(() => ([
+    variantStyles?.count,
+    variantStyles?.['count:disabled'],
     textProps?.style,
   ]), [disabled])
 
-  const showCounter = TypeGuards.isNumber(counter) && counter >= minCounter
+  const showCount = TypeGuards.isNumber(count) && count >= minCount
 
   if (debug) {
     logger.log(debugName, {
-      _borderSize,
-      _hasBorder,
-      _size,
       props,
-      showCounter,
+      showCount,
       content,
     }, 'Badge')
   }
@@ -123,8 +93,8 @@ export const Badge = (props: BadgeProps) => {
       style={wrapperStyles}
     >
       <View {...innerWrapperProps} style={innerWrapperStyles}>
-        {showCounter 
-          ? <Text text={content} {...textProps} style={counterStyles} /> 
+        {showCount 
+          ? <Text text={content} {...textProps} style={countStyles} /> 
           : null
         }
       </View>
