@@ -7,8 +7,9 @@ import {
   usePrevious,
 } from '@codeleap/common'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { RefreshControl, RefreshControlProps, ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { ViewProps } from '../View'
+import { RefreshControl, RefreshControlProps } from '../RefreshControl'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollPresets } from './styles'
@@ -80,14 +81,13 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       rootElement: 'content',
     })
 
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
-
     const Component = (animated ? KeyboardAwareScrollView : KeyboardAwareScrollView) as unknown as typeof ScrollView
 
     return (
       <Component
         style={[variantStyles.wrapper, style]}
         contentContainerStyle={[variantStyles.content, contentContainerStyle]}
+        showsVerticalScrollIndicator={false}
         // @ts-expect-error - Refs suck
         ref={ref}
         refreshControl= {
@@ -95,12 +95,10 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
             <RefreshControl
               refreshing={refreshingDisplay}
               onRefresh={onRefresh}
-              tintColor={refreshStyles?.color}
-              colors={[refreshStyles?.color]}
               {...refreshControlProps}
             />
           )
-        } 
+        }
         {...props}
       >
         {children}

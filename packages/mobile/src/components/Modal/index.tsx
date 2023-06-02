@@ -63,7 +63,15 @@ export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
 }
 
 const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
-  const { styles, title = null, showClose = false, description = null, closable, debugName, closeIconName = 'close', toggle } = props
+  const { 
+    styles, 
+    title = null, 
+    showClose = false, 
+    description = null, 
+    closable, debugName, 
+    closeIconName = 'close', 
+    toggle 
+  } = props
   return <>
     {(title || showClose || description) && (
       <View style={styles.wrapper}>
