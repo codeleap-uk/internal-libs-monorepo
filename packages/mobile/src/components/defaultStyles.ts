@@ -32,6 +32,7 @@ import { RefreshControlPresets } from './RefreshControl'
 import { AvatarPresets } from './Avatar'
 import { AvatarGroupPresets } from './AvatarGroup'
 import { SectionsPresets } from './Sections'
+import { BadgePresets } from './Badge'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -68,4 +69,5 @@ export const defaultStyles = {
   InputLabel: InputLabelPresets,
   InputBase: InputBasePresets,
   RefreshControl: RefreshControlPresets,
+  Badge: BadgePresets,
 }

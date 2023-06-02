@@ -56,7 +56,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
 
-export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
+const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
   const {
     children = null,
     styles,
