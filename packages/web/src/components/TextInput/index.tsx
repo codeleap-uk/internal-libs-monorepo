@@ -203,8 +203,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
-        onBlur={handleBlur as any}
-        onFocus={handleFocus as any}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
         css={[
           variantStyles.input,
           isMultiline && variantStyles['input:multiline'],
@@ -226,7 +226,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
             ],
           }
         ]}
-        ref={innerInputRef as any}
+        // @ts-ignore
+        ref={innerInputRef}
       />
     </InputBase>
   )
