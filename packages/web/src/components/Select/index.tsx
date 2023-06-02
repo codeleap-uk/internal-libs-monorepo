@@ -1,5 +1,5 @@
 
-import React, { useRef } from 'react'
+import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards, onUpdate } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
@@ -131,7 +131,9 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
   return props.text + `"${props.selectProps.inputValue}"`
 }
 
-export const Select = <T extends string | number = string, Multi extends boolean = false>(props: SelectProps<T, Multi>) => {
+export const Select = forwardRef<HTMLInputElement, SelectProps>(
+  <T extends string | number = string, Multi extends boolean = false>
+  (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
   type Option = FormTypes.Option<T>
 
   const {
@@ -207,6 +209,15 @@ export const Select = <T extends string | number = string, Multi extends boolean
     focused: isFocused,
     disabled: isDisabled,
   })
+
+  useImperativeHandle(inputRef, () => {
+    return { 
+      ...innerInputRef.current, 
+      focus: () => {
+        innerInputRef.current?.focus?.()
+      }, 
+    }
+  }, [!!innerInputRef?.current?.focus])
 
   const onLoadOptions = async (inputValue, cb) => {
     if (!!loadOptions) {
@@ -318,6 +329,8 @@ export const Select = <T extends string | number = string, Multi extends boolean
       <SelectComponent
         openMenuOnFocus={true}
         hideSelectedOptions={false}
+        tabSelectsValue={false}
+        tabIndex={0}
         {...otherProps}
         {..._props}
         onKeyDown={isFocused ? handleKeyDown : null}
@@ -341,7 +354,13 @@ export const Select = <T extends string | number = string, Multi extends boolean
           LoadingIndicator: () => null,
           ...otherProps.components,
           MultiValueRemove: () => null,
-          LoadingMessage: props => <LoadingIndicatorComponent {...props} defaultStyles={loadingStyles} size={loadingIndicatorSize} />,
+          LoadingMessage: props => (
+            <LoadingIndicatorComponent 
+              {...props} 
+              defaultStyles={loadingStyles} 
+              size={loadingIndicatorSize} 
+            />
+          ),
           DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,
           NoOptionsMessage: props => <_Placeholder {...props} />,
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
@@ -357,9 +376,15 @@ export const Select = <T extends string | number = string, Multi extends boolean
               isFocused={props?.isFocused && keyDownActive}
             />
           ),
-          MultiValue: props => <CustomMultiValue {...props} separator={separatorMultiValue} defaultStyles={inputMultiValueStyles} />,
+          MultiValue: props => (
+            <CustomMultiValue 
+              {...props} 
+              separator={separatorMultiValue} 
+              defaultStyles={inputMultiValueStyles} 
+            />
+          ),
         }}
       />
     </InputBase>
   )
-}
+})
