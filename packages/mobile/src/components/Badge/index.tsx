@@ -39,11 +39,11 @@ export const Badge = (props: BadgeProps) => {
     count = null,
     visible = true,
     getBadgeContent = defaultGetBadgeContent,
-    styles,
+    styles = {},
     variants,
-    disabled,
+    disabled = false,
     style = {},
-    debug,
+    debug = false,
     ...rest
   } = props
 
@@ -57,25 +57,25 @@ export const Badge = (props: BadgeProps) => {
 
   if (!visible) return null
 
-  const content = React.useMemo(() => getBadgeContent({ ...props, maxCount, minCount }), [count])
+  const content = getBadgeContent({ ...props, maxCount, minCount })
 
-  const wrapperStyles: ViewProps['style'] = React.useMemo(() => ([
+  const wrapperStyles: ViewProps['style'] = [
     variantStyles?.wrapper,
-    variantStyles?.['wrapper:disabled'],
+    (disabled && variantStyles?.['wrapper:disabled']),
     style,
-  ]), [disabled])
+  ]
 
-  const innerWrapperStyles: ViewProps['style'] = React.useMemo(() => ([
+  const innerWrapperStyles: ViewProps['style'] = [
     variantStyles?.innerWrapper,
-    variantStyles?.['innerWrapper:disabled'],
+    (disabled && variantStyles?.['innerWrapper:disabled']),
     innerWrapperProps?.style,
-  ]), [disabled])
+  ]
 
-  const countStyles = React.useMemo(() => ([
+  const countStyles = [
     variantStyles?.count,
-    variantStyles?.['count:disabled'],
+    (disabled && variantStyles?.['count:disabled']),
     textProps?.style,
-  ]), [disabled])
+  ]
 
   const showCount = TypeGuards.isNumber(count) && count >= minCount
 
