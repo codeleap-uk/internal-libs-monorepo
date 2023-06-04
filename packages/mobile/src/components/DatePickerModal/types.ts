@@ -6,7 +6,7 @@ import { TextInputComposition } from '../TextInput'
 import { ButtonComposition, ButtonProps } from '../Button'
 import { ModalProps } from '../Modal'
 
-type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'styles'> & {
+export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'styles'> & {
     valueLabel: FormTypes.Label
     styles?: StylesOf<TextInputComposition>
 }
@@ -51,4 +51,7 @@ export type DatePickerModalProps = Omit<ModalProps, 'styles' | 'variants' | 'ref
 
   footerComponent?: React.ComponentType<DatePickerModalFooterProps>
 
+  minimumDate?: DatePickerProps['minimumDate']
+
+  maximumDate?: DatePickerProps['maximumDate']
 } & ComponentVariants<typeof DatePickerModalPresets>

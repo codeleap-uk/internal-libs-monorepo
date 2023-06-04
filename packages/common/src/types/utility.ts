@@ -1,6 +1,6 @@
 import { EnhancedTheme } from '../styles/types'
 import { CommonVariantObject, ResponsiveVariantsProp, VariantProp } from '../styles/variants/types'
-
+import { Prev } from './pathMapping'
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any
 
@@ -74,21 +74,18 @@ type IsDict<T> = T extends AnyFunction
   ? true
   : false
 
-export type ReplaceRecursive<T, Replace, With> = {
+export type ReplaceRecursive<T, Replace, With, D extends number = 10> = [D] extends [never] ? never : {
   [Property in keyof T]: T[Property] extends Replace
     ? With
     : IsDict<T[Property]> extends true
-    ? ReplaceRecursive<T[Property], Replace, With>
+    ? ReplaceRecursive<T[Property], Replace, With, Prev[D]>
     : T[Property];
 }
 export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 }
 
-export type PropsOf<T, Exclude extends string = ''> = T extends (keyof JSX.IntrinsicElements) ?
-  JSX.IntrinsicElements[T]
-:
-   T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
+export type PropsOf<T, Exclude extends string = ''> = T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
 
 export type Hashmap<T> = {
   [key: string]: T
@@ -125,3 +122,5 @@ export type ReactStateProps<Name extends string, T = any, State extends ReactSta
 export type ExtractVariants<O extends VariantProp> = O extends VariantProp<infer X> ? keyof X : never
 
 export type MergeVariants<A extends VariantProp, B extends VariantProp> = (ExtractVariants<A> | ExtractVariants<B>)[]
+
+export type AnyRef<T> = React.Ref<T> | React.MutableRefObject<T> | ((instance: T | null) => void) | null | React.ForwardedRef<T> | React.LegacyRef<T>

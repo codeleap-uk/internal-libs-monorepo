@@ -25,10 +25,10 @@ export function useForm<
   >
 >(form: Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
 
-    const config:FormTypes.UseFormConfig<Values> = {
-      validateOn: 'change',
-      ...formConfig
-    }
+  const config:FormTypes.UseFormConfig<Values> = {
+    validateOn: 'change',
+    ...formConfig,
+  }
 
   const getInitialState = useCallback(() => {
     return deepMerge(form.defaultValue, config.initialState || {}) as Values
@@ -130,9 +130,10 @@ export function useForm<
 
   const registeredFields = useRef([])
   let registeredTextRefsOnThisRender = 0
-  function register(field: FieldPaths[0]) {
+  function register(field: FieldPaths[0], transformProps = (p) => p) {
     const nFields = registeredFields.current.length
-    const { changeEventName, validate, type, ...staticProps } =
+
+    const { changeEventName, validate, type, componentProps, ...staticProps } =
     // @ts-ignore
     form.staticFieldProps[field as string]
 
@@ -177,7 +178,7 @@ export function useForm<
       }
       dynamicProps.ref = inputRefs.current[thisRefIdx]
       registeredTextRefsOnThisRender++
-      if(!Theme.IsBrowser && !staticProps.multiline){
+      if (!Theme.IsBrowser && !staticProps.multiline) {
         dynamicProps.onSubmitEditing = () => {
           const nextRef = thisRefIdx + 1
           if (inputRefs.current.length <= nextRef) return
@@ -187,13 +188,21 @@ export function useForm<
 
     }
 
-
     registeredFields.current.push(type)
-    return {
+
+    const resolvedProps = {
       ...staticProps,
       ...dynamicProps,
-      validate
+      validate,
     }
+
+    const componentPropsConfig = TypeGuards.isFunction(componentProps) ? componentProps(resolvedProps) : (componentProps || {})
+
+    return transformProps({
+      ...resolvedProps,
+      ...componentPropsConfig,
+      ...componentProps,
+    })
   }
 
   function getTransformedValue(): Values {
@@ -218,12 +227,10 @@ export function useForm<
 
   const setters = {} as FormTypes.FormSetters<Values>
 
-  for(const fieldName in formValues){
+  for (const fieldName in formValues) {
     // @ts-ignore
     setters[fieldName] = (value) => setFieldValue(fieldName, value)
   }
-
-  
 
   return {
     setFieldValue,
@@ -238,6 +245,6 @@ export function useForm<
     reset,
     validateMultiple,
     isValid: validateAll(),
-    setters
+    setters,
   }
 }

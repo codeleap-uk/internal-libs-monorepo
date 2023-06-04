@@ -124,7 +124,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ?   'input-visiblity:hidden' : 'input-visiblity:visible') as IconPlaceholder,
+    icon: (secureTextEntry ? 'input-visiblity:hidden' : 'input-visiblity:visible') as IconPlaceholder,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -147,7 +147,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const buttonModeProps = isPressable ? {
     // pointerEvents: 'none',
     editable: false,
-    caretHidden: true
+    caretHidden: true,
   } : {}
   const hasMultipleLines = isMultiline && value?.includes('\n')
   return <InputBase
@@ -164,7 +164,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       ],
     }}
     innerWrapperProps={{
-      ...(inputBaseProps.innerWrapperProps  || {}),
+      ...(inputBaseProps.innerWrapperProps || {}),
       onPress,
       debugName,
     }}
@@ -172,7 +172,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     focused={isFocused}
   >
     <InputElement
-      
+
       allowFontScaling={false}
       editable={!isPressable && !isDisabled}
       {...buttonModeProps}

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react'
 export { createStackNavigator } from '@react-navigation/stack'
 export { createDrawerNavigator } from '@react-navigation/drawer'
@@ -11,5 +10,5 @@ export function useNavigationContext() {
   const navigation = React.useContext(NavigationContext)
   if (!navigation && !root) return undefined
 
-  return (navigation ?? root) as unknown as T
+  return (navigation ?? root)
 }

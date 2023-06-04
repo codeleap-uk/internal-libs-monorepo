@@ -51,8 +51,10 @@ export type TextInputProps =
     masking?: TextInputMaskingProps
   }
 
-export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
-  const innerInputRef = useRef<HTMLInputElement>(null)
+type InputRef = HTMLInputElement & { isTextInput?: boolean }
+
+export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
+  const innerInputRef = useRef<InputRef>(null)
 
   const {
     inputBaseProps,
@@ -203,7 +205,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
-          if (isMasked) innerInputRef.current?.onFocus?.()
+          // if (isMasked) innerInputRef.current?.onFocus?.()
           innerInputRef.current?.focus?.()
           if (isPressable) onPress?.()
         },
@@ -216,6 +218,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         ..._wrapperOnInputFocus,
       }}
     >
+
       <InputElement
         editable={`${!isPressable && !isDisabled}`}
         {...buttonModeProps}

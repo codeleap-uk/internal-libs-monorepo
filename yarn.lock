@@ -19624,10 +19624,6 @@ react-native@0.70.6:
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
 
-"react-native@link:apps/mobile/node_modules/react-native":
-  version "0.0.0"
-  uid ""
-
 react-photo-view@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/react-photo-view/-/react-photo-view-1.2.3.tgz#436f81ad0a611dfaa43bbc72a4fef26a057b5aef"
@@ -19729,14 +19725,9 @@ react@18.1.0:
   dependencies:
     loose-envify "^1.1.0"
 
-"react@link:apps/mobile/node_modules/react":
+"react@link:apps/web/node_modules/react":
   version "0.0.0"
   uid ""
-
-"react@link:apps/web/node_modules/react":
-  version "18.1.0"
-  dependencies:
-    loose-envify "^1.1.0"
 
 read-chunk@^3.2.0:
   version "3.2.0"

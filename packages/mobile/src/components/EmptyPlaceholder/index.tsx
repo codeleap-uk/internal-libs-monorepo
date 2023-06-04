@@ -16,9 +16,9 @@ import {
   EmptyPlaceholderPresets,
 } from './styles'
 
-import { ImageSourcePropType, StyleSheet, Image as RNImage } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types'
-import { Image } from '../Image'
+import { Image, ImageProps } from '../Image'
 
 export * from './styles'
 
@@ -27,7 +27,7 @@ export type EmptyPlaceholderProps = {
 
   title?: React.ReactElement | string
   description?: React.ReactElement | string
-  image?: ImageSourcePropType
+  image?: ImageProps['source']
   icon?: IconPlaceholder
 
   loading?: boolean

@@ -10,18 +10,15 @@ import {
   useNestedStylesByKey,
 } from '@codeleap/common'
 
-import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
+import { ReactNode, useEffect, useId, useLayoutEffect } from 'react'
 import ReactDOM from 'react-dom'
 
-import { v4 } from 'uuid'
-
 import { StylesOf } from '../../types/utility'
-import { Button } from '../Button'
 import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
 
-import {ModalComposition,ModalPresets} from './styles'
+import { ModalComposition, ModalPresets } from './styles'
 import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
@@ -36,6 +33,7 @@ export type ModalProps = React.PropsWithChildren<{
   closable?: boolean
   scroll?: boolean
   footer?: ReactNode
+  id?: string
   debugName?: string
 } & ComponentVariants<typeof ModalPresets>
 >
@@ -46,8 +44,11 @@ function focusModal(event: FocusEvent, id: string) {
     modal.focus()
   }
 }
-export const ModalContent = (
-  modalProps:ModalProps & { id: string },
+
+type ModalContentComponent = (props: ModalProps) => JSX.Element
+
+export const ModalContent:ModalContentComponent = (
+  modalProps: ModalProps,
 ) => {
   const {
     children,
@@ -102,8 +103,8 @@ export const ModalContent = (
     >
       <Overlay
         visible={visible}
-        
-        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden'] ]}
+
+        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden']]}
       />
       <View css={variantStyles.innerWrapper} >
         <View css={variantStyles.backdropPressable} onClick={close}/>
@@ -132,7 +133,7 @@ export const ModalContent = (
               {showClose && closable && (
                 <ActionIcon
                   icon={'close' as IconPlaceholder}
-                  
+
                   onPress={toggle}
                   styles={closeButtonStyles}
                 />
@@ -153,7 +154,7 @@ export const ModalContent = (
 }
 
 export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
-  const modalId = useRef(v4())
+  const modalId = useId()
 
   useEffect(() => {
     if (accessible) {

@@ -35,32 +35,38 @@ type SelectHeaderProps = {
   searchComponent?: React.ReactNode
 }
 
-type OuterInputProps<T = any, Multi  extends boolean = false> = Omit<SelectProps<T, Multi>, 'variants'| 'styles'> & {
+export type SelectOuterInputProps<T = any, Multi extends boolean = false> = Omit<SelectProps<T, Multi>, 'variants'| 'styles'> & {
   currentValueLabel: FormTypes.Label
   styles?: StylesOf<TextInputComposition>
   clearIcon?: Partial<ActionIconProps>
 }
 
-export type ValueBoundSelectProps<T, Multi  extends boolean = false> = {
+type OuterInputComponent<T, Multi extends boolean> = (props: SelectOuterInputProps<T, Multi>) => JSX.Element
+
+export type ValueBoundSelectProps<
+  T,
+  Multi extends boolean = false
+> = {
   options?: FormTypes.Options<T>
   defaultOptions?: FormTypes.Options<T>
   loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
-  value: SelectValue<T,Multi>
-  renderItem?: SelectRenderFN<SelectValue<T,Multi>>
-  onValueChange: (value: SelectValue<T,Multi>) => void
+  value: SelectValue<T, Multi>
+  renderItem?: SelectRenderFN<SelectValue<T, Multi>>
+  onValueChange: (value: SelectValue<T, Multi>) => void
   filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
-  getLabel?: (forOption: Multi extends true  ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
-  outerInputComponent?: React.ComponentType<OuterInputProps<T, Multi>>
+  getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
+  outerInputComponent?: OuterInputComponent<T, Multi>
+  inputProps?: Partial<SelectOuterInputProps<T, Multi>>
 }
 
-export type ReplaceSelectProps<Props, T, Multi extends boolean = false> =  Omit<
+export type ReplaceSelectProps<Props, T, Multi extends boolean = false> = Omit<
   Props,
   keyof ValueBoundSelectProps<T, Multi>
 > & ValueBoundSelectProps<T, Multi>
 
-export type SelectProps<T = any, Multi  extends boolean = false> = {
+export type SelectProps<T = any, Multi extends boolean = false> = {
     placeholder?: FormTypes.Label
     label?: FormTypes.Label
     styles?: StylesOf<SelectComposition>
@@ -69,7 +75,7 @@ export type SelectProps<T = any, Multi  extends boolean = false> = {
     selectedIcon?: IconPlaceholder
     arrowIconName?: IconPlaceholder
     closeOnSelect?: boolean
-    inputProps?: Partial<TextInputProps>
+
     listProps?: Partial<FlatListProps>
     clearable?: boolean
     clearIconName?: IconPlaceholder
@@ -84,6 +90,6 @@ export type SelectProps<T = any, Multi  extends boolean = false> = {
     searchInputProps?: Partial<TextInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
-    
+
   } & ComponentVariants<typeof SelectPresets> & SelectModalProps & ValueBoundSelectProps<T, Multi>
 

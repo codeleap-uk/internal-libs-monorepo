@@ -24,12 +24,12 @@ export type ActivityIndicatorProps =
 
 export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {
-    const { 
-      variants = [], 
-      style, 
-      styles: propStyles, 
-      component, 
-      ...props 
+    const {
+      variants = [],
+      style = {},
+      styles: propStyles = {},
+      component = Indicator,
+      ...props
     } = {
       ...ActivityIndicator.defaultProps,
       ...activityIndicatorProps,
@@ -49,7 +49,6 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
     const size = styles?.height || styles?.width || 'large'
 
     const Component = component
-   
 
     return (
       <Component

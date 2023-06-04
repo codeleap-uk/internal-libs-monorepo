@@ -62,15 +62,15 @@ export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
   description?: React.ReactElement
 }
 
-const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
-  const { 
-    styles, 
-    title = null, 
-    showClose = false, 
-    description = null, 
-    closable, debugName, 
-    closeIconName = 'close', 
-    toggle 
+const DefaultHeader = (props: ModalHeaderProps) => {
+  const {
+    styles,
+    title = null,
+    showClose = false,
+    description = null,
+    closable, debugName,
+    closeIconName = 'close',
+    toggle,
   } = props
   return <>
     {(title || showClose || description) && (
@@ -81,8 +81,6 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
           ) : (
             title
           )}
-
-        
 
           {(showClose && closable) && (
             <ActionIcon
@@ -103,7 +101,7 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
     )}</>
 }
 
-export const Modal: React.FC<ModalProps> = (modalProps) => {
+export const Modal = (modalProps:ModalProps) => {
   const {
     variants = [],
     styles = {},
@@ -220,7 +218,6 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         <View
           animated
           style={[getStyles('box'), boxAnimationStyles]}
-          
 
           {...props}
         >

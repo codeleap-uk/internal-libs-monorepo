@@ -66,7 +66,6 @@ export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
   return <View
     style={[styles.wrapper]}
     {...viewProps}
-    // @ts-expect-error - Refs are tricky
     ref={ref}
   >
     {text && <Text text={text} style={styles.text} {...textProps}/>}
@@ -182,4 +181,5 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       <Icon name={rightIcon} style={[_styles.rightIcon, rightFeedback]} />
     </Touchable>
   )
-})
+}) as ((props: ButtonProps) => JSX.Element)
+

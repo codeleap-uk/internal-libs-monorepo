@@ -137,7 +137,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
   },
 )
 
-export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
+export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => JSX.Element
 
 export const List = ListCP as unknown as ListComponentType
 
