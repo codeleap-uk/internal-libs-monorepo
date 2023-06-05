@@ -128,6 +128,7 @@ export type Cursor =
   | 'not-allowed'
   | 'zoom-in'
   | 'grab'
+  | 'pointer'
 
 export type FontTokens =
   | 'base'
