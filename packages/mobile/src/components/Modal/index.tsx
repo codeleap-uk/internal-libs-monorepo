@@ -121,7 +121,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     scrollProps = {},
     closeOnHardwareBackPress = true,
     ...props
-  } = modalProps
+  } = {
+    ...Modal.defaultProps,
+    ...modalProps,
+  }
   const variantStyles = useDefaultComponentStyle('u:Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
@@ -236,6 +239,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     </View>
 
   )
+}
+
+Modal.defaultProps = {
+  closeIconName: 'close' as IconPlaceholder,
 }
 
 export default Modal
