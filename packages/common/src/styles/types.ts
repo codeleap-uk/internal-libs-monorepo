@@ -85,6 +85,51 @@ export type IconSizes =
   | '5'
   | '6'
 
+export type BorderWidth =
+  | 'small'
+  | 'medium'
+
+export type BorderRadius =
+  | 'tiny'
+  | 'small'
+  | 'medium'
+  | 'rounded'
+
+export type TransformDirections = 'X' | 'Y'
+export type RotateDirections = TransformDirections | 'Z'
+
+type DirectionPrefix = 'top' | 'bottom'
+type DirectionSufix = 'right' | 'left'
+type DirectionConcat = `${Capitalize<DirectionPrefix>}${Capitalize<DirectionSufix>}`
+export type BorderDirections = DirectionPrefix | DirectionSufix | ''
+export type BorderColorsDirections = Capitalize<'start' | 'end' | BorderDirections>
+export type BorderRadiusDirections = Capitalize<
+  | `${DirectionPrefix}End`
+  | `${DirectionPrefix}Start`
+  | BorderDirections
+  | DirectionConcat
+>
+
+export type BorderStyle =
+  | 'solid'
+  | 'dotted'
+  | 'dashed'
+
+export type BorderIdentifiers =
+  | 'width'
+  | 'style'
+  | 'radius'
+  | 'color'
+
+export type Cursor =
+  | 'help'
+  | 'wait'
+  | 'crosshair'
+  | 'not-allowed'
+  | 'zoom-in'
+  | 'grab'
+  | 'pointer'
+
 export type FontTokens =
   | 'base'
   | 'quotes'
@@ -133,14 +178,10 @@ export type AppTheme = {
     innerSpacing: Record<'X'|'Y', number>
     itemHeight: Record<ItemHeight, number>
     iconSize: Record<IconSizes, number>
+    borderWidth: Record<BorderWidth, number>
   } & AnyProps<any>
 
-  readonly borderRadius: {
-    tiny: number
-    small: number
-    medium: number
-    rounded: number
-  }
+  readonly borderRadius: Record<BorderRadius, number>
 
   readonly presets?: Record<string, any>
   readonly effects?: Record<string, RNShadow>
@@ -231,6 +272,16 @@ export type Spacing =
   | `gap:${SpacingMultiplier}`
   | `w:${SpacingMultiplier}`
   | `h:${SpacingMultiplier}`
+
+type GetBorder<T> = Extract<BorderIdentifiers, T>
+
+export type Border =
+  | `border${Capitalize<BorderDirections>}-${GetBorder<'width'>}:${BorderWidth}`
+  | `border-${GetBorder<'style'>}:${BorderStyle}`
+  | `border${BorderRadiusDirections}-${GetBorder<'radius'>}:${BorderRadius}`
+  | `border${BorderColorsDirections}-${GetBorder<'color'>}:${DefaultColors}`
+
+export type Translate = `translate${TransformDirections | ''}:` & (number | `${number},${number}`)
 
 export type BaseViewProps = {
   css?: any

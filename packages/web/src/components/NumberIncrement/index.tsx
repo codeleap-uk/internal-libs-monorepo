@@ -1,11 +1,23 @@
 import * as React from 'react'
-import { ComponentVariants, yup, useDefaultComponentStyle, StylesOf, PropsOf, TypeGuards, onUpdate, useState, useRef, useValidate, FormTypes } from '@codeleap/common'
+import {
+  ComponentVariants,
+  yup,
+  useDefaultComponentStyle,
+  StylesOf,
+  PropsOf,
+  TypeGuards,
+  onUpdate,
+  useState,
+  useRef,
+  useValidate,
+  FormTypes,
+} from '@codeleap/common'
 import { View } from '../View'
 import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
-import { 
-  PatternFormat, 
+import {
+  PatternFormat,
   PatternFormatProps as PFProps,
   NumericFormat,
   NumericFormatProps as NFProps,
@@ -44,7 +56,7 @@ export type NumberIncrementProps = Pick<
 export const NumberIncrement = (props: NumberIncrementProps) => {
   const {
     inputBaseProps,
-    others
+    others,
   } = selectInputBaseProps(props)
 
   const {
@@ -96,12 +108,12 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   }, [value])
 
   const variantStyles = useDefaultComponentStyle<'u:NumberIncrement', typeof NumberIncrementPresets>(
-    'u:NumberIncrement', 
+    'u:NumberIncrement',
     {
       variants,
-      styles, 
+      styles,
       rootElement: 'wrapper',
-    }
+    },
   )
 
   const onChange = (newValue: number) => {
@@ -137,8 +149,8 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   const placeholderStyles = [
     variantStyles.placeholder,
     isFocused && variantStyles['placeholder:focus'],
-    hasError &&variantStyles['placeholder:error'],
-    disabled && variantStyles['placeholder:disabled']
+    hasError && variantStyles['placeholder:error'],
+    disabled && variantStyles['placeholder:disabled'],
   ]
 
   const handleBlur = React.useCallback((args) => {
@@ -184,7 +196,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     }
 
     document.addEventListener('mousedown', handleClickOutside)
-    
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
@@ -200,7 +212,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     ? PatternFormat
     : NumericFormat
 
-  const Input = TypeGuards.isFunction(formatter) 
+  const Input = TypeGuards.isFunction(formatter)
     ? NumberFormatBase
     : InputFormat
 
@@ -212,7 +224,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
-          editable && variantStyles['innerWrapper:cursor']
+          editable && variantStyles['innerWrapper:cursor'],
         ],
       }}
       rightIcon={{
@@ -233,7 +245,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       disabled={disabled}
       focused={isFocused}
       innerWrapperProps={{
-        ...(inputBaseProps.innerWrapperProps  || {}),
+        ...(inputBaseProps.innerWrapperProps || {}),
         onClick: () => {
           setIsFocused(true)
           innerInputRef.current?.focus?.()
@@ -247,17 +259,17 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
           css={[
             ...inputTextStyle,
             {
-              '&::placeholder': placeholderStyles
+              '&::placeholder': placeholderStyles,
             },
             {
-              '&:focus':  [
-                { 
-                  outline: 'none', 
-                  borderWidth: 0, 
-                  borderColor: 'transparent' 
+              '&:focus': [
+                {
+                  outline: 'none',
+                  borderWidth: 0,
+                  borderColor: 'transparent',
                 },
               ],
-            }
+            },
           ]}
           inputMode='numeric'
           onValueChange={handleChangeInput}
