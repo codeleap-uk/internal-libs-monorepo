@@ -1,10 +1,5 @@
-import {
-  BreakpointPlaceholder,
-  CommonVariantObject,
-  EnhancedTheme,
-  ResponsiveVariantsProp,
-  VariantProp,
-} from '..'
+import { EnhancedTheme } from '../styles/types'
+import { CommonVariantObject, ResponsiveVariantsProp, VariantProp } from '../styles/variants/types'
 
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any
@@ -91,7 +86,7 @@ export type SmartOmit<T, K extends keyof T> = {
   [Property in Exclude<keyof T, K>]: T[Property];
 }
 
-export type PropsOf<T,Exclude extends string = ''> = T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
+export type PropsOf<T, Exclude extends string = ''> = T extends React.ComponentType<infer P> ? Omit<P, Exclude> : any
 
 export type Hashmap<T> = {
   [key: string]: T

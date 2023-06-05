@@ -6,12 +6,13 @@ import {
 } from '@codeleap/common'
 
 import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-grid'
-import { RefreshControl, StyleSheet, RefreshControlProps, ScrollView } from 'react-native'
+import { StyleSheet, ScrollView } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { GridComposition, GridPresets } from './styles'
 import { StylesOf } from '../../types'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
+import { RefreshControlProps, RefreshControl } from '../RefreshControl'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -73,7 +74,6 @@ const GridCP = forwardRef<ScrollView, GridProps>(
     const isEmpty = !props.data || !props.data.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
     const Component = FlatGrid
 
     const _gridProps = {
@@ -87,8 +87,6 @@ const GridCP = forwardRef<ScrollView, GridProps>(
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor={refreshStyles?.color}
-              colors={[refreshStyles?.color]}
               {...refreshControlProps}
             />
           ),
