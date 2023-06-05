@@ -46,7 +46,7 @@ export type ComponentVariantsDefinition = Record<string, VariantStyleSheet<strin
 
 export type VariantProp<T = CommonVariantObject> =
   | string
-  | (keyof T | Spacing | Border | `backgroundColor:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}`
+  | (keyof T | Spacing | Border | `backgroundColor:${DefaultColors}` | `bg:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}`
     | `scale:${number}` | `rotate${RotateDirections}:${number}deg` | Translate
     | `cursor:${Cursor}`
     | boolean | null | undefined | '')[]

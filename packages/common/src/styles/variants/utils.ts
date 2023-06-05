@@ -88,8 +88,10 @@ export function applyVariants({
           [dim]: value,
         }),
       })
-    } else if (variantName.startsWith('backgroundColor') || variantName.startsWith('color')) {
-      const [property, themeColor] = variantName.split(':')
+    } else if (variantName.startsWith('backgroundColor') || variantName.startsWith('bg') || variantName.startsWith('color')) {
+      let [property, themeColor] = variantName.split(':')
+
+      if (property === 'bg') property = 'backgroundColor'
 
       const value = theme.colors[themeColor]
       const browserOnly = theme.IsBrowser && { fill: value, stroke: value }
