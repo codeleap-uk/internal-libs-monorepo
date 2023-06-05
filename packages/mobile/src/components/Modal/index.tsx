@@ -63,14 +63,14 @@ export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
 }
 
 const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
-  const { 
-    styles, 
-    title = null, 
-    showClose = false, 
-    description = null, 
-    closable, debugName, 
-    closeIconName = 'close', 
-    toggle 
+  const {
+    styles,
+    title = null,
+    showClose = false,
+    description = null,
+    closable, debugName,
+    closeIconName = 'close',
+    toggle,
   } = props
   return <>
     {(title || showClose || description) && (
@@ -81,8 +81,6 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
           ) : (
             title
           )}
-
-        
 
           {(showClose && closable) && (
             <ActionIcon
@@ -209,7 +207,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       >
         {dismissOnBackdrop &&
           <Touchable
-            onPress={ closable ? toggle : (() => {})}
+            onPress={closable && visible ? toggle : (() => {})}
             debounce={400}
             debugName={'Modal backdrop touchable'}
             style={variantStyles.backdropTouchable}
@@ -220,7 +218,6 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
         <View
           animated
           style={[getStyles('box'), boxAnimationStyles]}
-          
 
           {...props}
         >
