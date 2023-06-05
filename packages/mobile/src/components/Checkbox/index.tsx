@@ -133,7 +133,7 @@ export const Checkbox = (props: CheckboxProps) => {
         ]}
       >
         <Icon
-          name={'checkbox-checkmark' as any}
+          name={'check' as any}
           style={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
 
         />
