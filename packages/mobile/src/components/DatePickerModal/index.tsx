@@ -30,6 +30,7 @@ const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) 
 }
 
 const defaultFormatDate:DatePickerModalProps['formatDate'] = (date) => {
+  if (!date) return null
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 }
 
