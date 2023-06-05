@@ -5,6 +5,7 @@ import {
   matchInitialToColor,
   useDefaultComponentStyle,
   useMemo,
+  getNestedStylesByKey,
 } from '@codeleap/common'
 import React from 'react'
 import { StyleSheet } from 'react-native'
@@ -15,6 +16,7 @@ import { Touchable } from '../Touchable'
 import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { Icon } from '../Icon'
+import { Badge, BadgeProps } from '../Badge'
 
 export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
   styles?: StylesOf<AvatarComposition>
@@ -25,11 +27,12 @@ export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
   text?: string
   description?: string
   icon?: IconPlaceholder
-  badge?: IconPlaceholder
+  badgeIcon?: IconPlaceholder
   style?: ViewProps['style']
   onPress?: () => void
   noFeedback?: boolean
-  
+  badgeProps?: Partial<BadgeProps>
+  badge?: BadgeProps['badge']
 }
 
 export const Avatar: React.FC<AvatarProps> = (props) => {
@@ -42,15 +45,17 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
     styles,
     style,
     icon,
-    badge,
+    badgeIcon,
     text,
     description,
     onPress,
     noFeedback,
+    badgeProps,
+    badge = false,
     ...viewProps
   } = props
 
-  const variantStyles = useDefaultComponentStyle('u:Avatar', {
+  const variantStyles = useDefaultComponentStyle<'u:Avatar', typeof AvatarPresets>('u:Avatar', {
     variants,
     styles,
     transform: StyleSheet.flatten,
@@ -80,6 +85,10 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
 
   const hasBackgroundColor = !!variantStyles?.touchable?.backgroundColor
 
+  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+  
+  console.log(badgeStyles)
+
   return (
     <View style={[variantStyles.wrapper, style]} {...viewProps}>
       <Touchable
@@ -92,6 +101,9 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
           },
         ]}
         noFeedback={noFeedback || !onPress}
+        badgeStyles={badgeStyles}
+        badge={badge}
+        badgeProps={badgeProps}
       >
         {renderContent()}
 
@@ -102,14 +114,14 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
         )}
       </Touchable>
 
-      {badge && (
+      {badgeIcon && (
         <Touchable  
           debugName={`${debugName} badge`} 
-          style={variantStyles.badgeWrapper} 
+          style={variantStyles.badgeIconWrapper} 
           onPress={() => onPress?.()}   
           noFeedback
         >
-          <Icon name={badge} style={variantStyles.badge} />
+          <Icon name={badgeIcon} style={variantStyles.badgeIcon} />
         </Touchable>
       )}
     </View>

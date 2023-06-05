@@ -7,21 +7,25 @@ import { StyleSheet } from 'react-native'
 
 export * from './styles'
 
-export type BadgeProps = ComponentVariants<typeof BadgePresets> & ViewProps & {
-  styles?: StylesOf<BadgeComposition>
-  visible?: boolean
-  count?: number
-  maxCount?: number
-  minCount?: number
-  debugName: string
-  innerWrapperProps?: Partial<PropsOf<typeof View>>
-  textProps?: Partial<PropsOf<typeof Text>>
-  getBadgeContent?: (props: BadgeProps) => string
-  disabled?: boolean
-  debug?: boolean
-}
+export type BadgeProps = ComponentVariants<typeof BadgePresets> 
+  & ViewProps 
+  & {
+    styles?: StylesOf<BadgeComposition>
+    maxCount?: number
+    minCount?: number
+    debugName?: string
+    innerWrapperProps?: Partial<PropsOf<typeof View>>
+    textProps?: Partial<PropsOf<typeof Text>>
+    getBadgeContent?: (props: BadgeContent) => string
+    renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
+    disabled?: boolean
+    debug?: boolean
+    badge?: number | boolean
+  }
 
-const defaultGetBadgeContent = ({ count, maxCount }: BadgeProps) => {
+type BadgeContent = BadgeProps & { count: number }
+
+const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   if (Number(count) > maxCount) {
     return `${maxCount}+`
   } else {
@@ -36,16 +40,20 @@ export const Badge = (props: BadgeProps) => {
     textProps = {},
     maxCount = 9,
     minCount = 1,
-    count = null,
-    visible = true,
     getBadgeContent = defaultGetBadgeContent,
+    renderBadgeContent = null,
     styles = {},
     variants,
     disabled = false,
     style = {},
+    badge = true,
     debug = false,
     ...rest
   } = props
+
+  const visible = (TypeGuards.isBoolean(badge) && badge === true) || TypeGuards.isNumber(badge)
+
+  if (!visible) return null
 
   const { logger } = useCodeleapContext()
 
@@ -55,9 +63,9 @@ export const Badge = (props: BadgeProps) => {
     transform: StyleSheet.flatten,
   })
 
-  if (!visible) return null
+  const count = TypeGuards.isNumber(badge) ? badge : null
 
-  const content = getBadgeContent({ ...props, maxCount, minCount })
+  const content = getBadgeContent({ ...props, maxCount, minCount, count })
 
   const wrapperStyles: ViewProps['style'] = [
     variantStyles?.wrapper,
@@ -77,27 +85,42 @@ export const Badge = (props: BadgeProps) => {
     textProps?.style,
   ]
 
-  const showCount = TypeGuards.isNumber(count) && count >= minCount
+  const showContent = TypeGuards.isNumber(count) && count >= minCount
 
   if (debug) {
     logger.log(debugName, {
       props,
-      showCount,
+      showContent,
       content,
     }, 'Badge')
   }
 
+  let BadgeContent = renderBadgeContent
+
+  if (TypeGuards.isNil(renderBadgeContent)) {
+    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} /> 
+  }
+
+  const Wrapper = View
+
   return (
-    <View
+    <Wrapper
       {...rest}
       style={wrapperStyles}
     >
       <View {...innerWrapperProps} style={innerWrapperStyles}>
-        {showCount 
-          ? <Text text={content} {...textProps} style={countStyles} /> 
+        {showContent
+          ? <BadgeContent 
+              {...props} 
+              maxCount={maxCount} 
+              minCount={minCount} 
+              count={count}
+              getBadgeContent={getBadgeContent} 
+              content={content} 
+            /> 
           : null
         }
       </View>
-    </View>
+    </Wrapper>
   )
 }

@@ -15,6 +15,7 @@ import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
+import { Badge, BadgeComposition, BadgeProps } from '../Badge'
 export type TouchableProps = React.PropsWithChildren<
   Omit<
     ComponentPropsWithoutRef<typeof Pressable>,
@@ -33,6 +34,9 @@ export type TouchableProps = React.PropsWithChildren<
     styles?: StylesOf<TouchableComposition>
     setPressed?: (param: boolean) => void
     rippleDisabled?: boolean
+    badge?: BadgeProps['badge']
+    badgeProps?: BadgeProps
+    badgeStyles?: StylesOf<BadgeComposition>
 } & BaseViewProps
 >
 export * from './styles'
@@ -54,6 +58,9 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     styles,
     setPressed,
     rippleDisabled = false,
+    badge = false,
+    badgeProps = {},
+    badgeStyles = {},
     ...props
   } = touchableProps
 
@@ -121,68 +128,99 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
   const Wrapper = View
 
-  const { wrapperStyle, pressableStyle } = React.useMemo(() => {
-    const wrapperkeys = [
+  const { wrapperStyle, pressableStyle, innerWrapperStyle } = React.useMemo(() => {
+    const wrapperKeys = [
       'margin',
       'alignSelf',
-      'border',
       'top!',
       'left!',
       'right!',
       'bottom!',
       'position!',
-      // 'flex!',
+      'border',
     ]
+
+    const sharedWrappersKeys = [
+      'Radius#',
+    ]
+
     const sharedKeys = [
       'width!',
       'height!',
       'flex!',
       'backgroundColor!',
+      'alignSelf',
     ]
 
     const wrapperStyle = {} as any
     const pressableStyle = {} as any
-    const match = (k, key) => {
-      if (k.endsWith('!')) {
-        return key === k.substring(0, k.length - 1)
-      } else {
+    const innerWrapperStyle = {} as any
 
+    const match = (k: string, key: string) => {
+      if (k.endsWith('#')) { // include compare
+        return key.includes(k.substring(0, k.length - 1)) 
+      } else if (k.endsWith('!')) { // break compare
+        return key === k.substring(0, k.length - 1)
+      } else { // shallow compare
         return key.startsWith(k)
       }
     }
-    Object.entries(_styles).forEach(([key, value]) => {
 
-      if (wrapperkeys.some(k => match(k, key))) {
+    Object.entries(_styles).forEach(([key, value]) => {
+      if (sharedWrappersKeys.some(k => match(k, key))) {
+        innerWrapperStyle[key] = value
+
+        wrapperStyle[key] = value
+      } else if (wrapperKeys.some(k => match(k, key))) {
         wrapperStyle[key] = value
       } else if (sharedKeys.some(k => match(k, key))) {
         wrapperStyle[key] = value
 
         pressableStyle[key] = value
+
+        innerWrapperStyle[key] = value
       } else {
         pressableStyle[key] = value
       }
     })
+
     if (wrapperStyle.position === 'absolute') {
       pressableStyle.width = '100%'
       pressableStyle.height = '100%'
+
+      innerWrapperStyle.width = '100%'
+      innerWrapperStyle.height = '100%'
     }
-    wrapperStyle.overflow = 'hidden'
+
+    innerWrapperStyle.overflow = 'hidden'
+    wrapperStyle.overflow = 'visible'
 
     return {
       wrapperStyle,
       pressableStyle,
+      innerWrapperStyle,
     }
   }, [JSON.stringify(_styles)])
 
   return (
     <Wrapper style={[wrapperStyle]}>
-      <Pressable onPress={press} style={({ pressed }) => ([
-        pressableStyle,
-        getFeedbackStyle(pressed),
-        variantStyles.pressable,
-      ])} android_ripple={!rippleDisabled && rippleConfig} {...props} ref={ref}>
-        {children}
-      </Pressable>
+      <View style={[innerWrapperStyle]}>
+        <Pressable 
+          onPress={press} 
+          style={({ pressed }) => ([
+            pressableStyle,
+            getFeedbackStyle(pressed),
+            variantStyles.pressable,
+          ])} 
+          android_ripple={!rippleDisabled && rippleConfig} 
+          {...props} 
+          ref={ref}
+        >
+          {children}
+        </Pressable>
+      </View>
+
+      <Badge {...badgeProps} styles={badgeStyles} badge={badge} />
     </Wrapper>
   )
 })
