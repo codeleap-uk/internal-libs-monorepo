@@ -157,7 +157,7 @@ export const RadioGroup = <T extends string|number>(
     transform: StyleSheet.flatten,
   })
 
-  const _radioOnRight = radioOnRight ?? variantStyles.__props.radioOnRight
+  const _radioOnRight = radioOnRight ?? variantStyles.__props?.radioOnRight
 
   return <InputBase
     {...inputBaseProps}

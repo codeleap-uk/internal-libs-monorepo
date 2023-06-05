@@ -13,11 +13,14 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   value: string
   variantStyles?: StylesOf<SegmentedControlComposition>
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
-  iconName?: IconPlaceholder
+  icon?: IconPlaceholder
 }
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
   const { selected, onPress, debugName, style, variantStyles, label, value, icon, textProps, ...touchableProps } = props
+
+  console.log('printando icon', !!icon)
+  console.log('printando icon', icon)
 
   return <Touchable
     debugName={`Segmented Control ${debugName}, option ${label}`}
@@ -31,8 +34,8 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
   >
 
     {!!icon ? (
-      <Gap variants={['row', 'justifyCenter', 'alignCenter']} value={1}>
-        <Icon name={icon} variants={['neutral-7', 'medium']}/>
+      <>
+        <Icon name={icon} style={[variantStyles.icon]} />
 
         <Text
           text={label}
@@ -43,8 +46,8 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
           ]}
           {...textProps}
         />
-      </Gap>) : (
-      <View variants={['row', 'justifyCenter', 'alignCenter']}>
+      </>) : (
+      <>
         <Text
           text={label}
           style={[
@@ -54,7 +57,7 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
           ]}
           {...textProps}
         />
-      </View>
+      </>
     )}
 
   </Touchable>
