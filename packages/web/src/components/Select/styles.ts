@@ -23,8 +23,8 @@ export type SelectParts =
 
 type ItemState = 'focused' | 'selected' | 'selectedFocused'
 
-export type SelectUnStateParts =  
-  `item:${ItemState}` 
+export type SelectStatefulParts =
+  `item:${ItemState}`
   | `itemText:${ItemState}`
   | `itemIcon:${ItemState}`
   | 'listPlaceholder'
@@ -33,13 +33,13 @@ export type SelectUnStateParts =
   | 'listPlaceholderNoItems'
   | 'listPlaceholderNoItemsIcon'
   | 'listPlaceholderNoItemsText'
-  | 'itemsWrapper' 
+  | 'itemsWrapper'
   | 'loadingIndicator'
   | 'innerWrapper:searchable'
 
 export type SelectState = 'error' | 'focus' | 'disabled'
 
-export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}` | SelectUnStateParts
+export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}` | SelectStatefulParts
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 
@@ -54,8 +54,8 @@ export type ComponentState = {
 export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
   const {
     variants,
-    styles
-  }  = props
+    styles,
+  } = props
 
   const {
     error,
@@ -71,7 +71,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     },
   )
 
-  const stylesKey = (key: SelectParts | SelectUnStateParts, _styles: CSSObjectWithLabel = {}) => ({
+  const stylesKey = (key: SelectParts | SelectStatefulParts, _styles: CSSObjectWithLabel = {}) => ({
     ..._styles,
     ...variantStyles[key],
     ...(focused ? variantStyles[key + ':focus'] : {}),
@@ -118,11 +118,11 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   }
 
   const inputMultiValueStyles = {
-    text: stylesKey('valueMultiple')
+    text: stylesKey('valueMultiple'),
   }
 
   const menuWrapperStyles = {
-    wrapper: stylesKey('itemsWrapper')
+    wrapper: stylesKey('itemsWrapper'),
   }
 
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {

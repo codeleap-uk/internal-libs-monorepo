@@ -1,7 +1,7 @@
 import { AnyFunction } from 'callsites'
 import { CSSProperties } from 'react'
 import { VariantProp } from '.'
-import { EnhancedTheme } from '..'
+import { AppTheme, BorderIdentifiers, EnhancedTheme } from '..'
 import { VariantList, VariantsOf } from '../../types'
 import { deepMerge } from '../../utils/object'
 import {
@@ -88,13 +88,69 @@ export function applyVariants({
           [dim]: value,
         }),
       })
+    } else if (variantName.startsWith('backgroundColor') || variantName.startsWith('bg') || variantName.startsWith('color')) {
+      let [property, themeColor] = variantName.split(':')
+
+      if (property === 'bg') property = 'backgroundColor'
+
+      const value = theme.colors[themeColor]
+      const browserOnly = theme.IsBrowser && { fill: value, stroke: value }
+      return deepMerge(computedStyles, {
+        [rootElement]: wrapStyle({
+          [property]: value,
+          ...browserOnly,
+        }),
+      })
+    } else if (variantName.startsWith('border')) {
+      const [properties, value] = variantName.split(':')
+      const [property, type] = properties.split('-')
+
+      let borderStyle = {}
+      switch (type as BorderIdentifiers) {
+        case 'width':
+          borderStyle = { [`${property}Width`]: theme.values.borderWidth[value] }
+          break
+        case 'style':
+          borderStyle = { [`${property}Style`]: value }
+          break
+        case 'radius':
+          borderStyle = { [`${property}Radius`]: theme.borderRadius[value] }
+          break
+        case 'color':
+          borderStyle = { [`${property}Color`]: theme.colors[value] }
+          break
+        default:
+          break
+      }
+
+      return deepMerge(computedStyles, { [rootElement]: wrapStyle(borderStyle) })
+    } else if (variantName.startsWith('scale') || variantName.startsWith('rotate') || variantName.startsWith('translate')) {
+      const [property, value] = variantName.split(':')
+
+      return deepMerge(computedStyles, {
+        [rootElement]: wrapStyle({
+          transform: theme.IsBrowser ? `${property}(${value})` : [{
+            [property]: property !== 'rotate' ? Number(value) : value,
+          }],
+        }),
+      })
+    } else if (theme.IsBrowser) {
+      if (variantName.startsWith('cursor')) {
+        const [property, value] = variantName.split(':')
+
+        return deepMerge(computedStyles, {
+          [rootElement]: wrapStyle({
+            [property]: value,
+          }),
+        })
+      }
     }
 
     return computedStyles
   } else {
     const wrapped = {}
     const overWriteStyles = styles[variantName](theme)
-    for(const [key,val] of Object.entries(overWriteStyles)) {
+    for (const [key, val] of Object.entries(overWriteStyles)) {
       wrapped[key] = wrapStyle(val)
     }
     return deepMerge(computedStyles, wrapped)

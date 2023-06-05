@@ -1,4 +1,3 @@
-
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards, onUpdate } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
@@ -82,7 +81,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      {icon ? <Icon name={icon as any} forceStyle={defaultStyles.icon} /> : null}
+      {icon ? <Icon name={icon as any} style={defaultStyles.icon} /> : null}
       <_Text />
     </View>
   )
@@ -134,6 +133,7 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
   <T extends string | number = string, Multi extends boolean = false>
   (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
+
   type Option = FormTypes.Option<T>
 
   const {
@@ -211,11 +211,11 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
   })
 
   useImperativeHandle(inputRef, () => {
-    return { 
-      ...innerInputRef.current, 
+    return {
+      ...innerInputRef.current,
       focus: () => {
         innerInputRef.current?.focus?.()
-      }, 
+      },
     }
   }, [!!innerInputRef?.current?.focus])
 
@@ -292,7 +292,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
   }
 
   const _props = {
-    ...(!filterItems ? {} : { filterOption: filterItems  })
+    ...(!filterItems ? {} : { filterOption: filterItems }),
   }
 
   onUpdate(() => {
@@ -315,7 +315,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
-          searchable && variantStyles['innerWrapper:searchable']
+          searchable && variantStyles['innerWrapper:searchable'],
         ],
       }}
       innerWrapperProps={{
@@ -355,10 +355,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           ...otherProps.components,
           MultiValueRemove: () => null,
           LoadingMessage: props => (
-            <LoadingIndicatorComponent 
-              {...props} 
-              defaultStyles={loadingStyles} 
-              size={loadingIndicatorSize} 
+            <LoadingIndicatorComponent
+              {...props}
+              defaultStyles={loadingStyles}
+              size={loadingIndicatorSize}
             />
           ),
           DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,
@@ -366,25 +366,25 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
           MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
           Option: props => (
-            <DefaultOption 
-              {...props} 
-              {...componentProps} 
-              itemProps={itemProps} 
+            <DefaultOption
+              {...props}
+              {...componentProps}
+              itemProps={itemProps}
               selectedIcon={selectedIcon}
-              optionsStyles={optionsStyles} 
+              optionsStyles={optionsStyles}
               component={OptionComponent}
               isFocused={props?.isFocused && keyDownActive}
             />
           ),
           MultiValue: props => (
-            <CustomMultiValue 
-              {...props} 
-              separator={separatorMultiValue} 
-              defaultStyles={inputMultiValueStyles} 
+            <CustomMultiValue
+              {...props}
+              separator={separatorMultiValue}
+              defaultStyles={inputMultiValueStyles}
             />
           ),
         }}
       />
     </InputBase>
   )
-})
+  })

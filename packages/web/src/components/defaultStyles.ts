@@ -21,6 +21,7 @@ import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
+import { NumberIncrementPresets } from './NumberIncrement/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -46,4 +47,5 @@ export const defaultStyles = {
   LoadingOverlay: LoadingOverlayPresets,
   InputBase: InputBasePresets,
   Switch: SwitchPresets,
+  NumberIncrement: NumberIncrementPresets
 }
