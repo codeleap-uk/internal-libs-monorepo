@@ -1,6 +1,6 @@
-import { TypeGuards, createDefaultVariantFactory, getRenderedComponent, includePresets, useDefaultComponentStyle, useMemo, useNestedStylesByKey } from "@codeleap/common"
-import { ActionIconComposition, ActionIconParts } from "../ActionIcon"
-import { InputBaseProps } from "./types"
+import { TypeGuards, createDefaultVariantFactory, getRenderedComponent, includePresets, useDefaultComponentStyle, useMemo, useNestedStylesByKey } from '@codeleap/common'
+import { ActionIconComposition, ActionIconParts } from '../ActionIcon'
+import { InputBaseProps } from './types'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
@@ -10,14 +10,14 @@ export type InputIconComposition = `${InputIcons}${Capitalize<IconParts>}`
 
 export type InputBaseStates = 'error' | 'focus' | 'disabled'
 
-export type InputBaseParts = 
+export type InputBaseParts =
   'wrapper' |
   'innerWrapper' |
   'label' |
   'errorMessage' |
   'description' |
   'labelRow'|
-  InputIconComposition 
+  InputIconComposition
 
 export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconComposition>
 
@@ -30,28 +30,28 @@ export const InputBasePresets = includePresets((styles) => createTextInputBaseCo
 const getIconStyles = (obj, state) => {
   return {
     icon: {
-      ...obj.icon, 
+      ...obj.icon,
       ...(state.focused && obj['icon:focus']),
-      ...(state.hasError && obj['icon:error']), 
-      ...(state.disabled && obj['icon:disabled'])
+      ...(state.hasError && obj['icon:error']),
+      ...(state.disabled && obj['icon:disabled']),
     },
     wrapper: {
-      ...obj.touchableWrapper, 
+      ...obj.touchableWrapper,
       ...(state.focused && obj['touchableWrapper:focus']),
-      ...(state.hasError && obj['touchableWrapper:error']), 
-      ...(state.disabled && obj['touchableWrapper:disabled'])
+      ...(state.hasError && obj['touchableWrapper:error']),
+      ...(state.disabled && obj['touchableWrapper:disabled']),
     },
   }
 }
 
 export function concatStyles(unstyles: Record<number, {}>) {
   let styles = {}
-  
-  Object.values(unstyles).forEach(style => {
+
+  Object.values(unstyles || {}).forEach(style => {
     if (style) {
       styles = {
         ...styles,
-        ...style
+        ...style,
       }
     }
   })
@@ -64,7 +64,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused,
     disabled,
     error,
-    styles
+    styles,
   } = props
 
   const hasError = !TypeGuards.isNil(error)
@@ -79,8 +79,16 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
   const _generalIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', variantStyles)
 
   const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled, focused })
-  const leftIconStylesCompose = getIconStyles(_leftIconStyles, { hasError, disabled, focused })
-  const rightIconStylesCompose = getIconStyles(_rightIconStyles, { hasError, disabled, focused })
+  const leftIconStylesCompose = getIconStyles(_leftIconStyles, { 
+    hasError, 
+    disabled: disabled || props?.leftIcon?.disabled, 
+    focused 
+  })
+  const rightIconStylesCompose = getIconStyles(_rightIconStyles, { 
+    hasError, 
+    disabled: disabled || props?.rightIcon?.disabled,
+    focused 
+  })
 
   const leftIconStyles = {
     icon: {
@@ -90,7 +98,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     wrapper: {
       ...generalIconStyles.wrapper,
       ...leftIconStylesCompose.wrapper,
-    }
+    },
   }
 
   const rightIconStyles = {
@@ -101,7 +109,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     wrapper: {
       ...generalIconStyles.wrapper,
       ...rightIconStylesCompose.wrapper,
-    }
+    },
   }
 
   const labelStyle = [
@@ -133,7 +141,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
   ]
 
   const innerWrapperStyle = [
-    concatStyles(variantStyles['innerWrapper']),
+    concatStyles(variantStyles.innerWrapper),
     focused && variantStyles['innerWrapper:focus'],
     hasError && variantStyles['innerWrapper:error'],
     disabled && variantStyles['innerWrapper:disabled'],
@@ -146,7 +154,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     disabled && variantStyles['labelRow:disabled'],
   ]
 
- return {
+  return {
     wrapperStyle,
     innerWrapperStyle,
     leftIconStyles,
@@ -154,6 +162,6 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     labelStyle,
     errorStyle,
     descriptionStyle,
-    labelRowStyle
- }
+    labelRowStyle,
+  }
 }
