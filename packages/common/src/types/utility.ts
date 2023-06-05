@@ -124,3 +124,5 @@ export type ExtractVariants<O extends VariantProp> = O extends VariantProp<infer
 export type MergeVariants<A extends VariantProp, B extends VariantProp> = (ExtractVariants<A> | ExtractVariants<B>)[]
 
 export type AnyRef<T> = React.Ref<T> | React.MutableRefObject<T> | ((instance: T | null) => void) | null | React.ForwardedRef<T> | React.LegacyRef<T>
+
+export type Indices<T extends readonly any[]> = Exclude<Partial<T>['length'], T['length']>
