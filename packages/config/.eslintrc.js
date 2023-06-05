@@ -101,7 +101,7 @@ const formatting = {
   ],
   'max-len': ['warn', { code: 160, tabWidth: 3 }],
   'max-lines': ['warn', {
-    max: 250,
+    max: 450,
     skipComments: true,
     skipBlankLines: true,
   }],

@@ -33,7 +33,14 @@ export type TextInputProps =
     masking?: FormTypes.TextField['masking']
     variants?: ComponentVariants<typeof TextInputPresets>['variants']
     onChangeMask?: TextInputMaskProps['onChangeText']
+    visibleIcon?: IconPlaceholder
+    hiddenIcon?: IconPlaceholder
   } & Pick<PropsOf<typeof Touchable>, 'onPress'>
+
+const defaultProps:Partial<TextInputProps> = {
+  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
+  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
+}
 
 export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
 
@@ -44,7 +51,10 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...TextInput.defaultProps,
+    ...props,
+  })
 
   const {
     variants,
@@ -57,6 +67,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     password,
     onChangeMask,
     onPress,
+    visibleIcon,
+    hiddenIcon,
     ...textInputProps
   } = others
 
@@ -124,7 +136,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? 'eye-off' : 'eye') as IconPlaceholder,
+    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as IconPlaceholder,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -198,3 +210,5 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     />
   </InputBase>
 })
+
+TextInput.defaultProps = defaultProps
