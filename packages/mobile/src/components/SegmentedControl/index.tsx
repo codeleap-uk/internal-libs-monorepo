@@ -67,8 +67,6 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     RenderButton,
   } = props
 
-  console.log('options', options)
-
   const _animation = {
     ...defaultAnimation, ...animation,
   }
