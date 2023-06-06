@@ -21,7 +21,7 @@ import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
 
-import {ModalComposition,ModalPresets} from './styles'
+import { ModalComposition, ModalPresets } from './styles'
 import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
@@ -102,8 +102,8 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     >
       <Overlay
         visible={visible}
-        
-        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden'] ]}
+
+        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden']]}
       />
       <View css={variantStyles.innerWrapper} >
         <View css={variantStyles.backdropPressable} onClick={close}/>
@@ -132,7 +132,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
               {showClose && closable && (
                 <ActionIcon
                   icon={'close' as IconPlaceholder}
-                  
+
                   onPress={toggle}
                   styles={closeButtonStyles}
                 />
