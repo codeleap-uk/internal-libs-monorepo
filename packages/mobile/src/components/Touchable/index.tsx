@@ -81,7 +81,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     styles,
   })
 
-  const { logger } = useCodeleapContext()
+  const { logger, Theme } = useCodeleapContext()
 
   const press = () => {
     if (!onPress) {
@@ -137,6 +137,10 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       'right!',
       'bottom!',
       'position!',
+      
+    ]
+
+    const inner = [
       'border',
     ]
 
@@ -171,6 +175,8 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         innerWrapperStyle[key] = value
 
         wrapperStyle[key] = value
+      } else if (inner.some(k => match(k, key))) {
+        innerWrapperStyle[key] = value
       } else if (wrapperKeys.some(k => match(k, key))) {
         wrapperStyle[key] = value
       } else if (sharedKeys.some(k => match(k, key))) {
@@ -180,6 +186,8 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
         innerWrapperStyle[key] = value
       } else {
+        // innerWrapperStyle[key] = value
+
         pressableStyle[key] = value
       }
     })
@@ -187,10 +195,13 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     if (wrapperStyle.position === 'absolute') {
       pressableStyle.width = '100%'
       pressableStyle.height = '100%'
-
-      innerWrapperStyle.width = '100%'
-      innerWrapperStyle.height = '100%'
     }
+
+    // pressableStyle.width = '100%'
+    // pressableStyle.height = '100%'
+
+    // innerWrapperStyle.width = '100%'
+    // innerWrapperStyle.height = '100%'
 
     innerWrapperStyle.overflow = 'hidden'
     wrapperStyle.overflow = 'visible'

@@ -87,8 +87,6 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
 
   const badgeStyles = getNestedStylesByKey('badge', variantStyles)
   
-  console.log(badgeStyles)
-
   return (
     <View style={[variantStyles.wrapper, style]} {...viewProps}>
       <Touchable
