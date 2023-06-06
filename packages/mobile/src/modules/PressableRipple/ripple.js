@@ -79,13 +79,10 @@ export default class Ripple extends PureComponent {
   }
 
   onPress(event) {
-    let { ripples } = this.state;
-    let { onPress, rippleSequential } = this.props;
+    let { onPress } = this.props;
 
-    if (!rippleSequential || !ripples.length) {
-      if ('function' === typeof onPress) {
-        requestAnimationFrame(() => onPress(event));
-      }
+    if ('function' === typeof onPress) {
+      onPress(event)
     }
   }
 
@@ -225,14 +222,12 @@ export default class Ripple extends PureComponent {
       rippleSequential,
       rippleFades,
       ref,
+      radiusStyles,
 
       ...props
     } = this.props;
 
     let touchableProps = {
-      delayLongPress,
-      delayPressIn,
-      delayPressOut,
       disabled,
       hitSlop,
       pressRetentionOffset,
@@ -244,22 +239,16 @@ export default class Ripple extends PureComponent {
       onPress: this.onPress,
       onPressIn: this.onPressIn,
       onPressOut: this.onPressOut,
-      onLongPress: onLongPress?
-        this.onLongPress:
-        undefined,
+      onLongPress: onLongPress ? this.onLongPress : undefined,
 
       ...('web' !== Platform.OS? { nativeID } : null),
-    };
-
-    let containerStyle = {
-      borderRadius: rippleContainerBorderRadius,
     };
 
     return (
       <TouchableWithoutFeedback {...touchableProps} ref={ref}>
         <Animated.View {...props} pointerEvents='box-only'>
           {children}
-          <View style={[styles.container, containerStyle]}>
+          <View style={[styles.container, radiusStyles]}>
             {ripples.map(this.renderRipple)}
           </View>
         </Animated.View>

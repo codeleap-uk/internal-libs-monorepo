@@ -130,11 +130,10 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
   const Wrapper = View
 
-  const { wrapperStyle, pressableStyle } = React.useMemo(() => {
+  const { radiusStyle, wrapperStyle, pressableStyle } = React.useMemo(() => {
     const wrapperkeys = [
       'margin',
       'alignSelf',
-      'border',
       'top!',
       'left!',
       'right!',
@@ -142,6 +141,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       'position!',
       // 'flex!',
     ]
+
+    const radiusKey = [
+      'Radius#',
+    ]
+
     const sharedKeys = [
       'width!',
       'height!',
@@ -151,19 +155,30 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
     const wrapperStyle = {} as any
     const pressableStyle = {} as any
-    const match = (k, key) => {
-      if (k.endsWith('!')) {
+    const radiusStyle = {} as any
+
+    const matchKey = (k, key) => {
+      if (k.endsWith('#')) {
+        return key.includes(k.substring(0, k.length - 1)) 
+      } else if (k.endsWith('!')) {
         return key === k.substring(0, k.length - 1)
       } else {
-
+    
         return key.startsWith(k)
       }
     }
+    
     Object.entries(_styles).forEach(([key, value]) => {
-
-      if (wrapperkeys.some(k => match(k, key))) {
+      if (radiusKey.some(k => matchKey(k, key))) {
         wrapperStyle[key] = value
-      } else if (sharedKeys.some(k => match(k, key))) {
+        pressableStyle[key] = value
+        radiusStyle[key] = value
+        return
+      }
+
+      if (wrapperkeys.some(k => matchKey(k, key))) {
+        wrapperStyle[key] = value
+      } else if (sharedKeys.some(k => matchKey(k, key))) {
         wrapperStyle[key] = value
 
         pressableStyle[key] = value
@@ -176,15 +191,20 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       pressableStyle.height = '100%'
     }
 
+    wrapperStyle.overflow = 'visible'
+
     return {
       wrapperStyle,
       pressableStyle,
+      radiusStyle,
     }
   }, [JSON.stringify(_styles)])
 
+  const disableRipple = disableFeedback || rippleDisabled || disableFeedback || Platform.OS !== 'android'
+
   return (
     <Wrapper style={[wrapperStyle]}>
-      {Platform.OS === 'android' ? (
+      {!disableRipple ? (
         <PressableRipple
           onPress={press}  
           style={[
@@ -193,8 +213,10 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
           ]}
           {...props}
           rippleFades={false}
-          rippleDuration={400}
-          rippleContainerBorderRadius={10}
+          rippleDuration={300}
+          rippleOpacity={0.1}
+          rippleColor={rippleConfig.color}
+          radiusStyles={radiusStyle}
           // @ts-ignore
           ref={ref}
         >
