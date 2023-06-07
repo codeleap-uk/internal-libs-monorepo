@@ -18,16 +18,18 @@
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
+    "@radix-ui/react-slider": "1.1.1",
+    "framer-motion": "^10.10.0",
+    "js-cookie": "^3.0.1",
     "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",
+    "react-number-format": "^5.2.1",
+    "react-input-mask": "^2.0.4",
     "react-toastify": "^8.2.0",
     "react-virtualized-auto-sizer": "^1.0.6",
     "react-window": "1.8.5",
     "url-parse": "^1.5.10",
-    "uuid": "^8.3.2",
-    "js-cookie": "^3.0.1",
-    "framer-motion": "^10.10.0",
-    "@radix-ui/react-slider": "1.1.1"
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "@codeleap/common": "*",

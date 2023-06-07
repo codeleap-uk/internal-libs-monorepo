@@ -24,6 +24,6 @@ export * from './Link'
 export * from './LoadingOverlay'
 export * from './InputBase'
 export * from './Switch'
-
+export * from './NumberIncrement'
 
 export * from './defaultStyles'

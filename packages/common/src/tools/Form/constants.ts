@@ -12,6 +12,7 @@ export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
     number: '',
     list: [],
     switch: false,
+    date: null,
   }
 
 export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
@@ -27,5 +28,6 @@ export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
     number: 'onChangeText',
     list: 'onValueChange',
     switch: 'onValueChange',
+    date: 'onValueChange',
   }
 
