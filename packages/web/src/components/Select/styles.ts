@@ -8,7 +8,7 @@ import { SelectProps } from './types'
 
 type ButtonParts = Exclude<_ButtonParts, `loading${Capitalize<LoadingOverlayComposition>}` | 'badgeText' | 'badgeWrapper'>
 
-export type ItemParts = `item${Capitalize<_ButtonParts>}`
+export type ItemParts = `item${Capitalize<ButtonParts>}`
 
 export type SelectParts =
   InputBaseParts
