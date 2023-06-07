@@ -215,6 +215,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
           rippleFades={false}
           rippleDuration={400}
           rippleOpacity={0.1}
+          {...rippleConfig}
           radiusStyles={radiusStyle}
           // @ts-ignore
           ref={ref}

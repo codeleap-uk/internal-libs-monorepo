@@ -56,6 +56,7 @@ export const Badge = (props: BadgeProps) => {
   const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {
     variants,
     styles,
+    rootElement: 'wrapper',
     transform: StyleSheet.flatten,
   })
 
