@@ -22,6 +22,7 @@ export const SearchHeader:ComponentWithDefaultProps<SearchHeaderProps> = (props)
     clearIcon,
     searchIcon,
     debounce,
+    ...inputProps
   } = {
     ...SearchHeader.defaultProps,
     ...props,
@@ -75,6 +76,7 @@ export const SearchHeader:ComponentWithDefaultProps<SearchHeaderProps> = (props)
       leftIcon={{
         name: searchIcon,
       }}
+      {...inputProps}
     />
 
   </>
