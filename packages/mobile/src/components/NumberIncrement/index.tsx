@@ -12,6 +12,7 @@ import {
   FormTypes,
 } from '@codeleap/common'
 import { View } from '../View'
+import { forwardRef, useImperativeHandle } from 'react'
 import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
@@ -21,10 +22,9 @@ import { Touchable } from '../Touchable'
 
 export * from './styles'
 
-export type NumberIncrementProps = Pick<
-  InputBaseProps,
-  'debugName' | 'disabled' | 'label'
-> & {
+export type NumberIncrementProps = 
+  Omit<InputBaseProps, 'styles' | 'variants'> &
+  NativeTextInputProps & {
   variants?: ComponentVariants<typeof NumberIncrementPresets>['variants']
   styles?: StylesOf<NumberIncrementComposition>
   value: number
@@ -36,25 +36,34 @@ export type NumberIncrementProps = Pick<
   min?: number
   step?: number
   editable?: boolean
+  _error?: string
+  placeholder?: string
+
+  masking?: FormTypes.TextField['masking']
   // prefix?: NFProps['prefix']
   // suffix?: NFProps['suffix']
   // separator?: NFProps['thousandSeparator']
   // format?: PFProps['format']
   // mask?: PFProps['mask']
-  masking?: FormTypes.TextField['masking']
-  hasSeparator?: boolean
-  _error?: string
-  formatter?: () => null
-  placeholder?: string
+  // hasSeparator?: boolean
+  // formatter?: () => null
+} & Pick<PropsOf<typeof Touchable>, 'onPress'>
+
+const defaultProps: Partial<NumberIncrementProps> = {
+  max: 1000000000000000,
+  min: 0,
+  step: 1,
+  editable: true,
 }
 
-// useImperativeHandle
-
-export const NumberIncrement = (props: NumberIncrementProps) => {
+export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>((props, inputRef) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...NumberIncrement.defaultProps,
+    ...props
+  })
 
   const {
     variants = [],
@@ -63,25 +72,16 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     value,
     disabled,
     onChangeText,
-    max = 100000000000000000000,
-    min = 0,
-    step = 1,
-    editable = true,
-    hasSeparator = false,
-    // format = null,
+    max,
+    min,
+    step,
+    editable,
     masking = null,
-    // suffix,
-    // separator = null,
-    // prefix,
     validate,
+    onPress,
     _error,
-    formatter = null,
     ...textInputProps
   } = others
-
-  const isMasked = !!masking
-
-  const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
   const [isFocused, setIsFocused] = useState(false)
 
@@ -91,6 +91,21 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
 
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
+
+  const isMasked = !!masking
+
+  const InputElement = isMasked ? MaskedTextInput : NativeTextInput
+
+  // @ts-expect-error - React's ref type system is weird
+  useImperativeHandle(inputRef, () => {
+    return {
+      ...innerInputRef.current,
+      focus: () => {
+        innerInputRef.current?.focus?.()
+      },
+      isTextInput: true,
+    }
+  }, [!!innerInputRef?.current?.focus])
 
   const incrementDisabled = React.useMemo(() => {
     if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
@@ -139,7 +154,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   ].find(([x]) => x)?.[1]?.color
 
   const onChange = (newValue: number) => {
-    console.log('sdsds', { newValue })
     // @ts-ignore
     if (onChangeText) onChangeText?.(newValue)
   }
@@ -158,30 +172,41 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     }
   }, [validation?.onInputBlurred, validation?.onInputFocused, value])
 
-  const handleBlur = React.useCallback(() => {
+  const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     if (TypeGuards.isNumber(max) && (value >= max)) {
       onChange(max)
     } else if (TypeGuards.isNumber(min) && (value <= min) || !value) {
       onChange(min)
     }
 
-    setIsFocused(false)
     validation?.onInputBlurred()
-  }, [validation?.onInputBlurred, value])
+    setIsFocused(false)
+    props.onBlur?.(e)
+  }, [validation?.onInputBlurred, props.onBlur, value])
 
-  const handleFocus = React.useCallback(() => {
+  const handleFocus = React.useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation?.onInputFocused()
     setIsFocused(true)
-  }, [validation?.onInputFocused])
+    if (e) props.onFocus?.(e)
+  }, [validation?.onInputFocused, props.onFocus])
 
-  const handleChangeInput: NativeTextInputProps['onChangeText'] = (value) => {
-    console.log(value)
+  const handleChangeInput: NativeTextInputProps['onChangeText'] = (text) => {
+    const value = Number(text.replace(/[^0-9]/g, ''))
+
     if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
       onChange(max)
       return
     }
 
     onChange(Number(value))
+
+    return value
+  }
+
+  const onPressInnerWrapper = () => {
+    handleFocus()
+    innerInputRef.current?.focus?.()
+    if (onPress) onPress?.()
   }
 
   return (
@@ -199,15 +224,15 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         name: 'plus' as any,
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
-        ...inputBaseProps.rightIcon,
         debounce: null,
+        ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
         name: 'minus' as any,
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
-        ...inputBaseProps.leftIcon,
         debounce: null,
+        ...inputBaseProps.leftIcon,
       }}
       style={style}
       disabled={disabled}
@@ -215,10 +240,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       innerWrapper={Touchable}
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
-        onPress: () => {
-          handleFocus()
-          innerInputRef.current?.focus?.()
-        },
+        onPress: onPressInnerWrapper,
       }}
     >
       {editable && !disabled ? (
@@ -230,9 +252,8 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
           value={String(value)}
           selectionColor={selectionColor}
           onChangeText={handleChangeInput}
-          onChange={(e) => null}
           {...textInputProps}
-          onBlur={() => handleBlur()}
+          onBlur={handleBlur}
           onFocus={handleFocus}
           style={inputTextStyle}
           ref={innerInputRef}
@@ -241,4 +262,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       ) : <Text text={String(value)} css={inputTextStyle} />}
     </InputBase>
   )
-}
+})
+
+NumberIncrement.defaultProps = defaultProps
