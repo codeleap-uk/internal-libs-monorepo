@@ -13,6 +13,7 @@ import {
   PropsOf,
   StylesOf,
   getNestedStylesByKey,
+  TypeGuards,
 } from '@codeleap/common'
 
 export * from './styles'
@@ -53,8 +54,6 @@ export const IconComponent: React.FC<IconProps> = (props) => {
     rootElement: 'icon',
   })
 
-  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
-
   const Component = Theme?.icons?.[name]
 
   onUpdate(() => {
@@ -76,20 +75,26 @@ export const IconComponent: React.FC<IconProps> = (props) => {
     return null
   }
 
-  const sized = {
-    height: variantStyles.icon?.size || variantStyles.icon?.height || props?.size,
-    width: variantStyles.icon?.size || variantStyles.icon?.width || props?.size,
-  }
+  if (badge || TypeGuards.isNumber(badge)) {
+    const badgeStyles = getNestedStylesByKey('badge', variantStyles)
 
-  const wrapperStyle = [
-    sized,
-    (variantStyles.wrapper ?? {}),
-  ]
+    const sized = {
+      height: variantStyles.icon?.size || variantStyles.icon?.height || props?.size,
+      width: variantStyles.icon?.size || variantStyles.icon?.width || props?.size,
+    }
   
-  return <View {...wrapperProps} style={wrapperStyle}>
-    <Component {...otherProps} style={variantStyles.icon} />
-    <Badge {...badgeProps} styles={badgeStyles} badge={badge} />
-  </View>
+    const wrapperStyle = [
+      sized,
+      (variantStyles.iconBadgeWrapper ?? {}),
+    ]
+
+    return <View {...wrapperProps} style={wrapperStyle}>
+      <Component {...otherProps} style={variantStyles.icon} />
+      <Badge {...badgeProps} styles={badgeStyles} badge={badge} />
+    </View>
+  }
+  
+  return <Component {...otherProps} style={variantStyles.icon} />
 }
 
 function areEqual(prevProps, nextProps) {

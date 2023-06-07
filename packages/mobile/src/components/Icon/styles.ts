@@ -1,7 +1,7 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { BadgeComposition } from '../Badge'
 
-export type IconComposition = 'icon' | 'wrapper' | `badge${Capitalize<BadgeComposition>}`
+export type IconComposition = 'icon' | 'iconBadgeWrapper' | `badge${Capitalize<BadgeComposition>}`
 
 const createIconStyle = createDefaultVariantFactory<IconComposition>()
 
