@@ -38,7 +38,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
 
   return (
     <components.Option {...props}>
-      <_Component {...props} />
+      <_Component {...props} styles={styles} />
     </components.Option>
   )
 }

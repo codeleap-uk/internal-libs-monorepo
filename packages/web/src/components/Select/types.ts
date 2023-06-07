@@ -44,6 +44,7 @@ export type TCustomOption = OptionProps & ComponentPartProps & {
   optionsStyles: (state: OptionState) => OptionState['baseStyles']
   selectedIcon?: string
   itemProps?: ButtonProps
+  styles: OptionState['baseStyles']
 }
 
 type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Element) | null
