@@ -1,10 +1,14 @@
 import { capitalize, createDefaultVariantFactory, FormTypes, getNestedStylesByKey, includePresets, useDefaultComponentStyle } from '@codeleap/common'
+import { CSSInterpolation } from '@emotion/css'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
-import { ButtonParts } from '../Button'
+import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
+import { LoadingOverlayComposition } from '../LoadingOverlay'
 import { SelectProps } from './types'
 
-export type ItemParts = `item${Capitalize<ButtonParts>}`
+type ButtonParts = Exclude<_ButtonParts, `loading${Capitalize<LoadingOverlayComposition>}` | 'badgeText' | 'badgeWrapper'>
+
+export type ItemParts = `item${Capitalize<_ButtonParts>}`
 
 export type SelectParts =
   InputBaseParts
@@ -99,7 +103,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     }
   }
 
-  const optionsStyles = (state: OptionState) => ({
+  const optionsStyles = (state: OptionState): Record<ButtonParts, CSSInterpolation> => ({
     wrapper: optionStyleKey('wrapper', state),
     rightIcon: optionStyleKey('rightIcon', state),
     text: optionStyleKey('text', state),
