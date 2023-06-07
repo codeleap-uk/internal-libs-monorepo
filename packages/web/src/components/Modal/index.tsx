@@ -38,6 +38,7 @@ export type ModalProps = React.PropsWithChildren<{
   scroll?: boolean
   header?: React.ReactElement
   footer?: React.ReactNode
+  renderHeader?: (props: ModalHeaderProps) => React.ReactElement
   debugName?: string
 } & ComponentVariants<typeof ModalPresets>
 >
@@ -67,6 +68,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     styles,
     showClose = true,
     footer,
+    renderHeader,
     ...props
   } = modalProps
 
@@ -100,7 +102,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     }
   }, [id])
 
-  const ModalHeader:React.FC<ModalHeaderProps> = (props) => {
+  const ModalDefaultHeader:React.FC<ModalHeaderProps> = (props) => {
     const {
       styles,
       title = null,
@@ -131,9 +133,12 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     )
   }
 
+  const ModalHeader = renderHeader || ModalDefaultHeader
+
   //TO-DO: Change the title or showClose conditional to a default header or a custom header
 
   const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
+
   const close = closable ? toggle : () => {}
   return (
     <View
@@ -161,25 +166,6 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           {...props}
         >
           <ModalHeader />
-          {/* {(title || showClose) && (
-            <View
-              component='header'
-              className='modal-header header'
-              id={`${id}-title`}
-              css={variantStyles.header}
-            >
-              {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
-
-              {showClose && closable && (
-                <ActionIcon
-                  icon={'close' as IconPlaceholder}
-
-                  onPress={toggle}
-                  styles={closeButtonStyles}
-                />
-              )}
-            </View>
-          )} */}
 
           <View css={variantStyles.body}>{children}</View>
           {footer && (
