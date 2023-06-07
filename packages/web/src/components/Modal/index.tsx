@@ -10,7 +10,7 @@ import {
   useNestedStylesByKey,
 } from '@codeleap/common'
 
-import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 
 import { v4 } from 'uuid'
@@ -29,16 +29,23 @@ export * from './styles'
 export type ModalProps = React.PropsWithChildren<{
   visible: boolean
   title?: React.ReactNode
+  description?: React.ReactElement
   toggle: AnyFunction
   styles?: StylesOf<ModalComposition>
   accessible?: boolean
   showClose?: boolean
   closable?: boolean
   scroll?: boolean
-  footer?: ReactNode
+  header?: React.ReactElement
+  footer?: React.ReactNode
   debugName?: string
 } & ComponentVariants<typeof ModalPresets>
 >
+
+export type ModalHeaderProps = {
+
+}
+
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
   const modal = document.getElementById(id)
@@ -93,6 +100,39 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     }
   }, [id])
 
+  const ModalHeader:React.FC<ModalHeaderProps> = (props) => {
+    const {
+      styles,
+      title = null,
+      showClose = false,
+      description = null,
+      closable, debugName,
+      closeIconName = 'close',
+      toggle,
+    } = props
+    return (
+      <View
+        component='header'
+        className='modal-header header'
+        id={`${id}-title`}
+        css={variantStyles.header}
+      >
+        {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
+
+        {showClose && closable && (
+          <ActionIcon
+            icon={'close' as IconPlaceholder}
+
+            onPress={toggle}
+            styles={closeButtonStyles}
+          />
+        )}
+      </View>
+    )
+  }
+
+  //TO-DO: Change the title or showClose conditional to a default header or a custom header
+
   const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
   const close = closable ? toggle : () => {}
   return (
@@ -120,7 +160,8 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           aria-label='Close the modal by presing Escape key'
           {...props}
         >
-          {(title || showClose) && (
+          <ModalHeader />
+          {/* {(title || showClose) && (
             <View
               component='header'
               className='modal-header header'
@@ -138,7 +179,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
                 />
               )}
             </View>
-          )}
+          )} */}
 
           <View css={variantStyles.body}>{children}</View>
           {footer && (
