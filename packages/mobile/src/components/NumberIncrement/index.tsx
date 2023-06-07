@@ -15,7 +15,7 @@ import { View } from '../View'
 import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
-import { MaskedTextInput, TextInputMaskProps } from '../../modules/textInputMask'
+import { MaskedTextInput } from '../../modules/textInputMask'
 import { TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { Touchable } from '../Touchable'
 
@@ -63,7 +63,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     value,
     disabled,
     onChangeText,
-    max = 1000000000,
+    max = 100000000000000000000,
     min = 0,
     step = 1,
     editable = true,
@@ -115,26 +115,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     },
   )
 
-  const onChange = (newValue: number) => {
-    if (onChangeText) onChangeText?.(String(newValue))
-  }
-
-  const handleChange = React.useCallback((action: 'increment' | 'decrement') => {
-    validation?.onInputFocused()
-
-    if (action === 'increment' && !incrementDisabled) {
-      const newValue = Number(value) + step
-      onChange(newValue)
-      return
-    } else if (action === 'decrement' && !decrementDisabled) {
-      const newValue = Number(value) - step
-      onChange(newValue)
-      return
-    }
-
-    validation?.onInputBlurred()
-  }, [validation?.onInputBlurred, validation?.onInputFocused, value])
-
   const inputTextStyle = React.useMemo(() => {
     return [
       variantStyles.input,
@@ -158,15 +138,34 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     [true, variantStyles.selection],
   ].find(([x]) => x)?.[1]?.color
 
-  const handleBlur = React.useCallback((args) => {
-    if (TypeGuards.isNumber(max) && (value >= max)) {
-      onChange(max)
+  const onChange = (newValue: number) => {
+    console.log('sdsds', { newValue })
+    // @ts-ignore
+    if (onChangeText) onChangeText?.(newValue)
+  }
+
+  const handleChange = React.useCallback((action: 'increment' | 'decrement') => {
+    handleFocus()
+
+    if (action === 'increment' && !incrementDisabled) {
+      const newValue = Number(value) + step
+      onChange(newValue)
       return
-    } else if (TypeGuards.isNumber(min) && (value <= min) || !value) {
-      onChange(min)
+    } else if (action === 'decrement' && !decrementDisabled) {
+      const newValue = Number(value) - step
+      onChange(newValue)
       return
     }
+  }, [validation?.onInputBlurred, validation?.onInputFocused, value])
 
+  const handleBlur = React.useCallback(() => {
+    if (TypeGuards.isNumber(max) && (value >= max)) {
+      onChange(max)
+    } else if (TypeGuards.isNumber(min) && (value <= min) || !value) {
+      onChange(min)
+    }
+
+    setIsFocused(false)
     validation?.onInputBlurred()
   }, [validation?.onInputBlurred, value])
 
@@ -177,6 +176,11 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
 
   const handleChangeInput: NativeTextInputProps['onChangeText'] = (value) => {
     console.log(value)
+    if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
+      onChange(max)
+      return
+    }
+
     onChange(Number(value))
   }
 
@@ -195,15 +199,15 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         name: 'plus' as any,
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
-        component: 'button',
         ...inputBaseProps.rightIcon,
+        debounce: null,
       }}
       leftIcon={{
         name: 'minus' as any,
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
-        component: 'button',
         ...inputBaseProps.leftIcon,
+        debounce: null,
       }}
       style={style}
       disabled={disabled}
@@ -212,22 +216,23 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         onPress: () => {
-          console.log('fuck')
-          setIsFocused(true)
+          handleFocus()
           innerInputRef.current?.focus?.()
         },
       }}
     >
       {editable && !disabled ? (
         <InputElement
+          keyboardType='numeric'
           allowFontScaling={false}
           editable={!disabled}
           placeholderTextColor={placeholderTextColor}
           value={String(value)}
           selectionColor={selectionColor}
           onChangeText={handleChangeInput}
+          onChange={(e) => null}
           {...textInputProps}
-          onBlur={handleBlur}
+          onBlur={() => handleBlur()}
           onFocus={handleFocus}
           style={inputTextStyle}
           ref={innerInputRef}
