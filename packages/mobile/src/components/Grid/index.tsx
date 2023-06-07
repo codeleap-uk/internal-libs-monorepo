@@ -3,16 +3,18 @@ import { forwardRef } from 'react'
 import {
   useDefaultComponentStyle,
   ComponentVariants,
+  useCallback,
 } from '@codeleap/common'
 
-import { FlatGrid, FlatGridProps, GridRenderItemInfo } from 'react-native-super-grid'
-import { StyleSheet, ScrollView } from 'react-native'
-import { View, ViewProps } from '../View'
-import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { GridComposition, GridPresets } from './styles'
-import { StylesOf } from '../../types'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
-import { RefreshControlProps, RefreshControl } from '../RefreshControl'
+import { GridRenderItemInfo } from 'react-native-super-grid'
+import { StyleSheet, ListRenderItemInfo } from 'react-native'
+import { View } from '../View'
+import { EmptyPlaceholder } from '../EmptyPlaceholder'
+import { RefreshControl } from '../RefreshControl'
+import { List } from '../List'
+import { GridPresets } from './styles'
+import { FlatListProps } from '../List'
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 
 export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -28,21 +30,20 @@ export type ReplaceFlatGridProps<P, T> = Omit<P, DataboundFlatGridPropsTypes> & 
 }
 
 export * from './styles'
-type GridRef = React.ClassAttributes<typeof FlatGrid>['ref']
 export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
-> =FlatGridProps<Data> &
-  Omit<ViewProps, 'variants'> & {
-    separators?: boolean
-    placeholder?: EmptyPlaceholderProps
-    keyboardAware?: GetKeyboardAwarePropsOptions
-    debugName?: string
-    styles?: StylesOf<GridComposition>
-    refreshControlProps?: Partial<RefreshControlProps>
-  } & ComponentVariants<typeof GridPresets>
+> = {
+  spacing?: number
+} & FlatListProps<T, Data> & ComponentVariants<typeof GridPresets>
 
-const GridCP = forwardRef<ScrollView, GridProps>(
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
+  return (
+    <View style={props.separatorStyles}></View>
+  )
+}
+
+const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
   (flatGridProps, ref) => {
     const {
       variants = [],
@@ -51,9 +52,8 @@ const GridCP = forwardRef<ScrollView, GridProps>(
       onRefresh,
       refreshing,
       placeholder,
-      keyboardAware,
-      debugName,
       refreshControlProps = {},
+      spacing
       ...props
     } = flatGridProps
 
@@ -64,48 +64,67 @@ const GridCP = forwardRef<ScrollView, GridProps>(
 
     })
 
-    const renderSeparator = () => {
-      return (
-        <View variants={['separator']}></View>
-      )
-    }
+    const spacings = useMemo(() => {
+      return childArr.map((_, idx) => {
+        let spacingFunction = horizontal ? 'marginHorizontal' : 'marginVertical'
+  
+        switch (idx) {
+          case 0:
+            spacingFunction = horizontal ? 'marginRight' : 'marginBottom'
+            break
+          case childArr.length - 1:
+            spacingFunction = horizontal ? 'marginLeft' : 'marginTop'
+            break
+          default:
+            break
+        }
+  
+        return Theme.spacing[spacingFunction](value / 2)
+      })
+  
+    }, [childArr.length, horizontal])
 
-    const separatorProp = props.separators
-    const isEmpty = !props.data || !props.data.length
-    const separator = !isEmpty && separatorProp == true && renderSeparator
+    const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
+      if (!props?.renderItem) return null
+      const listLength = props?.data?.length || 0
 
-    const Component = FlatGrid
+      const isFirst = data.index === 0
+      const isLast = data.index === listLength - 1
 
+      const isOnly = isFirst && isLast
+
+      return props?.renderItem({
+        ...data,
+        isFirst,
+        isLast,
+        isOnly,
+      })
+    }, [props?.renderItem, props?.data?.length])
+
+    const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
+    const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps}/>
     const _gridProps = {
+      ref: ref,
+      ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
+      // ItemSeparatorComponent: separator,
+      refreshControl,
+      renderItem,
       style: [variantStyles.wrapper, style],
       contentContainerStyle: variantStyles.content,
       showsVerticalScrollIndicator: false,
-      ref: ref,
-      ItemSeparatorComponent: separator,
-      refreshControl:
-          !!onRefresh && (
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              {...refreshControlProps}
-            />
-          ),
-
-      ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
     }
 
     return (
       // @ts-ignore
-      <Component
+      <List
         {..._gridProps}
-
       />
     )
   },
 )
 
-export type GridComponentType = <T extends any[] = any[]>(props: FlatGridProps<T>) => React.ReactElement
+export type GridComponentType = <T extends any[] = any[]>(props: GridProps<T>) => React.ReactElement
 
-export const Grid = GridCP as GridComponentType
+export const Grid = GridCP as unknown as GridComponentType
 
