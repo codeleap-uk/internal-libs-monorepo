@@ -1,4 +1,4 @@
-import { AnyFunction, ComponentVariants, TypeGuards, useCodeleapContext, useDefaultComponentStyle, useI18N } from '@codeleap/common'
+import { ComponentVariants, TypeGuards, useDefaultComponentStyle, useI18N } from '@codeleap/common'
 import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { StylesOf } from '../../types/utility'
 import { TextComposition, TextPresets } from './styles'
@@ -13,7 +13,7 @@ export type TextProps<T extends ElementType> = {
 } & ComponentPropsWithoutRef<T> &
   ComponentVariants<typeof TextPresets>
 
-const getTextContent = (text: TextProps<any>['text'], warningI18N: AnyFunction) => {
+const getTextContent = (text: TextProps<any>['text']) => {
   const { t } = useI18N()
 
   let content = ''
@@ -27,7 +27,6 @@ const getTextContent = (text: TextProps<any>['text'], warningI18N: AnyFunction) 
         content = content + space + translatedMessage
       } catch {
         content = content + space + message
-        warningI18N(message)
       }
     })
   } else {
@@ -35,7 +34,6 @@ const getTextContent = (text: TextProps<any>['text'], warningI18N: AnyFunction) 
       content = t(String(text))
     } catch (err) {
       content = text
-      warningI18N(text)
     }
   }
 
@@ -55,25 +53,16 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   } = textProps
 
   const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
-    rootElement: 'text',
-    responsiveVariants,
     variants,
     styles,
+    responsiveVariants,
+    rootElement: 'text',
   })
 
-  const { logger } = useCodeleapContext()
-
-  const warningI18N = (_content) => {
-    logger.warn(
-      debugName,
-      `The text "${_content}" cannot be found by I18n, check content.`,
-    )
-  }
-
-  let content = getTextContent(text, warningI18N)
+  let content = getTextContent(text)
 
   const Component = component
-  
+
   return (
     <Component
       css={[variantStyles.text, props.style]}
