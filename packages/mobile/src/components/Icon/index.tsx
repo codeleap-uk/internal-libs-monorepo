@@ -93,7 +93,7 @@ export const IconComponent: React.FC<IconProps> = (props) => {
 }
 
 function areEqual(prevProps, nextProps) {
-  const check = ['name', 'style', 'variants', 'renderEmptySpace']
+  const check = ['name', 'style', 'variants', 'renderEmptySpace', 'badgeProps', 'badge']
   const res = arePropsEqual(prevProps, nextProps, { check })
   return res
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ComponentVariants, PropsOf, StylesOf, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
+import { ComponentVariants, PropsOf, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { BadgeComposition, BadgePresets } from './styles'
@@ -19,7 +19,6 @@ export type BadgeProps = ComponentVariants<typeof BadgePresets>
     getBadgeContent?: (props: BadgeContent) => string
     renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
     disabled?: boolean
-    debug?: boolean
     badge?: number | boolean
   }
 
@@ -47,7 +46,6 @@ export const Badge = (props: BadgeProps) => {
     disabled = false,
     style = {},
     badge = true,
-    debug = false,
     ...rest
   } = props
 
@@ -55,17 +53,11 @@ export const Badge = (props: BadgeProps) => {
 
   if (!visible) return null
 
-  const { logger } = useCodeleapContext()
-
   const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {
     variants,
     styles,
     transform: StyleSheet.flatten,
   })
-
-  const count = TypeGuards.isNumber(badge) ? badge : null
-
-  const content = getBadgeContent({ ...props, maxCount, minCount, count })
 
   const wrapperStyles: ViewProps['style'] = [
     variantStyles?.wrapper,
@@ -85,15 +77,11 @@ export const Badge = (props: BadgeProps) => {
     textProps?.style,
   ]
 
-  const showContent = TypeGuards.isNumber(count) && count >= minCount
+  const count = TypeGuards.isNumber(badge) ? badge : null
 
-  if (debug) {
-    logger.log(debugName, {
-      props,
-      showContent,
-      content,
-    }, 'Badge')
-  }
+  const content = getBadgeContent({ ...props, maxCount, minCount, count })
+
+  const showContent = TypeGuards.isNumber(count) && count >= minCount
 
   let BadgeContent = renderBadgeContent
 
@@ -101,10 +89,8 @@ export const Badge = (props: BadgeProps) => {
     BadgeContent = () => <Text text={content} {...textProps} style={countStyles} /> 
   }
 
-  const Wrapper = View
-
   return (
-    <Wrapper
+    <View
       {...rest}
       style={wrapperStyles}
     >
@@ -121,6 +107,6 @@ export const Badge = (props: BadgeProps) => {
           : null
         }
       </View>
-    </Wrapper>
+    </View>
   )
 }
