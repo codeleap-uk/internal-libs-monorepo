@@ -46,14 +46,16 @@ export type TCustomOption = OptionProps & ComponentPartProps & {
   itemProps?: ButtonProps
 }
 
+type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Element) | null
+
 export type PlaceholderProps = NoticeProps & ComponentPartProps & { 
-  text: string | ((props: PlaceholderProps) => JSX.Element)
+  text: SelectPlaceholderElement
   defaultStyles: {
     wrapper: CSSInterpolation
     text: CSSInterpolation
     icon: CSSInterpolation
   }
-  icon: string
+  icon: SelectPlaceholderElement
 }
 
 export type LoadingIndicatorProps = NoticeProps & { 
@@ -74,10 +76,10 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     PlaceholderComponent?: (props: PlaceholderProps) => JSX.Element
     PlaceholderNoItemsComponent?: (props: PlaceholderProps) => JSX.Element
     LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => JSX.Element
-    noItemsText?: string | ((props: PlaceholderProps) => JSX.Element) | null
-    noItemsIcon?: string | null
-    placeholderText?: string | ((props: PlaceholderProps) => JSX.Element) | null
-    placeholderIcon?: string | null
+    noItemsText?: SelectPlaceholderElement
+    noItemsIcon?: SelectPlaceholderElement
+    placeholderText?: SelectPlaceholderElement
+    placeholderIcon?: SelectPlaceholderElement
     showDropdownIcon?: boolean
     formatPlaceholderNoItems?: (props: PlaceholderProps & { text: string }) => string
     selectedIcon?: string

@@ -67,7 +67,7 @@ const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
-  const { text: TextPlaceholder, defaultStyles, icon } = props
+  const { text: TextPlaceholder, defaultStyles, icon: IconPlaceholder } = props
 
   const _Text = () => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
@@ -79,9 +79,19 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     }
   }
 
+  const _Image = () => {
+    if (TypeGuards.isNil(IconPlaceholder)) return null
+
+    if (TypeGuards.isString(IconPlaceholder)) {
+      return <Icon name={TextPlaceholder as any} forceStyle={defaultStyles.icon} />
+    } else {
+      return <IconPlaceholder {...props} />
+    }
+  }
+
   return (
     <View css={[defaultStyles.wrapper]}>
-      {icon ? <Icon name={icon as any} forceStyle={defaultStyles.icon} /> : null}
+      <_Image />
       <_Text />
     </View>
   )
