@@ -1,10 +1,14 @@
-import { createDefaultVariantFactory, FormTypes, includePresets, useDefaultComponentStyle } from '@codeleap/common'
+import { capitalize, createDefaultVariantFactory, FormTypes, getNestedStylesByKey, includePresets, useDefaultComponentStyle } from '@codeleap/common'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
+import { ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
 import { SelectProps } from './types'
 
+export type ItemParts = `item${Capitalize<ButtonParts>}`
+
 export type SelectParts =
   InputBaseParts
+  | ItemParts
   | 'listPortal'
   | 'listHeader'
   | 'listWrapper'
@@ -15,18 +19,13 @@ export type SelectParts =
   | 'value'
   | 'valueMultiple'
   | 'valueWrapper'
-  | 'item'
-  | 'itemIcon'
-  | 'itemText'
   | 'clearIcon'
   | 'dropdownIcon'
 
 type ItemState = 'focused' | 'selected' | 'selectedFocused'
 
 export type SelectStatefulParts =
-  `item:${ItemState}`
-  | `itemText:${ItemState}`
-  | `itemIcon:${ItemState}`
+  `${ItemParts}:${ItemState}`
   | 'listPlaceholder'
   | 'listPlaceholderIcon'
   | 'listPlaceholderText'
@@ -49,6 +48,12 @@ export type ComponentState = {
   error?: boolean
   focused?: boolean
   disabled?: boolean
+}
+
+type OptionState = { 
+  isSelected: boolean
+  isFocused: boolean
+  baseStyles: SelectProps['itemProps']['styles'] 
 }
 
 export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
@@ -79,34 +84,37 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     ...(error ? variantStyles[key + ':error'] : {}),
   })
 
-  const optionsStyles = (state: { isSelected: boolean; isFocused: boolean }) => ({
-    item: {
-      ...stylesKey('item'),
-      ...(state?.isSelected ? variantStyles['item:selected'] : {}),
-      ...(state?.isFocused ? variantStyles['item:focused'] : {}),
-      ...(state?.isFocused && state?.isSelected ? variantStyles['item:selectedFocused'] : {}),
-    },
-    icon: {
-      ...stylesKey('itemIcon'),
-      ...(state?.isSelected ? variantStyles['itemIcon:selected'] : {}),
-      ...(state?.isFocused ? variantStyles['itemIcon:focused'] : {}),
-      ...(state?.isFocused && state?.isSelected ? variantStyles['itemIcon:selectedFocused'] : {}),
-    },
-    text: {
-      ...stylesKey('itemText'),
-      ...(state?.isSelected ? variantStyles['itemText:selected'] : {}),
-      ...(state?.isFocused ? variantStyles['itemText:focused'] : {}),
-      ...(state?.isFocused && state?.isSelected ? variantStyles['itemText:selectedFocused'] : {}),
-    },
+  const optionNestedStyles = getNestedStylesByKey('item', variantStyles)
+
+  const optionStyleKey = (
+    key: ButtonParts | `${ButtonParts}:${ItemState}`,
+    state: OptionState
+  ): React.CSSProperties => {
+    return {
+      ...stylesKey(`item${capitalize(key)}` as any),
+      ...(state?.isSelected ? optionNestedStyles[`${key}:selected`] : {}),
+      ...(state?.isFocused ? optionNestedStyles[`${key}:focused`] : {}),
+      ...(state?.isFocused && state?.isSelected ? optionNestedStyles[`${key}:selectedFocused`] : {}),
+      ...(state.baseStyles?.[key] as React.CSSProperties),
+    }
+  }
+
+  const optionsStyles = (state: OptionState) => ({
+    wrapper: optionStyleKey('wrapper', state),
+    rightIcon: optionStyleKey('rightIcon', state),
+    text: optionStyleKey('text', state),
+    leftIcon: optionStyleKey('leftIcon', state),
+    icon: optionStyleKey('icon', state),
+    inner: optionStyleKey('inner', state),
   })
 
   const placeholderStyles = {
-    ['empty']: {
+    empty: {
       wrapper: stylesKey('listPlaceholder'),
       icon: stylesKey('listPlaceholderIcon'),
       text: stylesKey('listPlaceholderText'),
     },
-    ['noItems']: {
+    noItems: {
       wrapper: stylesKey('listPlaceholderNoItems'),
       icon: stylesKey('listPlaceholderNoItemsIcon'),
       text: stylesKey('listPlaceholderNoItemsText'),
