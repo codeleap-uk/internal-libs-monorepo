@@ -32,6 +32,7 @@ import { RefreshControlPresets } from './RefreshControl'
 import { AvatarPresets } from './Avatar'
 import { AvatarGroupPresets } from './AvatarGroup'
 import { SectionsPresets } from './Sections'
+import { DatePickerModalPresets } from './DatePickerModal'
 import { BadgePresets } from './Badge'
 
 export const defaultStyles = {
@@ -68,6 +69,7 @@ export const defaultStyles = {
   LoadingOverlay: LoadingOverlayPresets,
   InputLabel: InputLabelPresets,
   InputBase: InputBasePresets,
+  DatePickerModal: DatePickerModalPresets,
   RefreshControl: RefreshControlPresets,
   Badge: BadgePresets,
 }

@@ -44,6 +44,9 @@
       "react-native-device-info": [
         "../../apps/mobile/node_modules/react-native-device-info/lib/typescript/index.d.ts"
       ],
+         "react-native-date-picker": [
+        "../../apps/mobile/node_modules/react-native-date-picker/index.d.ts"
+      ]
     }
   },
   "include": [
