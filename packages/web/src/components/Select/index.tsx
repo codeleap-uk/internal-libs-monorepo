@@ -147,6 +147,7 @@ const defaultProps: Partial<SelectProps> = {
   separatorMultiValue: ', ',
   itemProps: {},
   loadingIndicatorSize: 20,
+  options: [],
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
@@ -169,10 +170,11 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     styles,
     debugName,
     onValueChange,
-    options = [],
+    options,
     value,
     loadOptions,
     multiple,
+    limit = null,
     focused,
     _error,
     renderItem: OptionComponent = null,
@@ -261,6 +263,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
   const handleChange = (opt: Multi extends true ? Option[] : Option) => {
     if (TypeGuards.isArray(opt)) {
+      // @ts-ignore
+      if (TypeGuards.isNumber(limit) && opt?.length >= limit && opt?.length > selectedOption?.length) {
+        return
+      }
       // @ts-ignore
       setSelectedOption(opt)
       // @ts-ignore

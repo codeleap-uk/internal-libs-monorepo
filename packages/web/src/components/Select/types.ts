@@ -88,6 +88,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     filterItems?: Props['filterOption']
     itemProps?: ButtonProps
     loadingIndicatorSize?: number
+    limit?: number
   } & Omit<
     ReactSelectProps<T, Multi>, 
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |
