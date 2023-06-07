@@ -50,7 +50,7 @@ export type ComponentState = {
   disabled?: boolean
 }
 
-type OptionState = { 
+export type OptionState = { 
   isSelected: boolean
   isFocused: boolean
   baseStyles: SelectProps['itemProps']['styles'] 
@@ -89,7 +89,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   const optionStyleKey = (
     key: ButtonParts | `${ButtonParts}:${ItemState}`,
     state: OptionState
-  ): React.CSSProperties => {
+  ) => {
     return {
       ...stylesKey(`item${capitalize(key)}` as any),
       ...(state?.isSelected ? optionNestedStyles[`${key}:selected`] : {}),

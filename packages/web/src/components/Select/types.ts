@@ -5,7 +5,7 @@ import { GroupBase, NoticeProps, OptionProps, Props } from "react-select"
 import { AsyncProps } from "react-select/async"
 import { ButtonProps } from '../Button'
 import { InputBaseProps } from "../InputBase"
-import { SelectPresets,SelectComposition } from "./styles"
+import { SelectPresets,SelectComposition, OptionState } from "./styles"
 
 type SelectValue<T,Multi extends boolean> = Multi extends true ? T[] : T
 
@@ -41,11 +41,7 @@ export type ComponentPartProps = {
 }
 
 export type TCustomOption = OptionProps & ComponentPartProps & { 
-  optionsStyles: (state: { isSelected: boolean; isFocused: boolean }) => { 
-    item: CSSInterpolation
-    icon: CSSInterpolation
-    text: CSSInterpolation
-  }
+  optionsStyles: (state: OptionState) => OptionState['baseStyles']
   selectedIcon?: string
   itemProps?: ButtonProps
 }

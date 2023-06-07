@@ -81,7 +81,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      {icon ? <Icon name={icon as any} style={defaultStyles.icon} /> : null}
+      {icon ? <Icon name={icon as any} forceStyle={defaultStyles.icon} /> : null}
       <_Text />
     </View>
   )
@@ -130,6 +130,25 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
   return props.text + `"${props.selectProps.inputValue}"`
 }
 
+const defaultProps: Partial<SelectProps> = {
+  PlaceholderComponent: DefaultPlaceholder,
+  PlaceholderNoItemsComponent: DefaultPlaceholder,
+  LoadingIndicatorComponent: LoadingIndicator,
+  noItemsText: 'No results for ',
+  noItemsIcon: 'placeholderNoItems-select',
+  placeholderText: 'Search items',
+  placeholderIcon: 'placeholder-select',
+  showDropdownIcon: true,
+  placeholder: 'Select',
+  clearable: false,
+  formatPlaceholderNoItems: defaultFormatPlaceholderNoItems,
+  selectedIcon: 'checkmark',
+  searchable: false,
+  separatorMultiValue: ', ',
+  itemProps: {},
+  loadingIndicatorSize: 20,
+}
+
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
   <T extends string | number = string, Multi extends boolean = false>
   (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
@@ -139,7 +158,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
   const {
     inputBaseProps,
     others: selectProps,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...Select.defaultProps,
+    ...props,
+  })
 
   const {
     variants,
@@ -155,26 +177,26 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     _error,
     renderItem: OptionComponent = null,
     FooterComponent = null,
-    PlaceholderComponent = DefaultPlaceholder,
-    PlaceholderNoItemsComponent = DefaultPlaceholder,
-    LoadingIndicatorComponent = LoadingIndicator,
-    noItemsText = 'No results for ',
-    noItemsIcon = 'placeholderNoItems-select',
-    placeholderText = 'Search items',
-    placeholderIcon = 'placeholder-select',
-    showDropdownIcon = true,
-    placeholder = 'Select',
-    clearable = false,
-    formatPlaceholderNoItems = defaultFormatPlaceholderNoItems,
+    PlaceholderComponent,
+    PlaceholderNoItemsComponent,
+    LoadingIndicatorComponent,
+    noItemsText,
+    noItemsIcon,
+    placeholderText,
+    placeholderIcon,
+    showDropdownIcon,
+    placeholder,
+    clearable,
+    formatPlaceholderNoItems,
     closeOnSelect = !multiple,
-    selectedIcon = 'checkmark',
+    selectedIcon,
     onLoadOptionsError,
     loadOptionsOnMount = options?.length === 0,
-    searchable = false,
-    separatorMultiValue = ', ',
+    searchable,
+    separatorMultiValue,
     filterItems = null,
     itemProps = {},
-    loadingIndicatorSize = 20,
+    loadingIndicatorSize,
     ...otherProps
   } = selectProps
 
@@ -189,6 +211,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
   const isFocused = _isFocused || focused
 
+  // @ts-ignore
   const validation = useValidate(value, validate)
 
   const isDisabled = !!inputBaseProps.disabled
@@ -388,3 +411,5 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     </InputBase>
   )
   })
+
+Select.defaultProps = defaultProps
