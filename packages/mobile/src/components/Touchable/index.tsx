@@ -201,7 +201,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     }
   }, [JSON.stringify(_styles)])
 
-  const disableRipple = disableFeedback || rippleDisabled || disableFeedback || Platform.OS !== 'android'
+  const disableRipple = disableFeedback || rippleDisabled || Platform.OS !== 'android'
 
   return (
     <Wrapper style={[wrapperStyle]}>
