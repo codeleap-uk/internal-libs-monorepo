@@ -27,6 +27,7 @@ export * from './Pager'
 export * from './EmptyPlaceholder'
 export * from './Backdrop'
 export * from './Drawer'
+export * from './Autocomplete'
 
 export * from './Grid'
 export * from './InputLabel'
