@@ -1,58 +1,22 @@
 import * as React from 'react'
 import {
-  ComponentVariants,
-  yup,
   useDefaultComponentStyle,
-  StylesOf,
-  PropsOf,
   TypeGuards,
   useState,
   useRef,
   useValidate,
-  FormTypes,
 } from '@codeleap/common'
-import { View } from '../View'
 import { forwardRef, useImperativeHandle } from 'react'
-import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
-import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { NumberIncrementPresets } from './styles'
+import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
-import { MaskedTextInput, TextInputMaskProps } from '../../modules/textInputMask'
+import { MaskedTextInput } from '../../modules/textInputMask'
 import { TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { Touchable } from '../Touchable'
 import { useActionValidate } from './utils'
+import { NumberIncrementProps } from './types'
 
 export * from './styles'
-
-type Masking = FormTypes.TextField['masking']
-type MaskOptions =  Masking['options']
-
-export type NumberIncrementProps = 
-  Omit<InputBaseProps, 'styles' | 'variants'> &
-  NativeTextInputProps & {
-  variants?: ComponentVariants<typeof NumberIncrementPresets>['variants']
-  styles?: StylesOf<NumberIncrementComposition>
-  value: number
-  validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
-  style?: PropsOf<typeof View>['style']
-  max?: number
-  min?: number
-  step?: number
-  editable?: boolean
-  _error?: string
-  placeholder?: string
-  onChangeMask?: TextInputMaskProps['onChangeText']
-  masking?: Exclude<Masking, 'mask' | 'format'>
-  prefix?: MaskOptions['unit']
-  suffix?: MaskOptions['suffixUnit']
-  separator?: MaskOptions['separator']
-  delimiter?: MaskOptions['delimiter']
-  mask?: MaskOptions['mask']
-  formatter?: (value: string | number) => string
-  parseValue?: (value: string) => number
-  timeoutActionFocus?: number
-  actionPressAutoFocus?: boolean
-  actionDebounce?: number | null
-} & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
 const MAX_VALID_DIGITS = 1000000000000000
 
@@ -210,9 +174,11 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       onChange(newValue)
     }
 
-    actionTimeoutRef.current = setTimeout(() => { 
-      if (actionPressAutoFocus) setIsFocused(false)
-    }, timeoutActionFocus)
+    if (!innerInputRef.current?.isFocused?.()) {
+      actionTimeoutRef.current = setTimeout(() => { 
+        if (actionPressAutoFocus) setIsFocused(false)
+      }, timeoutActionFocus)
+    }
   }, [validation?.onInputBlurred, validation?.onInputFocused, value])
 
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
@@ -248,7 +214,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   }
 
   const handleMaskChange = (masked: string, unmasked: any) => {
-    // @ts-ignore
     handleChangeInput?.(masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
   }
@@ -256,7 +221,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const maskingExtraProps = isMasked ? {
     type: TypeGuards.isNil(mask) ? 'money' : 'custom',
     onChangeText: handleMaskChange,
-    ref: (ref) => innerInputRef.current = ref,
     ...masking,
     options: {
       unit: prefix,
@@ -265,6 +229,12 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       delimiter: delimiter ?? ',',
       mask: mask,
       ...masking?.options,
+    },
+    ref: null,
+    refInput: (inputRef) => {
+      if (!!inputRef) {
+        innerInputRef.current = inputRef
+      }
     },
   } : {}
 
