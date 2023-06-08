@@ -1,7 +1,7 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ListComposition } from '../List'
 
-export type GridComposition = ListComposition | 'itemWrapper'
+export type GridComposition = ListComposition | 'itemWrapper' | 'footer'
 
 const createGridStyle = createDefaultVariantFactory<GridComposition>()
 
