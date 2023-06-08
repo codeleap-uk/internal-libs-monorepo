@@ -46,6 +46,7 @@ export type NumberIncrementProps =
   suffix?: MaskOptions['suffixUnit']
   separator?: MaskOptions['separator']
   delimiter?: MaskOptions['delimiter']
+  mask?: MaskOptions['mask']
   formatter?: (value: string | number) => string
   parseValue?: (value: string) => number
   timeoutActionFocus?: number
@@ -66,6 +67,7 @@ const defaultProps: Partial<NumberIncrementProps> = {
   formatter: null,
   parseValue: defaultParseValue,
   delimiter: null,
+  mask: null,
   masking: null,
   timeoutActionFocus: 300,
   actionPressAutoFocus: true,
@@ -105,6 +107,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     actionPressAutoFocus,
     parseValue,
     timeoutActionFocus,
+    mask,
     actionDebounce,
     ...textInputProps
   } = others
@@ -121,7 +124,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const isFormatted = TypeGuards.isFunction(formatter)
 
-  const isMasked = (!!masking || !!prefix || !!suffix || !!delimiter || !!separator) && !isFormatted
+  const isMasked = (!!masking || !!prefix || !!suffix || !!delimiter || !!separator || !!mask) && !isFormatted
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
@@ -244,15 +247,14 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     return value
   }
 
-  const handleMaskChange = (masked: string) => {
+  const handleMaskChange = (masked: string, unmasked: any) => {
     // @ts-ignore
-    const unmasked = innerInputRef?.current?.getRawValue?.()
     handleChangeInput?.(masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
   }
 
   const maskingExtraProps = isMasked ? {
-    type: 'money',
+    type: TypeGuards.isNil(mask) ? 'money' : 'custom',
     onChangeText: handleMaskChange,
     ref: (ref) => innerInputRef.current = ref,
     ...masking,
@@ -261,6 +263,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       separator: separator ?? '.',
       suffixUnit: suffix,
       delimiter: delimiter ?? ',',
+      mask: mask,
       ...masking?.options,
     },
   } : {}
