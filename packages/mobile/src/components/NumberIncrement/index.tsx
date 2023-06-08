@@ -16,11 +16,14 @@ import { forwardRef, useImperativeHandle } from 'react'
 import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
-import { MaskedTextInput } from '../../modules/textInputMask'
+import { MaskedTextInput, TextInputMaskProps } from '../../modules/textInputMask'
 import { TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { Touchable } from '../Touchable'
 
 export * from './styles'
+
+type Masking = FormTypes.TextField['masking']
+type MaskOptions =  Masking['options']
 
 export type NumberIncrementProps = 
   Omit<InputBaseProps, 'styles' | 'variants'> &
@@ -28,8 +31,6 @@ export type NumberIncrementProps =
   variants?: ComponentVariants<typeof NumberIncrementPresets>['variants']
   styles?: StylesOf<NumberIncrementComposition>
   value: number
-  onChange?: NativeTextInputProps['onChange']
-  onChangeText?: NativeTextInputProps['onChangeText']
   validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
   style?: PropsOf<typeof View>['style']
   max?: number
@@ -38,22 +39,30 @@ export type NumberIncrementProps =
   editable?: boolean
   _error?: string
   placeholder?: string
-
-  masking?: FormTypes.TextField['masking']
-  // prefix?: NFProps['prefix']
-  // suffix?: NFProps['suffix']
-  // separator?: NFProps['thousandSeparator']
-  // format?: PFProps['format']
-  // mask?: PFProps['mask']
-  // hasSeparator?: boolean
-  // formatter?: () => null
+  onChangeMask?: TextInputMaskProps['onChangeText']
+  masking?: Exclude<Masking, 'mask' | 'format'>
+  prefix?: MaskOptions['unit']
+  suffix?: MaskOptions['suffixUnit']
+  separator?: MaskOptions['separator']
+  delimiter?: MaskOptions['delimiter']
+  formatter?: (value: string | number) => string
+  parseValue?: (value: string) => number
 } & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
+const MAX_VALID_DIGITS = 1000000000000000
+
+const defaultParseValue = (value: string) => Number(value?.replace(/[^\d.]/g, ""))
+
 const defaultProps: Partial<NumberIncrementProps> = {
-  max: 1000000000000000,
+  max: MAX_VALID_DIGITS,
   min: 0,
   step: 1,
   editable: true,
+  separator: '.',
+  formatter: null,
+  parseValue: defaultParseValue,
+  delimiter: ',',
+  masking: null,
 }
 
 export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>((props, inputRef) => {
@@ -72,14 +81,21 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     value,
     disabled,
     onChangeText,
+    onChangeMask,
     max,
     min,
     step,
     editable,
-    masking = null,
     validate,
     onPress,
     _error,
+    masking,
+    separator,
+    prefix,
+    suffix,
+    delimiter,
+    formatter,
+    parseValue,
     ...textInputProps
   } = others
 
@@ -92,7 +108,11 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
 
-  const isMasked = !!masking
+  const disableFocus = !editable || disabled
+
+  const isFormatted = TypeGuards.isFunction(formatter)
+
+  const isMasked = (!!masking || !!prefix || !!suffix) && !isFormatted
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
@@ -130,14 +150,12 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     },
   )
 
-  const inputTextStyle = React.useMemo(() => {
-    return [
-      variantStyles.input,
-      isFocused && variantStyles['input:focus'],
-      hasError && variantStyles['input:error'],
-      disabled && variantStyles['input:disabled'],
-    ]
-  }, [disabled, isFocused, hasError])
+  const inputTextStyle = React.useMemo(() => ([
+    variantStyles.input,
+    isFocused && variantStyles['input:focus'],
+    hasError && variantStyles['input:error'],
+    disabled && variantStyles['input:disabled'],
+  ]), [disabled, isFocused, hasError])
 
   const placeholderTextColor = [
     [disabled, variantStyles['placeholder:disabled']],
@@ -160,6 +178,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const handleChange = React.useCallback((action: 'increment' | 'decrement') => {
     handleFocus()
+    innerInputRef.current?.focus?.()
 
     if (action === 'increment' && !incrementDisabled) {
       const newValue = Number(value) + step
@@ -186,22 +205,43 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const handleFocus = React.useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation?.onInputFocused()
-    setIsFocused(true)
+    if (!disableFocus) setIsFocused(true)
     if (e) props.onFocus?.(e)
   }, [validation?.onInputFocused, props.onFocus])
 
   const handleChangeInput: NativeTextInputProps['onChangeText'] = (text) => {
-    const value = Number(text.replace(/[^0-9]/g, ''))
+    const value = parseValue(text)
 
-    if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
-      onChange(max)
+    if (value >= MAX_VALID_DIGITS) {
+      onChange(MAX_VALID_DIGITS)
       return
     }
 
-    onChange(Number(value))
+    onChange(value)
 
     return value
   }
+
+  const handleMaskChange = (masked: string) => {
+    // @ts-ignore
+    const unmasked = innerInputRef?.current?.getRawValue?.()
+    handleChangeInput?.(masked)
+    if (onChangeMask) onChangeMask(masked, unmasked)
+  }
+
+  const maskingExtraProps = isMasked ? {
+    type: 'money',
+    onChangeText: handleMaskChange,
+    ref: (ref) => innerInputRef.current = ref,
+    ...masking,
+    options: {
+      unit: prefix,
+      separator,
+      suffixUnit: suffix,
+      delimiter,
+      ...masking?.options,
+    },
+  } : {}
 
   const onPressInnerWrapper = () => {
     handleFocus()
@@ -249,7 +289,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           allowFontScaling={false}
           editable={!disabled}
           placeholderTextColor={placeholderTextColor}
-          value={String(value)}
+          value={isFormatted ? formatter(value) : String(value)}
           selectionColor={selectionColor}
           onChangeText={handleChangeInput}
           {...textInputProps}
@@ -257,9 +297,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           onFocus={handleFocus}
           style={inputTextStyle}
           ref={innerInputRef}
-          // {...maskingExtraProps}
+          {...maskingExtraProps}
         />
-      ) : <Text text={String(value)} css={inputTextStyle} />}
+      ) : <Text text={isFormatted ? formatter(value) : String(value)} style={inputTextStyle} />}
     </InputBase>
   )
 })
