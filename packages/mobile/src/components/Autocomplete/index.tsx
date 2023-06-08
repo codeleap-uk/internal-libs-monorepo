@@ -1,17 +1,17 @@
-import { IconPlaceholder,
+import {
   useDefaultComponentStyle,
   TypeGuards,
   useNestedStylesByKey,
-  useBooleanToggle,
   FormTypes,
   onMount,
   onUpdate,
   usePrevious,
+  useSearch,
 } from '@codeleap/common'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
-import { TextInput } from '../TextInput'
+import { SearchInput } from '../TextInput'
 import { AutocompletePresets } from './styles'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
@@ -60,12 +60,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     listProps,
     debugName,
     placeholder = 'Select',
-    arrowIconName = 'selectArrow',
-    clearIconName,
-    clearable = false,
-    selectedIcon = 'selectMarker',
-    inputProps = {},
-    hideInput = false,
     itemProps = {},
     searchable = true,
     loadOptions,
@@ -75,49 +69,36 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     defaultOptions = options,
     visible: _visible,
     toggle: _toggle,
-    ListHeaderComponent,
     onLoadOptionsError,
     loadOptionsOnMount = defaultOptions.length === 0,
     loadOptionsOnOpen = false,
     filterItems = defaultFilterFunction,
-    getLabel,
-    searchInputProps,
-    outerInputComponent,
-    ...modalProps
   } = allProps
 
-  const [loading, setLoading] = useBooleanToggle(false)
-  const [, setSearch] = useState('')
   const isValueArray = TypeGuards.isArray(value) && multiple
 
-  const [labelOptions, setLabelOptions] = useState<FormTypes.Options<T>>(() => {
-    if (isValueArray) {
-      return defaultOptions.filter(o => value.includes(o.value))
-    }
-
-    const _option = defaultOptions.find(o => o.value === value)
-
-    if (!_option) {
-      return []
-    }
-
-    return [_option]
+  const {
+    loading,
+    setLoading,
+    labelOptions,
+    setLabelOptions,
+    visible,
+    toggle,
+    filteredOptions,
+    load,
+    onChangeSearch,
+  } = useSearch({
+    value,
+    multiple,
+    options,
+    filterItems,
+    debugName,
+    defaultOptions,
+    visible: _visible,
+    toggle: _toggle,
+    loadOptions,
+    onLoadOptionsError,
   })
-
-  const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
-
-  const [filteredOptions, setFilteredOptions] = useState(defaultOptions)
-
-  async function load() {
-    setLoading(true)
-    try {
-      const options = await loadOptions('')
-      setFilteredOptions(options)
-    } catch (e) {
-      onLoadOptionsError(e)
-    }
-    setLoading(false)
-  }
 
   onMount(() => {
     if (loadOptionsOnMount && !!loadOptions) {
@@ -156,7 +137,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     let removedIndex = null
 
     if (multiple && isValueArray) {
-
       if (value.includes(selectedValue)) {
         removedIndex = value.findIndex(v => v === selectedValue)
 
@@ -225,83 +205,17 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     />
   }, [value, select, multiple])
 
-  // ------------------------------------------------------------------------------------------------------------
-
-  const [searchInput, setSearchInput] = useState('')
-
-  const onChangeSearch = async (searchValue:string) => {
-    setSearchInput(searchValue)
-
-    if (!!loadOptions) {
-      setLoading(true)
-      try {
-        const _opts = await loadOptions(searchValue)
-        setFilteredOptions(_opts)
-      } catch (e) {
-        console.error(`Error loading select options [${debugName}]`, e)
-        onLoadOptionsError?.(e)
-      }
-      setTimeout(() => {
-        setLoading(false)
-      }, 0)
-      return
-    }
-    const _opts = filterItems(searchValue, options)
-    setFilteredOptions(_opts)
-  }
-
-  const debounceTest = !!loadOptions ? 800 : null
-
-  function onTypingChange(isTyping) {
-    if (searchable && !!loadOptions) {
-      setLoading(isTyping)
-    }
-  }
-
-  const setSearchTimeout = useRef<NodeJS.Timeout|null>(null)
-
-  const handleChangeSearch = (value: string) => {
-    setSearchInput(value)
-
-    if (TypeGuards.isNil(debounceTest)) {
-      onChangeSearch?.(value)
-    } else {
-      if (setSearchTimeout.current) {
-        clearTimeout(setSearchTimeout.current)
-      }
-
-      setSearchTimeout.current = setTimeout(() => {
-        onChangeSearch(value)
-      }, debounceTest ?? 0)
-    }
-  }
-
-  const handleClear = () => {
-    setSearchInput('')
-    onChangeSearch?.('')
-  }
-
   return <>
-    <TextInput
-      value={searchInput}
-      onChangeText={(value) => {
-        onTypingChange?.(true)
-        handleChangeSearch(value)
-      }}
-      onEndEditing={() => {
-        onTypingChange?.(false)
-        setLoading(false)
-      }}
+    <SearchInput
       placeholder={placeholder}
-      debugName={`Search ${debugName}`}
-      rightIcon={{
-        name: 'x' as IconPlaceholder,
-        onPress: handleClear,
+      debugName={debugName}
+      onTypingChange={(isTyping) => {
+        if (searchable && !!loadOptions) {
+          setLoading(isTyping)
+        }
       }}
-      leftIcon={{
-        name: 'search' as IconPlaceholder,
-      }}
-    />
+      debounce={!!loadOptions ? 800 : null}
+      onSearchChange={onChangeSearch} />
 
     <List<AutocompleteProps<any>['options']>
       data={searchable ? filteredOptions : options}

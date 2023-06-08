@@ -11,9 +11,8 @@ import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { ModalProps } from '../Modal'
 import { Text } from '../Text'
-import { TextInputComposition, TextInputProps } from '../TextInput'
+import { SearchInputProps, TextInputComposition, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { AutocompleteSearchHeaderProps } from './SearchHeader'
 import { AutocompleteComposition, AutocompletePresets } from './styles'
 
 export type AutocompleteRenderFNProps<T> = {
@@ -82,7 +81,7 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     searchable?: boolean
     limit?: number
     ListHeaderComponent?: React.ComponentType<AutocompleteHeaderProps>
-    searchInputProps?: Partial<AutocompleteSearchHeaderProps>
+    searchInputProps?: Partial<SearchInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
 
