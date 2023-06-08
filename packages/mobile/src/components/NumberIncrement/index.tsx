@@ -47,6 +47,8 @@ export type NumberIncrementProps =
   delimiter?: MaskOptions['delimiter']
   formatter?: (value: string | number) => string
   parseValue?: (value: string) => number
+  timeoutActionFocus?: number
+  actionPressAutoFocus?: boolean
 } & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
 const MAX_VALID_DIGITS = 1000000000000000
@@ -58,11 +60,13 @@ const defaultProps: Partial<NumberIncrementProps> = {
   min: 0,
   step: 1,
   editable: true,
-  separator: '.',
+  separator: null,
   formatter: null,
   parseValue: defaultParseValue,
-  delimiter: ',',
+  delimiter: null,
   masking: null,
+  timeoutActionFocus: 250,
+  actionPressAutoFocus: true,
 }
 
 export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>((props, inputRef) => {
@@ -95,7 +99,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     suffix,
     delimiter,
     formatter,
+    actionPressAutoFocus,
     parseValue,
+    timeoutActionFocus,
     ...textInputProps
   } = others
 
@@ -108,11 +114,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
 
-  const disableFocus = !editable || disabled
-
   const isFormatted = TypeGuards.isFunction(formatter)
 
-  const isMasked = (!!masking || !!prefix || !!suffix) && !isFormatted
+  const isMasked = (!!masking || !!prefix || !!suffix || !!delimiter || !!separator) && !isFormatted
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
@@ -176,19 +180,35 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     if (onChangeText) onChangeText?.(newValue)
   }
 
+  const actionTimeoutRef = useRef(null)
+
+  const clearActionTimeoutRef = React.useCallback(() => {
+    if (actionTimeoutRef.current !== null) {
+      clearTimeout(actionTimeoutRef.current)
+      actionTimeoutRef.current = null
+    }
+  }, [actionTimeoutRef.current])
+
   const handleChange = React.useCallback((action: 'increment' | 'decrement') => {
-    handleFocus()
-    innerInputRef.current?.focus?.()
+    if (actionPressAutoFocus) {
+      handleFocus()
+    } else {
+      validation?.onInputFocused()
+      clearActionTimeoutRef()
+    }
 
     if (action === 'increment' && !incrementDisabled) {
       const newValue = Number(value) + step
       onChange(newValue)
-      return
     } else if (action === 'decrement' && !decrementDisabled) {
       const newValue = Number(value) - step
       onChange(newValue)
-      return
     }
+
+    actionTimeoutRef.current = setTimeout(() => { 
+      if (actionPressAutoFocus) setIsFocused(false)
+      validation?.onInputBlurred()
+    }, timeoutActionFocus)
   }, [validation?.onInputBlurred, validation?.onInputFocused, value])
 
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
@@ -205,7 +225,8 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const handleFocus = React.useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation?.onInputFocused()
-    if (!disableFocus) setIsFocused(true)
+    clearActionTimeoutRef()
+    setIsFocused(true)
     if (e) props.onFocus?.(e)
   }, [validation?.onInputFocused, props.onFocus])
 
@@ -214,7 +235,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
     if (value >= MAX_VALID_DIGITS) {
       onChange(MAX_VALID_DIGITS)
-      return
+      return MAX_VALID_DIGITS
     }
 
     onChange(value)
@@ -236,9 +257,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     ...masking,
     options: {
       unit: prefix,
-      separator,
+      separator: separator ?? '.',
       suffixUnit: suffix,
-      delimiter,
+      delimiter: delimiter ?? ',',
       ...masking?.options,
     },
   } : {}
