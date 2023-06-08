@@ -1,19 +1,18 @@
 import {
   ComponentVariants,
   FormTypes,
-  IconPlaceholder,
   PropsOf,
 } from '@codeleap/common'
+import { AutocompletePresets } from '.'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
-import { ActionIconProps } from '../ActionIcon'
 import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { ModalProps } from '../Modal'
 import { Text } from '../Text'
-import { SearchInputProps, TextInputComposition, TextInputProps } from '../TextInput'
+import { SearchInputProps, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { AutocompleteComposition, AutocompletePresets } from './styles'
+import { AutocompleteComposition } from './styles'
 
 export type AutocompleteRenderFNProps<T> = {
   styles: StylesOf<AutocompleteComposition>
@@ -31,16 +30,6 @@ type AutocompleteModalProps = Omit<ModalProps, 'variants' | 'styles'>
 
 export type AutocompleteValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
-type AutocompleteHeaderProps = {
-  searchComponent?: React.ReactNode
-}
-
-type OuterInputProps<T = any, Multi extends boolean = false> = Omit<AutocompleteProps<T, Multi>, 'variants'| 'styles'> & {
-  currentValueLabel: FormTypes.Label
-  styles?: StylesOf<TextInputComposition>
-  clearIcon?: Partial<ActionIconProps>
-}
-
 export type ValueBoundAutocompleteProps<T, Multi extends boolean = false> = {
   options?: FormTypes.Options<T>
   defaultOptions?: FormTypes.Options<T>
@@ -52,7 +41,6 @@ export type ValueBoundAutocompleteProps<T, Multi extends boolean = false> = {
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
   getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
-  outerInputComponent?: React.ComponentType<OuterInputProps<T, Multi>>
 }
 
 export type ReplaceAutocompleteProps<Props, T, Multi extends boolean = false> = Omit<
@@ -65,14 +53,8 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     label?: FormTypes.Label
     styles?: StylesOf<AutocompleteComposition>
     style?: TextInputProps['style']
-    hideInput?: boolean
-    selectedIcon?: IconPlaceholder
-    arrowIconName?: IconPlaceholder
     closeOnSelect?: boolean
-    inputProps?: Partial<TextInputProps>
     listProps?: Partial<FlatListProps>
-    clearable?: boolean
-    clearIconName?: IconPlaceholder
     keyboardAware?: GetKeyboardAwarePropsOptions
     multiple?: Multi
     itemProps?: Partial<
@@ -80,10 +62,9 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     >>
     searchable?: boolean
     limit?: number
-    ListHeaderComponent?: React.ComponentType<AutocompleteHeaderProps>
-    searchInputProps?: Partial<SearchInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
-
+    isItemsSelectable?: boolean
+    searchInputProps?: Partial<SearchInputProps>
   } & ComponentVariants<typeof AutocompletePresets> & AutocompleteModalProps & ValueBoundAutocompleteProps<T, Multi>
 

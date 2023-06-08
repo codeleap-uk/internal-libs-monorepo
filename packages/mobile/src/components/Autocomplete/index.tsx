@@ -41,15 +41,14 @@ const defaultProps:Partial<AutocompleteProps<any, boolean>> = {
       return option?.label
     }
   },
-  // outerInputComponent: OuterInput,
   searchInputProps: {},
 }
 
 export const Autocomplete = <T extends string|number = string, Multi extends boolean = false>(autocomplete:AutocompleteProps<T, Multi>) => {
   const allProps = {
-    ...defaultProps,
     ...autocomplete,
   }
+
   const {
     value,
     onValueChange,
@@ -72,6 +71,7 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     onLoadOptionsError,
     loadOptionsOnMount = defaultOptions.length === 0,
     loadOptionsOnOpen = false,
+    isItemsSelectable = false,
     filterItems = defaultFilterFunction,
   } = allProps
 
@@ -114,7 +114,7 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     }
   }, [visible, prevVisible])
 
-  const variantStyles = useDefaultComponentStyle<'u:Select', typeof AutocompletePresets>('u:Select', {
+  const variantStyles = useDefaultComponentStyle<'u:Autocomplete', typeof AutocompletePresets>('u:Autocomplete', {
     transform: StyleSheet.flatten,
     rootElement: 'inputWrapper',
     styles,
@@ -175,7 +175,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     if (closeOnSelect) {
       close?.()
     }
-
   }
 
   const Item = renderItem || Button
@@ -192,7 +191,7 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
 
     return <Item
       debugName={`${debugName} item ${item.value}`}
-      selected={selected}
+      selected={isItemsSelectable ? selected : false}
       text={item.label}
       item={item}
       onPress={() => select(item.value)}
@@ -224,9 +223,8 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
       styles={listStyles}
       keyExtractor={(i) => i.value}
       renderItem={renderListItem}
-      fakeEmpty={loading}
-      separators
       {...listProps}
+      fakeEmpty={loading}
       placeholder={{
         loading: loading,
       }}
