@@ -16,8 +16,10 @@ export type Persistor = {
 }
 export type LanguageDictRecord = Record<
   string,
-  string | ((...args: any) => string)
+  string | object
 >
+
+export type LanguageDictionary = Record<string, LanguageDictRecord>
 
 export type I18NContextProps = React.PropsWithChildren<{
   i18n: I18nType
@@ -28,11 +30,11 @@ export type I18nType = {
   setLocale: (locale: string) => void
   locale: string
   persistor: Persistor
-  languageDictionary: Record<string, LanguageDictRecord>
+  languageDictionary: LanguageDictionary
 }
 
 export type MakeI18nProps = {
   initialLocale?: string
   persistor?: Persistor
-  languageDictionary?: Record<string, LanguageDictRecord>
+  languageDictionary?: LanguageDictionary
 }
