@@ -50,6 +50,7 @@ export type NumberIncrementProps =
   parseValue?: (value: string) => number
   timeoutActionFocus?: number
   actionPressAutoFocus?: boolean
+  actionDebounce?: number | null
 } & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
 const MAX_VALID_DIGITS = 1000000000000000
@@ -68,6 +69,7 @@ const defaultProps: Partial<NumberIncrementProps> = {
   masking: null,
   timeoutActionFocus: 300,
   actionPressAutoFocus: true,
+  actionDebounce: null,
 }
 
 export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>((props, inputRef) => {
@@ -103,6 +105,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     actionPressAutoFocus,
     parseValue,
     timeoutActionFocus,
+    actionDebounce,
     ...textInputProps
   } = others
 
@@ -224,7 +227,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const handleFocus = React.useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation?.onInputFocused()
     clearActionTimeoutRef()
-    setIsFocused(true)
+    if (editable) setIsFocused(true)
     if (e) props.onFocus?.(e)
   }, [validation?.onInputFocused, props.onFocus])
 
@@ -264,7 +267,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const onPressInnerWrapper = () => {
     handleFocus()
-    innerInputRef.current?.focus?.()
+    if (editable) innerInputRef.current?.focus?.()
     if (onPress) onPress?.()
   }
 
@@ -283,14 +286,14 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
         name: 'plus' as any,
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
-        debounce: null,
+        debounce: actionDebounce,
         ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
         name: 'minus' as any,
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
-        debounce: null,
+        debounce: actionDebounce,
         ...inputBaseProps.leftIcon,
       }}
       style={style}
@@ -299,6 +302,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       innerWrapper={Touchable}
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
+        rippleDisabled: true,
         onPress: onPressInnerWrapper,
       }}
     >
