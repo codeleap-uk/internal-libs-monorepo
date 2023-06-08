@@ -19,6 +19,7 @@ import { Text } from '../Text'
 import { MaskedTextInput, TextInputMaskProps } from '../../modules/textInputMask'
 import { TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { Touchable } from '../Touchable'
+import { useActionValidate } from './utils'
 
 export * from './styles'
 
@@ -65,7 +66,7 @@ const defaultProps: Partial<NumberIncrementProps> = {
   parseValue: defaultParseValue,
   delimiter: null,
   masking: null,
-  timeoutActionFocus: 250,
+  timeoutActionFocus: 300,
   actionPressAutoFocus: true,
 }
 
@@ -109,10 +110,11 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const innerInputRef = useRef<NativeTextInput>(null)
 
+  const actionValidation = useActionValidate(validate)
   const validation = useValidate(value, validate)
 
-  const hasError = !validation.isValid || _error
-  const errorMessage = validation.message || _error
+  const hasError = !validation.isValid || _error || !actionValidation?.isValid
+  const errorMessage = validation.message || _error || actionValidation?.message
 
   const isFormatted = TypeGuards.isFunction(formatter)
 
@@ -176,6 +178,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   ].find(([x]) => x)?.[1]?.color
 
   const onChange = (newValue: number) => {
+    actionValidation.onAction(newValue)
     // @ts-ignore
     if (onChangeText) onChangeText?.(newValue)
   }
@@ -190,12 +193,8 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   }, [actionTimeoutRef.current])
 
   const handleChange = React.useCallback((action: 'increment' | 'decrement') => {
-    if (actionPressAutoFocus) {
-      handleFocus()
-    } else {
-      validation?.onInputFocused()
-      clearActionTimeoutRef()
-    }
+    if (actionPressAutoFocus) setIsFocused(true)
+    clearActionTimeoutRef()
 
     if (action === 'increment' && !incrementDisabled) {
       const newValue = Number(value) + step
@@ -207,7 +206,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
     actionTimeoutRef.current = setTimeout(() => { 
       if (actionPressAutoFocus) setIsFocused(false)
-      validation?.onInputBlurred()
     }, timeoutActionFocus)
   }, [validation?.onInputBlurred, validation?.onInputFocused, value])
 
