@@ -5,6 +5,7 @@ import {
   useState,
   useRef,
   useValidate,
+  IconPlaceholder,
 } from '@codeleap/common'
 import { forwardRef, useImperativeHandle } from 'react'
 import { NumberIncrementPresets } from './styles'
@@ -18,7 +19,7 @@ import { NumberIncrementProps } from './types'
 
 export * from './styles'
 
-const MAX_VALID_DIGITS = 1000000000000000
+const MAX_VALID_DIGITS = 1000000000000000 // maximum number of digits that the input supports to perform operations
 
 const defaultParseValue = (value: string) => Number(value?.replace(/[^\d.]/g, ""))
 
@@ -88,7 +89,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const isFormatted = TypeGuards.isFunction(formatter)
 
-  const isMasked = (!!masking || !!prefix || !!suffix || !!delimiter || !!separator || !!mask) && !isFormatted
+  const hasMaskProps = [masking, prefix, suffix, delimiter, separator, mask].some(v => !!v)
+
+  const isMasked = hasMaskProps && !isFormatted
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
@@ -174,12 +177,12 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       onChange(newValue)
     }
 
-    if (!innerInputRef.current?.isFocused?.()) {
+    if (actionPressAutoFocus) {
       actionTimeoutRef.current = setTimeout(() => { 
-        if (actionPressAutoFocus) setIsFocused(false)
+        setIsFocused(false)
       }, timeoutActionFocus)
     }
-  }, [validation?.onInputBlurred, validation?.onInputFocused, value])
+  }, [value])
 
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     if (TypeGuards.isNumber(max) && (value >= max)) {
@@ -190,15 +193,15 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
     validation?.onInputBlurred()
     setIsFocused(false)
-    props.onBlur?.(e)
-  }, [validation?.onInputBlurred, props.onBlur, value])
+    props?.onBlur?.(e)
+  }, [validation?.onInputBlurred, props?.onBlur, value])
 
   const handleFocus = React.useCallback((e?: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation?.onInputFocused()
     clearActionTimeoutRef()
     if (editable) setIsFocused(true)
-    if (e) props.onFocus?.(e)
-  }, [validation?.onInputFocused, props.onFocus])
+    if (e) props?.onFocus?.(e)
+  }, [validation?.onInputFocused, props?.onFocus])
 
   const handleChangeInput: NativeTextInputProps['onChangeText'] = (text) => {
     const value = parseValue(text)
@@ -209,7 +212,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     }
 
     onChange(value)
-
     return value
   }
 
@@ -256,14 +258,14 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
         ],
       }}
       rightIcon={{
-        name: 'plus' as any,
+        name: 'plus' as IconPlaceholder,
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
         debounce: actionDebounce,
         ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
-        name: 'minus' as any,
+        name: 'minus' as IconPlaceholder,
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
         debounce: actionDebounce,
@@ -295,7 +297,12 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           ref={innerInputRef}
           {...maskingExtraProps}
         />
-      ) : <Text text={isFormatted ? formatter(value) : String(value)} style={inputTextStyle} />}
+      ) : (
+        <Text 
+          text={isFormatted ? formatter(value) : String(value)} 
+          style={inputTextStyle} 
+        />
+      )}
     </InputBase>
   )
 })
