@@ -21,7 +21,13 @@ export * from './styles'
 
 const MAX_VALID_DIGITS = 1000000000000000 // maximum number of digits that the input supports to perform operations
 
-const defaultParseValue = (value: string) => Number(value?.replace(/[^\d.]/g, ""))
+const defaultParseValue = (_value: string) => {
+  const value = _value?.length > 0 ? _value : '0'
+
+  const parsedValue = value?.replace(/[^\d.]/g, '')
+
+  return parseFloat(parsedValue)
+}
 
 const defaultProps: Partial<NumberIncrementProps> = {
   max: MAX_VALID_DIGITS,
@@ -284,6 +290,8 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       {editable && !disabled ? (
         <InputElement
           keyboardType='numeric'
+          textAlign='center'
+          textAlignVertical='center'
           allowFontScaling={false}
           editable={!disabled}
           placeholderTextColor={placeholderTextColor}
