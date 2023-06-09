@@ -14,10 +14,12 @@ export interface SegmentedControlOptionProps {
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
 }
 
-export const SegmentedControlOption = () => {
+export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
+
+  const { selected, onPress, style, variantStyles, label, value, textProps, ...touchableProps } = props
+
   return (
     <Touchable
-      debugName={`Segmented Control ${debugName}, option ${label}`}
       noFeedback={selected}
       key={touchableProps.key}
       styles={{
