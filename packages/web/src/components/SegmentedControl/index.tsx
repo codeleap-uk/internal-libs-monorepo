@@ -1,4 +1,5 @@
 import { View } from '../View'
+import { SegmentedControlOption } from './SegmentedControlOption'
 
 export interface SegmentedControlProps {
   options?: {label: string; value: any }[]
@@ -23,8 +24,23 @@ export interface SegmentedControlProps {
   */
 }
 
-export const SegmentedControl = () => {
+export const SegmentedControl = (props: SegmentedControlProps) => {
+
+  const { getItemWidth, label, options, styles, value } = props
+
   return (
-    <View />
+    <View>
+      {options.map((o, idx) => (
+        <SegmentedControlOption
+          label={o.label}
+          value={o.value}
+          onPress={onPress(o.value, idx)}
+          key={idx}
+          // style={widthStyle}
+          selected={value === o.value}
+          // variantStyles={variantStyles}
+        />
+      ))}
+    </View>
   )
 }
