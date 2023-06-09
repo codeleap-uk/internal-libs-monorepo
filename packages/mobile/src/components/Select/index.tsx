@@ -7,6 +7,7 @@ import { IconPlaceholder,
   onUpdate,
   usePrevious,
   useSearch,
+  useBooleanToggle,
 } from '@codeleap/common'
 import React, { useCallback, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
@@ -123,8 +124,6 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     setLoading,
     labelOptions,
     setLabelOptions,
-    visible,
-    toggle,
     filteredOptions,
     load,
     onChangeSearch,
@@ -135,11 +134,11 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     filterItems,
     debugName,
     defaultOptions,
-    visible: _visible,
-    toggle: _toggle,
     loadOptions,
     onLoadOptionsError,
   })
+
+  const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
 
   const currentValueLabel = useMemo(() => {
     const _options = (multiple ? labelOptions : labelOptions?.[0]) as Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]
