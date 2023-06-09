@@ -1,11 +1,23 @@
 import { View } from '../View'
 
 export interface SegmentedControlProps {
-  visible?: boolean
+  options?: {label: string; value: any }[]
   /**
    * Determine if the modal is visible
   */
-  title?: React.ReactNode
+  value?: any
+  /**
+   * Determine if the modal is visible
+  */
+  styles?: React.ReactNode
+  /**
+    * Determine if the modal is visible
+  */
+  label?: React.ReactNode
+  /**
+    * Determine if the modal is visible
+  */
+  getItemWidth?: (item:{label: string; value: any }, idx: number, arr: {label: string; value: any }[]) => number
   /**
     * Determine if the modal is visible
   */
