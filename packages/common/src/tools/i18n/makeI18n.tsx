@@ -1,30 +1,8 @@
 import { TypeGuards } from '../../utils'
 import { I18nType, MakeI18nProps } from './types'
+import { formatStrWithArgs, getNestedValues, replaceVariables } from './utils'
 
 let locale: string
-
-export function formatStrWithArgs(str: string, ...args: any[]) {
-  let i = 0
-  return str.replace(/%s/g, () => args[i++])
-}
-
-const replaceVariables = (str: string, args: any) => {
-  if (!args) return str
-
-  const regex = /{{(.*?)}}/g
-  return str.replace(regex, (_, match) => {
-    const variableName = match.trim()
-    return args[variableName] || variableName
-  })
-}
-
-const getNestedValues = (languageDictionary, key: string) => {
-  const properties = key.split('.')
-  return properties.reduce(
-    (nestedObj, property) => nestedObj && nestedObj[property],
-    languageDictionary,
-  )
-}
 
 export function make18n(props: MakeI18nProps): I18nType {
   const { initialLocale, persistor, languageDictionary } = props

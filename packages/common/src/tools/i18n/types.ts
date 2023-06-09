@@ -23,6 +23,7 @@ export type LanguageDictionary = Record<string, LanguageDictRecord>
 
 export type I18NContextProps = React.PropsWithChildren<{
   i18n: I18nType
+  persistor?: Persistor
 }>
 
 export type I18nType = {

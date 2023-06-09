@@ -24,7 +24,7 @@ export const I18NProvider = (props: I18NContextProps) => {
 
   I18NRef.current.subscribe = subscribe
 
-  const { children, i18n } = props
+  const { children, i18n, persistor } = props
   const initialLocale = i18n.locale
 
   const callSubscribers = React.useCallback((locale: string) => {
@@ -32,6 +32,23 @@ export const I18NProvider = (props: I18NContextProps) => {
   }, [])
 
   const [locale, _setLocale] = React.useState<string>(initialLocale)
+  // const [locale, _setLocale] = React.useState<string>(() => {
+  //   let _locale = initialLocale
+  //   let isPromise = false
+  //   if (persistor) {
+  //     const persistedLocale = persistor.getLocale()
+
+  //     // @ts-expect-error - TS doesn't know that a Promise has a then method
+  //     isPromise = persistedLocale instanceof Promise || !!persistedLocale.then
+
+  //     if (!isPromise) {
+  //       // @ts-expect-error - TS doesn't know that a Promise has a then method
+  //       _locale = persistedLocale
+  //     }
+  //   }
+  //   if (!isPromise) callSubscribers(_locale)
+  //   return _locale
+  // })
 
   I18NRef.current.locale = locale
   i18n.setLocale(locale)
@@ -42,6 +59,12 @@ export const I18NProvider = (props: I18NContextProps) => {
       I18NRef.current.locale = newLocale
       callSubscribers(newLocale)
       _setLocale(newLocale)
+
+      // if (persistor) {
+      //   console.log('SET PERSISTED LOCALE', newLocale)
+      //   persistor?.setLocale?.(newLocale)
+      // }
+
       setTimeout(() => {
         setIsSettingsLocale(false)
       })
@@ -50,6 +73,24 @@ export const I18NProvider = (props: I18NContextProps) => {
   )
 
   I18NRef.current.setLocale = setLocale
+
+  onMount(() => {
+    if (persistor) {
+      const persistedLocale = persistor.getLocale()
+      // @ts-expect-error - TS doesn't know that a Promise has a then method
+      const isPromise = persistedLocale instanceof Promise || TypeGuards.isFunction(persistedLocale.then)
+
+      if (isPromise) {
+      // @ts-expect-error - TS doesn't know that a Promise has a then method
+        persistedLocale.then((newLocale) => {
+          console.log('GET PERSISTED LOCALE', newLocale)
+          console.log('AFTER RESULT', newLocale || initialLocale)
+          setLocale(newLocale || initialLocale)
+
+        })
+      }
+    }
+  })
 
   const t = React.useCallback(
     (key: string, ...args: any): string => i18n.t(key, ...args, locale),
