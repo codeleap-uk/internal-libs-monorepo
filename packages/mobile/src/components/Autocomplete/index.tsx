@@ -4,8 +4,6 @@ import {
   useNestedStylesByKey,
   FormTypes,
   onMount,
-  onUpdate,
-  usePrevious,
   useSearch,
 } from '@codeleap/common'
 import React, { useCallback } from 'react'
@@ -15,6 +13,7 @@ import { SearchInput } from '../TextInput'
 import { AutocompletePresets } from './styles'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
+import { View } from '../View'
 export * from './styles'
 
 const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
@@ -42,10 +41,12 @@ const defaultProps:Partial<AutocompleteProps<any, boolean>> = {
     }
   },
   searchInputProps: {},
+  selectedIcon: 'check' as any,
 }
 
 export const Autocomplete = <T extends string|number = string, Multi extends boolean = false>(autocomplete:AutocompleteProps<T, Multi>) => {
   const allProps = {
+    ...defaultProps,
     ...autocomplete,
   }
 
@@ -56,23 +57,23 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     options = [],
     variants,
     renderItem,
-    listProps,
+
     debugName,
     placeholder = 'Select',
     itemProps = {},
     searchable = true,
     loadOptions,
     multiple = false,
-    closeOnSelect = !multiple,
     limit = null,
     defaultOptions = options,
-    visible: _visible,
-    toggle: _toggle,
     onLoadOptionsError,
+    selectedIcon,
     loadOptionsOnMount = defaultOptions.length === 0,
-    loadOptionsOnOpen = false,
-    isItemsSelectable = false,
+    selectable = false,
     filterItems = defaultFilterFunction,
+    searchInputProps: searchProps = {},
+    onItemPressed = () => {},
+    ...listProps
   } = allProps
 
   const isValueArray = TypeGuards.isArray(value) && multiple
@@ -82,8 +83,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     setLoading,
     labelOptions,
     setLabelOptions,
-    visible,
-    toggle,
     filteredOptions,
     load,
     onChangeSearch,
@@ -94,8 +93,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     filterItems,
     debugName,
     defaultOptions,
-    visible: _visible,
-    toggle: _toggle,
     loadOptions,
     onLoadOptionsError,
   })
@@ -105,14 +102,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
       load()
     }
   })
-
-  const prevVisible = usePrevious(visible)
-
-  onUpdate(() => {
-    if (visible && !prevVisible && loadOptionsOnOpen && !!loadOptions) {
-      load()
-    }
-  }, [visible, prevVisible])
 
   const variantStyles = useDefaultComponentStyle<'u:Autocomplete', typeof AutocompletePresets>('u:Autocomplete', {
     transform: StyleSheet.flatten,
@@ -126,8 +115,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
   const listStyles = useNestedStylesByKey('list', variantStyles)
 
   const currentOptions = searchable ? filteredOptions : defaultOptions
-
-  const close = () => toggle?.()
 
   const select = (selectedValue) => {
 
@@ -172,9 +159,6 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
       setLabelOptions([newOption])
     }
 
-    if (closeOnSelect) {
-      close?.()
-    }
   }
 
   const Item = renderItem || Button
@@ -191,20 +175,25 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
 
     return <Item
       debugName={`${debugName} item ${item.value}`}
-      selected={isItemsSelectable ? selected : false}
+      selected={selectable ? selected : false}
       text={item.label}
       item={item}
-      onPress={() => select(item.value)}
+      onPress={() => {
+        onItemPressed(item)
+        if (selectable) {
+          select(item.value)
+        }
+      }}
       // @ts-ignore
-      icon={'check'}
+      rightIcon={selectedIcon}
       // @ts-ignore
-      rightIcon={'check'}
+      icon={selectedIcon}
       styles={itemStyles}
       {...itemProps}
     />
-  }, [value, select, multiple])
+  }, [value, select, multiple, selectable, isValueArray])
 
-  return <>
+  return <View style={variantStyles.wrapper}>
     <SearchInput
       placeholder={placeholder}
       debugName={debugName}
@@ -214,22 +203,26 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
         }
       }}
       debounce={!!loadOptions ? 800 : null}
-      onSearchChange={onChangeSearch} />
+      onSearchChange={onChangeSearch}
+      hideErrorMessage
+      {...searchProps}
+    />
 
-    <List<AutocompleteProps<any>['options']>
+    <List<any>
       data={searchable ? filteredOptions : options}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}
       styles={listStyles}
+      // @ts-ignore
       keyExtractor={(i) => i.value}
       renderItem={renderListItem}
-      {...listProps}
       fakeEmpty={loading}
       placeholder={{
-        loading: loading,
+        loading,
       }}
+      {...listProps}
     />
-  </>
+  </View>
 }
 
 export * from './styles'

@@ -1,6 +1,7 @@
 import {
   ComponentVariants,
   FormTypes,
+  IconPlaceholder,
   PropsOf,
 } from '@codeleap/common'
 import { AutocompletePresets } from '.'
@@ -8,7 +9,6 @@ import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
-import { ModalProps } from '../Modal'
 import { Text } from '../Text'
 import { SearchInputProps, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
@@ -26,8 +26,6 @@ export type AutocompleteRenderFNProps<T> = {
 
 export type AutocompleteRenderFN<T> = (props: AutocompleteRenderFNProps<T>) => JSX.Element
 
-type AutocompleteModalProps = Omit<ModalProps, 'variants' | 'styles'>
-
 export type AutocompleteValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
 export type ValueBoundAutocompleteProps<T, Multi extends boolean = false> = {
@@ -41,6 +39,7 @@ export type ValueBoundAutocompleteProps<T, Multi extends boolean = false> = {
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
   getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
+  onItemPressed?: (item: FormTypes.Options<T>[number]) => any
 }
 
 export type ReplaceAutocompleteProps<Props, T, Multi extends boolean = false> = Omit<
@@ -62,9 +61,14 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     >>
     searchable?: boolean
     limit?: number
+    selectedIcon?: IconPlaceholder
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
-    isItemsSelectable?: boolean
+    selectable?: boolean
     searchInputProps?: Partial<SearchInputProps>
-  } & ComponentVariants<typeof AutocompletePresets> & AutocompleteModalProps & ValueBoundAutocompleteProps<T, Multi>
+    debugName: string
+  }
+    & Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>
+    & ComponentVariants<typeof AutocompletePresets>
+    & ValueBoundAutocompleteProps<T, Multi>
 
