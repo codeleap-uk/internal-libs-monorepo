@@ -74,6 +74,8 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 
     if (TypeGuards.isString(TextPlaceholder)) {
       return <Text text={TextPlaceholder} css={[defaultStyles.text]} />
+    } else if (React.isValidElement(TextPlaceholder)) {
+      return TextPlaceholder
     } else {
       return <TextPlaceholder {...props} />
     }
@@ -84,6 +86,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 
     if (TypeGuards.isString(IconPlaceholder)) {
       return <Icon name={TextPlaceholder as any} forceStyle={defaultStyles.icon} />
+    } else if (React.isValidElement(IconPlaceholder)) {
+      // @ts-ignore
+      return <View style={defaultStyles.icon}>
+        { IconPlaceholder}
+      </View>
     } else {
       return <IconPlaceholder {...props} />
     }
@@ -274,7 +281,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
   const handleChange = (opt: Multi extends true ? Option[] : Option) => {
     if (TypeGuards.isArray(opt)) {
       // @ts-ignore
-      if (TypeGuards.isNumber(limit) && opt?.length >= limit && opt?.length > selectedOption?.length) {
+      if (TypeGuards.isNumber(limit) && opt?.length > limit && opt?.length > selectedOption?.length) {
         return
       }
       // @ts-ignore
