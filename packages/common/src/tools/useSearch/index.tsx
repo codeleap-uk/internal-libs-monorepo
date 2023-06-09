@@ -11,8 +11,7 @@ export function useSearch<T extends string|number = string, Multi extends boolea
     filterItems,
     debugName,
     defaultOptions,
-    visible: _visible,
-    toggle: _toggle,
+
     loadOptions,
     onLoadOptionsError,
   } = { ...props }
@@ -33,7 +32,6 @@ export function useSearch<T extends string|number = string, Multi extends boolea
     return [_option]
   })
 
-  const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
   const [filteredOptions, setFilteredOptions] = useState(defaultOptions)
   const [, setSearchInput] = useState('')
 
@@ -69,5 +67,5 @@ export function useSearch<T extends string|number = string, Multi extends boolea
     setFilteredOptions(_opts)
   }
 
-  return { loading, setLoading, labelOptions, setLabelOptions, visible, toggle, filteredOptions, load, onChangeSearch }
+  return { loading, setLoading, labelOptions, setLabelOptions, filteredOptions, load, onChangeSearch }
 }
