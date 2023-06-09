@@ -35,6 +35,7 @@ export type TextInputProps =
     onChangeMask?: TextInputMaskProps['onChangeText']
     visibleIcon?: IconPlaceholder
     hiddenIcon?: IconPlaceholder
+    _error?: string
   } & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
 const defaultProps:Partial<TextInputProps> = {
@@ -69,6 +70,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     onPress,
     visibleIcon,
     hiddenIcon,
+    _error = null,
     ...textInputProps
   } = others
 
@@ -161,12 +163,13 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     editable: false,
     caretHidden: true,
   } : {}
+
   const hasMultipleLines = isMultiline && value?.includes('\n')
   return <InputBase
     {...inputBaseProps}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
-    error={validation.isValid ? null : validation.message}
+    error={(validation.isValid && !_error) ? null : _error || validation.message}
     styles={{
       ...variantStyles,
       innerWrapper: [
