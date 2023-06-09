@@ -4,7 +4,6 @@ import { View } from '../View'
 import { SwitchPresets, SwitchComposition } from './styles'
 import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
-import { Touchable } from '../Touchable'
 import { motion } from 'framer-motion'
 
 export * from './styles'
@@ -110,7 +109,7 @@ export const Switch = (props: SwitchProps) => {
           variantStyles.track, 
           disabled && variantStyles['track:disabled'],
         ]}
-        initial={trackAnimation}
+        initial={false}
         animate={trackAnimation}
         transition={variantStyles['track:transition']}
         onClick={handleChange}
@@ -120,7 +119,7 @@ export const Switch = (props: SwitchProps) => {
             variantStyles.thumb, 
             disabled && variantStyles['thumb:disabled'],
           ]}
-          initial={thumbAnimation}
+          initial={false}
           animate={thumbAnimation}
           transition={variantStyles['thumb:transition']}
         />
