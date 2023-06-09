@@ -14,16 +14,12 @@ export type Persistor = {
   getLocale: () => Promise<string> | string
   setLocale: (locale: string) => Promise<void> | void
 }
-export type LanguageDictRecord = Record<
-  string,
-  string | object
->
+export type LanguageDictRecord = Record<string, string | object>
 
 export type LanguageDictionary = Record<string, LanguageDictRecord>
 
 export type I18NContextProps = React.PropsWithChildren<{
   i18n: I18nType
-  persistor?: Persistor
 }>
 
 export type I18nType = {
