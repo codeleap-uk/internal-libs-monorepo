@@ -44,7 +44,7 @@ const defaultProps: Partial<BadgeProps> = {
 export const Badge = (props: BadgeProps) => {
   const allProps = {
     ...Badge.defaultProps,
-    props,
+    ...props,
   }
 
   const {
