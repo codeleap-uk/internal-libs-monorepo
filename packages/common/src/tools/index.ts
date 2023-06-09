@@ -8,4 +8,5 @@ export * from './PermissionManager'
 export * from './useSearchParams'
 export * from './usePagination'
 export * from './i18n'
+export * from './useSearch'
 

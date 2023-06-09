@@ -12,7 +12,7 @@ import {
   IconPlaceholder,
 } from '@codeleap/common'
 import { forwardRef, useImperativeHandle } from 'react'
-import { StylesOf } from '../../types'
+import { ComponentWithDefaultProps, StylesOf } from '../../types'
 import { StyleSheet, TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputComposition, TextInputPresets } from './styles'
@@ -211,4 +211,86 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   </InputBase>
 })
 
+export type SearchInputProps = {
+  onTypingChange: (isTyping: boolean) => void
+  onSearchChange: (search: string) => void
+  onClear: () => void
+  debugName: string
+  debounce?: number
+  clearIcon?: IconPlaceholder
+  searchIcon?: IconPlaceholder
+  placeholder: string
+} & Partial<TextInputProps>
+
+export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
+  const {
+    debugName,
+    onClear,
+    onSearchChange,
+    onTypingChange,
+    clearIcon,
+    searchIcon,
+    debounce,
+    placeholder,
+  } = {
+    ...SearchInput.defaultProps,
+    ...props,
+  }
+
+  const [search, setSearch] = useState('')
+
+  const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
+
+  const handleChangeSearch = (value: string) => {
+    setSearch(value)
+
+    if (TypeGuards.isNil(debounce)) {
+      onSearchChange?.(value)
+    } else {
+      if (setSearchTimeout.current) {
+        clearTimeout(setSearchTimeout.current)
+      }
+
+      setSearchTimeout.current = setTimeout(() => {
+        onSearchChange(value)
+      }, debounce ?? 0)
+    }
+
+  }
+
+  const handleClear = () => {
+    setSearch('')
+    onSearchChange?.('')
+    onClear?.()
+  }
+
+  return (
+    <TextInput
+      value={search}
+      onChangeText={(value) => {
+        onTypingChange?.(true)
+        handleChangeSearch(value)
+      }}
+      onEndEditing={() => {
+        onTypingChange?.(false)
+        // setLoading(false)
+      }}
+      placeholder={placeholder}
+      debugName={`Search ${debugName}`}
+      rightIcon={!!search.trim() && {
+        name: clearIcon,
+        onPress: handleClear,
+      }}
+      leftIcon={{
+        name: searchIcon,
+      }}
+    />
+  )
+}
+
 TextInput.defaultProps = defaultProps
+SearchInput.defaultProps = {
+  debounce: null,
+  clearIcon: 'x' as IconPlaceholder,
+  searchIcon: 'search' as IconPlaceholder,
+}
