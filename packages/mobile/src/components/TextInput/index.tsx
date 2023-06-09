@@ -277,7 +277,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       }}
       placeholder={placeholder}
       debugName={`Search ${debugName}`}
-      rightIcon={{
+      rightIcon={!!search.trim() && {
         name: clearIcon,
         onPress: handleClear,
       }}
