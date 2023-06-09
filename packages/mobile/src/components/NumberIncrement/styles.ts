@@ -1,9 +1,9 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { InputBaseParts } from '../InputBase'
+import { InputBaseParts, InputBaseStates } from '../InputBase'
 
 export type NumberIncrementParts = InputBaseParts | 'input' | 'placeholder' | 'selection'
 
-export type NumberIncrementStates = 'disabled' | 'focus' | 'error'
+export type NumberIncrementStates = InputBaseStates
 
 export type NumberIncrementComposition =
   | NumberIncrementParts

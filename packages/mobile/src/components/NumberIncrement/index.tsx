@@ -18,6 +18,7 @@ import { useActionValidate } from './utils'
 import { NumberIncrementProps } from './types'
 
 export * from './styles'
+export * from './types'
 
 const MAX_VALID_DIGITS = 1000000000000000 // maximum number of digits that the input supports to perform operations
 
@@ -193,7 +194,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     if (TypeGuards.isNumber(max) && (value >= max)) {
       onChange(max)
-    } else if (TypeGuards.isNumber(min) && (value <= min) || !value) {
+    } else if (TypeGuards.isNumber(min) && (value <= min) || !value || String(value)?.length <= 0) {
       onChange(min)
     }
 
@@ -260,7 +261,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
         ...variantStyles,
         innerWrapper: [
           variantStyles.innerWrapper,
-          editable && variantStyles['innerWrapper:cursor'],
         ],
       }}
       rightIcon={{
