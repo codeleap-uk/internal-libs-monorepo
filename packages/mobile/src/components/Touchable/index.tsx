@@ -37,7 +37,7 @@ export type TouchableProps = React.PropsWithChildren<
     setPressed?: (param: boolean) => void
     rippleDisabled?: boolean
     badge?: BadgeProps['badge']
-    badgeProps?: BadgeProps
+    badgeProps?: Partial<BadgeProps>
     badgeStyles?: StylesOf<BadgeComposition>
 } & BaseViewProps
 >
