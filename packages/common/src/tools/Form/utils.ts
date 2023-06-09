@@ -5,7 +5,7 @@ import { getValidator, yup } from '../..'
 
 const emptyValues = ['', null, undefined]
 
-export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm) {
+export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm, validatorDependence: any = false) {
 
   const isEmpty = emptyValues.includes(value)
 
@@ -13,7 +13,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
   const [isValid, setIsValid] = useState<boolean>(true)
   const updateErrorOnChange = useRef(false)
 
-  const _validator = useMemo(() => getValidator(validator), [])
+  const _validator = useMemo(() => getValidator(validator), [validatorDependence])
 
   onUpdate(() => {
     if (!updateErrorOnChange.current || !_validator) return
