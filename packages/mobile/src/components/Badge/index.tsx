@@ -32,22 +32,36 @@ const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   }
 }
 
+const defaultProps: Partial<BadgeProps> = {
+  maxCount: 9,
+  minCount: 1,
+  getBadgeContent: defaultGetBadgeContent,
+  renderBadgeContent: null,
+  disabled: false,
+  badge: true,
+}
+
 export const Badge = (props: BadgeProps) => {
+  const allProps = {
+    ...Badge.defaultProps,
+    props,
+  }
+
   const {
     debugName,
     innerWrapperProps = {},
     textProps = {},
-    maxCount = 9,
-    minCount = 1,
-    getBadgeContent = defaultGetBadgeContent,
-    renderBadgeContent = null,
+    maxCount,
+    minCount,
+    getBadgeContent,
+    renderBadgeContent,
     styles = {},
     variants,
-    disabled = false,
+    disabled,
     style = {},
-    badge = true,
+    badge,
     ...rest
-  } = props
+  } = allProps
 
   const visible = (TypeGuards.isBoolean(badge) && badge === true) || TypeGuards.isNumber(badge)
 
@@ -111,3 +125,5 @@ export const Badge = (props: BadgeProps) => {
     </View>
   )
 }
+
+Badge.defaultProps =  defaultProps
