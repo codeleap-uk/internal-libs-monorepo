@@ -11,9 +11,8 @@ import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { ModalProps } from '../Modal'
 import { Text } from '../Text'
-import { TextInputComposition, TextInputProps } from '../TextInput'
+import { SearchInputProps, TextInputComposition, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { SearchHeaderProps } from './SearchHeader'
 import { SelectComposition, SelectPresets } from './styles'
 
 export type SelectRenderFNProps<T> = {
@@ -82,7 +81,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = {
     searchable?: boolean
     limit?: number
     ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
-    searchInputProps?: Partial<SearchHeaderProps>
+    searchInputProps?: Partial<SearchInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
 

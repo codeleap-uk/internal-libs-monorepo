@@ -12,6 +12,7 @@ export type SegmentedControlComposition =
  'scrollContent' |
  'text' |
  `text:${SegmentedControlStates}` |
+ 'icon' |
  'button' |
  'buttonFeedback' |
  `button:${SegmentedControlStates}` |

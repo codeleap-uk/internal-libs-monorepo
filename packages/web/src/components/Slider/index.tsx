@@ -239,7 +239,6 @@ export const Slider = (props: SliderProps) => {
         {defaultValue.map((_thumbValue, i) => (
           <SliderThumb 
             key={i} 
-            index={i} 
             style={thumbStyle}
             onClick={() => currentThumbRef.current = i}
             onMouseEnter={() => currentThumbRef.current = i}

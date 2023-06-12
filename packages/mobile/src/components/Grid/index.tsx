@@ -79,13 +79,12 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
       if (isLastInRow) gap = Theme.spacing.marginLeft(spacing / 2)
       else if (isOnlyInRow) gap = Theme.spacing.marginHorizontal(spacing / 2)
 
+      const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
+      const RenderItem = props?.renderItem
+
       return (
         <View style={{ ...variantStyles.itemWrapper, ...gap }}>
-          {props?.renderItem({
-            ...data,
-            isFirst, isLast, isOnly,
-            isFirstInRow, isLastInRow, isOnlyInRow,
-          })}
+          <RenderItem {...data} {..._itemProps} />
         </View>
       )
     }, [props?.renderItem, props?.data?.length])

@@ -29,7 +29,8 @@
     "react-virtualized-auto-sizer": "^1.0.6",
     "react-window": "1.8.5",
     "url-parse": "^1.5.10",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "react-select": "^5.7.3"
   },
   "peerDependencies": {
     "@codeleap/common": "*",
@@ -41,6 +42,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-helmet": "^6.1.0",
+    "react-select": "*",
     "typescript": "4.5.4"
   }
 }
