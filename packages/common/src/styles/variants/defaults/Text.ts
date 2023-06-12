@@ -9,9 +9,9 @@ const createTextStyle = createDefaultVariantFactory<TextComposition>()
 const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })),
 )
 
-type ResolveTextFamilyParam = {fontWeight?: string; resolveFontFamilyAttr?: FontAttrs}
-export function resolveTextFamily(theme: ThemeColorScheme<AppTheme>, { fontWeight = '400', resolveFontFamilyAttr }: ResolveTextFamilyParam) {
-  let fontFamily = theme?.typography?.base?.fontFamily
+type ResolveTextFamilyParam = {fontWeight?: string; fontFamily?:string; resolveFontFamilyAttr?: FontAttrs}
+export function resolveTextFamily(theme: ThemeColorScheme<AppTheme>, { fontWeight = '400', fontFamily = '', resolveFontFamilyAttr }: ResolveTextFamilyParam) {
+  const family = fontFamily || theme?.typography?.base?.fontFamily
 
   const resolveFontFamily = theme.typography.base.resolveFontFamily
 
@@ -28,7 +28,7 @@ export function resolveTextFamily(theme: ThemeColorScheme<AppTheme>, { fontWeigh
     }
   }
 
-  return { fontFamily, fontWeight }
+  return { fontFamily: family, fontWeight }
 }
 
 export function assignTextStyle(name: Fonts, add = {}) {
