@@ -4,5 +4,20 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		 "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "packages\\\\web\\\\.*",
+        "isAsync": true,
+        "cmd": "yarn p:web build"
+      },
+      {
+        "match": "packages\/web\/.*",
+        "isAsync": true,
+        "cmd": "yarn p:web build && curl -X POST http://localhost:8000/__refresh"
+      }
+    ]
+  },
+	}
 }

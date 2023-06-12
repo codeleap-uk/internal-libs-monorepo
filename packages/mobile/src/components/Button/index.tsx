@@ -65,9 +65,9 @@ export const Badge = forwardRef<ViewRefType, BadgeProps>((props, ref) => {
     ...viewProps
   } = props
 
-  return <View 
-    style={[styles.wrapper]} 
-    {...viewProps} 
+  return <View
+    style={[styles.wrapper]}
+    {...viewProps}
     // @ts-expect-error - Refs are tricky
     ref={ref}
   >
@@ -160,6 +160,8 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   const rightFeedback = getFeedbackStyle(pressed)
 
+  // TODO - This is a hack to hide the icon when there is no text
+  const isLeftIconHidden = _styles?.leftIcon?.display != 'none'
   return (
     <Touchable
       style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
@@ -176,7 +178,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     >
       {_badge}
       {loading && <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} />}
-      {!loading && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} />}
+      {(!loading && isLeftIconHidden) && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} />}
       {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
       {childrenContent}
       <Icon name={rightIcon} style={[_styles.rightIcon, rightFeedback]} />

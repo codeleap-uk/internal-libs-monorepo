@@ -1,111 +1,179 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { capitalize, createDefaultVariantFactory, FormTypes, getNestedStylesByKey, includePresets, useDefaultComponentStyle } from '@codeleap/common'
+import { CSSInterpolation } from '@emotion/css'
+import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
+import { ButtonParts as _ButtonParts } from '../Button'
+import { InputBaseParts } from '../InputBase'
+import { LoadingOverlayComposition } from '../LoadingOverlay'
+import { SelectProps } from './types'
+
+type ButtonParts = Exclude<_ButtonParts, `loading${Capitalize<LoadingOverlayComposition>}` | 'badgeText' | 'badgeWrapper'>
+
+export type ItemParts = `item${Capitalize<ButtonParts>}`
 
 export type SelectParts =
-  | 'wrapper'
-  | 'label'
-  | 'inputWrapper'
+  InputBaseParts
+  | ItemParts
+  | 'listPortal'
+  | 'listHeader'
+  | 'listWrapper'
   | 'list'
-  | 'itemWrapper'
-  | 'itemWrapper:selected'
-  | 'itemText'
-  | 'itemText:selected'
-  | 'buttonWrapper'
-  | 'buttonText'
-  | 'buttonIcon'
-  | 'error'
+  | 'inputContainer'
+  | 'input'
+  | 'placeholder'
+  | 'value'
+  | 'valueMultiple'
+  | 'valueWrapper'
+  | 'clearIcon'
+  | 'dropdownIcon'
 
-export type SelectComposition =
-  | `${SelectParts}:hover`
-  | `${SelectParts}:open`
-  | `${SelectParts}:error`
-  | `${SelectParts}:disabled`
-  | SelectParts
+type ItemState = 'focused' | 'selected' | 'selectedFocused'
+
+export type SelectStatefulParts =
+  `${ItemParts}:${ItemState}`
+  | 'listPlaceholder'
+  | 'listPlaceholderIcon'
+  | 'listPlaceholderText'
+  | 'listPlaceholderNoItems'
+  | 'listPlaceholderNoItemsIcon'
+  | 'listPlaceholderNoItemsText'
+  | 'itemsWrapper'
+  | 'loadingIndicator'
+  | 'innerWrapper:searchable'
+
+export type SelectState = 'error' | 'focus' | 'disabled'
+
+export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}` | SelectStatefulParts
 
 const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
 
-export const SelectPresets = includePresets((styles) =>
-  createSelectStyle(() => ({ wrapper: styles })),
-)
+export const SelectPresets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })))
 
-export const SelectStyles = {
-  default: createSelectStyle((Theme) => ({
-    wrapper: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    label: {
-      ...Theme.spacing.marginBottom(1),
-    },
-    inputWrapper: {
-      position: 'relative',
-    },
+export type ComponentState = {
+  error?: boolean
+  focused?: boolean
+  disabled?: boolean
+}
 
-    list: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      display: 'flex',
-      top: '110%',
-      backgroundColor: Theme.colors.gray,
+export type OptionState = { 
+  isSelected: boolean
+  isFocused: boolean
+  baseStyles: SelectProps['itemProps']['styles'] 
+}
 
-      ...Theme.presets.column,
-      overflowY: 'hidden',
+export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
+  const {
+    variants,
+    styles,
+  } = props
 
-      transition: 'all 0.5s ease',
-      maxHeight: 0,
-      ...Theme.border.create({
-        width: 0,
-        color: 'transparent',
-      }),
-      borderRadius: Theme.borderRadius.small,
+  const {
+    error,
+    focused,
+    disabled,
+  } = state
+
+  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>(
+    'u:Select',
+    {
+      variants,
+      styles,
     },
-    'list:open': {
-      maxHeight: '500%',
-      overflowY: 'auto',
-      ...Theme.border.primary(1),
+  )
+
+  const stylesKey = (key: SelectParts | SelectStatefulParts, _styles: CSSObjectWithLabel = {}) => ({
+    ..._styles,
+    ...variantStyles[key],
+    ...(focused ? variantStyles[key + ':focus'] : {}),
+    ...(disabled ? variantStyles[key + ':disabled'] : {}),
+    ...(error ? variantStyles[key + ':error'] : {}),
+  })
+
+  const optionNestedStyles = getNestedStylesByKey('item', variantStyles)
+
+  const optionStyleKey = (
+    key: ButtonParts | `${ButtonParts}:${ItemState}`,
+    state: OptionState
+  ) => {
+    return {
+      ...stylesKey(`item${capitalize(key)}` as any),
+      ...(state?.isSelected ? optionNestedStyles[`${key}:selected`] : {}),
+      ...(state?.isFocused ? optionNestedStyles[`${key}:focused`] : {}),
+      ...(state?.isFocused && state?.isSelected ? optionNestedStyles[`${key}:selectedFocused`] : {}),
+      ...(state.baseStyles?.[key] as React.CSSProperties),
+    }
+  }
+
+  const optionsStyles = (state: OptionState): Record<ButtonParts, CSSInterpolation> => ({
+    wrapper: optionStyleKey('wrapper', state),
+    rightIcon: optionStyleKey('rightIcon', state),
+    text: optionStyleKey('text', state),
+    leftIcon: optionStyleKey('leftIcon', state),
+    icon: optionStyleKey('icon', state),
+    inner: optionStyleKey('inner', state),
+  })
+
+  const placeholderStyles = {
+    empty: {
+      wrapper: stylesKey('listPlaceholder'),
+      icon: stylesKey('listPlaceholderIcon'),
+      text: stylesKey('listPlaceholderText'),
     },
-    itemText: {},
-    itemWrapper: {
-      ...Theme.spacing.padding(0.5),
-      cursor: 'pointer',
-      display: 'flex',
-      '&:hover': {
-        backgroundColor: '#0002',
-      },
+    noItems: {
+      wrapper: stylesKey('listPlaceholderNoItems'),
+      icon: stylesKey('listPlaceholderNoItemsIcon'),
+      text: stylesKey('listPlaceholderNoItemsText'),
     },
-    'itemText:selected': {},
-    'itemWrapper:selected': {
-      backgroundColor: Theme.colors.primary,
-      '&:hover': {
-        backgroundColor: Theme.colors.primary,
-      },
-    },
-    buttonWrapper: {
-      ...Theme.border.primary(1),
-      ...Theme.presets.fullWidth,
-      ...Theme.presets.alignCenter,
-      ...Theme.spacing.padding(0.5),
-      backgroundColor: Theme.colors.gray,
-      borderRadius: Theme.borderRadius.small,
-      cursor: 'pointer',
-      display: 'flex',
-    },
-    'button:open': {},
-    buttonText: {
-      flex: 1,
-    },
-    buttonIcon: {
-      height: 24,
-      width: 24,
-      color: Theme.colors.white,
-      transition: 'all 0.2s ease',
-      ...Theme.spacing.marginLeft('auto'),
-    },
-    'buttonIcon:open': {
-      transform: 'rotate(180deg)',
-    },
-    error: {
-      color: Theme.colors.negative,
-    },
-  })),
+  }
+
+  const loadingStyles = {
+    wrapper: stylesKey('loadingIndicator'),
+  }
+
+  const inputMultiValueStyles = {
+    text: stylesKey('valueMultiple'),
+  }
+
+  const menuWrapperStyles = {
+    wrapper: stylesKey('itemsWrapper'),
+  }
+
+  const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
+    container: (baseStyles) => stylesKey('inputContainer', baseStyles),
+    control: () => stylesKey('inputContainer'),
+    menuPortal: (baseStyles) => stylesKey('listPortal', baseStyles),
+    menu: (baseStyles) => stylesKey('listWrapper', baseStyles),
+    menuList: (baseStyles) => stylesKey('list', baseStyles),
+    group: () => ({}),
+    indicatorSeparator: () => ({}),
+    groupHeading: (baseStyles) => stylesKey('listHeader', baseStyles),
+    clearIndicator: () => ({
+      ...stylesKey('iconIcon'),
+      ...stylesKey('clearIcon'),
+    }),
+    dropdownIndicator: () => ({
+      ...stylesKey('iconIcon'),
+      ...stylesKey('dropdownIcon'),
+    }),
+    indicatorsContainer: (baseStyles) => baseStyles,
+    input: (baseStyles) => stylesKey('input', baseStyles),
+    loadingIndicator: () => ({}),
+    loadingMessage: () => ({}),
+    multiValue: () => ({}),
+    multiValueLabel: () => ({}),
+    noOptionsMessage: () => ({}),
+    option: () => ({}),
+    placeholder: () => stylesKey('placeholder'),
+    singleValue: (baseStyles) => stylesKey('value', baseStyles),
+    valueContainer: (baseStyles) => stylesKey('valueWrapper', baseStyles),
+  }
+
+  return {
+    variantStyles,
+    reactSelectStyles,
+    optionsStyles,
+    placeholderStyles,
+    loadingStyles,
+    inputMultiValueStyles,
+    menuWrapperStyles,
+  }
 }

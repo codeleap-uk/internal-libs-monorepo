@@ -86,7 +86,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       onPress={handlePress}
       {...props}
     >
-      <LoadingOverlay 
+      <LoadingOverlay
         visible={loading}
         styles={loaderStyle}
 
@@ -96,29 +96,28 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
           name={icon}
           style={{ ...iconStyle, ...getStyles('leftIcon') }}
 
-          />
-          )}
+        />
+      )}
       {children || (
         <Text
           text={text}
-        styles={{
+          styles={{
             text: getStyles('text'),
           }}
-          />
-          )}
+        />
+      )}
 
       <Icon
         name={rightIcon}
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
-        
-        
-        />
-        {loading && <ActivityIndicator styles={{
-          'wrapper': getStyles('loaderWrapper'),
-          'backCircle': getStyles('loaderBackCircle'),
-          'frontCircle': getStyles('loaderFrontCircle'),
-          'circle': getStyles('loaderCircle'),
-        }} css={getStyles('loader')}/>}
+
+      />
+      {loading && <ActivityIndicator styles={{
+        'wrapper': getStyles('loaderWrapper'),
+        'backCircle': getStyles('loaderBackCircle'),
+        'frontCircle': getStyles('loaderFrontCircle'),
+        'circle': getStyles('loaderCircle'),
+      }} css={getStyles('loader')}/>}
     </Touchable>
   )
 }
