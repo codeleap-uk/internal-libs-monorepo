@@ -32,6 +32,8 @@ export type SegmentedControlProps = {
   */
   variants?: ComponentVariants<typeof SegmentedControlPresets>['variants']
 
+  onValueChange?: (v: any) => void
+
   label?: React.ReactNode
   /**
     * Determine if the modal is visible
@@ -44,12 +46,12 @@ export type SegmentedControlProps = {
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
 
-  const { getItemWidth, label, options, styles, value, variants, responsiveVariants } = props
+  const { getItemWidth, label, options, styles, value, variants, responsiveVariants, onValueChange } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
     {
-      variants, styles, responsiveVariants, rootElement: 'wrapper',
+      variants, styles, rootElement: 'wrapper',
     },
   )
 
@@ -59,11 +61,11 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         <SegmentedControlOption
           label={o.label}
           value={o.value}
-          // onPress={onPress(o.value, idx)}
+          onPress={onValueChange}
           key={idx}
           // style={widthStyle}
           selected={value === o.value}
-          // variantStyles={variantStyles}
+          variantStyles={variantStyles}
         />
       ))}
     </View>

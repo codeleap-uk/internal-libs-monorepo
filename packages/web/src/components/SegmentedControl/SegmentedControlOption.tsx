@@ -21,7 +21,7 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
   return (
     <Touchable
       noFeedback={selected}
-      key={touchableProps.key}
+      // key={touchableProps.key}
       styles={{
         // feedback: variantStyles.buttonFeedback,
       }}
