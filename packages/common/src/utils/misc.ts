@@ -119,3 +119,16 @@ export function hasFastRefreshed(Settings: AppSettings) {
     return undefined
   }
 }
+
+const throttleTimerId = []
+
+export function throttle(func, ref, delay) {
+  if (throttleTimerId[ref]) {
+    return
+  }
+
+  throttleTimerId[ref] = setTimeout(function () {
+    func()
+    throttleTimerId[ref] = undefined
+  }, delay)
+}
