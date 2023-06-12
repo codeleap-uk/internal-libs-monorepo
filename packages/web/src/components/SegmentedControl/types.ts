@@ -1,28 +1,51 @@
 import { PropsOf } from '@codeleap/common'
 import { StylesOf } from '../../types'
-import { InputBaseComposition } from './styles'
+import { SegmentedControlComposition } from './styles'
 import { ActionIcon } from '../ActionIcon'
 
-type ActionIconProps = PropsOf<typeof ActionIcon>
-
-type OrderedParts = 'label' | 'description' | 'innerWrapper' | 'error'
-
-export type InputBaseProps = React.PropsWithChildren<{
+export interface SegmentedControlProps {
+  options?: {label: string; value: any }[]
+  /**
+   * Determine if the modal is visible
+  */
+  value?: any
+  /**
+   * Determine if the modal is visible
+  */
+  styles?: React.ReactNode
+  /**
+    * Determine if the modal is visible
+  */
   label?: React.ReactNode
-  error?: React.ReactNode
-  leftIcon?: ActionIconProps
-  rightIcon?: ActionIconProps
-  wrapper?: React.FC<any>
-  wrapperProps?: any
-  innerWrapper?: React.FC<any>
-  innerWrapperProps?: any
-  styles?: StylesOf<InputBaseComposition>
-  description?: React.ReactNode
-  debugName: string
-  focused?: boolean
-  disabled?: boolean
-  order?: OrderedParts[]
-  style?: any
-  labelAsRow?: boolean
-  innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
-}>
+  /**
+    * Determine if the modal is visible
+  */
+  getItemWidth?: (item:{label: string; value: any }, idx: number, arr: {label: string; value: any }[]) => number
+  /**
+    * Determine if the modal is visible
+  */
+}
+
+export type SegmentedControlStates = 'selected' | 'disabled'
+
+export type SegmentedControlComposition =
+ 'selectedBubble' |
+ 'wrapper' |
+ 'innerWrapper' |
+ 'scroll' |
+ 'scrollContent' |
+ 'text' |
+ `text:${SegmentedControlStates}` |
+ 'icon' |
+ 'button' |
+ 'buttonFeedback' |
+ `button:${SegmentedControlStates}` |
+  `selectedBubble:${SegmentedControlStates}` |
+ `label`
+
+export type SegmentedControlStylesGen<TCSS = any> =
+  StylesOf<
+    Exclude<SegmentedControlComposition, 'buttonFeedback'>
+  > & {
+    buttonFeedback?: TouchableStylesGen['feedback']
+  }
