@@ -1,7 +1,7 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf, ComponentVariants } from '@codeleap/common'
 import { StylesOf } from '../../types'
-import { SegmentedControlComposition } from './styles'
 import { ActionIcon } from '../ActionIcon'
+import { SegmentedControlPresets } from './styles'
 
 export interface SegmentedControlProps {
   options?: {label: string; value: any }[]
@@ -16,6 +16,8 @@ export interface SegmentedControlProps {
   /**
     * Determine if the modal is visible
   */
+  variants?: ComponentVariants<typeof SegmentedControlPresets>['variants']
+
   label?: React.ReactNode
   /**
     * Determine if the modal is visible
@@ -26,26 +28,3 @@ export interface SegmentedControlProps {
   */
 }
 
-export type SegmentedControlStates = 'selected' | 'disabled'
-
-export type SegmentedControlComposition =
- 'selectedBubble' |
- 'wrapper' |
- 'innerWrapper' |
- 'scroll' |
- 'scrollContent' |
- 'text' |
- `text:${SegmentedControlStates}` |
- 'icon' |
- 'button' |
- 'buttonFeedback' |
- `button:${SegmentedControlStates}` |
-  `selectedBubble:${SegmentedControlStates}` |
- `label`
-
-export type SegmentedControlStylesGen<TCSS = any> =
-  StylesOf<
-    Exclude<SegmentedControlComposition, 'buttonFeedback'>
-  > & {
-    buttonFeedback?: TouchableStylesGen['feedback']
-  }
