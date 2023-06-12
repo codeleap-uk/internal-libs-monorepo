@@ -1,17 +1,18 @@
 import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react'
 import { Scroll, ScrollProps } from '../Scroll'
 
-import { Easing, EasingFunction, StyleSheet } from 'react-native'
+import { Easing, StyleSheet } from 'react-native'
 import { FormTypes, getNestedStylesByKey, PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlPresets } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
-import { Text, TextProps } from '../Text'
+import { Text } from '../Text'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { View } from '../View'
 import { InputLabel } from '../InputLabel'
 import { useAnimatedVariantStyles, TransitionConfig } from '../../utils'
 import { SegmentedControlOption } from './Option'
+import { IconPlaceholder } from '@codeleap/common'
 
 export * from './styles'
 export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrollView & {
@@ -19,8 +20,10 @@ export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrol
   scrollToCurrent: () => void
 }
 
+type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
+
 export type SegmentedControlProps<T = string> = ScrollProps & {
-    options : {label: string; value: T }[]
+    options : SegmentedContropOptions[]
     onValueChange: (value: T) => any
     value: T
     debugName: string
@@ -33,10 +36,10 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
     RenderButton?: (props: SegmentedControlProps & {
       touchableProps: PropsOf<typeof Touchable>
       textProps: PropsOf<typeof Text>
-      option: {label: string; value: any}
+      option: SegmentedContropOptions
     }) => ReactElement
     RenderAnimatedView?: (props: Partial<SegmentedControlProps>) => ReactElement
-    getItemWidth?: (item:{label: string; value: T }, idx: number, arr: {label: string; value: T }[]) => number
+    getItemWidth?: (item: SegmentedContropOptions, idx: number, arr: SegmentedContropOptions[]) => number
 }
 
 const defaultAnimation = {
@@ -44,8 +47,6 @@ const defaultAnimation = {
   duration: 200,
   easing: Easing.linear,
 }
-
-
 
 const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
 
@@ -66,7 +67,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     RenderButton,
   } = props
 
-  let _animation = {
+  const _animation = {
     ...defaultAnimation, ...animation,
   }
 
@@ -124,7 +125,6 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const BubbleView = RenderAnimatedView || View
   variantStyles = JSON.parse(JSON.stringify(variantStyles))
-  
 
   const labelStyles = getNestedStylesByKey('label', variantStyles)
 
@@ -132,15 +132,14 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     variantStyles,
     animatedProperties: [],
     updater: () => {
-      'worklet';
+      'worklet'
       return {
-        translateX: currentOptionIdx * widthStyle.width
+        translateX: currentOptionIdx * widthStyle.width,
       }
     },
     transition: _animation,
-    dependencies: [currentOptionIdx, widthStyle.width]
+    dependencies: [currentOptionIdx, widthStyle.width],
   })
-
 
   return (<View style={variantStyles.wrapper}>
     <InputLabel label={label} styles={labelStyles} required={false}/>
@@ -164,10 +163,11 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
         />
         {options.map((o, idx) => (
-          <SegmentedControlOption 
+          <SegmentedControlOption
             debugName={debugName}
             label={o.label}
             value={o.value}
+            icon={o.icon}
             onPress={onPress(o.value, idx)}
             key={idx}
             style={widthStyle}
