@@ -27,13 +27,16 @@ export * from './Pager'
 export * from './EmptyPlaceholder'
 export * from './Backdrop'
 export * from './Drawer'
+export * from './Autocomplete'
 
 export * from './Grid'
 export * from './InputLabel'
 export * from './LoadingOverlay'
 export * from './ActionIcon'
 export * from './InputBase'
-
-
+export * from './DatePickerModal'
+export * from './RefreshControl'
+export * from './Avatar'
+export * from './AvatarGroup'
 
 export * from './defaultStyles'
