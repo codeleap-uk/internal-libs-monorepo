@@ -38,7 +38,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
           key={idx}
           // style={widthStyle}
           selected={value === o.value}
-          // variantStyles={variantStyles}
+          variantStyles={variantStyles}
         />
       ))}
     </View>
