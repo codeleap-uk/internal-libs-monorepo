@@ -62,7 +62,7 @@ export const ViewCP = <T extends ElementType = 'div'>(
   const { Theme, logger } = useCodeleapContext()
 
   function handleHover(isMouseOverElement: boolean) {
-    onHover(isMouseOverElement)
+    onHover?.(isMouseOverElement)
   }
 
   const platformMediaQuery = useMemo(() => {
