@@ -15,7 +15,7 @@ export type LinkProps<T extends ElementType> = TextProps<T> & {
 } & ComponentVariants<typeof LinkPresets>
 
 export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
-  const { to, openNewTab, component = 'a', onScroll = null, responsiveVariants, variants, styles, style, css, ...props } = linkProps
+  const { to, openNewTab, component = 'a', onScroll = null, responsiveVariants, variants, styles, style, css = [], ...props } = linkProps
 
   const isExternal = ['http', 'tel', 'mailto'].some((start) => to.startsWith(start),
   )
@@ -52,15 +52,20 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
     variants,
     rootElement: 'text',
     styles,
-    
   })
+
+  const linkStyles = [
+    variantStyles.text,
+    style,
+    css
+  ]
 
   return (
     <Text
       component={Component}
       {...props}
       {...linkPropOverride}
-      css={[variantStyles.text, style, css]}
+      css={linkStyles}
       onClick={handleClick}
     />
   )
