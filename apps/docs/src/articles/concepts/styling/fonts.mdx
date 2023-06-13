@@ -1,0 +1,58 @@
+---
+title: Custom fonts
+---
+
+Once you have selected and exported your fonts with the correct type and weight, you need to place them in the assets folder located at `src/app/fonts`. Follow the steps below to ensure proper integration:
+
+1 - Check if there is a file named "react-native.config.js" in your project directory. If it does not exist, create a new file with that name.
+    
+2 - Open the "react-native.config.js" file and include the following code:
+ ```js
+ module.exports = {
+
+  project: {
+
+    ios: {},
+
+    android: {}, // grouped into "project"
+
+  },
+
+  assets: ['./src/app/assets/fonts'], // stays the same
+
+}
+```
+
+This configuration file specifies the location of your fonts when linking them to the system.
+
+Now to link your fonts to the systems, open your terminal and execute this command:
+```
+npx react-native-asset
+```
+Running this command will automatically link your fonts to both Android and iOS platforms. It's as simple as that! Once linked, your fonts will be ready to be utilized within your application.
+
+In your app's theme, you will find an object similar to the following, which you can adapt according to what your project needs:
+```ts
+typography: {
+    base: {
+      fontFamily: 'Inter',
+      styles: textStyles,
+      resolveFontFamily: {
+        'Inter_100': 'Inter-Thin',
+        'Inter_200': 'Inter-ExtraLight ',
+        'Inter_300': 'Inter-Light',
+        'Inter_400': 'Inter-Regular',
+        'Inter_500': 'Inter-Medium',
+        'Inter_600': 'Inter-SemiBold',
+        'Inter_700': 'Inter-Bold',
+        'Inter_800': 'Inter-ExtraBold',
+      }
+    }
+  }
+```
+- The "base" property represents the default font used throughout your application. You can update it and add more fonts, but make sure to have one with that name.
+- The "fontFamily" property specifies the name of the font you are adding.
+- The "styles" property defines the fontSize, fontWeight, and other styles for each type of text.
+- The "resolveFontFamily" property handles the fontFamily change when altering the weight. For example, if you create a variant with fontWeight 500, the fontFamily will be changed to 'Inter-Medium'.
+
+Basically, thats how you can easily import and set fonts in our iOS and Android applications.
