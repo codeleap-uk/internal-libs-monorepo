@@ -1,11 +1,11 @@
-import { ReactNode, useCallback, useMemo, useRef, useState } from 'react'
-import { onMount, onUpdate } from '../../utils'
+import { ReactNode, useMemo, useRef, useState } from 'react'
+import { onUpdate } from '../../utils'
 import { ValidatorFunctionWithoutForm } from './types'
 import { getValidator, yup } from '../..'
 
 const emptyValues = ['', null, undefined]
 
-export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm, validatorDependence: any = false) {
+export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm, dependencies: any[] = []) {
 
   const isEmpty = emptyValues.includes(value)
 
@@ -13,7 +13,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
   const [isValid, setIsValid] = useState<boolean>(true)
   const updateErrorOnChange = useRef(false)
 
-  const _validator = useMemo(() => getValidator(validator), [validatorDependence])
+  const _validator = useMemo(() => getValidator(validator), dependencies)
 
   onUpdate(() => {
     if (!updateErrorOnChange.current || !_validator) return
@@ -26,9 +26,8 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
   return {
     onInputBlurred: () => {
-      
-      if (!_validator) return
 
+      if (!_validator) return
 
       updateErrorOnChange.current = false
       const { valid, message } = _validator(value, {})
@@ -38,8 +37,8 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
     },
     onInputFocused: () => {
-      
-      if (isValid ) return
+
+      if (isValid) return
       updateErrorOnChange.current = true
     },
     message: _message,
@@ -47,7 +46,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
     showError: !isValid && !isEmpty,
     error: {
       message: _message,
-    }
+    },
   }
 
 }
