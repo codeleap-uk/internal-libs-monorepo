@@ -8,13 +8,6 @@ import {
   useDefaultComponentStyle,
   useMemo,
 } from '@codeleap/common'
-// import { SegmentedControlProps } from './types'
-// import { SegmentedControlPresets } from './styles'
-
-export * from './styles'
-
-import { PropsOf } from '@codeleap/common'
-// import { StylesOf } from '../../types'
 import { ActionIcon } from '../ActionIcon'
 import { SegmentedControlPresets } from './styles'
 
@@ -47,7 +40,7 @@ export type SegmentedControlProps = {
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
 
-  const { getItemWidth, label, options, styles = {}, value, variants = [], responsiveVariants, onValueChange } = props
+  const { getItemWidth, label, options, styles = {}, value, variants = [], onValueChange, RenderAnimatedView } = props
 
   const widthStyle = useMemo(() => {
     const sizes = options.map(getItemWidth)
@@ -66,7 +59,10 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   return (
     <View>
       <View style={variantStyles.innerWrapper}>
-        <View css={variantStyles} style={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'], widthStyle, bubbleAnimation]}>
+        <View
+          css={variantStyles}
+          style={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'], widthStyle]}
+        >
           {options.map((o, idx) => (
             <SegmentedControlOption
               label={o.label}
@@ -83,3 +79,5 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     </View>
   )
 }
+
+export * from './styles'
