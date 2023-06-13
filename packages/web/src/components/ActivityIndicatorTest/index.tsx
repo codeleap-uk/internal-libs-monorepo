@@ -48,11 +48,12 @@ export const ActivityIndicatorTest = forwardRef<typeof View, ActivityIndicatorTe
       <Component
         ref={ref}
         {...props}
+        css={variantStyles.wrapper}
       />
     </View>
   )
 })
 
 ActivityIndicatorTest.defaultProps = {
-  component: <View />,
+  component: View,
 }

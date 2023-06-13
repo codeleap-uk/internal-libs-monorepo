@@ -15407,6 +15407,11 @@ lottie-web@^5.10.2:
   resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.12.1.tgz#0974eefaf8058c1cba4a05ae67a77894022f9e71"
   integrity sha512-J5LgeexlmrrzRwe1q4qwQIwJmjih62vatDUPtxquaYVfjvSt/PfNfanhlfSrvdGPr4/nxJ8+uBKlS359Jq4F6w==
 
+lottie-web@^5.12.2:
+  version "5.12.2"
+  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.12.2.tgz#579ca9fe6d3fd9e352571edd3c0be162492f68e5"
+  integrity sha512-uvhvYPC8kGPjXT3MyKMrL3JitEAmDMp30lVkuq/590Mw9ok6pWcFCwXJveo0t5uqYw1UREQHofD+jVpdjBv8wg==
+
 loud-rejection@^1.0.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/loud-rejection/-/loud-rejection-1.6.0.tgz#5b46f80147edee578870f086d04821cf998e551f"
