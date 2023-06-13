@@ -2,13 +2,9 @@ import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
 import {
   ComponentVariants,
-  FormTypes,
-  StylesOf,
-  TypeGuards,
   useDefaultComponentStyle,
   useMemo,
 } from '@codeleap/common'
-import { ActionIcon } from '../ActionIcon'
 import { SegmentedControlPresets } from './styles'
 
 export type SegmentedControlProps = {
@@ -25,9 +21,13 @@ export type SegmentedControlProps = {
     * Determine if the modal is visible
   */
   variants?: ComponentVariants<typeof SegmentedControlPresets>['variants']
-
+  /**
+    * Determine if the modal is visible
+  */
   onValueChange?: (v: any) => void
-
+  /**
+    * Determine if the modal is visible
+  */
   label?: React.ReactNode
   /**
     * Determine if the modal is visible
@@ -52,16 +52,16 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
     {
-      variants, styles, rootElement: 'wrapper',
+      variants, styles,
     },
   )
 
   return (
-    <View>
-      <View style={variantStyles.innerWrapper}>
+    <View css={variantStyles.wrapper}>
+      <View css={variantStyles.innerWrapper}>
         <View
-          css={variantStyles}
-          style={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'], widthStyle]}
+          // css={variantStyles}
+          css={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'], widthStyle]}
         >
           {options.map((o, idx) => (
             <SegmentedControlOption

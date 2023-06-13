@@ -27,12 +27,12 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
       styles={{
         feedback: variantStyles.buttonFeedback,
       }}
-      style={[variantStyles.button, selected && variantStyles['button:selected'], style]}
+      css={[variantStyles.button, selected && variantStyles['button:selected'], style]}
       onPress={onPress}
     >
       <Text
         text={label}
-        style={[
+        css={[
           variantStyles.text,
           selected && variantStyles['text:selected'],
           // touchableProps?.disabled && variantStyles['text:disabled'],
