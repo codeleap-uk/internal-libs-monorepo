@@ -15395,6 +15395,18 @@ lottie-react-native@5.1.4:
     invariant "^2.2.2"
     react-native-safe-modules "^1.0.3"
 
+lottie-react@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/lottie-react/-/lottie-react-2.4.0.tgz#f7249eee2b1deee70457a2d142194fdf2456e4bd"
+  integrity sha512-pDJGj+AQlnlyHvOHFK7vLdsDcvbuqvwPZdMlJ360wrzGFurXeKPr8SiRCjLf3LrNYKANQtSsh5dz9UYQHuqx4w==
+  dependencies:
+    lottie-web "^5.10.2"
+
+lottie-web@^5.10.2:
+  version "5.12.1"
+  resolved "https://registry.yarnpkg.com/lottie-web/-/lottie-web-5.12.1.tgz#0974eefaf8058c1cba4a05ae67a77894022f9e71"
+  integrity sha512-J5LgeexlmrrzRwe1q4qwQIwJmjih62vatDUPtxquaYVfjvSt/PfNfanhlfSrvdGPr4/nxJ8+uBKlS359Jq4F6w==
+
 loud-rejection@^1.0.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/loud-rejection/-/loud-rejection-1.6.0.tgz#5b46f80147edee578870f086d04821cf998e551f"

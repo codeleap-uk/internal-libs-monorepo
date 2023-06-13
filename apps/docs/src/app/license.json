@@ -1,10 +1,4 @@
 {
-    "@emotion/react@11.10.6": {
-        "licenses": "MIT",
-        "repository": "https://github.com/emotion-js/emotion/tree/main/packages/react",
-        "licenseUrl": "https://github.com/emotion-js/emotion/tree/main/packages/react/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
     "@emotion/styled@11.10.6": {
         "licenses": "MIT",
         "repository": "https://github.com/emotion-js/emotion/tree/main/packages/styled",
@@ -129,12 +123,6 @@
         "licenses": "MIT",
         "repository": "https://github.com/fkhadra/react-toastify",
         "licenseUrl": "https://github.com/fkhadra/react-toastify/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
-    "react@18.1.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/facebook/react",
-        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
         "parents": "codeleap-docs"
     }
 }
