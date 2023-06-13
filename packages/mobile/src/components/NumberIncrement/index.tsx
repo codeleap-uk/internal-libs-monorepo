@@ -52,7 +52,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     others,
   } = selectInputBaseProps({
     ...NumberIncrement.defaultProps,
-    ...props
+    ...props,
   })
 
   const {
@@ -185,7 +185,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     }
 
     if (actionPressAutoFocus) {
-      actionTimeoutRef.current = setTimeout(() => { 
+      actionTimeoutRef.current = setTimeout(() => {
         setIsFocused(false)
       }, timeoutActionFocus)
     }
@@ -265,14 +265,14 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       }}
       rightIcon={{
         name: 'plus' as IconPlaceholder,
-        disabled: disabled || incrementDisabled,
+        disabled: disabled || incrementDisabled || !editable,
         onPress: () => handleChange('increment'),
         debounce: actionDebounce,
         ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
         name: 'minus' as IconPlaceholder,
-        disabled: disabled || decrementDisabled,
+        disabled: disabled || decrementDisabled || !editable,
         onPress: () => handleChange('decrement'),
         debounce: actionDebounce,
         ...inputBaseProps.leftIcon,
@@ -306,9 +306,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           {...maskingExtraProps}
         />
       ) : (
-        <Text 
-          text={isFormatted ? formatter(value) : String(value)} 
-          style={inputTextStyle} 
+        <Text
+          text={isFormatted ? formatter(value) : String(value)}
+          style={inputTextStyle}
         />
       )}
     </InputBase>
