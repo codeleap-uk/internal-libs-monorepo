@@ -36,7 +36,7 @@ export type TextInputProps =
     visibleIcon?: IconPlaceholder
     hiddenIcon?: IconPlaceholder
     _error?: string
-    validatorDependence?: any
+    validatorDependencies?: any[]
   } & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
 const defaultProps:Partial<TextInputProps> = {
@@ -72,7 +72,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     visibleIcon,
     hiddenIcon,
     _error = null,
-    validatorDependence = false,
+    validatorDependencies = [],
     ...textInputProps
   } = others
 
@@ -101,7 +101,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const isPressable = TypeGuards.isFunction(onPress)
 
-  const validation = useValidate(value, validate, validatorDependence)
+  const validation = useValidate(value, validate, validatorDependencies)
 
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation.onInputBlurred()
