@@ -183,7 +183,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   const close = () => toggle?.()
 
-  const select = (selectedValue) => {
+  const select = useCallback((selectedValue) => {
 
     let newValue = null
 
@@ -231,7 +231,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
       close?.()
     }
 
-  }
+  }, [isValueArray, ...(isValueArray ? value : [value]), limit, multiple])
 
   const Item = renderItem || Button
 
