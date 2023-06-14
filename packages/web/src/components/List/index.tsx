@@ -101,14 +101,16 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
       isOnly,
       isLast,
       isFirst,
+      item: data?.[_item?.index]
     }
 
     return (
       <View
+        css={[variantStyles.itemWrapper]}
         data-index={_item?.index}
         ref={dataVirtualizer?.measureElement}
       >
-        {isFirst && separator}
+        {!isFirst && separator}
         <RenderItem {..._itemProps} />
       </View>
     )
