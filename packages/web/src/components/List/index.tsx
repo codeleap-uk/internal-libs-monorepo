@@ -171,18 +171,18 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
           { height: dataVirtualizer.getTotalSize() }
         ]}
       >
+        {/* Necessary for correct list render */}
         <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              transform: `translateY(${items[0].start}px)`,
-            }}
-          >
-            {items?.map((item) => renderItem(item))}
-          </div>
-        
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            transform: `translateY(${items[0].start}px)`,
+          }}
+        >
+          {items?.map((item) => renderItem(item))}
+        </div>
       </View>
       {isLoading ? hasNextPage ? 'Loading more...' : 'Nothing more to load' : null}
     </View>
