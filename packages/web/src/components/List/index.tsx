@@ -4,7 +4,7 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListParts, ListPresets } from './styles'
 import { StylesOf } from '../../types'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
 
 export type AugmentedRenderItemInfo<T> = {
   isFirst: boolean
@@ -76,50 +76,43 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
 
   const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator} />
 
-  const renderItem = useCallback((data: any) => {
+  const dataVirtualizer = useVirtualizer({
+    count: hasNextPage ? data?.length + 1 : data?.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () =>  null,
+  })
+
+  const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
 
     const listLength = data?.length || 0
 
-    const isFirst = data?.index === 0
-    const isLast = data?.index === listLength - 1
+    const isFirst = _item?.index === 0
+    const isLast = _item?.index === listLength - 1
 
     const isOnly = isFirst && isLast
 
     const _itemProps = {
-      ...data,
+      ..._item,
       isOnly,
       isLast,
       isFirst,
     }
 
-    return <View
-      css={[
-        {
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: `${data.size}px`,
-          transform: `translateY(${data.start}px)`,
-        }
-      ]}
-    >
-      {isFirst && separator}
-      <RenderItem {..._itemProps} />
-    </View>
-  }, [RenderItem, data?.length])
+    return (
+      <View
+        data-index={_item?.index}
+        ref={dataVirtualizer?.measureElement}
+      >
+        {isFirst && separator}
+        <RenderItem {..._itemProps} />
+      </View>
+    )
+  }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
 
   const isEmpty = !data || !data?.length
 
   const parentRef = React.useRef()
-
-  const dataVirtualizer = useVirtualizer({
-    count: hasNextPage ? data?.length + 1 : data?.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 100,
-    overscan: 5,
-  })
 
   const items = dataVirtualizer.getVirtualItems()
 
@@ -145,6 +138,8 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     items,
   ])
 
+  console.log({ h: dataVirtualizer.getTotalSize() })
+
   const getKeyStyle = React.useCallback((key: ListParts) => {
     return [
       variantStyles[key],
@@ -164,7 +159,6 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
       css={[
         getKeyStyle('wrapper'), 
         style, 
-        { height: dataVirtualizer.getTotalSize() }
       ]}
     >
       {isLoading && <p>Loading...</p>}
@@ -172,9 +166,23 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
       <View
         //@ts-ignore
         ref={ref}
-        css={[getKeyStyle('content'), style]}
+        css={[
+          getKeyStyle('content'), 
+          { height: dataVirtualizer.getTotalSize() }
+        ]}
       >
-        {items?.map((item) => renderItem(item))}
+        <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              transform: `translateY(${items[0].start}px)`,
+            }}
+          >
+            {items?.map((item) => renderItem(item))}
+          </div>
+        
       </View>
       {isLoading ? hasNextPage ? 'Loading more...' : 'Nothing more to load' : null}
     </View>
