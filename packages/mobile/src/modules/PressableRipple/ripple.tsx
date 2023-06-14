@@ -1,11 +1,15 @@
-import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import { View, Animated, Easing, Platform, TouchableWithoutFeedback, I18nManager } from 'react-native';
-import { styles, radius } from './styles.js';
+import React, { PureComponent } from 'react'
+import { View, Animated, Easing, Platform, TouchableWithoutFeedback, I18nManager } from 'react-native'
+import { styles, radius } from './styles'
 
-export default class Ripple extends PureComponent {
+type State = any
+
+export default class Ripple extends PureComponent<any, State> {
+  unique = 0
+
+  mounted = false
+
   static defaultProps = {
-    ...TouchableWithoutFeedback.defaultProps,
 
     rippleColor: 'rgb(0, 0, 0)',
     rippleOpacity: 0.30,
@@ -18,68 +22,51 @@ export default class Ripple extends PureComponent {
     disabled: false,
 
     onRippleAnimation: (animation, callback) => animation.start(callback),
-  };
-
-  static propTypes = {
-    ...Animated.View.propTypes,
-    ...TouchableWithoutFeedback.propTypes,
-
-    rippleColor: PropTypes.string,
-    rippleOpacity: PropTypes.number,
-    rippleDuration: PropTypes.number,
-    rippleSize: PropTypes.number,
-    rippleContainerBorderRadius: PropTypes.number,
-    rippleCentered: PropTypes.bool,
-    rippleSequential: PropTypes.bool,
-    rippleFades: PropTypes.bool,
-    disabled: PropTypes.bool,
-
-    onRippleAnimation: PropTypes.func,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.onLayout = this.onLayout.bind(this);
-    this.onPress = this.onPress.bind(this);
-    this.onPressIn = this.onPressIn.bind(this);
-    this.onPressOut = this.onPressOut.bind(this);
-    this.onLongPress = this.onLongPress.bind(this);
-    this.onAnimationEnd = this.onAnimationEnd.bind(this);
+    this.onLayout = this.onLayout.bind(this)
+    this.onPress = this.onPress.bind(this)
+    this.onPressIn = this.onPressIn.bind(this)
+    this.onPressOut = this.onPressOut.bind(this)
+    this.onLongPress = this.onLongPress.bind(this)
+    this.onAnimationEnd = this.onAnimationEnd.bind(this)
 
-    this.renderRipple = this.renderRipple.bind(this);
+    this.renderRipple = this.renderRipple.bind(this)
 
-    this.unique = 0;
-    this.mounted = false;
+    this.unique = 0
+    this.mounted = false
 
     this.state = {
       width: 0,
       height: 0,
       ripples: [],
-    };
+    }
   }
 
   componentDidMount() {
-    this.mounted = true;
+    this.mounted = true
   }
 
   componentWillUnmount() {
-    this.mounted = false;
+    this.mounted = false
   }
 
   onLayout(event) {
-    let { width, height } = event.nativeEvent.layout;
-    let { onLayout } = this.props;
+    const { width, height } = event.nativeEvent.layout
+    const { onLayout } = this.props
 
     if ('function' === typeof onLayout) {
-      onLayout(event);
+      onLayout(event)
     }
 
-    this.setState({ width, height });
+    this.setState({ width, height })
   }
 
   onPress(event) {
-    let { onPress } = this.props;
+    const { onPress } = this.props
 
     if ('function' === typeof onPress) {
       onPress(event)
@@ -87,89 +74,89 @@ export default class Ripple extends PureComponent {
   }
 
   onLongPress(event) {
-    let { onLongPress } = this.props;
+    const { onLongPress } = this.props
 
     if ('function' === typeof onLongPress) {
-      requestAnimationFrame(() => onLongPress(event));
+      requestAnimationFrame(() => onLongPress(event))
     }
 
-    this.startRipple(event);
+    this.startRipple(event)
   }
 
   onPressIn(event) {
-    let { onPressIn } = this.props;
+    const { onPressIn } = this.props
 
     if ('function' === typeof onPressIn) {
-      onPressIn(event);
+      onPressIn(event)
     }
 
-    this.startRipple(event);
+    this.startRipple(event)
   }
 
   onPressOut(event) {
-    let { onPressOut } = this.props;
+    const { onPressOut } = this.props
 
     if ('function' === typeof onPressOut) {
-      onPressOut(event);
+      onPressOut(event)
     }
   }
 
   onAnimationEnd() {
     if (this.mounted) {
-      this.setState(({ ripples }) => ({ ripples: ripples.slice(1) }));
+      this.setState(({ ripples }) => ({ ripples: ripples.slice(1) }))
     }
   }
 
   startRipple(event) {
-    let { width, height } = this.state;
-    let {
+    const { width, height } = this.state
+    const {
       rippleDuration,
       rippleCentered,
       rippleSize,
       onRippleAnimation,
-    } = this.props;
+    } = this.props
 
-    let w2 = 0.5 * width;
-    let h2 = 0.5 * height;
+    const w2 = 0.5 * width
+    const h2 = 0.5 * height
 
-    let { locationX, locationY } = rippleCentered?
-      { locationX: w2, locationY: h2 }:
-      event.nativeEvent;
+    const { locationX, locationY } = rippleCentered ?
+      { locationX: w2, locationY: h2 } :
+      event.nativeEvent
 
-    let offsetX = Math.abs(w2 - locationX);
-    let offsetY = Math.abs(h2 - locationY);
+    const offsetX = Math.abs(w2 - locationX)
+    const offsetY = Math.abs(h2 - locationY)
 
-    let R = rippleSize > 0?
-      0.5 * rippleSize:
-      Math.sqrt(Math.pow(w2 + offsetX, 2) + Math.pow(h2 + offsetY, 2));
+    const R = rippleSize > 0 ?
+      0.5 * rippleSize :
+      Math.sqrt(Math.pow(w2 + offsetX, 2) + Math.pow(h2 + offsetY, 2))
 
-    let ripple = {
+    const ripple = {
       unique: this.unique++,
       progress: new Animated.Value(0),
       locationX,
       locationY,
       R,
-    };
+    }
 
-    let animation = Animated
+    const animation = Animated
       .timing(ripple.progress, {
         toValue: 1,
         easing: Easing.out(Easing.ease),
         duration: rippleDuration,
         useNativeDriver: true,
-      });
+      })
 
-    onRippleAnimation(animation, this.onAnimationEnd);
+    onRippleAnimation(animation, this.onAnimationEnd)
 
-    this.setState(({ ripples }) => ({ ripples: ripples.concat(ripple) }));
+    this.setState(({ ripples }) => ({ ripples: ripples.concat(ripple) }))
   }
 
   renderRipple({ unique, progress, locationX, locationY, R }) {
-    let { rippleColor, rippleOpacity, rippleFades } = this.props;
+    const { rippleColor, rippleOpacity, rippleFades } = this.props
 
-    let rippleStyle = {
+    const rippleStyle = {
       top: locationY - radius,
-      [I18nManager.isRTL? 'right' : 'left']: locationX - radius,
+      [I18nManager.isRTL ? 'right' : 'left']: locationX - radius,
       backgroundColor: rippleColor,
 
       transform: [{
@@ -179,22 +166,22 @@ export default class Ripple extends PureComponent {
         }),
       }],
 
-      opacity: rippleFades?
+      opacity: rippleFades ?
         progress.interpolate({
           inputRange: [0, 1],
           outputRange: [rippleOpacity, 0],
-        }):
+        }) :
         rippleOpacity,
-    };
+    }
 
     return (
       <Animated.View style={[styles.ripple, rippleStyle]} key={unique} />
-    );
+    )
   }
 
   render() {
-    let { ripples } = this.state;
-    let {
+    const { ripples } = this.state
+    const {
       delayLongPress,
       delayPressIn,
       delayPressOut,
@@ -213,7 +200,7 @@ export default class Ripple extends PureComponent {
       onLongPress,
       onLayout,
       onRippleAnimation,
-      
+
       rippleColor,
       rippleOpacity,
       rippleDuration,
@@ -225,9 +212,9 @@ export default class Ripple extends PureComponent {
       radiusStyles,
 
       ...props
-    } = this.props;
+    } = this.props
 
-    let touchableProps = {
+    const touchableProps = {
       disabled,
       hitSlop,
       pressRetentionOffset,
@@ -241,8 +228,8 @@ export default class Ripple extends PureComponent {
       onPressOut: this.onPressOut,
       onLongPress: onLongPress ? this.onLongPress : undefined,
 
-      ...('web' !== Platform.OS? { nativeID } : null),
-    };
+      ...('web' !== Platform.OS ? { nativeID } : null),
+    }
 
     return (
       <TouchableWithoutFeedback {...touchableProps} ref={ref}>
@@ -253,6 +240,6 @@ export default class Ripple extends PureComponent {
           </View>
         </Animated.View>
       </TouchableWithoutFeedback>
-    );
+    )
   }
 }

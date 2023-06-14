@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { StyleSheet } from 'react-native'
 import { IconComposition, IconPresets } from './styles'
 import { Badge, BadgeProps } from '../Badge'
@@ -31,15 +31,15 @@ export type IconProps = {
 }
 
 export const IconComponent: React.FC<IconProps> = (props) => {
-  const { 
-    name, 
-    style, 
-    variants, 
-    badge = false, 
-    badgeProps, 
+  const {
+    name,
+    style,
+    variants,
+    badge = false,
+    badgeProps,
     wrapperProps = {},
     styles = {},
-    ...otherProps 
+    ...otherProps
   } = props
 
   const { Theme, logger } = useCodeleapContext()
@@ -67,7 +67,7 @@ export const IconComponent: React.FC<IconProps> = (props) => {
   }, [name])
 
   if (!name) {
-    return  null
+    return null
   }
 
   if (!Component) {
@@ -82,7 +82,7 @@ export const IconComponent: React.FC<IconProps> = (props) => {
       height: variantStyles.icon?.size || variantStyles.icon?.height || props?.size,
       width: variantStyles.icon?.size || variantStyles.icon?.width || props?.size,
     }
-  
+
     const wrapperStyle = [
       sized,
       (variantStyles.iconBadgeWrapper ?? {}),
@@ -93,7 +93,7 @@ export const IconComponent: React.FC<IconProps> = (props) => {
       <Badge {...badgeProps} styles={badgeStyles} badge={badge} />
     </View>
   }
-  
+
   return <Component {...otherProps} style={variantStyles.icon} />
 }
 

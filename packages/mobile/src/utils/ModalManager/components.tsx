@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { usePrevious, onMount, onUpdate, PropsOf } from '@codeleap/common'
-import { useModalContext } from './context'
+import React from 'react'
+// import { usePrevious, onMount, onUpdate, PropsOf } from '@codeleap/common'
+// import { useModalContext } from './context'
 import { Portal } from '@gorhom/portal'
 import { Modal as _Modal } from '../../components/Modal'
-import { Drawer as _Drawer } from '../../components/Drawer'
+// import { Drawer as _Drawer } from '../../components/Drawer'
 
 type UseManagedModalArgs = {
   id?: string

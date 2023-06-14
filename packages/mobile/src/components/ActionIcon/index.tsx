@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
-import { ActionIconComposition, ActionIconPresets } from './styles'
+// import { ActionIconComposition, ActionIconPresets } from './styles'
 
 export type ActionIconProps= {
     iconProps?: Partial<IconProps>
@@ -15,21 +15,21 @@ export type ActionIconProps= {
 
 export const ActionIcon:React.FC<ActionIconProps> = (props) => {
   const { name, icon, iconProps, variants, styles, children, debugName, ...touchableProps } = props
-  
+
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    variants, 
-    styles, 
+    variants,
+    styles,
     transform: StyleSheet.flatten,
   })
-  
+
   const touchableStyles = getNestedStylesByKey('touchable', variantStyles)
 
   const badgeStyles = getNestedStylesByKey('badge', variantStyles)
 
   return (
     <Touchable debugName={debugName} styles={touchableStyles} badgeStyles={badgeStyles} {...touchableProps}>
-      <Icon 
-        name={icon ?? name} 
+      <Icon
+        name={icon ?? name}
         style={[
           variantStyles.icon,
           touchableProps?.disabled && variantStyles['icon:disabled'],

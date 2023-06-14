@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import React, { ComponentPropsWithoutRef, forwardRef } from 'react'
+
 import {
   ComponentVariants,
   useDefaultComponentStyle,
@@ -11,11 +11,11 @@ import {
   onMount,
 } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView, Platform } from 'react-native'
-import { TouchableComposition, TouchablePresets } from './styles'
-import { StylesOf } from '../../types'
-import { View } from '../View'
-import { usePressableFeedback } from '../../utils'
-import { Badge, BadgeComposition, BadgeProps } from '../Badge'
+// import { TouchableComposition, TouchablePresets } from './styles'
+// import { StylesOf } from '../../types'
+// import { View } from '../View'
+// import { usePressableFeedback } from '../../utils'
+// import { Badge, BadgeComposition, BadgeProps } from '../Badge'
 import { PressableRipple } from '../../modules/PressableRipple'
 
 export type TouchableProps = React.PropsWithChildren<
@@ -160,15 +160,15 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
     const matchKey = (k, key) => {
       if (k.endsWith('#')) {
-        return key.includes(k.substring(0, k.length - 1)) 
+        return key.includes(k.substring(0, k.length - 1))
       } else if (k.endsWith('!')) {
         return key === k.substring(0, k.length - 1)
       } else {
-    
+
         return key.startsWith(k)
       }
     }
-    
+
     Object.entries(_styles).forEach(([key, value]) => {
       if (radiusKey.some(k => matchKey(k, key))) {
         wrapperStyle[key] = value
@@ -207,7 +207,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     <Wrapper style={[wrapperStyle]}>
       {!disableRipple ? (
         <PressableRipple
-          onPress={press}  
+          onPress={press}
           style={[
             pressableStyle,
             variantStyles.pressable,
@@ -224,8 +224,8 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
           {children}
         </PressableRipple>
       ) : (
-        <Pressable 
-          onPress={press}  
+        <Pressable
+          onPress={press}
           style={({ pressed }) => ([
             pressableStyle,
             getFeedbackStyle(pressed),

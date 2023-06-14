@@ -1,28 +1,28 @@
-import * as React from 'react'
-import { View, ViewProps } from '../View'
-import { ButtonProps } from '../Button'
-import { Scroll } from '../Scroll'
-import {
-  ComponentVariants,
-  getNestedStylesByKey,
-  IconPlaceholder,
-  PropsOf,
-  TypeGuards,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import {
-  ModalComposition,
-  ModalPresets,
-  ModalParts,
-} from './styles'
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types/utility'
+import React from 'react'
+// import { View, ViewProps } from '../View'
+// import { ButtonProps } from '../Button'
+// import { Scroll } from '../Scroll'
+// import {
+//   ComponentVariants,
+//   getNestedStylesByKey,
+//   IconPlaceholder,
+//   PropsOf,
+//   TypeGuards,
+//   useDefaultComponentStyle,
+// } from '@codeleap/common'
+// import {
+//   ModalComposition,
+//   ModalPresets,
+//   ModalParts,
+// } from './styles'
+// import { StyleSheet } from 'react-native'
+// import { StylesOf } from '../../types/utility'
 
-import { Backdrop } from '../Backdrop'
-import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
-import { Text, TextProps } from '../Text'
-import { Touchable } from '../Touchable'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
+// import { Backdrop } from '../Backdrop'
+// import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
+// import { Text, TextProps } from '../Text'
+// import { Touchable } from '../Touchable'
+// import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
@@ -47,7 +47,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   header?: React.ReactElement
   closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
-  keyboardAware?: GetKeyboardAwarePropsOptions
+  // keyboardAware?: GetKeyboardAwarePropsOptions
   scrollProps?: PropsOf<typeof Scroll, 'ref'>
 }
 
