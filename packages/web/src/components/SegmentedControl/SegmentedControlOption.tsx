@@ -1,22 +1,24 @@
 import React from 'react'
-import { PropsOf } from '@codeleap/common'
+import { PropsOf, IconPlaceholder } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { SegmentedControlComposition } from './styles'
+import { Icon } from '../Icon'
 
-export interface SegmentedControlOptionProps {
+export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   selected?: boolean
   label: string
   value: string
   variantStyles?: StylesOf<SegmentedControlComposition>
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
+  icon?: IconPlaceholder
 }
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
 
-  const { selected, onPress, style, variantStyles, label, value, textProps, ...touchableProps } = props
+  const { selected, onPress, style, variantStyles, label, icon, value, textProps, ...touchableProps } = props
 
   console.log({ variantStyles })
 
@@ -30,6 +32,11 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
       css={[variantStyles.button, selected && variantStyles['button:selected'], style]}
       onPress={onPress}
     >
+      {
+        !!icon && (
+          <Icon name={icon} style={[variantStyles.icon]} />
+        )
+      }
       <Text
         text={label}
         css={[
@@ -39,7 +46,6 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
         ]}
         {...textProps}
       />
-
     </Touchable>
   )
 }

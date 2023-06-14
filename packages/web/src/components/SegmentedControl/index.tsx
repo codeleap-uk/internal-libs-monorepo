@@ -1,8 +1,10 @@
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
-import { ComponentVariants, useDefaultComponentStyle } from '@codeleap/common'
+import { ComponentVariants, useDefaultComponentStyle, PropsOf } from '@codeleap/common'
 import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
+import { Scroll } from '../Scroll'
+import { Touchable } from '../Touchable'
 
 export type SegmentedControlProps = {
   options?: {label: string; value: any }[]
@@ -29,11 +31,12 @@ export type SegmentedControlProps = {
   /**
     * Determine if the modal is visible
   */
+  touchableProps?: Partial<PropsOf<typeof Touchable>>
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
 
-  const { label, options, styles = {}, value, variants = [], onValueChange } = props
+  const { label, options, styles = {}, value, variants = [], onValueChange, touchableProps } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
@@ -42,18 +45,20 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     },
   )
 
+  console.log({ value, options })
+
   return (
     <View css={variantStyles.wrapper}>
       <View css={variantStyles.innerWrapper}>
         <Text label={label} />
         <View
-          css={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled']]}
+          css={[variantStyles.selectedBubble, touchableProps?.disabled && variantStyles['selectedBubble:disabled']]}
         >
           {options.map((o, idx) => (
             <SegmentedControlOption
               label={o.label}
               value={o.value}
-              onPress={onValueChange}
+              onPress={(txt:string) => onValueChange(txt)}
               key={idx}
               style={styles}
               selected={value === o.value}
