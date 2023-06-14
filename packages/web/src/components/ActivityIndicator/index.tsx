@@ -27,6 +27,7 @@ export type ActivityIndicatorProps = {
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSObject
   size?: number
+  style: React.CSSProperties
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 
 export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {
@@ -37,6 +38,7 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {
     responsiveVariants,
     styles,
     size = null,
+    style,
     ...viewProps
   } = props
 
@@ -60,6 +62,7 @@ export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {
       {...viewProps}
       css={[
         variantStyles.wrapper,
+        style,
         (!animating && hidesWhenStopped) && { visibility: 'hidden' },
         _size,
       ]}

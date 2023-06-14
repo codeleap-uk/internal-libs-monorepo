@@ -13,7 +13,7 @@ export type AugmentedRenderItemInfo<T> = {
 }
 
 export * from './styles'
-// export * from './PaginationIndicator'
+export * from './PaginationIndicator'
 
 export type ListProps<
   T = any[],
@@ -29,6 +29,7 @@ export type ListProps<
     styles?: StylesOf<ListComposition>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
+    ListFooterComponent?: () => React.ReactElement
     onRefresh?: () => void
     refreshing?: boolean
     getItemLayout?: ((
@@ -40,7 +41,7 @@ export type ListProps<
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: any
-    ListHeaderComponentStyle?: React.ReactChild
+    ListHeaderComponent?: () => React.ReactElement
   }
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
@@ -66,6 +67,8 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
+    ListFooterComponent = null,
+    ListHeaderComponent = null,
     ...props
   } = flatListProps
 
@@ -138,8 +141,6 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     items,
   ])
 
-  console.log({ h: dataVirtualizer.getTotalSize() })
-
   const getKeyStyle = React.useCallback((key: ListParts) => {
     return [
       variantStyles[key],
@@ -148,47 +149,46 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     ]
   }, [isLoading, isEmpty])
 
-  if (isEmpty) {
-    return <EmptyPlaceholder {...placeholder} />
-  }
-
   return (
-    // @ts-ignore
-    <View 
-      ref={parentRef} 
-      css={[
-        getKeyStyle('wrapper'), 
-        style, 
-      ]}
-    >
-      {isLoading && <p>Loading...</p>}
-      {isError && <span>Error: {error}</span>}
-      <View
-        //@ts-ignore
-        ref={ref}
-        css={[
-          getKeyStyle('content'), 
-          { height: dataVirtualizer.getTotalSize() }
-        ]}
-      >
-        {/* Necessary for correct list render */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            transform: `translateY(${items[0].start}px)`,
-          }}
+    <View css={[getKeyStyle('wrapper')]}>
+      {!!ListHeaderComponent && <ListHeaderComponent />}
+
+      {isEmpty ? <EmptyPlaceholder {...placeholder} /> : (
+        <View
+          ref={parentRef} 
+          css={[
+            getKeyStyle('innerWrapper'), 
+            style, 
+          ]}
         >
-          {items?.map((item) => renderItem(item))}
-        </div>
-      </View>
-      {isLoading ? hasNextPage ? 'Loading more...' : 'Nothing more to load' : null}
+          <View
+            //@ts-ignore
+            ref={ref}
+            css={[
+              getKeyStyle('content'), 
+              { height: dataVirtualizer.getTotalSize() }
+            ]}
+          >
+            {/* Necessary for correct list render */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                transform: `translateY(${items[0].start}px)`,
+              }}
+            >
+              {items?.map((item) => renderItem(item))}
+            </div>
+          </View>
+        </View>
+      )}
+
+      {!!ListFooterComponent && <ListFooterComponent />}
     </View>
   )
-},
-)
+})
 
 export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
 

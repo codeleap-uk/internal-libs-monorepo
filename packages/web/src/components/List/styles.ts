@@ -3,7 +3,7 @@ import { ViewComposition } from '../View'
 
 type ListStates = 'empty' | 'loading' 
 
-export type ListParts = ViewComposition | 'content' | 'separator' | 'header' | 'refreshControl'
+export type ListParts = ViewComposition | 'innerWrapper' | 'content' | 'separator' | 'header' | 'refreshControl'
 
 export type ListComposition = `${ListParts}:${ListStates}` | ListParts
 
