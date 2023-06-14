@@ -22,7 +22,7 @@ export type ActivityIndicatorTestProps<T extends ElementType = any> = ComponentV
 
 export const ActivityIndicatorTest = forwardRef<typeof View, ActivityIndicatorTestProps>((props, ref) => {
   const {
-    // animating = true,
+    // animating,
     // hidesWhenStopped = true,
     component,
     styles,

@@ -17,6 +17,7 @@ import { Icon } from '../Icon'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
 import { LoadingOverlay } from '../LoadingOverlay'
+import { ActivityIndicatorTest } from '../ActivityIndicatorTest'
 
 type NativeButtonProps = ComponentPropsWithRef<'button'>
 
@@ -82,14 +83,12 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       css={getStyles('wrapper')}
       component='button'
       debugComponent='Button'
-
       onPress={handlePress}
       {...props}
     >
       <LoadingOverlay
         visible={loading}
         styles={loaderStyle}
-
       />
       {!loading && (
         <Icon
@@ -112,12 +111,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
 
       />
-      {loading && <ActivityIndicator styles={{
-        'wrapper': getStyles('loaderWrapper'),
-        'backCircle': getStyles('loaderBackCircle'),
-        'frontCircle': getStyles('loaderFrontCircle'),
-        'circle': getStyles('loaderCircle'),
-      }} css={getStyles('loader')}/>}
+      {loading && <ActivityIndicatorTest style={{ display: 'none' }} />}
     </Touchable>
   )
 }

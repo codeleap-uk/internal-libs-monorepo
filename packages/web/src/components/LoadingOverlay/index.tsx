@@ -1,32 +1,25 @@
-import { ComponentVariants, useDefaultComponentStyle } from "@codeleap/common"
-import React from "react"
-import { StylesOf } from "../.."
-import { LoadingOverlayComposition, LoadingOverlayPresets } from "./styles"
-import {View} from '../View'
-import { ActivityIndicator } from "../ActivityIndicator"
+import { ComponentVariants, useDefaultComponentStyle } from '@codeleap/common'
+import React from 'react'
+import { StylesOf } from '../..'
+import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
+import { View } from '../View'
+import { ActivityIndicator } from '../ActivityIndicator'
+import { ActivityIndicatorTest } from '../ActivityIndicatorTest'
 
 export type LoadingOverlayProps = React.PropsWithChildren<{
   visible?: boolean
   styles?: StylesOf<LoadingOverlayComposition>
 }> & ComponentVariants<typeof LoadingOverlayPresets>
 
-
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
-  const { visible, children, styles, variants,responsiveVariants } = props
+  const { visible, children, styles, variants, responsiveVariants } = props
 
   const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
-    variants, styles, responsiveVariants, rootElement: 'wrapper'
+    variants, styles, responsiveVariants, rootElement: 'wrapper',
   })
 
-  return <View css={[variantStyles.wrapper, visible && variantStyles["wrapper:visible"]]}>
-    <ActivityIndicator 
-       styles={{
-        wrapper: [variantStyles.indicatorWrapper, visible && variantStyles["indicatorWrapper:visible"]],
-        backCircle: [variantStyles.indicatorBackCircle, visible && variantStyles["indicatorBackCircle:visible"]],
-        frontCircle: [variantStyles.indicatorFrontCircle, visible && variantStyles["indicatorFrontCircle:visible"]],
-        circle: [variantStyles.indicatorCircle, visible && variantStyles["indicatorCircle:visible"]],
-      }}
-    />
+  return <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible']]}>
+    <ActivityIndicatorTest/>
     {children}
   </View>
 }
