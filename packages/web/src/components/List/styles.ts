@@ -1,8 +1,12 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common";
-import { ViewComposition } from "../View";
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ViewComposition } from '../View'
 
-export type ListComposition = ViewComposition
+type ListStates = 'empty' | 'loading' 
 
-const createListStyles = createDefaultVariantFactory<ListComposition>()
+type ListParts = ViewComposition | 'separator' | 'header' | 'refreshControl'
 
-export const ListPresets = includePresets((styles) => createListStyles(() => ({ wrapper: styles })))
+export type ListComposition = `${ListParts}:${ListStates}` | ListParts
+
+const createListStyle = createDefaultVariantFactory<ListComposition>()
+
+export const ListPresets = includePresets(style => createListStyle(() => ({ wrapper: style })))
