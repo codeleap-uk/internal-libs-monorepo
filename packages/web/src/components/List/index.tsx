@@ -1,8 +1,8 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback } from '@codeleap/common'
+import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { ListComposition, ListPresets } from './styles'
+import { ListComposition, ListParts, ListPresets } from './styles'
 import { StylesOf } from '../../types'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
@@ -20,14 +20,13 @@ export type ListProps<
   Data = T extends Array<infer D> ? D : never
 > = ComponentVariants<typeof ListPresets> &
   Omit<ViewProps<'div'>, 'variants'> & {
+    data: Data[]
     isFetching?: boolean
     noMoreItemsText?: React.ReactChild
     hasNextPage?: boolean
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
     styles?: StylesOf<ListComposition>
-    fakeEmpty?: boolean
-    data: Data[]
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
     onRefresh?: () => void
@@ -41,6 +40,7 @@ export type ListProps<
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: any
+    ListHeaderComponentStyle?: React.ReactChild
   }
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
@@ -50,143 +50,136 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) =>
 }
 
 const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => {
-    const {
-      variants = [],
-      style,
-      styles = {},
-      onRefresh,
-      component,
-      refreshing,
-      placeholder,
-      fakeEmpty,
-      renderItem: RenderItem,
-      data,
-      hasNextPage,
-      isError,
-      error,
-      isLoading,
-      isFetchingNextPage,
-      fetchNextPage,
-      ...props
-    } = flatListProps
+  const {
+    variants = [],
+    style,
+    styles = {},
+    onRefresh,
+    component,
+    refreshing,
+    placeholder = {},
+    renderItem: RenderItem,
+    data,
+    hasNextPage,
+    isError,
+    error,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    ...props
+  } = flatListProps
 
-    const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
-      variants,
-      styles,
-    })
+  const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
+    variants,
+    styles,
+  })
 
-    const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
+  const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator} />
 
-    const renderItem = useCallback((data: any) => {
-      if (!RenderItem) return null
-      
-      const listLength = data?.length || 0
+  const renderItem = useCallback((data: any) => {
+    if (!RenderItem) return null
 
-      const isFirst = data?.index === 0
-      const isLast = data?.index === listLength - 1
+    const listLength = data?.length || 0
 
-      const isOnly = isFirst && isLast
+    const isFirst = data?.index === 0
+    const isLast = data?.index === listLength - 1
 
-      const _itemProps = {
-        ...data,
-        isOnly,
-        isLast,
-        isFirst,
-      }
+    const isOnly = isFirst && isLast
 
-      return <RenderItem {..._itemProps} />
-    }, [RenderItem, data?.length])
+    const _itemProps = {
+      ...data,
+      isOnly,
+      isLast,
+      isFirst,
+    }
 
-    const isEmpty = !data || !data?.length
+    return <View
+      css={[
+        {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: `${data.size}px`,
+          transform: `translateY(${data.start}px)`,
+        }
+      ]}
+    >
+      {isFirst && separator}
+      <RenderItem {..._itemProps} />
+    </View>
+  }, [RenderItem, data?.length])
 
-    const parentRef = React.useRef()
+  const isEmpty = !data || !data?.length
 
-    const rowVirtualizer = useVirtualizer({
-      count: hasNextPage ? data?.length + 1 : data?.length,
-      getScrollElement: () => parentRef.current,
-      estimateSize: () => 100,
-      overscan: 5,
-    })
+  const parentRef = React.useRef()
 
-    React.useEffect(() => {
-      const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
+  const dataVirtualizer = useVirtualizer({
+    count: hasNextPage ? data?.length + 1 : data?.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 100,
+    overscan: 5,
+  })
 
-      console.log({
-        isFetchingNextPage,
-        last: lastItem.index >= data?.length - 1,
-        hasNextPage,
-      })
-  
-      if (!lastItem) {
-        return
-      }
-  
-      if (
-        lastItem.index >= data?.length - 1 &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
-        console.log(fetchNextPage)
-        fetchNextPage()
-      }
-    }, [
-      hasNextPage,
-      fetchNextPage,
-      data?.length,
-      isFetchingNextPage,
-      rowVirtualizer.getVirtualItems(),
-    ])
+  const items = dataVirtualizer.getVirtualItems()
 
-    return <>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : isError ? (
-        <span>Error: {error}</span>
-      ) : (
-        <div
-          ref={parentRef}
-          style={{
-            height: `500px`,
-            width: `100%`,
-            overflow: 'auto',
-          }}
-        >
-          <div
-            style={{
-              height: `100vh`,
-              width: '100%',
-              position: 'relative',
-            }}
-          >
-            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const isLoaderRow = virtualRow?.index > data?.length - 1
-              const post = data?.[virtualRow?.index]
+  onUpdate(() => {
+    const [lastItem] = [...items].reverse()
 
-              return (
-                <div
-                  key={virtualRow.index}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: `${virtualRow.size}px`,
-                    transform: `translateY(${virtualRow.start}px)`,
-                  }}
-                >
-                  {isLoaderRow
-                    ? hasNextPage
-                      ? 'Loading more...'
-                      : 'Nothing more to load'
-                    : post?.title}
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
-    </>
-  },
+    if (!lastItem) {
+      return
+    }
+
+    if (
+      lastItem.index >= data?.length - 1 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
+      fetchNextPage()
+    }
+  }, [
+    hasNextPage,
+    fetchNextPage,
+    data?.length,
+    isFetchingNextPage,
+    items,
+  ])
+
+  const getKeyStyle = React.useCallback((key: ListParts) => {
+    return [
+      variantStyles[key],
+      isLoading && variantStyles[`${key}:loading`],
+      isEmpty && variantStyles[`${key}:empty`],
+    ]
+  }, [isLoading, isEmpty])
+
+  if (isEmpty) {
+    return <EmptyPlaceholder {...placeholder} />
+  }
+
+  return (
+    // @ts-ignore
+    <View 
+      ref={parentRef} 
+      css={[
+        getKeyStyle('wrapper'), 
+        style, 
+        { height: dataVirtualizer.getTotalSize() }
+      ]}
+    >
+      {isLoading && <p>Loading...</p>}
+      {isError && <span>Error: {error}</span>}
+      <View
+        //@ts-ignore
+        ref={ref}
+        css={[getKeyStyle('content'), style]}
+      >
+        {items?.map((item) => renderItem(item))}
+      </View>
+      {isLoading ? hasNextPage ? 'Loading more...' : 'Nothing more to load' : null}
+    </View>
+  )
+},
 )
 
 export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
