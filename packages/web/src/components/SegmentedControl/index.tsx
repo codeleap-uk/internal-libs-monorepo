@@ -1,13 +1,15 @@
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
-import { ComponentVariants, useDefaultComponentStyle, PropsOf } from '@codeleap/common'
+import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder } from '@codeleap/common'
 import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
 import { Scroll } from '../Scroll'
 import { Touchable } from '../Touchable'
 
+type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
+
 export type SegmentedControlProps = {
-  options?: {label: string; value: any }[]
+  options : SegmentedContropOptions[]
   /**
    * Determine if the modal is visible
   */
@@ -53,6 +55,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         <Text label={label} />
         <View
           css={[variantStyles.selectedBubble, touchableProps?.disabled && variantStyles['selectedBubble:disabled']]}
+
         >
           {options.map((o, idx) => (
             <SegmentedControlOption
