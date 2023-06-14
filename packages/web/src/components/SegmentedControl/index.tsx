@@ -58,7 +58,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             <SegmentedControlOption
               label={o.label}
               value={o.value}
-              onPress={(txt:string) => onValueChange(txt)}
+              onPress={() => onValueChange(o.value)}
               key={idx}
               style={styles}
               selected={value === o.value}
