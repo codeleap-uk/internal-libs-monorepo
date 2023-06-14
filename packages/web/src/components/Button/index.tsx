@@ -14,10 +14,9 @@ import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { ActivityIndicator } from '../ActivityIndicator'
 import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
 import { LoadingOverlay } from '../LoadingOverlay'
-import { ActivityIndicatorTest } from '../ActivityIndicatorTest'
+import { ActivityIndicator } from '../ActivityIndicator'
 
 type NativeButtonProps = ComponentPropsWithRef<'button'>
 
@@ -111,7 +110,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
 
       />
-      {loading && <ActivityIndicatorTest style={{ display: 'none' }} />}
+      {loading && <ActivityIndicator css={{ display: 'none' }} />}
     </Touchable>
   )
 }

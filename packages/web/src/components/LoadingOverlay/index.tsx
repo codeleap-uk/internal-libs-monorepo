@@ -4,7 +4,6 @@ import { StylesOf } from '../..'
 import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
-import { ActivityIndicatorTest } from '../ActivityIndicatorTest'
 
 export type LoadingOverlayProps = React.PropsWithChildren<{
   visible?: boolean
@@ -19,7 +18,7 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
   })
 
   return <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible']]}>
-    <ActivityIndicatorTest/>
+    <ActivityIndicator/>
     {children}
   </View>
 }
