@@ -39,5 +39,6 @@ export * from './RefreshControl'
 export * from './Avatar'
 export * from './AvatarGroup'
 export * from './Badge'
+export * from './NumberIncrement'
 
 export * from './defaultStyles'

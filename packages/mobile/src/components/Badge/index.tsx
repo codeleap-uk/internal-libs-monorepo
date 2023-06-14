@@ -69,8 +69,6 @@ export const Badge = (props: BadgeProps) => {
     TypeGuards.isNumber(badge) && !!badge
   )
 
-  console.log('badge', { badge, visible })
-
   if (!visible) return null
 
   const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {

@@ -36,6 +36,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     debugName: string
     badge?: BadgeProps['badge']
     selected?: boolean
+    badgeProps?: Partial<BadgeProps>
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
 

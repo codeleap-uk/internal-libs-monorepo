@@ -56,9 +56,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     styles,
     setPressed,
     rippleDisabled = false,
-    badge = false,
-    badgeProps = {},
-    badgeStyles = {},
     ...props
   } = touchableProps
 
