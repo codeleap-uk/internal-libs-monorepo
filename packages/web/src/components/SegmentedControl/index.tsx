@@ -1,11 +1,8 @@
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-  useMemo,
-} from '@codeleap/common'
+import { ComponentVariants, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlPresets } from './styles'
+import { Text } from '../Text'
 
 export type SegmentedControlProps = {
   options?: {label: string; value: any }[]
@@ -32,22 +29,11 @@ export type SegmentedControlProps = {
   /**
     * Determine if the modal is visible
   */
-  getItemWidth?: (item:{label: string; value: any }, idx: number, arr: {label: string; value: any }[]) => number
-  /**
-    * Determine if the modal is visible
-  */
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
 
-  const { getItemWidth, label, options, styles = {}, value, variants = [], onValueChange, RenderAnimatedView } = props
-
-  const widthStyle = useMemo(() => {
-    const sizes = options.map(getItemWidth)
-    const maxWidth = sizes.sort((a, b) => b - a)[0]
-
-    return { width: maxWidth }
-  }, [options])
+  const { label, options, styles = {}, value, variants = [], onValueChange } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
@@ -59,9 +45,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   return (
     <View css={variantStyles.wrapper}>
       <View css={variantStyles.innerWrapper}>
+        <Text label={label} />
         <View
-          // css={variantStyles}
-          css={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'], widthStyle]}
+          css={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled']]}
         >
           {options.map((o, idx) => (
             <SegmentedControlOption
@@ -69,7 +55,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
               value={o.value}
               onPress={onValueChange}
               key={idx}
-              style={widthStyle}
+              style={styles}
               selected={value === o.value}
               variantStyles={variantStyles}
             />
