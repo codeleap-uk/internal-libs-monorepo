@@ -9,3 +9,4 @@ export { Permissions }
 export * from './KeyboardAware'
 export * from './input'
 export * from './theme'
+export * from './locale'
