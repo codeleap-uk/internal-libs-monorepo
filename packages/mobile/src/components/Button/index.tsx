@@ -16,6 +16,7 @@ import { Icon } from '../Icon'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { StyleSheet } from 'react-native'
 import { usePressableFeedback } from '../../utils'
+import { Badge, BadgeProps } from '../Badge'
 
 export * from './styles'
 
@@ -33,6 +34,7 @@ export type ButtonProps = Omit<TouchableProps, 'variants'> &
     loading?: boolean
     debounce?: number
     debugName: string
+    badge?: BadgeProps['badge']
     selected?: boolean
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   }
@@ -49,6 +51,8 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     disabled,
     selected,
     rightIcon,
+    badge,
+    badgeProps,
     style,
     ...props
   } = buttonProps
@@ -112,7 +116,6 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   const isLeftIconHidden = _styles?.leftIcon?.display != 'none'
 
   const badgeStyles = getNestedStylesByKey('badge', variantStyles)
-  
   return (
     <Touchable
       style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
@@ -125,7 +128,6 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       debugComponent={'Button'}
       noFeedback={!onPress}
       setPressed={setPressed}
-      badgeStyles={badgeStyles}
       {...props}
     >
       {loading && <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} />}
@@ -133,6 +135,11 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
       {childrenContent}
       <Icon name={rightIcon} style={[_styles.rightIcon, rightFeedback]} />
+      <Badge
+        styles={badgeStyles}
+        {...badgeProps}
+        badge={badge}
+      />
     </Touchable>
   )
 })

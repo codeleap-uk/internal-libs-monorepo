@@ -86,7 +86,7 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
   const hasBackgroundColor = !!variantStyles?.touchable?.backgroundColor
 
   const badgeStyles = getNestedStylesByKey('badge', variantStyles)
-  
+
   return (
     <View style={[variantStyles.wrapper, style]} {...viewProps}>
       <Touchable
@@ -94,14 +94,11 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
         onPress={() => onPress?.()}
         style={[
           variantStyles.touchable,
-          !hasBackgroundColor  && {
-            backgroundColor:  randomColor,
+          !hasBackgroundColor && {
+            backgroundColor: randomColor,
           },
         ]}
         noFeedback={noFeedback || !onPress}
-        badgeStyles={badgeStyles}
-        badge={badge}
-        badgeProps={badgeProps}
       >
         {renderContent()}
 
@@ -110,13 +107,14 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
             <Text text={description} style={variantStyles.description} />
           </View>
         )}
+        <Badge styles={badgeStyles} {...badgeProps} badge={badge}/>
       </Touchable>
 
       {badgeIcon && (
-        <Touchable  
-          debugName={`${debugName} badge`} 
-          style={variantStyles.badgeIconWrapper} 
-          onPress={() => onPress?.()}   
+        <Touchable
+          debugName={`${debugName} badge`}
+          style={variantStyles.badgeIconWrapper}
+          onPress={() => onPress?.()}
           noFeedback
         >
           <Icon name={badgeIcon} style={variantStyles.badgeIcon} />

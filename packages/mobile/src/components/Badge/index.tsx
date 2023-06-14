@@ -7,8 +7,8 @@ import { StyleSheet } from 'react-native'
 
 export * from './styles'
 
-export type BadgeProps = ComponentVariants<typeof BadgePresets> 
-  & ViewProps 
+export type BadgeProps = ComponentVariants<typeof BadgePresets>
+  & ViewProps
   & {
     styles?: StylesOf<BadgeComposition>
     maxCount?: number
@@ -19,7 +19,7 @@ export type BadgeProps = ComponentVariants<typeof BadgePresets>
     getBadgeContent?: (props: BadgeContent) => string
     renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
     disabled?: boolean
-    badge?: number | boolean
+    badge: number | boolean
   }
 
 type BadgeContent = BadgeProps & { count: number }
@@ -38,13 +38,13 @@ const defaultProps: Partial<BadgeProps> = {
   getBadgeContent: defaultGetBadgeContent,
   renderBadgeContent: null,
   disabled: false,
-  badge: true,
+
 }
 
 export const Badge = (props: BadgeProps) => {
   const allProps = {
     ...Badge.defaultProps,
-    props,
+    ...props,
   }
 
   const {
@@ -63,7 +63,13 @@ export const Badge = (props: BadgeProps) => {
     ...rest
   } = allProps
 
-  const visible = (TypeGuards.isBoolean(badge) && badge === true) || TypeGuards.isNumber(badge)
+  const visible = (
+    TypeGuards.isBoolean(badge) && badge === true
+  ) || (
+    TypeGuards.isNumber(badge) && !!badge
+  )
+
+  console.log('badge', { badge, visible })
 
   if (!visible) return null
 
@@ -101,7 +107,7 @@ export const Badge = (props: BadgeProps) => {
   let BadgeContent = renderBadgeContent
 
   if (TypeGuards.isNil(renderBadgeContent)) {
-    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} /> 
+    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} />
   }
 
   return (
@@ -111,14 +117,14 @@ export const Badge = (props: BadgeProps) => {
     >
       <View {...innerWrapperProps} style={innerWrapperStyles}>
         {showContent
-          ? <BadgeContent 
-              {...props} 
-              maxCount={maxCount} 
-              minCount={minCount} 
-              count={count}
-              getBadgeContent={getBadgeContent} 
-              content={content} 
-            /> 
+          ? <BadgeContent
+            {...props}
+            maxCount={maxCount}
+            minCount={minCount}
+            count={count}
+            getBadgeContent={getBadgeContent}
+            content={content}
+          />
           : null
         }
       </View>
@@ -126,4 +132,4 @@ export const Badge = (props: BadgeProps) => {
   )
 }
 
-Badge.defaultProps =  defaultProps
+Badge.defaultProps = defaultProps
