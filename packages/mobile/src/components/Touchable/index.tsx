@@ -10,11 +10,13 @@ import {
   TypeGuards,
   onMount,
 } from '@codeleap/common'
-import { Pressable, StyleSheet, View as RNView } from 'react-native'
+import { Pressable, StyleSheet, View as RNView, Platform } from 'react-native'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
-import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
+
+import { PressableRipple } from '../../modules/PressableRipple'
+
 export type TouchableProps = React.PropsWithChildren<
   Omit<
     ComponentPropsWithoutRef<typeof Pressable>,
@@ -119,71 +121,44 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     feedbackConfig: variantStyles?.feedback,
   })
 
-  const Wrapper = View
+  const disableRipple = disableFeedback || rippleDisabled || Platform.OS !== 'android'
 
-  const { wrapperStyle, pressableStyle } = React.useMemo(() => {
-    const wrapperkeys = [
-      'margin',
-      'alignSelf',
-      'border',
-      'top!',
-      'left!',
-      'right!',
-      'bottom!',
-      'position!',
-      'transform!',
-      // 'flex!',
-    ]
-    const sharedKeys = [
-      'width!',
-      'height!',
-      'flex!',
-      'backgroundColor!',
-    ]
-
-    const wrapperStyle = {} as any
-    const pressableStyle = {} as any
-    const match = (k, key) => {
-      if (k.endsWith('!')) {
-        return key === k.substring(0, k.length - 1)
-      } else {
-
-        return key.startsWith(k)
-      }
-    }
-    Object.entries(_styles).forEach(([key, value]) => {
-
-      if (wrapperkeys.some(k => match(k, key))) {
-        wrapperStyle[key] = value
-      } else if (sharedKeys.some(k => match(k, key))) {
-        wrapperStyle[key] = value
-
-        pressableStyle[key] = value
-      } else {
-        pressableStyle[key] = value
-      }
-    })
-    if (wrapperStyle.position === 'absolute') {
-      pressableStyle.width = '100%'
-      pressableStyle.height = '100%'
-    }
-    wrapperStyle.overflow = 'hidden'
-
-    return {
-      wrapperStyle,
-      pressableStyle,
-    }
-  }, [JSON.stringify(_styles)])
-
+  const _style = StyleSheet.flatten([variantStyles.wrapper, style])
+  const radiusStyle = _style?.borderRadius
   return (
-    <Wrapper style={[wrapperStyle]}>
-      <Pressable onPress={press} style={({ pressed }) => ([
-        pressableStyle,
-        getFeedbackStyle(pressed),
-        variantStyles.pressable,
-      ])} android_ripple={!rippleDisabled && rippleConfig} {...props} ref={ref}>
-        {children}
-      </Pressable>
-    </Wrapper>
+    <>
+      {!disableRipple ? (
+        <PressableRipple
+          onPress={press}
+          style={[
+            _style,
+          ]}
+          {...props}
+          rippleFades={false}
+          rippleDuration={400}
+          rippleOpacity={0.1}
+          {...rippleConfig}
+          radiusStyles={radiusStyle}
+          // @ts-ignore
+          ref={ref}
+        >
+          {children}
+        </PressableRipple>
+      ) : (
+        <Pressable
+          onPress={press}
+          style={({ pressed }) => ([
+
+            getFeedbackStyle(pressed),
+            _style,
+          ])}
+          {...props}
+          ref={ref}
+        >
+          {children}
+        </Pressable>
+      )}
+
+    </>
   )
 })

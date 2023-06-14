@@ -23,7 +23,8 @@ export function useForm<
   Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<
     Form['config']
   >
->(form: Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
+>(formParam: () => Form | Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
+  const form = TypeGuards.isFunction(formParam) ? formParam() : formParam
 
   const config:FormTypes.UseFormConfig<Values> = {
     validateOn: 'change',
@@ -189,10 +190,6 @@ export function useForm<
         }
       }
 
-    }
-
-    if (validate) {
-      dynamicProps.validate = fieldErrors[field]
     }
 
     registeredFields.current.push(type)
