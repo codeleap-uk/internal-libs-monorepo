@@ -22,7 +22,6 @@ export type ListProps<
   Omit<ViewProps<'div'>, 'variants'> & {
     data: Data[]
     isFetching?: boolean
-    noMoreItemsText?: React.ReactChild
     hasNextPage?: boolean
     separators?: boolean
     placeholder?: EmptyPlaceholderProps
@@ -152,7 +151,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
   }, [isLoading, isEmpty])
 
   return (
-    <View css={[getKeyStyle('wrapper')]}>
+    <View ref={ref} css={[getKeyStyle('wrapper')]}>
       {!!ListHeaderComponent && <ListHeaderComponent />}
 
       {isEmpty ? <EmptyPlaceholder {...placeholder} /> : (
