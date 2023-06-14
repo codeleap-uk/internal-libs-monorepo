@@ -192,7 +192,9 @@ export function useForm<
     return {
       ...staticProps,
       ...dynamicProps,
-      validate,
+      validate: (v) => {
+        return validateField(field, true, v)
+      },
     }
   }
 
