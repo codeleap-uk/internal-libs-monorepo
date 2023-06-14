@@ -79,8 +79,10 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
 
   const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator} />
 
+  const count = hasNextPage ? data?.length + 1 : data?.length
+
   const dataVirtualizer = useVirtualizer({
-    count: hasNextPage ? data?.length + 1 : data?.length,
+    count,
     getScrollElement: () => parentRef.current,
     estimateSize: () =>  null,
   })

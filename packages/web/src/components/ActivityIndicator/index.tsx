@@ -27,7 +27,7 @@ export type ActivityIndicatorProps = {
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSObject
   size?: number
-  style: React.CSSProperties
+  style?: React.CSSProperties
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 
 export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {

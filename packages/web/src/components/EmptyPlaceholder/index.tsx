@@ -79,8 +79,6 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     )
   }
 
-  let _image = null
-
   const _Image = () => {
     if (TypeGuards.isNil(IconEmpty)) return null
 
