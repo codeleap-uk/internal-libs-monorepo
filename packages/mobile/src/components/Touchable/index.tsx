@@ -37,7 +37,7 @@ export type TouchableProps = React.PropsWithChildren<
     setPressed?: (param: boolean) => void
     rippleDisabled?: boolean
     badge?: BadgeProps['badge']
-    badgeProps?: Partial<BadgeProps>
+    badgeProps?: BadgeProps
     badgeStyles?: StylesOf<BadgeComposition>
 } & BaseViewProps
 >
@@ -214,7 +214,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
           ]}
           {...props}
           rippleFades={false}
-          rippleDuration={350}
+          rippleDuration={400}
           rippleOpacity={0.1}
           {...rippleConfig}
           radiusStyles={radiusStyle}
