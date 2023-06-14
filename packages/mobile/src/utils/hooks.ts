@@ -3,6 +3,7 @@ import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleCon
 
 import AsyncStorage from '@react-native-community/async-storage'
 import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { PressableRippleProps } from '../modules/PressableRipple/type'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -195,7 +196,7 @@ export type FeedbackConfig =
 
 type RippleConfig = {
   type: 'ripple'
-  config?: PressableAndroidRippleConfig
+  config?: PressableRippleProps
   iosFallback?: FeedbackConfig
 }
 export type TouchableFeedbackConfig = RippleConfig | FeedbackConfig

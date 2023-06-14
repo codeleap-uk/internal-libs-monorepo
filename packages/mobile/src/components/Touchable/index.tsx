@@ -10,11 +10,14 @@ import {
   TypeGuards,
   onMount,
 } from '@codeleap/common'
-import { Pressable, StyleSheet, View as RNView } from 'react-native'
+import { Pressable, StyleSheet, View as RNView, Platform } from 'react-native'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
+import { Badge, BadgeComposition, BadgeProps } from '../Badge'
+import { PressableRipple } from '../../modules/PressableRipple'
+
 export type TouchableProps = React.PropsWithChildren<
   Omit<
     ComponentPropsWithoutRef<typeof Pressable>,
@@ -33,6 +36,9 @@ export type TouchableProps = React.PropsWithChildren<
     styles?: StylesOf<TouchableComposition>
     setPressed?: (param: boolean) => void
     rippleDisabled?: boolean
+    badge?: BadgeProps['badge']
+    badgeProps?: Partial<BadgeProps>
+    badgeStyles?: StylesOf<BadgeComposition>
 } & BaseViewProps
 >
 export * from './styles'
@@ -54,6 +60,9 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     styles,
     setPressed,
     rippleDisabled = false,
+    badge = false,
+    badgeProps = {},
+    badgeStyles = {},
     ...props
   } = touchableProps
 
@@ -121,11 +130,10 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
   const Wrapper = View
 
-  const { wrapperStyle, pressableStyle } = React.useMemo(() => {
+  const { radiusStyle, wrapperStyle, pressableStyle } = React.useMemo(() => {
     const wrapperkeys = [
       'margin',
       'alignSelf',
-      'border',
       'top!',
       'left!',
       'right!',
@@ -134,6 +142,11 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       'transform!',
       // 'flex!',
     ]
+
+    const radiusKey = [
+      'Radius#',
+    ]
+
     const sharedKeys = [
       'width!',
       'height!',
@@ -143,19 +156,30 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
 
     const wrapperStyle = {} as any
     const pressableStyle = {} as any
-    const match = (k, key) => {
-      if (k.endsWith('!')) {
+    const radiusStyle = {} as any
+
+    const matchKey = (k, key) => {
+      if (k.endsWith('#')) {
+        return key.includes(k.substring(0, k.length - 1)) 
+      } else if (k.endsWith('!')) {
         return key === k.substring(0, k.length - 1)
       } else {
-
+    
         return key.startsWith(k)
       }
     }
+    
     Object.entries(_styles).forEach(([key, value]) => {
-
-      if (wrapperkeys.some(k => match(k, key))) {
+      if (radiusKey.some(k => matchKey(k, key))) {
         wrapperStyle[key] = value
-      } else if (sharedKeys.some(k => match(k, key))) {
+        pressableStyle[key] = value
+        radiusStyle[key] = value
+        return
+      }
+
+      if (wrapperkeys.some(k => matchKey(k, key))) {
+        wrapperStyle[key] = value
+      } else if (sharedKeys.some(k => matchKey(k, key))) {
         wrapperStyle[key] = value
 
         pressableStyle[key] = value
@@ -167,23 +191,54 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       pressableStyle.width = '100%'
       pressableStyle.height = '100%'
     }
-    wrapperStyle.overflow = 'hidden'
+
+    wrapperStyle.overflow = 'visible'
 
     return {
       wrapperStyle,
       pressableStyle,
+      radiusStyle,
     }
   }, [JSON.stringify(_styles)])
 
+  const disableRipple = disableFeedback || rippleDisabled || Platform.OS !== 'android'
+
   return (
     <Wrapper style={[wrapperStyle]}>
-      <Pressable onPress={press} style={({ pressed }) => ([
-        pressableStyle,
-        getFeedbackStyle(pressed),
-        variantStyles.pressable,
-      ])} android_ripple={!rippleDisabled && rippleConfig} {...props} ref={ref}>
-        {children}
-      </Pressable>
+      {!disableRipple ? (
+        <PressableRipple
+          onPress={press}  
+          style={[
+            pressableStyle,
+            variantStyles.pressable,
+          ]}
+          {...props}
+          rippleFades={false}
+          rippleDuration={350}
+          rippleOpacity={0.1}
+          {...rippleConfig}
+          radiusStyles={radiusStyle}
+          // @ts-ignore
+          ref={ref}
+        >
+          {children}
+        </PressableRipple>
+      ) : (
+        <Pressable 
+          onPress={press}  
+          style={({ pressed }) => ([
+            pressableStyle,
+            getFeedbackStyle(pressed),
+            variantStyles.pressable,
+          ])}
+          {...props}
+          ref={ref}
+        >
+          {children}
+        </Pressable>
+      )}
+
+      <Badge {...badgeProps} styles={badgeStyles} badge={badge} />
     </Wrapper>
   )
 })
