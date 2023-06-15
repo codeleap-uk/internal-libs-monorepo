@@ -1,9 +1,9 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ListComposition, ListParts } from '../List'
 
-export type GridComposition = ListComposition
+export type GridParts = ListParts | 'column'
 
-export type GridParts = ListParts
+export type GridComposition = ListComposition | GridParts
 
 const createGridStyle = createDefaultVariantFactory<GridComposition>()
 

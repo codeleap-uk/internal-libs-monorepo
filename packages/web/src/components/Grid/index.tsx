@@ -142,7 +142,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
 
-    const showIndicator = (_item?.index > (data?.length / numColumns) - 1) && !!ListLoadingIndicatorComponent
+    const showIndicator = (_item?.index === (data?.length / numColumns)) && !!ListLoadingIndicatorComponent
 
     const gridLength = data?.length || 0
 
@@ -157,36 +157,40 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
         data-index={_item?.index}
         ref={dataVirtualizer?.measureElement}
       >
-        {columnItems.map(column => {
-          const rowIndex = _item?.index
-          const columnIndex = column?.index
-          const itemIndex = (rowIndex + rowIndex) + columnIndex
+        {separator}
 
-          const isFirst = itemIndex === 0
-          const isLast = itemIndex === gridLength - 1
-          const isOnly = isFirst && isLast
-      
-          const isLastInRow = columnIndex === numColumns
-          const isFirstInRow = columnIndex === 0
-          const isOnlyInRow = isFirstInRow && isLastInRow
+        <View css={[variantStyles.column]}>
+          {columnItems.map(column => {
+            const rowIndex = _item?.index
+            const columnIndex = column?.index
+            const itemIndex = (rowIndex + rowIndex) + columnIndex
 
-          const _itemProps = {
-            ..._item,
-            key: itemIndex,
-            index: itemIndex,
-            isOnly,
-            isLast,
-            isFirst,
-            column,
-            isFirstInRow,
-            isLastInRow,
-            isOnlyInRow,
-            rowIndex,
-            item: data?.[itemIndex]
-          }
+            const isFirst = itemIndex === 0
+            const isLast = itemIndex === gridLength - 1
+            const isOnly = isFirst && isLast
+        
+            const isLastInRow = columnIndex === numColumns
+            const isFirstInRow = columnIndex === 0
+            const isOnlyInRow = isFirstInRow && isLastInRow
 
-          return <RenderItem {..._itemProps} />
-        })}
+            const _itemProps = {
+              ..._item,
+              key: itemIndex,
+              index: itemIndex,
+              isOnly,
+              isLast,
+              isFirst,
+              column,
+              isFirstInRow,
+              isLastInRow,
+              isOnlyInRow,
+              rowIndex,
+              item: data?.[itemIndex]
+            }
+
+            return <RenderItem {..._itemProps} />
+          })}
+        </View>
 
         {showIndicator && <ListLoadingIndicatorComponent />}
       </div>
