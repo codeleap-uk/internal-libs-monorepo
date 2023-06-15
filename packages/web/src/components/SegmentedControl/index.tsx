@@ -1,9 +1,9 @@
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
-import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder } from '@codeleap/common'
+import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder, FormTypes } from '@codeleap/common'
 import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
-import { Scroll } from '../Scroll'
+// import { Scroll } from '../Scroll'
 import { Touchable } from '../Touchable'
 
 type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
@@ -29,7 +29,7 @@ export type SegmentedControlProps = {
   /**
     * Determine if the modal is visible
   */
-  label?: React.ReactNode
+  label?: string
   /**
     * Determine if the modal is visible
   */
@@ -51,11 +51,10 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
 
   return (
     <View css={variantStyles.wrapper}>
+      {label && <Text text={label} css={variantStyles.label} />}
       <View css={variantStyles.innerWrapper}>
-        <Text label={label} />
         <View
           css={[variantStyles.selectedBubble, touchableProps?.disabled && variantStyles['selectedBubble:disabled']]}
-
         >
           {options.map((o, idx) => (
             <SegmentedControlOption
@@ -63,6 +62,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
               value={o.value}
               onPress={() => onValueChange(o.value)}
               key={idx}
+              icon={o.icon}
               style={styles}
               selected={value === o.value}
               variantStyles={variantStyles}
