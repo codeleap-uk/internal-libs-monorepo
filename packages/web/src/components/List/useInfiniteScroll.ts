@@ -14,6 +14,7 @@ export type UseInfiniteScrollReturn = {
   count: number
   items: VirtualItem[]
   isRefresh: boolean
+  parentRef: React.MutableRefObject<undefined>
   layoutProps: {
     isEmpty: boolean
     refreshing: boolean
@@ -33,6 +34,7 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
     refreshDebounce,
     refreshThreshold,
     overscan = 10,
+    numColumns = 1,
   } = props
 
   const parentRef = React.useRef()
@@ -78,8 +80,10 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
       return
     }
 
+    const itemsLength = (data?.length / numColumns) - 1
+
     if (
-      lastItem.index >= data?.length - 1 &&
+      lastItem.index >= itemsLength &&
       hasNextPage &&
       !isFetchingNextPage
     ) {
@@ -98,6 +102,7 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
     dataVirtualizer,
     isRefresh,
     count,
+    parentRef,
     layoutProps: {
       parentRef,
       refreshing,

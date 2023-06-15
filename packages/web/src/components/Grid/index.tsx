@@ -1,12 +1,11 @@
 import React from 'react'
-import { useDefaultComponentStyle, useCallback, onUpdate, useCodeleapContext, TypeGuards } from '@codeleap/common'
+import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { GridParts, GridPresets } from './styles'
+import { GridPresets } from './styles'
 import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
-import { motion } from 'framer-motion'
-import { ActivityIndicator } from '../ActivityIndicator'
 import { GridProps } from './types'
+import { ListLayout, useInfiniteScroll } from '../List'
 
 export * from './styles'
 export * from './types'
@@ -50,36 +49,15 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
   const {
     variants = [],
     responsiveVariants = {},
-    onRefresh,
-    style,
     styles = {},
-    placeholder = {},
     renderItem: RenderItem,
     data,
-    hasNextPage,
-    isLoading,
-    isFetchingNextPage,
-    fetchNextPage,
-    ListFooterComponent,
-    ListHeaderComponent,
     ListLoadingIndicatorComponent,
-    ListRefreshControlComponent,
     ListSeparatorComponent,
-    ListEmptyComponent,
     virtualizerOptions = {},
-    refreshDebounce,
-    refreshSize,
-    refreshThreshold,
-    refreshPosition,
-    refresh,
-    refreshControlProps = {},
     numColumns,
-    ...props
+    separators
   } = allProps
-
-  const [refreshing, setRefreshing] = React.useState(false)
-
-  const { Theme } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
     variants,
@@ -87,21 +65,21 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     styles,
   })
 
-  const separator = props?.separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
-  const count = hasNextPage ? data?.length + 1 : data?.length
-
-  const dataVirtualizer = useVirtualizer({
-    count,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => null,
+  const {
+    dataVirtualizer,
+    parentRef,
+    items,
+    layoutProps,
+  } = useInfiniteScroll({
+    ...allProps,
     overscan: 5,
-    ...virtualizerOptions,
   })
 
   const columns = React.useMemo(() => {
     return generateColumns(numColumns)
-  }, [numColumns])
+  }, [])
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
@@ -113,13 +91,6 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
   })
 
   const columnItems = columnVirtualizer.getVirtualItems()
-
-  const isRefresh = React.useMemo(() => {
-    const _offset = dataVirtualizer?.scrollOffset
-    const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
-
-    return _refresh
-  }, [dataVirtualizer?.scrollOffset, dataVirtualizer?.isScrolling])
 
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
@@ -139,7 +110,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
         data-index={_item?.index}
         ref={dataVirtualizer?.measureElement}
       >
-        {separator}
+        {_item?.index !== 0 ? separator : null}
 
         <View css={[variantStyles.column]}>
           {columnItems.map(column => {
@@ -179,101 +150,15 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     </>
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
 
-  const isEmpty = !data || !data?.length
-
-  const parentRef = React.useRef()
-
-  const items = dataVirtualizer.getVirtualItems()
-
-  onUpdate(() => {
-    if (isRefresh) {
-      setRefreshing(true)
-      onRefresh?.()
-
-      setTimeout(() => {
-        setRefreshing(false)
-      }, refreshDebounce)
-    }
-  }, [!!isRefresh])
-
-  onUpdate(() => {
-    const [lastItem] = [...items].reverse()
-
-    if (!lastItem) {
-      return
-    }
-
-    const itemsLength = (data?.length / numColumns) - 1
-
-    if (
-      lastItem.index >= itemsLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage?.()
-    }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    data?.length,
-    isFetchingNextPage,
-    items,
-  ])
-
-  const getKeyStyle = React.useCallback((key: GridParts) => {
-    return [
-      variantStyles[key],
-      isLoading && variantStyles[`${key}:loading`],
-      isEmpty && variantStyles[`${key}:empty`],
-    ]
-  }, [isLoading, isEmpty])
-
-  const _refreshPosition = React.useMemo(() => {
-    return Theme.spacing.value(refreshPosition)
-  }, [refreshPosition])
-
   return (
-    <View css={[getKeyStyle('wrapper')]}>
-      {!!ListHeaderComponent && <ListHeaderComponent />}
-
-      {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
-        // @ts-ignore
-        <View
-          ref={parentRef}
-          css={[
-            getKeyStyle('innerWrapper'),
-            style,
-          ]}
-        >
-          <View
-            //@ts-ignore
-            ref={ref}
-            css={[
-              getKeyStyle('content'),
-              { height: dataVirtualizer.getTotalSize() }
-            ]}
-          >
-            {TypeGuards.isNil(ListRefreshControlComponent) && refresh ? (
-              <motion.div
-                css={[variantStyles?.refreshControl]}
-                initial={false}
-                animate={{
-                  opacity: refreshing ? 1 : 0,
-                  top: refreshing ? _refreshPosition : 0
-                }}
-                {...refreshControlProps}
-              >
-                <ActivityIndicator size={refreshSize} />
-              </motion.div>
-            ) : (<ListRefreshControlComponent /> ?? null)}
-
-            {items?.map((item) => renderItem(item))}
-          </View>
-        </View>
-      )}
-
-      {!!ListFooterComponent && <ListFooterComponent />}
-    </View>
+    <ListLayout
+      {...allProps}
+      {...layoutProps}
+      variantStyles={variantStyles} // @ts-ignore
+      ref={ref}
+    >
+      {items?.map((item) => renderItem(item))}
+    </ListLayout>
   )
 })
 

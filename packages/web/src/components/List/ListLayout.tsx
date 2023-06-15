@@ -54,7 +54,6 @@ export const ListLayout = (props: ListLayoutProps) => {
       {!!ListHeaderComponent && <ListHeaderComponent />}
 
       {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
-        
         <View
           ref={parentRef}
           css={[getKeyStyle('innerWrapper')]}
