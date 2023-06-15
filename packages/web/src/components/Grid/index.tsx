@@ -2,13 +2,13 @@ import React from 'react'
 import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext, TypeGuards, PropsOf } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { ListComposition, ListParts, ListPresets } from './styles'
+import { GridComposition, GridParts, GridPresets } from './styles'
 import { StylesOf } from '../../types'
-import { useVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
+import { useVirtualizer, useWindowVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
 import { motion } from 'framer-motion'
 import { ActivityIndicator } from '../ActivityIndicator'
 
-export type AugmentedRenderItemInfo<T> = VirtualItem & {
+type AugmentedRenderItemInfo<T> = VirtualItem & {
   item: T
   isFirst: boolean
   isLast: boolean
@@ -16,12 +16,11 @@ export type AugmentedRenderItemInfo<T> = VirtualItem & {
 }
 
 export * from './styles'
-export * from './PaginationIndicator'
 
-export type ListProps<
+export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
-> = ComponentVariants<typeof ListPresets> &
+> = ComponentVariants<typeof GridPresets> &
   Omit<ViewProps<'div'>, 'variants'> & {
     data: Data[]
     isFetching?: boolean
@@ -29,18 +28,18 @@ export type ListProps<
     separators?: boolean
     onRefresh?: () => void
     placeholder?: EmptyPlaceholderProps
-    styles?: StylesOf<ListComposition>
+    styles?: StylesOf<GridComposition>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
-    ListFooterComponent?: () => React.ReactElement
+    GridFooterComponent?: () => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
-    ListRefreshControlComponent?: () => React.ReactElement
-    ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
-    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
+    GridRefreshControlComponent?: () => React.ReactElement
+    GridEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
+    GridSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
-    ListHeaderComponent?: () => React.ReactElement
+    GridHeaderComponent?: () => React.ReactElement
     virtualizerOptions?: Partial<VirtualizerOptions<any, any>>
     refreshDebounce?: number
     refreshSize?: number
@@ -48,6 +47,17 @@ export type ListProps<
     refreshPosition?: number
     refresh?: boolean
     refreshControlProps?: PropsOf<typeof motion.div>
+    //
+    numColumns: number
+  }
+
+  const generateColumns = (count: number) => {
+    return new Array(count).fill(0).map((_, i) => {
+      const key: string = i.toString()
+      return {
+        key,
+      }
+    })
   }
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
@@ -56,13 +66,13 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) =>
   )
 }
 
-const defaultProps: Partial<ListProps> = {
-  ListFooterComponent: null,
-  ListHeaderComponent: null,
+const defaultProps: Partial<GridProps> = {
+  GridFooterComponent: null,
+  GridHeaderComponent: null,
   ListLoadingIndicatorComponent: null,
-  ListRefreshControlComponent: null,
-  ListEmptyComponent: EmptyPlaceholder,
-  ListSeparatorComponent: RenderSeparator,
+  GridRefreshControlComponent: null,
+  GridEmptyComponent: EmptyPlaceholder,
+  GridSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
   refreshSize: 20,
   refreshThreshold: 1,
@@ -70,10 +80,10 @@ const defaultProps: Partial<ListProps> = {
   refresh: true,
 }
 
-const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
+const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
   const allProps = {
     ...defaultProps,
-    ...flatListProps,
+    ...flatGridProps,
   }
 
   const {
@@ -89,12 +99,12 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
-    ListFooterComponent,
-    ListHeaderComponent,
+    GridFooterComponent,
+    GridHeaderComponent,
     ListLoadingIndicatorComponent,
-    ListRefreshControlComponent,
-    ListSeparatorComponent,
-    ListEmptyComponent,
+    GridRefreshControlComponent,
+    GridSeparatorComponent,
+    GridEmptyComponent,
     virtualizerOptions = {},
     refreshDebounce,
     refreshSize,
@@ -109,13 +119,13 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
 
   const { Theme } = useCodeleapContext()
 
-  const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
+  const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
     variants,
     responsiveVariants,
     styles,
   })
 
-  const separator = props?.separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = props?.separators && <GridSeparatorComponent separatorStyles={variantStyles.separator} />
 
   const count = hasNextPage ? data?.length + 1 : data?.length
 
@@ -123,9 +133,24 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
     count,
     getScrollElement: () => parentRef.current,
     estimateSize: () => null,
-    overscan: 10,
+    overscan: 5,
     ...virtualizerOptions,
   })
+
+  //
+
+  const columns = generateColumns(2)
+
+  const columnVirtualizer = useVirtualizer({
+    horizontal: true,
+    count: columns.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => null,
+    overscan: 5,
+    ...virtualizerOptions,
+  })
+
+  const columnItems = columnVirtualizer.getVirtualItems()
 
   const isRefresh = React.useMemo(() => {
     const _offset = dataVirtualizer?.scrollOffset
@@ -139,31 +164,49 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
 
     const showIndicator = (_item?.index > data?.length - 1) && !!ListLoadingIndicatorComponent
 
-    const listLength = data?.length || 0
+    const GridLength = data?.length || 0
 
     const isFirst = _item?.index === 0
-    const isLast = _item?.index === listLength - 1
+    const isLast = _item?.index === GridLength - 1
 
     const isOnly = isFirst && isLast
 
-    const _itemProps = {
-      ..._item,
-      isOnly,
-      isLast,
-      isFirst,
-      item: data?.[_item?.index]
-    }
+    let acc = 1
 
     return (
       <div
-        css={[variantStyles.itemWrapper]}
+        style={{
+          width: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          transform: `translateY(${
+            _item.start - dataVirtualizer.options.scrollMargin
+          }px)`,
+          display: 'flex',
+        }}
         key={_item?.key}
         data-index={_item?.index}
         ref={dataVirtualizer?.measureElement}
       >
-        {!isFirst && separator}
-        {showIndicator && <ListLoadingIndicatorComponent />}
-        <RenderItem {..._itemProps} />
+        {columnItems.map(column => {
+          const _itemProps = {
+            ..._item,
+            isOnly,
+            isLast,
+            isFirst,
+            item: data?.[(_item?.index !== 0 ? _item?.index + acc : _item?.index) + column.index]
+          }
+
+          acc = acc + 1
+
+          return <>
+            {/* {!isFirst && separator} */}
+            <RenderItem {..._itemProps} />
+          </>
+        })}
+
+        {showIndicator && <ListLoadingIndicatorComponent />} 
       </div>
     )
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
@@ -207,7 +250,7 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
     items,
   ])
 
-  const getKeyStyle = React.useCallback((key: ListParts) => {
+  const getKeyStyle = React.useCallback((key: GridParts) => {
     return [
       variantStyles[key],
       isLoading && variantStyles[`${key}:loading`],
@@ -221,9 +264,9 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
 
   return (
     <View css={[getKeyStyle('wrapper')]}>
-      {!!ListHeaderComponent && <ListHeaderComponent />}
+      {!!GridHeaderComponent && <GridHeaderComponent />}
 
-      {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
+      {isEmpty ? <GridEmptyComponent {...placeholder} /> : (
         // @ts-ignore
         <View
           ref={parentRef}
@@ -240,7 +283,7 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
               { height: dataVirtualizer.getTotalSize() }
             ]}
           >
-            {TypeGuards.isNil(ListRefreshControlComponent) && refresh ? (
+            {TypeGuards.isNil(GridRefreshControlComponent) && refresh ? (
               <motion.div
                 css={[variantStyles?.refreshControl]}
                 initial={false}
@@ -252,10 +295,10 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
               >
                 <ActivityIndicator size={refreshSize} />
               </motion.div>
-            ) : (<ListRefreshControlComponent /> ?? null)}
+            ) : (<GridRefreshControlComponent /> ?? null)}
 
-            {/* Necessary for correct list render */}
-            <div
+            {/* Necessary for correct Grid render */}
+            {/* <div
               style={{
                 position: 'absolute',
                 top: 0,
@@ -263,18 +306,18 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
                 width: '100%',
                 transform: `translateY(${items[0].start}px)`,
               }}
-            >
+            > */}
               {items?.map((item) => renderItem(item))}
-            </div>
+            {/* </div> */}
           </View>
         </View>
       )}
 
-      {!!ListFooterComponent && <ListFooterComponent />}
+      {!!GridFooterComponent && <GridFooterComponent />}
     </View>
   )
 })
 
-export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
+export type GridComponentType = <T extends any[] = any[]>(props: GridProps<T>) => React.ReactElement
 
-export const List = ListCP as unknown as ListComponentType
+export const Grid = GridCP as unknown as GridComponentType

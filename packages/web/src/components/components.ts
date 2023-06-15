@@ -26,5 +26,6 @@ export * from './InputBase'
 export * from './Switch'
 export * from './NumberIncrement'
 export * from './EmptyPlaceholder'
+export * from './Grid'
 
 export * from './defaultStyles'

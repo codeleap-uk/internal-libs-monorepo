@@ -23,6 +23,7 @@ import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
 import { NumberIncrementPresets } from './NumberIncrement/styles'
 import { EmptyPlaceholderPresets } from './EmptyPlaceholder/styles'
+import { GridPresets } from './Grid'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -51,4 +52,5 @@ export const defaultStyles = {
   NumberIncrement: NumberIncrementPresets,
   EmptyPlaceholder: EmptyPlaceholderPresets,
   PaginationIndicator: PaginationIndicatorStyles,
+  Grid: GridPresets,
 }
