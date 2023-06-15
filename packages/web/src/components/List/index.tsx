@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext } from '@codeleap/common'
+import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext, TypeGuards } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListParts, ListPresets } from './styles'
@@ -33,6 +33,7 @@ export type ListProps<
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
     ListFooterComponent?: () => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
+    ListRefreshControlComponent?: () => React.ReactElement
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
@@ -42,6 +43,7 @@ export type ListProps<
     refreshSize?: number
     refreshThreshold?: number
     refreshPosition?: number
+    refresh?: boolean
   }
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
@@ -50,7 +52,24 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) =>
   )
 }
 
+const defaultProps: Partial<ListProps> = {
+  ListFooterComponent: null,
+  ListHeaderComponent: null,
+  ListLoadingIndicatorComponent: null,
+  ListRefreshControlComponent: null,
+  refreshDebounce: 3000,
+  refreshSize: 20,
+  refreshThreshold: 1,
+  refreshPosition: 2,
+  refresh: true,
+}
+
 const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => {
+  const allProps = {
+    ...defaultProps,
+    ...flatListProps,
+  }
+
   const {
     variants = [],
     responsiveVariants = {},
@@ -64,16 +83,18 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
-    ListFooterComponent = null,
-    ListHeaderComponent = null,
-    ListLoadingIndicatorComponent = null,
+    ListFooterComponent,
+    ListHeaderComponent,
+    ListLoadingIndicatorComponent,
+    ListRefreshControlComponent,
     virtualizerOptions = {},
-    refreshDebounce = 3000,
-    refreshSize = 20,
-    refreshThreshold = 1,
-    refreshPosition = 2,
+    refreshDebounce,
+    refreshSize,
+    refreshThreshold,
+    refreshPosition,
+    refresh,
     ...props
-  } = flatListProps
+  } = allProps
 
   const [refreshing, setRefreshing] = React.useState(false)
 
@@ -92,7 +113,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
   const dataVirtualizer = useVirtualizer({
     count,
     getScrollElement: () => parentRef.current,
-    estimateSize: () =>  null,
+    estimateSize: () => null,
     overscan: 10,
     ...virtualizerOptions,
   })
@@ -185,7 +206,9 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     ]
   }, [isLoading, isEmpty])
 
-  const _refreshPosition = Theme.spacing.value(refreshPosition)
+  const _refreshPosition = React.useMemo(() => {
+    return Theme.spacing.value(refreshPosition)
+  }, [refreshPosition])
 
   return (
     <View css={[getKeyStyle('wrapper')]}>
@@ -194,30 +217,33 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
       {isEmpty ? <EmptyPlaceholder {...placeholder} /> : (
         // @ts-ignore
         <View
-          ref={parentRef} 
+          ref={parentRef}
           css={[
-            getKeyStyle('innerWrapper'), 
-            style, 
+            getKeyStyle('innerWrapper'),
+            style,
           ]}
         >
           <View
             //@ts-ignore
             ref={ref}
             css={[
-              getKeyStyle('content'), 
+              getKeyStyle('content'),
               { height: dataVirtualizer.getTotalSize() }
             ]}
           >
-            <motion.div
-              css={[variantStyles?.refreshControl]}
-              initial={false}
-              animate={{ 
-                opacity: refreshing ? 1 : 0, 
-                top: refreshing ? _refreshPosition : 0
-              }}
-            >
-              <ActivityIndicator size={refreshSize} />
-            </motion.div>
+            {TypeGuards.isNil(ListRefreshControlComponent) && refresh ? (
+              <motion.div
+                css={[variantStyles?.refreshControl]}
+                initial={false}
+                animate={{
+                  opacity: refreshing ? 1 : 0,
+                  top: refreshing ? _refreshPosition : 0
+                }}
+              >
+                <ActivityIndicator size={refreshSize} />
+              </motion.div>
+            ) : (<ListRefreshControlComponent /> ?? null)}
+
             {/* Necessary for correct list render */}
             <div
               style={{
