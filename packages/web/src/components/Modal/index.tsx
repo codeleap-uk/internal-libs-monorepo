@@ -1,6 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
-
 import {
   AnyFunction,
   ComponentVariants,
@@ -12,7 +9,7 @@ import {
   useNestedStylesByKey,
 } from '@codeleap/common'
 
-import React, { useEffect, useId, useLayoutEffect, useRef } from 'react'
+import React, { useId, useLayoutEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
 
@@ -86,14 +83,6 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     variants: [...variants, fullscreen && 'fullscreen', centered && 'centered'],
     styles,
   })
-
-  useEffect(() => {
-    console.log('MOUNT MODAL')
-
-    return () => {
-      console.log('UNMOUNT MODAL')
-    }
-  }, [])
 
   onUpdate(() => {
     if (visible) {
@@ -204,16 +193,19 @@ export const Modal: React.FC<ModalProps> = ({
   ...props
 }) => {
   const modalId = useRef(v4())
-  const [renderStatus, setRenderStatus] = React.useState('first')
+  const [renderStatus, setRenderStatus] = React.useState(
+    keepMounted ? 'mounted' : 'unmounted',
+  )
 
   onUpdate(() => {
     if (!keepMounted) {
-      if (props.visible && renderStatus !== 'first') setRenderStatus('mounted')
-      if (!props.visible && renderStatus !== 'first') {
+      if (props.visible) {
+        setRenderStatus('mounted')
+      } else {
         setTimeout(() => setRenderStatus('unmounted'), 500)
       }
     }
-  }, [props.visible])
+  }, [keepMounted, props.visible])
 
   onMount(() => {
     if (accessible) {
