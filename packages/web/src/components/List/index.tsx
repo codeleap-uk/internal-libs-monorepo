@@ -1,12 +1,13 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext, TypeGuards, PropsOf } from '@codeleap/common'
+import { useDefaultComponentStyle, ComponentVariants, useCallback, useCodeleapContext, TypeGuards, PropsOf } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListParts, ListPresets } from './styles'
 import { StylesOf } from '../../types'
-import { useVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
+import { VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
 import { motion } from 'framer-motion'
 import { ActivityIndicator } from '../ActivityIndicator'
+import { useInfiniteScroll } from './useInfiniteScroll'
 
 export type AugmentedRenderItemInfo<T> = VirtualItem & {
   item: T
@@ -17,6 +18,7 @@ export type AugmentedRenderItemInfo<T> = VirtualItem & {
 
 export * from './styles'
 export * from './PaginationIndicator'
+export * from './useInfiniteScroll'
 
 export type ListProps<
   T = any[],
@@ -105,8 +107,6 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
     ...props
   } = allProps
 
-  const [refreshing, setRefreshing] = React.useState(false)
-
   const { Theme } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -115,24 +115,15 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
     styles,
   })
 
+  const {
+    items,
+    isEmpty,
+    dataVirtualizer,
+    parentRef,
+    refreshing,
+  } = useInfiniteScroll(allProps)
+
   const separator = props?.separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
-
-  const count = hasNextPage ? data?.length + 1 : data?.length
-
-  const dataVirtualizer = useVirtualizer({
-    count,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => null,
-    overscan: 10,
-    ...virtualizerOptions,
-  })
-
-  const isRefresh = React.useMemo(() => {
-    const _offset = dataVirtualizer?.scrollOffset
-    const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
-
-    return _refresh
-  }, [dataVirtualizer?.scrollOffset, dataVirtualizer?.isScrolling])
 
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
@@ -167,45 +158,6 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
       </div>
     )
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
-
-  const isEmpty = !data || !data?.length
-
-  const parentRef = React.useRef()
-
-  const items = dataVirtualizer.getVirtualItems()
-
-  onUpdate(() => {
-    if (isRefresh) {
-      setRefreshing(true)
-      onRefresh?.()
-
-      setTimeout(() => {
-        setRefreshing(false)
-      }, refreshDebounce)
-    }
-  }, [!!isRefresh])
-
-  onUpdate(() => {
-    const [lastItem] = [...items].reverse()
-
-    if (!lastItem) {
-      return
-    }
-
-    if (
-      lastItem.index >= data?.length - 1 &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage?.()
-    }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    data?.length,
-    isFetchingNextPage,
-    items,
-  ])
 
   const getKeyStyle = React.useCallback((key: ListParts) => {
     return [
