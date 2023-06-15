@@ -116,8 +116,8 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
           {columnItems.map(column => {
             const rowIndex = _item?.index
             const columnIndex = column?.index
-            const itemIndex = (rowIndex + rowIndex) + columnIndex
-
+            const itemIndex = (rowIndex * numColumns) + columnIndex
+            
             const isFirst = itemIndex === 0
             const isLast = itemIndex === gridLength - 1
             const isOnly = isFirst && isLast
