@@ -5,87 +5,101 @@ import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
+  TypeGuards,
+  onMount,
   onUpdate,
   useDefaultComponentStyle,
   useNestedStylesByKey,
 } from '@codeleap/common'
 
-import React, { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
+import React, { useEffect, useId, useLayoutEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
-
 import { v4 } from 'uuid'
 
-import { StylesOf } from '../../types/utility'
-import { Button } from '../Button'
 import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
-
+import { StylesOf } from '../../types/utility'
 import { ModalComposition, ModalPresets } from './styles'
 import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
 
-export type ModalProps = React.PropsWithChildren<{
-  visible: boolean
-  title?: React.ReactNode
-  description?: React.ReactElement
-  toggle: AnyFunction
-  styles?: StylesOf<ModalComposition>
-  accessible?: boolean
-  showClose?: boolean
-  closable?: boolean
-  scroll?: boolean
-  header?: React.ReactElement
-  footer?: React.ReactNode
-  renderHeader?: (props: ModalHeaderProps) => React.ReactElement
-  debugName?: string
-} & ComponentVariants<typeof ModalPresets>
+export type ModalProps = React.PropsWithChildren<
+  {
+    visible: boolean
+    title?: React.ReactNode
+    description?: React.ReactElement
+    toggle: AnyFunction
+    styles?: StylesOf<ModalComposition>
+    accessible?: boolean
+    showClose?: boolean
+    closable?: boolean
+    scroll?: boolean
+    header?: React.ReactElement
+    footer?: React.ReactNode
+    fullScreen?: boolean
+    centered?: boolean
+    withOverlay?: boolean
+    keepMounted?: boolean
+    renderHeader?: (props: ModalHeaderProps) => React.ReactElement
+    debugName?: string
+  } & ComponentVariants<typeof ModalPresets>
 >
 
-export type ModalHeaderProps = {
-
-}
+export type ModalHeaderProps = {}
 
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
   const modal = document.getElementById(id)
-  if (modal) {
-    modal.focus()
-  }
+  if (modal) modal.focus()
 }
+
 export const ModalContent: React.FC<ModalProps & { id: string }> = (
   modalProps,
 ) => {
   const {
     children,
-    closable = true,
     visible,
     title = '',
     toggle,
-    responsiveVariants,
-    variants,
+    variants = [],
     styles,
-    showClose = true,
     footer,
     renderHeader,
+    closable = true,
+    withOverlay = true,
+    showClose = true,
+    fullscreen = false,
+    centered = false,
+    responsiveVariants,
     ...props
   } = modalProps
 
   const id = useId()
 
-  const variantStyles = useDefaultComponentStyle<'u:Modal', typeof ModalPresets>('u:Modal', {
+  const variantStyles = useDefaultComponentStyle<
+    'u:Modal',
+    typeof ModalPresets
+  >('u:Modal', {
     responsiveVariants,
-    variants,
+    variants: [...variants, fullscreen && 'fullscreen', centered && 'centered'],
     styles,
   })
+
+  useEffect(() => {
+    console.log('MOUNT MODAL')
+
+    return () => {
+      console.log('UNMOUNT MODAL')
+    }
+  }, [])
 
   onUpdate(() => {
     if (visible) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
-
     }
   }, [visible])
 
@@ -97,64 +111,69 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   useLayoutEffect(() => {
     const modal = document.getElementById(id)
-    if (modal) {
-      modal.focus()
-    }
+    if (modal) modal.focus()
   }, [id])
 
-  const ModalDefaultHeader:React.FC<ModalHeaderProps> = (props) => {
-    const {
-      styles,
-      title = null,
-      showClose = false,
-      description = null,
-      closable, debugName,
-      closeIconName = 'close',
-      toggle,
-    } = props
-    return (
-      <View
-        component='header'
-        className='modal-header header'
-        id={`${id}-title`}
-        css={variantStyles.header}
-      >
-        {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
+  const ModalDefaultHeader = () => (
+    <View
+      id={`${id}-title`}
+      component='header'
+      css={variantStyles.header}
+      className='modal-header header'
+    >
+      {TypeGuards.isString(title) ? (
+        <Text text={title} css={variantStyles.title} />
+      ) : (
+        title
+      )}
 
-        {showClose && closable && (
-          <ActionIcon
-            icon={'close' as IconPlaceholder}
-
-            onPress={toggle}
-            styles={closeButtonStyles}
-          />
-        )}
-      </View>
-    )
-  }
+      {showClose && closable && (
+        <ActionIcon
+          icon={'close' as IconPlaceholder}
+          onPress={toggle}
+          styles={closeButtonStyles}
+        />
+      )}
+    </View>
+  )
 
   const ModalHeader = renderHeader || ModalDefaultHeader
-
-  //TO-DO: Change the title or showClose conditional to a default header or a custom header
 
   const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
 
   const close = closable ? toggle : () => {}
+
+  const hasHeader = title || (closable && showClose)
+
   return (
     <View
       aria-hidden={!visible}
-      css={[variantStyles.wrapper, visible ? variantStyles['wrapper:visible'] : variantStyles['wrapper:hidden']]}
+      css={[
+        variantStyles.wrapper,
+        visible
+          ? variantStyles['wrapper:visible']
+          : variantStyles['wrapper:hidden'],
+      ]}
     >
       <Overlay
-        visible={visible}
-
-        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden']]}
+        visible={withOverlay ? visible : false}
+        css={[
+          variantStyles.backdrop,
+          visible
+            ? variantStyles['backdrop:visible']
+            : variantStyles['backdrop:hidden'],
+        ]}
       />
-      <View css={variantStyles.innerWrapper} >
-        <View css={variantStyles.backdropPressable} onClick={close}/>
+      <View css={variantStyles.innerWrapper}>
+        <View css={variantStyles.backdropPressable} onClick={close} />
         <View
           component='section'
-          css={[variantStyles.box, visible ? variantStyles['box:visible'] : variantStyles['box:hidden']]}
+          css={[
+            variantStyles.box,
+            visible
+              ? variantStyles['box:visible']
+              : variantStyles['box:hidden'],
+          ]}
           className='content'
           onKeyDown={closeOnEscPress}
           tabIndex={0}
@@ -165,7 +184,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           aria-label='Close the modal by presing Escape key'
           {...props}
         >
-          <ModalHeader />
+          {hasHeader && <ModalHeader />}
 
           <View css={variantStyles.body}>{children}</View>
           {footer && (
@@ -179,19 +198,33 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
   )
 }
 
-export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
+export const Modal: React.FC<ModalProps> = ({
+  accessible,
+  keepMounted = true,
+  ...props
+}) => {
   const modalId = useRef(v4())
+  const [renderStatus, setRenderStatus] = React.useState('first')
 
-  useEffect(() => {
+  onUpdate(() => {
+    if (!keepMounted) {
+      if (props.visible && renderStatus !== 'first') setRenderStatus('mounted')
+      if (!props.visible && renderStatus !== 'first') {
+        setTimeout(() => setRenderStatus('unmounted'), 500)
+      }
+    }
+  }, [props.visible])
+
+  onMount(() => {
     if (accessible) {
       const currentId = modalId.current
       const appRoot = document.body
       appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
       return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
     }
-  }, [])
+  })
 
-  useEffect(() => {
+  onUpdate(() => {
     if (accessible) {
       const appRoot = document.body
       appRoot.setAttribute('aria-hidden', `${props.visible}`)
@@ -211,6 +244,8 @@ export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
       return null
     }
   }
+
+  if (renderStatus === 'unmounted') return null
 
   return <ModalContent {...props} id={modalId.current} />
 }
