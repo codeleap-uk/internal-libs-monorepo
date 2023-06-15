@@ -79,7 +79,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
 
   const columns = React.useMemo(() => {
     return generateColumns(numColumns)
-  }, [])
+  }, [numColumns])
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
