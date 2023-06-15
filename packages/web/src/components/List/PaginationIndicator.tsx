@@ -11,8 +11,9 @@ import {
 import { StylesOf } from '../../types'
 import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
 import { Text } from '../Text'
+import { View } from '../View'
 
-export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}`
+export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}` | 'wrapper'
 
 const createPaginationIndicatorStyle = createDefaultVariantFactory<PaginationIndicatorComposition>()
 
@@ -22,6 +23,10 @@ export const PaginationIndicatorStyles = {
   ...presets,
   default: createPaginationIndicatorStyle((theme) => {
     return {
+      wrapper: {
+        ...theme.presets.fullWidth,
+        ...theme.presets.center,
+      },
       loaderWrapper: {
         ...theme.presets.center,
         ...theme.spacing.marginVertical(3),
@@ -69,7 +74,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const loaderStyles = getNestedStylesByKey('loader', variantStyles)
 
   if (isFetching) {
-    return activityIndicator || <ActivityIndicator style={style} styles={loaderStyles}/>
+    return activityIndicator || <View style={variantStyles.wrapper}><ActivityIndicator style={style} styles={loaderStyles}/></View>
   }
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {

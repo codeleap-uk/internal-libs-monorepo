@@ -1,18 +1,19 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext, TypeGuards, PropsOf } from '@codeleap/common'
+import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext, TypeGuards, StylesOf } from '@codeleap/common'
 import { View, ViewProps } from '../View'
-import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
+import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridComposition, GridParts, GridPresets } from './styles'
-import { StylesOf } from '../../types'
-import { useVirtualizer, useWindowVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
+import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
 import { motion } from 'framer-motion'
 import { ActivityIndicator } from '../ActivityIndicator'
+import { AugmentedRenderItemInfo, ListProps } from '../List'
 
-type AugmentedRenderItemInfo<T> = VirtualItem & {
-  item: T
-  isFirst: boolean
-  isLast: boolean
-  isOnly: boolean
+type GridAugmentedRenderItemInfo<T> = AugmentedRenderItemInfo<T> & {
+  column: VirtualItem
+  isLastInRow: boolean
+  isOnlyInRow: boolean
+  isFirstInRow: boolean
+  rowIndex: number
 }
 
 export * from './styles'
@@ -20,45 +21,22 @@ export * from './styles'
 export type GridProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
-> = ComponentVariants<typeof GridPresets> &
-  Omit<ViewProps<'div'>, 'variants'> & {
-    data: Data[]
-    isFetching?: boolean
-    hasNextPage?: boolean
-    separators?: boolean
-    onRefresh?: () => void
-    placeholder?: EmptyPlaceholderProps
+> = 
+  Omit<ListProps<T, Data>, 'variants' | 'styles' | 'renderItem'> &
+  ComponentVariants<typeof GridPresets> &  {
     styles?: StylesOf<GridComposition>
-    keyExtractor?: (item: T, index: number) => string
-    renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
-    GridFooterComponent?: () => React.ReactElement
-    ListLoadingIndicatorComponent?: () => React.ReactElement
-    GridRefreshControlComponent?: () => React.ReactElement
-    GridEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
-    GridSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
-    isLoading?: boolean
-    isFetchingNextPage?: boolean
-    fetchNextPage?: () => void
-    GridHeaderComponent?: () => React.ReactElement
-    virtualizerOptions?: Partial<VirtualizerOptions<any, any>>
-    refreshDebounce?: number
-    refreshSize?: number
-    refreshThreshold?: number
-    refreshPosition?: number
-    refresh?: boolean
-    refreshControlProps?: PropsOf<typeof motion.div>
-    //
-    numColumns: number
+    numColumns?: number
+    renderItem: (data: GridAugmentedRenderItemInfo<T>) => React.ReactElement
   }
 
-  const generateColumns = (count: number) => {
-    return new Array(count).fill(0).map((_, i) => {
-      const key: string = i.toString()
-      return {
-        key,
-      }
-    })
-  }
+const generateColumns = (count: number) => {
+  return new Array(count).fill(0).map((_, i) => {
+    const key: string = i.toString()
+    return {
+      key,
+    }
+  })
+}
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
@@ -67,17 +45,18 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) =>
 }
 
 const defaultProps: Partial<GridProps> = {
-  GridFooterComponent: null,
-  GridHeaderComponent: null,
+  ListFooterComponent: null,
+  ListHeaderComponent: null,
   ListLoadingIndicatorComponent: null,
-  GridRefreshControlComponent: null,
-  GridEmptyComponent: EmptyPlaceholder,
-  GridSeparatorComponent: RenderSeparator,
+  ListRefreshControlComponent: null,
+  ListEmptyComponent: EmptyPlaceholder,
+  ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
   refreshSize: 20,
   refreshThreshold: 1,
   refreshPosition: 2,
   refresh: true,
+  numColumns: 2,
 }
 
 const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
@@ -99,12 +78,12 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
-    GridFooterComponent,
-    GridHeaderComponent,
+    ListFooterComponent,
+    ListHeaderComponent,
     ListLoadingIndicatorComponent,
-    GridRefreshControlComponent,
-    GridSeparatorComponent,
-    GridEmptyComponent,
+    ListRefreshControlComponent,
+    ListSeparatorComponent,
+    ListEmptyComponent,
     virtualizerOptions = {},
     refreshDebounce,
     refreshSize,
@@ -112,6 +91,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     refreshPosition,
     refresh,
     refreshControlProps = {},
+    numColumns,
     ...props
   } = allProps
 
@@ -125,7 +105,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     styles,
   })
 
-  const separator = props?.separators && <GridSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = props?.separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
   const count = hasNextPage ? data?.length + 1 : data?.length
 
@@ -137,9 +117,9 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     ...virtualizerOptions,
   })
 
-  //
-
-  const columns = generateColumns(2)
+  const columns = React.useMemo(() => {
+    return generateColumns(numColumns)
+  }, [numColumns])
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
@@ -162,53 +142,55 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
 
-    const showIndicator = (_item?.index > data?.length - 1) && !!ListLoadingIndicatorComponent
+    const showIndicator = (_item?.index > (data?.length / numColumns) - 1) && !!ListLoadingIndicatorComponent
 
-    const GridLength = data?.length || 0
+    const gridLength = data?.length || 0
 
-    const isFirst = _item?.index === 0
-    const isLast = _item?.index === GridLength - 1
-
-    const isOnly = isFirst && isLast
-
-    let acc = 1
-
-    return (
+    return <>
+      {/* Necessary for correct list render */}
       <div
-        style={{
-          width: '100%',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          transform: `translateY(${
-            _item.start - dataVirtualizer.options.scrollMargin
-          }px)`,
-          display: 'flex',
-        }}
+        css={[
+          variantStyles.itemWrapper,
+          { transform: `translateY(${_item.start - dataVirtualizer.options.scrollMargin}px)` }
+        ]}
         key={_item?.key}
         data-index={_item?.index}
         ref={dataVirtualizer?.measureElement}
       >
         {columnItems.map(column => {
+          const rowIndex = _item?.index
+          const columnIndex = column?.index
+          const itemIndex = (rowIndex + rowIndex) + columnIndex
+
+          const isFirst = itemIndex === 0
+          const isLast = itemIndex === gridLength - 1
+          const isOnly = isFirst && isLast
+      
+          const isLastInRow = columnIndex === numColumns
+          const isFirstInRow = columnIndex === 0
+          const isOnlyInRow = isFirstInRow && isLastInRow
+
           const _itemProps = {
             ..._item,
+            key: itemIndex,
+            index: itemIndex,
             isOnly,
             isLast,
             isFirst,
-            item: data?.[(_item?.index !== 0 ? _item?.index + acc : _item?.index) + column.index]
+            column,
+            isFirstInRow,
+            isLastInRow,
+            isOnlyInRow,
+            rowIndex,
+            item: data?.[itemIndex]
           }
 
-          acc = acc + 1
-
-          return <>
-            {/* {!isFirst && separator} */}
-            <RenderItem {..._itemProps} />
-          </>
+          return <RenderItem {..._itemProps} />
         })}
 
-        {showIndicator && <ListLoadingIndicatorComponent />} 
+        {showIndicator && <ListLoadingIndicatorComponent />}
       </div>
-    )
+    </>
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
 
   const isEmpty = !data || !data?.length
@@ -235,8 +217,10 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
       return
     }
 
+    const itemsLength = (data?.length / numColumns) - 1
+
     if (
-      lastItem.index >= data?.length - 1 &&
+      lastItem.index >= itemsLength &&
       hasNextPage &&
       !isFetchingNextPage
     ) {
@@ -264,9 +248,9 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
 
   return (
     <View css={[getKeyStyle('wrapper')]}>
-      {!!GridHeaderComponent && <GridHeaderComponent />}
+      {!!ListHeaderComponent && <ListHeaderComponent />}
 
-      {isEmpty ? <GridEmptyComponent {...placeholder} /> : (
+      {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
         // @ts-ignore
         <View
           ref={parentRef}
@@ -283,7 +267,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
               { height: dataVirtualizer.getTotalSize() }
             ]}
           >
-            {TypeGuards.isNil(GridRefreshControlComponent) && refresh ? (
+            {TypeGuards.isNil(ListRefreshControlComponent) && refresh ? (
               <motion.div
                 css={[variantStyles?.refreshControl]}
                 initial={false}
@@ -295,25 +279,14 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
               >
                 <ActivityIndicator size={refreshSize} />
               </motion.div>
-            ) : (<GridRefreshControlComponent /> ?? null)}
+            ) : (<ListRefreshControlComponent /> ?? null)}
 
-            {/* Necessary for correct Grid render */}
-            {/* <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                transform: `translateY(${items[0].start}px)`,
-              }}
-            > */}
-              {items?.map((item) => renderItem(item))}
-            {/* </div> */}
+            {items?.map((item) => renderItem(item))}
           </View>
         </View>
       )}
 
-      {!!GridFooterComponent && <GridFooterComponent />}
+      {!!ListFooterComponent && <ListFooterComponent />}
     </View>
   )
 })
