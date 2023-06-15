@@ -4,7 +4,7 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListParts, ListPresets } from './styles'
 import { StylesOf } from '../../types'
-import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
+import { useVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
 
 export type AugmentedRenderItemInfo<T> = {
   isFirst: boolean
@@ -24,24 +24,18 @@ export type ListProps<
     isFetching?: boolean
     hasNextPage?: boolean
     separators?: boolean
+    onRefresh?: () => void
     placeholder?: EmptyPlaceholderProps
     styles?: StylesOf<ListComposition>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
     ListFooterComponent?: () => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
-    onRefresh?: () => void
-    refreshing?: boolean
-    getItemLayout?: ((
-      data: Data,
-      index: number,
-    ) => { length: number; offset: number; index: number })
-    isError?: boolean
-    error?: string
     isLoading?: boolean
     isFetchingNextPage?: boolean
-    fetchNextPage?: any
+    fetchNextPage?: () => void
     ListHeaderComponent?: () => React.ReactElement
+    virtualizerOptions?: VirtualizerOptions<any, any>
   }
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
@@ -53,28 +47,27 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) =>
 const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => {
   const {
     variants = [],
+    responsiveVariants = {},
+    onRefresh,
     style,
     styles = {},
-    onRefresh,
-    component,
-    refreshing,
     placeholder = {},
     renderItem: RenderItem,
     data,
     hasNextPage,
-    isError,
-    error,
     isLoading,
     isFetchingNextPage,
     fetchNextPage,
     ListFooterComponent = null,
     ListHeaderComponent = null,
     ListLoadingIndicatorComponent = null,
+    virtualizerOptions = {},
     ...props
   } = flatListProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
     variants,
+    responsiveVariants,
     styles,
   })
 
@@ -87,7 +80,16 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     getScrollElement: () => parentRef.current,
     estimateSize: () =>  null,
     overscan: 10,
+    ...virtualizerOptions,
   })
+
+  const isRefresh = React.useMemo(() => {
+    const up = dataVirtualizer?.scrollDirection === 'backward' 
+    const _offset = dataVirtualizer?.scrollOffset
+    const _refresh = up && _offset <= 0
+
+    return _refresh
+  }, [dataVirtualizer?.scrollDirection, dataVirtualizer?.scrollOffset])
 
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
@@ -130,6 +132,13 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
   const items = dataVirtualizer.getVirtualItems()
 
   onUpdate(() => {
+    if (isRefresh) {
+      console.log('refresh')
+      onRefresh?.()
+    }
+  }, [!!isRefresh])
+
+  onUpdate(() => {
     const [lastItem] = [...items].reverse()
 
     if (!lastItem) {
@@ -141,7 +150,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
       hasNextPage &&
       !isFetchingNextPage
     ) {
-      fetchNextPage()
+      fetchNextPage?.()
     }
   }, [
     hasNextPage,
