@@ -1,56 +1,18 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback, useCodeleapContext, TypeGuards, PropsOf } from '@codeleap/common'
+import { useDefaultComponentStyle, useCallback, useCodeleapContext, TypeGuards } from '@codeleap/common'
 import { View, ViewProps } from '../View'
-import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { ListComposition, ListParts, ListPresets } from './styles'
-import { StylesOf } from '../../types'
-import { VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
+import { EmptyPlaceholder } from '../EmptyPlaceholder'
+import { ListParts, ListPresets } from './styles'
+import { VirtualItem } from '@tanstack/react-virtual'
 import { motion } from 'framer-motion'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { useInfiniteScroll } from './useInfiniteScroll'
-
-export type AugmentedRenderItemInfo<T> = VirtualItem & {
-  item: T
-  isFirst: boolean
-  isLast: boolean
-  isOnly: boolean
-}
+import { ListProps } from './types'
 
 export * from './styles'
 export * from './PaginationIndicator'
 export * from './useInfiniteScroll'
-
-export type ListProps<
-  T = any[],
-  Data = T extends Array<infer D> ? D : never
-> = ComponentVariants<typeof ListPresets> &
-  Omit<ViewProps<'div'>, 'variants'> & {
-    data: Data[]
-    isFetching?: boolean
-    hasNextPage?: boolean
-    separators?: boolean
-    onRefresh?: () => void
-    placeholder?: EmptyPlaceholderProps
-    styles?: StylesOf<ListComposition>
-    keyExtractor?: (item: T, index: number) => string
-    renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
-    ListFooterComponent?: () => React.ReactElement
-    ListLoadingIndicatorComponent?: () => React.ReactElement
-    ListRefreshControlComponent?: () => React.ReactElement
-    ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
-    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
-    isLoading?: boolean
-    isFetchingNextPage?: boolean
-    fetchNextPage?: () => void
-    ListHeaderComponent?: () => React.ReactElement
-    virtualizerOptions?: Partial<VirtualizerOptions<any, any>>
-    refreshDebounce?: number
-    refreshSize?: number
-    refreshThreshold?: number
-    refreshPosition?: number
-    refresh?: boolean
-    refreshControlProps?: PropsOf<typeof motion.div>
-  }
+export * from './types'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
