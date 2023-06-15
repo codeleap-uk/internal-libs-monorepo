@@ -12,6 +12,7 @@ export * from './styles'
 export * from './PaginationIndicator'
 export * from './useInfiniteScroll'
 export * from './types'
+export * from './ListLayout'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (

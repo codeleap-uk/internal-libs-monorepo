@@ -1,33 +1,15 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext, TypeGuards, StylesOf } from '@codeleap/common'
+import { useDefaultComponentStyle, useCallback, onUpdate, useCodeleapContext, TypeGuards } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { GridComposition, GridParts, GridPresets } from './styles'
+import { GridParts, GridPresets } from './styles'
 import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
 import { motion } from 'framer-motion'
 import { ActivityIndicator } from '../ActivityIndicator'
-import { AugmentedRenderItemInfo, ListProps } from '../List'
-
-type GridAugmentedRenderItemInfo<T> = AugmentedRenderItemInfo<T> & {
-  column: VirtualItem
-  isLastInRow: boolean
-  isOnlyInRow: boolean
-  isFirstInRow: boolean
-  rowIndex: number
-}
+import { GridProps } from './types'
 
 export * from './styles'
-
-export type GridProps<
-  T = any[],
-  Data = T extends Array<infer D> ? D : never
-> = 
-  Omit<ListProps<T, Data>, 'variants' | 'styles' | 'renderItem'> &
-  ComponentVariants<typeof GridPresets> &  {
-    styles?: StylesOf<GridComposition>
-    numColumns?: number
-    renderItem: (data: GridAugmentedRenderItemInfo<T>) => React.ReactElement
-  }
+export * from './types'
 
 const generateColumns = (count: number) => {
   return new Array(count).fill(0).map((_, i) => {
