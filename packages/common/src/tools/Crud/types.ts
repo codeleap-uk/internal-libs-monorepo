@@ -8,14 +8,14 @@ export type PaginationResponse<T> = {
   results: T[]
 }
 
-export type CreateOptions = {
+export type CreateOptions<Filters = any> = {
   appendTo?: 'start' | 'end' | [number, number]
   optimistic?: boolean
-
 }
 
-export type UpdateOptions = {
+export type UpdateOptions<Filters = any> = {
   optimistic?: boolean
+
 }
 
 export type QueryManagerAction<
@@ -54,15 +54,20 @@ export type UseManagerArgs<T extends QueryManagerItem, ExtraArgs = any> = {
   filter?: ExtraArgs
   limit?: number
   offset?: number
+
+  creation?: CreateOptions
+  update?: UpdateOptions
+  deletion?: UpdateOptions
 }
 
 export type QueryManagerItem = {
   id: string | number
 }
 
-export type AppendToPaginationParams<TItem = any> = {
+export type AppendToPaginationParams<TItem = any, Filters=any> = {
   item: TItem|TItem[]
   to?: CreateOptions['appendTo']
+  refreshFilters?: Filters
 }
 export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>
 
@@ -72,6 +77,7 @@ export type MutationCtx<T extends QueryManagerItem> = {
   previousData?: InfinitePaginationData<T>
   addedId?: T['id']
   previousItem?: T
+  optimisticItem?: T
   prevItemPage?: [number, number]
 }
 
@@ -81,7 +87,7 @@ export const isInfiniteQueryData = <T>(data: any): data is InfinitePaginationDat
 
 export type QueryStateValue<T extends QueryManagerItem> = {
   itemMap: Record<T['id'], T>
-  itemList: T[]
+  itemList?: T[]
   pagesById: Record<T['id'], [number, number]>
   itemIndexes: Record<T['id'], number>
 }

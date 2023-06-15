@@ -3,11 +3,12 @@ import {
   useQuery,
   useMutation,
   useInfiniteQuery,
+  hashQueryKey,
 } from '@tanstack/react-query'
 
 import { useEffect, useRef, useState } from 'react'
-import { AsyncReturnType } from '../..'
-import { isArray, isNumber } from '../../utils/typeGuards'
+import { usePromise, waitFor } from '../..'
+import { isArray } from '../../utils/typeGuards'
 import {
   QueryManagerItem,
   QueryStateSubscriber,
@@ -26,10 +27,8 @@ import {
 
 export * from './types'
 
-class QueryState<T extends QueryManagerItem> {
+class QueryState<T extends QueryManagerItem, Filters = any> {
   itemMap: QueryStateValue<T>['itemMap']
-
-  itemList: QueryStateValue<T>['itemList']
 
   pagesById: QueryStateValue<T>['pagesById']
 
@@ -39,7 +38,10 @@ class QueryState<T extends QueryManagerItem> {
 
   getItemFallback?: (itemId: T['id']) => Promise<T>
 
-  setData?: (updater: (old: InfinitePaginationData<T>) => InfinitePaginationData<T>) => InfinitePaginationData<T>
+  setData?: (
+    updater: (old: InfinitePaginationData<T>) => InfinitePaginationData<T>,
+    filters?: Filters,
+  ) => InfinitePaginationData<T>
 
   constructor() {
     // @ts-ignore
@@ -56,7 +58,6 @@ class QueryState<T extends QueryManagerItem> {
     return {
       itemMap: this.itemMap,
       pagesById: this.pagesById,
-      itemList: this.itemList,
       itemIndexes: this.itemIndexes,
     }
   }
@@ -88,24 +89,17 @@ class QueryState<T extends QueryManagerItem> {
         pageIdx += 1
       }
 
-      this.itemList = flatItems
       this.itemMap = { ...this.itemMap, ...itemMap }
       this.pagesById = { ...this.pagesById, ...pagesById }
       this.itemIndexes = { ...this.itemIndexes, ...itemIndexes }
-      this.notifySubscribers()
-      return this.currentState
+      this.notifySubscribers(flatItems)
+      return { ...this.currentState, itemList: flatItems }
     }
 
     if (isArray(data)) {
       data.forEach((i) => {
         const itemId = i.id
         itemMap[itemId] = i
-
-        if (isNumber(this.itemIndexes[itemId])) {
-          const itemIdx = this.itemIndexes[itemId]
-          this.itemList[itemIdx] = i
-        }
-
       })
       this.notifySubscribers()
       return this.currentState
@@ -113,10 +107,7 @@ class QueryState<T extends QueryManagerItem> {
 
     const itemId = data.id
     itemMap[itemId] = data
-    if (isNumber(this.itemIndexes[itemId])) {
-      const itemIdx = this.itemIndexes[itemId]
-      this.itemList[itemIdx] = data
-    }
+
     this.notifySubscribers()
     return this.currentState
   }
@@ -159,13 +150,13 @@ class QueryState<T extends QueryManagerItem> {
         old.pageParams[pageIdx].limit += itemsToAppend.length
       }
       return old
-    })
+    }, args.refreshFilters)
     this.updateItems(newData)
 
     return newData
   }
 
-  removeItem(itemId: T['id']) {
+  removeItem(itemId: T['id'], refreshFilters?:Filters) {
     if (!this.setData) return
     const newData = this.setData((old) => {
       const [itemPage, itemIdx] = this.pagesById[itemId]
@@ -173,24 +164,24 @@ class QueryState<T extends QueryManagerItem> {
       // @ts-ignore
       old.pageParams[itemPage].limit -= 1
       return old
-    })
+    }, refreshFilters)
     this.updateItems(newData)
     return newData
   }
 
-  updateItem(itemId: T['id'], item: T) {
+  updateItem(itemId: T['id'], item: T, refreshFilters?:Filters) {
     if (!this.setData) return
     const newData = this.setData((old) => {
       const [itemPage, itemIdx] = this.pagesById[itemId]
       old.pages[itemPage].results[itemIdx] = item
       return old
-    })
+    }, refreshFilters)
     this.updateItems(newData)
     return newData
   }
 
-  notifySubscribers() {
-    this.subscribers.forEach((cb) => cb(this.currentState))
+  notifySubscribers(itemList?: T[]) {
+    this.subscribers.forEach((cb) => cb({ ...this.currentState, itemList }))
   }
 
   setItem(item: T) {
@@ -223,8 +214,13 @@ export class QueryManager<
 
     this.state.getItemFallback = this.options.retrieveItem
 
-    this.state.setData = (updater) => {
-      return this.queryClient.setQueryData(this.queryKeys.list, updater)
+    this.state.setData = (updater, filters) => {
+      console.log('Setting data', updater, filters)
+      const updated = this.queryClient.setQueriesData(this.queryKeys.list, updater)
+      const updatedQuery = updated.find(([key, data]) => {
+        return hashQueryKey(this.filteredQueryKey(filters)) === hashQueryKey(key)
+      })
+      return updatedQuery?.[1] || updated?.[0]?.[1]
     }
   }
 
@@ -312,8 +308,8 @@ export class QueryManager<
   }
 
   useList(args?: ExtraArgs) {
-    const [transformedData, setTransformedData] = useState<AsyncReturnType<typeof this.state.updateItems>>({
-      itemList: this.state.itemList,
+    const [transformedData, setTransformedData] = useState<QueryStateValue<T>>({
+      itemList: [],
       itemMap: this.state.itemMap,
       pagesById: this.state.pagesById,
       itemIndexes: this.state.itemIndexes,
@@ -322,7 +318,7 @@ export class QueryManager<
     const [isRefreshing, setRefreshing] = useState(false)
 
     const query = useInfiniteQuery({
-      queryKey: [...this.queryKeys.list, args],
+      queryKey: this.filteredQueryKey(args),
       initialData: {
         pageParams: [
           {
@@ -359,7 +355,12 @@ export class QueryManager<
 
     useEffect(() => {
       return this.state.subscribe((data) => {
-        setTransformedData(data)
+        console.log('subscribed', data)
+        setTransformedData(prevData => ({
+          ...prevData,
+          ...data,
+          itemList: data?.itemList || prevData.itemList,
+        }))
       })
     })
 
@@ -370,12 +371,15 @@ export class QueryManager<
     }
 
     return {
-      items: transformedData.itemList,
+      items: transformedData.itemList ?? [],
       query,
       getNextPage: query.fetchNextPage,
       getPreviousPage: query.fetchPreviousPage,
       refresh,
       isRefreshing,
+      itemMap: transformedData.itemMap,
+      pagesById: transformedData.pagesById,
+      itemIndexes: transformedData.itemIndexes,
     }
   }
 
@@ -406,11 +410,15 @@ export class QueryManager<
     return this.useRetrieve(itemId)
   }
 
-  useCreate(options?: CreateOptions) {
+  useCreate(options?: CreateOptions, filters?: ExtraArgs) {
 
     const tmpOptions = useRef<CreateOptions>(options ?? this.options.creation ?? {
       appendTo: 'start',
       optimistic: false,
+    })
+
+    const getOptimisticItem = usePromise<T>({
+      timeout: 1200,
     })
 
     const query = useMutation({
@@ -426,7 +434,8 @@ export class QueryManager<
             id: this.generateId(),
             ...data,
           } as T
-
+          getOptimisticItem.resolve(addedItem)
+          console.log('added item', addedItem)
           const addedId = addedItem.id
 
           this.state.addItem({
@@ -452,22 +461,30 @@ export class QueryManager<
           this.state.addItem({
             item: data,
             to: this.options.creation?.appendTo || 'start',
+            refreshFilters: filters,
           })
-          this.state.updateItems(data)
+
         } else {
-          this.state.updateItem(data.id, data)
+          this.state.updateItem(data.id, data, filters)
         }
       },
     })
 
-    const createItem = (data: Partial<T>, options?: CreateOptions) => {
+    const createItem = async (data: Partial<T>, options?: CreateOptions) => {
       const prevOptions = tmpOptions.current
       if (!!options) {
 
         tmpOptions.current = options
       }
+      let res: T = null
 
-      const res = query.mutateAsync(data)
+      if (tmpOptions.current?.optimistic) {
+        query.mutateAsync(data)
+        res = await getOptimisticItem.await()
+      } else {
+        res = await query.mutateAsync(data)
+      }
+
       if (!!options) {
         tmpOptions.current = prevOptions
       }
@@ -482,14 +499,19 @@ export class QueryManager<
     }
   }
 
-  useUpdate(options?: UpdateOptions) {
+  useUpdate(options?: UpdateOptions, filters?: ExtraArgs) {
     const tmpOptions = useRef<UpdateOptions>(options ?? this.options.update ?? {
       optimistic: false,
+    })
+
+    const getOptimisticItem = usePromise<T>({
+      timeout: 1200,
     })
 
     const query = useMutation({
       mutationKey: this.queryKeys.update,
       onMutate: async (data) => {
+
         if (tmpOptions.current?.optimistic) {
 
           const prevItem = await this.state.getItem(data.id, {
@@ -498,19 +520,29 @@ export class QueryManager<
 
           if (!prevItem) return
 
-          this.state.updateItem(data.id, {
+          const optimisticItem:T = {
             ...prevItem,
             ...data,
-          })
+          }
+
+          getOptimisticItem.resolve(optimisticItem)
+
+          this.state.updateItem(data.id, optimisticItem, filters)
 
           return {
             previousItem: prevItem,
+            optimisticItem,
+
           } as MutationCtx<T>
         }
       },
       onError: (error, data, ctx: MutationCtx<T>) => {
         if (tmpOptions.current?.optimistic && !!ctx?.previousItem?.id) {
-          this.state.updateItem(ctx.previousItem.id, ctx.previousItem)
+          this.state.updateItem(
+            ctx.previousItem.id,
+            ctx.previousItem,
+            filters,
+          )
         }
       },
       mutationFn: (data: Partial<T>) => {
@@ -518,19 +550,28 @@ export class QueryManager<
       },
       onSuccess: (data) => {
 
-        this.state.updateItems(data)
+        this.state.updateItem(data.id, data, filters)
 
       },
     })
 
-    const update = (data: Partial<T>, options?: UpdateOptions) => {
+    const update = async (data: Partial<T>, options?: UpdateOptions) => {
       const prevOptions = tmpOptions.current
       if (!!options) {
 
         tmpOptions.current = options
       }
 
-      const res = query.mutateAsync(data)
+      let res: T = null
+
+      if (tmpOptions.current?.optimistic) {
+        query.mutateAsync(data)
+        res = await getOptimisticItem.await()
+      } else {
+
+        res = await query.mutateAsync(data)
+      }
+
       if (!!options) {
         tmpOptions.current = prevOptions
       }
@@ -545,24 +586,31 @@ export class QueryManager<
     }
   }
 
-  useDelete(options?: UpdateOptions) {
+  useDelete(options?: UpdateOptions, filters?: ExtraArgs) {
 
     const tmpOptions = useRef<UpdateOptions>(options ?? this.options?.deletion ?? {
       optimistic: false,
     })
+
+    const getOptimisticItem = usePromise<T>({
+      timeout: 1200,
+    })
+
     const query = useMutation({
       mutationKey: this.queryKeys.delete,
 
       onMutate: async (data) => {
         if (tmpOptions.current?.optimistic) {
+          console.log('DELETE', { data })
           const prevItem = await this.state.getItem(data.id, {
             fetchOnNotFoud: false,
           })
           const prevItemPage = this.state.pagesById[data.id]
 
+          getOptimisticItem.resolve(prevItem)
           if (!prevItem) return
 
-          this.state.removeItem(data.id)
+          this.state.removeItem(data.id, filters)
 
           return {
             previousItem: prevItem,
@@ -579,31 +627,40 @@ export class QueryManager<
           this.state.addItem({
             item: ctx.previousItem,
             to: ctx.prevItemPage,
+            refreshFilters: filters,
 
           })
         }
       },
       onSuccess: (data) => {
         if (!tmpOptions.current?.optimistic) {
-          this.state.removeItem(data.id)
+          this.state.removeItem(data.id, filters)
         }
       },
 
     })
 
-    const _delete = (data: T, options?: UpdateOptions) => {
+    const _delete = async (data: T, options?: UpdateOptions) => {
       const prevOptions = tmpOptions.current
       if (!!options) {
 
         tmpOptions.current = options
       }
 
-      const res = query.mutateAsync(data)
+      let prevItem = null
+
+      if (tmpOptions.current?.optimistic) {
+        query.mutateAsync(data)
+        prevItem = await getOptimisticItem.await()
+      } else {
+        prevItem = await query.mutateAsync(data)
+      }
+
       if (!!options) {
         tmpOptions.current = prevOptions
       }
 
-      return res
+      return prevItem
     }
 
     return {
@@ -640,13 +697,14 @@ export class QueryManager<
 
   use(options?: UseManagerArgs<T, ExtraArgs>) {
     const list = this.useList(options.filter)
-    const create = this.useCreate()
-    const update = this.useUpdate()
-    const del = this.useDelete()
+    const create = this.useCreate(options.creation, options.filter)
+    const update = this.useUpdate(options.update, options.filter)
+    const del = this.useDelete(options.deletion, options.filter)
 
     return {
       items: list.items,
       list,
+      itemMap: list.itemMap,
       create: create.create,
       update: update.update,
       delete: del.delete,
@@ -657,6 +715,7 @@ export class QueryManager<
       refresh: list.refresh,
       isRefreshing: list.isRefreshing,
       actions: this.actions,
+      updatedAt: list.query.dataUpdatedAt,
     }
   }
 
