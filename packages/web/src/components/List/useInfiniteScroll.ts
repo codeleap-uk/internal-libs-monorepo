@@ -1,15 +1,28 @@
 import { onUpdate } from '@codeleap/common'
-import { useVirtualizer, VirtualizerOptions } from '@tanstack/react-virtual'
+import { useVirtualizer, VirtualItem, Virtualizer, VirtualizerOptions } from '@tanstack/react-virtual'
 import React from 'react'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
 
-export type UseInfiniteScroll = 
+export type UseInfiniteScrollProps = 
   ListProps & 
   GridProps & 
   Pick<VirtualizerOptions<any, any>, 'overscan'>
 
-export const useInfiniteScroll = (props: UseInfiniteScroll) => {
+export type UseInfiniteScrollReturn = {
+  dataVirtualizer: Virtualizer<any, any>
+  count: number
+  items: VirtualItem[]
+  isRefresh: boolean
+  layoutProps: {
+    isEmpty: boolean
+    refreshing: boolean
+    parentRef: React.MutableRefObject<undefined>
+    dataVirtualizer: Virtualizer<any, any>
+  }
+}
+
+export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScrollReturn => {
   const {
     onRefresh,
     data,
@@ -81,12 +94,15 @@ export const useInfiniteScroll = (props: UseInfiniteScroll) => {
   ])
 
   return {
-    isEmpty,
     items,
     dataVirtualizer,
-    refreshing,
     isRefresh,
     count,
-    parentRef,
+    layoutProps: {
+      parentRef,
+      refreshing,
+      isEmpty,
+      dataVirtualizer
+    }
   }
 }

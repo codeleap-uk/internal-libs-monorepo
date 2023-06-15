@@ -1,13 +1,12 @@
 import React from 'react'
-import { useDefaultComponentStyle, useCallback, useCodeleapContext, TypeGuards } from '@codeleap/common'
+import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { ListParts, ListPresets } from './styles'
+import { ListPresets } from './styles'
 import { VirtualItem } from '@tanstack/react-virtual'
-import { motion } from 'framer-motion'
-import { ActivityIndicator } from '../ActivityIndicator'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
+import { ListLayout } from './ListLayout'
 
 export * from './styles'
 export * from './PaginationIndicator'
@@ -43,33 +42,13 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
   const {
     variants = [],
     responsiveVariants = {},
-    onRefresh,
-    style,
     styles = {},
-    placeholder = {},
-    renderItem: RenderItem,
-    data,
-    hasNextPage,
-    isLoading,
-    isFetchingNextPage,
-    fetchNextPage,
-    ListFooterComponent,
-    ListHeaderComponent,
     ListLoadingIndicatorComponent,
-    ListRefreshControlComponent,
+    renderItem: RenderItem,
     ListSeparatorComponent,
-    ListEmptyComponent,
-    virtualizerOptions = {},
-    refreshDebounce,
-    refreshSize,
-    refreshThreshold,
-    refreshPosition,
-    refresh,
-    refreshControlProps = {},
-    ...props
+    data,
+    separators,
   } = allProps
-
-  const { Theme } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
     variants,
@@ -79,13 +58,11 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
 
   const {
     items,
-    isEmpty,
     dataVirtualizer,
-    parentRef,
-    refreshing,
+    layoutProps,
   } = useInfiniteScroll(allProps)
 
-  const separator = props?.separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
@@ -121,71 +98,26 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
     )
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
 
-  const getKeyStyle = React.useCallback((key: ListParts) => {
-    return [
-      variantStyles[key],
-      isLoading && variantStyles[`${key}:loading`],
-      isEmpty && variantStyles[`${key}:empty`],
-    ]
-  }, [isLoading, isEmpty])
-
-  const _refreshPosition = React.useMemo(() => {
-    return Theme.spacing.value(refreshPosition)
-  }, [refreshPosition])
-
   return (
-    <View css={[getKeyStyle('wrapper')]}>
-      {!!ListHeaderComponent && <ListHeaderComponent />}
-
-      {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
-        // @ts-ignore
-        <View
-          ref={parentRef}
-          css={[
-            getKeyStyle('innerWrapper'),
-            style,
-          ]}
-        >
-          <View
-            //@ts-ignore
-            ref={ref}
-            css={[
-              getKeyStyle('content'),
-              { height: dataVirtualizer.getTotalSize() }
-            ]}
-          >
-            {TypeGuards.isNil(ListRefreshControlComponent) && refresh ? (
-              <motion.div
-                css={[variantStyles?.refreshControl]}
-                initial={false}
-                animate={{
-                  opacity: refreshing ? 1 : 0,
-                  top: refreshing ? _refreshPosition : 0
-                }}
-                {...refreshControlProps}
-              >
-                <ActivityIndicator size={refreshSize} />
-              </motion.div>
-            ) : (<ListRefreshControlComponent /> ?? null)}
-
-            {/* Necessary for correct list render */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                transform: `translateY(${items[0].start}px)`,
-              }}
-            >
-              {items?.map((item) => renderItem(item))}
-            </div>
-          </View>
-        </View>
-      )}
-
-      {!!ListFooterComponent && <ListFooterComponent />}
-    </View>
+    <ListLayout
+      {...allProps}
+      {...layoutProps}
+      variantStyles={variantStyles} // @ts-ignore
+      ref={ref}
+    >
+      {/* Necessary for correct list render */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          transform: `translateY(${items[0].start}px)`,
+        }}
+      >
+        {items?.map((item) => renderItem(item))}
+      </div>
+    </ListLayout>
   )
 })
 
