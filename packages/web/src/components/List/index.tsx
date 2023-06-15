@@ -107,15 +107,7 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
       ref={ref}
     >
       {/* Necessary for correct list render */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          transform: `translateY(${items[0].start}px)`,
-        }}
-      >
+      <div css={[variantStyles.list, { transform: `translateY(${items[0].start}px)` }]}>
         {items?.map((item) => renderItem(item))}
       </div>
     </ListLayout>

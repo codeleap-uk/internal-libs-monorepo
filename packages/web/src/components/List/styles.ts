@@ -9,7 +9,8 @@ export type ListParts =
   'content' | 
   'separator' | 
   'itemWrapper' |
-  'refreshControl'
+  'refreshControl' |
+  'list'
 
 export type ListComposition = `${ListParts}:${ListStates}` | ListParts
 
