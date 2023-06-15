@@ -19,6 +19,7 @@ import { Overlay } from '../Overlay'
 import { StylesOf } from '../../types/utility'
 import { ModalComposition, ModalPresets } from './styles'
 import { ActionIcon } from '../ActionIcon'
+import { Scroll } from '../Scroll'
 
 export * from './styles'
 
@@ -27,6 +28,7 @@ export type ModalProps = React.PropsWithChildren<
     visible: boolean
     title?: React.ReactNode
     description?: React.ReactElement
+    renderModalBody?: () => React.ReactElement
     toggle: AnyFunction
     styles?: StylesOf<ModalComposition>
     accessible?: boolean
@@ -70,6 +72,8 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     fullscreen = false,
     centered = false,
     responsiveVariants,
+    renderModalBody,
+    scroll = true,
     ...props
   } = modalProps
 
@@ -80,7 +84,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     typeof ModalPresets
   >('u:Modal', {
     responsiveVariants,
-    variants: [...variants, fullscreen && 'fullscreen', centered && 'centered'],
+    variants: [...variants, fullscreen && 'fullscreen', centered && 'centered', scroll && 'scroll'],
     styles,
   })
 
@@ -134,6 +138,8 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   const hasHeader = title || (closable && showClose)
 
+  const ModalBody = renderModalBody || (scroll ? Scroll : View)
+
   return (
     <View
       aria-hidden={!visible}
@@ -153,6 +159,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
             : variantStyles['backdrop:hidden'],
         ]}
       />
+
       <View css={variantStyles.innerWrapper}>
         <View css={variantStyles.backdropPressable} onClick={close} />
         <View
@@ -175,7 +182,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
         >
           {hasHeader && <ModalHeader />}
 
-          <View css={variantStyles.body}>{children}</View>
+          <ModalBody css={variantStyles.body}>{children}</ModalBody>
           {footer && (
             <View component='footer' css={variantStyles.footer}>
               {footer}

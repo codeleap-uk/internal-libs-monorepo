@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import {
+import React, {
   ElementType,
   forwardRef,
   ReactElement,
