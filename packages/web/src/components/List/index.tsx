@@ -29,6 +29,7 @@ export type ListProps<
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
     ListFooterComponent?: () => React.ReactElement
+    ListLoadingIndicatorComponent?: () => React.ReactElement
     onRefresh?: () => void
     refreshing?: boolean
     getItemLayout?: ((
@@ -68,6 +69,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     fetchNextPage,
     ListFooterComponent = null,
     ListHeaderComponent = null,
+    ListLoadingIndicatorComponent = null,
     ...props
   } = flatListProps
 
@@ -84,10 +86,13 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     count,
     getScrollElement: () => parentRef.current,
     estimateSize: () =>  null,
+    overscan: 10,
   })
 
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
+
+    const showIndicator = (_item?.index > data?.length - 1) && !!ListLoadingIndicatorComponent
 
     const listLength = data?.length || 0
 
@@ -105,14 +110,16 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     }
 
     return (
-      <View
+      <div
         css={[variantStyles.itemWrapper]}
+        key={_item?.key}
         data-index={_item?.index}
         ref={dataVirtualizer?.measureElement}
       >
         {!isFirst && separator}
+        {showIndicator && <ListLoadingIndicatorComponent />}
         <RenderItem {..._itemProps} />
-      </View>
+      </div>
     )
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
 
@@ -153,10 +160,11 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
   }, [isLoading, isEmpty])
 
   return (
-    <View ref={ref} css={[getKeyStyle('wrapper')]}>
+    <View css={[getKeyStyle('wrapper')]}>
       {!!ListHeaderComponent && <ListHeaderComponent />}
 
       {isEmpty ? <EmptyPlaceholder {...placeholder} /> : (
+        // @ts-ignore
         <View
           ref={parentRef} 
           css={[
