@@ -38,7 +38,7 @@ export type SegmentedControlProps = {
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
 
-  const { label, options, styles = {}, value, variants = [], onValueChange, touchableProps } = props
+  const { label, options, styles = {}, value, variants = [], onValueChange } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
@@ -54,7 +54,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
       {label && <Text text={label} css={variantStyles.label} />}
       <View css={variantStyles.innerWrapper}>
         <View
-          css={[variantStyles.selectedBubble, touchableProps?.disabled && variantStyles['selectedBubble:disabled']]}
+          css={[variantStyles, variantStyles.controlWrapper, props?.touchableProps?.disabled && variantStyles['controlWrapper:disabled']]}
         >
           {options.map((o, idx) => (
             <SegmentedControlOption

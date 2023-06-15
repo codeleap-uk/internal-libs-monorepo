@@ -34,7 +34,7 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
     >
       {
         !!icon && (
-          <Icon name={icon} style={[variantStyles.icon]} />
+          <Icon name={icon} css={[variantStyles.icon]} />
         )
       }
       <Text
