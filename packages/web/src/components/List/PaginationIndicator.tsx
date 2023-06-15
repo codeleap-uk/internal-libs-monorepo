@@ -46,13 +46,23 @@ export type PaginationIndicatorProps = {
 } & ComponentVariants<typeof PaginationIndicatorStyles>
 
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
-  const { hasMore, isFetching, noMoreItemsText, style, activityIndicator, styles = {}, variants = [] } = props
+  const { 
+    hasMore, 
+    isFetching, 
+    noMoreItemsText, 
+    style, 
+    activityIndicator, 
+    styles = {}, 
+    responsiveVariants = {},
+    variants = [] 
+  } = props
 
   const variantStyles = useDefaultComponentStyle<
     'u:PaginationIndicator',
     typeof PaginationIndicatorStyles
     >('u:PaginationIndicator', {
       variants,
+      responsiveVariants,
       styles,
     })
 

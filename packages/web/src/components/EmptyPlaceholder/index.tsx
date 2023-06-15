@@ -21,14 +21,13 @@ type RenderEmptyProps = {
   styles: StylesOf<EmptyPlaceholderComposition> & {activityIndicatorStyles: StylesOf<ActivityIndicatorComposition>}
 }
 
-export type EmptyPlaceholderProps = {
+export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPresets> & {
   itemName?: string
   title?: React.ReactElement | string
   description?: React.ReactElement | string
   icon?: IconPlaceholder | ((props: EmptyPlaceholderProps) => JSX.Element) | null
   loading?: boolean
   styles?: StylesOf<EmptyPlaceholderComposition>
-  variants?: ComponentVariants<typeof EmptyPlaceholderPresets>['variants']
   renderEmpty?: (props: RenderEmptyProps) => React.ReactElement
 }
 
@@ -40,13 +39,16 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     description,
     styles = {},
     variants = [],
+    responsiveVariants = {},
     icon: IconEmpty = null,
     renderEmpty: RenderEmpty = null,
   } = props
+  
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
   const variantStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderPresets>('u:EmptyPlaceholder', {
     variants,
+    responsiveVariants,
     styles,
   })
 
