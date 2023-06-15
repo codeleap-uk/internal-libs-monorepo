@@ -1,10 +1,12 @@
 import React from 'react'
-import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate } from '@codeleap/common'
+import { useDefaultComponentStyle, ComponentVariants, useCallback, onUpdate, useCodeleapContext } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListParts, ListPresets } from './styles'
 import { StylesOf } from '../../types'
 import { useVirtualizer, VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
+import { motion } from 'framer-motion'
+import { ActivityIndicator } from '../ActivityIndicator'
 
 export type AugmentedRenderItemInfo<T> = {
   isFirst: boolean
@@ -36,6 +38,10 @@ export type ListProps<
     fetchNextPage?: () => void
     ListHeaderComponent?: () => React.ReactElement
     virtualizerOptions?: VirtualizerOptions<any, any>
+    refreshDebounce?: number
+    refreshSize?: number
+    refreshThreshold?: number
+    refreshPosition?: number
   }
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
@@ -62,8 +68,16 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     ListHeaderComponent = null,
     ListLoadingIndicatorComponent = null,
     virtualizerOptions = {},
+    refreshDebounce = 3000,
+    refreshSize = 20,
+    refreshThreshold = 1,
+    refreshPosition = 2,
     ...props
   } = flatListProps
+
+  const [refreshing, setRefreshing] = React.useState(false)
+
+  const { Theme } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
     variants,
@@ -84,12 +98,11 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
   })
 
   const isRefresh = React.useMemo(() => {
-    const up = dataVirtualizer?.scrollDirection === 'backward' 
     const _offset = dataVirtualizer?.scrollOffset
-    const _refresh = up && _offset <= 0
+    const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
 
     return _refresh
-  }, [dataVirtualizer?.scrollDirection, dataVirtualizer?.scrollOffset])
+  }, [dataVirtualizer?.scrollOffset, dataVirtualizer?.isScrolling])
 
   const renderItem = useCallback((_item: VirtualItem) => {
     if (!RenderItem) return null
@@ -133,8 +146,12 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
 
   onUpdate(() => {
     if (isRefresh) {
-      console.log('refresh')
+      setRefreshing(true)
       onRefresh?.()
+
+      setTimeout(() => {
+        setRefreshing(false)
+      }, refreshDebounce)
     }
   }, [!!isRefresh])
 
@@ -168,6 +185,8 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     ]
   }, [isLoading, isEmpty])
 
+  const _refreshPosition = Theme.spacing.value(refreshPosition)
+
   return (
     <View css={[getKeyStyle('wrapper')]}>
       {!!ListHeaderComponent && <ListHeaderComponent />}
@@ -189,6 +208,16 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
               { height: dataVirtualizer.getTotalSize() }
             ]}
           >
+            <motion.div
+              css={[variantStyles?.refreshControl]}
+              initial={false}
+              animate={{ 
+                opacity: refreshing ? 1 : 0, 
+                top: refreshing ? _refreshPosition : 0
+              }}
+            >
+              <ActivityIndicator size={refreshSize} />
+            </motion.div>
             {/* Necessary for correct list render */}
             <div
               style={{
