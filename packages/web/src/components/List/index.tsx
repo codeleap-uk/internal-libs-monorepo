@@ -35,6 +35,7 @@ export type ListProps<
     ListLoadingIndicatorComponent?: () => React.ReactElement
     ListRefreshControlComponent?: () => React.ReactElement
     ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
+    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
@@ -59,6 +60,7 @@ const defaultProps: Partial<ListProps> = {
   ListLoadingIndicatorComponent: null,
   ListRefreshControlComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
+  ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
   refreshSize: 20,
   refreshThreshold: 1,
@@ -89,6 +91,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     ListHeaderComponent,
     ListLoadingIndicatorComponent,
     ListRefreshControlComponent,
+    ListSeparatorComponent,
     ListEmptyComponent,
     virtualizerOptions = {},
     refreshDebounce,
@@ -109,7 +112,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     styles,
   })
 
-  const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator} />
+  const separator = props?.separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
   const count = hasNextPage ? data?.length + 1 : data?.length
 
