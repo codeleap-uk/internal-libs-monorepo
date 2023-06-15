@@ -34,6 +34,7 @@ export type ListProps<
     ListFooterComponent?: () => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
     ListRefreshControlComponent?: () => React.ReactElement
+    ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
@@ -57,6 +58,7 @@ const defaultProps: Partial<ListProps> = {
   ListHeaderComponent: null,
   ListLoadingIndicatorComponent: null,
   ListRefreshControlComponent: null,
+  ListEmptyComponent: EmptyPlaceholder,
   refreshDebounce: 3000,
   refreshSize: 20,
   refreshThreshold: 1,
@@ -87,6 +89,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     ListHeaderComponent,
     ListLoadingIndicatorComponent,
     ListRefreshControlComponent,
+    ListEmptyComponent,
     virtualizerOptions = {},
     refreshDebounce,
     refreshSize,
@@ -214,7 +217,7 @@ const ListCP = React.forwardRef<typeof View, ListProps>((flatListProps, ref) => 
     <View css={[getKeyStyle('wrapper')]}>
       {!!ListHeaderComponent && <ListHeaderComponent />}
 
-      {isEmpty ? <EmptyPlaceholder {...placeholder} /> : (
+      {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
         // @ts-ignore
         <View
           ref={parentRef}
