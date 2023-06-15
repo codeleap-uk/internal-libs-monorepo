@@ -15,11 +15,13 @@ import React, {
   useImperativeHandle,
   useRef,
   useState,
+  Dispatch,
+  SetStateAction,
 } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import InputMask from 'react-input-mask'
 import { Touchable, TouchableProps } from '../Touchable'
-import { StylesOf } from '../../types/utility'
+import { ComponentWithDefaultProps, StylesOf } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
@@ -251,3 +253,54 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     </InputBase>
   )
 })
+
+export type SearchInputProps = {
+  value: string
+  setValue: Dispatch<SetStateAction<string>>
+  placeholder: string
+  debugName: string
+  clearIcon?: IconPlaceholder
+  searchIcon?: IconPlaceholder
+  variants?: ComponentVariants<typeof TextInputPresets>['variants']
+} & Partial<TextInputProps>
+
+export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
+  const {
+    value,
+    setValue,
+    placeholder,
+    debugName,
+    clearIcon,
+    searchIcon,
+    variants,
+  } = {
+    ...SearchInput.defaultProps,
+    ...props,
+  }
+
+  const handleClear = () => {
+    setValue('')
+  }
+
+  return (
+    <TextInput
+      value={value}
+      onChangeText={setValue}
+      placeholder={placeholder}
+      debugName={`Search ${debugName}`}
+      rightIcon={value && {
+        name: clearIcon,
+        onPress: () => handleClear(),
+      }}
+      leftIcon={{
+        name: searchIcon,
+      }}
+      variants={variants}
+    />
+  )
+}
+
+SearchInput.defaultProps = {
+  clearIcon: 'close' as IconPlaceholder,
+  searchIcon: 'search' as IconPlaceholder,
+}
