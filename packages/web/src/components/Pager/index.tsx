@@ -18,23 +18,25 @@ import React, {
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { View } from '../View'
+import { View, ViewProps } from '../View'
 import { Touchable } from '../Touchable'
 
 export type PagerRef = {
   goTo: (page: number) => void
 }
 
-export type PagerProps = Settings & {
-  variants?: ComponentVariants<typeof PagerPresets>['variants']
-  styles?: StylesOf<PagerComposition>
-  page?: number
-  style?: CSSProperties
-  children: ReactNode
-  onChange?: (page: number) => void
-  renderPageWrapper?: React.FC
-  footer?: ReactElement
-}
+export type PagerProps = Settings &
+  ComponentVariants<typeof PagerPresets> & {
+    styles?: StylesOf<PagerComposition>
+    page?: number
+    style?: CSSProperties
+    children: ReactNode
+    onChange?: (page: number) => void
+    renderPageWrapper?: React.FC
+    footer?: ReactElement
+    dotsProps?: DotsProps
+    pageWrapperProps?: ViewProps<'div'>
+  }
 
 type DotsProps = Pick<PagerProps, 'page'> & {
   childArray: ReactNode[]
@@ -71,11 +73,14 @@ const PagerComponent = (
     variants,
     children,
     renderPageWrapper,
+    responsiveVariants,
     page,
     dots = false,
     infinite = false,
     onChange,
     footer,
+    dotsProps,
+    pageWrapperProps,
     ...rest
   } = props
 
@@ -84,6 +89,7 @@ const PagerComponent = (
     typeof PagerPresets
   >('u:Pager', {
     variants,
+    responsiveVariants,
     styles,
     rootElement: 'wrapper',
   })
@@ -107,7 +113,7 @@ const PagerComponent = (
   }, [page])
 
   return (
-    <View variants={variants} style={style || variantStyles.wrapper}>
+    <View css={style || variantStyles.wrapper}>
       <Slider
         {...rest}
         arrows={false}
@@ -119,14 +125,18 @@ const PagerComponent = (
       >
         {childArray.map((child, index) => {
           return (
-            <PageWrapper key={index} style={variantStyles.pageWrapper}>
+            <PageWrapper
+              key={index}
+              css={variantStyles.pageWrapper}
+              {...pageWrapperProps}
+            >
               {child}
             </PageWrapper>
           )
         })}
       </Slider>
 
-      <View variants={['column']}>
+      <View css={variantStyles.footerWrapper}>
         {footer}
 
         {dots && (
@@ -135,6 +145,7 @@ const PagerComponent = (
             onPress={onChange}
             childArray={childArray}
             variantStyles={variantStyles}
+            {...dotsProps}
           />
         )}
       </View>

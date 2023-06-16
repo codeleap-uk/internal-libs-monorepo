@@ -1,7 +1,14 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type PagerComposition = 'wrapper' | 'dot' | 'dot:selected' | 'dots' | 'pageWrapper'
+export type PagerComposition =
+  | 'wrapper'
+  | 'dot'
+  | 'dot:selected'
+  | 'dots'
+  | 'pageWrapper'
+  | 'footerWrapper'
 
 const createPagerStyle = createDefaultVariantFactory<PagerComposition>()
 
-export const PagerPresets = includePresets((styles) => createPagerStyle(() => ({ wrapper: styles })))
+export const PagerPresets = includePresets((styles) => createPagerStyle(() => ({ wrapper: styles })),
+)
