@@ -141,6 +141,8 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
               item: data?.[itemIndex]
             }
 
+            if (!_itemProps?.item) return null
+
             return <RenderItem {..._itemProps} />
           })}
         </View>

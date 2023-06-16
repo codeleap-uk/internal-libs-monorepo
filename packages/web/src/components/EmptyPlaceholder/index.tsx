@@ -81,7 +81,7 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     )
   }
 
-  const _Image = () => {
+  const _Image = React.useMemo(() => {
     if (TypeGuards.isNil(IconEmpty)) return null
 
     if (TypeGuards.isString(IconEmpty)) {
@@ -92,12 +92,12 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     } else {
       return <IconEmpty {...props} />
     }
-  }
+  }, [])
 
   return (
     <View css={variantStyles.wrapper}>
       <View css={variantStyles.imageWrapper}>
-        <_Image />
+        {_Image}
       </View>
 
       {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} css={variantStyles.title}/> }
