@@ -43,12 +43,14 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     },
   )
 
+  const controlWrapperStyles = [variantStyles.controlWrapper, props?.touchableProps?.disabled && variantStyles['controlWrapper:disabled']]
+
   return (
-    <View css={variantStyles.wrapper}>
+    <View css={[variantStyles.wrapper]}>
       {label && <Text text={label} css={variantStyles.label} />}
       <View css={variantStyles.innerWrapper}>
         <View
-          css={[variantStyles, variantStyles.controlWrapper, props?.touchableProps?.disabled && variantStyles['controlWrapper:disabled']]}
+          css={controlWrapperStyles}
         >
           {options.map((o, idx) => (
             <SegmentedControlOption
