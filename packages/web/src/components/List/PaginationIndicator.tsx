@@ -9,7 +9,7 @@ import {
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { StylesOf } from '../../types'
-import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
+import { ActivityIndicator, ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { Text } from '../Text'
 import { View } from '../View'
 
@@ -48,6 +48,7 @@ export type PaginationIndicatorProps = {
   activityIndicator?: JSX.Element
   styles?: StylesOf<PaginationIndicatorComposition>
   style?: React.CSSProperties
+  indicatorProps?: Partial<ActivityIndicatorProps>
 } & ComponentVariants<typeof PaginationIndicatorStyles>
 
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
@@ -59,7 +60,8 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
     activityIndicator, 
     styles = {}, 
     responsiveVariants = {},
-    variants = [] 
+    variants = [],
+    indicatorProps = {},
   } = props
 
   const variantStyles = useDefaultComponentStyle<
@@ -74,7 +76,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const loaderStyles = getNestedStylesByKey('loader', variantStyles)
 
   if (isFetching) {
-    return activityIndicator || <View style={variantStyles.wrapper}><ActivityIndicator style={style} styles={loaderStyles}/></View>
+    return activityIndicator || <View css={[variantStyles.wrapper, style]}><ActivityIndicator {...indicatorProps} styles={loaderStyles}/></View>
   }
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
