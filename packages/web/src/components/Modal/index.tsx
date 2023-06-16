@@ -26,17 +26,6 @@ import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
 
-export interface NewModalProps {
-  visible?: boolean
-  /**
-   * Determine if the modal is visible
-  */
-  title?: React.ReactNode
-  /**
-    * Determine if the modal is visible
-  */
-}
-
 export type ModalProps = React.PropsWithChildren<{
   visible: boolean
   title?: React.ReactNode

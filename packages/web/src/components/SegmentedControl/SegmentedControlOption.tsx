@@ -27,6 +27,7 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
       }}
       css={[variantStyles.button, selected && variantStyles['button:selected'], style]}
       onPress={onPress}
+      {...touchableProps}
     >
       {
         !!icon && (

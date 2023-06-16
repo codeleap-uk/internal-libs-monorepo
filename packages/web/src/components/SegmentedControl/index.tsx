@@ -1,9 +1,10 @@
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
-import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder } from '@codeleap/common'
+import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder, StylesOf } from '@codeleap/common'
 import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
+import { SegmentedControlComposition } from './styles'
 
 type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
 
@@ -16,7 +17,7 @@ export type SegmentedControlProps<T = string> = {
   value?: T
 
   /**  all styles from the segmented control */
-  styles?: React.ReactNode
+  styles?: StylesOf<SegmentedControlComposition>
 
   /** all variants of the segmented control */
   variants?: ComponentVariants<typeof SegmentedControlPresets>['variants']
@@ -38,7 +39,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
     {
-      variants, styles,
+      variants, styles, responsiveVariants,
     },
   )
 
