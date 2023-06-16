@@ -11,14 +11,14 @@ import { View } from '../View'
 
 type Orientation = 'row' | 'column'
 
-type AlertProps = ModalProps & {
-  body?: string
-  children: React.ReactElement
-  variants?: ComponentVariants<typeof AlertPresets>['variants']
-  styles?: StylesOf<AlertComposition>
-  orientation: Orientation
-  buttons?: ButtonProps[]
-}
+type AlertProps = ModalProps &
+  ComponentVariants<typeof AlertPresets> & {
+    body?: string
+    children: React.ReactElement
+    styles?: StylesOf<AlertComposition>
+    orientation: Orientation
+    buttons?: ButtonProps[]
+  }
 
 export const Alert = (props: AlertProps) => {
   const {
@@ -28,38 +28,32 @@ export const Alert = (props: AlertProps) => {
     styles,
     buttons = [],
     orientation = 'row',
-    ...modalProps
+    responsiveVariants,
+    ...rest
   } = props
   const variantStyles = useDefaultComponentStyle<
     'u:Alert',
     typeof AlertPresets
   >('u:Alert', {
     variants,
+    responsiveVariants,
     styles,
   })
   const isRow = orientation === 'row'
 
   return (
-    <Modal centered showClose={false} {...modalProps}>
-      {body ? <Text text={body} variants={['p1', 'textCenter']} /> : null}
+    <Modal centered showClose={false} {...rest}>
+      {body ? <Text text={body} css={variantStyles.body} /> : null}
       {children}
 
       {buttons.length && (
         <View
           variants={[!isRow && 'column', 'marginTop:3']}
-          style={variantStyles.buttons}
+          css={variantStyles.buttons}
         >
-          {buttons.map((button) => {
-            const { variants = [] } = button
-
-            return (
-              <Button
-                {...button}
-                key={button.text}
-                variants={['flex', 'fullWidth', ...variants]}
-              />
-            )
-          })}
+          {buttons.map((button) => (
+            <Button {...button} key={button.text} css={variantStyles.button} />
+          ))}
         </View>
       )}
     </Modal>
