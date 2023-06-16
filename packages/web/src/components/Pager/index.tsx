@@ -36,25 +36,27 @@ export type PagerProps = Settings &
     footer?: ReactElement
     dotsProps?: DotsProps
     pageWrapperProps?: ViewProps<'div'>
+    dotsDisabled?:boolean
   }
 
-type DotsProps = Pick<PagerProps, 'page'> & {
+type DotsProps = Pick<PagerProps, 'page' | 'dotsDisabled'> & {
   childArray: ReactNode[]
   onPress?: (index: number) => void
   variantStyles: StylesOf<PagerComposition>
 }
 
-const Dots = ({ page, childArray, onPress, variantStyles }: DotsProps) => {
+const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsProps) => {
   return (
     <View style={variantStyles.dots}>
       {childArray.map((_, index) => {
         const isSelected = index === page
-
+        const style = { ...variantStyles[isSelected ? 'dot:selected' : 'dot'], ...(dotsDisabled ? variantStyles['dot:disabled'] : {}) }
         return (
           <Touchable
             key={index}
             onPress={() => onPress?.(index)}
-            style={variantStyles[isSelected ? 'dot' : 'dot:selected']}
+            style={style}
+            disabled={dotsDisabled}
           />
         )
       })}
@@ -76,6 +78,7 @@ const PagerComponent = (
     responsiveVariants,
     page,
     dots = false,
+    dotsDisabled = false,
     infinite = false,
     onChange,
     footer,
@@ -145,6 +148,7 @@ const PagerComponent = (
             onPress={onChange}
             childArray={childArray}
             variantStyles={variantStyles}
+            dotsDisabled={dotsDisabled}
             {...dotsProps}
           />
         )}
