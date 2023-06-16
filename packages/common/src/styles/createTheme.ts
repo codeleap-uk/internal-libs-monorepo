@@ -2,7 +2,6 @@ import { createBorderHelpers } from './helpers'
 
 import { breakpointHooksFactory, buildMediaQueries } from './MediaQuery'
 import { defaultPresets } from './presets'
-import { defaultEffects } from './effects'
 import { spacingFactory } from './Spacing'
 import { AppTheme, DynamicValueAccessors, EnhancedTheme, ThemeValues } from './types'
 
@@ -54,7 +53,6 @@ export function createTheme<T extends ThemeValues>(
       ...values.presets,
     },
     effects: {
-      ...defaultEffects,
       ...values.effects,
     },
     semiCircle: (side) => ({
@@ -79,7 +77,6 @@ export function createTheme<T extends ThemeValues>(
   }
 }
 
-
-export function validateTheme<T extends AppTheme>(t: T){
+export function validateTheme<T extends AppTheme>(t: T) {
   return t
 }
