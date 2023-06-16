@@ -7,9 +7,10 @@ import {
   onUpdate,
   useDefaultComponentStyle,
   useNestedStylesByKey,
+  useUnmount,
 } from '@codeleap/common'
 
-import React, { useId, useLayoutEffect, useRef } from 'react'
+import React, { useId, useLayoutEffect, useRef, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
 
@@ -93,17 +94,29 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     styles,
   })
 
+  const toggleAndReturn = () => {
+    toggle?.()
+    window.history.back()
+  }
+
   onUpdate(() => {
     if (visible) {
       document.body.style.overflow = 'hidden'
+      window.history.pushState(null, null, window.location.pathname)
+      window.addEventListener('popstate', toggle)
     } else {
       document.body.style.overflow = 'auto'
+      window.removeEventListener('popstate', toggle)
     }
   }, [visible])
 
+  useUnmount(() => {
+    window.removeEventListener('popstate', toggle)
+  })
+
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (e.key === 'Escape') {
-      toggle()
+      toggleAndReturn()
     }
   }
 
@@ -128,7 +141,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
       {showClose && closable && (
         <ActionIcon
           icon={'close' as IconPlaceholder}
-          onPress={toggle}
+          onPress={toggleAndReturn}
           styles={closeButtonStyles}
         />
       )}
@@ -139,7 +152,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
 
-  const close = closable ? toggle : () => {}
+  const close = closable ? toggleAndReturn : () => {}
 
   const hasHeader = title || (closable && showClose)
 
