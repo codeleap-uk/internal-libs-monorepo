@@ -16,9 +16,11 @@ import {
 export * from './styles'
 
 type RenderEmptyProps = {
-  emptyText:string | React.ReactElement
+  emptyText: string | React.ReactElement
   emptyIconName?: IconPlaceholder
-  styles: StylesOf<EmptyPlaceholderComposition> & {activityIndicatorStyles: StylesOf<ActivityIndicatorComposition>}
+  styles: StylesOf<EmptyPlaceholderComposition> & {
+    activityIndicatorStyles: StylesOf<ActivityIndicatorComposition>
+  }
 }
 
 export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPresets> & {
