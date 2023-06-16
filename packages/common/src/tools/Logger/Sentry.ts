@@ -24,7 +24,7 @@ export class SentryService {
         // @ts-expect-error - These are provided by platform specific Sentry providers and plugins
         integrations: [],
         ...settings?.Sentry?.initArgs,
-      } 
+      }
       if (settings?.Sentry?.beforeBreadcrumb) {
         initObj.beforeBreadcrumb = settings?.Sentry?.beforeBreadcrumb
       }
@@ -32,8 +32,9 @@ export class SentryService {
     }
   }
 
-  captureBreadcrumb(type: LogType, content: LogFunctionArgs) {
+  captureBreadcrumb(type: LogType, content: LogFunctionArgs | string) {
     if (!this.use) return
+
     const [message, data, category] = content
 
     const sentryArgs: Breadcrumb = {
