@@ -101,7 +101,10 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
       </View>
 
       {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} css={variantStyles.title}/> }
-      {React.isValidElement(description) ? description : <Text text={description} css={variantStyles.description}/> }
+      {React.isValidElement(description) 
+        ? description 
+        : !TypeGuards.isNil(description) && <Text text={description} css={variantStyles.description}/>
+      }
     </View>
   )
 }

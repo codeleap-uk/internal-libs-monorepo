@@ -21,7 +21,7 @@ const generateColumns = (count: number) => {
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
-    <View css={[props.separatorStyles]}></View>
+    <View css={[props?.separatorStyles]}></View>
   )
 }
 
@@ -83,7 +83,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
 
   const columnVirtualizer = useVirtualizer({
     horizontal: true,
-    count: columns.length,
+    count: columns?.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => null,
     overscan: 5,
@@ -104,7 +104,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
       <div
         css={[
           variantStyles.itemWrapper,
-          { transform: `translateY(${_item.start - dataVirtualizer.options.scrollMargin}px)` }
+          { transform: `translateY(${_item?.start - dataVirtualizer?.options?.scrollMargin}px)` }
         ]}
         key={_item?.key}
         data-index={_item?.index}

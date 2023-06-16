@@ -16,7 +16,7 @@ export * from './ListLayout'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
-    <View css={[props.separatorStyles]}></View>
+    <View css={[props?.separatorStyles]}></View>
   )
 }
 
@@ -94,7 +94,7 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
       >
         {!isFirst && separator}
         {showIndicator && <ListLoadingIndicatorComponent />}
-        <RenderItem {..._itemProps} />
+        {!!_itemProps?.item && <RenderItem {..._itemProps} />}
       </div>
     )
   }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
@@ -107,7 +107,7 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
       ref={ref}
     >
       {/* Necessary for correct list render */}
-      <div css={[variantStyles.list, { transform: `translateY(${items[0].start}px)` }]}>
+      <div css={[variantStyles.list, { transform: `translateY(${items?.[0]?.start}px)` }]}>
         {items?.map((item) => renderItem(item))}
       </div>
     </ListLayout>

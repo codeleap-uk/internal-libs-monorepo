@@ -60,7 +60,7 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
 
   const isEmpty = !data || !data?.length
 
-  const items = dataVirtualizer.getVirtualItems()
+  const items = dataVirtualizer?.getVirtualItems()
 
   onUpdate(() => {
     if (isRefresh) {
@@ -74,7 +74,7 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
   }, [!!isRefresh])
 
   onUpdate(() => {
-    const [lastItem] = [...items].reverse()
+    const [lastItem] = [...(items ?? [])]?.reverse()
 
     if (!lastItem) {
       return
@@ -83,7 +83,7 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
     const itemsLength = (data?.length / numColumns) - 1
 
     if (
-      lastItem.index >= itemsLength &&
+      lastItem?.index >= itemsLength &&
       hasNextPage &&
       !isFetchingNextPage
     ) {
