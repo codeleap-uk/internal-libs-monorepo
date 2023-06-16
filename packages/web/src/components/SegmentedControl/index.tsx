@@ -20,7 +20,7 @@ export type SegmentedControlProps<T = string> = {
   styles?: StylesOf<SegmentedControlComposition>
 
   /** all variants of the segmented control */
-  variants?: ComponentVariants<typeof SegmentedControlPresets>['variants']
+  variants?: ComponentVariants<typeof SegmentedControlPresets > & {}
 
   /**  prop to control when te value of the segmented control changes */
   onValueChange?: (v: any) => void
@@ -59,7 +59,6 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
               onPress={() => onValueChange(o.value)}
               key={idx}
               icon={o.icon}
-              style={styles}
               selected={value === o.value}
               variantStyles={variantStyles}
             />
