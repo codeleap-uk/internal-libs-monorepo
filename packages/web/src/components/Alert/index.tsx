@@ -55,7 +55,6 @@ export const Alert = (props: AlertProps) => {
             return (
               <Button
                 {...button}
-                onClick={() => console.log(button.text)}
                 key={button.text}
                 variants={['flex', 'fullWidth', ...variants]}
               />
