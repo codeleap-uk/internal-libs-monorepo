@@ -37,7 +37,7 @@ export type ModalProps = React.PropsWithChildren<
     scroll?: boolean
     header?: React.ReactElement
     footer?: React.ReactNode
-    fullScreen?: boolean
+    fullscreen?: boolean
     centered?: boolean
     withOverlay?: boolean
     keepMounted?: boolean
@@ -84,7 +84,12 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     typeof ModalPresets
   >('u:Modal', {
     responsiveVariants,
-    variants: [...variants, fullscreen && 'fullscreen', centered && 'centered', scroll && 'scroll'],
+    variants: [
+      ...variants,
+      centered && 'centered',
+      scroll && 'scroll',
+      fullscreen && 'fullscreen',
+    ],
     styles,
   })
 
