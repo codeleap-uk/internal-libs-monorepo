@@ -3,14 +3,12 @@ import { PropsOf, IconPlaceholder } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
-import { View } from '../View'
 import { SegmentedControlComposition } from './styles'
 import { Icon } from '../Icon'
 
 export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   selected?: boolean
   label: string
-  value: string
   variantStyles?: StylesOf<SegmentedControlComposition>
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
   icon?: IconPlaceholder
@@ -18,9 +16,7 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
 
-  const { selected, onPress, style, variantStyles, label, icon, value, textProps, ...touchableProps } = props
-
-  console.log({ variantStyles })
+  const { selected, onPress, style, variantStyles, label, icon, textProps, ...touchableProps } = props
 
   return (
     <Touchable

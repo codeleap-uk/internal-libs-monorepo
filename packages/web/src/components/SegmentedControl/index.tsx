@@ -7,31 +7,27 @@ import { Touchable } from '../Touchable'
 
 type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
 
-export type SegmentedControlProps = {
+export type SegmentedControlProps<T = string> = {
+
+  /** options that the segmented control will receive */
   options : SegmentedContropOptions[]
-  /**
-   * Determine if the modal is visible
-  */
-  value?: any
-  /**
-   * Determine if the modal is visible
-  */
+
+  /** the value of the segmented control */
+  value?: T
+
+  /**  all styles from the segmented control */
   styles?: React.ReactNode
-  /**
-    * Determine if the modal is visible
-  */
+
+  /** all variants of the segmented control */
   variants?: ComponentVariants<typeof SegmentedControlPresets>['variants']
-  /**
-    * Determine if the modal is visible
-  */
+
+  /**  prop to control when te value of the segmented control changes */
   onValueChange?: (v: any) => void
-  /**
-    * Determine if the modal is visible
-  */
+
+  /** label that will be shown above the segmented control */
   label?: string
-  /**
-    * Determine if the modal is visible
-  */
+
+  /** * all the touchable props */
   touchableProps?: Partial<PropsOf<typeof Touchable>>
 }
 
