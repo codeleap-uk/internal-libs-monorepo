@@ -1,8 +1,8 @@
 import React from 'react'
 import { Icon } from '../Icon'
-import { View } from '../View'
+import { View, ViewProps } from '../View'
 import { Text } from '../Text'
-import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
+import { ActivityIndicator, ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition, EmptyPlaceholderPresets } from './styles'
 import {
   ComponentVariants,
@@ -30,7 +30,11 @@ export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPre
   icon?: IconPlaceholder | ((props: EmptyPlaceholderProps) => JSX.Element) | null
   loading?: boolean
   styles?: StylesOf<EmptyPlaceholderComposition>
+  style?: React.CSSProperties
   renderEmpty?: (props: RenderEmptyProps) => React.ReactElement
+  wrapperProps?: Partial<Omit<typeof View, 'variants' | 'styles'>>
+  imageWrapperProps?: Partial<Omit<typeof View, 'variants' | 'styles'>>
+  indicatorProps?: Partial<ActivityIndicatorProps>
 }
 
 export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPlaceholderProps) => {
@@ -40,10 +44,14 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     loading,
     description,
     styles = {},
+    style,
     variants = [],
     responsiveVariants = {},
     icon: IconEmpty = null,
     renderEmpty: RenderEmpty = null,
+    wrapperProps = {},
+    imageWrapperProps = {},
+    indicatorProps = {}
   } = props
   
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
@@ -60,8 +68,8 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
 
   if (loading) {
     return (
-      <View css={[variantStyles.wrapper, variantStyles['wrapper:loading']]} >
-        <ActivityIndicator styles={activityIndicatorStyles}/>
+      <View css={[variantStyles.wrapper, variantStyles['wrapper:loading']]}>
+        <ActivityIndicator {...indicatorProps} styles={activityIndicatorStyles}/>
       </View>
     )
   }
@@ -97,15 +105,19 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
   }, [])
 
   return (
-    <View css={variantStyles.wrapper}>
-      <View css={variantStyles.imageWrapper}>
+    <View {...wrapperProps} css={[variantStyles.wrapper, style]}>
+      <View {...imageWrapperProps} css={variantStyles.imageWrapper}>
         {_Image}
       </View>
 
-      {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} css={variantStyles.title}/> }
+      {React.isValidElement(emptyText) 
+        ? emptyText 
+        : <Text text={emptyText} css={variantStyles.title}/>
+      }
+      
       {React.isValidElement(description) 
         ? description 
-        : !TypeGuards.isNil(description) && <Text text={description} css={variantStyles.description}/>
+        : TypeGuards.isString(description) && <Text text={description} css={variantStyles.description}/>
       }
     </View>
   )

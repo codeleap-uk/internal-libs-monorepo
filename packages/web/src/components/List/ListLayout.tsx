@@ -1,6 +1,6 @@
 import React from 'react'
-import { TypeGuards, useCodeleapContext } from '@codeleap/common'
-import { ListParts } from './styles'
+import { StylesOf, TypeGuards, useCodeleapContext } from '@codeleap/common'
+import { ListComposition, ListParts } from './styles'
 import { ListProps } from './types'
 import { View } from '../View'
 import { UseInfiniteScrollReturn } from './useInfiniteScroll'
@@ -8,7 +8,7 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { motion } from 'framer-motion'
 
 type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
-  variantStyles: any
+  variantStyles: StylesOf<ListComposition>
   children?: React.ReactNode
 }
 
