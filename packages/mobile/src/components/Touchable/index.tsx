@@ -131,6 +131,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
       'right!',
       'bottom!',
       'position!',
+      'transform!',
       // 'flex!',
     ]
     const sharedKeys = [

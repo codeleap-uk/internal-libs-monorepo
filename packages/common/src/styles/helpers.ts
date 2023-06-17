@@ -1,12 +1,12 @@
 import { CSSProperties } from 'react'
-import { ThemeValues } from './types'
+import { BorderDirections, ThemeValues } from './types'
 import { capitalize } from '../utils'
 
 type BorderArgs = {
   width: number | string
   style?: CSSProperties['borderStyle']
   color?: string
-  directions?: ('left' | 'top' | 'right' | 'bottom')[]
+  directions?: BorderDirections[]
 }
 
 export type BorderHelpers<T extends ThemeValues> = {
