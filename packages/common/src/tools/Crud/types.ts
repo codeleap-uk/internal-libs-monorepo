@@ -1,4 +1,4 @@
-import { InfiniteData, useQueryClient } from '@tanstack/react-query'
+import { InfiniteData, QueryKey, useQueryClient } from '@tanstack/react-query'
 import { QueryManager } from './index'
 
 export type PaginationResponse<T> = {
@@ -9,7 +9,7 @@ export type PaginationResponse<T> = {
 }
 
 export type CreateOptions<Filters = any> = {
-  appendTo?: 'start' | 'end' | [number, number]
+  appendTo?: 'start' | 'end' | [number, number] | Record<string, [number, number]>
   optimistic?: boolean
 }
 
@@ -46,6 +46,7 @@ export type QueryManagerOptions<
   deletion?: UpdateOptions
   generateId?: () => T['id']
   actions?: Actions
+  keyExtractor?: (item: T) => string
 }
 
 export type InfinitePaginationData<T> = InfiniteData<PaginationResponse<T>>
@@ -67,18 +68,18 @@ export type QueryManagerItem = {
 export type AppendToPaginationParams<TItem = any, Filters=any> = {
   item: TItem|TItem[]
   to?: CreateOptions['appendTo']
-  refreshFilters?: Filters
+  refreshKey?: string
 }
 export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>
 
-export type AppendToPagination<TItem = any> = (params: AppendToPaginationParams<TItem>) => AppendToPaginationReturn<PaginationResponse<TItem>>
+export type AppendToPagination<TItem = any> = (params: AppendToPaginationParams<TItem>) => Promise<void>
 
 export type MutationCtx<T extends QueryManagerItem> = {
   previousData?: InfinitePaginationData<T>
   addedId?: T['id']
   previousItem?: T
   optimisticItem?: T
-  prevItemPage?: [number, number]
+  prevItemPages?:Record<string, [number, number]>
 }
 
 export const isInfiniteQueryData = <T>(data: any): data is InfinitePaginationData<T> => {
@@ -86,10 +87,9 @@ export const isInfiniteQueryData = <T>(data: any): data is InfinitePaginationDat
 }
 
 export type QueryStateValue<T extends QueryManagerItem> = {
-  itemMap: Record<T['id'], T>
-  itemList?: T[]
   pagesById: Record<T['id'], [number, number]>
   itemIndexes: Record<T['id'], number>
+  key: QueryKey
 }
 
 export type QueryStateSubscriber<T extends QueryManagerItem> = (data: QueryStateValue<T>) => void
