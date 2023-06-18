@@ -1,4 +1,4 @@
-import { InfiniteData, QueryKey, useQueryClient } from '@tanstack/react-query'
+import { InfiniteData, QueryKey, UseInfiniteQueryOptions, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
 import { QueryManager } from './index'
 
 export type PaginationResponse<T> = {
@@ -8,30 +8,67 @@ export type PaginationResponse<T> = {
   results: T[]
 }
 
-export type CreateOptions<Filters = any> = {
+type OmitMutationKeys<O> = Omit<O, 'mutationFn'|'mutationKey'>
+
+export type QueryManagerMeta = Record<string, any>
+
+export type CreateOptions<T extends QueryManagerItem> = {
   appendTo?: 'start' | 'end' | [number, number] | Record<string, [number, number]>
   optimistic?: boolean
+  mutationOptions?: Partial<OmitMutationKeys<UseMutationOptions<T, unknown, Partial<T>, MutationCtx<T>>>>
 }
 
-export type UpdateOptions<Filters = any> = {
+export type UpdateOptions<T extends QueryManagerItem> = {
   optimistic?: boolean
 
+  mutationOptions?: Partial<OmitMutationKeys<UseMutationOptions<T, unknown, Partial<T>, MutationCtx<T>>>>
+
+}
+
+export type DeleteOptions<T extends QueryManagerItem> = {
+  optimistic?: boolean
+
+  mutationOptions?: Partial<OmitMutationKeys<UseMutationOptions<T, unknown, T, MutationCtx<T>>>>
+
+}
+
+export type RetrieveOptions<T extends QueryManagerItem> = {
+  queryOptions?: Partial<UseQueryOptions<T, unknown, T>>
+  id?: T['id']
+}
+
+export type ListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
+  queryOptions?: Partial<
+    UseInfiniteQueryOptions<PaginationResponse<T>>
+  >
+  filter?: ExtraArgs
 }
 
 export type QueryManagerAction<
   T extends QueryManagerItem,
   ExtraArgs = any,
+  Meta extends QueryManagerMeta = QueryManagerMeta,
   Args extends any[] = any[]
-> = (manager: QueryManager<T, ExtraArgs>, ...args: Args) => any
+> = (
+    manager: QueryManager<T, ExtraArgs, Meta>, ...args: Args
+  ) => any
 
-export type QueryManagerActions<T extends QueryManagerItem, ExtraArgs = any> = Record<string, QueryManagerAction<T, ExtraArgs>>
+export type QueryManagerActions<
+  T extends QueryManagerItem,
+  ExtraArgs = any,
+  Meta extends QueryManagerMeta = QueryManagerMeta
+> = Record<
+  string, QueryManagerAction<T, ExtraArgs, Meta>
+>
 
 export type QueryManagerOptions<
   T extends QueryManagerItem,
   ExtraArgs = any,
-  Actions extends QueryManagerActions<T, ExtraArgs> = QueryManagerActions<T, ExtraArgs>
+  Meta extends QueryManagerMeta = QueryManagerMeta,
+  Actions extends QueryManagerActions<T, ExtraArgs, Meta> = QueryManagerActions<T, ExtraArgs, Meta>
 > = {
   name: string
+  itemType: T
   queryClient: ReturnType<typeof useQueryClient>
 
   listItems?: (limit: number, offset: number, args?: ExtraArgs) => Promise<PaginationResponse<T>>
@@ -41,12 +78,24 @@ export type QueryManagerOptions<
   retrieveItem?: (id: T['id']) => Promise<T>
 
   limit?: number
-  creation?: CreateOptions
-  update?: UpdateOptions
-  deletion?: UpdateOptions
+  creation?: CreateOptions<T>
+  update?: UpdateOptions<T>
+  deletion?: DeleteOptions<T>
   generateId?: () => T['id']
   actions?: Actions
   keyExtractor?: (item: T) => string
+  initialMeta?: Meta
+}
+
+export type QueryManagerActionTrigger<
+  A extends QueryManagerAction<any, any, any>,
+  Args extends any[] = A extends QueryManagerAction<any, any, any, infer _Args> ? _Args : any[]
+> = (...args: Args) => any
+
+export type QueryManagerActionTriggers<
+  Actions extends QueryManagerActions<any, any, any>
+> = {
+  [K in keyof Actions]: QueryManagerActionTrigger<Actions[K]>
 }
 
 export type InfinitePaginationData<T> = InfiniteData<PaginationResponse<T>>
@@ -56,25 +105,28 @@ export type UseManagerArgs<T extends QueryManagerItem, ExtraArgs = any> = {
   limit?: number
   offset?: number
 
-  creation?: CreateOptions
-  update?: UpdateOptions
-  deletion?: UpdateOptions
+  creation?: CreateOptions<T>
+  update?: UpdateOptions<T>
+  deletion?: DeleteOptions<T>
+
+  listOptions?: Pick<ListOptions<T, ExtraArgs>, 'queryOptions'>
 }
 
 export type QueryManagerItem = {
   id: string | number
 }
 
-export type AppendToPaginationParams<TItem = any, Filters=any> = {
+export type AppendToPaginationParams<TItem extends QueryManagerItem, Filters=any> = {
   item: TItem|TItem[]
-  to?: CreateOptions['appendTo']
+  to?: CreateOptions<TItem>['appendTo']
   refreshKey?: string
 }
+
 export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>
 
-export type AppendToPagination<TItem = any> = (params: AppendToPaginationParams<TItem>) => Promise<void>
+export type AppendToPagination<TItem extends QueryManagerItem> = (params: AppendToPaginationParams<TItem>) => Promise<void>
 
-export type MutationCtx<T extends QueryManagerItem> = {
+export type MutationCtx<T extends QueryManagerItem> = null | {
   previousData?: InfinitePaginationData<T>
   addedId?: T['id']
   previousItem?: T
@@ -100,3 +152,20 @@ export type GetItemOptions<T extends QueryManagerItem> = {
   forceRefetch?: boolean
   fetchOnNotFoud?: boolean
 }
+
+export type SettableOptions<O extends QueryManagerOptions<any, any, any, any>> = Partial<
+  Pick<
+    O,
+    'limit' |
+    'creation' |
+    'update' |
+    'deletion'
+  > & {
+    meta: O['initialMeta']
+  }
+>
+
+export type OptionChangeListener<O extends QueryManagerOptions<any, any, any, any>> = (
+  options: O,
+  meta: O['initialMeta'],
+) => any

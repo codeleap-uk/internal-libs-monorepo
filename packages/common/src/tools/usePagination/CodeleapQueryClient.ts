@@ -77,6 +77,7 @@ export class CodeleapQueryClient {
   }
 
   queryManager<T extends QueryManagerItem, Args>(name:string, options: Partial<QueryManagerOptions<T, Args>>) {
+    // @ts-expect-error
     const m = new QueryManager<T, Args>({
       name,
       queryClient: this.client,

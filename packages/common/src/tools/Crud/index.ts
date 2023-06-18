@@ -7,8 +7,8 @@ import {
   QueryKey,
 } from '@tanstack/react-query'
 
-import { useRef, useState } from 'react'
-import { usePromise } from '../..'
+import { useEffect, useRef, useState } from 'react'
+import { deepMerge, usePromise } from '../..'
 import { isArray } from '../../utils/typeGuards'
 import {
   QueryManagerItem,
@@ -23,6 +23,13 @@ import {
   UpdateOptions,
   UseManagerArgs,
   GetItemOptions,
+  DeleteOptions,
+  SettableOptions,
+  QueryManagerMeta,
+  ListOptions,
+  RetrieveOptions,
+  OptionChangeListener,
+  QueryManagerActionTriggers,
 } from './types'
 
 export * from './types'
@@ -30,18 +37,28 @@ export * from './types'
 export class QueryManager<
   T extends QueryManagerItem,
   ExtraArgs extends Record<string, any> = any,
-  Actions extends QueryManagerActions<T, ExtraArgs> = QueryManagerActions<T, ExtraArgs>
+  Meta extends QueryManagerMeta = QueryManagerMeta,
+  Actions extends QueryManagerActions<T, ExtraArgs, Meta> = QueryManagerActions<T, ExtraArgs, Meta>
 > {
-  options: QueryManagerOptions<T>
+
+  options: QueryManagerOptions<T, ExtraArgs, Meta, Actions>
+
+  meta: Meta
 
   itemMap: Record<T['id'], T>
 
   queryStates: Record<string, QueryStateValue<T>> = {}
 
-  constructor(options: QueryManagerOptions<T, ExtraArgs>) {
+  optionListeners: OptionChangeListener<QueryManagerOptions<T, ExtraArgs, Meta, Actions>>[]
+
+  constructor(options: QueryManagerOptions<T, ExtraArgs, Meta, Actions>) {
     this.options = options
 
     this.itemMap = {} as Record<T['id'], T>
+
+    this.meta = options?.initialMeta
+
+    this.optionListeners = []
   }
 
   extractKey(item:T) {
@@ -72,7 +89,7 @@ export class QueryManager<
       }
 
       return acc
-    }, {} as Actions)
+    }, {} as QueryManagerActionTriggers<Actions>)
 
     return actionFunctions
   }
@@ -80,6 +97,25 @@ export class QueryManager<
   generateId() {
     return this.options.generateId?.() ?? Date.now().toString()
 
+  }
+
+  useOptions(cb?: OptionChangeListener<QueryManagerOptions<T, ExtraArgs, Meta, Actions>>) {
+    const [options, setOptions] = useState(this.options)
+    const [meta, setMeta] = useState(this.meta)
+
+    useEffect(() => {
+      const idx = this.optionListeners.push((o, meta) => {
+        setOptions(o)
+        setMeta(meta)
+        cb?.(o, meta)
+      }) - 1
+
+      return () => {
+        this.optionListeners.splice(idx, 1)
+      }
+    })
+
+    return [options, meta] as const
   }
 
   async updateItems(items: T | T[]) {
@@ -123,7 +159,7 @@ export class QueryManager<
 
   addItem: AppendToPagination<T> = async (args) => {
 
-    const promises = Object.entries(this.queryStates).map(async ([hashedKey, { key, pagesById }]) => {
+    const promises = Object.entries(this.queryStates).map(async ([hashedKey, { key }]) => {
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
@@ -252,14 +288,20 @@ export class QueryManager<
     return [...this.queryKeys.list, filters]
   }
 
-  useList(args?: ExtraArgs) {
+  useList(options?: ListOptions<T, ExtraArgs>) {
     const [isRefreshing, setRefreshing] = useState(false)
 
-    const queryKey = this.filteredQueryKey(args)
+    const {
+      filter,
+      queryOptions,
+    } = options
+
+    const queryKey = this.filteredQueryKey(filter)
 
     const hashedKey = hashQueryKey(queryKey)
 
     const query = useInfiniteQuery({
+      ...queryOptions,
       queryKey,
       initialData: {
         pageParams: [
@@ -272,7 +314,7 @@ export class QueryManager<
       },
       queryFn: async (query) => {
 
-        return this.options.listItems(this.standardLimit, query.pageParam?.offset ?? 0, args)
+        return this.options.listItems(this.standardLimit, query.pageParam?.offset ?? 0, filter)
       },
       refetchOnMount: (query) => {
         return query.state.dataUpdateCount === 0 || query.isStaleByTime()
@@ -304,7 +346,7 @@ export class QueryManager<
 
     const refresh = async () => {
       setRefreshing(true)
-      await this.refresh(args)
+      await this.refresh(filter)
       setRefreshing(false)
     }
 
@@ -322,10 +364,13 @@ export class QueryManager<
     }
   }
 
-  useRetrieve(itemId: T['id']) {
+  useRetrieve(options?: RetrieveOptions<T>) {
     const [isRefreshing, setRefreshing] = useState(false)
 
+    const itemId = options?.id
+
     const query = useQuery({
+      ...options?.queryOptions,
       queryKey: this.queryKeyFor(itemId),
       initialData: () => {
         return this.itemMap[itemId]
@@ -353,13 +398,15 @@ export class QueryManager<
     }
   }
 
-  useItem(itemId: T['id']) {
-    return this.useRetrieve(itemId)
+  useItem(options?: RetrieveOptions<T>) {
+    return this.useRetrieve(options)
   }
 
-  useCreate(options?: CreateOptions, filters?: ExtraArgs) {
+  useCreate(options?: CreateOptions<T>) {
 
-    const tmpOptions = useRef<CreateOptions>(options ?? this.options.creation ?? {
+    const [managerOptions, meta] = this.useOptions()
+
+    const tmpOptions = useRef<CreateOptions<T>>(options ?? managerOptions.creation ?? {
       appendTo: 'start',
       optimistic: false,
     })
@@ -369,12 +416,13 @@ export class QueryManager<
     })
 
     const query = useMutation({
-      mutationKey: this.queryKeys.create,
+      ...options?.mutationOptions,
       mutationFn: (data: Partial<T>) => {
         return this.options.createItem(data)
       },
-
+      mutationKey: this.queryKeys.create,
       onMutate: async (data) => {
+        options?.mutationOptions?.onMutate?.(data)
         if (tmpOptions?.current?.optimistic) {
           await this.queryClient.cancelQueries({ queryKey: this.queryKeys.list })
           const addedItem = {
@@ -387,7 +435,7 @@ export class QueryManager<
 
           this.addItem({
             item: addedItem,
-            to: this.options.creation?.appendTo || 'start',
+            to: managerOptions.creation?.appendTo || 'start',
           })
 
           return {
@@ -407,7 +455,7 @@ export class QueryManager<
         if (!tmpOptions.current?.optimistic) {
           this.addItem({
             item: data,
-            to: this.options.creation?.appendTo || 'start',
+            to: managerOptions.creation?.appendTo || 'start',
           })
 
         } else {
@@ -416,7 +464,7 @@ export class QueryManager<
       },
     })
 
-    const createItem = async (data: Partial<T>, options?: CreateOptions) => {
+    const createItem = async (data: Partial<T>, options?: CreateOptions<T>) => {
       const prevOptions = tmpOptions.current
       if (!!options) {
 
@@ -445,8 +493,10 @@ export class QueryManager<
     }
   }
 
-  useUpdate(options?: UpdateOptions, filters?: ExtraArgs) {
-    const tmpOptions = useRef<UpdateOptions>(options ?? this.options.update ?? {
+  useUpdate(options?: UpdateOptions<T>) {
+    const [managerOptions] = this.useOptions()
+
+    const tmpOptions = useRef<UpdateOptions<T>>(options ?? managerOptions.update ?? {
       optimistic: false,
     })
 
@@ -455,9 +505,10 @@ export class QueryManager<
     })
 
     const query = useMutation({
+      ...options?.mutationOptions,
       mutationKey: this.queryKeys.update,
       onMutate: async (data) => {
-
+        options?.mutationOptions?.onMutate?.(data)
         if (tmpOptions.current?.optimistic) {
 
           const prevItem = await this.getItem(data.id, {
@@ -497,7 +548,7 @@ export class QueryManager<
       },
     })
 
-    const update = async (data: Partial<T>, options?: UpdateOptions) => {
+    const update = async (data: Partial<T>, options?: UpdateOptions<T>) => {
       const prevOptions = tmpOptions.current
       if (!!options) {
 
@@ -528,9 +579,11 @@ export class QueryManager<
     }
   }
 
-  useDelete(options?: UpdateOptions, filters?: ExtraArgs) {
+  useDelete(options?: DeleteOptions<T>) {
 
-    const tmpOptions = useRef<UpdateOptions>(options ?? this.options?.deletion ?? {
+    const [managerOptions] = this.useOptions()
+
+    const tmpOptions = useRef<DeleteOptions<T>>(options ?? managerOptions?.deletion ?? {
       optimistic: false,
     })
 
@@ -539,9 +592,10 @@ export class QueryManager<
     })
 
     const query = useMutation({
+      ...options?.mutationOptions,
       mutationKey: this.queryKeys.delete,
-
       onMutate: async (data) => {
+        options?.mutationOptions?.onMutate?.(data)
         if (tmpOptions.current?.optimistic) {
 
           const prevItem = await this.getItem(data.id, {
@@ -580,7 +634,7 @@ export class QueryManager<
 
     })
 
-    const _delete = async (data: T, options?: UpdateOptions) => {
+    const _delete = async (data: T, options?: UpdateOptions<T>) => {
       const prevOptions = tmpOptions.current
       if (!!options) {
 
@@ -625,7 +679,8 @@ export class QueryManager<
   async refresh(filters?: ExtraArgs) {
     if (!!filters) {
       const key = this.filteredQueryKey(filters)
-      await this.queryClient.refetchQueries(key)
+      this.queryClient.removeQueries(key)
+      this.queryClient.invalidateQueries(this.queryKeys.list)
     } else {
 
       this.queryClient.removeQueries(this.queryKeys.list)
@@ -637,10 +692,14 @@ export class QueryManager<
   }
 
   use(options?: UseManagerArgs<T, ExtraArgs>) {
-    const list = this.useList(options.filter)
-    const create = this.useCreate(options.creation, options.filter)
-    const update = this.useUpdate(options.update, options.filter)
-    const del = this.useDelete(options.deletion, options.filter)
+
+    const list = this.useList({
+      filter: options?.filter,
+      queryOptions: options?.listOptions?.queryOptions,
+    })
+    const create = this.useCreate(options.creation)
+    const update = this.useUpdate(options.update)
+    const del = this.useDelete(options.deletion)
 
     return {
       items: list.items,
@@ -658,6 +717,33 @@ export class QueryManager<
       actions: this.actions,
       updatedAt: list.query.dataUpdatedAt,
     }
+  }
+
+  setOptions(to: SettableOptions<QueryManagerOptions<T, ExtraArgs, Meta, Actions>>) {
+    const {
+      creation = {},
+      update = {},
+      deletion = {},
+      limit,
+    } = this.options
+
+    const currentOptions = {
+      creation,
+      update,
+      deletion,
+      limit,
+    }
+
+    const o = deepMerge(currentOptions, to)
+
+    this.options = {
+      ...this.options,
+      ...o,
+    }
+
+    this.meta = deepMerge(this.meta, to.meta)
+
+    this.optionListeners.forEach((l) => l(this.options, this.meta))
   }
 
 }
