@@ -42,7 +42,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
     {
-      variants, styles, responsiveVariants,
+      variants, styles,
     },
   )
 
