@@ -53,4 +53,5 @@ jobs:
         run: |
           git pull
           git add packages
+          git commit -m "update package versions"
           git push --follow-tags origin master
