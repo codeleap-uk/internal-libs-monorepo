@@ -10,7 +10,7 @@ import {
   TypeGuards,
   onMount,
 } from '@codeleap/common'
-import { Pressable, StyleSheet, View as RNView } from 'react-native'
+import { Pressable, StyleSheet, View as RNView, Insets } from 'react-native'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
@@ -175,8 +175,15 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     }
   }, [JSON.stringify(_styles)])
 
+  const hitSlop = TypeGuards.isNumber(props.hitSlop) ? {
+    top: props.hitSlop,
+    left: props.hitSlop,
+    right: props.hitSlop,
+    bottom: props.hitSlop,
+  } as Insets : props.hitSlop
+
   return (
-    <Wrapper style={[wrapperStyle]} hitSlop={props?.hitSlop}>
+    <Wrapper style={[wrapperStyle]} hitSlop={hitSlop}>
       <Pressable onPress={press} style={({ pressed }) => ([
         pressableStyle,
         getFeedbackStyle(pressed),
