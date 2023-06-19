@@ -16,22 +16,36 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
 
-  const { selected, onPress, style, variantStyles, label, icon, textProps, ...touchableProps } = props
+  const { selected, onPress, style, variantStyles, label, icon, textProps, maxDivWidthRef, ...touchableProps } = props
+
+  console.log({ touchableProps })
 
   return (
     <Touchable
       noFeedback={selected}
       key={touchableProps.key}
-      styles={{
+      style={{
         feedback: variantStyles.buttonFeedback,
       }}
-      css={[variantStyles.button, selected && variantStyles['button:selected'], style]}
+      ref={(ref) => {
+        if (ref && ref.offsetWidth > maxDivWidthRef.current) {
+          maxDivWidthRef.current = ref.offsetWidth
+        }
+      }}
+      css={[
+        variantStyles.button,
+        selected &&
+        variantStyles['button:selected'],
+        touchableProps?.disabled &&
+        variantStyles['button:disabled'],
+        style,
+      ]}
       onPress={onPress}
       {...touchableProps}
     >
       {
         !!icon && (
-          <Icon name={icon} css={[variantStyles.icon]} />
+          <Icon name={icon} css={[variantStyles.icon, selected && variantStyles['icon:selected']]} />
         )
       }
       <Text

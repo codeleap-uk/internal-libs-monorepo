@@ -3,7 +3,7 @@ import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap
 export type SegmentedControlStates = 'selected' | 'disabled'
 
 export type SegmentedControlComposition =
- 'controlWrapper' |
+ 'selectedBubble' |
  'wrapper' |
  'innerWrapper' |
  'scroll' |
@@ -11,10 +11,11 @@ export type SegmentedControlComposition =
  'text' |
  `text:${SegmentedControlStates}` |
  'icon' |
+ `icon:${SegmentedControlStates}` |
  'button' |
  'buttonFeedback' |
  `button:${SegmentedControlStates}` |
-  `controlWrapper:${SegmentedControlStates}` |
+  `selectedBubble:${SegmentedControlStates}` |
  `label`
 
 export type SegmentedControlStylesGen<TCSS = any> =
