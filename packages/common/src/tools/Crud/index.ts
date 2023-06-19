@@ -342,9 +342,11 @@ export class QueryManager<
       setRefreshing(false)
     }
 
+    // @ts-ignore
+    const items = query.data?.flatItems
+
     return {
-      // @ts-ignore
-      items: query.data?.flatItems,
+      items: items as T[],
       query,
       getNextPage: query.fetchNextPage,
       getPreviousPage: query.fetchPreviousPage,
