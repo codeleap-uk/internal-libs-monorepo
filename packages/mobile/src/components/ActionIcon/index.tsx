@@ -30,4 +30,8 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
   </Touchable>
 }
 
+ActionIcon.defaultProps = {
+  hitSlop: 10,
+}
+
 export * from './styles'

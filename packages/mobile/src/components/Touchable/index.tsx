@@ -175,7 +175,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   }, [JSON.stringify(_styles)])
 
   return (
-    <Wrapper style={[wrapperStyle]}>
+    <Wrapper style={[wrapperStyle]} hitSlop={props?.hitSlop}>
       <Pressable onPress={press} style={({ pressed }) => ([
         pressableStyle,
         getFeedbackStyle(pressed),
