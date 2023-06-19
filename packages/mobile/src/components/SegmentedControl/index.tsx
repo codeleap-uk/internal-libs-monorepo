@@ -144,6 +144,8 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     dependencies: [currentOptionIdx, widthStyle.width],
   })
 
+  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+
   return (<View style={variantStyles.wrapper}>
     <InputLabel label={label} styles={labelStyles} required={false}/>
     <Scroll
@@ -176,7 +178,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             style={widthStyle}
             selected={value === o.value}
             variantStyles={variantStyles}
-            badge={<Badge badge={o.badge} {...badgeProps}/>}
+            badge={<Badge badge={o.badge} styles={badgeStyles} {...badgeProps} />}
           />
         ))}
       </View>
