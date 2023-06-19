@@ -2,7 +2,7 @@ import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react
 import { Scroll, ScrollProps } from '../Scroll'
 
 import { Easing, StyleSheet } from 'react-native'
-import { FormTypes, getNestedStylesByKey, PropsOf, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
+import { FormTypes, getNestedStylesByKey, PropsOf, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlPresets } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
@@ -178,7 +178,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             style={widthStyle}
             selected={value === o.value}
             variantStyles={variantStyles}
-            badge={<Badge badge={o.badge} styles={badgeStyles} {...badgeProps} />}
+            badge={!TypeGuards.isNil(o.badge) ? <Badge badge={o.badge} styles={badgeStyles} {...badgeProps} /> : null}
           />
         ))}
       </View>
