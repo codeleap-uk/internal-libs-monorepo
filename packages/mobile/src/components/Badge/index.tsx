@@ -24,6 +24,11 @@ export type BadgeProps = ComponentVariants<typeof BadgePresets>
 
 type BadgeContent = BadgeProps & { count: number }
 
+export type BadgeComponentProps = {
+  badge?: BadgeProps['badge']
+  badgeProps?: Partial<BadgeProps>
+}
+
 const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   if (Number(count) > maxCount) {
     return `${maxCount}+`

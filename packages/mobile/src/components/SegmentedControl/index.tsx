@@ -13,6 +13,7 @@ import { InputLabel } from '../InputLabel'
 import { useAnimatedVariantStyles, TransitionConfig } from '../../utils'
 import { SegmentedControlOption } from './Option'
 import { IconPlaceholder } from '@codeleap/common'
+import { Badge, BadgeProps } from '../Badge'
 
 export * from './styles'
 export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrollView & {
@@ -20,7 +21,7 @@ export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrol
   scrollToCurrent: () => void
 }
 
-type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
+type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder; badge?: BadgeProps['badge']}
 
 export type SegmentedControlProps<T = string> = ScrollProps & {
     options : SegmentedContropOptions[]
@@ -40,6 +41,7 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
     }) => ReactElement
     RenderAnimatedView?: (props: Partial<SegmentedControlProps>) => ReactElement
     getItemWidth?: (item: SegmentedContropOptions, idx: number, arr: SegmentedContropOptions[]) => number
+    badgeProps?: Partial<BadgeProps>
 }
 
 const defaultAnimation = {
@@ -65,6 +67,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     getItemWidth = (i) => (Theme.values.width - Theme.spacing.value(4)) / options.length,
     RenderAnimatedView,
     RenderButton,
+    badgeProps = {},
   } = props
 
   const _animation = {
@@ -141,6 +144,8 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     dependencies: [currentOptionIdx, widthStyle.width],
   })
 
+  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+
   return (<View style={variantStyles.wrapper}>
     <InputLabel label={label} styles={labelStyles} required={false}/>
     <Scroll
@@ -173,6 +178,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             style={widthStyle}
             selected={value === o.value}
             variantStyles={variantStyles}
+            badge={<Badge badge={o.badge} styles={badgeStyles} {...badgeProps} />}
           />
         ))}
       </View>

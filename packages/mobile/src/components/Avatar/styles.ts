@@ -1,4 +1,5 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { BadgeComposition } from '../Badge'
 
 export type AvatarParts =
   | 'wrapper'
@@ -9,6 +10,9 @@ export type AvatarParts =
   | 'iconWrapper'
   | 'description'
   | 'descriptionOverlay'
+  | 'badgeIconWrapper'
+  | 'badgeIcon'
+  | `badge${Capitalize<BadgeComposition>}`
 
 export type AvatarComposition = AvatarParts
 

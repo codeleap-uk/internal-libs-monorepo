@@ -8,25 +8,43 @@ import {
   IconPlaceholder,
   onMount,
   onUpdate,
+  PropsOf,
+  StylesOf,
+  TypeGuards,
+  getNestedStylesByKey,
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 import { View } from '../View'
 export * from './styles'
 
 import {
+  IconComposition,
   IconPresets,
 } from './styles'
+import { Badge, BadgeComponentProps } from '../Badge'
 
 export type IconProps = {
   name: IconPlaceholder
   style?: any
   color?: string
   variants?: ComponentVariants<typeof IconPresets>['variants']
-
+  wrapperProps?: Partial<PropsOf<typeof View>>
   size?: number
-}
+  styles?: StylesOf<IconComposition>
+} & BadgeComponentProps
 
-export const IconComponent: React.FC<IconProps> = ({ name, style, variants,  ...otherProps }) => {
+export const IconComponent: React.FC<IconProps> = (props) => {
+  const { 
+    name, 
+    style, 
+    variants, 
+    badge = false, 
+    badgeProps = {}, 
+    wrapperProps = {},
+    styles = {},
+    ...otherProps 
+  } = props
+
   const { Theme, logger } = useCodeleapContext()
 
   const variantStyles = useDefaultComponentStyle<'u:Icon', typeof IconPresets>('u:Icon', {
@@ -34,6 +52,7 @@ export const IconComponent: React.FC<IconProps> = ({ name, style, variants,  ...
     transform: StyleSheet.flatten,
     styles: {
       icon: style,
+      ...styles,
     },
     rootElement: 'icon',
   })
@@ -48,6 +67,25 @@ export const IconComponent: React.FC<IconProps> = ({ name, style, variants,  ...
     }
   }, [name])
 
+  if (badge || TypeGuards.isNumber(badge)) {
+    const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+
+    const sized = {
+      height: variantStyles.icon?.size || variantStyles.icon?.height || props?.size,
+      width: variantStyles.icon?.size || variantStyles.icon?.width || props?.size,
+    }
+
+    const wrapperStyle = [
+      sized,
+      (variantStyles.iconBadgeWrapper ?? {}),
+    ]
+
+    return <View {...wrapperProps} style={wrapperStyle}>
+      <Component {...otherProps} style={variantStyles.icon} />
+      <Badge styles={badgeStyles} badge={badge} {...badgeProps} />
+    </View>
+  }
+
   if (!name) {
     return  null
   }
@@ -60,7 +98,7 @@ export const IconComponent: React.FC<IconProps> = ({ name, style, variants,  ...
 }
 
 function areEqual(prevProps, nextProps) {
-  const check = ['name', 'style', 'variants', 'renderEmptySpace']
+  const check = ['name', 'style', 'variants', 'renderEmptySpace', 'badgeProps', 'badge']
   const res = arePropsEqual(prevProps, nextProps, { check })
   return res
 }
