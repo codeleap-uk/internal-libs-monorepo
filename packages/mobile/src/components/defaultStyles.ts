@@ -33,6 +33,8 @@ import { AvatarPresets } from './Avatar'
 import { AvatarGroupPresets } from './AvatarGroup'
 import { SectionsPresets } from './Sections'
 import { DatePickerModalPresets } from './DatePickerModal'
+import { NumberIncrementPresets } from './NumberIncrement'
+import { BadgePresets } from './Badge'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -70,4 +72,6 @@ export const defaultStyles = {
   DatePickerModal: DatePickerModalPresets,
   RefreshControl: RefreshControlPresets,
   PaginationIndicator: PaginationIndicatorPresets,
+  NumberIncrement: NumberIncrementPresets,
+  Badge: BadgePresets,
 }

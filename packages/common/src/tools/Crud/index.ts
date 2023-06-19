@@ -303,15 +303,7 @@ export class QueryManager<
     const query = useInfiniteQuery({
       ...queryOptions,
       queryKey,
-      initialData: {
-        pageParams: [
-          {
-            limit: this.standardLimit,
-            offset: 0,
-          },
-        ],
-        pages: [],
-      },
+
       queryFn: async (query) => {
 
         return this.options.listItems(this.standardLimit, query.pageParam?.offset ?? 0, filter)

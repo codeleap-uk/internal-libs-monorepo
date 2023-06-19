@@ -23,7 +23,7 @@ export type MaskProps = {
   alwaysShowMask?: boolean
   validator?: FormTypes.ValidatorFunctionWithoutForm
   maskType?: 'BRL' | 'INTERNATIONAL'
-  getRawValue?: (value: any) => string | number
+  getRawValue?: (value: any) => string
 }
 
 export type TextInputMaskTypeProp =
@@ -38,8 +38,8 @@ export interface TextInputMaskingProps {
   type: TextInputMaskTypeProp
   options?: MaskProps
   onChangeMask?: (
-    newState: beforeMaskedValueChangeArgs['state'], 
-    oldState: beforeMaskedValueChangeArgs['state'], 
+    newState: beforeMaskedValueChangeArgs['state'],
+    oldState: beforeMaskedValueChangeArgs['state'],
     userInput: beforeMaskedValueChangeArgs['userInput']
   ) => beforeMaskedValueChangeArgs['state']
   saveFormatted?: boolean
@@ -50,8 +50,8 @@ type InputMaskProps = {
 }
 
 export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { notSaveFormatted: boolean } => {
-  const { 
-    type = 'custom', 
+  const {
+    type = 'custom',
     options = {},
   } = masking
 
@@ -61,7 +61,7 @@ export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { no
   const presetProps = masking?.type === 'cel-phone' ? maskPreset[phoneType] : maskPreset[type]
 
   const isObfuscated = options?.obfuscated === true && {
-    type: 'password'
+    type: 'password',
   }
 
   const notSaveFormatted = (TypeGuards.isBoolean(masking?.saveFormatted) && masking?.saveFormatted === false)
@@ -71,11 +71,11 @@ export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { no
     ...options,
     ...isObfuscated,
     notSaveFormatted,
-    beforeMaskedValueChange: masking?.onChangeMask
+    beforeMaskedValueChange: masking?.onChangeMask,
   }
 
   const defaultGetRawValue = (value: string) => {
-    return String(value)?.replace(/\D/g, '') 
+    return String(value)?.replace(/\D/g, '')
   }
 
   return {
@@ -86,12 +86,12 @@ export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { no
 }
 
 const format: Record<string, FormatChar> = {
-  number: "['0123456789']"
+  number: "['0123456789']",
 }
 
 const validatorRegExp = (value: string | number, regex: RegExp, error: string) => {
   const isValid = regex.test(String(value))
-  
+
   return {
     valid: isValid,
     message: error,
@@ -107,7 +107,7 @@ export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskPro
     },
     validator: (value: string) => {
       return validatorRegExp(value, /^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/, 'Invalid information')
-    }
+    },
   },
   'cpf': {
     mask: '999.999.999-99',
@@ -117,7 +117,7 @@ export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskPro
     },
     validator: (value: string) => {
       return validatorRegExp(value, /^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'Invalid CPF')
-    }
+    },
   },
   'cnpj': {
     mask: '99.999.999/9999-99',
@@ -127,7 +127,7 @@ export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskPro
     },
     validator: (value: string) => {
       return validatorRegExp(value, /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/, 'Invalid CNPJ')
-    }
+    },
   },
   'zip-code': {
     mask: '99999-999',
@@ -137,7 +137,7 @@ export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskPro
     },
     validator: (value: string) => {
       return validatorRegExp(value, /^\d{5}-\d{3}$/, 'Invalid zip code')
-    }
+    },
   },
   'cel-phone': {
     mask: '+999 999 999 999',
@@ -148,7 +148,7 @@ export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskPro
     },
     validator: (value: string) => {
       return validatorRegExp(value, /^\+\d{3}\s\d{3}\s\d{3}\s\d{3}$/, 'Invalid phone')
-    }
+    },
   },
   'cel-phone-brl': {
     mask: '(99) 99999-9999',
@@ -159,7 +159,7 @@ export const maskPreset: Record<TextInputMaskTypeProp | 'cel-phone-brl', MaskPro
     },
     validator: (value: string) => {
       return validatorRegExp(value, /^\(?\d{2}\)?\s?9?\d{4}-\d{4}$/, 'Invalid phone')
-    }
+    },
   },
   'custom': {},
 }

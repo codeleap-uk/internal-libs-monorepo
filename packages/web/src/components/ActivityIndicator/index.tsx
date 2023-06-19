@@ -5,18 +5,20 @@ import {
   ComponentVariants,
   ActivityIndicatorStyles,
   ActivityIndicatorComposition,
+  TypeGuards,
 } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
+import { ActivityIndicatorPresets } from './styles'
 
 export * from './styles'
 
 const spin = keyframes`
-    from {
-        transform: rotate(0deg);
-    }
-    to{ 
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to { 
+    transform: rotate(360deg);
+  }
 `
 
 export type ActivityIndicatorProps = {
@@ -24,29 +26,44 @@ export type ActivityIndicatorProps = {
   hidesWhenStopped?: boolean
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSObject
+  size?: number
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 
-export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (
-  indicatorProps,
-) => {
+export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {
   const {
     animating = true,
     hidesWhenStopped = true,
-
     variants,
     responsiveVariants,
     styles,
+    size = null,
     ...viewProps
-  } = indicatorProps
+  } = props
 
-  const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
-    styles,
-    responsiveVariants,
-    variants,
-  })
+  const variantStyles = useDefaultComponentStyle<'u:ActivityIndicator', typeof ActivityIndicatorPresets>(
+    'u:ActivityIndicator',
+    {
+      styles,
+      responsiveVariants,
+      variants,
+    }
+  )
+
+  const _size = TypeGuards.isNumber(size) && {
+    height: size,
+    width: size,
+    borderWidth: size * 0.25,
+  }
 
   return (
-    <View {...viewProps} css={[variantStyles.wrapper, (!animating && hidesWhenStopped) && { visibility: 'hidden' }]}>
+    <View
+      {...viewProps}
+      css={[
+        variantStyles.wrapper,
+        (!animating && hidesWhenStopped) && { visibility: 'hidden' },
+        _size,
+      ]}
+    >
       <View css={{ ...variantStyles.circle, ...variantStyles.backCircle }} />
       <View
         css={{
