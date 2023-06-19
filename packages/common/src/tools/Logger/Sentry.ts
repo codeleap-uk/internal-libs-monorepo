@@ -24,11 +24,11 @@ export class SentryService {
         // @ts-expect-error - These are provided by platform specific Sentry providers and plugins
         integrations: [],
         ...settings?.Sentry?.initArgs,
-      } 
+      }
       if (settings?.Sentry?.beforeBreadcrumb) {
         initObj.beforeBreadcrumb = settings?.Sentry?.beforeBreadcrumb
       }
-      this.sentry.init(initObj)
+      this.sentry?.init?.(initObj)
     }
   }
 

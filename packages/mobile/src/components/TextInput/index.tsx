@@ -217,7 +217,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 export type SearchInputProps = {
   onTypingChange: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
-  onClear: () => void
+  onClear?: () => void
   debugName: string
   debounce?: number
   clearIcon?: IconPlaceholder
