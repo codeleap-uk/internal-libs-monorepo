@@ -90,7 +90,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
     }, [props?.renderItem, props?.data?.length])
 
     const separatorStyles = { height: Theme.spacing.value(spacing), ...variantStyles.separator }
-    const separator = props?.separators || spacing && <RenderSeparator separatorStyles={separatorStyles}/>
+    const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles}/> : null)
     const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps}/>
     const _gridProps = {
       ...props,
@@ -101,7 +101,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
       ItemSeparatorComponent: separator,
       refreshControl,
       style: [variantStyles.wrapper, style],
-      contentContainerStyle: variantStyles.content,
+      contentContainerStyle: [variantStyles.content, props?.contentContainerStyle],
       showsVerticalScrollIndicator: false,
       numColumns,
       renderItem,
