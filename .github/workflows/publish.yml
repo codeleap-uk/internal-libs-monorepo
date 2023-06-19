@@ -5,6 +5,7 @@ on:
       - master
     paths:
       - "packages/**/*"
+      - .github/workflows/publish.yml
 
 jobs:
   build:
