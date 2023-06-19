@@ -72,7 +72,8 @@ jobs:
           git pull origin master
           cd android/fastlane
           fastlane increment_version_code
-          cd ../..
+          cd ..
+          ls
           git add ./app/version.json
           git diff-index --quiet HEAD || git commit -m "Update version.json"
           git push origin master
