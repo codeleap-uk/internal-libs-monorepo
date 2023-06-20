@@ -63,8 +63,8 @@ jobs:
       - name: Commit version file
         if: always()
         run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           cd apps/mobile
           git restore android/app/version.json
           git pull
