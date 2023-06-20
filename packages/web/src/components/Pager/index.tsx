@@ -50,12 +50,16 @@ const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsPr
     <View style={variantStyles.dots}>
       {childArray.map((_, index) => {
         const isSelected = index === page
-        const style = { ...variantStyles[isSelected ? 'dot:selected' : 'dot'], ...(dotsDisabled ? variantStyles['dot:disabled'] : {}) }
+        const css = [
+          variantStyles[isSelected ? 'dot:selected' : 'dot'],
+          dotsDisabled && variantStyles['dot:disabled']
+        ]
+
         return (
           <Touchable
             key={index}
             onPress={() => onPress?.(index)}
-            style={style}
+            css={css}
             disabled={dotsDisabled}
           />
         )
@@ -116,7 +120,7 @@ const PagerComponent = (
   }, [page])
 
   return (
-    <View css={style || variantStyles.wrapper}>
+    <View css={[variantStyles.wrapper, style]}>
       <Slider
         {...rest}
         arrows={false}
