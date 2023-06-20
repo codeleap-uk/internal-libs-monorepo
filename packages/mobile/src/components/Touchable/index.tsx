@@ -201,7 +201,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   const disableRipple = disableFeedback || rippleDisabled || Platform.OS !== 'android'
 
   return (
-    <Wrapper style={[wrapperStyle]}>
+    <Wrapper style={[wrapperStyle]} hitSlop={hitSlop}>
       {!disableRipple ? (
         <PressableRipple
           onPress={press}
@@ -222,7 +222,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         </PressableRipple>
       ) : (
         <Pressable
-          hitSlop={hitSlop}
           onPress={press}
           style={({ pressed }) => ([
             pressableStyle,

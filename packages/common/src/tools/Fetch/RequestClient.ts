@@ -1,8 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
+import { inspect } from 'util'
 import { ExternalRequestClientConfig, InternalRequestClientConfig, RequestQueueItem } from '.'
 import { Logger } from '..'
 import { CancellablePromise } from '../..'
 import { silentLogger } from '../../constants'
+import { APIError } from './APIError'
 import { IRequestClient, RequestClientConfig } from './types'
 import { getRequestId, parseFailedRequest, toMultipart } from './utils'
 
@@ -35,7 +37,7 @@ export class RequestClient implements IRequestClient {
       if (reqConfig.multipart && this.config.automaticMultipartParsing) {
         reqConfig.data = await this.toMultipart(reqConfig.data)
 
-        reqConfig.headers.set('Content-Type', 'multipart/form-data') 
+        reqConfig.headers.set('Content-Type', 'multipart/form-data')
       }
 
       if (this.config.requestMiddleware) {
@@ -61,7 +63,7 @@ export class RequestClient implements IRequestClient {
     }
 
     this.axios = axios.create(this.config)
-    
+
     this.applyInterceptors()
   }
 
@@ -84,17 +86,27 @@ export class RequestClient implements IRequestClient {
     )
 
     this.setInQueue(failedRequest)
-    const logName = request?.silent ? 'warn' : 'error' // NOTE some individual requests should not throw an error
-    this.logger[logName](
-      `${request.method.toUpperCase()} to ${request.url} failed with status ${
-        err?.response?.status || ''
-      }`,
-      err?.response?.data || err,
-      'Network',
+    const logName = request.errorLogSeverity || 'error'
+
+    const apiError = new APIError(
+      failedRequest.errorReason,
+      request.url,
+      err,
     )
 
+    if (!request.silent) {
+      this.logger[logName](
+        apiError,
+        'Network',
+      )
+    }
+
+    if (!!this.config.onError) {
+      this.config.onError(apiError)
+    }
+
     if (shouldReject) {
-      reject({ failedRequest, err })
+      reject(apiError)
     }
   }
 
@@ -146,9 +158,7 @@ export class RequestClient implements IRequestClient {
         if (data.debug) {
           console.log(err?.request)
         }
-        if (this.config.onError) {
-          this.config.onError(err)
-        }
+
         this.onRequestFailure(err, { ...data }, reject)
       })
     }) as CancellablePromise<any>
