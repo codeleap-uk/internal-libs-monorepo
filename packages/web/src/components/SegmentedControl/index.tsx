@@ -1,3 +1,4 @@
+import { HTMLAttributes } from 'react'
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
 import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder, StylesOf, useRef } from '@codeleap/common'
@@ -5,7 +6,7 @@ import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
-import { motion } from 'framer-motion'
+import { motion, MotionProps } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'
 
 type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
@@ -33,16 +34,14 @@ export type SegmentedControlProps<T = string> = {
   /**  prop to control when te value of the segmented control changes */
   onValueChange?: (v: any) => void
 
+  /**  motion div props */
+  bubbleProps?: HTMLAttributes<HTMLDivElement> & MotionProps
+
   /** label that will be shown above the segmented control */
   label?: string
 
   /** * all the touchable props */
   touchableProps?: Partial<PropsOf<typeof Touchable>>
-}
-
-const defaultAnimation = {
-  duration: 0.2,
-  ease: [0.42, 0, 0.58, 1],
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
@@ -56,6 +55,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     responsiveVariants = {},
     onValueChange,
     style,
+    bubbleProps,
     ...rest
   } = props
 
@@ -84,7 +84,6 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         transition: 'all .1s ease-in-out',
       }
     },
-    transition: defaultAnimation,
     dependencies: [currentOptionIdx, biggerWidth.width],
   })
 
@@ -97,6 +96,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         <motion.div
           css={selectedBubbleStyles}
           animate={bubbleAnimation}
+          {...bubbleProps}
         />
         {options.map((o, idx) => (
           <SegmentedControlOption

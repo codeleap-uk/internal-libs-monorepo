@@ -18,8 +18,6 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
 
   const { selected, onPress, style, variantStyles, label, icon, textProps, maxDivWidthRef, ...touchableProps } = props
 
-  console.log({ touchableProps })
-
   return (
     <Touchable
       noFeedback={selected}
