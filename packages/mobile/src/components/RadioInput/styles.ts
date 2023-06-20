@@ -6,7 +6,7 @@ type OptionStates = 'selected' | 'disabled' | 'selectedDisabled'
 
 type OptionComposition = `${OptionParts}:${OptionStates}` | OptionParts
 
-export type RadioInputComposition = IconLessInputBaseParts | `${IconLessInputBaseParts}:disabled` | `option${Capitalize<OptionComposition>}`
+export type RadioInputComposition = IconLessInputBaseParts | `${IconLessInputBaseParts}:disabled` | `option${Capitalize<OptionComposition>}` | '__props'
 
 const createRadioStyle =
   createDefaultVariantFactory<RadioInputComposition>()

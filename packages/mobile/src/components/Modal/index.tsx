@@ -121,7 +121,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     scrollProps = {},
     closeOnHardwareBackPress = true,
     ...props
-  } = modalProps
+  } = {
+    ...Modal.defaultProps,
+    ...modalProps,
+  }
   const variantStyles = useDefaultComponentStyle('u:Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
@@ -207,7 +210,7 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
       >
         {dismissOnBackdrop &&
           <Touchable
-            onPress={ closable ? toggle : (() => {})}
+            onPress={closable && visible ? toggle : (() => {})}
             debounce={400}
             debugName={'Modal backdrop touchable'}
             style={variantStyles.backdropTouchable}
@@ -236,6 +239,10 @@ export const Modal: React.FC<ModalProps> = (modalProps) => {
     </View>
 
   )
+}
+
+Modal.defaultProps = {
+  closeIconName: 'close' as IconPlaceholder,
 }
 
 export default Modal

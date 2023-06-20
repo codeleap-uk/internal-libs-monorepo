@@ -2,21 +2,21 @@ import { IconPlaceholder,
   useDefaultComponentStyle,
   TypeGuards,
   useNestedStylesByKey,
-  useBooleanToggle,
   FormTypes,
   onMount,
   onUpdate,
   usePrevious,
+  useSearch,
+  useBooleanToggle,
 } from '@codeleap/common'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { List } from '../List'
-import { TextInput } from '../TextInput'
+import { SearchInput, TextInput } from '../TextInput'
 import { SelectPresets } from './styles'
 import { SelectProps, ValueBoundSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
-import { SearchHeader } from './SearchHeader'
 export * from './styles'
 
 export * from './styles'
@@ -72,6 +72,7 @@ const defaultProps:Partial<SelectProps<any, boolean>> = {
     }
   },
   outerInputComponent: OuterInput,
+  searchInputProps: {},
 }
 
 export const Select = <T extends string|number = string, Multi extends boolean = false>(selectProps:SelectProps<T, Multi>) => {
@@ -118,23 +119,28 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     ...modalProps
   } = allProps
 
-  const [loading, setLoading] = useBooleanToggle(false)
-  const [, setSearch] = useState('')
   const isValueArray = TypeGuards.isArray(value) && multiple
 
-  const [labelOptions, setLabelOptions] = useState<FormTypes.Options<T>>(() => {
-    if (isValueArray) {
-      return defaultOptions.filter(o => value.includes(o.value))
-    }
-
-    const _option = defaultOptions.find(o => o.value === value)
-
-    if (!_option) {
-      return []
-    }
-
-    return [_option]
+  const {
+    loading,
+    setLoading,
+    labelOptions,
+    setLabelOptions,
+    filteredOptions,
+    load,
+    onChangeSearch,
+  } = useSearch({
+    value,
+    multiple,
+    options,
+    filterItems,
+    debugName,
+    defaultOptions,
+    loadOptions,
+    onLoadOptionsError,
   })
+
+  const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
 
   const currentValueLabel = useMemo(() => {
     const _options = (multiple ? labelOptions : labelOptions?.[0]) as Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]
@@ -145,21 +151,6 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
     return label
   }, [labelOptions])
-
-  const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
-
-  const [filteredOptions, setFilteredOptions] = useState(defaultOptions)
-
-  async function load() {
-    setLoading(true)
-    try {
-      const options = await loadOptions('')
-      setFilteredOptions(options)
-    } catch (e) {
-      onLoadOptionsError(e)
-    }
-    setLoading(false)
-  }
 
   onMount(() => {
     if (loadOptionsOnMount && !!loadOptions) {
@@ -285,36 +276,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
   }
 
-  const onChangeSearch = async (searchValue:string) => {
-    setSearch(searchValue)
-
-    if (!!loadOptions) {
-      setLoading(true)
-      try {
-
-        const _opts = await loadOptions(searchValue)
-
-        setFilteredOptions(_opts)
-      } catch (e) {
-        console.error(`Error loading select options [${debugName}]`, e)
-        onLoadOptionsError?.(e)
-
-      }
-      setTimeout(() => {
-        setLoading(false)
-      }, 0)
-
-      return
-
-    }
-
-    const _opts = filterItems(searchValue, options)
-
-    setFilteredOptions(_opts)
-
-  }
-
-  const searchHeader = searchable ? <SearchHeader
+  const searchHeader = searchable ? <SearchInput
     debugName={debugName}
     onTypingChange={(isTyping) => {
       if (searchable && !!loadOptions) {

@@ -5,6 +5,7 @@ import {
   useDefaultComponentStyle,
   StylesOf,
   PropsOf,
+  IconPlaceholder,
 } from '@codeleap/common'
 import { ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
@@ -31,15 +32,22 @@ export type CheckboxProps = Pick<
   onValueChange: (value: boolean) => void
   style?: PropsOf<typeof View>['style']
   checkboxOnLeft?: boolean
+  checkIcon?: IconPlaceholder
 }
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
-
+const defaultProps: Partial<CheckboxProps> = {
+  checkIcon: 'check' as IconPlaceholder,
+}
 export const Checkbox = (props: CheckboxProps) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...defaultProps,
+    ...props,
+  })
+
   const {
     variants = [],
     style = {},
@@ -49,6 +57,7 @@ export const Checkbox = (props: CheckboxProps) => {
     debugName,
     onValueChange,
     checkboxOnLeft,
+    checkIcon,
   } = others
 
   const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
@@ -133,7 +142,7 @@ export const Checkbox = (props: CheckboxProps) => {
         ]}
       >
         <Icon
-          name={'check' as any}
+          name={checkIcon as any}
           style={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
 
         />
@@ -141,3 +150,5 @@ export const Checkbox = (props: CheckboxProps) => {
     </View>
   </InputBase>
 }
+
+Checkbox.defaultProps = defaultProps

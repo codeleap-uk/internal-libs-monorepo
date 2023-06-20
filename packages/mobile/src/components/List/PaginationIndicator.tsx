@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  assignTextStyle,
   ComponentVariants,
   createDefaultVariantFactory,
   getNestedStylesByKey,
@@ -16,24 +15,8 @@ import { Text } from '../Text'
 export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}`
 
 const createPaginationIndicatorStyle = createDefaultVariantFactory<PaginationIndicatorComposition>()
-const presets = includePresets((style) => createPaginationIndicatorStyle(() => ({ loaderWrapper: style, text: style })))
-export const PaginationIndicatorStyles = {
-  ...presets,
-  default: createPaginationIndicatorStyle((theme) => {
-    return {
-      loaderWrapper: {
-        ...theme.presets.center,
-        ...theme.spacing.marginVertical(3),
-      },
-      text: {
-        ...assignTextStyle('h4')(theme).text,
-        ...theme.presets.textCenter,
-        ...theme.spacing.marginVertical(3),
-        ...theme.presets.fullWidth,
-      },
-    }
-  }),
-}
+
+export const PaginationIndicatorPresets = includePresets((style) => createPaginationIndicatorStyle(() => ({ loaderWrapper: style, text: style })))
 
 export type PaginationIndicatorProps = {
   isFetching?: boolean
@@ -42,14 +25,14 @@ export type PaginationIndicatorProps = {
   activityIndicator?: JSX.Element
   styles?: StylesOf<PaginationIndicatorComposition>
   style?: ViewStyle
-} & ComponentVariants<typeof PaginationIndicatorStyles>
+} & ComponentVariants<typeof PaginationIndicatorPresets>
 
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const { hasMore, isFetching, noMoreItemsText, style, activityIndicator, styles = {}, variants = [] } = props
 
   const variantStyles = useDefaultComponentStyle<
     'u:PaginationIndicator',
-    typeof PaginationIndicatorStyles
+    typeof PaginationIndicatorPresets
     >('u:PaginationIndicator', {
       variants,
       styles,
