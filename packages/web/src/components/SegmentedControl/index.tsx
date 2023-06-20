@@ -6,12 +6,12 @@ import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
-import { motion, MotionProps } from 'framer-motion'
+import { motion, MotionProps, AnimationProps } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'
 
 type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder}
 
-export type SegmentedControlProps<T = string> = {
+export type SegmentedControlProps<T = string> = ComponentVariants<typeof SegmentedControlPresets> & {
 
   /** options that the segmented control will receive */
   options : SegmentedContropOptions[]
@@ -25,12 +25,6 @@ export type SegmentedControlProps<T = string> = {
   /**  all styles from the segmented control */
   style: PropsOf<typeof View>['style']
 
-  /** all variants of the segmented control */
-  variants?: ComponentVariants<typeof SegmentedControlPresets > & {}
-
-  /** all responsive variants of the segmented control */
-  responsiveVariants?: any
-
   /**  prop to control when te value of the segmented control changes */
   onValueChange?: (v: any) => void
 
@@ -42,9 +36,21 @@ export type SegmentedControlProps<T = string> = {
 
   /** * all the touchable props */
   touchableProps?: Partial<PropsOf<typeof Touchable>>
+
+  animationProps?: AnimationProps
+  transitionDuration?: number
+}
+
+const defaultProps: Partial<SegmentedControlProps> = {
+  animationProps: {},
+  transitionDuration: 0.2,
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
+  const allProps = {
+    ...SegmentedControl.defaultProps,
+    ...props,
+  }
 
   const {
     label,
@@ -56,8 +62,10 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     onValueChange,
     style,
     bubbleProps,
+    animationProps,
+    transitionDuration,
     ...rest
-  } = props
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
     'u:SegmentedControl',
@@ -73,7 +81,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   const maxDivWidthRef = useRef(null)
 
   const biggerWidth = { width: maxDivWidthRef.current }
-
+  
   const bubbleAnimation = useAnimatedVariantStyles({
     variantStyles,
     animatedProperties: [],
@@ -81,8 +89,12 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
       'worklet'
       return {
         translateX: currentOptionIdx * biggerWidth.width,
-        transition: 'all .1s ease-in-out',
-      }
+        transition: { 
+          ease: 'easeInOut', 
+          duration: transitionDuration
+        },
+        ...animationProps,
+      } as AnimationProps
     },
     dependencies: [currentOptionIdx, biggerWidth.width],
   })
@@ -118,3 +130,5 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
 }
 
 export * from './styles'
+
+SegmentedControl.defaultProps = defaultProps
