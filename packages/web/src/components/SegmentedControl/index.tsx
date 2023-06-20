@@ -42,7 +42,7 @@ export type SegmentedControlProps<T = string> = {
 
 const defaultAnimation = {
   duration: 0.2,
-  ease: 'linear',
+  ease: [0.42, 0, 0.58, 1],
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
@@ -53,7 +53,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     styles = {},
     value,
     variants = [],
-    responsiveVariants = [],
+    responsiveVariants = {},
     onValueChange,
     style,
     ...rest
@@ -81,6 +81,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
       'worklet'
       return {
         translateX: currentOptionIdx * biggerWidth.width,
+        transition: 'all .1s ease-in-out',
       }
     },
     transition: defaultAnimation,
