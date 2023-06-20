@@ -4,7 +4,6 @@ import { AppSettings } from '../../config/Settings'
 
 import type { SeverityLevel, Client, ClientOptions, Breadcrumb } from '@sentry/types'
 
-
 export type LogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'silent'
 
 export type LogFunctionArgs = [
@@ -19,22 +18,23 @@ export type DebugColors = {
   >}`]: (...args: LogFunctionArgs) => void;
 }
 export type DebugColor = keyof DebugColors
-export type LogToTerminalArgs = [
-  logType: LogType,
-  args: LogFunctionArgs,
-  color?: keyof DebugColors,
-  deviceIdentifier?: string,
+export type LogToTerminalArgs = {
+  logType: LogType
+  args: LogFunctionArgs
+  color?: keyof DebugColors
+  deviceIdentifier?: string
   stringify?: boolean
-]
-export type LogToTerminal = FunctionType<LogToTerminalArgs, void>
+  logKeys?: boolean
+}
+export type LogToTerminal = FunctionType<[LogToTerminalArgs], void>
 
 export const SentrySeverityMap: Record<LogType, SeverityLevel> = {
   debug: 'debug',
-  error: 'error' ,
-  info: 'info' ,
-  log: 'log' ,
-  warn: 'warning' ,
-  silent: 'log' ,
+  error: 'error',
+  info: 'info',
+  log: 'log',
+  warn: 'warning',
+  silent: 'log',
 }
 
 export type SentryProvider = {
@@ -43,4 +43,4 @@ export type SentryProvider = {
   captureException(err: any): void
 }
 
-export type LoggerMiddleware = FunctionType<LogToTerminalArgs, any>
+export type LoggerMiddleware = FunctionType<[arguments: LogToTerminalArgs, formattedContent: string[]], any>
