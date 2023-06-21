@@ -10,7 +10,7 @@ import {
   useUnmount,
 } from '@codeleap/common'
 
-import React, { useId, useLayoutEffect, useRef, useEffect } from 'react'
+import React, { useId, useLayoutEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
 
@@ -38,9 +38,8 @@ export type ModalProps = React.PropsWithChildren<
     scroll?: boolean
     header?: React.ReactElement
     footer?: React.ReactNode
-    fullscreen?: boolean
-    centered?: boolean
     withOverlay?: boolean
+    closeIconName?: IconPlaceholder
     keepMounted?: boolean
     renderHeader?: (props: ModalHeaderProps) => React.ReactElement
     debugName?: string
@@ -67,16 +66,17 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     styles,
     footer,
     renderHeader,
-    closable = true,
-    withOverlay = true,
-    showClose = true,
-    fullscreen = false,
-    centered = false,
+    closable,
+    withOverlay,
+    showClose,
     responsiveVariants,
+    closeIconName,
     renderModalBody,
-    scroll = true,
     ...props
-  } = modalProps
+  } = {
+    ...Modal.defaultProps,
+    ...modalProps,
+  }
 
   const id = useId()
 
@@ -85,12 +85,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     typeof ModalPresets
   >('u:Modal', {
     responsiveVariants,
-    variants: [
-      ...variants,
-      centered && 'centered',
-      scroll && 'scroll',
-      fullscreen && 'fullscreen',
-    ],
+    variants: [...variants],
     styles,
   })
 
@@ -140,7 +135,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
       {showClose && closable && (
         <ActionIcon
-          icon={'close' as IconPlaceholder}
+          icon={closeIconName as IconPlaceholder}
           onPress={toggleAndReturn}
           styles={closeButtonStyles}
         />
@@ -265,4 +260,12 @@ export const Modal: React.FC<ModalProps> = ({
   if (renderStatus === 'unmounted') return null
 
   return <ModalContent {...props} id={modalId.current} />
+}
+
+Modal.defaultProps = {
+  closeIconName: 'close' as IconPlaceholder,
+  closable: true,
+  withOverlay: true,
+  showClose: true,
+  scroll: true,
 }

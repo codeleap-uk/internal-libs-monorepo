@@ -22,7 +22,6 @@ import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
 import { NumberIncrementPresets } from './NumberIncrement/styles'
-import { AlertPresets } from './Alert/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -45,10 +44,8 @@ export const defaultStyles = {
   Tooltip: TooltipPresets,
   List: ListPresets,
   Slider: SliderPresets,
-  MultiSelect: SelectPresets,
   LoadingOverlay: LoadingOverlayPresets,
   InputBase: InputBasePresets,
   Switch: SwitchPresets,
   NumberIncrement: NumberIncrementPresets,
-  Alert: AlertPresets,
 }
