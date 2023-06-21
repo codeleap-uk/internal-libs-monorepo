@@ -124,7 +124,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   return (
     <View css={[variantStyles.wrapper, style]} {...rest}>
       {label && <Text text={label} css={[variantStyles.label, disabled && variantStyles['label:disabled']]} />}
-      <View css={variantStyles.innerWrapper}>
+      <View css={[variantStyles.innerWrapper, disabled && variantStyles['innerWrapper:disabled']]}>
         <Bubble
           css={selectedBubbleStyles}
           animate={bubbleAnimation}

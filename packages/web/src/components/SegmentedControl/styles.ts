@@ -7,6 +7,7 @@ export type SegmentedControlComposition =
  `selectedBubble:${SegmentedControlStates}` |
  'wrapper' |
  'innerWrapper' |
+ `innerWrapper:${SegmentedControlStates}` |
  'text' |
  `text:${SegmentedControlStates}` |
  'icon' |
