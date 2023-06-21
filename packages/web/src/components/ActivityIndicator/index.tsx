@@ -1,5 +1,5 @@
-import { View, ViewProps } from '../View'
-import { ElementType, forwardRef } from 'react'
+import { View } from '../View'
+import { forwardRef } from 'react'
 import {
   useDefaultComponentStyle,
   ComponentVariants,
@@ -13,6 +13,7 @@ import { CSSObject } from '@emotion/react'
 export * from './styles'
 
 export type ActivityIndicatorProps = {
+  style?: any
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSObject
   component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<any>}, 'component'>>
@@ -20,6 +21,7 @@ export type ActivityIndicatorProps = {
 
 export const ActivityIndicator = forwardRef<typeof View, ActivityIndicatorProps>((activityIndicatorProps, ref) => {
   const {
+    style,
     styles,
     component,
     variants,
@@ -42,7 +44,7 @@ export const ActivityIndicator = forwardRef<typeof View, ActivityIndicatorProps>
   const Component = component
 
   return (
-    <View css={[variantStyles.wrapper, styles]}>
+    <View css={[variantStyles.wrapper, style]}>
       <Component
         ref={ref}
         css={variantStyles.wrapper}

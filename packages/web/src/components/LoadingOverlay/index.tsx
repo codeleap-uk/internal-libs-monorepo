@@ -12,7 +12,7 @@ export type LoadingOverlayProps = React.PropsWithChildren<{
 }> & ComponentVariants<typeof LoadingOverlayPresets>
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
-  const { visible, children, styles, variants, responsiveVariants, indicatorProps } = props
+  const { visible, children, styles, variants, responsiveVariants, indicatorProps, ...rest } = props
 
   const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
     variants, styles, responsiveVariants, rootElement: 'wrapper',
@@ -21,7 +21,7 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
   const indicatorStyles = getNestedStylesByKey('indicator', variantStyles)
 
   return (
-    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible']]}>
+    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible']]} {...rest}>
       <ActivityIndicator styles={indicatorStyles} {...indicatorProps} />
       {children}
     </View>
