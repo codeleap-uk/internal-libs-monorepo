@@ -30,6 +30,7 @@ export type ButtonProps = NativeButtonProps &
     loading?: boolean
     debugName?: string
     debounce?: number
+    selected?: boolean
   } & Partial<TouchableProps<any>>
 
 export const Button: React.FC<ButtonProps> = (buttonProps) => {
@@ -45,6 +46,8 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     disabled,
     rightIcon,
     debounce = 600,
+    selected,
+    style,
     ...props
   } = buttonProps
   const [pressed, setPressed] = React.useState(false)
@@ -70,7 +73,9 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
 
     return {
       ...variantStyles[key],
+      ...optionalObject(key === 'wrapper', style, {}),
       ...optionalObject(disabled, variantStyles[key + ':disabled'], {}),
+      ...optionalObject(selected, variantStyles[key + ':selected'], {}),
     }
   }
   const iconStyle = getStyles('icon')
