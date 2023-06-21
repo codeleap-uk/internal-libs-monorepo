@@ -67,6 +67,7 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     selectable?: boolean
     searchInputProps?: Partial<SearchInputProps>
     debugName: string
+    searchComponent?: React.ComponentType<SearchInputProps>
   }
     & Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>
     & ComponentVariants<typeof AutocompletePresets>

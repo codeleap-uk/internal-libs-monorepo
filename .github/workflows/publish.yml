@@ -2,9 +2,10 @@ name: Publish libraries
 on:
   push:
     branches:
-      - none
+      - master
     paths:
-      - "disabled/**/*"
+      - "packages/**/*"
+      - .github/workflows/publish.yml
 
 jobs:
   build:
@@ -20,7 +21,7 @@ jobs:
   
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.15.0'
+          node-version: '18.15.0'
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
 
@@ -51,5 +52,7 @@ jobs:
         if: always()
         run: |
           git pull
+          git restore **/**
           git add packages
+          git commit -m "update package versions"
           git push --follow-tags origin master

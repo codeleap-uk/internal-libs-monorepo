@@ -38,7 +38,8 @@ export type AppSettings<
     IgnoreWarnings?: string[]
     StringifyObjects?: boolean
     isMain?: boolean
-    inspect?: InspectOptions,
+    inspect?: InspectOptions
+    alwaysSendToSentry?: boolean
     Obfuscate: {
       keys: Matcher<'key'>[]
       values: Matcher<'value'>[]
