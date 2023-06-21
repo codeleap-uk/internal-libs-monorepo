@@ -1,5 +1,6 @@
 import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap/common'
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
+import { BadgeComposition } from '../Badge'
 import { TouchableStylesGen } from '../Touchable'
 
 export type ButtonStates = 'disabled' | 'selected'
@@ -12,8 +13,7 @@ export type ButtonParts =
 | 'rightIcon'
 | 'loader'
 | `loader${Capitalize<ActivityIndicatorComposition>}`
-| 'badgeText'
-| 'badgeWrapper'
+| `badge${Capitalize<BadgeComposition>}`
 
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 

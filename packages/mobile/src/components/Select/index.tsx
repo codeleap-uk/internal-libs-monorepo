@@ -19,6 +19,8 @@ import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 export * from './styles'
 
+export * from './styles'
+
 const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
   return options.filter((option) => {
     if (TypeGuards.isString(option.label)) {
@@ -91,10 +93,10 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     listProps,
     debugName,
     placeholder = 'Select',
-    arrowIconName = 'selectArrow',
-    clearIconName,
+    arrowIconName = 'chevrons-up-down',
+    clearIconName = 'x',
     clearable = false,
-    selectedIcon = 'selectMarker',
+    selectedIcon = 'check',
     inputProps = {},
     hideInput = false,
     itemProps = {},

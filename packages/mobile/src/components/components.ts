@@ -38,5 +38,7 @@ export * from './DatePickerModal'
 export * from './RefreshControl'
 export * from './Avatar'
 export * from './AvatarGroup'
+export * from './NumberIncrement'
+export * from './Badge'
 
 export * from './defaultStyles'

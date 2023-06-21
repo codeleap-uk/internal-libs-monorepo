@@ -23,12 +23,13 @@ export function useForm<
   Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<
     Form['config']
   >
->(form: Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
+>(formParam: () => Form | Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
+  const form = TypeGuards.isFunction(formParam) ? formParam() : formParam
 
-    const config:FormTypes.UseFormConfig<Values> = {
-      validateOn: 'change',
-      ...formConfig
-    }
+  const config:FormTypes.UseFormConfig<Values> = {
+    validateOn: 'change',
+    ...formConfig,
+  }
 
   const getInitialState = useCallback(() => {
     return deepMerge(form.defaultValue, config.initialState || {}) as Values
@@ -177,7 +178,7 @@ export function useForm<
       }
       dynamicProps.ref = inputRefs.current[thisRefIdx]
       registeredTextRefsOnThisRender++
-      if(!Theme.IsBrowser && !staticProps.multiline){
+      if (!Theme.IsBrowser && !staticProps.multiline) {
         dynamicProps.onSubmitEditing = () => {
           const nextRef = thisRefIdx + 1
           if (inputRefs.current.length <= nextRef) return
@@ -187,12 +188,13 @@ export function useForm<
 
     }
 
-
     registeredFields.current.push(type)
     return {
       ...staticProps,
       ...dynamicProps,
-      validate
+      validate: (v) => {
+        return validateField(field, true, v)
+      },
     }
   }
 
@@ -218,12 +220,10 @@ export function useForm<
 
   const setters = {} as FormTypes.FormSetters<Values>
 
-  for(const fieldName in formValues){
+  for (const fieldName in formValues) {
     // @ts-ignore
     setters[fieldName] = (value) => setFieldValue(fieldName, value)
   }
-
-  
 
   return {
     setFieldValue,
@@ -238,6 +238,6 @@ export function useForm<
     reset,
     validateMultiple,
     isValid: validateAll(),
-    setters
+    setters,
   }
 }

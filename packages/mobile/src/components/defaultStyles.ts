@@ -20,7 +20,7 @@ import { BackdropPresets } from './Backdrop'
 import { PagerPresets } from './Pager'
 import { CalendarPresets } from './Calendar'
 import { DrawerPresets } from './Drawer/styles'
-import { ListPresets, PaginationIndicatorStyles } from './List'
+import { ListPresets, PaginationIndicatorPresets } from './List'
 
 import { ScrollPresets } from './Scroll'
 import { ActionIconPresets } from './ActionIcon'
@@ -33,6 +33,8 @@ import { AvatarPresets } from './Avatar'
 import { AvatarGroupPresets } from './AvatarGroup'
 import { SectionsPresets } from './Sections'
 import { DatePickerModalPresets } from './DatePickerModal'
+import { NumberIncrementPresets } from './NumberIncrement'
+import { BadgePresets } from './Badge'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -62,7 +64,6 @@ export const defaultStyles = {
   Drawer: DrawerPresets,
   Scroll: ScrollPresets,
   Sections: SectionsPresets,
-  PaginationIndicator: PaginationIndicatorStyles,
   ActionIcon: ActionIconPresets,
   Grid: GridPresets,
   LoadingOverlay: LoadingOverlayPresets,
@@ -70,4 +71,7 @@ export const defaultStyles = {
   InputBase: InputBasePresets,
   DatePickerModal: DatePickerModalPresets,
   RefreshControl: RefreshControlPresets,
+  PaginationIndicator: PaginationIndicatorPresets,
+  NumberIncrement: NumberIncrementPresets,
+  Badge: BadgePresets,
 }
