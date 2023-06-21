@@ -7,6 +7,7 @@ export * from './useQuery'
 export * from './PermissionManager'
 export * from './useSearchParams'
 export * from './usePagination'
+export * from './Crud'
 export * from './i18n'
 export * from './useSearch'
 
