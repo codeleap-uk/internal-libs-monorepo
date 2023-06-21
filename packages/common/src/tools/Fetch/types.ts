@@ -1,5 +1,6 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { Logger } from '../Logger'
+import { APIError } from './APIError'
 
 export type FetchFailure =
   | 'NO_RESPONSE'
@@ -29,7 +30,7 @@ type MiddleWares<T> = {
   requestMiddleware?: Middleware<T>[]
   responseMiddleware?: Middleware<AxiosResponse>[]
 }
-type ExtraProperties = {
+export type ExtraProperties = {
   rejectOnCancel?: boolean
   duplicateBehavior?: 'cancelPrevious' | 'maintainPrevious'
   multipart?: MultipartConfig | boolean
@@ -38,12 +39,20 @@ type ExtraProperties = {
   automaticMultipartParsing?: boolean
   multipartParser?: (body:any) => FormData | Promise<FormData>
   silent?: boolean
-  onError?: (e: AxiosError) => void
+  onError?: (e: APIError) => void
+  errorLogSeverity?: 'error' | 'warn' | 'log'
 }
 
-type ReqConfig<D = any, Extending = AxiosRequestConfig, T = Extending & ExtraProperties > = T & MiddleWares<T>
+type ReqConfig<D = any, Extending = AxiosRequestConfig > = Extending & ExtraProperties & MiddleWares<Extending & ExtraProperties>
 
 export type RequestClientConfig<D = any> = ReqConfig<D, InternalAxiosRequestConfig>
-export type InternalRequestClientConfig<D = any> = ReqConfig<D,InternalAxiosRequestConfig> 
+export type InternalRequestClientConfig<D = any> = ReqConfig<D, InternalAxiosRequestConfig>
 
-export type ExternalRequestClientConfig<D = any> =  AxiosRequestConfig<D> & ExtraProperties
+export type ExternalRequestClientConfig<D = any> = AxiosRequestConfig<D> & ExtraProperties
+
+export type AugmentedAxiosError<T = any, D = any> = Omit<
+  AxiosError<T, D>,
+  'config'
+> & {
+  config: AxiosError<T, D>['config'] & ExtraProperties
+}
