@@ -69,7 +69,7 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
     showClose = false,
     description = null,
     closable, debugName,
-    closeIconName = 'close',
+    closeIconName = 'x',
     toggle,
   } = props
   return <>

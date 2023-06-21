@@ -4,7 +4,6 @@ import {
   ComponentVariants,
   useCodeleapContext,
   useDefaultComponentStyle,
-  useI18N,
 } from '@codeleap/common'
 import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { StylesOf } from '../../types/utility'
@@ -45,14 +44,10 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 
   const { logger } = useCodeleapContext()
 
-  const { t } = useI18N()
-
-  const content = !!text ? text : t(String(message))
-
   const Component = component
 
   if (debug) {
-    logger.log(`Text ${debugName}`, { variantStyles, content })
+    logger.log(`Text ${debugName}`, { variantStyles, text })
   }
 
   return (
@@ -61,7 +56,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
       css={[variantStyles.text, props.style]}
       {...props}
     >
-      {content || children}
+      {text || children}
     </Component>
   )
 }

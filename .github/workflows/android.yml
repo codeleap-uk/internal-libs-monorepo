@@ -3,11 +3,13 @@ name: "Run android build"
 on:
   push:
     branches:
-      - internal
+      - master
     paths: 
       - apps/mobile
       - .github/workflows/android.yml
-  
+concurrency:
+  group: ${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,7 +36,7 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v3
         with: 
-          node-version: 16.15.0
+          node-version: 18.15.0
           cache: 'yarn'
 
       - name: Install dependencies
@@ -63,14 +65,16 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git restore apps/mobile/android/app/version.json
+          cd apps/mobile
+          git restore android/app/version.json
           git pull
           git checkout master
           git pull origin master
-          cd apps/mobile/android/fastlane
+          cd android/fastlane
           fastlane increment_version_code
-          cd ../..
-          git add app/version.json
+          cd ..
+          ls
+          git add ./app/version.json
           git diff-index --quiet HEAD || git commit -m "Update version.json"
           git push origin master
 
