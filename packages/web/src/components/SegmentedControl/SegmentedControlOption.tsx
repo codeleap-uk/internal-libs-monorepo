@@ -15,16 +15,23 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
 }
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
-
-  const { selected, onPress, style, variantStyles, label, icon, textProps, maxDivWidthRef, ...touchableProps } = props
+  const { 
+    selected, 
+    onPress, 
+    style, 
+    variantStyles, 
+    label, 
+    icon, 
+    textProps, 
+    maxDivWidthRef,
+    disabled, 
+    ...touchableProps 
+  } = props
 
   return (
     <Touchable
       noFeedback={selected}
       key={touchableProps.key}
-      style={{
-        feedback: variantStyles.buttonFeedback,
-      }}
       ref={(ref) => {
         if (ref && ref.offsetWidth > maxDivWidthRef.current) {
           maxDivWidthRef.current = ref.offsetWidth
@@ -32,18 +39,24 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
       }}
       css={[
         variantStyles.button,
-        selected &&
-        variantStyles['button:selected'],
-        touchableProps?.disabled &&
-        variantStyles['button:disabled'],
+        selected && variantStyles['button:selected'],
+        disabled && variantStyles['button:disabled'],
         style,
       ]}
       onPress={onPress}
+      disabled={disabled}
       {...touchableProps}
     >
       {
         !!icon && (
-          <Icon name={icon} css={[variantStyles.icon, selected && variantStyles['icon:selected']]} />
+          <Icon 
+            name={icon} 
+            css={[
+              variantStyles.icon,
+              selected && variantStyles['icon:selected'],
+              disabled && variantStyles['icon:disabled']
+            ]}
+          />
         )
       }
       <Text
@@ -51,7 +64,7 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
         css={[
           variantStyles.text,
           selected && variantStyles['text:selected'],
-          touchableProps?.disabled && variantStyles['text:disabled'],
+          disabled && variantStyles['text:disabled'],
         ]}
         {...textProps}
       />

@@ -4,19 +4,17 @@ export type SegmentedControlStates = 'selected' | 'disabled'
 
 export type SegmentedControlComposition =
  'selectedBubble' |
+ `selectedBubble:${SegmentedControlStates}` |
  'wrapper' |
  'innerWrapper' |
- 'scroll' |
- 'scrollContent' |
  'text' |
  `text:${SegmentedControlStates}` |
  'icon' |
  `icon:${SegmentedControlStates}` |
  'button' |
- 'buttonFeedback' |
  `button:${SegmentedControlStates}` |
-  `selectedBubble:${SegmentedControlStates}` |
- `label`
+ `label` |
+ `label:${SegmentedControlStates}`
 
 export type SegmentedControlStylesGen<TCSS = any> =
   StylesOf<
@@ -29,4 +27,3 @@ SegmentedControlStylesGen
 >()
 
 export const SegmentedControlPresets = includePresets((style) => createSegmentedControlStyle(() => ({ wrapper: style })))
-
