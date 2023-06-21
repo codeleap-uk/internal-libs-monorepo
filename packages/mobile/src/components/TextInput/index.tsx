@@ -217,7 +217,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 export type SearchInputProps = {
   onTypingChange: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
-  onClear: () => void
+  onClear?: () => void
   debugName: string
   debounce?: number
   clearIcon?: IconPlaceholder
@@ -235,6 +235,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     searchIcon,
     debounce,
     placeholder,
+    ...others
   } = {
     ...SearchInput.defaultProps,
     ...props,
@@ -255,7 +256,9 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       }
 
       setSearchTimeout.current = setTimeout(() => {
+
         onSearchChange(value)
+        onTypingChange?.(false)
       }, debounce ?? 0)
     }
 
@@ -274,10 +277,6 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
         onTypingChange?.(true)
         handleChangeSearch(value)
       }}
-      onEndEditing={() => {
-        onTypingChange?.(false)
-        // setLoading(false)
-      }}
       placeholder={placeholder}
       debugName={`Search ${debugName}`}
       rightIcon={!!search.trim() && {
@@ -287,6 +286,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       leftIcon={{
         name: searchIcon,
       }}
+      {...others}
     />
   )
 }

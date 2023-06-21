@@ -1,7 +1,7 @@
 import { InfiniteData, QueryClient, QueryKey, UseInfiniteQueryResult } from '@tanstack/react-query'
 import { TypeGuards } from '../../utils'
 import { CodeleapQueryClient } from './CodeleapQueryClient'
-import { DeriveDataArgs, DeriveDataFn, PaginationReturn } from './types'
+import { DeriveDataFn, PaginationReturn } from './types'
 
 export const getQueryKeys = (base:string) => {
 
@@ -24,7 +24,7 @@ export const getPaginationKeys = <Data = any>(base:string, queryClient: Codeleap
   }
 }
 
-type PaginationFilter<T> = (item: T, index: number, arr: T[], map: Record<string, T>, page: Record<string, [number, number]>) => boolean 
+type PaginationFilter<T> = (item: T, index: number, arr: T[], map: Record<string, T>, page: Record<string, [number, number]>) => boolean
 
 export type GetPaginationDataParams<TItem = any> = {
   queryKeyOrList: UseInfiniteQueryResult<PaginationReturn<TItem>>['data'] | QueryKey
@@ -58,22 +58,21 @@ export function getPaginationData<TItem, TParams extends GetPaginationDataParams
       let include = true
       if (params?.filter) {
         include = params?.filter(i, flatIdx, flatItems, itemMap, pagesById) as boolean
-      }else {
+      } else {
         include = !itemMap[itemId]
       }
-      
-      
+
       if (params?.derive) {
         derivedData = params.derive?.({
           item: i,
           context: {
             passedFilter: include,
-            
+
           },
           index: flatIdx,
           arr: flatItems,
           currentData: derivedData,
-          
+
         }) as ReturnType<TParams['derive']>
       }
 
