@@ -14,10 +14,11 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   variantStyles?: StylesOf<SegmentedControlComposition>
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
   icon?: IconPlaceholder
+  badge?: React.ReactNode
 }
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
-  const { selected, onPress, debugName, style, variantStyles, label, value, icon, textProps, ...touchableProps } = props
+  const { selected, onPress, debugName, style, variantStyles, label, value, icon, textProps, badge = null, ...touchableProps } = props
 
   return <Touchable
     debugName={`Segmented Control ${debugName}, option ${label}`}
@@ -44,6 +45,7 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
       ]}
       {...textProps}
     />
+    { badge }
 
   </Touchable>
 }

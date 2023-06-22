@@ -42,6 +42,7 @@ const defaultProps:Partial<AutocompleteProps<any, boolean>> = {
   },
   searchInputProps: {},
   selectedIcon: 'check' as any,
+  searchComponent: SearchInput,
 }
 
 export const Autocomplete = <T extends string|number = string, Multi extends boolean = false>(autocomplete:AutocompleteProps<T, Multi>) => {
@@ -70,6 +71,7 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     selectedIcon,
     loadOptionsOnMount = defaultOptions.length === 0,
     selectable = false,
+    searchComponent,
     filterItems = defaultFilterFunction,
     searchInputProps: searchProps = {},
     onItemPressed = () => {},
@@ -193,8 +195,10 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     />
   }, [value, select, multiple, selectable, isValueArray])
 
+  const Search = searchComponent
+
   return <View style={variantStyles.wrapper}>
-    <SearchInput
+    <Search
       placeholder={placeholder}
       debugName={debugName}
       onTypingChange={(isTyping) => {
