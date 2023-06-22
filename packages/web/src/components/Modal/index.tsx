@@ -71,6 +71,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     showClose,
     responsiveVariants,
     closeIconName,
+    scroll,
     renderModalBody,
     ...props
   } = {
@@ -85,7 +86,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     typeof ModalPresets
   >('u:Modal', {
     responsiveVariants,
-    variants: [...variants],
+    variants,
     styles,
   })
 
@@ -190,7 +191,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           aria-modal={true}
           role='dialog'
           aria-describedby={`${id}-title`}
-          aria-label='Close the modal by presing Escape key'
+          aria-label='Close the modal by pressing Escape key'
           {...props}
         >
           {hasHeader && <ModalHeader />}
