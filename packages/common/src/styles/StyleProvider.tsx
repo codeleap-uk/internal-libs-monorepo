@@ -168,7 +168,7 @@ export function useDefaultComponentStyle<
         currentTheme as string,
       )
     }, [
-      ...(props.variants ?? []),
+
       windowSize.height,
       windowSize.width,
       styles,

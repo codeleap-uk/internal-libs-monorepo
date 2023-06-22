@@ -23,13 +23,14 @@ type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponen
 export type DatePickerModalProps = Omit<ModalProps, 'styles' | 'variants' | 'ref'> & {
   hideInput?: boolean
   debugName: string
-  value?: Date
+
+  value: Date
 
   label?: FormTypes.Label
 
   placeholder?: FormTypes.Label
 
-  onValueChange?: (date: Date) => void
+  onValueChange: (date: Date) => void
 
   styles?: StylesOf<DatePickerModalComposition>
 

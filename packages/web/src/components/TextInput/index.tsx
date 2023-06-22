@@ -43,7 +43,7 @@ export type TextInputProps =
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: (text:string) => void
+    onChangeText?: (textValue:string) => void
     caretColor?: string
     focused?: boolean
     _error?: boolean

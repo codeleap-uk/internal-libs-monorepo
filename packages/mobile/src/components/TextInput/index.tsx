@@ -12,7 +12,7 @@ import {
   IconPlaceholder,
 } from '@codeleap/common'
 import { forwardRef, useImperativeHandle } from 'react'
-import { StylesOf } from '../../types'
+import { ComponentWithDefaultProps, StylesOf } from '../../types'
 import { StyleSheet, TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputComposition, TextInputPresets } from './styles'
@@ -33,7 +33,15 @@ export type TextInputProps =
     masking?: FormTypes.TextField['masking']
     variants?: ComponentVariants<typeof TextInputPresets>['variants']
     onChangeMask?: TextInputMaskProps['onChangeText']
+    visibleIcon?: IconPlaceholder
+    hiddenIcon?: IconPlaceholder
+    _error?: string
   } & Pick<PropsOf<typeof Touchable>, 'onPress'>
+
+const defaultProps:Partial<TextInputProps> = {
+  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
+  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
+}
 
 export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
 
@@ -44,7 +52,10 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...TextInput.defaultProps,
+    ...props,
+  })
 
   const {
     variants,
@@ -57,6 +68,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     password,
     onChangeMask,
     onPress,
+    visibleIcon,
+    hiddenIcon,
+    _error = null,
     ...textInputProps
   } = others
 
@@ -124,7 +138,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? 'input-visiblity:hidden' : 'input-visiblity:visible') as IconPlaceholder,
+    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as IconPlaceholder,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -149,12 +163,13 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     editable: false,
     caretHidden: true,
   } : {}
+
   const hasMultipleLines = isMultiline && value?.includes('\n')
   return <InputBase
     {...inputBaseProps}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
-    error={validation.isValid ? null : validation.message}
+    error={(validation.isValid && !_error) ? null : _error || validation.message}
     styles={{
       ...variantStyles,
       innerWrapper: [
@@ -198,3 +213,87 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     />
   </InputBase>
 })
+
+export type SearchInputProps = {
+  onTypingChange: (isTyping: boolean) => void
+  onSearchChange: (search: string) => void
+  onClear?: () => void
+  debugName: string
+  debounce?: number
+  clearIcon?: IconPlaceholder
+  searchIcon?: IconPlaceholder
+  placeholder: string
+} & Partial<TextInputProps>
+
+export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
+  const {
+    debugName,
+    onClear,
+    onSearchChange,
+    onTypingChange,
+    clearIcon,
+    searchIcon,
+    debounce,
+    placeholder,
+    ...others
+  } = {
+    ...SearchInput.defaultProps,
+    ...props,
+  }
+
+  const [search, setSearch] = useState('')
+
+  const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
+
+  const handleChangeSearch = (value: string) => {
+    setSearch(value)
+
+    if (TypeGuards.isNil(debounce)) {
+      onSearchChange?.(value)
+    } else {
+      if (setSearchTimeout.current) {
+        clearTimeout(setSearchTimeout.current)
+      }
+
+      setSearchTimeout.current = setTimeout(() => {
+
+        onSearchChange(value)
+        onTypingChange?.(false)
+      }, debounce ?? 0)
+    }
+
+  }
+
+  const handleClear = () => {
+    setSearch('')
+    onSearchChange?.('')
+    onClear?.()
+  }
+
+  return (
+    <TextInput
+      value={search}
+      onChangeText={(value) => {
+        onTypingChange?.(true)
+        handleChangeSearch(value)
+      }}
+      placeholder={placeholder}
+      debugName={`Search ${debugName}`}
+      rightIcon={!!search.trim() && {
+        name: clearIcon,
+        onPress: handleClear,
+      }}
+      leftIcon={{
+        name: searchIcon,
+      }}
+      {...others}
+    />
+  )
+}
+
+TextInput.defaultProps = defaultProps
+SearchInput.defaultProps = {
+  debounce: null,
+  clearIcon: 'x' as IconPlaceholder,
+  searchIcon: 'search' as IconPlaceholder,
+}

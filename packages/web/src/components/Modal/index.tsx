@@ -158,7 +158,7 @@ export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
 
   useEffect(() => {
     if (accessible) {
-      const currentId = modalId.current
+      const currentId = modalId
       const appRoot = document.body
       appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
       return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
@@ -177,7 +177,7 @@ export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
     if (props.visible) {
       document.body.style.overflow = 'hidden'
       return ReactDOM.createPortal(
-        <ModalContent {...props} id={modalId.current} />,
+        <ModalContent {...props} id={modalId} />,
         document.body,
       )
     } else {
@@ -186,5 +186,5 @@ export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
     }
   }
 
-  return <ModalContent {...props} id={modalId.current} />
+  return <ModalContent {...props} id={modalId} />
 }

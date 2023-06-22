@@ -5,20 +5,19 @@ import { View } from '../View'
 import { SwitchPresets, SwitchComposition } from './styles'
 import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
-import { Touchable } from '../Touchable'
 import { motion } from 'framer-motion'
 
 export * from './styles'
-  
+
 export type SwitchProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
-> &  {
+> & {
   variants?: ComponentVariants<typeof SwitchPresets>['variants']
   styles?: StylesOf<SwitchComposition>
   value: boolean
   onValueChange: (value: boolean) => void
-  onChange?:  (value: boolean) => void
+  onChange?: (value: boolean) => void
   style?: PropsOf<typeof View>['style']
   switchOnLeft?: boolean
 }
@@ -26,107 +25,105 @@ export type SwitchProps = Pick<
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
 export const Switch = (props: SwitchProps) => {
-    const {
-      inputBaseProps,
-      others
-    } = selectInputBaseProps(props)
-    const {
-      variants = [],
-      style = {},
-      styles = {},
-      value,
-      disabled,
-      debugName,
-      onValueChange,
-      onChange,
-      switchOnLeft,
-    } = others
+  const {
+    inputBaseProps,
+    others,
+  } = selectInputBaseProps(props)
+  const {
+    variants = [],
+    style = {},
+    styles = {},
+    value,
+    disabled,
+    debugName,
+    onValueChange,
+    onChange,
+    switchOnLeft,
+  } = others
 
-    const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
-      variants,
-      styles, 
-      rootElement: 'wrapper',
-    })
-    
-    const trackAnimation = useAnimatedVariantStyles({
-      variantStyles,
-      animatedProperties: ['track:off','track:disabled', 'track:on', 'track:disabled-on', 'track:disabled-off'],
-      updater: () =>{
-        'worklet'
-        let disabledStyle = {}
-        if(disabled){
-          disabledStyle =  value ? variantStyles['track:disabled-on'] : variantStyles['track:disabled-off']
-        }
-        const style =  value ? variantStyles['track:on'] : variantStyles['track:off']
+  const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
+    variants,
+    styles,
+    rootElement: 'wrapper',
+  })
 
-        return {
-          ...style,
-          ...disabledStyle
-        }
-      },
-      dependencies: [value, disabled],
-    })
+  const trackAnimation = useAnimatedVariantStyles({
+    variantStyles,
+    animatedProperties: ['track:off', 'track:disabled', 'track:on', 'track:disabled-on', 'track:disabled-off'],
+    updater: () => {
+      'worklet'
+      let disabledStyle = {}
+      if (disabled) {
+        disabledStyle = value ? variantStyles['track:disabled-on'] : variantStyles['track:disabled-off']
+      }
+      const style = value ? variantStyles['track:on'] : variantStyles['track:off']
 
-    const thumbAnimation = useAnimatedVariantStyles({
-      variantStyles,
-      animatedProperties: ['thumb:off','thumb:disabled', 'thumb:on', 'thumb:disabled-off', 'thumb:disabled-on'],
-      updater: () =>{
-        'worklet'
-        let disabledStyle = {}
-        if(disabled){
-          disabledStyle = value ? variantStyles['thumb:disabled-on'] : variantStyles['thumb:disabled-off']
-        }
-        const style = value ? variantStyles['thumb:on'] : variantStyles['thumb:off']
-        return {
-          ...style,
-          ...disabledStyle
-        }
-      },
-      dependencies: [value, disabled],
-    })
+      return {
+        ...style,
+        ...disabledStyle,
+      }
+    },
+    dependencies: [value, disabled],
+  })
 
-    const _switchOnLeft = switchOnLeft ?? variantStyles['__props']?.switchOnLeft
+  const thumbAnimation = useAnimatedVariantStyles({
+    variantStyles,
+    animatedProperties: ['thumb:off', 'thumb:disabled', 'thumb:on', 'thumb:disabled-off', 'thumb:disabled-on'],
+    updater: () => {
+      'worklet'
+      let disabledStyle = {}
+      if (disabled) {
+        disabledStyle = value ? variantStyles['thumb:disabled-on'] : variantStyles['thumb:disabled-off']
+      }
+      const style = value ? variantStyles['thumb:on'] : variantStyles['thumb:off']
+      return {
+        ...style,
+        ...disabledStyle,
+      }
+    },
+    dependencies: [value, disabled],
+  })
 
-    const handleChange = () => {
-      if (disabled) return
-      if(onValueChange) onValueChange?.(!value)
-      if(onChange) onChange?.(!value)
-    }
+  const _switchOnLeft = switchOnLeft ?? variantStyles.__props?.switchOnLeft
 
-    return <InputBase
-      {...inputBaseProps}
-      debugName={debugName}
-      styles={{
-        ...variantStyles,
-        innerWrapper: [
-          variantStyles.innerWrapper,
-        ],
-      }}
-      order={_switchOnLeft ?  reversedOrder : InputBaseDefaultOrder}
-      style={style}
-      disabled={disabled} 
+  const handleChange = () => {
+    if (disabled) return
+    if (onValueChange) onValueChange?.(!value)
+    if (onChange) onChange?.(!value)
+  }
+
+  return <InputBase
+    {...inputBaseProps}
+    debugName={debugName}
+    styles={{
+      ...variantStyles,
+      innerWrapper: [
+        variantStyles.innerWrapper,
+      ],
+    }}
+    order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
+    style={style}
+    disabled={disabled}
+  >
+    <motion.div
+      css={[
+        variantStyles.track,
+        disabled && variantStyles['track:disabled'],
+      ]}
+      initial={false}
+      animate={trackAnimation}
+      transition={variantStyles['track:transition']}
+      onClick={handleChange}
     >
       <motion.div
         css={[
-          variantStyles.track, 
-          disabled && variantStyles['track:disabled'],
+          variantStyles.thumb,
+          disabled && variantStyles['thumb:disabled'],
         ]}
-        // @ts-ignore
-        initial={trackAnimation}
-        animate={trackAnimation}
-        transition={variantStyles['track:transition']}
-        onClick={handleChange}
-      >
-        <motion.div 
-          css={[
-            variantStyles.thumb, 
-            disabled && variantStyles['thumb:disabled'],
-          ]}
-          // @ts-ignore
-          initial={thumbAnimation}
-          animate={thumbAnimation}
-          transition={variantStyles['thumb:transition']}
-        />
-      </motion.div>
-    </InputBase>
+        initial={false}
+        animate={thumbAnimation}
+        transition={variantStyles['thumb:transition']}
+      />
+    </motion.div>
+  </InputBase>
 }

@@ -69,7 +69,7 @@ const DefaultHeader = (props: ModalHeaderProps) => {
     showClose = false,
     description = null,
     closable, debugName,
-    closeIconName = 'close',
+    closeIconName = 'x',
     toggle,
   } = props
   return <>
@@ -121,7 +121,10 @@ export const Modal = (modalProps:ModalProps) => {
     scrollProps = {},
     closeOnHardwareBackPress = true,
     ...props
-  } = modalProps
+  } = {
+    ...Modal.defaultProps,
+    ...modalProps,
+  }
   const variantStyles = useDefaultComponentStyle('u:Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
@@ -207,7 +210,7 @@ export const Modal = (modalProps:ModalProps) => {
       >
         {dismissOnBackdrop &&
           <Touchable
-            onPress={ closable ? toggle : (() => {})}
+            onPress={closable && visible ? toggle : (() => {})}
             debounce={400}
             debugName={'Modal backdrop touchable'}
             style={variantStyles.backdropTouchable}
@@ -236,6 +239,10 @@ export const Modal = (modalProps:ModalProps) => {
     </View>
 
   )
+}
+
+Modal.defaultProps = {
+  closeIconName: 'close' as IconPlaceholder,
 }
 
 export default Modal

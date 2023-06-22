@@ -32,7 +32,7 @@ const DefaultBubble = (props:Partial<SegmentedControlProps>) => {
 }
 
 export type SegmentedControlProps<T = string> = ScrollProps & {
-    options : {label: string; value: T }[]
+    options : SegmentedControlOptionProps[]
     onValueChange: (value: T) => any
     value: T
     debugName: string
@@ -68,7 +68,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     animation = {},
     variants = [],
     scrollProps = {},
-    getItemWidth,
+    getItemWidth = (i) => (Theme.values.width - Theme.spacing.value(4)) / options.length,
     renderBubble,
     scrollToCurrentOptionOnMount = true,
     renderOption,
@@ -196,6 +196,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             debugName={debugName}
             label={o.label}
             value={o.value}
+            icon={o.icon}
             onPress={onPress(o.value, idx)}
             key={idx}
             style={widthStyle}

@@ -1,15 +1,15 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { ComponentVariants,  PropsOf,  TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import React from 'react'
+import { ComponentVariants, PropsOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 
-import { StylesOf, HTMLProps } from '../../types'
+import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
-import { Touchable, TouchableProps } from '../Touchable'
+import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { ActionIconComposition, ActionIconPresets } from './styles'
 
-export type ActionIconProps= {
+export type ActionIconProps = {
+    disabled?: boolean
     iconProps?: Partial<IconProps>
     icon?: IconProps['name']
     name?: IconProps['name']
@@ -19,42 +19,41 @@ export type ActionIconProps= {
 
 export const ActionIcon = (props:ActionIconProps) => {
   const { icon, name, iconProps, action, onPress, variants, styles, children, disabled, ...touchableProps } = props
-  
+
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    variants, 
-    styles
+    variants,
+    styles,
   })
 
-  const isPressable = (TypeGuards.isFunction(onPress) || TypeGuards.isFunction(action)) && !disabled
+  const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent = isPressable ? Touchable : View
+  const WrapperComponent: any = isPressable ? Touchable : View
 
   const handlePress = () => {
     if (!isPressable) return
 
     if (onPress) onPress?.()
-    if (action) action?.()
   }
-  
+
   return (
     // @ts-ignore
-    <WrapperComponent 
-      style={variantStyles.wrapper}
+    <WrapperComponent
+      onPress={handlePress}
       css={[
         variantStyles.wrapper,
         disabled && variantStyles['wrapper:disabled'],
-        isPressable && variantStyles['wrapper:cursor']
+        isPressable && variantStyles['wrapper:cursor'],
       ]}
       disabled={disabled}
       {
         ...(isPressable && {
-          onPress: handlePress
+          onPress: handlePress,
         })
       }
       {...touchableProps}
     >
-      <Icon 
-        name={icon ?? name} 
+      <Icon
+        name={icon ?? name}
         css={[
           variantStyles.icon,
           disabled && variantStyles['icon:disabled'],

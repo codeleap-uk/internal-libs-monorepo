@@ -11,7 +11,6 @@ import { BorderHelpers } from './helpers'
 import { defaultPresets } from './presets'
 import { Spacings } from './Spacing'
 import { SpacingFunction } from '.'
-import { defaultEffects } from './effects'
 
 type AnyProps<T = any> = {
   [x: string]: T
@@ -20,34 +19,34 @@ export type IconPlaceholder = '__ICON__'
 export type BreakpointPlaceholder = '__BREAKPOINT__'
 
 export type DefaultColors =
-| 'primary-1'
-| 'primary-2'
-| 'primary-3'
-| 'primary-4'
-| 'primary-5'
-| 'secondary-1'
-| 'secondary-2'
-| 'secondary-3'
-| 'secondary-4'
-| 'secondary-5'
-| 'neutral-1'
-| 'neutral-2'
-| 'neutral-3'
-| 'neutral-4'
-| 'neutral-5'
-| 'neutral-6'
-| 'neutral-7'
-| 'neutral-8'
-| 'neutral-9'
-| 'neutral-10'
-| 'positive-1'
-| 'positive-2'
-| 'warning-1'
-| 'warning-2'
-| 'alert-1'
-| 'alert-2'
-| 'destructive-1'
-| 'destructive-2'
+| 'primary1'
+| 'primary2'
+| 'primary3'
+| 'primary4'
+| 'primary5'
+| 'secondary1'
+| 'secondary2'
+| 'secondary3'
+| 'secondary4'
+| 'secondary5'
+| 'neutral1'
+| 'neutral2'
+| 'neutral3'
+| 'neutral4'
+| 'neutral5'
+| 'neutral6'
+| 'neutral7'
+| 'neutral8'
+| 'neutral9'
+| 'neutral10'
+| 'positive1'
+| 'positive2'
+| 'warning1'
+| 'warning2'
+| 'alert1'
+| 'alert2'
+| 'destructive1'
+| 'destructive2'
 | 'background'
 | 'card'
 | 'separator'
@@ -65,7 +64,6 @@ export type Fonts =
   | 'h3'
   | 'h4'
   | 'h5'
-  | 'h6'
   | 'p1'
   | 'p2'
   | 'p3'
@@ -84,6 +82,51 @@ export type IconSizes =
   | '4'
   | '5'
   | '6'
+
+export type BorderWidth =
+  | 'small'
+  | 'medium'
+
+export type BorderRadius =
+  | 'tiny'
+  | 'small'
+  | 'medium'
+  | 'rounded'
+
+export type TransformDirections = 'X' | 'Y'
+export type RotateDirections = TransformDirections | 'Z'
+
+type DirectionPrefix = 'top' | 'bottom'
+type DirectionSufix = 'right' | 'left'
+type DirectionConcat = `${Capitalize<DirectionPrefix>}${Capitalize<DirectionSufix>}`
+export type BorderDirections = DirectionPrefix | DirectionSufix | ''
+export type BorderColorsDirections = Capitalize<'start' | 'end' | BorderDirections>
+export type BorderRadiusDirections = Capitalize<
+  | `${DirectionPrefix}End`
+  | `${DirectionPrefix}Start`
+  | BorderDirections
+  | DirectionConcat
+>
+
+export type BorderStyle =
+  | 'solid'
+  | 'dotted'
+  | 'dashed'
+
+export type BorderIdentifiers =
+  | 'width'
+  | 'style'
+  | 'radius'
+  | 'color'
+
+export type Cursor =
+  | 'help'
+  | 'wait'
+  | 'crosshair'
+  | 'not-allowed'
+  | 'zoom-in'
+  | 'grab'
+  | 'pointer'
 
 export type FontTokens =
   | 'base'
@@ -130,17 +173,16 @@ export type AppTheme = {
    values?: {
     width: number
     height: number
-    innerSpacing: Record<'X'|'Y', number>
+    innerSpacing: Record<'X'|'Y'|'value', number>
+    outerSpacing: Record<'X'|'Y'|'value', number>
+    gap: number
+    smallGap: number
     itemHeight: Record<ItemHeight, number>
     iconSize: Record<IconSizes, number>
+    borderWidth: Record<BorderWidth, number>
   } & AnyProps<any>
 
-  readonly borderRadius: {
-    tiny: number
-    small: number
-    medium: number
-    rounded: number
-  }
+  readonly borderRadius: Record<BorderRadius, number>
 
   readonly presets?: Record<string, any>
   readonly effects?: Record<string, RNShadow>
@@ -152,7 +194,7 @@ export type AppTheme = {
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   T,
-  'spacing' | 'effects'
+  'spacing'
 > & {
   spacing: {
     base: number
@@ -163,9 +205,7 @@ export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
   media: MediaQueries<keyof T['breakpoints'], string>
   presets: typeof defaultPresets & T['presets']
   border: BorderHelpers<T>
-  effects: T['effects'] & typeof defaultEffects
   readonly circle: (size: number) => any
-
   readonly semiCircle: (side: number) => any
   readonly sized: (multiplier: number) => Record<'height' | 'width', number>
   IsBrowser: boolean
@@ -231,6 +271,16 @@ export type Spacing =
   | `gap:${SpacingMultiplier}`
   | `w:${SpacingMultiplier}`
   | `h:${SpacingMultiplier}`
+
+type GetBorder<T> = Extract<BorderIdentifiers, T>
+
+export type Border =
+  | `border${Capitalize<BorderDirections>}-${GetBorder<'width'>}:${BorderWidth}`
+  | `border-${GetBorder<'style'>}:${BorderStyle}`
+  | `border${BorderRadiusDirections}-${GetBorder<'radius'>}:${BorderRadius}`
+  | `border${BorderColorsDirections}-${GetBorder<'color'>}:${DefaultColors}`
+
+export type Translate = `translate${TransformDirections | ''}:` & (number | `${number},${number}`)
 
 export type BaseViewProps = {
   css?: any

@@ -15,7 +15,7 @@ import { View } from '../View'
 import { RadioInputComposition, RadioInputPresets } from './styles'
 import { InputLabel } from '../InputLabel'
 import { StyleSheet } from 'react-native'
-import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
 export * from './styles'
 
 type WrapperProps = InputBaseProps
@@ -30,6 +30,7 @@ export type RadioGroupProps<T extends string|number> = WrapperProps & {
   label: ReactNode
   styles?: StylesOf<RadioInputComposition>
   variants?: ComponentVariants<typeof RadioInputPresets>['variants']
+  radioOnRight?: boolean
 }
 
 type OptionProps<T extends string|number> = {
@@ -40,6 +41,7 @@ type OptionProps<T extends string|number> = {
   debugName?: string
   disabled?: boolean
   separator?: boolean
+  reverseOrder?: boolean
 }
 
 const Option = <T extends string|number>(props: OptionProps<T>) => {
@@ -51,6 +53,7 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
     selected,
     onSelect,
     separator = false,
+    reverseOrder,
   } = props
 
   const isDisabled = disabled || item.disabled
@@ -87,21 +90,42 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       onPress={onSelect}
       disabled={isDisabled}
     >
-      <View
-        style={[
-          styles.optionIndicator,
-          getStyle('optionIndicator'),
-        ]}
 
-      >
-        <View
-          style={[
-            styles.optionIndicatorInner,
-            getStyle('optionIndicatorInner'),
-          ]}
-        />
-      </View>
-      {label}
+      {reverseOrder ? (
+        <>
+          {label}
+          <View
+            style={[
+              styles.optionIndicator,
+              getStyle('optionIndicator'),
+            ]}
+          >
+            <View
+              style={[
+                styles.optionIndicatorInner,
+                getStyle('optionIndicatorInner'),
+              ]}
+            />
+          </View>
+        </>
+      ) : (
+        <>
+          <View
+            style={[
+              styles.optionIndicator,
+              getStyle('optionIndicator'),
+            ]}
+          >
+            <View
+              style={[
+                styles.optionIndicatorInner,
+                getStyle('optionIndicatorInner'),
+              ]}
+            />
+          </View>
+          {label}
+        </>
+      )}
 
     </Touchable>
     {separator && <View style={styles.optionSeparator} />}
@@ -124,6 +148,7 @@ export const RadioGroup = <T extends string|number>(
     styles,
     disabled,
     debugName,
+    radioOnRight,
   } = others
 
   const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', {
@@ -131,6 +156,8 @@ export const RadioGroup = <T extends string|number>(
     styles,
     transform: StyleSheet.flatten,
   })
+
+  const _radioOnRight = radioOnRight ?? variantStyles.__props?.radioOnRight
 
   return <InputBase
     {...inputBaseProps}
@@ -148,6 +175,7 @@ export const RadioGroup = <T extends string|number>(
         selected={value === item.value}
         onSelect={() => onValueChange(item.value)}
         separator={idx < options.length - 1}
+        reverseOrder={_radioOnRight}
       />
     ))}
   </InputBase>

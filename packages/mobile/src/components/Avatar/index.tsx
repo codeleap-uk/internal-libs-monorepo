@@ -5,6 +5,7 @@ import {
   matchInitialToColor,
   useDefaultComponentStyle,
   useMemo,
+  getNestedStylesByKey,
 } from '@codeleap/common'
 import React from 'react'
 import { StyleSheet } from 'react-native'
@@ -15,6 +16,7 @@ import { Touchable } from '../Touchable'
 import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { Icon } from '../Icon'
+import { Badge, BadgeComponentProps } from '../Badge'
 
 export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
   styles?: StylesOf<AvatarComposition>
@@ -25,12 +27,11 @@ export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
   text?: string
   description?: string
   icon?: IconPlaceholder
-  badge?: IconPlaceholder
+  badgeIcon?: IconPlaceholder
   style?: ViewProps['style']
   onPress?: () => void
   noFeedback?: boolean
-
-}
+} & BadgeComponentProps
 
 export const Avatar = (props:AvatarProps) => {
   const {
@@ -42,11 +43,13 @@ export const Avatar = (props:AvatarProps) => {
     styles,
     style,
     icon,
-    badge,
+    badgeIcon,
     text,
     description,
     onPress,
     noFeedback,
+    badge = false,
+    badgeProps = {},
     ...viewProps
   } = props
 
@@ -80,6 +83,8 @@ export const Avatar = (props:AvatarProps) => {
 
   const hasBackgroundColor = !!variantStyles?.touchable?.backgroundColor
 
+  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+
   return (
     <View style={[variantStyles.wrapper, style]} {...viewProps}>
       <Touchable
@@ -100,16 +105,18 @@ export const Avatar = (props:AvatarProps) => {
             <Text text={description} style={variantStyles.description} />
           </View>
         )}
+
+        <Badge badge={badge} style={badgeStyles} {...badgeProps} />
       </Touchable>
 
-      {badge && (
+      {badgeIcon && (
         <Touchable
           debugName={`${debugName} badge`}
-          style={variantStyles.badgeWrapper}
+          style={variantStyles.badgeIconWrapper}
           onPress={() => onPress?.()}
           noFeedback
         >
-          <Icon name={badge} style={variantStyles.badge} />
+          <Icon name={badgeIcon} style={variantStyles.badgeIcon} />
         </Touchable>
       )}
     </View>

@@ -34,7 +34,7 @@ export type ValidatorWithoutForm<T> = T extends boolean
   : ValidatorFunctionWithoutForm<T> | yup.SchemaOf<T>
 
 export type Options<T> = { label: Label; value: T }[]
-
+export type Option<T> = Options<T>[number]
 type FormValidateOn = 'change'
 
 export type FormOutput = 'json'
@@ -123,6 +123,8 @@ export type NumberField = {
   required?: boolean
   precision?: number
   masking?: Mask
+  min?: number
+  max?: number
 
 } & WithTransformer<number>
 export type SelectField<T = any> = {

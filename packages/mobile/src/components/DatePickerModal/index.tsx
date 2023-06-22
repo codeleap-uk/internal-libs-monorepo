@@ -30,6 +30,7 @@ const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) 
 }
 
 const defaultFormatDate:DatePickerModalProps['formatDate'] = (date) => {
+  if (!date) return null
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 }
 
@@ -134,7 +135,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   })
 
   const [visible, toggle] = !TypeGuards.isNil(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
-  const [value, setValue] = _value && onValueChange ? [_value, onValueChange] : useState(_value ?? new Date())
+  const [value, setValue] = [_value, onValueChange]
+  //const [value, setValue] = _value && onValueChange ? [_value, onValueChange] : useState(_value ?? new Date())
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
 

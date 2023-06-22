@@ -1,10 +1,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
 import {
+  Border,
   BreakpointPlaceholder,
+  Cursor,
+  DefaultColors,
   EnhancedTheme,
   IconPlaceholder,
+  RotateDirections,
   Spacing,
+  Translate,
 } from '../types'
 import {
   FunctionType,
@@ -37,9 +42,13 @@ export type ComponentVariantsDefinition = Record<string, VariantStyleSheet<strin
 
 export type AcceptedNullishVariants = boolean | null | undefined | ''
 
+export type DynamicVariants = Spacing | Border | `backgroundColor:${DefaultColors}` | `bg:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}`
+| `scale:${number}` | `rotate${RotateDirections}:${number}deg` | Translate
+| `cursor:${Cursor}`
+
 export type VariantProp<T = Record<string, any>> =
   string
-  | (keyof T | Spacing | AcceptedNullishVariants)[]
+  | (keyof T | DynamicVariants | AcceptedNullishVariants)[]
 
 export type ResponsiveVariantsProp<
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
@@ -97,7 +106,7 @@ export type ReplaceWithBreakpoints<
   Theme extends EnhancedTheme<any>
 > = ReplaceRecursive<Props, BreakpointPlaceholder, keyof Theme['breakpoints']>
 
-type WithDynamicVariants<T extends Record<string, any>> = keyof T | Spacing | AcceptedNullishVariants
+type WithDynamicVariants<T extends Record<string, any>> = keyof T | DynamicVariants | AcceptedNullishVariants
 
 export type ReplaceWithVariants<T, VariantSheet, Theme extends EnhancedTheme<any>> =
 Omit<T, 'variants'|'responsiveVariants'>

@@ -23,8 +23,7 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
 import { LoadingOverlay } from '../LoadingOverlay'
 
-
-export type ButtonProps = 
+export type ButtonProps =
   ComponentVariants<typeof ButtonStyles> & {
     text?: string
     rightIcon?: IconPlaceholder
@@ -91,7 +90,7 @@ export const Button = (buttonProps:ButtonProps) => {
       onPress={handlePress}
       {...props}
     >
-      <LoadingOverlay 
+      <LoadingOverlay
         visible={loading}
         styles={loaderStyle}
 
@@ -101,8 +100,8 @@ export const Button = (buttonProps:ButtonProps) => {
           name={icon}
           style={{ ...iconStyle, ...getStyles('leftIcon') }}
 
-          />
-          )}
+        />
+      )}
       {children || (
         <Text
           text={text}
@@ -113,15 +112,14 @@ export const Button = (buttonProps:ButtonProps) => {
       <Icon
         name={rightIcon}
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
-        
-        
-        />
-        {loading && <ActivityIndicator styles={{
-          'wrapper': getStyles('loaderWrapper'),
-          'backCircle': getStyles('loaderBackCircle'),
-          'frontCircle': getStyles('loaderFrontCircle'),
-          'circle': getStyles('loaderCircle'),
-        }} css={getStyles('loader')}/>}
+
+      />
+      {loading && <ActivityIndicator styles={{
+        'wrapper': getStyles('loaderWrapper'),
+        'backCircle': getStyles('loaderBackCircle'),
+        'frontCircle': getStyles('loaderFrontCircle'),
+        'circle': getStyles('loaderCircle'),
+      }} css={getStyles('loader')}/>}
     </Touchable>
   )
 }
