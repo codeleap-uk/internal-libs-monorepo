@@ -8,6 +8,7 @@ import {
   ButtonParts,
   optionalObject,
   AnyFunction,
+  TypeGuards,
 } from '@codeleap/common'
 import React, { ComponentPropsWithRef } from 'react'
 import { StylesOf } from '../../types/utility'
@@ -20,6 +21,11 @@ import { LoadingOverlay } from '../LoadingOverlay'
 
 type NativeButtonProps = ComponentPropsWithRef<'button'>
 
+type ChildProps = {
+  styles: StylesOf<ButtonParts>
+  props: Omit<ButtonProps, 'children'>
+}
+
 export type ButtonProps = NativeButtonProps &
   ComponentVariants<typeof ButtonStyles> & {
     text?: string
@@ -31,6 +37,7 @@ export type ButtonProps = NativeButtonProps &
     debugName?: string
     debounce?: number
     selected?: boolean
+    children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
   } & Partial<TouchableProps<any>>
 
 export const Button: React.FC<ButtonProps> = (buttonProps) => {
@@ -80,7 +87,13 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
   }
   const iconStyle = getStyles('icon')
 
-  const loaderStyle = useNestedStylesByKey('loading', variantStyles)
+  const childrenContent = TypeGuards.isFunction(children) ?
+    // @ts-ignore
+    children({ styles: _styles, props: buttonProps })
+    : children
+
+  // TODO - This is a hack to hide the icon when there is no text
+  const isLeftIconHidden = iconStyle?.display != 'none'
 
   return (
     <Touchable
@@ -91,38 +104,29 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       onPress={handlePress}
       {...props}
     >
-      <LoadingOverlay
-        visible={loading}
-        styles={loaderStyle}
-
-      />
-      {!loading && (
+      {(!loading && isLeftIconHidden) && (
         <Icon
           name={icon}
           style={{ ...iconStyle, ...getStyles('leftIcon') }}
 
         />
       )}
-      {children || (
+      {text ? (
         <Text
           text={text}
           styles={{
             text: getStyles('text'),
           }}
         />
-      )}
+      ) : null }
+      {childrenContent}
 
       <Icon
         name={rightIcon}
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
 
       />
-      {loading && <ActivityIndicator styles={{
-        'wrapper': getStyles('loaderWrapper'),
-        'backCircle': getStyles('loaderBackCircle'),
-        'frontCircle': getStyles('loaderFrontCircle'),
-        'circle': getStyles('loaderCircle'),
-      }} css={getStyles('loader')}/>}
+      {loading && <ActivityIndicator css={getStyles('loader')}/>}
     </Touchable>
   )
 }

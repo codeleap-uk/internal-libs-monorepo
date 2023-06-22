@@ -1,7 +1,7 @@
-import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap/common'
+import { ActivityIndicatorComposition, createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap/common'
 import { LoadingOverlayComposition } from '../LoadingOverlay'
 
-export type ButtonStates = 'disabled'
+export type ButtonStates = 'disabled' | 'selected'
 export type ButtonParts =
 | 'text'
 | 'inner'
@@ -10,12 +10,12 @@ export type ButtonParts =
 | 'leftIcon'
 | 'rightIcon'
 | `loading${Capitalize<LoadingOverlayComposition>}`
+| 'loader'
+| `loader${Capitalize<ActivityIndicatorComposition>}`
 | 'badgeText'
 | 'badgeWrapper'
 
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
-
-
 
 const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
 
