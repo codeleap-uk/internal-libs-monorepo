@@ -28,6 +28,7 @@ export type ModalProps = React.PropsWithChildren<
   {
     visible: boolean
     title?: React.ReactNode | string
+    description?: React.ReactNode | string
     renderModalBody?: (props: ModalBodyProps) => React.ReactElement
     toggle: AnyFunction
     styles?: StylesOf<ModalComposition>
@@ -79,36 +80,45 @@ const ModalDefaultHeader = (props: ModalHeaderProps) => {
     closeIconName,
     onPressClose,
     closeButtonProps = {},
+    description,
   } = props
 
   const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
 
   const showCloseButton = showClose && closable
 
-  const hasHeader = !!title || showCloseButton
+  const hasHeader = !!title || !!description || showCloseButton
 
   if (!hasHeader) return null
 
   return (
     <View
-      id={`${id}-title`}
+      id={`${id}-header`}
       component='header'
       css={variantStyles.header}
       className='modal-header header'
     >
-      {TypeGuards.isString(title) ? (
-        <Text text={title} css={variantStyles.title} />
+      <View id={`${id}-title`} css={variantStyles.titleWrapper}>
+        {TypeGuards.isString(title) ? (
+          <Text text={title} css={variantStyles.title} />
+        ) : (
+          title
+        )}
+    
+        {showCloseButton && (
+          <ActionIcon
+            icon={closeIconName as IconPlaceholder}
+            onPress={onPressClose}
+            {...closeButtonProps}
+            styles={closeButtonStyles}
+          />
+        )}
+      </View>
+
+      {TypeGuards.isString(description) ? (
+        <Text text={description} style={variantStyles.description} />
       ) : (
-        title
-      )}
-  
-      {showCloseButton && (
-        <ActionIcon
-          icon={closeIconName as IconPlaceholder}
-          onPress={onPressClose}
-          {...closeButtonProps}
-          styles={closeButtonStyles}
-        />
+        description
       )}
     </View>
   )
@@ -126,6 +136,7 @@ const defaultProps: Partial<ModalProps> = {
   keepMounted: true,
   dismissOnBackdrop: true,
   zIndex: null,
+  description: null,
 }
 
 export const ModalContent: React.FC<ModalProps & { id: string }> = (
