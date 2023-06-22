@@ -267,6 +267,16 @@ function getInitialValue(query: string, initialValue?: boolean) {
   return false;
 }
 
+export function isMediaQuery(query: string) {
+  const media = query.trim().replace('@media screen and ', '')
+
+  if (typeof window !== 'undefined' && 'matchMedia' in window) {
+    return window.matchMedia(media).matches
+  }
+
+  return false
+}
+
 export function useMediaQuery(
   query: string,
   initialValue?: boolean,
