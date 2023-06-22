@@ -236,7 +236,8 @@ export function usePagination({
 
 
 export interface UseMediaQueryOptions {
-  getInitialValueInEffect: boolean;
+  getInitialValueInEffect?: boolean
+  initialValue?: boolean
 }
 
 type MediaQueryCallback = (event: { matches: boolean; media: string }) => void;
@@ -267,45 +268,48 @@ function getInitialValue(query: string, initialValue?: boolean) {
   return false;
 }
 
-export function isMediaQuery(query: string) {
+export function isMediaQuery(query: string, initialValue = false) {
   const media = query.trim().replace('@media screen and ', '')
 
   if (typeof window !== 'undefined' && 'matchMedia' in window) {
     return window.matchMedia(media).matches
   }
 
-  return false
+  return initialValue
 }
 
 export function useMediaQuery(
   query: string,
-  initialValue?: boolean,
-  { getInitialValueInEffect }: UseMediaQueryOptions = {
-    getInitialValueInEffect: true,
-  }
+  queryOptions: UseMediaQueryOptions = {}
 ) {
+  const {
+    initialValue = false,
+    getInitialValueInEffect = true,
+  } = queryOptions
 
   const _query = useMemo(() => {
     return query.trim().replace('@media screen and ', '')
-    
   }, [query])
+
   const [matches, setMatches] = useState(
-    getInitialValueInEffect ? initialValue : getInitialValue(_query, initialValue)
-  );
-  const queryRef = useRef<MediaQueryList>();
+    getInitialValueInEffect ? initialValue : isMediaQuery(query, initialValue)
+  )
+
+  const queryRef = useRef<MediaQueryList>()
 
   useEffect(() => {
     if(query.trim() === '') return
+
     if ('matchMedia' in window) {
       queryRef.current = window.matchMedia(_query);
       setMatches(queryRef.current.matches);
       return attachMediaListener(queryRef.current, (event) => setMatches(event.matches));
     }
 
-    return undefined;
-  }, [_query]);
+    return undefined
+  }, [_query])
 
-  return matches;
+  return matches
 }
 
 type SelectProperties<T extends Record<string|number|symbol, any>, K extends keyof T> = {
