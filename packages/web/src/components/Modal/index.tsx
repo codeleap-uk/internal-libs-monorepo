@@ -130,7 +130,7 @@ const defaultProps: Partial<ModalProps> = {
   closable: true,
   withOverlay: true,
   showClose: true,
-  scroll: true,
+  scroll: false,
   closeOnEscape: true,
   renderHeader: ModalDefaultHeader,
   keepMounted: true,
