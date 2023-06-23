@@ -65,7 +65,7 @@ export const Link = <T extends ElementType = 'a'>(linkProps: LinkProps<T>) => {
       component={Component}
       {...props}
       {...linkPropOverride}
-      css={linkStyles}
+      css={[variantStyles.text, style, ...(css)]}
       onClick={handleClick}
     />
   )
