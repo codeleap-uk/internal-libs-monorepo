@@ -8,24 +8,22 @@ import {
   Arrow as TooltipArrow,
   TooltipProps as PrimitiveTooltipProps,
 } from '@radix-ui/react-tooltip'
-import { Button } from '../Button'
-import { Text } from '../Text'
 
-import './estilo.css'
-import { useDefaultComponentStyle } from '@codeleap/common'
-import { TooltipTestPresets } from './styles'
+import { ComponentVariants, StylesOf, useDefaultComponentStyle } from '@codeleap/common'
+import { TooltipTestComposition, TooltipTestPresets } from './styles'
 
-export type TooltipProps = PrimitiveTooltipProps & {
-  children: any
-  content: any
-}
+export type TooltipProps = PrimitiveTooltipProps & React.PropsWithChildren<{}> & {
+  content: React.ReactNode
+  styles?: StylesOf<TooltipTestComposition>
+} & ComponentVariants<typeof TooltipTestPresets>
 
-export const TooltipCP = (props: any) => {
+export const TooltipCP = (props: TooltipProps) => {
   const {
     children,
     content,
     variants,
     styles,
+    ...rest
   } = props
 
   const variantsStyles = useDefaultComponentStyle<'u:TooltipTest', typeof TooltipTestPresets>('u:TooltipTest', {
@@ -33,17 +31,16 @@ export const TooltipCP = (props: any) => {
     styles,
   })
 
-  console.log('variant styles tooltiptest', variantsStyles.wrapper)
-
   return (
     <TooltipContainer>
-      <TooltipWrapper open={true}>
+      <TooltipWrapper>
         <TooltipTrigger asChild>
-          {/* Componente de exemplo */}
           {children}
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent style={variantsStyles.wrapper} sideOffset={2} side={'bottom'}>
+          <TooltipContent {...rest} style={{
+            ...variantsStyles.wrapper, wrapper: [variantsStyles.wrapper],
+          }} sideOffset={2}>
             {content}
             <TooltipArrow style={variantsStyles.arrow} />
           </TooltipContent>
