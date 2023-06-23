@@ -128,6 +128,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         <Bubble
           css={selectedBubbleStyles}
           animate={bubbleAnimation}
+          initial={false}
           {...bubbleProps}
         />
         {options.map((o, idx) => (
