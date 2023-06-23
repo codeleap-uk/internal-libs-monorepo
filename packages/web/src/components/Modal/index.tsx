@@ -24,9 +24,10 @@ import { Scroll } from '../Scroll'
 
 export * from './styles'
 
-export type ModalProps = React.PropsWithChildren<
+export type ModalProps =
   {
     visible: boolean
+    children?: React.ReactNode
     title?: React.ReactNode | string
     description?: React.ReactNode | string
     renderModalBody?: (props: ModalBodyProps) => React.ReactElement
@@ -51,7 +52,6 @@ export type ModalProps = React.PropsWithChildren<
     overlayProps?: Partial<OverlayProps>
     zIndex?: number
   } & ComponentVariants<typeof ModalPresets>
->
 
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
