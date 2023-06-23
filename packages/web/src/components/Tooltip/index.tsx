@@ -1,155 +1,54 @@
-/** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react'
+import React from 'react'
 import {
-  ComponentVariants,
-  useBooleanToggle,
-  useDefaultComponentStyle,
-  useDebounce,
-} from '@codeleap/common'
-import { ReactNode } from 'react'
-import { View } from '../View'
+  Provider as TooltipContainer,
+  Root as TooltipWrapper,
+  Trigger as TooltipTrigger,
+  Portal as TooltipPortal,
+  Content as TooltipContent,
+  Arrow as TooltipArrow,
+  TooltipProps as PrimitiveTooltipProps,
+} from '@radix-ui/react-tooltip'
 
-import { StylesOf } from '../../types/utility'
-import { Touchable } from '../Touchable'
-import { useClickOutside } from '../../lib/hooks'
+import { ComponentVariants, StylesOf, useDefaultComponentStyle } from '@codeleap/common'
 import { TooltipComposition, TooltipPresets } from './styles'
 
-type TooltipPosition = 'left' | 'top' | 'bottom' | 'right'
+export type TooltipProps = PrimitiveTooltipProps & React.PropsWithChildren<{}> & {
+  content: React.ReactNode
+  styles?: StylesOf<TooltipComposition>
+} & ComponentVariants<typeof TooltipPresets>
 
-const arrowPositionStyles = {
-  left: {
-    right: `100%`,
-    top: '50%',
-    transform: 'translate(50%,-50%)',
-    borderRight: 'none',
-    borderTop: 'none',
-  },
-  right: {
-    left: `100%`,
-    top: '50%',
-    transform: 'translate(-50%,-50%)',
-    borderLeft: 'none',
-    borderBottom: 'none',
-  },
-  bottom: {
-    left: '50%',
-    top: `100%`,
-    transform: 'translate(-50%,-50%)',
-    borderTop: 'none',
-    borderLeft: 'none',
-  },
-  top: {
-    left: '50%',
-    bottom: `100%`,
-    transform: 'translate(-50%,50%)',
-    borderBottom: 'none',
-    borderRight: 'none',
-  },
-}
-
-const tooltipPositionStyles = {
-  left: (arrow = 0, visible = false) => ({
-    right: `calc(100% + ${arrow}px)`,
-    top: '50%',
-    transform: `translate(0%,-50%) scale(${visible ? '1' : '0'})`,
-  }),
-  right: (arrow = 0, visible = false) => ({
-    left: `calc(100% + ${arrow}px)`,
-    top: '50%',
-    transform: `translate(0%,-50%) scale(${visible ? '1' : '0'})`,
-  }),
-  bottom: (arrow = 0, visible = false) => ({
-    left: '50%',
-    top: `calc(100% + ${arrow}px)`,
-    transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
-  }),
-  top: (arrow = 0, visible = false) => ({
-    left: '50%',
-    bottom: `calc(100% + ${arrow}px)`,
-    transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
-  }),
-}
-
-// export type TooltipProps = React.PropsWithChildren<{
-//   position: TooltipPosition
-//   styles?: StylesOf<TooltipComposition>
-//   showOn?: 'click' | 'hover'
-//   content?: string | ReactNode
-// } & ComponentVariants<typeof TooltipPresets>
-// >
-const invert = (pos) => {
-  switch (pos) {
-    case 'left':
-      return 'right'
-    case 'right':
-      return 'left'
-    case 'top':
-      return 'bottom'
-    case 'bottom':
-      return 'top'
-  }
-}
-
-export const Tooltip: React.FC<TooltipProps> = (props) => {
+export const TooltipCP = (props: TooltipProps) => {
   const {
     children,
-    position = 'top',
-    styles,
+    content,
     variants,
     responsiveVariants,
-    showOn,
-    content,
+    styles,
+    ...rest
   } = props
 
-  const [isVisible, setVisible] = useBooleanToggle(false)
-
-  const [debouncedVisible] = useDebounce(isVisible, 100)
-  const arrowPos = arrowPositionStyles[invert(position)]
-
-  const variantStyles = useDefaultComponentStyle('Tooltip', {
+  const variantsStyles = useDefaultComponentStyle<'u:Tooltip', typeof TooltipPresets>('u:Tooltip', {
     responsiveVariants,
     variants,
     styles,
   })
 
-  const style = {
-    transition: 'transform 0.2s ease',
-    '&:after': {
-      ...variantStyles.arrow,
-      ...arrowPos,
-      transform: arrowPos.transform + ' rotate(45deg)',
-    },
-    ...tooltipPositionStyles[position](10, debouncedVisible),
-    ...variantStyles.bubble,
-  } as CSSObject
-
-  const wrapperRef = useClickOutside(
-    () => {
-      if (isVisible) {
-        setVisible(false)
-      }
-    },
-  )
-
-  if (showOn === 'click') {
-    return (
-      <Touchable
-        onPress={() => setVisible()}
-        ref={wrapperRef}
-        css={variantStyles.wrapper}
-      >
-        <View css={style}>{content}</View>
-        {children}
-      </Touchable>
-    )
-  }
-
   return (
-    <View onHover={setVisible} ref={wrapperRef} css={variantStyles.wrapper}>
-      <View css={style}>{content}</View>
-      {children}
-    </View>
+    <TooltipContainer>
+      <TooltipWrapper>
+        <TooltipTrigger asChild>
+          {children}
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent {...rest} style={{
+            ...variantsStyles.wrapper, wrapper: [variantsStyles.wrapper],
+          }} sideOffset={2}>
+            {content}
+            <TooltipArrow style={variantsStyles.arrow} />
+          </TooltipContent>
+        </TooltipPortal>
+      </TooltipWrapper>
+
+    </TooltipContainer>
   )
 }
-
-export * from './styles'
