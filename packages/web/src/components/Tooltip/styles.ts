@@ -1,9 +1,10 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 export type TooltipSide = 'left' | 'right' | 'bottom' | 'top'
+export type TooltipState = 'delayed-open' | 'closed' | 'instant-open'
 export type TooltipParts = 'wrapper' | 'arrow'
 
-export type TooltipComposition = `wrapper[${TooltipSide}]` | TooltipParts
+export type TooltipComposition = `wrapper:${TooltipSide}` | TooltipParts
 
 const createTooltipStyle = createDefaultVariantFactory<TooltipComposition>()
 

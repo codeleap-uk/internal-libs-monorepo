@@ -33,6 +33,8 @@ export const TooltipCP = (props: TooltipProps) => {
     styles,
   })
 
+  const tooltipSide = rest.side ? variantsStyles[`wrapper:${rest.side}`] : variantsStyles.wrapper
+
   return (
     <TooltipContainer>
       <TooltipWrapper>
@@ -40,9 +42,7 @@ export const TooltipCP = (props: TooltipProps) => {
           {children}
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent {...rest} style={{
-            ...variantsStyles.wrapper, wrapper: [variantsStyles.wrapper],
-          }} sideOffset={2}>
+          <TooltipContent css={[tooltipSide]} sideOffset={2} {...rest} >
             {content}
             <TooltipArrow style={variantsStyles.arrow} />
           </TooltipContent>
