@@ -18,3 +18,5 @@ export function makeFetcher(
     ...override,
   })
 }
+
+export { APIError } from './APIError'
