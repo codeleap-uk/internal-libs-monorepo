@@ -1,36 +1,41 @@
 import { View } from '../View'
-import { forwardRef } from 'react'
+import React from 'react'
 import {
   useDefaultComponentStyle,
   ComponentVariants,
   ActivityIndicatorStyles,
   ActivityIndicatorComposition,
+  StylesOf,
+  TypeGuards,
 } from '@codeleap/common'
-import { StylesOf } from '../../types/utility'
 import { ActivityIndicatorPresets } from './styles'
-import { CSSObject } from '@emotion/react'
+import { CSSInterpolation } from '@emotion/css'
 
 export * from './styles'
 
 export type ActivityIndicatorProps = {
-  style?: any
+  style?: React.CSSProperties
   styles?: StylesOf<ActivityIndicatorComposition>
-  css?: CSSObject
+  css?: CSSInterpolation | CSSInterpolation[]
   component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<any>}, 'component'>>
+  size?: number
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 
-export const ActivityIndicator = forwardRef<typeof View, ActivityIndicatorProps>((activityIndicatorProps, ref) => {
-  const {
-    style,
-    styles,
-    component,
-    variants,
-    responsiveVariants,
-    ...props
-  } = {
+export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicatorProps>((activityIndicatorProps, ref) => {
+  const allProps = {
     ...ActivityIndicator.defaultProps,
     ...activityIndicatorProps,
   }
+
+  const {
+    style = {},
+    styles = {},
+    component: Component,
+    variants = [],
+    responsiveVariants = {},
+    size,
+    ...props
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:ActivityIndicator', typeof ActivityIndicatorPresets>(
     'u:ActivityIndicator',
@@ -41,13 +46,18 @@ export const ActivityIndicator = forwardRef<typeof View, ActivityIndicatorProps>
     },
   )
 
-  const Component = component
+  const _size = React.useMemo(() => {
+    return TypeGuards.isNumber(size) ? {
+      width: size,
+      height: size,
+    } : {}
+  }, [size])
 
   return (
-    <View css={[variantStyles.wrapper, style]}>
+    <View css={[variantStyles.wrapper, style, _size]}>
       <Component
         ref={ref}
-        css={variantStyles.wrapper}
+        css={[variantStyles.wrapper, _size]}
         {...props}
       />
     </View>
@@ -56,4 +66,5 @@ export const ActivityIndicator = forwardRef<typeof View, ActivityIndicatorProps>
 
 ActivityIndicator.defaultProps = {
   component: View,
+  size: null,
 }

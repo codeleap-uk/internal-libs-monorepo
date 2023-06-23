@@ -2,27 +2,43 @@ import { ComponentVariants, getNestedStylesByKey, useDefaultComponentStyle } fro
 import React from 'react'
 import { StylesOf } from '../..'
 import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
-import { View } from '../View'
+import { View, ViewProps } from '../View'
 import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 
-export type LoadingOverlayProps = React.PropsWithChildren<{
+export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
   visible?: boolean
   styles?: StylesOf<LoadingOverlayComposition>
+  style?: React.CSSProperties
   indicatorProps?: ActivityIndicatorProps
-}> & ComponentVariants<typeof LoadingOverlayPresets>
+  children?: React.ReactNode
+} & ComponentVariants<typeof LoadingOverlayPresets>
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
-  const { visible, children, styles, variants, responsiveVariants, indicatorProps, ...rest } = props
+  const { 
+    visible,
+    children,
+    styles = {},
+    variants = [],
+    responsiveVariants = {},
+    style = {},
+    indicatorProps, 
+    ...rest 
+  } = props
 
   const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
-    variants, styles, responsiveVariants, rootElement: 'wrapper',
+    variants, 
+    styles, 
+    responsiveVariants, 
+    rootElement: 'wrapper',
   })
 
-  const indicatorStyles = getNestedStylesByKey('indicator', variantStyles)
+  const indicatorStyles = React.useMemo(() => {
+    return getNestedStylesByKey('indicator', variantStyles)
+  }, [variantStyles])
 
   return (
-    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible']]} {...rest}>
-      <ActivityIndicator styles={indicatorStyles} {...indicatorProps} />
+    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible'], style]} {...rest}>
+      <ActivityIndicator {...indicatorProps} styles={indicatorStyles} />
       {children}
     </View>
   )
