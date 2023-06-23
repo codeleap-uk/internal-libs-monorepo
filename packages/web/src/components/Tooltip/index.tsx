@@ -12,18 +12,20 @@ import {
 import { ComponentVariants, StylesOf, useDefaultComponentStyle } from '@codeleap/common'
 import { TooltipComposition, TooltipPresets } from './styles'
 
-export type TooltipProps = PrimitiveTooltipProps & React.PropsWithChildren<{}> & {
+export type TooltipProps = PrimitiveTooltipProps & {
   content: React.ReactNode
   styles?: StylesOf<TooltipComposition>
+  side?: 'left' | 'right' | 'bottom' | 'top'
 } & ComponentVariants<typeof TooltipPresets>
 
-export const TooltipCP = (props: TooltipProps) => {
+export const Tooltip = (props: TooltipProps) => {
   const {
     children,
     content,
     variants,
     responsiveVariants,
     styles,
+    side = 'bottom',
     ...rest
   } = props
 
@@ -33,20 +35,18 @@ export const TooltipCP = (props: TooltipProps) => {
     styles,
   })
 
-  console.log('variantStyles', variantsStyles)
-
-  const tooltipSide = rest.side ? variantsStyles[`wrapper:${rest.side}`] : variantsStyles.wrapper
+  const tooltipDirectionStyle = side ? variantsStyles[`wrapper:${side}`] : variantsStyles.wrapper
 
   return (
     <TooltipContainer>
       <TooltipWrapper>
-        <TooltipTrigger asChild>
+        <TooltipTrigger asChild >
           {children}
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent css={[tooltipSide]} sideOffset={2} {...rest} >
+          <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} {...rest} >
             {content}
-            <TooltipArrow style={variantsStyles.arrow} />
+            <TooltipArrow />
           </TooltipContent>
         </TooltipPortal>
       </TooltipWrapper>
@@ -54,3 +54,5 @@ export const TooltipCP = (props: TooltipProps) => {
     </TooltipContainer>
   )
 }
+
+export * from './styles'
