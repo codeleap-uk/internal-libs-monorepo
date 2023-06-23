@@ -105,11 +105,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 }
 
 const LoadingIndicator = (props: LoadingIndicatorProps) => {
-  const { defaultStyles, size } = props
+  const { defaultStyles } = props
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      <ActivityIndicator size={size} />
+      <ActivityIndicator />
     </View>
   )
 }
