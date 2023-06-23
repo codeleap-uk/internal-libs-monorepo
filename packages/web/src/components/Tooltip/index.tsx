@@ -33,6 +33,8 @@ export const TooltipCP = (props: TooltipProps) => {
     styles,
   })
 
+  console.log('variantStyles', variantsStyles)
+
   const tooltipSide = rest.side ? variantsStyles[`wrapper:${rest.side}`] : variantsStyles.wrapper
 
   return (

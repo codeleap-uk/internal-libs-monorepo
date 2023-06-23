@@ -92,6 +92,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     styles,
   })
 
+  console.log('textInput', variantStyles)
+
   useImperativeHandle(inputRef, () => {
     return {
       ...innerInputRef.current,

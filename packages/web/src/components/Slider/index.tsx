@@ -128,8 +128,6 @@ export const Slider = (props: SliderProps) => {
     styles,
   })
 
-  console.log('variant styles slider', variantStyles)
-
   const thumbStyle = React.useMemo(() => {
     return concatStyles([
       variantStyles.thumb,
