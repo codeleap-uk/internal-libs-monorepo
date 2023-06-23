@@ -51,6 +51,7 @@ export type ModalProps =
     onClose?: () => void
     overlayProps?: Partial<OverlayProps>
     zIndex?: number
+    scrollable?: boolean
   } & ComponentVariants<typeof ModalPresets>
 
 function focusModal(event: FocusEvent, id: string) {
@@ -137,6 +138,7 @@ const defaultProps: Partial<ModalProps> = {
   dismissOnBackdrop: true,
   zIndex: null,
   description: null,
+  scrollable: false,
 }
 
 export const ModalContent: React.FC<ModalProps & { id: string }> = (
@@ -164,6 +166,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     overlayProps = {},
     dismissOnBackdrop,
     zIndex,
+    scrollable,
     ...props
   } = modalProps
 
@@ -214,12 +217,14 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   const ModalBody = renderModalBody || (scroll ? Scroll : View)
 
+  const ModalArea = scrollable ? Scroll : View
+
   const _zIndex = React.useMemo(() => {
     return TypeGuards.isNumber(zIndex) ? { zIndex } : {}
   }, [zIndex])
 
   return (
-    <View
+    <ModalArea
       aria-hidden={!visible}
       css={[
         variantStyles.wrapper,
@@ -283,7 +288,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           )}
         </View>
       </View>
-    </View>
+    </ModalArea>
   )
 }
 
