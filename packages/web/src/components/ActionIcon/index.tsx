@@ -55,22 +55,22 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
     if (onPress) onPress?.()
   }
 
-  const getStyles = (key: ActionIconParts) => ({
-    ...variantStyles[key],
-    ...(disabled && variantStyles[`${key}:disabled`]),
-    ...(isPressable && variantStyles[`${key}:pressable`]),
-  })
+  const getStyles = (key: ActionIconParts) => ([
+    variantStyles[key],
+    disabled && variantStyles[`${key}:disabled`],
+    isPressable && variantStyles[`${key}:pressable`]
+  ])
 
   return (
     <WrapperComponent 
       onPress={handlePress}
-      style={getStyles('touchableWrapper')}
+      css={getStyles('touchableWrapper')}
       disabled={disabled}
       {...touchableProps}
     >
       <Icon
         name={icon ?? name}
-        style={getStyles('icon')}
+        css={getStyles('icon')}
         {...iconProps}
       />
       {children}
