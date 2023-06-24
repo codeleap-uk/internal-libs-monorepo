@@ -48,7 +48,7 @@ export const Tooltip = (props: TooltipProps) => {
           {children}
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} {...rest} >
+          <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...rest} >
             {content}
             <TooltipArrow />
           </TooltipContent>
