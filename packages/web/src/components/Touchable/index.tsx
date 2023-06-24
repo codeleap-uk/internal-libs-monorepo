@@ -19,7 +19,7 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   styles?: StylesOf<TouchableComposition>
   debounce?: number
   leadingDebounce?: boolean
-  setPressed?: (param: boolean) => void
+  setPressed?: (pressed: boolean) => void
 } & ComponentVariants<typeof TouchablePresets>
 
 export const TouchableCP = <T extends ElementType = typeof View>(
