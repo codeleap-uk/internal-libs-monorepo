@@ -106,13 +106,20 @@ export const TouchableCP = <T extends ElementType = typeof View>(
     }
   }
 
+  const _styles = React.useMemo(() => ([
+    variantStyles.wrapper,
+    disabled && variantStyles['wrapper:disabled'],
+    css,
+    style,
+  ]), [variantStyles, disabled])
+
   return (
     <View
       component={Component || 'div'} 
       {...props} 
       onClick={handleClick} 
       ref={ref}
-      css={[variantStyles.wrapper, css, style]}
+      css={_styles}
     >
       {children}
     </View>

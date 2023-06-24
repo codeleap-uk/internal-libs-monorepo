@@ -1,6 +1,8 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type TouchableComposition = 'wrapper'
+export type TouchableState = 'disabled'
+export type TouchableParts = 'wrapper'
+export type TouchableComposition = TouchableParts | `${TouchableParts}:${TouchableState}`
 
 const createTouchableStyle = createDefaultVariantFactory<TouchableComposition>()
 
