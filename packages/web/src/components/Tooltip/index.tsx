@@ -16,16 +16,18 @@ export type TooltipProps = PrimitiveTooltipProps & {
   content: React.ReactNode
   styles?: StylesOf<TooltipComposition>
   side?: 'left' | 'right' | 'bottom' | 'top'
+  isOpen?: boolean
 } & ComponentVariants<typeof TooltipPresets>
 
 export const Tooltip = (props: TooltipProps) => {
   const {
     children,
     content,
+    side = 'bottom',
+    isOpen,
     variants,
     responsiveVariants,
     styles,
-    side = 'bottom',
     ...rest
   } = props
 
@@ -35,11 +37,13 @@ export const Tooltip = (props: TooltipProps) => {
     styles,
   })
 
+  const open = !isOpen ? undefined : true
+
   const tooltipDirectionStyle = side ? variantsStyles[`wrapper:${side}`] : variantsStyles.wrapper
 
   return (
     <TooltipContainer>
-      <TooltipWrapper>
+      <TooltipWrapper open={open}>
         <TooltipTrigger asChild >
           {children}
         </TooltipTrigger>
