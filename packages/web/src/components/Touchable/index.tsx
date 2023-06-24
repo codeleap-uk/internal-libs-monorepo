@@ -14,7 +14,7 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   disabled?: boolean
   propagate?: boolean
   onPress?: AnyFunction
-  debugName?: string
+  debugName: string
   debugComponent?: string
   styles?: StylesOf<TouchableComposition>
   debounce?: number
