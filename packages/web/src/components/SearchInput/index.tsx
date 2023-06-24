@@ -1,14 +1,13 @@
 import { ComponentVariants, IconPlaceholder, TypeGuards } from '@codeleap/common'
 import React, {
-  Dispatch,
-  SetStateAction,
+
 } from 'react'
 import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
 import { ComponentWithDefaultProps } from '../../types/utility'
 
 export type SearchInputProps = {
   searchValue: string
-  setSearchValue: Dispatch<SetStateAction<string>>
+  setSearchValue: (value: string) => void
   placeholder: string
   debugName: string
   clearIcon?: IconPlaceholder
@@ -16,8 +15,7 @@ export type SearchInputProps = {
   debounce?: number
   onSearchChange: (search: string) => void
   onTypingChange: (isTyping: boolean) => void
-  variants?: ComponentVariants<typeof TextInputPresets>['variants']
-} & Partial<TextInputProps>
+} & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
 export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
   const {
@@ -30,7 +28,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     clearIcon,
     searchIcon,
     debounce,
-    variants,
+    ...rest
   } = {
     ...SearchInput.defaultProps,
     ...props,
@@ -44,7 +42,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     if (TypeGuards.isNil(debounce)) {
       onSearchChange?.(value)
     } else {
-      if (setSearchTimeout.current) {
+      if (!TypeGuards.isNil(setSearchTimeout.current)) {
         clearTimeout(setSearchTimeout.current)
       }
       setSearchTimeout.current = setTimeout(() => {
@@ -74,7 +72,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       leftIcon={{
         name: searchIcon,
       }}
-      variants={variants}
+      {...rest}
     />
   )
 }
