@@ -9,7 +9,6 @@ import { ActionIconComposition, ActionIconParts, ActionIconPresets } from './sty
 export * from './styles'
 
 export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & {
-  disabled?: boolean
   iconProps?: Partial<IconProps>
   icon?: IconProps['name']
   name?: IconProps['name']
@@ -20,7 +19,7 @@ const defaultProps: Partial<ActionIconProps> = {
   disabled: false,
 }
 
-export const ActionIcon:React.FC<ActionIconProps> = (props) => {
+export const ActionIcon = (props: ActionIconProps) => {
   const allProps = {
     ...ActionIcon.defaultProps,
     ...props,

@@ -1,6 +1,7 @@
-import { TypeGuards, createDefaultVariantFactory, getRenderedComponent, includePresets, useDefaultComponentStyle, useMemo, useNestedStylesByKey } from '@codeleap/common'
+import { TypeGuards, createDefaultVariantFactory, includePresets, useDefaultComponentStyle, useNestedStylesByKey } from '@codeleap/common'
 import { ActionIconComposition, ActionIconParts } from '../ActionIcon'
 import { InputBaseProps } from './types'
+import { concatStyles, getIconStyles, iconStylesOf } from './utils'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
@@ -27,38 +28,6 @@ const createTextInputBaseComposition = createDefaultVariantFactory<InputBaseComp
 
 export const InputBasePresets = includePresets((styles) => createTextInputBaseComposition(() => ({ wrapper: styles })))
 
-const getIconStyles = (obj, state) => {
-  return {
-    icon: {
-      ...obj.icon,
-      ...(state.focused && obj['icon:focus']),
-      ...(state.hasError && obj['icon:error']),
-      ...(state.disabled && obj['icon:disabled']),
-    },
-    wrapper: {
-      ...obj.touchableWrapper,
-      ...(state.focused && obj['touchableWrapper:focus']),
-      ...(state.hasError && obj['touchableWrapper:error']),
-      ...(state.disabled && obj['touchableWrapper:disabled']),
-    },
-  }
-}
-
-export function concatStyles(unstyles: Record<number, {}> = {}) {
-  let styles = {}
-
-  Object.values(unstyles || {}).forEach(style => {
-    if (style) {
-      styles = {
-        ...styles,
-        ...style,
-      }
-    }
-  })
-
-  return styles
-}
-
 export const useInputBaseStyles = (props: InputBaseProps) => {
   const {
     focused,
@@ -76,41 +45,24 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const _leftIconStyles = useNestedStylesByKey<ActionIconComposition>('leftIcon', variantStyles)
   const _rightIconStyles = useNestedStylesByKey<ActionIconComposition>('rightIcon', variantStyles)
-  const _generalIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', variantStyles)
+  const _baseIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', variantStyles)
 
-  const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled, focused })
+  const baseIconStyles = getIconStyles(_baseIconStyles, { hasError, disabled, focused })
+
   const leftIconStylesCompose = getIconStyles(_leftIconStyles, { 
     hasError, 
     disabled: disabled || props?.leftIcon?.disabled, 
     focused 
   })
+
   const rightIconStylesCompose = getIconStyles(_rightIconStyles, { 
     hasError, 
     disabled: disabled || props?.rightIcon?.disabled,
     focused 
   })
 
-  const leftIconStyles = {
-    icon: {
-      ...generalIconStyles.icon,
-      ...leftIconStylesCompose.icon,
-    },
-    wrapper: {
-      ...generalIconStyles.wrapper,
-      ...leftIconStylesCompose.wrapper,
-    },
-  }
-
-  const rightIconStyles = {
-    icon: {
-      ...generalIconStyles.icon,
-      ...rightIconStylesCompose.icon,
-    },
-    wrapper: {
-      ...generalIconStyles.wrapper,
-      ...rightIconStylesCompose.wrapper,
-    },
-  }
+  const leftIconStyles = iconStylesOf(baseIconStyles, leftIconStylesCompose)
+  const rightIconStyles = iconStylesOf(baseIconStyles, rightIconStylesCompose)
 
   const labelStyle = [
     variantStyles.label,

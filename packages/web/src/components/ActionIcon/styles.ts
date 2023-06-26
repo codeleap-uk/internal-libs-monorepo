@@ -1,8 +1,8 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { IconComposition } from '../Icon'
-import { TouchableParts } from '../Touchable'
+import { TouchableComposition } from '../Touchable/styles'
 
-export type ActionIconParts = IconComposition | `touchable${Capitalize<TouchableParts>}`
+export type ActionIconParts = IconComposition | `touchable${Capitalize<TouchableComposition>}`
 export type ActionIconStates = 'disabled' | 'pressable'
 
 export type ActionIconComposition = ActionIconParts | `${ActionIconParts}:${ActionIconStates}`
