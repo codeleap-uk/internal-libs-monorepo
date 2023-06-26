@@ -22,6 +22,9 @@ import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
 import { NumberIncrementPresets } from './NumberIncrement/styles'
+import { AvatarPresets } from './Avatar/styles'
+import { AvatarGroupPresets } from './AvatarGroup/styles'
+import { BadgePresets } from './Badge/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -47,5 +50,8 @@ export const defaultStyles = {
   LoadingOverlay: LoadingOverlayPresets,
   InputBase: InputBasePresets,
   Switch: SwitchPresets,
-  NumberIncrement: NumberIncrementPresets
+  NumberIncrement: NumberIncrementPresets,
+  Avatar: AvatarPresets,
+  AvatarGroupPresets: AvatarGroupPresets,
+  Badge: BadgePresets,
 }

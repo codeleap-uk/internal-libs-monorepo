@@ -27,5 +27,5 @@ export * from './Switch'
 export * from './NumberIncrement'
 export * from './Avatar'
 export * from './AvatarGroup'
-
 export * from './defaultStyles'
+export * from './Badge'
