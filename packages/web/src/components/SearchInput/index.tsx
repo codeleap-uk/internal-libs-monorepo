@@ -1,20 +1,18 @@
-import { ComponentVariants, IconPlaceholder, TypeGuards } from '@codeleap/common'
-import React, {
-
-} from 'react'
+import { AnyFunction, ComponentVariants, IconPlaceholder, TypeGuards } from '@codeleap/common'
+import React, { useState } from 'react'
 import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
 import { ComponentWithDefaultProps } from '../../types/utility'
 
 export type SearchInputProps = {
-  searchValue: string
-  setSearchValue: (value: string) => void
   placeholder: string
+  clearable?: boolean
   debugName: string
   clearIcon?: IconPlaceholder
   searchIcon?: IconPlaceholder
   debounce?: number
   onSearchChange: (search: string) => void
   onTypingChange: (isTyping: boolean) => void
+  onClear: AnyFunction
 } & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
 
 export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
@@ -22,8 +20,8 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     debugName,
     onSearchChange,
     onTypingChange,
-    searchValue,
-    setSearchValue,
+    onClear,
+    clearable,
     placeholder,
     clearIcon,
     searchIcon,
@@ -33,11 +31,11 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     ...SearchInput.defaultProps,
     ...props,
   }
-
+  const [search, setSearch] = useState('')
   const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
 
   const handleChangeSearch = (value: string) => {
-    setSearchValue(value)
+    setSearch(value)
 
     if (TypeGuards.isNil(debounce)) {
       onSearchChange?.(value)
@@ -47,25 +45,27 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       }
       setSearchTimeout.current = setTimeout(() => {
         onSearchChange(value)
+        onTypingChange?.(false)
       }, debounce ?? 0)
     }
   }
 
   const handleClear = () => {
-    setSearchValue('')
+    setSearch('')
     onSearchChange?.('')
+    onClear?.()
   }
 
   return (
     <TextInput
-      value={searchValue}
+      value={search}
       placeholder={placeholder}
       onChangeText={(value) => {
         onTypingChange?.(true)
         handleChangeSearch(value)
       }}
       debugName={`Search ${debugName}`}
-      rightIcon={searchValue && {
+      rightIcon={search && clearable && {
         name: clearIcon,
         onPress: () => handleClear(),
       }}
@@ -79,6 +79,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 
 SearchInput.defaultProps = {
   debounce: null,
+  clearable: true,
   clearIcon: 'close' as IconPlaceholder,
   searchIcon: 'search' as IconPlaceholder,
 }
