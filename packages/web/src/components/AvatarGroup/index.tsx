@@ -4,7 +4,7 @@ import {
   useNestedStylesByKey,
 } from '@codeleap/common'
 import React from 'react'
-import { StyleSheet } from 'react-native'
+// import { StyleSheet } from 'react-native'
 import { StylesOf } from '../../types'
 import { AvatarGroupComposition, AvatarGroupPresets } from './styles'
 import { View, ViewProps } from '../View'
@@ -39,7 +39,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
   const variantStyles = useDefaultComponentStyle('u:AvatarGroup', {
     variants,
     styles,
-    transform: StyleSheet.flatten,
+    // transform: StyleSheet.flatten,
   })
 
   const avatarStyles = useNestedStylesByKey('avatar', variantStyles)

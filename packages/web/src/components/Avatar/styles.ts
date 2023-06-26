@@ -1,12 +1,22 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { ActivityIndicatorComposition } from '../ActivityIndicator'
+import { BadgeComposition } from '../Badge'
 
-type LoadingOverlayStates = 'visible'
+export type AvatarParts =
+  | 'wrapper'
+  | 'touchable'
+  | 'initials'
+  | 'image'
+  | 'icon'
+  | 'iconWrapper'
+  | 'description'
+  | 'descriptionOverlay'
+  | 'badgeIconWrapper'
+  | 'badgeIcon'
+  | `badge${Capitalize<BadgeComposition>}`
 
-export type LoadingOverlayParts = 'wrapper' | `indicator${Capitalize<ActivityIndicatorComposition>}`
+export type AvatarComposition = AvatarParts
 
-export type LoadingOverlayComposition = `${LoadingOverlayParts}:${LoadingOverlayStates}` | LoadingOverlayParts
+const createAvatarStyle = createDefaultVariantFactory<AvatarComposition>()
 
-export const createLoadingOverlayStyle = createDefaultVariantFactory<LoadingOverlayComposition>()
-
-export const LoadingOverlayPresets = includePresets(s => createLoadingOverlayStyle(() => ({ wrapper: s })))
+export const AvatarPresets = includePresets((styles) => createAvatarStyle(() => ({ wrapper: styles })),
+)
