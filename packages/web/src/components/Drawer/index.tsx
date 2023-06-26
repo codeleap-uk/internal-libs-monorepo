@@ -14,6 +14,7 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { StylesOf } from '../../types/utility'
 import { DrawerComposition, DrawerPresets } from './styles'
+import { ActionIcon } from '../ActionIcon'
 
 const axisMap = {
   top: [-1, 'Y'],
@@ -129,10 +130,9 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
             >
               {typeof title === 'string' ? <Text text={title} /> : title}
               {showCloseButton && (
-                <Button
+                <ActionIcon
                   onPress={toggle}
                   icon={'close' as IconPlaceholder}
-                  variants={['icon']}
                   css={variantStyles.headerCloseButton}
                 />
               )}

@@ -7,8 +7,7 @@
       "ESNext",
       "DOM"
     ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react",
+    "jsx": "react",
     /* Modules */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
     "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */
@@ -23,14 +22,6 @@
     "outDir": "./dist",
     "declaration": true,
     "sourceMap": true,
-    "paths": {
-      "react-dom": [
-        "../../apps/web/node_modules/@types/react-dom/index.d.ts"
-      ],
-      "react": [
-        "../../apps/web/node_modules/@types/react/index.d.ts"
-      ]
-    }
   },
   "include": [
     "**/*.ts",

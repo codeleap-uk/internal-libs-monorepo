@@ -54,7 +54,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     styles,
   })
 
-  function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
+  function handlePress(e?: Parameters<ButtonProps['onPress']>[0]) {
     if (!pressed) {
       props?.onClick?.(e)
 
@@ -82,8 +82,9 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       css={getStyles('wrapper')}
       component='button'
       debugComponent='Button'
-      onPress={handlePress}
       {...props}
+      onPress={null}
+      onClick={handlePress}
     >
       <LoadingOverlay
         visible={loading}

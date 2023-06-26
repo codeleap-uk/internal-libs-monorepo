@@ -38,6 +38,7 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
     disabled = false,
     order = InputBaseDefaultOrder,
     style,
+    noError = false,
     labelAsRow = false,
     innerWrapperRef,
     ...otherProps
@@ -81,9 +82,11 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
-    error: _error || <Text children={<>
-      &nbsp;
-    </>} css={_styles.errorStyle}/>,
+    error: noError ? null : (
+      _error || <Text children={<>
+        &nbsp;
+      </>} css={_styles.errorStyle}/>
+    ),
   }
 
   return (

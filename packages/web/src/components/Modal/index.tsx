@@ -10,6 +10,7 @@ import {
   useUnmount,
   StylesOf,
   PropsOf,
+  useIsomorphicEffect,
 } from '@codeleap/common'
 
 import React, { useId, useLayoutEffect, useRef } from 'react'
@@ -105,7 +106,7 @@ const ModalDefaultHeader = (props: ModalHeaderProps) => {
         ) : (
           title
         )}
-    
+
         {showCloseButton && (
           <ActionIcon
             icon={closeIconName as IconPlaceholder}
@@ -208,7 +209,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     }
   }
 
-  useLayoutEffect(() => {
+  useIsomorphicEffect(() => {
     const modal = document.getElementById(id)
     if (modal) modal.focus()
   }, [id])
@@ -266,7 +267,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           aria-label='Close the modal by pressing Escape key'
           {...props}
         >
-          <ModalHeader 
+          <ModalHeader
             {...modalProps}
             variantStyles={variantStyles}
             id={id}
@@ -309,15 +310,15 @@ export const Modal: React.FC<ModalProps> = (props) => {
     keepMounted ? 'mounted' : 'unmounted',
   )
 
-  onUpdate(() => {
-    if (!keepMounted) {
-      if (visible) {
-        setRenderStatus('mounted')
-      } else {
-        setTimeout(() => setRenderStatus('unmounted'), 500)
-      }
-    }
-  }, [keepMounted, visible])
+  // onUpdate(() => {
+  //   if (!keepMounted) {
+  //     if (visible) {
+  //       setRenderStatus('mounted')
+  //     } else {
+  //       setTimeout(() => setRenderStatus('unmounted'), 500)
+  //     }
+  //   }
+  // }, [keepMounted, visible])
 
   onMount(() => {
     if (accessible) {
@@ -336,22 +337,25 @@ export const Modal: React.FC<ModalProps> = (props) => {
     }
   }, [visible])
 
-  if (accessible) {
+  onUpdate(() => {
     if (visible) {
       document.body.style.overflow = 'hidden'
-      return ReactDOM.createPortal(
-        <ModalContent {...props} id={modalId.current} />,
-        document.body,
-      )
     } else {
       document.body.style.overflow = 'visible'
-      return null
     }
-  }
+  }, [visible])
 
-  if (renderStatus === 'unmounted') return null
+  const content = <ModalContent {...props} id={modalId.current} />
 
-  return <ModalContent {...props} id={modalId.current} />
+  // if (renderStatus === 'unmounted') return null
+
+  if (typeof window === 'undefined') return content
+
+  return ReactDOM.createPortal(
+    content,
+    document.body,
+  )
+
 }
 
 Modal.defaultProps = defaultProps

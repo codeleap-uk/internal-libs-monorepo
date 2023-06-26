@@ -2,20 +2,16 @@ import { createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap
 
 export type SegmentedControlStates = 'selected' | 'disabled'
 
-export type SegmentedControlComposition =
- 'selectedBubble' |
- `selectedBubble:${SegmentedControlStates}` |
- 'wrapper' |
- 'innerWrapper' |
- `innerWrapper:${SegmentedControlStates}` |
- 'text' |
- `text:${SegmentedControlStates}` |
- 'icon' |
- `icon:${SegmentedControlStates}` |
- 'button' |
- `button:${SegmentedControlStates}` |
- `label` |
- `label:${SegmentedControlStates}`
+type SegmentedControlParts =
+'selectedBubble' |
+'wrapper' |
+'innerWrapper' |
+'text' |
+'icon' |
+'button' |
+`label`
+
+export type SegmentedControlComposition = SegmentedControlParts | `${SegmentedControlParts}:${SegmentedControlStates}`
 
 export type SegmentedControlStylesGen<TCSS = any> =
   StylesOf<

@@ -1,10 +1,12 @@
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
   useCodeleapContext,
   BaseViewProps,
   useMemo,
-  TypeGuards
+  TypeGuards,
 } from '@codeleap/common'
 import {
   ComponentPropsWithRef,
@@ -56,7 +58,7 @@ export const ViewCP = <T extends ElementType = 'div'>(
     responsiveVariants,
     variants,
     styles,
-    rootElement: 'wrapper'
+    rootElement: 'wrapper',
   })
 
   const { Theme, logger } = useCodeleapContext()
@@ -82,7 +84,7 @@ export const ViewCP = <T extends ElementType = 'div'>(
       scroll && { overflowY: 'scroll' },
       matches && { display: 'none' },
       style,
-      css
+      css,
     ]
   }, [scroll, matches, css])
 
@@ -91,7 +93,7 @@ export const ViewCP = <T extends ElementType = 'div'>(
     onMouseLeave: () => handleHover(false),
   }
 
-  if (debug){
+  if (debug) {
     logger.log(debugName, { componentStyles, platformMediaQuery, matches })
   }
 

@@ -1,13 +1,12 @@
 /** @jsx jsx */
-import { AnyFunction, useCodeleapContext } from '@codeleap/common'
 import { jsx, CSSObject } from '@emotion/react'
+import { AnyFunction, useCodeleapContext } from '@codeleap/common'
 
 import React, { ComponentPropsWithRef, ElementType, forwardRef, ReactElement } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
 import { TouchableComposition } from './styles'
 import { StylesOf } from '../../types'
-
 
 export * from './styles'
 
@@ -45,17 +44,17 @@ export const TouchableCP = <T extends ElementType = typeof View>(
 
     if (!propagate) stopPropagation(event)
 
-    if (!onPress) { 
+    if (!onPress && !onClick) {
       logger.warn('No onPress passed to touchable', touchableProps)
       return
-     }
+    }
 
     logger.log(
       `<${debugComponent || 'Touchable'}/>  pressed`,
       { debugName, debugComponent },
       'User interaction',
     )
-    onClick?.()
+    onClick?.(event)
     onPress && onPress()
     // logger.log('Touchable pressed', JSON.stringify(touchableProps, null, 2)  ,'Component')
   }

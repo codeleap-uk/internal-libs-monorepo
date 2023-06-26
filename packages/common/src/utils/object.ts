@@ -11,9 +11,12 @@ export function deepMerge(base = {}, changes = {}): any {
   } catch (e) {
     return changes
   }
+
+  const checkForFile = typeof window !== 'undefined' && changes instanceof File
+
   for (const [key, value] of changeEntries) {
     obj[key] =
-      typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date || value instanceof File)
+      typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date || checkForFile)
         ? deepMerge(obj[key], changes[key])
         : value
   }

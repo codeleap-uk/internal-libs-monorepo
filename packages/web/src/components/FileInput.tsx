@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import React, {
   ComponentPropsWithoutRef,
   useImperativeHandle,

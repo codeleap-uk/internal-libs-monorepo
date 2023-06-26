@@ -52,7 +52,7 @@ const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsPr
         const isSelected = index === page
         const css = [
           variantStyles[isSelected ? 'dot:selected' : 'dot'],
-          dotsDisabled && variantStyles['dot:disabled']
+          dotsDisabled && variantStyles['dot:disabled'],
         ]
 
         return (
