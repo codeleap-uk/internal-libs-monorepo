@@ -1,10 +1,10 @@
 import { AnyFunction, ComponentVariants, onMount, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
-import React, { ComponentPropsWithRef, ElementType, forwardRef, ReactElement } from 'react'
+import React, { ComponentPropsWithRef, ElementType, forwardRef } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
 import { TouchableComposition, TouchablePresets } from './styles'
-import { StylesOf } from '../../types'
 import { CSSInterpolation } from '@emotion/css'
+import { StylesOf, NativeHTMLElement } from '../../types'
 
 export * from './styles'
 
@@ -13,6 +13,7 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   component?: T
   disabled?: boolean
   propagate?: boolean
+  style?: React.CSSObject
   onPress?: AnyFunction
   debugName: string
   debugComponent?: string
@@ -22,12 +23,12 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   setPressed?: (pressed: boolean) => void
 } & ComponentVariants<typeof TouchablePresets>
 
-export const TouchableCP = <T extends ElementType = typeof View>(
+export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>,
   ref,
 ) => {
   const {
-    children,
+
     propagate = true,
     debounce = null,
     leadingDebounce,
@@ -70,7 +71,7 @@ export const TouchableCP = <T extends ElementType = typeof View>(
 
     if (!propagate) stopPropagation(event)
 
-    if (!TypeGuards.isFunction(onPress)) { 
+    if (!TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)) { 
       logger.warn(
         'No onPress passed to touchable', 
         touchableProps, 
@@ -115,17 +116,16 @@ export const TouchableCP = <T extends ElementType = typeof View>(
 
   return (
     <View
-      component={Component || 'div'} 
+      component={Component || 'button'} 
       {...props} 
+      debugName={debugName}
       onClick={handleClick} 
       ref={ref}
       css={_styles}
-    >
-      {children}
-    </View>
+    />
   )
 }
 
-export const Touchable = forwardRef(TouchableCP) as <T extends ElementType = typeof View>(
+export const Touchable = forwardRef(TouchableCP) as <T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>
-) => ReactElement
+) => JSX.Element

@@ -4,29 +4,27 @@ import { StyleSheet } from 'react-native'
 import {
   TypeGuards,
   useDefaultComponentStyle,
-  onUpdate
+  onUpdate,
 } from '@codeleap/common'
 
 import { SliderProps, TrackMarkProps } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
-import {SliderPresets} from './styles'
+import { SliderPresets } from './styles'
 import { Text } from '../Text'
 import { View } from '../View'
 
 export * from './styles'
 
-
-
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
   const { index, content, style } = props
 
-  if(!TypeGuards.isString(props.content)){
+  if (!TypeGuards.isString(props.content)) {
     return <>
       {props.content}
     </>
   }
 
-  return <Text 
+  return <Text
     text={props.content}
     style={style}
   />
@@ -35,7 +33,7 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
 export const Slider = (props:SliderProps) => {
   const {
     inputBaseProps,
-    others
+    others,
   } = selectInputBaseProps(props)
 
   const {
@@ -57,12 +55,10 @@ export const Slider = (props:SliderProps) => {
   const [_value, _setValue] = React.useState(value)
 
   onUpdate(() => {
-    if(value !== _value){
+    if (value !== _value) {
       _setValue(value)
     }
   }, [value])
-
-
 
   const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
     variants,
@@ -74,30 +70,30 @@ export const Slider = (props:SliderProps) => {
     return StyleSheet.flatten([
       variantStyles.thumb,
       disabled && variantStyles['thumb:disabled'],
-    ])  
-  }, []) 
+    ])
+  }, [])
 
   const trackStyle = React.useMemo(() => {
     return StyleSheet.flatten([
       variantStyles.track,
       disabled && variantStyles['track:disabled'],
-    ])  
-  }, [disabled]) 
+    ])
+  }, [disabled])
 
   const selectedTrackStyle = React.useMemo(() => {
     return StyleSheet.flatten([
       variantStyles.selectedTrack,
       disabled && variantStyles['selectedTrack:disabled'],
-    ])  
-  }, [disabled]) 
+    ])
+  }, [disabled])
 
   const unselectedTrackStyle = React.useMemo(() => {
     return StyleSheet.flatten([
       variantStyles.unselectedTrack,
       disabled && variantStyles['unselectedTrack:disabled'],
-    ])  
+    ])
   }, [disabled])
-  
+
   const containerStyle = React.useMemo(() => {
     return StyleSheet.flatten([
       variantStyles.sliderContainer,
@@ -108,11 +104,11 @@ export const Slider = (props:SliderProps) => {
   const trackMarksHaveContent = !(TypeGuards.isArray(trackMarks) || TypeGuards.isNil(trackMarks))
 
   const trackMarksProp = React.useMemo(() => {
-    if(!trackMarksHaveContent){
+    if (!trackMarksHaveContent) {
       return trackMarks
     }
     return Object.keys(trackMarks).map((key) => Number(key))
-  },[trackMarksHaveContent])
+  }, [trackMarksHaveContent])
 
   const trackMarkStyle = React.useMemo(() => {
     return StyleSheet.flatten([
@@ -128,7 +124,7 @@ export const Slider = (props:SliderProps) => {
       styles={variantStyles}
       labelAsRow
     >
-      <RNSlider 
+      <RNSlider
         value={_value}
         onValueChange={_setValue}
         // @ts-ignore
@@ -150,38 +146,38 @@ export const Slider = (props:SliderProps) => {
       {
         trackMarksProp ? (
           <View style={variantStyles.trackMarkWrapper}>
-          {
-            trackMarksProp.map((_, idx) => {
-              let idxStyle = {}
+            {
+              trackMarksProp.map((_, idx) => {
+                let idxStyle = {}
 
-              if(idx === 0){
-                idxStyle = variantStyles.firstTrackMark
-              } else if(idx === trackMarksProp.length - 1){
-                idxStyle = variantStyles.lastTrackMark
-              }
-              const style = [
-                trackMarkStyle,
-                idxStyle,
-              ]
+                if (idx === 0) {
+                  idxStyle = variantStyles.firstTrackMark
+                } else if (idx === trackMarksProp.length - 1) {
+                  idxStyle = variantStyles.lastTrackMark
+                }
+                const style = [
+                  trackMarkStyle,
+                  idxStyle,
+                ]
 
-              if(!trackMarksHaveContent){
-                return <SliderTrackMark 
-                  index={idx} 
-                  style={style}
-                  key={idx}
-                />
-              }
-              
-              const relativeValue = trackMarksProp[idx]
-              const content = trackMarks[relativeValue]
-          
-              return <SliderTrackMark index={idx} content={content} style={style} key={idx}/>
-            })
-          }
+                if (!trackMarksHaveContent) {
+                  return <SliderTrackMark
+                    index={idx}
+                    style={style}
+                    key={idx}
+                  />
+                }
+
+                const relativeValue = trackMarksProp[idx]
+                const content = trackMarks[relativeValue]
+
+                return <SliderTrackMark index={idx} content={content} style={style} key={idx}/>
+              })
+            }
           </View>
         ) : null
       }
-    </InputBase>    
+    </InputBase>
   )
 }
 

@@ -13,7 +13,7 @@ module.exports = {
       "label": "Typescript",
       "dependencies": ["typescript"],
       packages: ["**"],
-      pinVersion: "4.5.4"
+      pinVersion: "5.0.4"
     },
     {
       "label": "React native",

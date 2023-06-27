@@ -5,6 +5,7 @@ import { capitalize, TypeGuards } from '@codeleap/common'
 import { Scroll } from '../Scroll'
 import { View, ViewProps } from '../View'
 import { ElementType } from 'react'
+import { NativeHTMLElement } from '../../types'
 
 export type CollapseAxis = 'horizontal' | 'vertical'
 
@@ -51,7 +52,7 @@ export function getCollapseStyles<
   } as unknown as Return
 }
 
-export type CollapseProps<T extends ElementType = 'div'> = ViewProps<T> & {
+export type CollapseProps<T extends NativeHTMLElement = 'div'> = ViewProps<T> & {
     open: boolean
     scroll?: boolean
     size?: string | number
@@ -59,7 +60,7 @@ export type CollapseProps<T extends ElementType = 'div'> = ViewProps<T> & {
     animation?: string
 }
 
-export const Collapse:React.FC<CollapseProps> = ({
+export const Collapse = ({
   open,
   size = 1000,
   scroll = false,
@@ -67,7 +68,7 @@ export const Collapse:React.FC<CollapseProps> = ({
   direction,
   animation,
   ...props
-}) => {
+}:CollapseProps) => {
 
   const Component = scroll ? Scroll : View
   const styles = getCollapseStyles({
