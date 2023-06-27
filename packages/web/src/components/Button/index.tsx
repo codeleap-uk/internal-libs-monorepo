@@ -24,8 +24,6 @@ import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
 import { LoadingOverlay } from '../LoadingOverlay'
 import { ActivityIndicator } from '../ActivityIndicator'
 
-type NativeButtonProps = ComponentPropsWithRef<'button'>
-
 type ChildProps = {
   styles: StylesOf<ButtonParts>
   props: Omit<ButtonProps, 'children'>
@@ -33,7 +31,7 @@ type ChildProps = {
 
 const BUTTON_DEBOUNCE_TIME = 600
 
-export type ButtonProps = NativeButtonProps &
+export type ButtonProps =
   ComponentVariants<typeof ButtonStyles> & {
     text?: string
     rightIcon?: IconPlaceholder
@@ -43,10 +41,9 @@ export type ButtonProps = NativeButtonProps &
     loading?: boolean
     debugName: string
     debounce?: number
-  } & Partial<TouchableProps<'button'>>
     selected?: boolean
     children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
-  } & Partial<TouchableProps<any>>
+  } & Partial<TouchableProps<'button'>>
 
 export const Button = (buttonProps:ButtonProps) => {
   const {
