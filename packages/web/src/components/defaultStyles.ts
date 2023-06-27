@@ -16,12 +16,13 @@ import { RadioInputPresets } from './RadioInput/styles'
 import { SelectPresets } from './Select/styles'
 import { TooltipPresets } from './Tooltip/styles'
 import { ListPresets, PaginationIndicatorStyles } from './List'
-import { LinkPresets } from './Link/styles'
 import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
 import { NumberIncrementPresets } from './NumberIncrement/styles'
+import { SegmentedControlPresets } from './SegmentedControl/styles'
+import { PagerPresets } from './Pager/styles'
 import { EmptyPlaceholderPresets } from './EmptyPlaceholder/styles'
 import { GridPresets } from './Grid'
 
@@ -33,7 +34,7 @@ export const defaultStyles = {
   ActivityIndicator: ActivityIndicatorPresets,
   ActionIcon: ActionIconPresets,
   Scroll: ScrollPresets,
-  Link: LinkPresets,
+
   Button: ButtonPresets,
   Modal: ModalPresets,
   Checkbox: CheckboxPresets,
@@ -50,7 +51,19 @@ export const defaultStyles = {
   InputBase: InputBasePresets,
   Switch: SwitchPresets,
   NumberIncrement: NumberIncrementPresets,
+  SegmentedControlPresets: SegmentedControlPresets,
+  Pager: PagerPresets,
   EmptyPlaceholder: EmptyPlaceholderPresets,
   PaginationIndicator: PaginationIndicatorStyles,
   Grid: GridPresets,
 }
+
+import createCache from '@emotion/cache'
+
+export const createCodeleapWebCache = () => {
+  return createCache({
+    key: 'codeleap-web',
+  })
+}
+
+export const codeleapWebCache = createCodeleapWebCache()

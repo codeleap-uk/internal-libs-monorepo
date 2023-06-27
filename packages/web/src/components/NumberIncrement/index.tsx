@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import * as React from 'react'
 import {
   ComponentVariants,

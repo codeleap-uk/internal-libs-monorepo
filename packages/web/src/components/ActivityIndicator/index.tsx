@@ -1,81 +1,71 @@
 import { View } from '../View'
-import { CSSObject, keyframes } from '@emotion/react'
+import React from 'react'
 import {
   useDefaultComponentStyle,
   ComponentVariants,
   ActivityIndicatorStyles,
   ActivityIndicatorComposition,
+  StylesOf,
   TypeGuards,
 } from '@codeleap/common'
-import { StylesOf } from '../../types/utility'
 import { ActivityIndicatorPresets } from './styles'
+import { CSSInterpolation } from '@emotion/css'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
-const spin = keyframes`
-  from {
-    transform: rotate(0deg);
-  }
-  to { 
-    transform: rotate(360deg);
-  }
-`
-
 export type ActivityIndicatorProps = {
-  animating?: boolean
-  hidesWhenStopped?: boolean
-  styles?: StylesOf<ActivityIndicatorComposition>
-  css?: CSSObject
-  size?: number
   style?: React.CSSProperties
+  styles?: StylesOf<ActivityIndicatorComposition>
+  css?: CSSInterpolation | CSSInterpolation[]
+  component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<any>}, 'component'>>
+  size?: number
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 
-export const ActivityIndicator: React.FC<ActivityIndicatorProps> = (props) => {
+export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicatorProps>((activityIndicatorProps, ref) => {
+  const allProps = {
+    ...ActivityIndicator.defaultProps,
+    ...activityIndicatorProps,
+  }
+
   const {
-    animating = true,
-    hidesWhenStopped = true,
-    variants,
-    responsiveVariants,
-    styles,
-    size = null,
-    style,
-    ...viewProps
-  } = props
+    style = {},
+    styles = {},
+    component: Component,
+    variants = [],
+    responsiveVariants = {},
+    size,
+    ...props
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:ActivityIndicator', typeof ActivityIndicatorPresets>(
     'u:ActivityIndicator',
     {
+      variants,
       styles,
       responsiveVariants,
-      variants,
-    }
+    },
   )
 
-  const _size = TypeGuards.isNumber(size) && {
-    height: size,
-    width: size,
-    borderWidth: size * 0.25,
-  }
+  const _size = React.useMemo(() => {
+    return TypeGuards.isNumber(size) ? {
+      width: size,
+      height: size,
+    } : {}
+  }, [size])
 
   return (
-    <View
-      {...viewProps}
-      css={[
-        variantStyles.wrapper,
-        style,
-        (!animating && hidesWhenStopped) && { visibility: 'hidden' },
-        _size,
-      ]}
-    >
-      <View css={{ ...variantStyles.circle, ...variantStyles.backCircle }} />
-      <View
-        css={{
-          ...variantStyles.circle,
-          ...variantStyles.frontCircle,
-          animation: `${spin} 1s infinite`,
-          animationPlayState: animating ? 'running' : 'paused',
-        }}
+    <View css={[variantStyles.wrapper, style, _size]}>
+      <Component
+        ref={ref}
+        css={[variantStyles.wrapper, _size]}
+        {...props}
       />
     </View>
   )
+}) as ComponentWithDefaultProps<ActivityIndicatorProps>
+
+ActivityIndicator.defaultProps = {
+  component: View,
+  size: null,
 }

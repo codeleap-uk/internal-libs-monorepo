@@ -3,7 +3,6 @@ import { IconPlaceholder, PropsOf } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
-import { Gap, View } from '../View'
 import { SegmentedControlComposition } from './styles'
 import { Icon } from '../Icon'
 
@@ -23,12 +22,13 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
   return <Touchable
     debugName={`Segmented Control ${debugName}, option ${label}`}
     noFeedback={selected}
-    key={touchableProps.key}
+
     styles={{
       feedback: variantStyles.buttonFeedback,
     }}
     style={[variantStyles.button, selected && variantStyles['button:selected'], style]}
     onPress={onPress}
+    {...touchableProps}
   >
     {
       !!icon && (

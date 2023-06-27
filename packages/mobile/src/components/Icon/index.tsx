@@ -6,7 +6,6 @@ import {
   useCodeleapContext,
   arePropsEqual,
   IconPlaceholder,
-  onMount,
   onUpdate,
   PropsOf,
   StylesOf,
@@ -14,7 +13,6 @@ import {
   getNestedStylesByKey,
 } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
-import { View } from '../View'
 export * from './styles'
 
 import {
@@ -22,6 +20,7 @@ import {
   IconPresets,
 } from './styles'
 import { Badge, BadgeComponentProps } from '../Badge'
+import { View } from '../View'
 
 export type IconProps = {
   name: IconPlaceholder
@@ -33,16 +32,16 @@ export type IconProps = {
   styles?: StylesOf<IconComposition>
 } & BadgeComponentProps
 
-export const IconComponent: React.FC<IconProps> = (props) => {
-  const { 
-    name, 
-    style, 
-    variants, 
-    badge = false, 
-    badgeProps = {}, 
+export const IconComponent = (props: IconProps) => {
+  const {
+    name,
+    style,
+    variants,
+    badge = false,
+    badgeProps = {},
     wrapperProps = {},
     styles = {},
-    ...otherProps 
+    ...otherProps
   } = props
 
   const { Theme, logger } = useCodeleapContext()
@@ -87,7 +86,7 @@ export const IconComponent: React.FC<IconProps> = (props) => {
   }
 
   if (!name) {
-    return  null
+    return null
   }
 
   if (!Component) {
@@ -103,5 +102,5 @@ function areEqual(prevProps, nextProps) {
   return res
 }
 
-export const Icon = React.memo(IconComponent, areEqual)
+export const Icon = React.memo(IconComponent, areEqual) as typeof IconComponent
 
