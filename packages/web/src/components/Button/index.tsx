@@ -26,6 +26,8 @@ type ChildProps = {
   props: Omit<ButtonProps, 'children'>
 }
 
+const BUTTON_DEBOUNCE_TIME = 600
+
 export type ButtonProps = NativeButtonProps &
   ComponentVariants<typeof ButtonStyles> & {
     text?: string
@@ -52,7 +54,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     onPress,
     disabled,
     rightIcon,
-    debounce = 600,
+    debounce = BUTTON_DEBOUNCE_TIME,
     selected,
     style,
     ...props
@@ -86,6 +88,10 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     }
   }
   const iconStyle = getStyles('icon')
+  const leftIconStyle = getStyles('leftIcon')
+  const rightIconStyle = getStyles('rightIcon')
+
+  const textStyle = getStyles('text')
 
   const childrenContent = TypeGuards.isFunction(children) ?
     // @ts-ignore
@@ -93,7 +99,8 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     : children
 
   // TODO - This is a hack to hide the icon when there is no text
-  const isLeftIconHidden = iconStyle?.display != 'none'
+  const isLeftIconHidden = !(textStyle?.display != 'none')
+  const shouldRenderLeftIcon = !loading && !isLeftIconHidden
 
   return (
     <Touchable
@@ -104,10 +111,10 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       onPress={handlePress}
       {...props}
     >
-      {(!loading && isLeftIconHidden) && (
+      {shouldRenderLeftIcon && (
         <Icon
           name={icon}
-          style={{ ...iconStyle, ...getStyles('leftIcon') }}
+          style={{ ...iconStyle, ...leftIconStyle }}
 
         />
       )}
@@ -115,7 +122,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
         <Text
           text={text}
           styles={{
-            text: getStyles('text'),
+            text: textStyle,
           }}
         />
       ) : null }
@@ -123,7 +130,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
 
       <Icon
         name={rightIcon}
-        style={{ ...iconStyle, ...getStyles('rightIcon') }}
+        style={{ ...iconStyle, ...rightIconStyle }}
 
       />
       {loading && <ActivityIndicator css={getStyles('loader')}/>}
