@@ -74,7 +74,13 @@ export const Checkbox = (props: CheckboxProps) => {
 
   const checkmarkWrapperAnimation = useAnimatedVariantStyles({
     variantStyles,
-    animatedProperties: ['checkmarkWrapper:unchecked', 'checkmarkWrapper:disabled', 'checkmarkWrapper:checked', 'checkmarkWrapper:disabled-unchecked', 'checkmarkWrapper:disabled-checked'],
+    animatedProperties: [
+      'checkmarkWrapper:unchecked',
+      'checkmarkWrapper:disabled',
+      'checkmarkWrapper:checked',
+      'checkmarkWrapper:disabled-unchecked',
+      'checkmarkWrapper:disabled-checked',
+    ],
     updater: () => {
       'worklet'
       let disabledStyle = {}

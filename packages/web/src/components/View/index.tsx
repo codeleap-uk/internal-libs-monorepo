@@ -103,11 +103,10 @@ export const ViewCP = (
 
   return (
     <Component
-      css={[variantStyles.wrapper, scroll && { overflowY: 'scroll' }, matches && { display: 'none' }]}
+      css={componentStyles}
       ref={ref}
       {...onHoverProps}
       {...props}
-      css={componentStyles}
     >
       {children}
     </Component>

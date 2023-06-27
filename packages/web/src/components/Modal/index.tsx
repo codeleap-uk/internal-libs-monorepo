@@ -13,7 +13,7 @@ import {
   useIsomorphicEffect,
 } from '@codeleap/common'
 
-import React, { useId,  useRef } from 'react'
+import React, { useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
 import { View } from '../View'

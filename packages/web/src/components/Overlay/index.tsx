@@ -9,12 +9,11 @@ import { View, ViewProps } from '../View'
 import { OverlayComposition, OverlayPresets } from './styles'
 import { NativeHTMLElement } from '../../types'
 
-export type OverlayProps<T extends NativeHTMLElement> = {
+export type OverlayProps<T extends NativeHTMLElement = 'div'> = {
   visible?: boolean
   styles?: StylesOf<OverlayComposition>
   onPress?: TouchableProps<'div'>['onClick']
 } & ComponentVariants<typeof OverlayPresets> & Omit<ViewProps<T>, 'variants' | 'responsiveVariants'>
-  
 
 export * from './styles'
 
@@ -34,9 +33,9 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
     // @ts-ignore
     <Component
       css={[
-        {transition: 'opacity 0.2s ease'},
+        { transition: 'opacity 0.2s ease' },
         variantStyles.wrapper,
-        visible ? variantStyles['wrapper:visible'] : {}
+        visible ? variantStyles['wrapper:visible'] : {},
       ]}
       {...props}
     />

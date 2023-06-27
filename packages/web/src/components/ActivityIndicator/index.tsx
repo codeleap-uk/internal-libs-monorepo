@@ -10,6 +10,7 @@ import {
 } from '@codeleap/common'
 import { ActivityIndicatorPresets } from './styles'
 import { CSSInterpolation } from '@emotion/css'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
@@ -62,7 +63,7 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
       />
     </View>
   )
-}) as ((props: ActivityIndicatorProps) => JSX.Element)
+}) as ComponentWithDefaultProps<ActivityIndicatorProps>
 
 ActivityIndicator.defaultProps = {
   component: View,

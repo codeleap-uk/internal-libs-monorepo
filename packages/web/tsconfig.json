@@ -7,7 +7,8 @@
       "ESNext",
       "DOM"
     ],
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     /* Modules */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
     "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */

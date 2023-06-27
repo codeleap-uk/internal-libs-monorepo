@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
+import { CSSObject, jsx } from '@emotion/react'
 import { AnyFunction, useCodeleapContext } from '@codeleap/common'
-import React, { ComponentPropsWithRef, forwardRef, ReactElement } from 'react'
+import React, { forwardRef } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
 import { TouchableComposition } from './styles'
@@ -9,10 +9,11 @@ import { StylesOf, NativeHTMLElement, HTMLProps } from '../../types'
 
 export * from './styles'
 
-export type TouchableProps<T extends NativeHTMLElement = 'button'> = HTMLProps<T> & {
+export type TouchableProps<T extends NativeHTMLElement = 'button'> = Omit<HTMLProps<T>, 'style'> & {
   component?: T
   disabled?: boolean
   propagate?: boolean
+  style?: CSSObject
   onPress?: AnyFunction
   debugComponent?: string
   debugName?: string
@@ -55,7 +56,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     // @ts-ignore
     onClick?.(event)
     onPress && onPress()
-    // logger.log('Touchable pressed', JSON.stringify(touchableProps, null, 2)  ,'Component')
+
   }
 
   return (

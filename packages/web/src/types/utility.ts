@@ -4,9 +4,9 @@ import { PropsOf } from '@codeleap/common'
 
 export type StylesOf<C extends string> = Partial<Record<C, CSSInterpolation>>
 
-type WithChildren<T> =  T & { children?: React.ReactNode }
+type WithChildren<T> = T & { children?: React.ReactNode }
 
-// You're right, this is not standard or very clean. But for some reason all the types provided by ComponentPropsWithoutRef<T> become any when imported outside the package, while this keeps working. 
+// You're right, this is not standard or very clean. But for some reason all the types provided by ComponentPropsWithoutRef<T> become any when imported outside the package, while this keeps working.
 // It's important that the elements used are defined explicitly, otherwise typescript will throw JavascriptHeapOutOfMemory when building the package.
 export type ElementMap = {
   'select': WithChildren<JSX.IntrinsicElements['select']>
@@ -25,6 +25,8 @@ export type ElementMap = {
   'footer': WithChildren<JSX.IntrinsicElements['footer']>
 }
 
-export type NativeHTMLElement = keyof ElementMap 
- 
-export type HTMLProps<T extends NativeHTMLElement> = ElementMap[T] 
+export type NativeHTMLElement = keyof ElementMap
+
+export type HTMLProps<T extends NativeHTMLElement> = ElementMap[T]
+
+export type ComponentWithDefaultProps<P> = ((props: P) => JSX.Element) & { defaultProps?: Partial<P> }

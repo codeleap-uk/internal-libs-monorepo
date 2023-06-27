@@ -52,7 +52,7 @@ const defaultProps: Partial<SegmentedControlProps> = {
   animationProps: {},
   transitionDuration: 0.2,
   disabled: false,
-  RenderAnimatedView: motion.div
+  RenderAnimatedView: motion.div,
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
@@ -93,11 +93,11 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   const maxDivWidthRef = useRef(null)
 
   const biggerWidth = React.useMemo(() => {
-    return { 
-      width: maxDivWidthRef.current 
+    return {
+      width: maxDivWidthRef.current,
     }
   }, [maxDivWidthRef.current])
-  
+
   const bubbleAnimation = useAnimatedVariantStyles({
     variantStyles,
     animatedProperties: [],
@@ -105,9 +105,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
       'worklet'
       return {
         translateX: currentOptionIdx * biggerWidth.width,
-        transition: { 
-          ease: 'easeInOut', 
-          duration: transitionDuration
+        transition: {
+          ease: 'easeInOut',
+          duration: transitionDuration,
         },
         ...animationProps,
       } as AnimationProps
@@ -116,9 +116,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   })
 
   const selectedBubbleStyles = [
-    variantStyles.selectedBubble, 
-    disabled && variantStyles['selectedBubble:disabled'], 
-    biggerWidth
+    variantStyles.selectedBubble,
+    disabled && variantStyles['selectedBubble:disabled'],
+    biggerWidth,
   ]
 
   return (
@@ -133,7 +133,11 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         />
         {options.map((o, idx) => (
           <SegmentedControlOption
-            maxDivWidthRef={maxDivWidthRef}
+            ref={(ref) => {
+              if (ref && ref.offsetWidth > maxDivWidthRef.current) {
+                maxDivWidthRef.current = ref.offsetWidth
+              }
+            }}
             debugName={debugName}
             label={o.label}
             value={o.value}

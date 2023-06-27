@@ -1,4 +1,7 @@
-import React from 'react'
+/** @jsx jsx */
+import { CSSObject, jsx } from '@emotion/react'
+
+import React, { forwardRef } from 'react'
 import { PropsOf, IconPlaceholder } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Text } from '../Text'
@@ -6,37 +9,37 @@ import { Touchable } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
 import { Icon } from '../Icon'
 
+type OptionRef = PropsOf<typeof Touchable>['ref']
+
 export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   selected?: boolean
   label: string
   variantStyles?: StylesOf<SegmentedControlComposition>
+  value?: any
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
   icon?: IconPlaceholder
+  ref?: OptionRef
 }
 
-export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
-  const { 
-    selected, 
-    onPress, 
-    style, 
-    variantStyles, 
-    label, 
-    icon, 
-    textProps, 
-    maxDivWidthRef,
-    disabled, 
-    ...touchableProps 
+const SegmentedControlOptionCP = (props: SegmentedControlOptionProps, ref: OptionRef) => {
+  const {
+    selected,
+    onPress,
+    style,
+    variantStyles,
+    label,
+    icon,
+    textProps,
+
+    disabled,
+    ...touchableProps
   } = props
 
   return (
     <Touchable
-      noFeedback={selected}
+
       key={touchableProps.key}
-      ref={(ref) => {
-        if (ref && ref.offsetWidth > maxDivWidthRef.current) {
-          maxDivWidthRef.current = ref.offsetWidth
-        }
-      }}
+      ref={ref}
       css={[
         variantStyles.button,
         selected && variantStyles['button:selected'],
@@ -49,12 +52,12 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
     >
       {
         !!icon && (
-          <Icon 
-            name={icon} 
+          <Icon
+            name={icon}
             css={[
               variantStyles.icon,
               selected && variantStyles['icon:selected'],
-              disabled && variantStyles['icon:disabled']
+              disabled && variantStyles['icon:disabled'],
             ]}
           />
         )
@@ -71,3 +74,5 @@ export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {
     </Touchable>
   )
 }
+
+export const SegmentedControlOption = forwardRef(SegmentedControlOptionCP) as ((props: SegmentedControlOptionProps) => JSX.Element)
