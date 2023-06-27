@@ -442,7 +442,7 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
     resolveRef.current = null
   }
 
-  const await = () => {
+  const _await = () => {
     return new Promise<T>((resolve, reject) => {
       rejectRef.current = reject
       resolveRef.current = resolve
@@ -455,7 +455,7 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
   }
 
   return {
-    await,
+    _await,
     resolve,
     reject,
   }
