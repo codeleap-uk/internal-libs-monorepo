@@ -1,6 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
-
+import { jsx, CSSObject } from '@emotion/react'
 import React, {
   useImperativeHandle,
   useRef,

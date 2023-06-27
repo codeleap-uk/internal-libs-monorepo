@@ -38,6 +38,7 @@ export const Text = <T extends NativeHTMLElement>(textProps: TextProps<T>) => {
     // @ts-ignore
     <View
       css={variantStyles.text}
+      component={'p'}
       {...props}
     >
       {text || children}

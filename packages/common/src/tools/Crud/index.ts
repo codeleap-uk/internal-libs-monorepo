@@ -691,9 +691,9 @@ export class QueryManager<
       filter: options?.filter,
       queryOptions: options?.listOptions?.queryOptions,
     })
-    const create = this.useCreate(options.creation)
-    const update = this.useUpdate(options.update)
-    const del = this.useDelete(options.deletion)
+    const create = this.useCreate(options?.creation)
+    const update = this.useUpdate(options?.update)
+    const del = this.useDelete(options?.deletion)
 
     return {
       items: list.items,

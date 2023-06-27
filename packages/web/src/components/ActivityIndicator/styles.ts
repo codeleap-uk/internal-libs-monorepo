@@ -1,10 +1,6 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type ActivityIndicatorComposition =
-  | 'wrapper'
-  | 'backCircle'
-  | 'frontCircle'
-  | 'circle'
+export type ActivityIndicatorComposition = 'wrapper'
 
 const createActivityIndicatorStyle = createDefaultVariantFactory<ActivityIndicatorComposition>()
 

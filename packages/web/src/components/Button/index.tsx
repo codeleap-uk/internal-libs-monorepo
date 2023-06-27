@@ -19,9 +19,9 @@ import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { ActivityIndicator } from '../ActivityIndicator'
 import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
 import { LoadingOverlay } from '../LoadingOverlay'
+import { ActivityIndicator } from '../ActivityIndicator'
 
 export type ButtonProps =
   ComponentVariants<typeof ButtonStyles> & {
@@ -58,7 +58,7 @@ export const Button = (buttonProps:ButtonProps) => {
     styles,
   })
 
-  function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
+  function handlePress(e?: Parameters<ButtonProps['onPress']>[0]) {
     if (!pressed) {
       props?.onClick?.(e)
 
@@ -86,14 +86,13 @@ export const Button = (buttonProps:ButtonProps) => {
       css={getStyles('wrapper')}
       component='button'
       debugComponent='Button'
-
-      onPress={handlePress}
       {...props}
+      onPress={null}
+      onClick={handlePress}
     >
       <LoadingOverlay
         visible={loading}
         styles={loaderStyle}
-
       />
       {!loading && (
         <Icon
@@ -114,12 +113,7 @@ export const Button = (buttonProps:ButtonProps) => {
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
 
       />
-      {loading && <ActivityIndicator styles={{
-        'wrapper': getStyles('loaderWrapper'),
-        'backCircle': getStyles('loaderBackCircle'),
-        'frontCircle': getStyles('loaderFrontCircle'),
-        'circle': getStyles('loaderCircle'),
-      }} css={getStyles('loader')}/>}
+      {loading && <ActivityIndicator css={{ display: 'none' }} />}
     </Touchable>
   )
 }

@@ -8,6 +8,8 @@
       "DOM"
     ],
     "jsx": "react",
+    /* Modules */
+    // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
     "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */
     "allowJs": true, /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
     "isolatedModules": true, /* Ensure that each file can be safely transpiled without relying on other imports. */
@@ -22,17 +24,6 @@
     "strict": false,
     "strictFunctionTypes": false,
     "sourceMap": true,
-    "paths": {
-      "@emotion/react": [
-        "../../apps/web/node_modules/@emotion/react/types/index.d.ts"
-      ],
-      "@emotion/react/jsx-runtime": [
-        "../../apps/web/node_modules/@emotion/react/jsx-runtime/dist/emotion-react-jsx-runtime.cjs.d.ts"
-      ],
-      "react": [
-        "../../apps/web/node_modules/@types/react/index.d.ts"
-      ]
-    }
   },
   "include": [
     "src/**/*.ts",

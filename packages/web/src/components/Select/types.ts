@@ -47,7 +47,7 @@ export type TCustomOption = OptionProps & ComponentPartProps & {
   styles?: OptionState['baseStyles']
 }
 
-type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Element) | null
+type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Element) | JSX.Element
 
 export type PlaceholderProps = NoticeProps & ComponentPartProps & {
   text: SelectPlaceholderElement

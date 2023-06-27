@@ -77,8 +77,8 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isString(TextPlaceholder)) {
       return <Text text={TextPlaceholder} css={[defaultStyles.text]} />
     } else if (React.isValidElement(TextPlaceholder)) {
-      return TextPlaceholder
-    } else {
+      return TextPlaceholder as JSX.Element
+    } else if (TypeGuards.isFunction(TextPlaceholder)) {
       return <TextPlaceholder {...props} />
     }
   }
@@ -93,7 +93,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
       return <View style={defaultStyles.icon}>
         { IconPlaceholder}
       </View>
-    } else {
+    } else if (TypeGuards.isFunction(IconPlaceholder)) {
       return <IconPlaceholder {...props} />
     }
   }
@@ -107,11 +107,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 }
 
 const LoadingIndicator = (props: LoadingIndicatorProps) => {
-  const { defaultStyles, size } = props
+  const { defaultStyles } = props
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      <ActivityIndicator size={size} />
+      <ActivityIndicator />
     </View>
   )
 }

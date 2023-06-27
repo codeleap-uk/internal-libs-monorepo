@@ -1,37 +1,47 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
+import { ComponentVariants, getNestedStylesByKey, useDefaultComponentStyle } from '@codeleap/common'
+import React from 'react'
+import { StylesOf } from '../..'
+import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
+import { View, ViewProps } from '../View'
+import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 
-import { ComponentVariants, useDefaultComponentStyle } from "@codeleap/common"
-import React from "react"
-import { StylesOf } from "../.."
-import { LoadingOverlayComposition, LoadingOverlayPresets } from "./styles"
-import {View} from '../View'
-import { ActivityIndicator } from "../ActivityIndicator"
-
-export type LoadingOverlayProps = React.PropsWithChildren<{
+export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
   visible?: boolean
   styles?: StylesOf<LoadingOverlayComposition>
-}> & ComponentVariants<typeof LoadingOverlayPresets>
-
+  style?: React.CSSProperties
+  indicatorProps?: ActivityIndicatorProps
+  children?: React.ReactNode
+} & ComponentVariants<typeof LoadingOverlayPresets>
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
-  const { visible, children, styles, variants,responsiveVariants } = props
+  const { 
+    visible,
+    children,
+    styles = {},
+    variants = [],
+    responsiveVariants = {},
+    style = {},
+    indicatorProps, 
+    ...rest 
+  } = props
 
   const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
-    variants, styles, responsiveVariants, rootElement: 'wrapper'
+    variants, 
+    styles, 
+    responsiveVariants, 
+    rootElement: 'wrapper',
   })
 
-  return <View css={[variantStyles.wrapper, visible && variantStyles["wrapper:visible"]]}>
-    <ActivityIndicator 
-       styles={{
-        wrapper: [variantStyles.indicatorWrapper, visible && variantStyles["indicatorWrapper:visible"]],
-        backCircle: [variantStyles.indicatorBackCircle, visible && variantStyles["indicatorBackCircle:visible"]],
-        frontCircle: [variantStyles.indicatorFrontCircle, visible && variantStyles["indicatorFrontCircle:visible"]],
-        circle: [variantStyles.indicatorCircle, visible && variantStyles["indicatorCircle:visible"]],
-      }}
-    />
-    {children}
-  </View>
+  const indicatorStyles = React.useMemo(() => {
+    return getNestedStylesByKey('indicator', variantStyles)
+  }, [variantStyles])
+
+  return (
+    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible'], style]} {...rest}>
+      <ActivityIndicator {...indicatorProps} styles={indicatorStyles} />
+      {children}
+    </View>
+  )
 }
 
 export * from './styles'

@@ -1,12 +1,11 @@
-
-
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import { AnyFunction, useCodeleapContext } from '@codeleap/common'
 import React, { ComponentPropsWithRef, forwardRef, ReactElement } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
 import { TouchableComposition } from './styles'
 import { StylesOf, NativeHTMLElement, HTMLProps } from '../../types'
-
 
 export * from './styles'
 
@@ -25,7 +24,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   ref,
 ) => {
   const {
-    
+
     propagate = true,
     component: Component = View,
     disabled,
@@ -43,10 +42,10 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
     if (!propagate) stopPropagation(event)
 
-    if (!onPress) { 
+    if (!onPress && !onClick) {
       logger.warn('No onPress passed to touchable', touchableProps)
       return
-     }
+    }
 
     logger.log(
       `<${debugComponent || 'Touchable'}/>  pressed`,
@@ -61,7 +60,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
   return (
     // @ts-ignore
-    <View component={Component || 'button'}  {...props} debugName={debugName} onClick={handleClick} ref={ref}/>
+    <View component={Component || 'button'} {...props} debugName={debugName} onClick={handleClick} ref={ref}/>
   )
 }
 

@@ -1,5 +1,6 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
+import { jsx, CSSObject } from '@emotion/react'
+import * as React from 'react'
 import { ComponentVariants, useDefaultComponentStyle, StylesOf, PropsOf } from '@codeleap/common'
 import { View } from '../View'
 import { SwitchPresets, SwitchComposition } from './styles'
@@ -104,6 +105,7 @@ export const Switch = (props: SwitchProps) => {
     order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
     style={style}
     disabled={disabled}
+    noError
   >
     <motion.div
       css={[
