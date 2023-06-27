@@ -110,6 +110,11 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     leftIcon: optionStyleKey('leftIcon', state),
     icon: optionStyleKey('icon', state),
     inner: optionStyleKey('inner', state),
+    loader: optionStyleKey('loader', state),
+    loaderWrapper: optionStyleKey('loaderWrapper', state),
+    loaderBackCircle: optionStyleKey('loaderBackCircle', state),
+    loaderFrontCircle: optionStyleKey('loaderFrontCircle', state),
+    loaderCircle: optionStyleKey('loaderCircle', state),
   })
 
   const placeholderStyles = {

@@ -102,9 +102,9 @@ export const Button = (buttonProps:ButtonProps) => {
     children({ styles: _styles, props: buttonProps })
     : children
 
-  // TODO - This is a hack to hide the icon when there is no text
-  const isLeftIconHidden = !(textStyle?.display != 'none')
-  const shouldRenderLeftIcon = !loading && !isLeftIconHidden
+  // TODO - This is a hack to hide the icon with display: none
+  const isLeftIconVisible = !(leftIconStyle?.display != 'none')
+  const shouldRenderLeftIcon = !loading && isLeftIconVisible
 
   return (
     <Touchable
