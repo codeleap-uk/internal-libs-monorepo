@@ -77,6 +77,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
   const isNotVisible = !visible
   const notOpenOnPress = !openOnPress
   const notOpenOnHover = !openOnHover
+
   let open = isNotVisible ? undefined : true
 
   const tooltipDirectionStyle = side ? variantsStyles[`wrapper:${side}`] : variantsStyles.wrapper
@@ -85,17 +86,9 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     open = false
   }
 
-  if (openOnPress) {
-    open = isNotVisible ? undefined : true
-  }
-
   if (notOpenOnHover) {
     open = visible
   }
-
-  console.log('notOpenOnrPress', notOpenOnPress)
-  console.log('open', visible)
-  console.log('disabled', disabled)
 
   function handleIsTooltipOpen() {
     if (disabled || notOpenOnPress) return
@@ -104,20 +97,19 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
   }
 
   function handleOpenState(_open:boolean) {
-    console.log(')_________________open', _open)
     if (_open === true) {
-      console.log('testeando open')
       onOpen?.()
     } else {
-      console.log('testeando closed')
       onClose?.()
     }
   }
 
+  const onOpenChange = notOpenOnHover ? () => null : handleOpenState
+
   return (
     <TooltipContainer {...providerProps}>
-      <TooltipWrapper delayDuration={delayDuration} open={open} onOpenChange={notOpenOnHover ? undefined : handleOpenState}
-        onClick={notOpenOnHover ? handleOpenState : undefined} {...rest}>
+      <TooltipWrapper delayDuration={delayDuration} open={open} onOpenChange={onOpenChange}
+        {...rest}>
         <TooltipTrigger onClick={handleIsTooltipOpen} asChild {...triggerProps}>
           {children}
         </TooltipTrigger>
