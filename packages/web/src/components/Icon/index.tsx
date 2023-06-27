@@ -1,6 +1,6 @@
-import React from 'react'
 /** @jsx jsx */
 import { CSSObject, jsx } from '@emotion/react'
+import { CSSInterpolation } from '@emotion/css'
 import {
   ComponentVariants,
   IconPlaceholder,
@@ -8,8 +8,7 @@ import {
   useDefaultComponentStyle,
   useCodeleapContext,
 } from '@codeleap/common'
-import { View, ViewProps } from '../View'
-import { CSSInterpolation } from '@emotion/css'
+import { View } from '../View'
 
 export * from './styles'
 
@@ -17,11 +16,11 @@ export type IconProps = {
   name: IconPlaceholder
   style?: any
   renderEmptySpace?: boolean
-  css?: Array<React.CSSProperties>
   forceStyle?: CSSObject | CSSInterpolation | React.CSSProperties
+  css?: any
 } & ComponentVariants<typeof IconStyles>
 
-export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySpace, ...otherProps }) => {
+const IconCP = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconProps) => {
   const { Theme, logger } = useCodeleapContext()
   const Component = Theme?.icons?.[name]
 
@@ -51,3 +50,5 @@ export const Icon: React.FC<IconProps> = ({ name, style, variants, renderEmptySp
   }
   return <Component css={variantStyles.icon} {...otherProps}/>
 }
+
+export const Icon = IconCP as ((props: IconProps) => jsx.JSX.Element)

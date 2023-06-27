@@ -22,9 +22,7 @@ const defaultProps:Partial<AvatarGroupProps> = {
   displacement: 20.5,
 }
 
-
-
-export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
+export const AvatarGroup = (props:AvatarGroupProps) => {
   const {
     variants = [],
     avatars = [],
@@ -35,7 +33,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
     ...viewProps
   } = {
     ...defaultProps,
-    ...props
+    ...props,
   }
 
   const variantStyles = useDefaultComponentStyle('u:AvatarGroup', {
@@ -58,7 +56,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
           key={avatar.debugName || index}
           {...avatar}
           variants={avatar.variants || avatarVariants}
-          style={getAvatarStyle(index,displacement)}
+          style={getAvatarStyle(index, displacement)}
           styles={avatarStyles}
         />
       ))}
@@ -68,7 +66,7 @@ export const AvatarGroup: React.FC<AvatarGroupProps> = (props) => {
 
 AvatarGroup.defaultProps = defaultProps
 
-const getAvatarStyle = (index: number,displacementPixels: number) => {
+const getAvatarStyle = (index: number, displacementPixels: number) => {
   const displacement = index * 20.5
   return { right: `${displacement}%` }
 }

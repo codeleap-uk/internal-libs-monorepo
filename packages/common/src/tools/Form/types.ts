@@ -171,6 +171,8 @@ export type DateField = {
   defaultValue: Date
   validate?: Validator<Date>
   required?: boolean
+  minimumDate?: Date
+  maximumDate?: Date
 } & WithTransformer<Date>
 
 export type CompositeField = {
@@ -208,7 +210,8 @@ export type FormField = {
   debugName?: string
   required?: boolean
   debounce?: number
-  
+  componentProps?: any
+
 } & AllFields
 
 export type FieldsMap = Record<string, Partial<FormField>>
@@ -261,7 +264,7 @@ export type UseFormConfig<T> = {
 
 export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
   ? never
-  :  T extends Record<string, any>   
+  : T extends Record<string, any>
     ? {
         [K in keyof T]-?: K extends string | number
           ?
@@ -272,7 +275,7 @@ export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
               ]
           : never;
       }[keyof T]
-    : '' 
+    : ''
 export type FormShape<Form extends CreateFormReturn<any>> = MapValues<Form['config']>
 export type FormSetters<Values> = {
   [Property in keyof Values]: (value: Values[Property]) => void

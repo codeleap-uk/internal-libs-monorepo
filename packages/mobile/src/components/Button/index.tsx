@@ -142,4 +142,5 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       <Badge badge={badge} style={badgeStyles} {...badgeProps} />
     </Touchable>
   )
-})
+}) as ((props: ButtonProps) => JSX.Element)
+
