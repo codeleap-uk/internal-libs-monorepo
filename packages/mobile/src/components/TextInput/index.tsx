@@ -244,7 +244,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     ...props,
   }
 
-  const [search, setSearch] = TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
+  const [search, setSearch] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
 
   const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
 
