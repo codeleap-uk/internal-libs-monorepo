@@ -4,7 +4,7 @@ import { deepEqual, onUpdate, ReactState, TypeGuards, usePrevious, useUnmount } 
 import uuid from 'react-native-uuid'
 import { ImageView } from './component'
 import { ImageProps } from '../Image'
-import {ImageURISource, ImageRequireSource} from 'react-native'
+import { ImageURISource, ImageRequireSource } from 'react-native'
 type ImageSource = ImageURISource | ImageRequireSource
 
 type TImage = {
@@ -143,7 +143,7 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
   }
 }
 
-export const Spotlight = ({ name }) => {
+export const Spotlight = ({ name }: {name: string}) => {
   const spotlight = useSpotlight(name)
   useUnmount(() => {
     spotlight.clear()

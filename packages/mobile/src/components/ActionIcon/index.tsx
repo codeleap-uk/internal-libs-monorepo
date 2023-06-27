@@ -14,7 +14,7 @@ export type ActionIconProps= {
     styles?: StylesOf<ActionIconComposition> | StylesOf<ActionIconComposition>[]
 } & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets> & BadgeComponentProps
 
-export const ActionIcon:React.FC<ActionIconProps> = (props) => {
+export const ActionIcon = (props: ActionIconProps) => {
   const { name, icon, iconProps, variants, styles, children, badge = false, badgeProps = {}, ...touchableProps } = props
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
     variants, styles, transform: StyleSheet.flatten,

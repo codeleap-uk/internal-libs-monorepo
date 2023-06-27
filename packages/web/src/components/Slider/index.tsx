@@ -1,4 +1,7 @@
-import * as React from 'react'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+import React from 'react'
+
 import { ComponentVariants, onMount, PropsOf, TypeGuards, useDefaultComponentStyle, useRef } from '@codeleap/common'
 import { SliderComposition } from './styles'
 import { StylesOf } from '../../types'
@@ -43,9 +46,9 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
   const { index, content, style } = props
 
   if (!TypeGuards.isString(props.content)) {
-    return <>
+    return <React.Fragment>
       {props.content}
-    </>
+    </React.Fragment>
   }
 
   return <Text
@@ -239,6 +242,8 @@ export const Slider = (props: SliderProps) => {
         {defaultValue.map((_thumbValue, i) => (
           <SliderThumb
             key={i}
+            // @ts-ignore
+            index={i}
             style={thumbStyle}
             onClick={() => currentThumbRef.current = i}
             onMouseEnter={() => currentThumbRef.current = i}

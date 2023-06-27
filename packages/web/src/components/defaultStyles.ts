@@ -15,13 +15,14 @@ import { TextInputPresets } from './TextInput/styles'
 import { RadioInputPresets } from './RadioInput/styles'
 import { SelectPresets } from './Select/styles'
 import { ListPresets } from './List/styles'
-import { LinkPresets } from './Link/styles'
 import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
 import { NumberIncrementPresets } from './NumberIncrement/styles'
 import { TooltipPresets } from './Tooltip/styles'
+import { SegmentedControlPresets } from './SegmentedControl/styles'
+import { PagerPresets } from './Pager/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -31,7 +32,7 @@ export const defaultStyles = {
   ActivityIndicator: ActivityIndicatorPresets,
   ActionIcon: ActionIconPresets,
   Scroll: ScrollPresets,
-  Link: LinkPresets,
+
   Button: ButtonPresets,
   Modal: ModalPresets,
   Checkbox: CheckboxPresets,
@@ -48,4 +49,16 @@ export const defaultStyles = {
   Switch: SwitchPresets,
   NumberIncrement: NumberIncrementPresets,
   Tooltip: TooltipPresets,
+  SegmentedControlPresets: SegmentedControlPresets,
+  Pager: PagerPresets,
 }
+
+import createCache from '@emotion/cache'
+
+export const createCodeleapWebCache = () => {
+  return createCache({
+    key: 'codeleap-web',
+  })
+}
+
+export const codeleapWebCache = createCodeleapWebCache()
