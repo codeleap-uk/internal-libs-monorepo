@@ -90,7 +90,7 @@ const invert = (pos) => {
   }
 }
 
-export const Tooltip: React.FC<TooltipProps> = (props) => {
+export const Tooltip = (props:TooltipProps) => {
   const {
     children,
     position = 'top',

@@ -43,7 +43,7 @@ const defaultProps:Partial<TextInputProps> = {
   visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
 }
 
-export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
+const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
 
   const innerInputRef = React.useRef<NativeTextInput>(null)
 
@@ -291,7 +291,10 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
   )
 }
 
+export const TextInput = TextInputComponent as ComponentWithDefaultProps<TextInputProps>
+
 TextInput.defaultProps = defaultProps
+
 SearchInput.defaultProps = {
   debounce: null,
   clearIcon: 'x' as IconPlaceholder,

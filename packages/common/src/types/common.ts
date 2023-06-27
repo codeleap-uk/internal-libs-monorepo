@@ -20,4 +20,4 @@ export type FileWithPreview<Extra = {}> = {
   preview: string
 }
 
-export type MobileInputFile<Extra = {}> = FileWithPreview | MobileFile<Extra>
+export type MobileInputFile<Extra = {}> = FileWithPreview<Extra> | MobileFile<Extra>

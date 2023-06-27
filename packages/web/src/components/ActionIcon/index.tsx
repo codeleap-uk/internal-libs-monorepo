@@ -1,25 +1,27 @@
-import React from 'react'
-import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
+
+import { ComponentVariants, PropsOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
-import { Touchable, TouchableProps } from '../Touchable'
+import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { ActionIconComposition, ActionIconPresets } from './styles'
 
 export type ActionIconProps = {
-    disabled?: boolean
     iconProps?: Partial<IconProps>
     icon?: IconProps['name']
     name?: IconProps['name']
+    action?: () => void
     styles?: StylesOf<ActionIconComposition>
-} & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
+} & Omit<PropsOf<typeof Touchable>, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
 
-export const ActionIcon:React.FC<ActionIconProps> = (props) => {
+export const ActionIcon = (props:ActionIconProps) => {
   const { icon, name, iconProps, onPress, variants, styles, children, disabled, ...touchableProps } = props
-  
+
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    variants, 
-    styles
+    variants,
+    styles,
   })
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
@@ -31,25 +33,32 @@ export const ActionIcon:React.FC<ActionIconProps> = (props) => {
 
     if (onPress) onPress?.()
   }
-  
+
   return (
-    <WrapperComponent 
+    // @ts-ignore
+    <WrapperComponent
       onPress={handlePress}
       css={[
         variantStyles.wrapper,
         disabled && variantStyles['wrapper:disabled'],
-        isPressable && variantStyles['wrapper:cursor']
+        isPressable && variantStyles['wrapper:cursor'],
       ]}
       disabled={disabled}
+      {
+        ...(isPressable && {
+          onPress: handlePress,
+        })
+      }
       {...touchableProps}
     >
-      <Icon 
-        name={icon ?? name} 
+      <Icon
+        name={icon ?? name}
+        {...iconProps}
+        // @ts-ignore
         css={[
           variantStyles.icon,
           disabled && variantStyles['icon:disabled'],
         ]}
-        {...iconProps}
       />
       {children}
     </WrapperComponent>

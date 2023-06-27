@@ -33,7 +33,7 @@ export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
   noFeedback?: boolean
 } & BadgeComponentProps
 
-export const Avatar: React.FC<AvatarProps> = (props) => {
+export const Avatar = (props:AvatarProps) => {
   const {
     debugName,
     name = '',
