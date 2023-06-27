@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { IconPlaceholder,
   useDefaultComponentStyle,
   TypeGuards,
@@ -312,7 +313,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
           }}
-          onPress={close}
+
           currentValueLabel={currentValueLabel}
 
           debugName={`${debugName} select input`}

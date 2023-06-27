@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards, onUpdate } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
@@ -5,7 +7,7 @@ import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
 import { LoadingIndicatorProps, PlaceholderProps, SelectProps, TCustomOption } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
-import { Button } from '../Button'
+import { Button, ButtonProps } from '../Button'
 import { Text } from '../Text'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
@@ -16,7 +18,7 @@ export * from './styles'
 export * from './types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
-  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {}, isFocused } = props
+  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused } = props
 
   const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.styles ?? {}) })
 
@@ -46,12 +48,12 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
 const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
   const { Footer, children } = props
 
-  return <>
+  return <React.Fragment>
     <components.Menu {...props}>
       {children}
       {!!Footer && <Footer />}
     </components.Menu>
-  </>
+  </React.Fragment>
 }
 
 const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React.CSSProperties } }) => {
@@ -75,8 +77,8 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isString(TextPlaceholder)) {
       return <Text text={TextPlaceholder} css={[defaultStyles.text]} />
     } else if (React.isValidElement(TextPlaceholder)) {
-      return TextPlaceholder
-    } else {
+      return TextPlaceholder as JSX.Element
+    } else if (TypeGuards.isFunction(TextPlaceholder)) {
       return <TextPlaceholder {...props} />
     }
   }
@@ -91,7 +93,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
       return <View style={defaultStyles.icon}>
         { IconPlaceholder}
       </View>
-    } else {
+    } else if (TypeGuards.isFunction(IconPlaceholder)) {
       return <IconPlaceholder {...props} />
     }
   }
@@ -105,11 +107,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 }
 
 const LoadingIndicator = (props: LoadingIndicatorProps) => {
-  const { defaultStyles, size } = props
+  const { defaultStyles } = props
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      <ActivityIndicator size={size} />
+      <ActivityIndicator />
     </View>
   )
 }
@@ -162,7 +164,7 @@ const defaultProps: Partial<SelectProps> = {
   selectedIcon: 'checkmark',
   searchable: false,
   separatorMultiValue: ', ',
-  itemProps: {},
+  itemProps: {} as ButtonProps,
   loadingIndicatorSize: 20,
   options: [],
 }
@@ -415,7 +417,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             <DefaultOption
               {...props}
               {...componentProps}
-              itemProps={itemProps}
+              itemProps={itemProps as ButtonProps}
               selectedIcon={selectedIcon}
               optionsStyles={optionsStyles}
               component={OptionComponent}

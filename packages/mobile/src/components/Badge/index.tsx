@@ -7,8 +7,8 @@ import { StyleSheet } from 'react-native'
 
 export * from './styles'
 
-export type BadgeProps = ComponentVariants<typeof BadgePresets> 
-  & ViewProps 
+export type BadgeProps = ComponentVariants<typeof BadgePresets>
+  & ViewProps
   & {
     styles?: StylesOf<BadgeComposition>
     maxCount?: number
@@ -106,7 +106,7 @@ export const Badge = (props: BadgeProps) => {
   let BadgeContent = renderBadgeContent
 
   if (TypeGuards.isNil(renderBadgeContent)) {
-    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} /> 
+    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} />
   }
 
   return (
@@ -116,14 +116,14 @@ export const Badge = (props: BadgeProps) => {
     >
       <View {...innerWrapperProps} style={innerWrapperStyles}>
         {showContent
-          ? <BadgeContent 
-              {...props} 
-              maxCount={maxCount} 
-              minCount={minCount} 
-              count={count}
-              getBadgeContent={getBadgeContent} 
-              content={content} 
-            /> 
+          ? <BadgeContent
+            {...props}
+            maxCount={maxCount}
+            minCount={minCount}
+            count={count}
+            getBadgeContent={getBadgeContent}
+            content={content}
+          />
           : null
         }
       </View>
@@ -131,4 +131,4 @@ export const Badge = (props: BadgeProps) => {
   )
 }
 
-Badge.defaultProps =  defaultProps
+Badge.defaultProps = defaultProps
