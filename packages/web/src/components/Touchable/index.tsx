@@ -71,10 +71,10 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
     if (!propagate) stopPropagation(event)
 
-    if (!TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)) { 
+    if (!TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)) {
       logger.warn(
-        'No onPress passed to touchable', 
-        touchableProps, 
+        'No onPress passed to touchable',
+        touchableProps,
         'User interaction'
       )
       return
@@ -82,12 +82,12 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
     const _onPress = () => {
       logger.log(
-        `<${debugComponent || 'Touchable'}/> pressed`, 
-        { debugName }, 
+        `<${debugComponent || 'Touchable'}/> pressed`,
+        { debugName, debugComponent },
         'User interaction'
       )
-      
-      if(TypeGuards.isFunction(onClick)) onClick?.(event)
+
+      if (TypeGuards.isFunction(onClick)) onClick?.(event)
       onPress?.()
     }
 
@@ -116,10 +116,10 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
   return (
     <View
-      component={Component || 'button'} 
-      {...props} 
+      component={Component || 'button'}
+      {...props}
       debugName={debugName}
-      onClick={handleClick} 
+      onClick={handleClick}
       ref={ref}
       css={_styles}
     />
