@@ -1,30 +1,38 @@
 import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react'
-import { Scroll, ScrollProps } from '../Scroll'
+import { Scroll, ScrollProps, ScrollRef } from '../Scroll'
 
 import { Easing, StyleSheet } from 'react-native'
-import { FormTypes, getNestedStylesByKey, PropsOf, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
+import { FormTypes, getNestedStylesByKey, PropsOf, useCodeleapContext, useDefaultComponentStyle, useState } from '@codeleap/common'
 import { SegmentedControlComposition, SegmentedControlPresets } from './styles'
 import { Touchable } from '../Touchable'
 import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
-import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { View } from '../View'
 import { InputLabel } from '../InputLabel'
 import { useAnimatedVariantStyles, TransitionConfig } from '../../utils'
 import { SegmentedControlOption } from './Option'
-import { IconPlaceholder } from '@codeleap/common'
-import { Badge, BadgeProps } from '../Badge'
+import { SegmentedControlOptionProps } from './Option'
 
 export * from './styles'
-export type SegmentedControlRef =KeyboardAwareScrollViewTypes.KeyboardAwareScrollView & {
+
+export type SegmentedControlRef = ScrollRef & {
   scrollTo: (index: number) => void
   scrollToCurrent: () => void
 }
 
-type SegmentedContropOptions<T = string> = {label: string; value: T; icon?: IconPlaceholder; badge?: BadgeProps['badge']}
+const DefaultBubble = (props:Partial<SegmentedControlProps>) => {
+  const {
+    style,
+
+  } = props
+  return <View
+    animated
+    style={style}
+  />
+}
 
 export type SegmentedControlProps<T = string> = ScrollProps & {
-    options : SegmentedContropOptions[]
+    options : SegmentedControlOptionProps[]
     onValueChange: (value: T) => any
     value: T
     debugName: string
@@ -34,14 +42,10 @@ export type SegmentedControlProps<T = string> = ScrollProps & {
     styles?: StylesOf<SegmentedControlComposition>
     scrollProps?: any
     label?: FormTypes.Label
-    RenderButton?: (props: SegmentedControlProps & {
-      touchableProps: PropsOf<typeof Touchable>
-      textProps: PropsOf<typeof Text>
-      option: SegmentedContropOptions
-    }) => ReactElement
-    RenderAnimatedView?: (props: Partial<SegmentedControlProps>) => ReactElement
-    getItemWidth?: (item: SegmentedContropOptions, idx: number, arr: SegmentedContropOptions[]) => number
-    badgeProps?: Partial<BadgeProps>
+    renderOption?: (props: SegmentedControlOptionProps) => JSX.Element
+    renderBubble?: (props: Partial<SegmentedControlProps>) => JSX.Element
+    getItemWidth?: (item:{label: string; value: T }, idx: number, arr: {label: string; value: T }[]) => number
+    scrollToCurrentOptionOnMount?: boolean
 }
 
 const defaultAnimation = {
@@ -65,10 +69,15 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     variants = [],
     scrollProps = {},
     getItemWidth = (i) => (Theme.values.width - Theme.spacing.value(4)) / options.length,
-    RenderAnimatedView,
-    RenderButton,
-    badgeProps = {},
-  } = props
+    renderBubble,
+    scrollToCurrentOptionOnMount = true,
+    renderOption,
+  } = {
+    ...(_SegmentedControl.defaultProps || {}),
+    ...props,
+  }
+
+  const [bubbleWidth, setBubbleWidth] = useState(0)
 
   const _animation = {
     ...defaultAnimation, ...animation,
@@ -81,7 +90,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     rootElement: 'scroll',
   })
 
-  const scrollRef = useRef<KeyboardAwareScrollViewTypes.KeyboardAwareScrollView>(null)
+  const scrollRef = useRef<SegmentedControlRef>(null)
 
   function scrollTo(idx:number) {
     if (!scrollRef.current) return
@@ -91,11 +100,18 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   }
 
   const widthStyle = useMemo(() => {
-    const sizes = options.map(getItemWidth)
-    const maxWidth = sizes.sort((a, b) => b - a)[0]
+    if (getItemWidth) {
+      const sizes = options.map(getItemWidth)
+      const maxWidth = sizes.sort((a, b) => b - a)[0]
 
-    return { width: maxWidth }
-  }, [options])
+      return { width: maxWidth }
+
+    }
+
+    return {
+      width: bubbleWidth,
+    }
+  }, [options, bubbleWidth])
 
   const currentOptionIdx = options.findIndex(o => o.value === value) || 0
 
@@ -119,14 +135,18 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
         scrollTo(currentOptionIdx)
       },
     } as SegmentedControlRef
-  })
+  }, [
+    currentOptionIdx,
+  ])
 
-  if (!hasScrolledInitially.current && scrollRef.current) {
+  if (!hasScrolledInitially.current && scrollRef.current && scrollToCurrentOptionOnMount) {
     scrollTo(currentOptionIdx)
     hasScrolledInitially.current = true
   }
 
-  const BubbleView = RenderAnimatedView || View
+  const BubbleView = renderBubble
+  const Option = renderOption
+
   variantStyles = JSON.parse(JSON.stringify(variantStyles))
 
   const labelStyles = getNestedStylesByKey('label', variantStyles)
@@ -144,7 +164,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     dependencies: [currentOptionIdx, widthStyle.width],
   })
 
-  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+  const largestWidth = useRef(0)
 
   return (<View style={variantStyles.wrapper}>
     <InputLabel label={label} styles={labelStyles} required={false}/>
@@ -164,11 +184,15 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
           options={options}
           styles={variantStyles}
           animated
-          style={[variantStyles.selectedBubble, props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'], widthStyle, bubbleAnimation]}
-
+          style={[
+            variantStyles.selectedBubble,
+            props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'],
+            widthStyle,
+            bubbleAnimation,
+          ]}
         />
         {options.map((o, idx) => (
-          <SegmentedControlOption
+          <Option
             debugName={debugName}
             label={o.label}
             value={o.value}
@@ -178,7 +202,17 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
             style={widthStyle}
             selected={value === o.value}
             variantStyles={variantStyles}
-            badge={!TypeGuards.isNil(o.badge) ? <Badge badge={o.badge} styles={badgeStyles} {...badgeProps} /> : null}
+            onLayout={e => {
+              const { width } = e.nativeEvent.layout
+              if (width > largestWidth.current) {
+                largestWidth.current = width
+              }
+
+              if (idx === options.length - 1) {
+                setBubbleWidth(largestWidth.current)
+                largestWidth.current = 0
+              }
+            }}
           />
         ))}
       </View>
@@ -187,6 +221,11 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   )
 
 })
+
+_SegmentedControl.defaultProps = {
+  renderBubble: DefaultBubble,
+  renderOption: SegmentedControlOption,
+}
 
 type SegControlComponent = <T = string>(props: SegmentedControlProps<T> & {ref?: React.Ref<SegmentedControlRef>}) => ReactElement
 

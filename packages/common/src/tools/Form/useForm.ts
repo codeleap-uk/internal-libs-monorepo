@@ -131,9 +131,10 @@ export function useForm<
 
   const registeredFields = useRef([])
   let registeredTextRefsOnThisRender = 0
-  function register(field: FieldPaths[0]) {
+  function register(field: FieldPaths[0], transformProps = (p) => p) {
     const nFields = registeredFields.current.length
-    const { changeEventName, validate, type, ...staticProps } =
+
+    const { changeEventName, validate, type, componentProps, ...staticProps } =
     // @ts-ignore
     form.staticFieldProps[field as string]
 
@@ -189,13 +190,22 @@ export function useForm<
     }
 
     registeredFields.current.push(type)
-    return {
+
+    const resolvedProps = {
       ...staticProps,
       ...dynamicProps,
       validate: (v) => {
         return validateField(field, true, v)
       },
     }
+
+    const componentPropsConfig = TypeGuards.isFunction(componentProps) ? componentProps(resolvedProps) : (componentProps || {})
+
+    return transformProps({
+      ...resolvedProps,
+      ...componentPropsConfig,
+      ...componentProps,
+    })
   }
 
   function getTransformedValue(): Values {

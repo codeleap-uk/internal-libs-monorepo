@@ -1,5 +1,7 @@
-import * as React from 'react'
-import { ReactNode } from 'react'
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
+import React, { ReactNode } from 'react'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import {
@@ -54,28 +56,28 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
   const isDisabled = disabled || item.disabled
 
   const getStyle = (key) => {
-    if(isDisabled && selected) {
+    if (isDisabled && selected) {
       return styles[`${key}:selectedDisabled`]
     }
-    if(isDisabled) {
+    if (isDisabled) {
       return styles[`${key}:disabled`]
     }
-    if(selected) {
+    if (selected) {
       return styles[`${key}:selected`]
     }
     return styles[key]
   }
 
-  const label = TypeGuards.isString(item.label) ? <Text 
+  const label = TypeGuards.isString(item.label) ? <Text
     css={[
       styles.optionLabel,
       getStyle('optionLabel'),
     ]}
     text={item.label}
-  /> : item.label 
+  /> : item.label
 
-  return <>
-    <Touchable 
+  return <React.Fragment>
+    <Touchable
       debugName={`${debugName} option ${item.value}`}
       css={[
         styles.optionWrapper,
@@ -83,11 +85,11 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       ]}
       onPress={onSelect}
       disabled={isDisabled}
-    > 
-      <View 
+    >
+      <View
         css={[
           styles.optionIndicator,
-        getStyle('optionIndicator'),
+          getStyle('optionIndicator'),
         ]}
 
       >
@@ -99,10 +101,10 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
         />
       </View>
       {label}
-      
+
     </Touchable>
     {separator && <View style={styles.optionSeparator} />}
-  </>
+  </React.Fragment>
 }
 
 export const RadioGroup = <T extends string|number>(
@@ -110,7 +112,7 @@ export const RadioGroup = <T extends string|number>(
 ) => {
   const {
     inputBaseProps,
-    others
+    others,
   } = selectInputBaseProps(props)
 
   const {
@@ -123,12 +125,12 @@ export const RadioGroup = <T extends string|number>(
     debugName,
   } = others
 
-  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', { 
+  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', {
     variants,
     styles,
   })
 
-  return <InputBase 
+  return <InputBase
     {...inputBaseProps}
     disabled={disabled}
     styles={{
@@ -138,13 +140,13 @@ export const RadioGroup = <T extends string|number>(
       ],
     }}
     debugName={debugName}
-  > 
+  >
     {options?.map((item, idx) => (
       <Option
         debugName={debugName}
         item={item}
         key={idx}
-        disabled={disabled} 
+        disabled={disabled}
         styles={variantStyles}
         selected={value === item.value}
         onSelect={() => onValueChange(item.value)}

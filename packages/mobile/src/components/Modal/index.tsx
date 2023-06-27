@@ -62,7 +62,7 @@ export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
   description?: React.ReactElement
 }
 
-const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
+const DefaultHeader = (props: ModalHeaderProps) => {
   const {
     styles,
     title = null,
@@ -101,7 +101,7 @@ const DefaultHeader:React.FC<ModalHeaderProps> = (props) => {
     )}</>
 }
 
-export const Modal: React.FC<ModalProps> = (modalProps) => {
+export const Modal = (modalProps:ModalProps) => {
   const {
     variants = [],
     styles = {},
