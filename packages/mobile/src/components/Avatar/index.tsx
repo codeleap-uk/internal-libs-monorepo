@@ -92,8 +92,8 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
         onPress={() => onPress?.()}
         style={[
           variantStyles.touchable,
-          !hasBackgroundColor  && {
-            backgroundColor:  randomColor,
+          !hasBackgroundColor && {
+            backgroundColor: randomColor,
           },
         ]}
         noFeedback={noFeedback || !onPress}
@@ -110,10 +110,10 @@ export const Avatar: React.FC<AvatarProps> = (props) => {
       </Touchable>
 
       {badgeIcon && (
-        <Touchable  
-          debugName={`${debugName} badge`} 
-          style={variantStyles.badgeIconWrapper} 
-          onPress={() => onPress?.()}   
+        <Touchable
+          debugName={`${debugName} badge`}
+          style={variantStyles.badgeIconWrapper}
+          onPress={() => onPress?.()}
           noFeedback
         >
           <Icon name={badgeIcon} style={variantStyles.badgeIcon} />
