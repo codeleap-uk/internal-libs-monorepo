@@ -217,6 +217,7 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
 export type SearchInputProps = {
   onTypingChange: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
+  onValueChange?: (search: string) => void
   onClear?: () => void
   debugName: string
   debounce?: number
@@ -235,13 +236,15 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     searchIcon,
     debounce,
     placeholder,
+    value,
+    onValueChange,
     ...others
   } = {
     ...SearchInput.defaultProps,
     ...props,
   }
 
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
 
   const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
 
