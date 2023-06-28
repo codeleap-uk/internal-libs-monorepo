@@ -51,8 +51,6 @@ jobs:
       - name: Git push
         if: always()
         run: |
-          git pull
-          git restore **/**
-          git add packages
-          git commit -m "update package versions"
+          git add packages/*/**
+          git commit -m "Update package versions"
           git push --follow-tags origin master
