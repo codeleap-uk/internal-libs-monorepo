@@ -262,20 +262,21 @@ export type UseFormConfig<T> = {
   validateOn?: 'change' | 'none'
 }
 
-export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
-  ? never
-  : T extends Record<string, any>
-    ? {
-        [K in keyof T]-?: K extends string | number
-          ?
-              | [`${K}`, T[K]]
-              | [
-                Join<K, Paths<T[K], Prev[D]>>,
-                T[K] extends FlattenFields<any> ? T[K][keyof T[K]] : T[K]
-              ]
-          : never;
-      }[keyof T]
-    : ''
+// export type PathsWithValues<T, D extends number = 2> = [D] extends [never]
+//   ? never
+//   : T extends Record<string, any>
+//     ? {
+//         [K in keyof T]-?: K extends string | number
+//           ?
+//               | [`${K}`, T[K]]
+//               | [
+//                 Join<K, Paths<T[K], Prev[D]>>,
+//                 T[K] extends FlattenFields<any> ? T[K][keyof T[K]] : T[K]
+//               ]
+//           : never;
+//       }[keyof T]
+//     : ''
+export type PathsWithValues<T, D extends number = 2> = Record<string|number, any>
 export type FormShape<Form extends CreateFormReturn<any>> = MapValues<Form['config']>
 export type FormSetters<Values> = {
   [Property in keyof Values]: (value: Values[Property]) => void
