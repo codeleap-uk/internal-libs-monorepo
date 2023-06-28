@@ -9,7 +9,7 @@ export type BasePermissionConfig = {
     onAllow: 'openSettings' | 'ask'
     description: string[]
     icon?: string
-    image?: any
+    image?: ImageProps['source']
     imageProps?: Omit<ImageProps, 'source'>
 }
 
