@@ -3,7 +3,7 @@ import { ComponentVariants, PropsOf, StylesOf, TypeGuards, useDefaultComponentSt
 import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { BadgeComposition, BadgePresets } from './styles'
-import { StyleSheet } from 'react-native'
+// import { StyleSheet } from 'react-native'
 
 export * from './styles'
 
@@ -76,7 +76,7 @@ export const Badge = (props: BadgeProps) => {
     variants,
     styles,
     rootElement: 'wrapper',
-    transform: StyleSheet.flatten,
+    // transform: StyleSheet.flatten,
   })
 
   const wrapperStyles: ViewProps['style'] = [
