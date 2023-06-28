@@ -40,7 +40,8 @@ export const ActionIcon = (props: ActionIconProps) => {
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
     responsiveVariants,
     variants, 
-    styles
+    styles,
+    rootElement: 'touchableWrapper'
   })
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled

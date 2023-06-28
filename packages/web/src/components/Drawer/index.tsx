@@ -1,6 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
-
 import {
   AnyFunction,
   ComponentVariants,
@@ -8,16 +5,16 @@ import {
   onUpdate,
   TypeGuards,
   useDefaultComponentStyle,
+  useNestedStylesByKey,
 } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { Overlay } from '../Overlay'
 import { View } from '../View'
 import { Text } from '../Text'
-import { Button } from '../Button'
 import { StylesOf } from '../../types/utility'
 import { DrawerComposition, DrawerPresets } from './styles'
-import { ActionIcon } from '../ActionIcon'
+import { ActionIcon, ActionIconProps } from '../ActionIcon'
 
 const axisMap = {
   top: [-1, 'Y'],
@@ -30,15 +27,17 @@ export type DrawerProps = React.PropsWithChildren<{
   open: boolean
   toggle: AnyFunction
   darkenBackground?: boolean
-  size: string | number
+  size?: string | number
   showCloseButton?: boolean
-  title?: ReactNode
-  footer?: ReactNode
+  title?: React.ReactNode | string
+  footer?: React.ReactNode
   position?: keyof typeof axisMap
   styles?: StylesOf<DrawerComposition>
+  style?: React.CSSProperties
   animationDuration?: string
-} & ComponentVariants<typeof DrawerPresets>
->
+  closeButtonProps?: Partial<ActionIconProps>
+} & ComponentVariants<typeof DrawerPresets>>
+
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],
 ): [string, string, CSSObject] => {
@@ -59,7 +58,21 @@ const resolveHiddenDrawerPosition = (
   return [css, translateAxis, positioning]
 }
 
-export const Drawer = ({ ...rawProps }:DrawerProps) => {
+const defaultProps: Partial<DrawerProps> = {
+  animationDuration: '0.3s',
+  position: 'bottom',
+  showCloseButton: false,
+  darkenBackground: true,
+  size: '75vw',
+  title: null
+}
+
+export const Drawer = (props: DrawerProps) => {
+  const allProps = {
+    ...Drawer.defaultProps,
+    ...props,
+  }
+
   const {
     open,
     toggle,
@@ -67,14 +80,16 @@ export const Drawer = ({ ...rawProps }:DrawerProps) => {
     size,
     title,
     footer,
-    darkenBackground = true,
+    darkenBackground,
     showCloseButton,
-    position = 'bottom',
+    closeButtonProps = {},
+    position,
     variants = [],
     responsiveVariants = {},
     styles,
-    animationDuration = '0.3s',
-  } = rawProps
+    style,
+    animationDuration,
+  } = allProps
 
   onUpdate(() => {
     if (open) {
@@ -84,34 +99,41 @@ export const Drawer = ({ ...rawProps }:DrawerProps) => {
     }
   }, [open])
 
-  const [hiddenStyle, axis, positioning] =
-    resolveHiddenDrawerPosition(position)
+  const [hiddenStyle, axis, positioning] = resolveHiddenDrawerPosition(position)
 
   const sizeProperty = axis === 'X' ? 'width' : 'height'
   const fullProperty = sizeProperty === 'height' ? 'width' : 'height'
 
-  const variantStyles = useDefaultComponentStyle('Drawer', {
+  const variantStyles = useDefaultComponentStyle<'u:Drawer', typeof DrawerPresets>('u:Drawer', {
     styles,
     variants,
     responsiveVariants,
   })
 
+  const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
+
+  const showHeader = (!TypeGuards.isNil(title) || showCloseButton)
+
+  const wrapperStyles = React.useMemo(() => ([
+    variantStyles.wrapper,
+    {
+      transition: 'visibility 0.01s ease',
+      transitionDelay: open ? '0' : animationDuration,
+      visibility: open ? 'visible' : 'hidden'
+    },
+    style,
+  ]), [open, variantStyles])
+
   return (
-    <View
-      css={{
-        ...variantStyles.wrapper,
-        transition: 'visibility 0.01s ease',
-        transitionDelay: open ? '0' : animationDuration,
-        visibility: open ? 'visible' : 'hidden',
-      }}
-    >
+    <View css={wrapperStyles}>
       {darkenBackground && (
         <Overlay
           visible={open}
           css={variantStyles.overlay}
-          onPress={() => toggle()}
+          onPress={toggle}
         />
       )}
+
       <View
         variants={['fixed']}
         css={{
@@ -125,24 +147,26 @@ export const Drawer = ({ ...rawProps }:DrawerProps) => {
         }}
       >
         {
-          !TypeGuards.isNil(title) || showCloseButton && (
+          showHeader ? (
             <View
               component='header'
-              variants={['justifySpaceBetween']}
-              css={variantStyles.header}
+              css={[variantStyles.header]}
             >
-              {typeof title === 'string' ? <Text text={title} /> : title}
+              {TypeGuards.isString(title) ? <Text css={variantStyles.title} text={title} /> : title}
               {showCloseButton && (
                 <ActionIcon
                   onPress={toggle}
                   icon={'close' as IconPlaceholder}
-                  css={variantStyles.headerCloseButton}
+                  {...closeButtonProps}
+                  styles={closeButtonStyles}
                 />
               )}
             </View>
-          )
+          ) : null
         }
+        
         <View css={variantStyles.body}>{children}</View>
+        
         {footer && (
           <View component='footer' css={variantStyles.footer}>
             {footer}
@@ -152,5 +176,7 @@ export const Drawer = ({ ...rawProps }:DrawerProps) => {
     </View>
   )
 }
+
+Drawer.defaultProps = defaultProps
 
 export * from './styles'
