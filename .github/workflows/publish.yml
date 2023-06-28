@@ -6,7 +6,9 @@ on:
     paths:
       - "packages/**/*"
       - .github/workflows/publish.yml
-
+concurrency:
+  group: ${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
