@@ -6,7 +6,6 @@ import {
   StylesOf,
   PropsOf,
 } from '@codeleap/common'
-import { ReactNode } from 'react'
 import { StyleSheet } from 'react-native'
 import { View } from '../View'
 
@@ -18,15 +17,12 @@ import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps 
 import { useAnimatedVariantStyles } from '../..'
 import { Touchable } from '../Touchable'
 
-
 export * from './styles'
 
-
-  
 export type SwitchProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
-> &  {
+> & {
   variants?: ComponentVariants<typeof SwitchPresets>['variants']
   styles?: StylesOf<SwitchComposition>
   value: boolean
@@ -37,107 +33,105 @@ export type SwitchProps = Pick<
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
-
-
 export const Switch = (props: SwitchProps) => {
-    const {
-      inputBaseProps,
-      others
-    } = selectInputBaseProps(props)
-    const {
-      variants = [],
-      style = {},
-      styles = {},
-      value,
+  const {
+    inputBaseProps,
+    others,
+  } = selectInputBaseProps(props)
+  const {
+    variants = [],
+    style = {},
+    styles = {},
+    value,
+    disabled,
+    debugName,
+    onValueChange,
+    switchOnLeft,
+  } = others
+
+  const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
+    variants,
+    styles,
+    rootElement: 'wrapper',
+    transform: StyleSheet.flatten,
+  })
+
+  const trackAnimation = useAnimatedVariantStyles({
+    variantStyles,
+    animatedProperties: ['track:off', 'track:disabled', 'track:on', 'track:disabled-on', 'track:disabled-off'],
+    transition: variantStyles['track:transition'],
+    updater: () => {
+      'worklet'
+      let disabledStyle = {}
+      if (disabled) {
+        disabledStyle = value ? variantStyles['track:disabled-on'] : variantStyles['track:disabled-off']
+      }
+      const style = value ? variantStyles['track:on'] : variantStyles['track:off']
+
+      return {
+        ...style,
+        ...disabledStyle,
+      }
+
+    },
+    dependencies: [value, disabled],
+  })
+
+  const thumbAnimation = useAnimatedVariantStyles({
+    variantStyles,
+    animatedProperties: ['thumb:off', 'thumb:disabled', 'thumb:on', 'thumb:disabled-off', 'thumb:disabled-on'],
+    transition: variantStyles['thumb:transition'],
+    updater: () => {
+      'worklet'
+      let disabledStyle = {}
+      if (disabled) {
+        disabledStyle = value ? variantStyles['thumb:disabled-on'] : variantStyles['thumb:disabled-off']
+      }
+      const style = value ? variantStyles['thumb:on'] : variantStyles['thumb:off']
+      return {
+        ...style,
+        ...disabledStyle,
+      }
+
+    },
+    dependencies: [value, disabled],
+  })
+
+  const _switchOnLeft = switchOnLeft ?? variantStyles.__props?.switchOnLeft
+
+  return <InputBase
+    {...inputBaseProps}
+    debugName={debugName}
+    wrapper={Touchable}
+    styles={variantStyles}
+    wrapperProps={{
+      onPress: () => {
+        onValueChange(!value)
+      },
       disabled,
-      debugName,
-      onValueChange,
-      switchOnLeft,
-    } = others
+      rippleDisabled: true,
+    }}
+    order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
+    style={style}
+    disabled={disabled}
 
-    const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
-      variants,
-      styles, 
-      rootElement: 'wrapper',
-      transform: StyleSheet.flatten
-    })
-    
-    const trackAnimation = useAnimatedVariantStyles({
-      variantStyles,
-      animatedProperties: ['track:off','track:disabled', 'track:on', 'track:disabled-on', 'track:disabled-off'],
-      transition: variantStyles['track:transition'],
-      updater: () =>{
-        'worklet'
-        let disabledStyle = {}
-        if(disabled){
-          disabledStyle =  value ? variantStyles['track:disabled-on'] : variantStyles['track:disabled-off']
-        }
-        const style =  value ? variantStyles['track:on'] : variantStyles['track:off']
-
-        return {
-          ...style,
-          ...disabledStyle
-        }
-        
-      },
-      dependencies: [value, disabled],
-    })
-
-    const thumbAnimation = useAnimatedVariantStyles({
-      variantStyles,
-      animatedProperties: ['thumb:off','thumb:disabled', 'thumb:on', 'thumb:disabled-off', 'thumb:disabled-on'],
-      transition: variantStyles['thumb:transition'],
-      updater: () =>{
-        'worklet'
-        let disabledStyle = {}
-        if(disabled){
-          disabledStyle = value ? variantStyles['thumb:disabled-on'] : variantStyles['thumb:disabled-off']
-        }
-        const style = value ? variantStyles['thumb:on'] : variantStyles['thumb:off']
-        return {
-          ...style,
-          ...disabledStyle
-        }
-        
-      },
-      dependencies: [value, disabled],
-    })
-
-    const _switchOnLeft = switchOnLeft ?? variantStyles['__props']?.switchOnLeft
-
-    return <InputBase
-      {...inputBaseProps}
-      debugName={debugName}
-      wrapper={Touchable}
-      styles={variantStyles}
-      wrapperProps={{
-        onPress: () => {
-          onValueChange(!value)
-        },
-        disabled,
-        rippleDisabled: true
-      }}
-      order={_switchOnLeft ?  reversedOrder : InputBaseDefaultOrder}
-      style={style}
-      disabled={disabled} 
-      
+  >
+    <View
+      animated
+      style={[
+        variantStyles.track,
+        disabled && variantStyles['track:disabled'],
+        trackAnimation,
+      ]}
     >
-      <View 
-        animated 
+      <View
+        animated
         style={[
-          variantStyles.track, 
-          disabled && variantStyles['track:disabled'],
-          trackAnimation
+          variantStyles.thumb,
+          disabled && variantStyles['thumb:disabled'],
+          thumbAnimation,
         ]}
-        >
-        <View 
-          animated 
-          style={[
-            variantStyles.thumb, 
-            disabled && variantStyles['thumb:disabled'],
-            thumbAnimation
-          ]}
-        />
-      </View>
-    </InputBase>
+      />
+    </View>
+  </InputBase>
 }

@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-restricted-imports */
-import { ReactElement } from 'react'
-import { QueryKey } from '../MediaQuery'
 import {
-  BaseViewProps,
   Border,
   BreakpointPlaceholder,
   Cursor,
@@ -15,7 +12,6 @@ import {
   Translate,
 } from '../types'
 import {
-  ComponentVariants,
   FunctionType,
   NestedKeys,
   ReplaceRecursive,
@@ -44,12 +40,16 @@ export type FromVariantsBuilder<S, T extends DefaultVariantBuilder<S>> = {
 export type VariantStyleSheet<C extends string, > = Record<C, DefaultVariantBuilder>
 export type ComponentVariantsDefinition = Record<string, VariantStyleSheet<string>>
 
-export type VariantProp<T = CommonVariantObject> =
-  | string
-  | (keyof T | Spacing | Border | `backgroundColor:${DefaultColors}` | `bg:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}`
-    | `scale:${number}` | `rotate${RotateDirections}:${number}deg` | Translate
-    | `cursor:${Cursor}`
-    | boolean | null | undefined | '')[]
+export type AcceptedNullishVariants = boolean | null | undefined | ''
+
+export type DynamicVariants = Spacing | Border | `backgroundColor:${DefaultColors}` | `bg:${DefaultColors}` | `color:${DefaultColors}` | `d:${string}`
+| `scale:${number}` | `rotate${RotateDirections}:${number}deg` | Translate
+| `cursor:${Cursor}`
+
+export type VariantProp<T = Record<string, any>> =
+  string
+  | (keyof T | DynamicVariants | AcceptedNullishVariants)[]
+
 export type ResponsiveVariantsProp<
   Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
   Styles = CommonVariantObject<any>,
@@ -84,66 +84,62 @@ export type ApplyVariantsArgs = {
   theme: EnhancedTheme<any>
   wrapStyle?: (style: any) => any
 }
-export type CT<StyleType> = [
-  Component: FunctionType<[any], ReactElement | null>,
-  style: DefaultVariantBuilder<StyleType>
+export type CT = [
+  (props: Record<string, any>) => any,
+  Record<string, any>
   // style: FunctionType<[any], CommonVariantObject<string, StyleType>>;
 ]
 
-export type ComponentStyleMap<CSS = any> = Partial<{
-  [x: string]: CT<CSS>
+export type ComponentStyleMap = Partial<{
+  [x: string]: CT
 }>
 
 // ReplaceRecursive<MergedProps, IconPlaceholder, keyof Theme['icons']>
 
-type ReplaceWithIcons<
+export type ReplaceWithIcons<
   Props,
   Theme extends EnhancedTheme<any>
 > = ReplaceRecursive<Props, IconPlaceholder, keyof Theme['icons']>
 
-type ReplaceWithBreakpoints<
+export type ReplaceWithBreakpoints<
   Props,
   Theme extends EnhancedTheme<any>
 > = ReplaceRecursive<Props, BreakpointPlaceholder, keyof Theme['breakpoints']>
 
+type WithDynamicVariants<T extends Record<string, any>> = keyof T | DynamicVariants | AcceptedNullishVariants
+
+export type ReplaceWithVariants<T, VariantSheet, Theme extends EnhancedTheme<any>> =
+Omit<T, 'variants'|'responsiveVariants'>
+& {
+  responsiveVariants?: {
+    [Breakpoint in keyof Theme['breakpoints']]?: WithDynamicVariants<VariantSheet>[]
+  }
+  variants?: WithDynamicVariants<VariantSheet>[]
+}
+
 export type ReplaceProps<
-  T extends CT<any>,
-  Theme extends EnhancedTheme<any>,
-  EX = {},
-  NewProps = ComponentVariants<T[1], any>,
-  Props = Parameters<T[0]>[0],
-  MergedProps = Omit<Props, 'responsiveVariants' | 'variants'> & NewProps
-> = React.FC<
-  ReplaceWithBreakpoints<ReplaceWithIcons<MergedProps & EX, Theme>, Theme>
->
-type ViewPlatformProps = Partial<
-  BaseViewProps & Record<QueryKey, BreakpointPlaceholder>
->
+  T extends CT,
+  Theme extends EnhancedTheme<any>
+> =
+  ReplaceWithBreakpoints<
+    ReplaceWithIcons<
+      ReplaceWithVariants<
+        Parameters<T[0]>[0],
+        T[1],
+        Theme
+      >,
+      Theme
+    >,
+    Theme
+  >
 
 export type TypedComponents<
-  T extends ComponentStyleMap = ComponentStyleMap,
-  Theme extends EnhancedTheme<any> = EnhancedTheme<any>
+  T extends ComponentStyleMap,
+  Theme extends EnhancedTheme<any>
 > = {
-  [Property in keyof T]: Property extends 'View'
-    ? ReplaceProps<
-        T[Property],
-        Theme,
-        ViewPlatformProps,
-        | ComponentVariants<T[Property][1], Theme>
-        | ComponentVariants<T[Property][1]>
-      >
-    : Property extends string
-    ? ReplaceProps<
-        T[Property],
-        Theme,
-        {},
-        | ComponentVariants<T[Property][1], Theme>
-        | ComponentVariants<T[Property][1]>
-      >
-    : ReplaceProps<
-        T[Property],
-        Theme,
-        ViewPlatformProps,
-        ComponentVariants<T[Property][1], Theme>
-      >;
+  [Property in keyof T]: (props: ReplaceProps<
+    T[Property],
+    Theme
+  >) => JSX.Element
+
 }

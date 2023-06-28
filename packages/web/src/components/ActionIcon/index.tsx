@@ -1,4 +1,3 @@
-import React from 'react'
 import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
@@ -46,7 +45,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent: any = isPressable ? Touchable : View
+  const WrapperComponent = isPressable ? Touchable : View
 
   const handlePress = () => {
     if (!isPressable) return
@@ -61,10 +60,15 @@ export const ActionIcon = (props: ActionIconProps) => {
   ])
 
   return (
-    <WrapperComponent 
-      onPress={handlePress}
+    // @ts-ignore
+    <WrapperComponent
       css={getStyles('touchableWrapper')}
       disabled={disabled}
+      {
+        ...(isPressable && {
+          onPress: handlePress,
+        })
+      }
       {...touchableProps}
     >
       <Icon

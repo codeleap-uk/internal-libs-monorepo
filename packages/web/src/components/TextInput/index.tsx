@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   ComponentVariants,
   FormTypes,
@@ -10,7 +13,6 @@ import {
   yup,
 } from '@codeleap/common'
 import React, {
-  ComponentPropsWithoutRef,
   forwardRef,
   useImperativeHandle,
   useRef,
@@ -19,7 +21,7 @@ import React, {
 import TextareaAutosize from 'react-autosize-textarea'
 import InputMask from 'react-input-mask'
 import { Touchable, TouchableProps } from '../Touchable'
-import { StylesOf } from '../../types/utility'
+import { StylesOf, HTMLProps } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
@@ -27,7 +29,7 @@ import { getMaskInputProps, TextInputMaskingProps } from './mask'
 export * from './styles'
 export * from './mask'
 
-type NativeTextInputProps = ComponentPropsWithoutRef<'input'>
+type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps =
   Omit<InputBaseProps, 'styles' | 'variants'> &
@@ -41,7 +43,7 @@ export type TextInputProps =
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: (value: string) => void
+    onChangeText?: (textValue:string) => void
     caretColor?: string
     focused?: boolean
     _error?: boolean
@@ -49,8 +51,10 @@ export type TextInputProps =
     masking?: TextInputMaskingProps
   }
 
-export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
-  const innerInputRef = useRef<HTMLInputElement>(null)
+type InputRef = HTMLInputElement & { isTextInput?: boolean }
+
+export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
+  const innerInputRef = useRef<InputRef>(null)
 
   const {
     inputBaseProps,
@@ -201,8 +205,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
-          // @ts-ignore
-          if (isMasked) innerInputRef.current?.onFocus?.()
+          // if (isMasked) innerInputRef.current?.onFocus?.()
           innerInputRef.current?.focus?.()
           if (isPressable) onPress?.()
         },
@@ -215,6 +218,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         ..._wrapperOnInputFocus,
       }}
     >
+
       <InputElement
         editable={`${!isPressable && !isDisabled}`}
         {...buttonModeProps}
@@ -222,7 +226,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
+        // @ts-ignore
         onBlur={handleBlur}
+        // @ts-ignore
         onFocus={handleFocus}
         css={[
           variantStyles.input,

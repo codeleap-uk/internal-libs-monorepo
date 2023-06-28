@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
 import React from 'react'
 import { TypeGuards, getRenderedComponent } from '@codeleap/common'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -17,7 +19,7 @@ export const InputBaseDefaultOrder:InputBaseProps['order'] = [
   'error',
 ]
 const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
-  return <>{props.children}</>
+  return <React.Fragment>{props.children}</React.Fragment>
 }
 
 export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) => {
@@ -38,6 +40,7 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
     disabled = false,
     order = InputBaseDefaultOrder,
     style,
+    noError = false,
     labelAsRow = false,
     innerWrapperRef,
     ...otherProps
@@ -81,9 +84,11 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
-    error: _error || <Text children={<>
-      &nbsp;
-    </>} css={_styles.errorStyle}/>,
+    error: noError ? null : (
+      _error || <Text children={<React.Fragment>
+        &nbsp;
+      </React.Fragment>} css={_styles.errorStyle}/>
+    ),
   }
 
   return (

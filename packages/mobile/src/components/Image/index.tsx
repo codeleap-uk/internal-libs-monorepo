@@ -1,24 +1,21 @@
 import * as React from 'react'
 import {
   ComponentVariants,
-
   useDefaultComponentStyle,
   arePropsEqual,
   FormTypes,
   TypeGuards,
-  useBooleanToggle,
   getNestedStylesByKey,
 } from '@codeleap/common'
-import { ComponentPropsWithoutRef } from 'react'
 import {
   Image as NativeImage,
+  ImageProps as NativeImageProps,
   ImageStyle,
   StyleProp,
   StyleSheet,
   TextStyle,
   ViewStyle,
 } from 'react-native'
-import { FastImage } from '../../modules/fastImage'
 import {
   ImageComposition,
   ImagePresets,
@@ -28,27 +25,25 @@ import { Touchable } from '../Touchable'
 import { isFile, toMultipartFile } from '../../utils'
 import { LoadingOverlay, LoadingOverlayProps } from '../LoadingOverlay'
 import { StylesOf } from '../../types'
+import FastImage, { Source } from 'react-native-fast-image'
+
 export * from './styles'
-type NativeImageProps = ComponentPropsWithoutRef<typeof NativeImage>
+
 export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
   variants?: ComponentVariants<typeof ImagePresets>['variants']
   fast?: boolean
   styles?: StylesOf<ImageComposition>
   style?: StyleProp<ImageStyle | TextStyle | ViewStyle>
   source:
-    | (NativeImageProps['source'] & {
-        priority?: keyof typeof FastImage.priority
-      })
+    | Source
     | FormTypes.AnyFile
-    | string
-    | number
   resizeMode?: keyof typeof FastImage.resizeMode
   spotlight?: string
   maintainAspectRatio?: boolean
-  withLoadingOverlay?: boolean | React.FC<LoadingOverlayProps>
+  withLoadingOverlay?: boolean | ((props: LoadingOverlayProps) => JSX.Element)
 }
 
-export const ImageComponent: React.FC<ImageProps> = (props) => {
+export const ImageComponent = (props:ImageProps) => {
   const {
     variants,
     style,
@@ -62,12 +57,17 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     ...imageProps
   } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImagePresets>('u:Image', { variants, styles: componentStyleSheet, transform: StyleSheet.flatten })
+  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImagePresets>('u:Image', {
+    variants,
+    styles: componentStyleSheet,
+    transform: StyleSheet.flatten,
+  })
   const [loading, setLoading] = React.useState(false)
 
   const styles = StyleSheet.flatten([variantStyles.wrapper, style])
 
   let imSource = source
+
   if (isFile(imSource)) {
     imSource = toMultipartFile(imSource)
   } else if (TypeGuards.isString(source)) {
@@ -139,6 +139,7 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
           style={[aspectRatioStyle, styles]}
           // @ts-ignore
           tintColor={styles?.tintColor}
+          // @ts-ignore
           source={imSource}
           resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
           {...loadProps.current}
@@ -152,7 +153,8 @@ export const ImageComponent: React.FC<ImageProps> = (props) => {
     <NativeImage
       style={[aspectRatioStyle, styles]}
       resizeMode={resizeMode}
-      source={imSource} {...(imageProps as any)}
+      source={imSource}
+      {...(imageProps as any)}
       {...loadProps.current}
     />
     {
@@ -167,5 +169,5 @@ function areEqual(prevProps, nextProps) {
   return res
 }
 
-export const Image = React.memo(ImageComponent, areEqual)
+export const Image = React.memo(ImageComponent, areEqual) as typeof ImageComponent
 

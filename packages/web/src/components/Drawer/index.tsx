@@ -1,8 +1,12 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
   onUpdate,
+  TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
@@ -13,6 +17,7 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { StylesOf } from '../../types/utility'
 import { DrawerComposition, DrawerPresets } from './styles'
+import { ActionIcon } from '../ActionIcon'
 
 const axisMap = {
   top: [-1, 'Y'],
@@ -54,7 +59,7 @@ const resolveHiddenDrawerPosition = (
   return [css, translateAxis, positioning]
 }
 
-export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
+export const Drawer = ({ ...rawProps }:DrawerProps) => {
   const {
     open,
     toggle,
@@ -119,21 +124,24 @@ export const Drawer: React.FC<DrawerProps> = ({ ...rawProps }) => {
           ...variantStyles.box,
         }}
       >
-        <View
-          component='header'
-          variants={['justifySpaceBetween']}
-          css={variantStyles.header}
-        >
-          {typeof title === 'string' ? <Text text={title} /> : title}
-          {showCloseButton && (
-            <Button
-              onPress={toggle}
-              icon={'close' as IconPlaceholder}
-              variants={['icon']}
-              css={variantStyles.headerCloseButton}
-            />
-          )}
-        </View>
+        {
+          !TypeGuards.isNil(title) || showCloseButton && (
+            <View
+              component='header'
+              variants={['justifySpaceBetween']}
+              css={variantStyles.header}
+            >
+              {typeof title === 'string' ? <Text text={title} /> : title}
+              {showCloseButton && (
+                <ActionIcon
+                  onPress={toggle}
+                  icon={'close' as IconPlaceholder}
+                  css={variantStyles.headerCloseButton}
+                />
+              )}
+            </View>
+          )
+        }
         <View css={variantStyles.body}>{children}</View>
         {footer && (
           <View component='footer' css={variantStyles.footer}>
