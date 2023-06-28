@@ -442,7 +442,7 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
     resolveRef.current = null
   }
 
-  const await = () => {
+  const _await = () => {
     return new Promise<T>((resolve, reject) => {
       rejectRef.current = reject
       resolveRef.current = resolve
@@ -455,8 +455,12 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
   }
 
   return {
-    await,
+    _await,
     resolve,
     reject,
   }
 }
+
+// useLayoutEffect will show warning if used during ssr, e.g. with Next.js
+// useIsomorphicEffect removes it by replacing useLayoutEffect with useEffect during ssr
+export const useIsomorphicEffect = typeof document !== 'undefined' ? useLayoutEffect : useEffect

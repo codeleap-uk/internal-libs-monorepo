@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { ReactNode, ComponentPropsWithoutRef } from 'react'
 
 import { Text } from '../Text'

@@ -3,7 +3,7 @@ import {
   onUpdate,
   TypeGuards,
   useDefaultComponentStyle,
-  useWarning
+  useWarning,
 } from '@codeleap/common'
 import React, { ReactNode, useCallback, useRef } from 'react'
 import {
@@ -46,7 +46,7 @@ export type PagerProps = React.PropsWithChildren<{
    windowing?:boolean
 }>
 
-export const Pager: React.FC<PagerProps> = (pagerProps) => {
+export const Pager = (pagerProps:PagerProps) => {
   const {
     styles,
     variants,
@@ -61,12 +61,11 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
     setPage,
   } = pagerProps
 
-  
   const childArr = React.Children.toArray(children)
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
-  
-  let variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
+
+  const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
     {
       styles,
@@ -75,15 +74,14 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
     },
   )
 
-  
   const windowWidth = Dimensions.get('window').width
   let width = widthProp ?? variantStyles.wrapper.width
 
   const validWidth = TypeGuards.isNumber(width)
-  
+
   if (!validWidth) {
     width = windowWidth
-    
+
   }
 
   useWarning(
@@ -97,7 +95,6 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
   const lastPage = nChildren - 1
 
   const WrapperComponent = renderPageWrapper || View
-
 
   const handleScrollEnd = useCallback(
     ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -142,13 +139,12 @@ export const Pager: React.FC<PagerProps> = (pagerProps) => {
         const isFirst = index === 0
         const isNext = index === page + 1
         const isPrevious = index === page - 1
-        
+
         const shouldRender = windowing ? (isActive || isNext || isPrevious) : true
 
         if (!shouldRender && returnEarly) {
           return <View style={{ height: '100%', width }} />
         }
-
 
         const pageProps:PageProps = {
           isLast,

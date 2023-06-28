@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import { VariableSizeList as VirtualList , VariableSizeListProps} from 'react-window'
 import { ComponentProps, CSSProperties, ReactElement } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'

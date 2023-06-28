@@ -121,6 +121,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     description,
     showDoneButton,
     style,
+    minimumDate,
+    maximumDate,
     footerComponent,
     ...modalProps
   } = allProps
@@ -226,6 +228,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           textColor={variantStyles?.picker?.color}
           androidVariant='iosClone'
           onConfirm={setValue}
+          minimumDate={minimumDate}
+          maximumDate={maximumDate}
           {...datePickerProps}
           mode={mode}
 

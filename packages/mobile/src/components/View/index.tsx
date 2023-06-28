@@ -1,36 +1,34 @@
-import * as React from 'react'
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import React from 'react'
+import { forwardRef } from 'react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
   ViewStyles,
-  BaseViewProps,
   useCodeleapContext,
   useMemo,
+  AnyRef,
 } from '@codeleap/common'
 import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
-import {TransitionConfig} from '../../types'
+import { GetKeyboardAwarePropsOptions } from '../../utils'
+import { TransitionConfig } from '../../types'
 import Animated from 'react-native-reanimated'
 export * from './styles'
 
+type NativeViewProps = RNViewProps
 
+export type ViewRefType = NativeView
 
-type NativeViewProps =Omit<ComponentPropsWithoutRef<typeof NativeView>, 'children'>
-
-export type ViewRefType = NativeView | React.ForwardedRef<NativeView>
-export type ViewProps = React.PropsWithChildren<{
-  ref?: ViewRefType
+export type ViewProps ={
+  ref?: AnyRef<ViewRefType>
   component?: any
   animated?: boolean
   keyboardAware?: GetKeyboardAwarePropsOptions
   transition?: Partial<TransitionConfig>
-} &
-  NativeViewProps & ComponentVariants<typeof ViewStyles>   & BaseViewProps
->
+}
+  & NativeViewProps
+  & ComponentVariants<typeof ViewStyles>
 
-
-export const View  = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
+export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
   const {
     responsiveVariants = {},
     variants = [],
@@ -46,15 +44,14 @@ export const View  = forwardRef<NativeView,ViewProps>((viewProps, ref) => {
     responsiveVariants,
     variants,
   })
-  const Component = animated ? Animated.View  : component || NativeView
+  const Component = animated ? Animated.View : component || NativeView
 
   return (
-    <Component  {...props} style={[variantStyles.wrapper, style]}>
+    <Component {...props} style={[variantStyles.wrapper, style]}>
       {children}
     </Component>
   )
-}) as unknown as React.FC<ViewProps>
-
+}) as unknown as ((props: ViewProps) => JSX.Element)
 
 type GapProps = ViewProps & {
   value: number
@@ -62,7 +59,7 @@ type GapProps = ViewProps & {
   defaultProps?: any
 }
 
-export const Gap:React.FC<React.PropsWithChildren<GapProps>> = ({ children, value, defaultProps = {}, ...props }) => {
+export const Gap = ({ children, value, defaultProps = {}, ...props }: GapProps) => {
   const { Theme } = useCodeleapContext()
   const childArr = React.Children.toArray(children)
 
