@@ -60,13 +60,11 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     rootElement: 'text',
   })
 
-  let content = ''
-
   const _text = TypeGuards.isString(msg) ? msg : text
 
-  try {
-    content = t(String(_text))
-  } catch (err) {
+  let content = t(String(_text))
+
+  if (TypeGuards.isNil(content) || !TypeGuards.isString(content) || content === 'null') {
     content = text
   }
 
