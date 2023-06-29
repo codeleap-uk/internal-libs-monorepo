@@ -14,13 +14,13 @@ import { OverlayPresets } from './Overlay/styles'
 import { TextInputPresets } from './TextInput/styles'
 import { RadioInputPresets } from './RadioInput/styles'
 import { SelectPresets } from './Select/styles'
-import { TooltipPresets } from './Tooltip/styles'
 import { ListPresets } from './List/styles'
 import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
 import { SwitchPresets } from './Switch/styles'
 import { NumberIncrementPresets } from './NumberIncrement/styles'
+import { TooltipPresets } from './Tooltip/styles'
 import { SegmentedControlPresets } from './SegmentedControl/styles'
 import { PagerPresets } from './Pager/styles'
 
@@ -42,13 +42,13 @@ export const defaultStyles = {
   TextInput: TextInputPresets,
   RadioInput: RadioInputPresets,
   Select: SelectPresets,
-  Tooltip: TooltipPresets,
   List: ListPresets,
   Slider: SliderPresets,
   LoadingOverlay: LoadingOverlayPresets,
   InputBase: InputBasePresets,
   Switch: SwitchPresets,
   NumberIncrement: NumberIncrementPresets,
+  Tooltip: TooltipPresets,
   SegmentedControlPresets: SegmentedControlPresets,
   Pager: PagerPresets,
 }
