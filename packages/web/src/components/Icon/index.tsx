@@ -50,7 +50,7 @@ const IconCP = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconP
     )
     return null
   }
-  return <Component css={variantStyles.icon} {...otherProps}/>
+  return <Component style={variantStyles.icon} {...otherProps}/>
 }
 
 export const Icon = IconCP as ((props: IconProps) => jsx.JSX.Element)

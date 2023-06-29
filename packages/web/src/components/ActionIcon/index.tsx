@@ -54,11 +54,11 @@ export const ActionIcon = (props: ActionIconProps) => {
     if (onPress) onPress?.()
   }
 
-  const getStyles = (key: ActionIconParts) => ([
-    variantStyles[key],
-    disabled && variantStyles[`${key}:disabled`],
-    isPressable && variantStyles[`${key}:pressable`]
-  ])
+  const getStyles = (key: ActionIconParts) => ({
+    ...variantStyles[key],
+    ...(disabled ? variantStyles[`${key}:disabled`] : {}),
+    ...(isPressable ? variantStyles[`${key}:pressable`] : {})
+  })
 
   return (
     <WrapperComponent
@@ -73,7 +73,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     >
       <Icon
         name={icon ?? name}
-        css={getStyles('icon')}
+        style={getStyles('icon')}
         {...iconProps}
       />
       {children}
