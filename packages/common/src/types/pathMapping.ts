@@ -30,16 +30,16 @@ export type Join<K, P> = K extends string | number
     : never
   : never
 
-// export type Paths<T, D extends number = 2> = [D] extends [never]
-//   ? never
-//   : (T extends Date
-//     ? ''
-//       : (T extends object
-//         ? {
-//             [K in keyof T]-?: K extends string | number
-//               ? `${K}` | Join<K, Paths<T[K], Prev[D]>>
-//               : never;
-//           }[keyof T]
-//         : '')
-//     )
-export type Paths<T, D extends number = 2> = any
+export type Paths<T, D extends number = 2> = [D] extends [never]
+  ? never
+  : (T extends Date
+    ? ''
+      : (T extends object
+        ? {
+            [K in keyof T]-?: K extends string | number
+              ? `${K}` | Join<K, Paths<T[K], Prev[D]>>
+              : never;
+          }[keyof T]
+        : '')
+    )
+
