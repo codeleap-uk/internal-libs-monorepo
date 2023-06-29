@@ -163,7 +163,6 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
           <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
-
             {
               TypeGuards.isFunction(Content)
                 ? <Content
