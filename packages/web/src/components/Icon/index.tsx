@@ -15,6 +15,8 @@ export * from './styles'
 export type IconProps = {
   name: IconPlaceholder
   style?: React.CSSProperties
+  size?: string | number
+  color?: string
   renderEmptySpace?: boolean
   forceStyle?: CSSObject | CSSInterpolation | React.CSSProperties
   css?: CSSInterpolation | CSSInterpolation[]
