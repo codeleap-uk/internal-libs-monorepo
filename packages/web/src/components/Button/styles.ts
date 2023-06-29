@@ -1,17 +1,13 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { LoadingOverlayComposition } from '../LoadingOverlay'
 
 export type ButtonStates = 'disabled' | 'selected'
+
 export type ButtonParts =
-| 'text'
-| 'inner'
-| 'wrapper'
-| 'icon'
-| 'leftIcon'
-| 'rightIcon'
-| `loading${Capitalize<LoadingOverlayComposition>}`
-| 'badgeText'
-| 'badgeWrapper'
+  | 'wrapper'
+  | 'text'
+  | 'icon'
+  | 'leftIcon'
+  | 'rightIcon'
 
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
