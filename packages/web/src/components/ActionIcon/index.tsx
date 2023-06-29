@@ -46,7 +46,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent = isPressable ? Touchable : View
+  const WrapperComponent: any = isPressable ? Touchable : View
 
   const handlePress = () => {
     if (!isPressable) return
@@ -61,7 +61,6 @@ export const ActionIcon = (props: ActionIconProps) => {
   ])
 
   return (
-    // @ts-ignore
     <WrapperComponent
       css={getStyles('touchableWrapper')}
       disabled={disabled}
