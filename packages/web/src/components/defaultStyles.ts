@@ -14,7 +14,7 @@ import { OverlayPresets } from './Overlay/styles'
 import { TextInputPresets } from './TextInput/styles'
 import { RadioInputPresets } from './RadioInput/styles'
 import { SelectPresets } from './Select/styles'
-import { ListPresets } from './List/styles'
+import { ListPresets, PaginationIndicatorStyles } from './List'
 import { SliderPresets } from './Slider/styles'
 import { LoadingOverlayPresets } from './LoadingOverlay/styles'
 import { InputBasePresets } from './InputBase'
@@ -23,6 +23,8 @@ import { NumberIncrementPresets } from './NumberIncrement/styles'
 import { TooltipPresets } from './Tooltip/styles'
 import { SegmentedControlPresets } from './SegmentedControl/styles'
 import { PagerPresets } from './Pager/styles'
+import { EmptyPlaceholderPresets } from './EmptyPlaceholder/styles'
+import { GridPresets } from './Grid/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -51,6 +53,9 @@ export const defaultStyles = {
   Tooltip: TooltipPresets,
   SegmentedControlPresets: SegmentedControlPresets,
   Pager: PagerPresets,
+  EmptyPlaceholder: EmptyPlaceholderPresets,
+  PaginationIndicator: PaginationIndicatorStyles,
+  Grid: GridPresets,
 }
 
 import createCache from '@emotion/cache'

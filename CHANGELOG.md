@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.7...v3.2.8) (2023-06-29)
+
+
+### Bug Fixes
+
+* **common:** remove composite form type, fix usePartialState typing ([79cb56e](https://github.com/codeleap-uk/internal-libs-monorepo/commit/79cb56eedbe6f314ce2735c86349ccfead6c7fad))
+
 ### [3.2.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.6...v3.2.7) (2023-06-29)
 
 ### 3.2.6 (2023-06-28)
