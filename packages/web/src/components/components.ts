@@ -24,6 +24,8 @@ export * from './LoadingOverlay'
 export * from './InputBase'
 export * from './Switch'
 export * from './NumberIncrement'
+export * from './SearchInput'
+
 export * from './SegmentedControl'
 export * from './Pager'
 export * from './defaultStyles'
