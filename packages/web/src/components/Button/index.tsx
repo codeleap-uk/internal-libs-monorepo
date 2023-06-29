@@ -6,12 +6,11 @@ import {
   TypeGuards,
   IconPlaceholder,
   StylesOf,
-  getNestedStylesByKey
 } from '@codeleap/common'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { ActivityIndicator } from '../ActivityIndicator'
+import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
 
 export type ButtonProps = ComponentVariants<typeof ButtonPresets> & {
@@ -25,7 +24,8 @@ export type ButtonProps = ComponentVariants<typeof ButtonPresets> & {
   debugName: string
   debounce?: number
   selected?: boolean
-  children?: React.ReactNode | ((props: Partial<ButtonProps>) => React.ReactNode)
+  children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
+  loaderProps?: Partial<ActivityIndicatorProps>
 } & Partial<TouchableProps<'button'>>
 
 const defaultProps: Partial<ButtonProps> = {
@@ -51,6 +51,7 @@ export const Button = (buttonProps: ButtonProps) => {
     disabled,
     rightIcon,
     selected,
+    loaderProps = {},
     ...props
   } = allProps
 
@@ -61,19 +62,18 @@ export const Button = (buttonProps: ButtonProps) => {
     rootElement: 'wrapper',
   })
 
-  const getStyles = (key:ButtonParts) => React.useCallback(() => ({
+  const getStyles = (key: ButtonParts) => ({
     ...variantStyles?.[key],
     ...(disabled ? variantStyles?.[key + ':disabled'] : {}),
     ...(selected ? variantStyles?.[key + ':selected'] : {})
-  }), [variantStyles, disabled, selected])
+  })
 
   const iconStyles = getStyles('icon')
-
-  const indicatorStyles = getNestedStylesByKey('loader', variantStyles)
 
   const _styles: StylesOf<ButtonParts> = {
     wrapper: getStyles('wrapper'),
     text: getStyles('text'),
+    loaderWrapper: getStyles('loaderWrapper'),
     leftIcon: {
       ...iconStyles,
       ...getStyles('leftIcon'),
@@ -109,7 +109,9 @@ export const Button = (buttonProps: ButtonProps) => {
       {childrenContent}
 
       <Icon name={rightIcon} style={_styles.rightIcon}/>
-      {loading && <ActivityIndicator styles={indicatorStyles} />}
+      {loading && (
+        <ActivityIndicator style={_styles.loaderWrapper} {...loaderProps} />
+      )}
     </Touchable>
   )
 }
