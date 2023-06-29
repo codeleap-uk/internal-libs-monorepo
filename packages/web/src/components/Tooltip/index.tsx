@@ -118,28 +118,28 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     if (TypeGuards.isFunction(onValueChange)) onValueChange?.(_value)
   }
 
-  function onOpenChange(_open: boolean) {
+  const onOpenChange = React.useCallback((_open: boolean) => {
     handleToggle(_open, false)
-  }
+  }, [handleToggle])
 
   const _onHover = (type: 'enter' | 'leave') => {
-    if (!openOnHover) return
+    if (!openOnHover || disabled) return
 
     const value = !visible
 
     if (type === 'leave' && visible === false) return
 
     handleToggle(value)
-    onHover?.(type, value)
+    if (TypeGuards.isFunction(onHover)) onHover?.(type, value)
   }
 
   const _onPress = () => {
-    if (!openOnPress) return
+    if (!openOnPress || disabled) return
 
     const value = !visible
 
     handleToggle(value)
-    onPress?.(value)
+    if (TypeGuards.isFunction(onPress)) onPress?.(value)
   }
 
   return (
