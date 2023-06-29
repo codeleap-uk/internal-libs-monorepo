@@ -23,13 +23,13 @@
         "licenseUrl": "https://github.com/reach/router/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "@reduxjs/toolkit@1.9.4": {
+    "@reduxjs/toolkit@1.9.5": {
         "licenses": "MIT",
         "repository": "https://github.com/reduxjs/redux-toolkit",
         "licenseUrl": "https://github.com/reduxjs/redux-toolkit/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "@sentry/browser@7.48.0": {
+    "@sentry/browser@7.57.0": {
         "licenses": "MIT",
         "repository": "https://github.com/getsentry/sentry-javascript",
         "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
@@ -41,7 +41,7 @@
         "licenseUrl": "https://github.com/antonioru/beautiful-react-hooks/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "framer-motion@10.12.10": {
+    "framer-motion@10.12.17": {
         "licenses": "MIT",
         "repository": "https://github.com/framer/motion/",
         "licenseUrl": "https://github.com/framer/motion//raw/master/LICENSE.md",
@@ -107,7 +107,7 @@
         "licenseUrl": "https://github.com/nfl/react-helmet/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "react-icons@4.8.0": {
+    "react-icons@4.10.1": {
         "licenses": "MIT",
         "repository": "https://github.com:react-icons/react-icons",
         "licenseUrl": "https://github.com:react-icons/react-icons/raw/master/LICENSE",
@@ -119,7 +119,7 @@
         "licenseUrl": "https://github.com/MinJieLiu/react-photo-view/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "react-redux@8.0.5": {
+    "react-redux@8.1.1": {
         "licenses": "MIT",
         "repository": "github:reduxjs/react-redux",
         "licenseUrl": "github:reduxjs/react-redux",
