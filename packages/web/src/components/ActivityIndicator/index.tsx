@@ -41,9 +41,10 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
   const variantStyles = useDefaultComponentStyle<'u:ActivityIndicator', typeof ActivityIndicatorPresets>(
     'u:ActivityIndicator',
     {
+      responsiveVariants,
       variants,
       styles,
-      responsiveVariants,
+      rootElement: 'wrapper',
     },
   )
 
@@ -58,7 +59,7 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
     <View css={[variantStyles.wrapper, style, _size]}>
       <Component
         ref={ref}
-        css={[variantStyles.wrapper, _size]}
+        css={[variantStyles.wrapper, style, _size]}
         {...props}
       />
     </View>
