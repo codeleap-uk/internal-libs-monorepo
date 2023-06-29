@@ -44,7 +44,6 @@ export const Button = (buttonProps: ButtonProps) => {
     variants = [],
     responsiveVariants = {},
     styles = {},
-    style = {},
     children,
     icon,
     text,
