@@ -5,12 +5,12 @@ import {
   createDefaultVariantFactory,
   getNestedStylesByKey,
   includePresets,
+  StylesOf,
   TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import { StylesOf } from '../../types'
 import { ActivityIndicator, ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
-import { Text } from '../Text'
+import { Text, TextProps } from '../Text'
 import { View } from '../View'
 
 export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}` | 'wrapper'
@@ -49,9 +49,17 @@ export type PaginationIndicatorProps = {
   styles?: StylesOf<PaginationIndicatorComposition>
   style?: React.CSSProperties
   indicatorProps?: Partial<ActivityIndicatorProps>
+  textProps?: Partial<TextProps<'p'>>
 } & ComponentVariants<typeof PaginationIndicatorStyles>
 
+const defaultProps: Partial<PaginationIndicatorProps> = {}
+
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
+  const allProps = {
+    ...PaginationIndicator.defaultProps,
+    ...props,
+  }
+
   const { 
     hasMore, 
     isFetching, 
@@ -62,7 +70,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
     responsiveVariants = {},
     variants = [],
     indicatorProps = {},
-  } = props
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<
     'u:PaginationIndicator',
@@ -78,11 +86,15 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   if (isFetching) {
     return activityIndicator || <View css={[variantStyles.wrapper, style]}><ActivityIndicator {...indicatorProps} styles={loaderStyles}/></View>
   }
+  
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
       return <Text css={[variantStyles.text, style]} text={noMoreItemsText.toString()}/>
     }
     return noMoreItemsText
   }
+
   return null
 }
+
+PaginationIndicator.defaultProps = defaultProps
