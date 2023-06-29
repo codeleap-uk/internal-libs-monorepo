@@ -17,6 +17,7 @@ import {
 import { AnyFunction, ComponentVariants, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { TooltipComposition, TooltipPresets } from './styles'
 import { ComponentWithDefaultProps } from '../../types/utility'
+import { View, ViewProps } from '../View'
 
 type TooltipComponentProps = {
   contentProps?: TooltipContentProps
@@ -29,7 +30,9 @@ type TooltipComponentProps = {
 export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
   toggle?: AnyFunction
   visible?: boolean
-  content: React.ReactNode | ((props: TooltipProps) => JSX.Element)
+  content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
+  triggerWrapper?: React.ReactNode
+  triggerWrapperProps?: Partial<ViewProps<'div'>>
   styles?: StylesOf<TooltipComposition>
   side?: 'left' | 'right' | 'bottom' | 'top'
   openOnPress?: boolean
@@ -39,8 +42,9 @@ export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
   onOpen?: AnyFunction
   onClose?: AnyFunction
   onValueChange?: (value: boolean) => void
-  onHover?: (value: boolean) => void
+  onHover?: (hoverType: 'enter' | 'leave', value: boolean) => void
   onPress?: (value: boolean) => void
+  children?: React.ReactNode
 } & ComponentVariants<typeof TooltipPresets>
 
 const defaultProps: Partial<TooltipProps> = {
@@ -49,6 +53,7 @@ const defaultProps: Partial<TooltipProps> = {
   disabled: false,
   delayDuration: 0,
   side: 'bottom',
+  triggerWrapper: View,
 }
 
 export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipProps) => {
@@ -62,6 +67,8 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     visible: _visible = null,
     children,
     content: Content,
+    triggerWrapperProps = {},
+    triggerWrapper: TriggerWrapper,
     side,
     disabled,
     delayDuration,
@@ -98,6 +105,8 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
   }, [side, variantsStyles])
 
   function handleToggle(_value: boolean, isToggle = true) {
+    if (disabled) return
+
     if (_value === true) {
       onOpen?.()
     } else {
@@ -121,9 +130,9 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     if (type === 'leave' && visible === false) return
 
     handleToggle(value)
-    onHover?.(value)
+    onHover?.(type, value)
   }
-  
+
   const _onPress = () => {
     if (!openOnPress) return
 
@@ -136,24 +145,34 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
   return (
     <TooltipContainer {...providerProps}>
       <TooltipWrapper
-        delayDuration={delayDuration} 
-        open={visible} 
+        delayDuration={delayDuration}
+        open={visible}
         onOpenChange={onOpenChange}
         {...rest}
       >
-        <TooltipTrigger 
+        <TooltipTrigger
           onClick={_onPress}
           onMouseEnter={() => _onHover('enter')}
           onMouseLeave={() => _onHover('leave')}
           asChild
           {...triggerProps}
         >
-          {children}
+          <TriggerWrapper {...allProps as any} {...triggerWrapperProps}>
+            {children}
+          </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
           <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
+
             {
-              TypeGuards.isFunction(Content) ? <Content {...allProps} /> : Content
+              TypeGuards.isFunction(Content)
+                ? <Content
+                  {...allProps}
+                  visible={visible}
+                  toggle={toggle}
+                  variantsStyles={variantsStyles}
+                />
+                : Content
             }
             <TooltipArrow {...arrowProps} />
           </TooltipContent>
