@@ -1,11 +1,9 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
-import { StylesOf } from '../../types'
 
-export type TouchableComposition = 'wrapper'
+export type TouchableState = 'disabled'
+export type TouchableParts = 'wrapper'
+export type TouchableComposition = TouchableParts | `${TouchableParts}:${TouchableState}`
 
-const createTouchableStyle = createDefaultVariantFactory<
-  TouchableComposition
->()
+const createTouchableStyle = createDefaultVariantFactory<TouchableComposition>()
 
 export const TouchablePresets = includePresets((styles) => createTouchableStyle(() => ({ wrapper: styles })))
-
