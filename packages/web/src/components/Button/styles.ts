@@ -1,4 +1,5 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ActivityIndicatorComposition } from '../ActivityIndicator'
 
 export type ButtonStates = 'disabled' | 'selected'
 
@@ -8,6 +9,7 @@ export type ButtonParts =
   | 'icon'
   | 'leftIcon'
   | 'rightIcon'
+  | `loader${Capitalize<ActivityIndicatorComposition>}`
 
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
