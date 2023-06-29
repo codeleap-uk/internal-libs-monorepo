@@ -4,6 +4,7 @@ import {
   useDefaultComponentStyle,
   ComponentVariants,
   useCallback,
+  TypeGuards,
 } from '@codeleap/common'
 
 import { FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet } from 'react-native'
@@ -33,6 +34,7 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
     index: number,
   ) => { length: number; offset: number; index: number })
   fakeEmpty?: boolean
+  loading?: boolean
 }
 
 export * from './styles'
@@ -48,6 +50,7 @@ export type FlatListProps<
     styles?: StylesOf<ListComposition>
     refreshControlProps?: Partial<RefreshControlProps>
     fakeEmpty?: boolean
+    loading?: boolean
   } & ComponentVariants<typeof ListPresets>
 
 const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
@@ -68,7 +71,8 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
       placeholder,
       keyboardAware,
       refreshControlProps = {},
-      fakeEmpty,
+      loading = false,
+      fakeEmpty = loading,
       ...props
     } = flatListProps
 
@@ -103,6 +107,11 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
 
     const isEmpty = !props.data || !props.data.length
 
+    const _placeholder = {
+      ...placeholder,
+      loading: TypeGuards.isBoolean(placeholder?.loading) ? placeholder.loading : loading,
+    }
+
     return (
       <KeyboardAwareFlatList
         style={[
@@ -126,7 +135,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
           />
         )}
 
-        ListEmptyComponent={<EmptyPlaceholder {...placeholder}/>}
+        ListEmptyComponent={<EmptyPlaceholder {..._placeholder}/>}
         {...props}
         data={fakeEmpty ? [] : props.data}
         ref={ ref as React.LegacyRef<KeyboardAwareFlatList> }
@@ -137,7 +146,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
   },
 )
 
-export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
+export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => JSX.Element
 
 export const List = ListCP as unknown as ListComponentType
 

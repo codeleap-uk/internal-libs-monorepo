@@ -6,22 +6,21 @@ import {
   useCallback,
 } from '@codeleap/common'
 
-import { 
-  RefreshControl, 
-  StyleSheet, 
-  RefreshControlProps, 
+import {
+  RefreshControl,
+  StyleSheet,
+  RefreshControlProps,
   SectionListRenderItemInfo,
   SectionListProps as RNSectionListProps,
 } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { StylesOf } from '../../types'
-import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareSectionList, KeyboardAwareSectionListProps } from 'react-native-keyboard-aware-scroll-view'
 import { SectionsComposition, SectionsPresets } from './styles'
 export * from './styles'
 
 export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
-
 
 export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & {
   isFirst: boolean
@@ -43,7 +42,6 @@ export type ReplaceSectionListProps<P, T> = Omit<P, DataboundSectionListPropsTyp
 
 export * from './styles'
 
-
 export type SectionListProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
@@ -55,7 +53,6 @@ export type SectionListProps<
     refreshControlProps?: Partial<RefreshControlProps>
     fakeEmpty?: boolean
   } & ComponentVariants<typeof SectionsPresets>
-
 
 export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
   (sectionsProps, ref) => {
@@ -80,7 +77,7 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       transform: StyleSheet.flatten,
 
     })
-    
+
     const renderSeparator = () => {
       return (
         <View style={variantStyles.separator}></View>
@@ -132,7 +129,7 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
 
     return (
       <KeyboardAwareSectionList
-        style={[variantStyles.wrapper,style]}
+        style={[variantStyles.wrapper, style]}
         contentContainerStyle={[variantStyles.content]}
         showsVerticalScrollIndicator={false}
         // @ts-ignore
@@ -150,4 +147,4 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       />
     )
   },
-)
+) as unknown as <T = any>(props: SectionListProps<T>) => JSX.Element

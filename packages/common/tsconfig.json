@@ -22,6 +22,7 @@
     "outDir": "./dist",
     "declaration": true,
     "downlevelIteration": true,
+    "baseUrl": "./",
     "paths": {
       "react-dom": [
         "../../apps/web/node_modules/@types/react-dom/index.d.ts"

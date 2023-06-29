@@ -1,38 +1,45 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
+import { jsx, CSSObject } from '@emotion/react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
   useCodeleapContext,
+  useMemo,
+  BreakpointPlaceholder,
   BaseViewProps,
-  useMemo
+
+  TypeGuards,
 } from '@codeleap/common'
 import {
-  ComponentPropsWithRef,
-  ElementType,
   forwardRef,
-  ReactElement,
-  ReactNode,
   Ref,
 } from 'react'
 import { ViewPresets } from './styles'
 import { useMediaQuery } from '../../lib/hooks'
+import { HTMLProps, NativeHTMLElement } from '../../types'
 
 export * from './styles'
 
-export type ViewProps<T extends ElementType> = ComponentPropsWithRef<T> &
-  ComponentVariants<typeof ViewPresets> & {
+export type ViewProps<T extends NativeHTMLElement> =
+  HTMLProps<T> &
+  ComponentVariants<typeof ViewPresets> &
+   {
     component?: T
-    children?: ReactNode
-    css?: any
     scroll?: boolean
+    debugName?: string
     debug?: boolean
+    is?: BreakpointPlaceholder
+    not?: BreakpointPlaceholder
+    up?: BreakpointPlaceholder
+    down?: BreakpointPlaceholder
+    onHover?: (isMouseOverElement: boolean) => void
   } & BaseViewProps
 
-export const ViewCP = <T extends ElementType = 'div'>(
-  viewProps: ViewProps<T>,
+export const ViewCP = (
+  viewProps: ViewProps<'div'>,
   ref: Ref<any>,
 ) => {
+
   const {
     responsiveVariants = {},
     variants = [],
@@ -42,22 +49,26 @@ export const ViewCP = <T extends ElementType = 'div'>(
     not,
     up,
     onHover,
-    styles,
+    debugName,
     down,
-    css: cssProp,
     scroll = false,
     debug = false,
+    style,
+    css = [],
     ...props
   } = viewProps
-  const variantStyles = useDefaultComponentStyle('View', {
+
+  const variantStyles = useDefaultComponentStyle<'u:View', typeof ViewPresets>('u:View', {
     responsiveVariants,
     variants,
-    styles,
+    styles: { wrapper: style },
+    rootElement: 'wrapper',
   })
+
   const { Theme, logger } = useCodeleapContext()
 
   function handleHover(isMouseOverElement: boolean) {
-    onHover && onHover(isMouseOverElement)
+    onHover?.(isMouseOverElement)
   }
 
   const platformMediaQuery = useMemo(() => {
@@ -71,17 +82,30 @@ export const ViewCP = <T extends ElementType = 'div'>(
 
   const matches = useMediaQuery(platformMediaQuery)
 
-  if(debug){
-    logger.log('View', {variantStyles, platformMediaQuery, matches})
+  const componentStyles = useMemo(() => {
+    return [
+      variantStyles.wrapper,
+      scroll && { overflowY: 'scroll' },
+      matches && { display: 'none' },
+      style,
+      css,
+    ]
+  }, [scroll, matches, css])
+
+  const onHoverProps = TypeGuards.isFunction(onHover) && {
+    onMouseEnter: () => handleHover(true),
+    onMouseLeave: () => handleHover(false),
+  }
+
+  if (debug) {
+    logger.log(debugName, { componentStyles, platformMediaQuery, matches })
   }
 
   return (
     <Component
-      // className={cx(css([variantStyles.wrapper, scroll && {overflowY: 'scroll'}, platformMediaQuery]), cssProp)}
-      css={[variantStyles.wrapper, scroll && { overflowY: 'scroll' }, matches && { display: 'none' }]}
+      css={componentStyles}
       ref={ref}
-      onMouseEnter={() => handleHover(true)}
-      onMouseLeave={() => handleHover(false)}
+      {...onHoverProps}
       {...props}
     >
       {children}
@@ -89,6 +113,6 @@ export const ViewCP = <T extends ElementType = 'div'>(
   )
 }
 
-export const View = forwardRef(ViewCP) as <T extends ElementType = 'div'>(
+export const View = forwardRef(ViewCP) as unknown as <T extends NativeHTMLElement = 'div'>(
   props: ViewProps<T>
-) => ReactElement
+) => JSX.Element

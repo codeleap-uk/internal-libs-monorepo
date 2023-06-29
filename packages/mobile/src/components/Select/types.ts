@@ -11,9 +11,8 @@ import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { ModalProps } from '../Modal'
 import { Text } from '../Text'
-import { TextInputComposition, TextInputProps } from '../TextInput'
+import { SearchInputProps, TextInputComposition, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { SearchHeaderProps } from './SearchHeader'
 import { SelectComposition, SelectPresets } from './styles'
 
 export type SelectRenderFNProps<T> = {
@@ -36,13 +35,18 @@ type SelectHeaderProps = {
   searchComponent?: React.ReactNode
 }
 
-type OuterInputProps<T = any, Multi extends boolean = false> = Omit<SelectProps<T, Multi>, 'variants'| 'styles'> & {
+export type SelectOuterInputProps<T = any, Multi extends boolean = false> = Omit<SelectProps<T, Multi>, 'variants'| 'styles'> & {
   currentValueLabel: FormTypes.Label
   styles?: StylesOf<TextInputComposition>
   clearIcon?: Partial<ActionIconProps>
 }
 
-export type ValueBoundSelectProps<T, Multi extends boolean = false> = {
+type OuterInputComponent<T, Multi extends boolean> = (props: SelectOuterInputProps<T, Multi>) => JSX.Element
+
+export type ValueBoundSelectProps<
+  T,
+  Multi extends boolean = false
+> = {
   options?: FormTypes.Options<T>
   defaultOptions?: FormTypes.Options<T>
   loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
@@ -53,7 +57,8 @@ export type ValueBoundSelectProps<T, Multi extends boolean = false> = {
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
   getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
-  outerInputComponent?: React.ComponentType<OuterInputProps<T, Multi>>
+  outerInputComponent?: OuterInputComponent<T, Multi>
+  inputProps?: Partial<SelectOuterInputProps<T, Multi>>
 }
 
 export type ReplaceSelectProps<Props, T, Multi extends boolean = false> = Omit<
@@ -70,7 +75,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = {
     selectedIcon?: IconPlaceholder
     arrowIconName?: IconPlaceholder
     closeOnSelect?: boolean
-    inputProps?: Partial<TextInputProps>
+
     listProps?: Partial<FlatListProps>
     clearable?: boolean
     clearIconName?: IconPlaceholder
@@ -82,7 +87,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = {
     searchable?: boolean
     limit?: number
     ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
-    searchInputProps?: Partial<SearchHeaderProps>
+    searchInputProps?: Partial<SearchInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
 

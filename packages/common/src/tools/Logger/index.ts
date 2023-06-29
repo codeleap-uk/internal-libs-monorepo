@@ -7,6 +7,7 @@ import {
   LogToTerminal,
   LogFunctionArgs,
   LogType,
+  LogToTerminalArgs,
   LoggerMiddleware,
 } from './types'
 
@@ -70,26 +71,25 @@ export class Logger {
     }
 
     this.analytics.onError((err) => {
-      this.logToTerminal('error', [
-        'Error on analytics event',
-        err,
-        'Internal',
-      ])
+      this.logToTerminal({
+        logType: 'error',
+        args: ['Error on analytics event', err, 'Internal'],
+      })
     })
 
   }
 
-  static coloredLog:LogToTerminal = (...logArgs) => {
-    const [logType, content, _ig_color, deviceId, stringify] = logArgs
+  static formatContent(logArgs: LogToTerminalArgs) {
+    const { logType, args: content, deviceIdentifier: deviceId, stringify, logKeys = true } = logArgs
 
     const [descriptionOrValue, value, category] = content
 
-    const nArgs = logArgs[1].length
-    let logContent = logArgs[1]
+    const nArgs = content.length
+    let logContent = content
 
     const logValue = nArgs === 1 ? descriptionOrValue : value
 
-    const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue)
+    const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue) && !(logValue instanceof Error)
     const inspectOptions = Logger?.settings?.Logger?.inspect || {}
 
     // @ts-expect-error interface merging sucks
@@ -114,9 +114,9 @@ export class Logger {
     }
 
     if (nArgs === 1) {
-      const isObj = typeof descriptionOrValue === 'object'
+      const isObj = typeof descriptionOrValue === 'object' && !(descriptionOrValue instanceof Error)
       const keys = isObj ? Object.keys(descriptionOrValue) : null
-      const title = isObj && keys.length ?
+      const title = isObj && keys.length && logKeys ?
         `${keys.filter(i => !!i).slice(0, 3).join(', ')}${keys.length > 3 ? '...' : ''} ->`
         : null
 
@@ -132,18 +132,32 @@ export class Logger {
       }
     }
 
-    // console[logType](`[${logType.toUpperCase()}] ${deviceId ? `${deviceId}` : ''}`, ...logContent)
-    const displayLog = logType === 'error' ? 'warn' : logType
-    console[displayLog](`${deviceId ? `${deviceId}` : ''}`, ...logContent)
+    return logContent
   }
 
-  private logToTerminal: LogToTerminal = (...logArgs) => {
-    const [logType, args, color] = logArgs
+  static coloredLog:LogToTerminal = (logArgs) => {
+    const { logType, args: content, deviceIdentifier: deviceId, stringify } = logArgs
+
+    const logContent = Logger.formatContent(logArgs)
+
+    const displayLog = logType === 'error' ? 'warn' : logType
+
+    console[displayLog](deviceId, ...logContent)
+
+    return logContent
+  }
+
+  private logToTerminal: LogToTerminal = (logArgs) => {
+    const { logType, args, color } = logArgs
+
     if (this.settings.Logger.Level === 'silent') return
+
     const shouldLog = TypeGuards.isString(this.settings.Logger.Level) ?
       logLevels.indexOf(logType) >=
       logLevels.indexOf(this.settings.Logger.Level) : this.settings.Logger.Level.includes(logType)
     if (!shouldLog) return
+
+    const content = Logger.formatContent(logArgs)
 
     if (this.settings.Environment.IsDev) {
 
@@ -152,16 +166,34 @@ export class Logger {
 
       const stringify = this.settings.Logger?.StringifyObjects
 
-      this.middleware.forEach(m => m(...logArgs))
+      this.middleware.forEach(m => m(logArgs, content))
 
-      Logger.coloredLog(logType, args, color, deviceId, stringify)
+      Logger.coloredLog(
+        {
+          logType: logType as LogType,
+          args,
+          color,
+          deviceIdentifier: deviceId,
+          stringify,
+        },
+      )
 
-    } else {
+    }
+
+    if (!this.settings.Environment.IsDev || this.settings.Logger.alwaysSendToSentry) {
       try {
-        this.middleware.forEach(m => m(...logArgs))
-        // if (['error', 'warn'].includes(logType)) {
-        //   this.sentry.sendLog()
-        // }
+
+        this.middleware.forEach(m => m(logArgs, content))
+        if (['info', 'log'].includes(logType)) {
+
+          this.sentry.captureBreadcrumb(
+            logType,
+            content,
+          )
+        }
+        if (['error'].includes(logType)) {
+          this.sentry.sendLog(args?.[1] || args?.[0])
+        }
       } catch (e) {
         // Nothing
       }
@@ -169,23 +201,38 @@ export class Logger {
   }
 
   info(...args: LogFunctionArgs) {
-    this.logToTerminal('info', args)
+    this.logToTerminal({
+      args,
+      logType: 'info',
+    })
   }
 
   error(...args: LogFunctionArgs) {
-    this.logToTerminal('error', args)
+    this.logToTerminal({
+      args,
+      logType: 'error',
+    })
   }
 
   warn(...args: LogFunctionArgs) {
-    this.logToTerminal('warn', args)
+    this.logToTerminal({
+      args,
+      logType: 'warn',
+    })
   }
 
   log(...args: LogFunctionArgs) {
-    this.logToTerminal('log', args)
+    this.logToTerminal({
+      args,
+      logType: 'log',
+    })
   }
 
   debug(...args: LogFunctionArgs) {
-    this.logToTerminal('debug', args)
+    this.logToTerminal({
+      args,
+      logType: 'debug',
+    })
   }
 }
 
