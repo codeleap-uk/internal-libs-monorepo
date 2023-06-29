@@ -1,6 +1,6 @@
-import { AnyFunction, ComponentVariants, IconPlaceholder, TypeGuards } from '@codeleap/common'
+import { AnyFunction, IconPlaceholder, TypeGuards } from '@codeleap/common'
 import React, { useState } from 'react'
-import { TextInput, TextInputPresets, TextInputProps } from '../TextInput'
+import { TextInput, TextInputProps } from '../TextInput'
 import { ComponentWithDefaultProps } from '../../types/utility'
 
 export type SearchInputProps = {
@@ -11,9 +11,10 @@ export type SearchInputProps = {
   searchIcon?: IconPlaceholder
   debounce?: number
   onSearchChange: (search: string) => void
-  onTypingChange: (isTyping: boolean) => void
-  onClear: AnyFunction
-} & Partial<TextInputProps> & ComponentVariants<typeof TextInputPresets>
+  onTypingChange?: (isTyping: boolean) => void
+  onValueChange?: (search: string) => void
+  onClear?: AnyFunction
+} & Partial<TextInputProps>
 
 export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
   const {
@@ -26,12 +27,17 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     clearIcon,
     searchIcon,
     debounce,
+    value,
+    onValueChange,
     ...rest
   } = {
     ...SearchInput.defaultProps,
     ...props,
   }
-  const [search, setSearch] = useState('')
+
+  const hasStateProps = !TypeGuards.isNil(value) && TypeGuards.isFunction(onValueChange)
+
+  const [search, setSearch] = hasStateProps ? [value, onValueChange] : useState('')
   const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
 
   const handleChangeSearch = (value: string) => {
@@ -53,8 +59,10 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
   const handleClear = () => {
     setSearch('')
     onSearchChange?.('')
-    onClear?.()
+    if (TypeGuards.isFunction(onClear)) onClear?.()
   }
+
+  const showClearIcon = !!search?.trim() && clearable
 
   return (
     <TextInput
@@ -65,9 +73,9 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
         handleChangeSearch(value)
       }}
       debugName={`Search ${debugName}`}
-      rightIcon={search && clearable && {
+      rightIcon={showClearIcon && {
         name: clearIcon,
-        onPress: () => handleClear(),
+        onPress: handleClear,
       }}
       leftIcon={{
         name: searchIcon,
