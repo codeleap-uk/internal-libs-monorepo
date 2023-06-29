@@ -1,4 +1,4 @@
-import { ActivityIndicatorComposition, createDefaultVariantFactory, includePresets, StylesOf } from '@codeleap/common'
+import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { LoadingOverlayComposition } from '../LoadingOverlay'
 
 export type ButtonStates = 'disabled' | 'selected'
@@ -10,8 +10,6 @@ export type ButtonParts =
 | 'leftIcon'
 | 'rightIcon'
 | `loading${Capitalize<LoadingOverlayComposition>}`
-| 'loader'
-| `loader${Capitalize<ActivityIndicatorComposition>}`
 | 'badgeText'
 | 'badgeWrapper'
 
