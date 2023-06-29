@@ -13,20 +13,22 @@ import { Icon } from '../Icon'
 import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
 
-export type ButtonProps = ComponentVariants<typeof ButtonPresets> & {
-  text?: string
-  rightIcon?: IconPlaceholder
-  icon?: IconPlaceholder
-  onPress?: AnyFunction
-  styles?: StylesOf<ButtonComposition>
-  style?: React.CSSProperties
-  loading?: boolean
-  debugName: string
-  debounce?: number
-  selected?: boolean
-  children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
-  loaderProps?: Partial<ActivityIndicatorProps>
-} & Partial<TouchableProps<'button'>>
+export type ButtonProps = 
+  ComponentVariants<typeof ButtonPresets> &
+  Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> & {
+    text?: string
+    rightIcon?: IconPlaceholder
+    icon?: IconPlaceholder
+    onPress?: AnyFunction
+    styles?: StylesOf<ButtonComposition>
+    style?: React.CSSProperties
+    loading?: boolean
+    debugName: string
+    debounce?: number
+    selected?: boolean
+    children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
+    loaderProps?: Partial<ActivityIndicatorProps>
+  }
 
 const defaultProps: Partial<ButtonProps> = {
   debounce: 600,
