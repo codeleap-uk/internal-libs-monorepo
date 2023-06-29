@@ -25,6 +25,7 @@ import { SegmentedControlPresets } from './SegmentedControl/styles'
 import { PagerPresets } from './Pager/styles'
 import { EmptyPlaceholderPresets } from './EmptyPlaceholder/styles'
 import { GridPresets } from './Grid/styles'
+import { BadgePresets } from './Badge/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -56,6 +57,7 @@ export const defaultStyles = {
   EmptyPlaceholder: EmptyPlaceholderPresets,
   PaginationIndicator: PaginationIndicatorStyles,
   Grid: GridPresets,
+  Badge: BadgePresets,
 }
 
 import createCache from '@emotion/cache'
