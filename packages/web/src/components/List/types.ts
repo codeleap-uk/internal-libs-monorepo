@@ -4,6 +4,7 @@ import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { View, ViewProps } from '../View'
 import { ListComposition, ListPresets } from './styles'
 import { motion } from 'framer-motion'
+import { ActivityIndicatorProps } from '../ActivityIndicator'
 
 export type AugmentedRenderItemInfo<T> = VirtualItem & {
   item: T
@@ -43,6 +44,7 @@ Data = T extends Array<infer D> ? D : never
     refreshPosition?: number
     refresh?: boolean
     refreshControlProps?: PropsOf<typeof motion.div>
+    refreshControlIndicatorProps?: Partial<ActivityIndicatorProps>
     style?: React.CSSProperties
     ref?: React.MutableRefObject<undefined>
 }

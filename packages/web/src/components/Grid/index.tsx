@@ -33,7 +33,7 @@ const defaultProps: Partial<GridProps> = {
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
-  refreshSize: 20,
+  refreshSize: 40,
   refreshThreshold: 1,
   refreshPosition: 2,
   refresh: true,
