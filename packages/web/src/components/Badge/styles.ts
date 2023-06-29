@@ -8,7 +8,8 @@ export type BadgeComposition =
   `${BadgeParts}:${BadgeStates}`
   | BadgeParts
 
-const createBadgeStyle =
-  createDefaultVariantFactory<BadgeComposition>()
+const createBadgeStyle = createDefaultVariantFactory<BadgeComposition>()
 
-export const BadgePresets = includePresets((styles) => createBadgeStyle(() => ({ wrapper: styles })))
+export const BadgePresets = includePresets((styles) => createBadgeStyle(() => ({ 
+  wrapper: styles 
+})))

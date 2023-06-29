@@ -7,7 +7,7 @@ import { BadgeComposition, BadgePresets } from './styles'
 export * from './styles'
 
 export type BadgeProps = ComponentVariants<typeof BadgePresets>
-  & ViewProps
+  & ViewProps<'div'>
   & {
     styles?: StylesOf<BadgeComposition>
     maxCount?: number
@@ -60,9 +60,11 @@ export const Badge = (props: BadgeProps) => {
     getBadgeContent,
     renderBadgeContent,
     styles = {},
-    variants,
+    variants = [],
+    responsiveVariants = {},
     disabled,
     style = {},
+    css,
     badge,
     ...rest
   } = allProps
@@ -72,18 +74,20 @@ export const Badge = (props: BadgeProps) => {
   if (!visible) return null
 
   const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {
+    responsiveVariants,
     variants,
     styles,
     rootElement: 'wrapper',
   })
 
-  const wrapperStyles: ViewProps['style'] = [
+  const wrapperStyles = [
     variantStyles?.wrapper,
     (disabled && variantStyles?.['wrapper:disabled']),
+    css,
     style,
   ]
 
-  const innerWrapperStyles: ViewProps['style'] = [
+  const innerWrapperStyles = [
     variantStyles?.innerWrapper,
     (disabled && variantStyles?.['innerWrapper:disabled']),
     innerWrapperProps?.style,
@@ -108,11 +112,8 @@ export const Badge = (props: BadgeProps) => {
   }
 
   return (
-    <View
-      {...rest}
-      style={wrapperStyles}
-    >
-      <View {...innerWrapperProps} style={innerWrapperStyles}>
+    <View {...rest} css={wrapperStyles}>
+      <View {...innerWrapperProps} css={innerWrapperStyles}>
         {showContent
           ? <BadgeContent
             {...props}
