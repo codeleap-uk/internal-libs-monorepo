@@ -1,7 +1,23 @@
-// @ts-nocheck
-import { createBottomTabNavigator, createDrawerNavigator, createStackNavigator } from '../../modules/reactNavigation'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createStackNavigator } from '@react-navigation/stack'
+import type { TypedNavigator } from '@react-navigation/core'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-export const Navigators = {
+type X = TypedNavigator<
+  any,
+  any,
+  any,
+  any,
+  any
+>
+
+type INavigators = {
+  Drawer: X
+  Stack: X
+  Tab: X
+}
+
+export const Navigators:INavigators = {
   Drawer: createDrawerNavigator(),
   Stack: createStackNavigator(),
   Tab: createBottomTabNavigator(),

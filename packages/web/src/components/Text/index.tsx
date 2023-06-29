@@ -44,7 +44,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   const {
     variants = [],
     responsiveVariants = {},
-    text,
+    text = null,
     children,
     component = 'p',
     styles,

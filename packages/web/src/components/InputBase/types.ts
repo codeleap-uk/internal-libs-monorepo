@@ -1,14 +1,14 @@
-import { PropsOf } from "@codeleap/common"
-import { StylesOf } from "../../types"
-import { InputBaseComposition } from "./styles"
-import { ActionIcon } from "../ActionIcon"
+import { PropsOf } from '@codeleap/common'
+import { StylesOf } from '../../types'
+import { InputBaseComposition } from './styles'
+import { ActionIcon } from '../ActionIcon'
 
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
 type OrderedParts = 'label' | 'description' | 'innerWrapper' | 'error'
 
 export type InputBaseProps = React.PropsWithChildren<{
-  label?: React.ReactNode 
+  label?: React.ReactNode
   error?: React.ReactNode
   leftIcon?: ActionIconProps
   rightIcon?: ActionIconProps
@@ -24,5 +24,6 @@ export type InputBaseProps = React.PropsWithChildren<{
   order?: OrderedParts[]
   style?: any
   labelAsRow?: boolean
+  noError?: boolean
   innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
 }>

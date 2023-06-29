@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { AppTheme } from '.'
-import { FunctionType } from '..'
+import { AppTheme } from './types'
+import { FunctionType } from '../types/utility'
 export type QueryKey = 'up' | 'down' | 'is' | 'not'
 
 type ThemeBreakpoints = AppTheme['breakpoints']
@@ -82,7 +82,7 @@ function getBreakpointValue(
     return breakpoints[breakpoint]
   }
 
-  return breakpoint
+  return Infinity
 }
 
 export function breakpointHooksFactory<T extends ThemeBreakpoints>(

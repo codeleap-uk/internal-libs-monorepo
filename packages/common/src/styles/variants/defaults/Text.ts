@@ -8,16 +8,15 @@ const createTextStyle = createDefaultVariantFactory<TextComposition>()
 
 const presets = includePresets((styles) => createTextStyle(() => ({ text: styles })),
 )
+
 export function assignTextStyle(name: Fonts, add = {}) {
   return createTextStyle((theme) => {
     const style = theme.typography.base.styles[name]
     let fontFamily = theme?.typography?.base?.fontFamily
     const fontWeight = style.weight.toString()
 
-    
-
     const fontSize = style.size
-    // console.log('name', name)
+
     const resolveFontFamily = theme.typography.base.resolveFontFamily
 
     if (!TypeGuards.isNil(resolveFontFamily)) {
@@ -36,12 +35,11 @@ export function assignTextStyle(name: Fonts, add = {}) {
           fontFamily = resolved
         }
       }
-
     }
+
     return {
       text: {
         fontWeight,
-        // color,
         fontFamily,
         fontSize,
         lineHeight: style.lineHeight ?? null,
@@ -67,7 +65,6 @@ export const TextStyles = {
   h3: assignTextStyle('h3'),
   h4: assignTextStyle('h4'),
   h5: assignTextStyle('h5'),
-  h6: assignTextStyle('h6'),
   p1: assignTextStyle('p1'),
   p2: assignTextStyle('p2'),
   p3: assignTextStyle('p3'),

@@ -15,12 +15,13 @@ import {
   useId as useReactId,
 } from 'react'
 import { deepMerge } from './object'
-import { AnyFunction, DeepPartial, StylesOf} from '../types'
+import { AnyFunction, DeepPartial, StylesOf } from '../types'
 
 import { uniqueId } from 'lodash'
 import { useUnmount } from 'react-use'
 import { getNestedStylesByKey } from './misc'
 import { useCodeleapContext } from '../styles/StyleProvider'
+import { TypeGuards } from '.'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -387,15 +388,14 @@ export function useId(prefix?: string) {
   return prefix ? `${prefix}${_id}` : _id
 }
 
-
-export function useForceRender(){
-  const [_, forceRender] = useReducer((x) => x+1, 0)
+export function useForceRender() {
+  const [_, forceRender] = useReducer((x) => x + 1, 0)
 
   return forceRender
 }
 
-export function useCounter(){
-  return useReducer((x) => x+1, 0)
+export function useCounter() {
+  return useReducer((x) => x + 1, 0)
 
 }
 
@@ -409,10 +409,58 @@ export function useNestedStylesByKey<T extends string, O extends StylesOf<T> = S
 
 export function useWarning(condition: boolean, ...logArgs: any[]) {
   const logged = useRef(false)
-  const {logger} = useCodeleapContext()
+  const { logger } = useCodeleapContext()
 
-  if(!logged.current && condition){
+  if (!logged.current && condition) {
     logged.current = true
     logger?.warn(...logArgs)
   }
 }
+
+type UsePromiseOptions<T = any> = {
+  onResolve?: (value: T) => void
+  onReject?: (err: any) => void
+  timeout?: number
+  debugName?: string
+}
+
+export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
+  const rejectRef = useRef<AnyFunction>()
+  const resolveRef = useRef<(v:T) => any>()
+  const timeoutRef = useRef(null)
+  const reject = async (err: any) => {
+    await rejectRef.current?.(err)
+    options?.onReject?.(err)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    rejectRef.current = null
+  }
+
+  const resolve = async (value: T) => {
+    await resolveRef.current?.(value)
+    options?.onResolve?.(value)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    resolveRef.current = null
+  }
+
+  const _await = () => {
+    return new Promise<T>((resolve, reject) => {
+      rejectRef.current = reject
+      resolveRef.current = resolve
+      if (TypeGuards.isNumber(options?.timeout) && options?.timeout > 0) {
+        timeoutRef.current = setTimeout(() => {
+          reject(new Error(`usePromise: ${options?.debugName || ''} timed out after ${options?.timeout}ms`))
+        }, options?.timeout)
+      }
+    })
+  }
+
+  return {
+    _await,
+    resolve,
+    reject,
+  }
+}
+
+// useLayoutEffect will show warning if used during ssr, e.g. with Next.js
+// useIsomorphicEffect removes it by replacing useLayoutEffect with useEffect during ssr
+export const useIsomorphicEffect = typeof document !== 'undefined' ? useLayoutEffect : useEffect

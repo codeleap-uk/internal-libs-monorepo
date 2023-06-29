@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "2.4.6",
+  "version": "3.2.7",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
@@ -33,7 +33,7 @@
     "@sentry/browser": "*",
     "@tanstack/react-query": "4.0.10",
     "react": "18.1.0",
-    "typescript": "4.5.4",
+    "typescript": "5.0.4",
     "yup": "^0.32.11"
   },
   "dependencies": {

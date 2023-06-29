@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { ReactNode, ComponentPropsWithoutRef } from 'react'
 
 import { Text } from '../Text'
@@ -15,14 +15,14 @@ import { View } from '../View'
 import { RadioInputComposition, RadioInputPresets } from './styles'
 import { InputLabel } from '../InputLabel'
 import { StyleSheet } from 'react-native'
-import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
 export * from './styles'
 
 type WrapperProps = InputBaseProps
 
 type RadioOption<T> = FormTypes.Options<T>[number] & {
   disabled?: boolean
-} 
+}
 export type RadioGroupProps<T extends string|number> = WrapperProps & {
   options: RadioOption<T>[]
   value: T
@@ -30,8 +30,8 @@ export type RadioGroupProps<T extends string|number> = WrapperProps & {
   label: ReactNode
   styles?: StylesOf<RadioInputComposition>
   variants?: ComponentVariants<typeof RadioInputPresets>['variants']
+  radioOnRight?: boolean
 }
-
 
 type OptionProps<T extends string|number> = {
   item: RadioOption<T>
@@ -41,6 +41,7 @@ type OptionProps<T extends string|number> = {
   debugName?: string
   disabled?: boolean
   separator?: boolean
+  reverseOrder?: boolean
 }
 
 const Option = <T extends string|number>(props: OptionProps<T>) => {
@@ -52,33 +53,34 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
     selected,
     onSelect,
     separator = false,
+    reverseOrder,
   } = props
 
   const isDisabled = disabled || item.disabled
 
   const getStyle = (key) => {
-    if(isDisabled && selected) {
+    if (isDisabled && selected) {
       return styles[`${key}:selectedDisabled`]
     }
-    if(isDisabled) {
+    if (isDisabled) {
       return styles[`${key}:disabled`]
     }
-    if(selected) {
+    if (selected) {
       return styles[`${key}:selected`]
     }
     return styles[key]
   }
 
-  const label = TypeGuards.isString(item.label) ? <Text 
+  const label = TypeGuards.isString(item.label) ? <Text
     style={[
       styles.optionLabel,
       getStyle('optionLabel'),
     ]}
     text={item.label}
-  /> : item.label 
+  /> : item.label
 
   return <>
-    <Touchable 
+    <Touchable
       debugName={`${debugName} option ${item.value}`}
       style={[
         styles.optionWrapper,
@@ -87,35 +89,55 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       rippleDisabled
       onPress={onSelect}
       disabled={isDisabled}
-    > 
-      <View 
-        style={[
-          styles.optionIndicator,
-        getStyle('optionIndicator'),
-        ]}
+    >
 
-      >
-        <View
-          style={[
-            styles.optionIndicatorInner,
-            getStyle('optionIndicatorInner'),
-          ]}
-        />
-      </View>
-      {label}
-      
+      {reverseOrder ? (
+        <>
+          {label}
+          <View
+            style={[
+              styles.optionIndicator,
+              getStyle('optionIndicator'),
+            ]}
+          >
+            <View
+              style={[
+                styles.optionIndicatorInner,
+                getStyle('optionIndicatorInner'),
+              ]}
+            />
+          </View>
+        </>
+      ) : (
+        <>
+          <View
+            style={[
+              styles.optionIndicator,
+              getStyle('optionIndicator'),
+            ]}
+          >
+            <View
+              style={[
+                styles.optionIndicatorInner,
+                getStyle('optionIndicatorInner'),
+              ]}
+            />
+          </View>
+          {label}
+        </>
+      )}
+
     </Touchable>
     {separator && <View style={styles.optionSeparator} />}
   </>
 }
-
 
 export const RadioGroup = <T extends string|number>(
   props: RadioGroupProps<T>,
 ) => {
   const {
     inputBaseProps,
-    others
+    others,
   } = selectInputBaseProps(props)
 
   const {
@@ -126,30 +148,34 @@ export const RadioGroup = <T extends string|number>(
     styles,
     disabled,
     debugName,
+    radioOnRight,
   } = others
 
-  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', { 
+  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', {
     variants,
     styles,
-    transform: StyleSheet.flatten
+    transform: StyleSheet.flatten,
   })
 
-  return <InputBase 
+  const _radioOnRight = radioOnRight ?? variantStyles.__props?.radioOnRight
+
+  return <InputBase
     {...inputBaseProps}
     disabled={disabled}
     styles={variantStyles}
     debugName={debugName}
-  > 
+  >
     {options?.map((item, idx) => (
       <Option
         debugName={debugName}
         item={item}
         key={idx}
-        disabled={disabled} 
+        disabled={disabled}
         styles={variantStyles}
         selected={value === item.value}
         onSelect={() => onValueChange(item.value)}
         separator={idx < options.length - 1}
+        reverseOrder={_radioOnRight}
       />
     ))}
   </InputBase>

@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
+
 import {
   useDefaultComponentStyle,
   ButtonStyles,
@@ -8,19 +9,21 @@ import {
   ButtonParts,
   optionalObject,
   AnyFunction,
+  EnhancedTheme,
+  ComponentStyleMap,
+  CommonVariantObject,
+  AppTheme,
 } from '@codeleap/common'
-import React, { ComponentPropsWithRef } from 'react'
+import React from 'react'
 import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { ActivityIndicator } from '../ActivityIndicator'
 import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
 import { LoadingOverlay } from '../LoadingOverlay'
+import { ActivityIndicator } from '../ActivityIndicator'
 
-type NativeButtonProps = ComponentPropsWithRef<'button'>
-
-export type ButtonProps = NativeButtonProps &
+export type ButtonProps =
   ComponentVariants<typeof ButtonStyles> & {
     text?: string
     rightIcon?: IconPlaceholder
@@ -28,11 +31,11 @@ export type ButtonProps = NativeButtonProps &
     onPress?: AnyFunction
     styles?: StylesOf<ButtonComposition>
     loading?: boolean
-    debugName?: string
+    debugName: string
     debounce?: number
-  } & Partial<TouchableProps<any>>
+  } & Partial<TouchableProps<'button'>>
 
-export const Button: React.FC<ButtonProps> = (buttonProps) => {
+export const Button = (buttonProps:ButtonProps) => {
   const {
     variants = [],
     responsiveVariants = {},
@@ -47,6 +50,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     debounce = 600,
     ...props
   } = buttonProps
+
   const [pressed, setPressed] = React.useState(false)
   const variantStyles = useDefaultComponentStyle('Button', {
     responsiveVariants,
@@ -54,7 +58,7 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
     styles,
   })
 
-  function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
+  function handlePress(e?: Parameters<ButtonProps['onPress']>[0]) {
     if (!pressed) {
       props?.onClick?.(e)
 
@@ -82,43 +86,34 @@ export const Button: React.FC<ButtonProps> = (buttonProps) => {
       css={getStyles('wrapper')}
       component='button'
       debugComponent='Button'
-
-      onPress={handlePress}
       {...props}
+      onPress={null}
+      onClick={handlePress}
     >
-      <LoadingOverlay 
+      <LoadingOverlay
         visible={loading}
         styles={loaderStyle}
-
       />
       {!loading && (
         <Icon
           name={icon}
           style={{ ...iconStyle, ...getStyles('leftIcon') }}
 
-          />
-          )}
+        />
+      )}
       {children || (
         <Text
           text={text}
-        styles={{
-            text: getStyles('text'),
-          }}
-          />
-          )}
+          css={getStyles('text')}
+        />
+      )}
 
       <Icon
         name={rightIcon}
         style={{ ...iconStyle, ...getStyles('rightIcon') }}
-        
-        
-        />
-        {loading && <ActivityIndicator styles={{
-          'wrapper': getStyles('loaderWrapper'),
-          'backCircle': getStyles('loaderBackCircle'),
-          'frontCircle': getStyles('loaderFrontCircle'),
-          'circle': getStyles('loaderCircle'),
-        }} css={getStyles('loader')}/>}
+
+      />
+      {loading && <ActivityIndicator css={{ display: 'none' }} />}
     </Touchable>
   )
 }

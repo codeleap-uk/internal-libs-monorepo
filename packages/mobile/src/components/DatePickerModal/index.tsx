@@ -121,6 +121,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     description,
     showDoneButton,
     style,
+    minimumDate,
+    maximumDate,
     footerComponent,
     ...modalProps
   } = allProps
@@ -133,7 +135,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   })
 
   const [visible, toggle] = !TypeGuards.isNil(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
-  const [value, setValue] = _value && onValueChange ? [_value, onValueChange] : useState(_value ?? new Date())
+  const [value, setValue] = [_value, onValueChange]
+  //const [value, setValue] = _value && onValueChange ? [_value, onValueChange] : useState(_value ?? new Date())
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
 
@@ -225,6 +228,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           textColor={variantStyles?.picker?.color}
           androidVariant='iosClone'
           onConfirm={setValue}
+          minimumDate={minimumDate}
+          maximumDate={maximumDate}
           {...datePickerProps}
           mode={mode}
 

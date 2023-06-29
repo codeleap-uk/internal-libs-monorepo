@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import * as React from 'react'
 import {
   ComponentVariants,
@@ -11,6 +13,7 @@ import {
   useRef,
   useValidate,
   FormTypes,
+  IconPlaceholder,
 } from '@codeleap/common'
 import { View } from '../View'
 import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
@@ -153,7 +156,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     disabled && variantStyles['placeholder:disabled'],
   ]
 
-  const handleBlur = React.useCallback((args) => {
+  const handleBlur = React.useCallback(() => {
     if (TypeGuards.isNumber(max) && (value >= max)) {
       onChange(max)
       return
@@ -228,14 +231,14 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         ],
       }}
       rightIcon={{
-        name: 'plus',
+        name: 'plus' as IconPlaceholder,
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
         component: 'button',
         ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
-        name: 'minus',
+        name: 'minus' as IconPlaceholder,
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
         component: 'button',
