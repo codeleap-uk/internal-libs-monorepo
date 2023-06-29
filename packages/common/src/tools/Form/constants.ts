@@ -4,7 +4,7 @@ export const defaultFieldValues: Partial<Record<Form.FormField['type'], any>> =
   {
     checkbox: false,
     text: '',
-    composite: {},
+
     file: null,
     multipleFile: [],
     'range-slider': [0, 100],

@@ -6,7 +6,9 @@ on:
     paths:
       - "packages/**/*"
       - .github/workflows/publish.yml
-
+concurrency:
+  group: ${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,19 +42,9 @@ jobs:
 
       - name: Publish
         run: |
-          yarn release
           chmod +x ./publish.sh
           ./publish.sh
           yarn notifyVersion
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }} 
-
-      - name: Git push
-        if: always()
-        run: |
-          git pull
-          git restore **/**
-          git add packages
-          git commit -m "update package versions"
-          git push --follow-tags origin master
