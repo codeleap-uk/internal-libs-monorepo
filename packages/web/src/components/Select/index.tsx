@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards, onUpdate } from '@codeleap/common'
+import { FormTypes, useValidate, useState, TypeGuards, onUpdate, IconPlaceholder } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -69,7 +69,7 @@ const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
-  const { text: TextPlaceholder, defaultStyles, icon: IconPlaceholder } = props
+  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder } = props
 
   const _Text = () => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
@@ -84,22 +84,22 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
   }
 
   const _Image = () => {
-    if (TypeGuards.isNil(IconPlaceholder)) return null
+    if (TypeGuards.isNil(_IconPlaceholder)) return null
 
-    if (TypeGuards.isString(IconPlaceholder)) {
-      return <Icon name={TextPlaceholder as any} forceStyle={defaultStyles.icon} />
-    } else if (React.isValidElement(IconPlaceholder)) {
+    if (TypeGuards.isString(_IconPlaceholder)) {
+      return <Icon name={_IconPlaceholder as IconPlaceholder} forceStyle={defaultStyles.icon as React.CSSProperties} />
+    } else if (React.isValidElement(_IconPlaceholder)) {
       // @ts-ignore
       return <View style={defaultStyles.icon}>
-        { IconPlaceholder}
+        {_IconPlaceholder}
       </View>
-    } else if (TypeGuards.isFunction(IconPlaceholder)) {
-      return <IconPlaceholder {...props} />
+    } else if (TypeGuards.isFunction(_IconPlaceholder)) {
+      return <_IconPlaceholder {...props} />
     }
   }
 
   return (
-    <View css={[defaultStyles.wrapper]}>
+    <View style={defaultStyles.wrapper as React.CSSProperties}>
       <_Image />
       <_Text />
     </View>
@@ -332,6 +332,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     }
 
     if (!hasInputValue) {
+      
       return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
     } else {
       const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText

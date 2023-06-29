@@ -14,10 +14,10 @@ export * from './styles'
 
 export type IconProps = {
   name: IconPlaceholder
-  style?: any
+  style?: React.CSSProperties
   renderEmptySpace?: boolean
   forceStyle?: CSSObject | CSSInterpolation | React.CSSProperties
-  css?: any
+  css?: CSSInterpolation | CSSInterpolation[]
 } & ComponentVariants<typeof IconStyles>
 
 const IconCP = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconProps) => {
