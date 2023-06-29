@@ -52,7 +52,7 @@ export type ModalProps =
     onClose?: () => void
     overlayProps?: Partial<OverlayProps>
     zIndex?: number
-    scrollable?: boolean
+    withScrollContainer?: boolean
   } & ComponentVariants<typeof ModalPresets>
 
 function focusModal(event: FocusEvent, id: string) {
@@ -139,7 +139,7 @@ const defaultProps: Partial<ModalProps> = {
   dismissOnBackdrop: true,
   zIndex: null,
   description: null,
-  scrollable: false,
+  withScrollContainer: false,
 }
 
 export const ModalContent: React.FC<ModalProps & { id: string }> = (
@@ -167,7 +167,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     overlayProps = {},
     dismissOnBackdrop,
     zIndex,
-    scrollable,
+    withScrollContainer,
     ...props
   } = modalProps
 
@@ -218,14 +218,14 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
 
   const ModalBody = renderModalBody || (scroll ? Scroll : View)
 
-  const ModalArea = scrollable ? Scroll : View
+  const ModalArea = withScrollContainer ? Scroll : View
 
   const _zIndex = React.useMemo(() => {
     return TypeGuards.isNumber(zIndex) ? { zIndex } : {}
   }, [zIndex])
 
   return (
-    <ModalArea
+    <View
       aria-hidden={!visible}
       css={[
         variantStyles.wrapper,
@@ -246,7 +246,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
         {...overlayProps}
       />
 
-      <View css={variantStyles.innerWrapper}>
+      <ModalArea css={variantStyles.innerWrapper}>
         <View css={variantStyles.backdropPressable} onClick={close} />
         <View
           component='section'
@@ -288,8 +288,8 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
             </View>
           )}
         </View>
-      </View>
-    </ModalArea>
+      </ModalArea>
+    </View>
   )
 }
 

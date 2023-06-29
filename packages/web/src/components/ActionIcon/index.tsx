@@ -1,32 +1,52 @@
-/** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
-
-import { ComponentVariants, PropsOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
-import { Touchable } from '../Touchable'
+import { Touchable, TouchableProps } from '../Touchable'
 import { View } from '../View'
-import { ActionIconComposition, ActionIconPresets } from './styles'
+import { ActionIconComposition, ActionIconParts, ActionIconPresets } from './styles'
 
-export type ActionIconProps = {
-    iconProps?: Partial<IconProps>
-    icon?: IconProps['name']
-    name?: IconProps['name']
-    action?: () => void
-    styles?: StylesOf<ActionIconComposition>
-} & Omit<PropsOf<typeof Touchable>, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets>
+export * from './styles'
 
-export const ActionIcon = (props:ActionIconProps) => {
-  const { icon, name, iconProps, onPress, variants, styles, children, disabled, ...touchableProps } = props
+export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & {
+  iconProps?: Partial<IconProps>
+  icon?: IconProps['name']
+  name?: IconProps['name']
+  styles?: StylesOf<ActionIconComposition>
+} & ComponentVariants<typeof ActionIconPresets>
 
+const defaultProps: Partial<ActionIconProps> = {
+  disabled: false,
+}
+
+export const ActionIcon = (props: ActionIconProps) => {
+  const allProps = {
+    ...ActionIcon.defaultProps,
+    ...props,
+  }
+
+  const { 
+    icon,
+    name,
+    iconProps,
+    onPress,
+    responsiveVariants = {},
+    variants = [],
+    styles = {},
+    children,
+    disabled,
+    ...touchableProps 
+  } = allProps
+  
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    variants,
+    responsiveVariants,
+    variants, 
     styles,
+    rootElement: 'touchableWrapper'
   })
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent: any = isPressable ? Touchable : View
+  const WrapperComponent = isPressable ? Touchable : View
 
   const handlePress = () => {
     if (!isPressable) return
@@ -34,15 +54,16 @@ export const ActionIcon = (props:ActionIconProps) => {
     if (onPress) onPress?.()
   }
 
+  const getStyles = (key: ActionIconParts) => ([
+    variantStyles[key],
+    disabled && variantStyles[`${key}:disabled`],
+    isPressable && variantStyles[`${key}:pressable`]
+  ])
+
   return (
     // @ts-ignore
     <WrapperComponent
-      onPress={handlePress}
-      css={[
-        variantStyles.wrapper,
-        disabled && variantStyles['wrapper:disabled'],
-        isPressable && variantStyles['wrapper:cursor'],
-      ]}
+      css={getStyles('touchableWrapper')}
       disabled={disabled}
       {
         ...(isPressable && {
@@ -53,16 +74,12 @@ export const ActionIcon = (props:ActionIconProps) => {
     >
       <Icon
         name={icon ?? name}
+        css={getStyles('icon')}
         {...iconProps}
-        // @ts-ignore
-        css={[
-          variantStyles.icon,
-          disabled && variantStyles['icon:disabled'],
-        ]}
       />
       {children}
     </WrapperComponent>
   )
 }
 
-export * from './styles'
+ActionIcon.defaultProps = defaultProps
