@@ -11,13 +11,18 @@ export type TextProps<T extends ElementType> =
     component?: T
     text: string
     styles?: StylesOf<TextComposition>
-    debugName?: string
     msg?: string
+    debugName?: string
+    debounce?: number
+    pressDisabled?: boolean
+    onPress?: (event: React.MouseEventHandler<T>) => void
   }
 
 const defaultProps: Partial<TextProps<'p'>> = {
   debugName: 'Text component',
   component: 'p',
+  debounce: null,
+  pressDisabled: false,
 }
 
 export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
@@ -30,20 +35,28 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     variants = [],
     responsiveVariants = {},
     styles = {},
+    style = {},
+    css,
     text = null,
     children,
     component: Component,
     debugName,
     msg = null,
+    onPress,
+    debounce,
+    pressDisabled,
+    onClick,
     ...props
   } = allProps
+
+  const pressedRef = React.useRef(false)
 
   const { t } = useI18N()
 
   const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
+    responsiveVariants,
     variants,
     styles,
-    responsiveVariants,
     rootElement: 'text',
   })
 
@@ -57,10 +70,49 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     content = text
   }
 
+  const isPressable = (TypeGuards.isFunction(onPress) || TypeGuards.isFunction(onClick)) && !pressDisabled
+
+  const disabled = isPressable === false
+
+  const _onPress = (e: React.MouseEventHandler<T>) => {
+    if (disabled) return
+
+    const handlePress = () => {
+      onClick?.(e)
+      onPress?.(e)
+    }
+
+    if (TypeGuards.isNumber(debounce)) {
+      if (pressedRef.current) {
+        return
+      }
+
+      pressedRef.current = true
+      handlePress()
+      setTimeout(() => {
+        pressedRef.current = false
+      }, debounce)
+    } else {
+      handlePress()
+    }
+  }
+
+  const _styles = [
+    variantStyles.text,
+    disabled && variantStyles['text:disabled'],
+    css,
+    style,
+  ]
+
+  const pressProps = isPressable ? {
+    onClick: disabled ? null : _onPress,
+  } : {}
+
   return (
     <Component
-      css={[variantStyles.text, props.style]}
+      css={_styles}
       {...props}
+      {...pressProps}
     >
       {content || children}
     </Component>
