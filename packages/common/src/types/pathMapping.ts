@@ -30,7 +30,7 @@ export type Join<K, P> = K extends string | number
     : never
   : never
 
-export type Paths<T, D extends number = 10> = [D] extends [never]
+export type Paths<T, D extends number = 2> = [D] extends [never]
   ? never
   : (T extends Date
     ? ''
@@ -42,3 +42,4 @@ export type Paths<T, D extends number = 10> = [D] extends [never]
           }[keyof T]
         : '')
     )
+

@@ -1,6 +1,7 @@
 import {
   ComponentVariants,
   onUpdate,
+  PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
   useWarning,
@@ -11,6 +12,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  ScrollViewProps,
   StyleSheet,
 } from 'react-native'
 import { StylesOf } from '../../types/utility'
@@ -44,7 +46,7 @@ export type PagerProps = React.PropsWithChildren<{
   onScroll: ScrollProps['onScroll']
    /** If TRUE render page, nextPage and prevPage only */
    windowing?:boolean
-}>
+} & ScrollViewProps>
 
 export const Pager = (pagerProps:PagerProps) => {
   const {
@@ -59,6 +61,7 @@ export const Pager = (pagerProps:PagerProps) => {
     children,
     windowing = false,
     setPage,
+    scrollEnabled = true,
   } = pagerProps
 
   const childArr = React.Children.toArray(children)
@@ -122,15 +125,15 @@ export const Pager = (pagerProps:PagerProps) => {
 
   return (
     <ScrollView
-      {...pagerProps}
       ref={scrollRef}
       horizontal
       pagingEnabled
       onMomentumScrollEnd={handleScrollEnd}
       scrollEventThrottle={300}
       showsHorizontalScrollIndicator={false}
-      scrollEnabled={childArr.length > 1}
       style={[variantStyles.wrapper, style]}
+      {...pagerProps}
+      scrollEnabled={childArr.length > 1 && scrollEnabled}
     >
       {childArr.map((child: PagerProps['children'][number], index) => {
 

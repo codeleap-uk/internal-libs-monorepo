@@ -32,12 +32,19 @@ export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPre
   styles?: StylesOf<EmptyPlaceholderComposition>
   style?: React.CSSProperties
   renderEmpty?: (props: RenderEmptyProps) => React.ReactElement
-  wrapperProps?: Partial<Omit<typeof View, 'variants' | 'styles'>>
-  imageWrapperProps?: Partial<Omit<typeof View, 'variants' | 'styles'>>
+  wrapperProps?: Partial<typeof View>
+  imageWrapperProps?: Partial<typeof View>
   indicatorProps?: Partial<ActivityIndicatorProps>
 }
 
-export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPlaceholderProps) => {
+const defaultProps: Partial<EmptyPlaceholderProps> = {}
+
+export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
+  const allProps = {
+    ...EmptyPlaceholder.defaultProps,
+    ...props,
+  }
+
   const {
     itemName,
     title,
@@ -51,8 +58,8 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     renderEmpty: RenderEmpty = null,
     wrapperProps = {},
     imageWrapperProps = {},
-    indicatorProps = {}
-  } = props
+    indicatorProps = {},
+  } = allProps
   
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
@@ -85,7 +92,7 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     }
 
     return (
-      <View css={variantStyles.wrapper}>
+      <View {...wrapperProps} css={[variantStyles.wrapper, style]}>
         <RenderEmpty {..._emptyProps}/>
       </View>
     )
@@ -122,3 +129,5 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
     </View>
   )
 }
+
+EmptyPlaceholder.defaultProps = defaultProps

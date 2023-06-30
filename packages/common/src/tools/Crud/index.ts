@@ -468,7 +468,7 @@ export class QueryManager<
 
       if (tmpOptions.current?.optimistic) {
         query.mutateAsync(data)
-        res = await getOptimisticItem.await()
+        res = await getOptimisticItem._await()
       } else {
         res = await query.mutateAsync(data)
       }
@@ -553,7 +553,7 @@ export class QueryManager<
 
       if (tmpOptions.current?.optimistic) {
         query.mutateAsync(data)
-        res = await getOptimisticItem.await()
+        res = await getOptimisticItem._await()
       } else {
 
         res = await query.mutateAsync(data)
@@ -639,7 +639,7 @@ export class QueryManager<
 
       if (tmpOptions.current?.optimistic) {
         query.mutateAsync(data)
-        prevItem = await getOptimisticItem.await()
+        prevItem = await getOptimisticItem._await()
       } else {
         prevItem = await query.mutateAsync(data)
       }

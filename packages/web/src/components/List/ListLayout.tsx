@@ -29,6 +29,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     refresh,
     refreshing,
     refreshControlProps,
+    refreshControlIndicatorProps = {},
     refreshSize,
     children,
     ref,
@@ -76,7 +77,11 @@ export const ListLayout = (props: ListLayoutProps) => {
                 }}
                 {...refreshControlProps}
               >
-                <ActivityIndicator size={refreshSize} />
+                <ActivityIndicator 
+                  size={refreshSize} 
+                  style={variantStyles.refreshControlIndicator} 
+                  {...refreshControlIndicatorProps} 
+                />
               </motion.div>
             ) : (<ListRefreshControlComponent /> ?? null)}
 

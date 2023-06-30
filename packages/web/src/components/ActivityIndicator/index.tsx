@@ -55,10 +55,10 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
   }, [size])
 
   return (
-    <View css={[variantStyles.wrapper, style, _size]}>
+    <View css={[variantStyles.wrapper, _size, style]}>
       <Component
         ref={ref}
-        css={[variantStyles.wrapper, _size]}
+        css={[variantStyles.wrapper, _size, style]}
         {...props}
       />
     </View>
