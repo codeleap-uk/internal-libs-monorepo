@@ -23,6 +23,7 @@ export type ButtonProps =
     styles?: StylesOf<ButtonComposition>
     style?: React.CSSProperties
     loading?: boolean
+    loadingShowText?: boolean
     debugName: string
     debounce?: number
     selected?: boolean
@@ -32,6 +33,7 @@ export type ButtonProps =
 
 const defaultProps: Partial<ButtonProps> = {
   debounce: 600,
+  loadingShowText: false,
 }
 
 export const Button = (buttonProps: ButtonProps) => {
@@ -48,6 +50,7 @@ export const Button = (buttonProps: ButtonProps) => {
     icon,
     text,
     loading,
+    loadingShowText,
     onPress,
     disabled,
     rightIcon,
@@ -95,6 +98,8 @@ export const Button = (buttonProps: ButtonProps) => {
 
   const shouldRenderLeftIcon = !loading && !isLeftIconHide
 
+  const _hideTextOnLoading = !loadingShowText && loading
+
   return (
     <Touchable
       css={_styles.wrapper}
@@ -105,7 +110,7 @@ export const Button = (buttonProps: ButtonProps) => {
       {...props}
     >
       {shouldRenderLeftIcon && <Icon name={icon} style={_styles.leftIcon} />}
-      {TypeGuards.isString(text) ? <Text text={text} css={[_styles.text]} /> : null }
+      {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text text={text} css={[_styles.text]} /> : null }
       
       {childrenContent}
 
