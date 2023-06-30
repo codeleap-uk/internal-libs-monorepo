@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.17](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.16...v3.2.17) (2023-06-30)
+
+
+### Bug Fixes
+
+* **mobile:** fix takuya's branch and fix Gap ([8b69f7c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/8b69f7c095bf9a1afe0598c2c5c0eccac01e91df))
+
 ### [3.2.16](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.15...v3.2.16) (2023-06-30)
 
 ### [3.2.15](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.14...v3.2.15) (2023-06-30)
