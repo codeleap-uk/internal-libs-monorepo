@@ -19,13 +19,12 @@ export type CheckboxProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
 > & {
-  variants?: ComponentVariants<typeof CheckboxPresets>['variants']
   styles?: StylesOf<CheckboxComposition>
   value: boolean
   onValueChange: (value: boolean) => void
   style?: PropsOf<typeof View>['style']
   checkboxOnLeft?: boolean
-}
+} & ComponentVariants<typeof CheckboxPresets>
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
@@ -36,6 +35,7 @@ export const Checkbox = (props: CheckboxProps) => {
   } = selectInputBaseProps(props)
 
   const {
+    responsiveVariants = {},
     variants = [],
     style = {},
     styles = {},
@@ -47,6 +47,7 @@ export const Checkbox = (props: CheckboxProps) => {
   } = others
 
   const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
+    responsiveVariants,
     variants,
     styles,
     rootElement: 'wrapper',
@@ -115,6 +116,9 @@ export const Checkbox = (props: CheckboxProps) => {
     }}
     order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
     style={style}
+    wrapperProps={{
+      onClick: handleChange
+    }}
   >
     <motion.div
       css={[

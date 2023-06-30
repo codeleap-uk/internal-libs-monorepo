@@ -61,6 +61,7 @@ export type OptionState = {
 
 export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
   const {
+    responsiveVariants = {},
     variants,
     styles,
   } = props
@@ -74,6 +75,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>(
     'u:Select',
     {
+      responsiveVariants,
       variants,
       styles,
     },
