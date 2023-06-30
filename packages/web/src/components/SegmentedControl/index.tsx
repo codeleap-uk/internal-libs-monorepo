@@ -8,6 +8,7 @@ import { Touchable } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
 import { motion, MotionProps, AnimationProps, ForwardRefComponent } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'
+import { IconProps } from '../Icon'
 
 export type SegmentedControlOptionProps<T = string> = {
   label: string
@@ -46,6 +47,8 @@ export type SegmentedControlProps<T = string> = ComponentVariants<typeof Segment
   animationProps?: AnimationProps
   transitionDuration?: number
   RenderAnimatedView?: ForwardRefComponent<HTMLDivElement, any>
+  textProps?: Omit<PropsOf<typeof Text>, 'key'>
+  iconProps?: Partial<IconProps>
 }
 
 const defaultProps: Partial<SegmentedControlProps> = {
@@ -75,6 +78,8 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     transitionDuration,
     disabled,
     RenderAnimatedView: Bubble,
+    textProps = {},
+    iconProps = {},
     debugName,
     ...rest
   } = allProps
@@ -148,6 +153,8 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             variantStyles={variantStyles}
             style={biggerWidth}
             disabled={disabled}
+            textProps={textProps}
+            iconProps={iconProps}
             {...props?.touchableProps}
           />
         ))}

@@ -7,7 +7,7 @@ import { StylesOf } from '../../types'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
-import { Icon } from '../Icon'
+import { Icon, IconProps } from '../Icon'
 
 type OptionRef = PropsOf<typeof Touchable>['ref']
 
@@ -17,6 +17,7 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   variantStyles?: StylesOf<SegmentedControlComposition>
   value?: any
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
+  iconProps?: Partial<IconProps>
   icon?: IconPlaceholder
   ref?: OptionRef
 }
@@ -26,18 +27,24 @@ const SegmentedControlOptionCP = (props: SegmentedControlOptionProps, ref: Optio
     selected,
     onPress,
     style,
-    variantStyles,
+    variantStyles = {},
+    iconProps = {},
     label,
     icon,
     textProps,
-
     disabled,
     ...touchableProps
   } = props
 
+
+  const iconStyles = {
+    ...variantStyles.icon as object,
+    ...(selected ? variantStyles['icon:selected'] as object : {}),
+    ...(disabled ? variantStyles['icon:disabled'] as object : {}),
+  }
+
   return (
     <Touchable
-
       key={touchableProps.key}
       ref={ref}
       css={[
@@ -54,11 +61,8 @@ const SegmentedControlOptionCP = (props: SegmentedControlOptionProps, ref: Optio
         !!icon && (
           <Icon
             name={icon}
-            css={[
-              variantStyles.icon,
-              selected && variantStyles['icon:selected'],
-              disabled && variantStyles['icon:disabled'],
-            ]}
+            style={iconStyles}
+            {...iconProps}
           />
         )
       }
