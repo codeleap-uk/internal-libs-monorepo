@@ -12,6 +12,8 @@ export class APIError<T= any, D = any> extends Error {
 
   axiosError?: AugmentedAxiosError<T, D>
 
+  method?: string
+
   constructor(
     reason = 'INVALID_STATUS_CODE',
     url = '',
@@ -19,10 +21,11 @@ export class APIError<T= any, D = any> extends Error {
   ) {
     const status = axiosError?.response?.status
     const data = axiosError?.response?.data
-
+    const method = axiosError?.config?.method
     const message = `
       APIError
       Reason: ${reason}
+      Method: ${method}
       URL: ${url} 
       Status Code: ${status} 
       Response data: ${inspect(data, {
@@ -34,6 +37,7 @@ export class APIError<T= any, D = any> extends Error {
 
     this.reason = reason
     this.url = url
+    this.method = method
     this.status = status
     this.data = data
     this.axiosError = axiosError
