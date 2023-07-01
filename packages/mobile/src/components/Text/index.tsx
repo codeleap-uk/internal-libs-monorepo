@@ -10,6 +10,7 @@ import {
 import { Animated, Platform, StyleSheet, Text as NativeText, TextProps as RNTextProps } from 'react-native'
 import { usePressableFeedback } from '../../utils'
 import { TextPresets } from './styles'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
@@ -24,9 +25,15 @@ export type TextProps = RNTextProps & {
 }
 
 const _Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
-  const { variants = [], text, children, onPress, style, debounce = 1000, pressDisabled, ...props } = textProps
+  const { variants = [], text, children, onPress, style, debounce = 1000, pressDisabled, ...props } = {
+    ...Text.defaultProps,
+    ...textProps,
+  }
 
-  const pressPolyfillEnabled = Platform.OS === 'android' && !!onPress && !pressDisabled
+  const pressPolyfillEnabled = Platform.select({
+    ios: props.suppressHighlighting,
+    android: true,
+  }) && !!onPress && !pressDisabled
 
   const [pressed, setPressed] = useState(false)
   const pressedRef = React.useRef(false)
@@ -96,7 +103,10 @@ const _Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
 
 })
 
-export const Text = _Text as (props: TextProps & {ref?: React.MutableRefObject<NativeText> }) => JSX.Element
+export const Text = _Text as ComponentWithDefaultProps<TextProps & {ref?: React.MutableRefObject<NativeText> }>
+
+Text.defaultProps = {
+}
 
 export const AnimatedText = Animated.createAnimatedComponent(Text)
 
