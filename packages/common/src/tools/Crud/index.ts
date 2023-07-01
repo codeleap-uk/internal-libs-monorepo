@@ -167,21 +167,49 @@ export class QueryManager<
           const idx = old.pages.length - 1
           old.pages[idx].results.push(...itemsToAppend)
 
-          // @ts-ignore
-          old.pageParams[idx].limit += itemsToAppend.length
+          if (old.pageParams[idx]) {
+            // @ts-ignore
+            old.pageParams[idx].limit += itemsToAppend.length
+          } else {
+            old.pageParams[idx] = {
+              limit: itemsToAppend.length,
+              offset: 0,
+            }
+          }
 
         } else if (args.to === 'start') {
           old.pages[0].results.unshift(...itemsToAppend)
           // @ts-ignore
-          old.pageParams[0].limit += itemsToAppend.length
+
+          if (old.pageParams[0]) {
+            // @ts-ignore
+            old.pageParams[0].offset -= itemsToAppend.length
+            // @ts-ignore
+            old.pageParams[0].limit += itemsToAppend.length
+          } else {
+            old.pageParams[0] = {
+              limit: itemsToAppend.length,
+              offset: -itemsToAppend.length,
+            }
+          }
 
         } else if (!!args.to) {
           const appendTo = isArray(args.to) ? args.to : args.to[hashedKey]
 
           const [pageIdx, itemIdx] = appendTo
           old.pages[pageIdx].results.splice(itemIdx, 0, ...itemsToAppend)
-          // @ts-ignore
-          old.pageParams[pageIdx].limit += itemsToAppend.length
+
+          if (old.pageParams[pageIdx]) {
+            // @ts-ignore
+            old.pageParams[pageIdx].offset -= itemsToAppend.length
+            // @ts-ignore
+            old.pageParams[pageIdx].limit += itemsToAppend.length
+          } else {
+            old.pageParams[pageIdx] = {
+              limit: itemsToAppend.length,
+              offset: -itemsToAppend.length,
+            }
+          }
 
         }
         return old
