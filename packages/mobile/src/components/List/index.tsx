@@ -73,6 +73,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
       refreshControlProps = {},
       loading = false,
       fakeEmpty = loading,
+      contentContainerStyle,
       ...props
     } = flatListProps
 
@@ -85,8 +86,6 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
 
     // const isEmpty = !props.data || !props.data.length
     const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
-
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null
@@ -118,9 +117,11 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
           variantStyles.wrapper,
           style,
           isEmpty && variantStyles['wrapper:empty'],
+
         ]}
         contentContainerStyle={[
           variantStyles.content,
+          contentContainerStyle,
           isEmpty && variantStyles['content:empty'],
         ]}
         // @ts-expect-error React's refs suck
