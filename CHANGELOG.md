@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.19...v3.3.0) (2023-07-01)
+
+
+### Features
+
+* **common:** log method in api error ([cf26b08](https://github.com/codeleap-uk/internal-libs-monorepo/commit/cf26b0816e8c5171ef2ed0ae2a16bb658a6372e3))
+* **common:** typed i18n ([c71957d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c71957d23491a90bc4321e023343280cb4705f1f))
+* **mobile:** handle ios suppressHighlight, add defaultProps ([b796d7b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/b796d7b6b0378b99c4caba8817af6eef8b10de9f))
+
+
+### Bug Fixes
+
+* **common:** add logging filters to form, fix useValidate ([8d79c0d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/8d79c0dcb7146649f6dd4267f4ceef0726efaf68))
+* **common:** check pageparams for null before modifying in CRUD ([3df172a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3df172a6713140834a1b37c8a843524824f6402b))
+* **common:** memoize for creation with locale ([13a4416](https://github.com/codeleap-uk/internal-libs-monorepo/commit/13a441654022f9f17b6d5cd0db714f9b710b9d5e))
+* **list:** inherit contentContainerStyle ([ef23159](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ef23159e2f7f42b9f96ed429f04723038a07bf83))
+* **mobile:** autocomplete  -> style fix, add listPlaceholder prop, and loading control prop ([955135f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/955135f9b1dba7a9b075c1f49f76dbc3a3df6896))
+
 ### [3.2.19](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.18...v3.2.19) (2023-07-01)
 
 ### [3.2.18](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.2.17...v3.2.18) (2023-06-30)
