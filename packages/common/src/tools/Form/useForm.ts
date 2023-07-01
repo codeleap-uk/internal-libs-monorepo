@@ -24,7 +24,12 @@ export function useForm<
     Form['config']
   >
 >(formParam: (() => Form) | Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
-  const form = TypeGuards.isFunction(formParam) ? formParam() : formParam
+
+  const i18n = useI18N()
+
+  const form = useMemo(() => {
+    return TypeGuards.isFunction(formParam) ? formParam() : formParam
+  }, [formParam, i18n?.locale])
 
   const config:FormTypes.UseFormConfig<Values> = {
     validateOn: 'change',
