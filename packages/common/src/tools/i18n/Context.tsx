@@ -105,17 +105,18 @@ export const I18NProvider = (props: I18NContextProps) => {
   )
 }
 
-export const useI18N = () => {
+export const useI18N = <Keys extends string = string>() => {
   const ctx = React.useContext(I18NContext)
 
   if (!ctx) {
     return {
       locale: 'en',
       setLocale: () => {},
-      t: (key: string) => key,
+      t: (key: Keys) => key,
       isSettingLocale: false,
     }
   }
 
-  return ctx
+  return ctx as I18NContextType<Keys>
 }
+
