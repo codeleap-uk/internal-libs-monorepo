@@ -1,8 +1,9 @@
 import * as FormTypes from './types'
-import { usePartialState, deepGet, deepSet, deepMerge, TypeGuards } from '../../utils'
+import { usePartialState, useMemo, deepGet, deepSet, deepMerge, TypeGuards } from '../../utils'
 import { FunctionType } from '../../types'
 import { useCodeleapContext } from '../../styles/StyleProvider'
 import { createRef, useCallback, useRef } from 'react'
+import { useI18N } from '../i18n'
 
 export * as FormTypes from './types'
 
@@ -56,7 +57,7 @@ export function useForm<
     // @ts-ignore
     const val = deepSet([args[0], transform(args[1])])
 
-    if (shouldLog('setValue', config)) {
+    if (shouldLog('setValue', config) || shouldLog(`setValue.${args[0]}`, config)) {
       // @ts-ignore
       logger.log(
         // @ts-ignore
@@ -73,13 +74,14 @@ export function useForm<
     const { validate } = form.staticFieldProps[field as string]
 
     if (validate) {
+      const value = val !== undefined ? val : deepGet(field, formValues)
       // @ts-ignore
       const result = validate(
-        val !== undefined ? val : deepGet(field, formValues),
+        value,
         formValues,
       )
-      if (shouldLog('validate', config)) {
-        logger.log(`Validation for ${form.name} ->`, result, SCOPE)
+      if (shouldLog('validate', config) || shouldLog(`validate.${field}`, config)) {
+        logger.log(`Validation for ${form.name} ${field}`, { result, formValues, value }, SCOPE)
       }
 
       if (set) {
@@ -206,11 +208,13 @@ export function useForm<
 
     const componentPropsConfig = TypeGuards.isFunction(componentProps) ? componentProps(resolvedProps) : (componentProps || {})
 
-    return transformProps({
+    const t = transformProps({
       ...resolvedProps,
-      ...componentPropsConfig,
       ...componentProps,
+      ...componentPropsConfig,
     })
+
+    return t
   }
 
   function getTransformedValue(): Values {

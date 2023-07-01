@@ -240,10 +240,9 @@ export type CreateFormReturn<T extends FieldsMap> = {
   numberOfTextFields: number
 }
 
-export type FormStep = 'setValue' | 'validate'
-
-export type UseFormConfig<T> = {
-  log?: FormStep[]
+export type FormStep<Keys extends string = string> = 'setValue' | 'validate' | `validate.${Keys}` | `setValue.${Keys}`
+export type UseFormConfig<T extends Record<string, any>> = {
+  log?: FormStep<Exclude<keyof T, symbol|number>>[]
   initialState?: DeepPartial<T>
   validateOn?: 'change' | 'none'
 }
