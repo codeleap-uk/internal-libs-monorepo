@@ -34,6 +34,18 @@ import {
 
 export * from './types'
 
+const instances = {}
+
+const getInstance = (name: string) => {
+  const i = instances[name]
+
+  if (!i) {
+    throw new Error(`QueryManager with name ${name} not found`)
+  }
+
+  return i
+}
+
 export class QueryManager<
   T extends QueryManagerItem,
   ExtraArgs extends Record<string, any> = any,
@@ -51,6 +63,8 @@ export class QueryManager<
 
   optionListeners: OptionChangeListener<QueryManagerOptions<T, ExtraArgs, Meta, Actions>>[]
 
+  private _actionHooks: any
+
   constructor(options: QueryManagerOptions<T, ExtraArgs, Meta, Actions>) {
     this.options = options
 
@@ -59,6 +73,19 @@ export class QueryManager<
     this.meta = options?.initialMeta
 
     this.optionListeners = []
+
+    instances[options.name] = this
+  }
+
+  get views() {
+    return {
+      list: this.options?.listItems,
+      create: this.options?.createItem,
+      update: this.options?.updateItem,
+      delete: this.options?.deleteItem,
+      retrieve: this.options?.retrieveItem,
+      ...this.actions,
+    }
   }
 
   extractKey(item:T) {
@@ -92,6 +119,58 @@ export class QueryManager<
     }, {} as QueryManagerActionTriggers<Actions>)
 
     return actionFunctions
+  }
+
+  get actionHooks() {
+    if (this._actionHooks) return this._actionHooks
+
+    const actions = this.options.actions ?? {} as Actions
+
+    const actionKeys = Object.keys(actions)
+
+    const actionFunctions = actionKeys.reduce((acc, key) => {
+      const action = actions[key]
+      // @ts-ignore
+      acc[key] = (...args: any[]) => {
+        return action(getInstance(this.name), ...args)
+      }
+
+      return acc
+    }, {} as QueryManagerActionTriggers<Actions>)
+
+    const actionHooks = actionKeys.reduce((acc, key) => {
+      const hookName = `use${key[0].toUpperCase()}${key.slice(1)}`
+      // @ts-ignore
+      const { isQuery = true } = this.options?.hooks?.[key] ?? {}
+
+      const hook = isQuery ? useQuery : useMutation
+
+      const fnProperty = isQuery ? 'queryFn' : 'mutationFn'
+      const keyProperty = isQuery ? 'queryKey' : 'mutationKey'
+
+      const hookKey = `${this.options?.name}-${key}`
+      // @ts-ignore
+      acc[hookName] = (...hookArgs: any[]) => {
+        // @ts-ignore
+        const q = hook({
+          // @ts-ignore
+          ...this.options?.hooks?.[key],
+          [keyProperty]: [hookKey],
+          [fnProperty]: (...args) => {
+            // @ts-ignore
+            return actionFunctions[key](...hookArgs, ...args)
+          },
+        })
+
+        return q
+      }
+
+      return acc
+    }, {})
+
+    this._actionHooks = actionHooks
+
+    return actionHooks
   }
 
   generateId() {
