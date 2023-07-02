@@ -9,13 +9,14 @@ import {
   PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
+  useRef,
 } from '@codeleap/common'
 import {
   ModalComposition,
   ModalPresets,
   ModalParts,
 } from './styles'
-import { StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
 import { Backdrop } from '../Backdrop'
@@ -129,7 +130,7 @@ export const Modal = (modalProps:ModalProps) => {
     transform: StyleSheet.flatten,
     styles,
   }) as ModalProps['styles']
-
+  const scrollRef = useRef<ScrollView>(null)
   function getStyles(key: ModalParts) {
     const s = [
       variantStyles[key],

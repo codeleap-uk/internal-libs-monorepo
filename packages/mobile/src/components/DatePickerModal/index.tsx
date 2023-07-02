@@ -148,7 +148,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const cancelStyle = useNestedStylesByKey('cancelButton', variantStyles)
   const confirmStyle = useNestedStylesByKey('confirmButton', variantStyles)
 
-  const formattedDate = value ? formatDate(value) : placeholder
+  const formattedDate = value ? formatDate(value) : ''
   const { locale } = useI18N()
 
   const tempDate = useRef<Date|null>(null)
