@@ -36,7 +36,8 @@
     "react-native-super-grid": "4.6.1",
     "react-native-image-viewing": "0.2.2",
     "react-native-keyboard-aware-scroll-view": "0.9.5",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "react-native-avoid-softinput": "3.1.5"
   },
   "dependencies": {
     "@gorhom/portal": "1.0.14",

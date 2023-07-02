@@ -227,6 +227,7 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
       renderItem={renderListItem}
       loading={showLoading}
       placeholder={listPlaceholder}
+      keyboardAware={false}
       {...listProps}
     />
   </View>

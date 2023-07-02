@@ -347,6 +347,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         renderItem={renderListItem}
         fakeEmpty={loading}
         separators
+        keyboardAware={false}
         {...listProps}
         ListHeaderComponent={_ListHeaderComponent}
         placeholder={{

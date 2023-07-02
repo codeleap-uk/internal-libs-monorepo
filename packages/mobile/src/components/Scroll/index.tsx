@@ -11,15 +11,16 @@ import { ViewProps } from '../View'
 import { RefreshControl, RefreshControlProps } from '../RefreshControl'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollPresets } from './styles'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
+import { GetKeyboardAwarePropsOptions, useKeyboardPaddingStyle } from '../../utils'
 import { KeyboardAwareScrollView, KeyboardAwareScrollViewProps } from 'react-native-keyboard-aware-scroll-view'
-
+import { useSoftInputState } from 'react-native-avoid-softinput'
+import { useMemo } from 'react'
 export type ScrollProps = KeyboardAwareScrollViewProps &
   ViewProps & {
     onRefresh?: () => void
     refreshTimeout?: number
     changeData?: any
-    keyboardAware?: GetKeyboardAwarePropsOptions
+    keyboardAware?: boolean
     refreshing?: boolean
     styles?: StylesOf<ScrollComposition>
     refreshControlProps?: Partial<RefreshControlProps>
@@ -39,7 +40,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
       styles = {},
       refreshControlProps = {},
       contentContainerStyle,
-      keyboardAware,
+      keyboardAware = true,
       animated = true,
       ...props
     } = scrollProps
@@ -79,12 +80,14 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
       rootElement: 'content',
     })
 
-    const Component = KeyboardAwareScrollView
+    const Component = ScrollView
+
+    const keyboardStyle = useKeyboardPaddingStyle([variantStyles.content, contentContainerStyle], keyboardAware)
 
     return (
       <Component
         style={[variantStyles.wrapper, style]}
-        contentContainerStyle={[variantStyles.content, contentContainerStyle]}
+        contentContainerStyle={keyboardStyle}
         showsVerticalScrollIndicator={false}
         // @ts-ignore
         ref={ref}
