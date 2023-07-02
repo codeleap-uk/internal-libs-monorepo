@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.3.2...v3.4.0) (2023-07-02)
+
+
+### Features
+
+* **common:** add Replace type ([bf66d07](https://github.com/codeleap-uk/internal-libs-monorepo/commit/bf66d07bfcc73840bd8b5b4c1d343040145e3f9c))
+
+
+### Bug Fixes
+
+* **mobile:** keyboard aware types ([beee8a8](https://github.com/codeleap-uk/internal-libs-monorepo/commit/beee8a8c9fef25356cb0f4841e3422c69d9101ec))
+
 ### [3.3.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.3.1...v3.3.2) (2023-07-02)
 
 ### [3.3.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.3.0...v3.3.1) (2023-07-02)
