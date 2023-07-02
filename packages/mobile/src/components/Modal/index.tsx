@@ -198,8 +198,7 @@ export const Modal = (modalProps:ModalProps) => {
         showsVerticalScrollIndicator={false}
         keyboardAware
         animated
-        // @ts-ignore
-        ref={scrollRef}
+
         { ...scrollProps}
       >
         {dismissOnBackdrop &&
