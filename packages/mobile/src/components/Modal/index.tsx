@@ -22,7 +22,6 @@ import { Backdrop } from '../Backdrop'
 import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
@@ -47,7 +46,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   header?: React.ReactElement
   closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
-  keyboardAware?: GetKeyboardAwarePropsOptions
+  keyboardAware?: boolean
   scrollProps?: PropsOf<typeof Scroll, 'ref'>
 }
 
@@ -197,15 +196,10 @@ export const Modal = (modalProps:ModalProps) => {
         style={scrollStyle}
         contentContainerStyle={getStyles('scrollContent')}
         showsVerticalScrollIndicator={false}
-        keyboardAware= {{
-          adapt: 'maxHeight',
-          baseStyleProp: 'style',
-          animated: true,
-          enabled: visible,
-          // enableOnAndroid: true,
-        }}
+        keyboardAware
         animated
-        // ref={scrollRef}
+        // @ts-ignore
+        ref={scrollRef}
         { ...scrollProps}
       >
         {dismissOnBackdrop &&

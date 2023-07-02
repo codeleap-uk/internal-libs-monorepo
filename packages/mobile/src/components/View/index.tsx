@@ -23,7 +23,7 @@ export type ViewProps ={
   ref?: AnyRef<ViewRefType>
   component?: any
   animated?: boolean
-  keyboardAware?: GetKeyboardAwarePropsOptions
+  keyboardAware?: boolean
   transition?: Partial<TransitionConfig>
 }
   & NativeViewProps
