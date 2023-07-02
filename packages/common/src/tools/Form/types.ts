@@ -171,6 +171,7 @@ export type DateField = {
   validate?: Validator<Date>
   required?: boolean
   minimumDate?: Date
+  placeholder?: string
   maximumDate?: Date
 } & WithTransformer<Date>
 
