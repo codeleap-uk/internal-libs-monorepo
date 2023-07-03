@@ -183,12 +183,6 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
 
   const inputBaseAction = isPressable ? 'onPress' : 'onClick'
 
-  const _wrapperOnInputFocus = {
-    [inputBaseAction]: () => {
-      innerInputRef.current?.focus?.()
-    },
-  }
-
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -214,10 +208,6 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
       }}
       rightIcon={rightIcon}
       focused={isFocused}
-      wrapperProps={{
-        ...(inputBaseProps.wrapperProps || {}),
-        ..._wrapperOnInputFocus,
-      }}
     >
 
       <InputElement
