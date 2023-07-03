@@ -4,13 +4,13 @@ import React from 'react'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
 
-export type UseInfiniteScrollProps = 
+export type UseInfiniteScrollProps<TS extends Element, T extends Element> = 
   ListProps & 
   GridProps & 
-  Pick<VirtualizerOptions<any, any>, 'overscan'>
+  Pick<VirtualizerOptions<TS, T>, 'overscan'>
 
-export type UseInfiniteScrollReturn = {
-  dataVirtualizer: Virtualizer<any, any>
+export type UseInfiniteScrollReturn<TS extends Element, T extends Element> = {
+  dataVirtualizer: Virtualizer<TS, T>
   count: number
   items: VirtualItem[]
   isRefresh: boolean
@@ -19,11 +19,11 @@ export type UseInfiniteScrollReturn = {
     isEmpty: boolean
     refreshing: boolean
     parentRef: React.MutableRefObject<undefined>
-    dataVirtualizer: Virtualizer<any, any>
+    dataVirtualizer: Virtualizer<TS, T>
   }
 }
 
-export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScrollReturn => {
+export const useInfiniteScroll = (props: UseInfiniteScrollProps<any, any>): UseInfiniteScrollReturn<any, any> => {
   const {
     onRefresh,
     data,

@@ -65,14 +65,14 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
   const { logger } = useCodeleapContext()
 
-  const unPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
+  const notPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (disabled) return
 
     if (!propagate) stopPropagation(event)
 
-    if (unPressable) {
+    if (notPressable) {
       logger.warn(
         'No onPress passed to touchable',
         touchableProps,

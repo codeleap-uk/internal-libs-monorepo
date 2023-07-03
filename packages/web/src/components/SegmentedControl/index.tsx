@@ -97,7 +97,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
 
   const maxDivWidthRef = useRef(null)
 
-  const biggerWidth = React.useMemo(() => {
+  const largestWidth = React.useMemo(() => {
     return {
       width: maxDivWidthRef.current,
     }
@@ -109,7 +109,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     updater: () => {
       'worklet'
       return {
-        translateX: currentOptionIdx * biggerWidth.width,
+        translateX: currentOptionIdx * largestWidth.width,
         transition: {
           ease: 'easeInOut',
           duration: transitionDuration,
@@ -117,13 +117,13 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         ...animationProps,
       } as AnimationProps
     },
-    dependencies: [currentOptionIdx, biggerWidth.width],
+    dependencies: [currentOptionIdx, largestWidth.width],
   })
 
   const selectedBubbleStyles = [
     variantStyles.selectedBubble,
     disabled && variantStyles['selectedBubble:disabled'],
-    biggerWidth,
+    largestWidth,
   ]
 
   return (
@@ -151,7 +151,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             icon={o.icon}
             selected={value === o.value}
             variantStyles={variantStyles}
-            style={biggerWidth}
+            style={largestWidth}
             disabled={disabled}
             textProps={textProps}
             iconProps={iconProps}
