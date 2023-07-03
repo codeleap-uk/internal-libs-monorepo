@@ -90,7 +90,7 @@ export const ViewCP = (
       style,
       css,
     ]
-  }, [scroll, matches, css])
+  }, [variantStyles, scroll, matches, css])
 
   const onHoverProps = TypeGuards.isFunction(onHover) && {
     onMouseEnter: () => handleHover(true),

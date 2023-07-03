@@ -8,6 +8,7 @@ import { Touchable } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
 import { motion, MotionProps, AnimationProps, ForwardRefComponent } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'
+import { IconProps } from '../Icon'
 
 export type SegmentedControlOptionProps<T = string> = {
   label: string
@@ -46,6 +47,8 @@ export type SegmentedControlProps<T = string> = ComponentVariants<typeof Segment
   animationProps?: AnimationProps
   transitionDuration?: number
   RenderAnimatedView?: ForwardRefComponent<HTMLDivElement, any>
+  textProps?: Omit<PropsOf<typeof Text>, 'key'>
+  iconProps?: Partial<IconProps>
 }
 
 const defaultProps: Partial<SegmentedControlProps> = {
@@ -75,6 +78,8 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     transitionDuration,
     disabled,
     RenderAnimatedView: Bubble,
+    textProps = {},
+    iconProps = {},
     debugName,
     ...rest
   } = allProps
@@ -92,7 +97,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
 
   const maxDivWidthRef = useRef(null)
 
-  const biggerWidth = React.useMemo(() => {
+  const largestWidth = React.useMemo(() => {
     return {
       width: maxDivWidthRef.current,
     }
@@ -104,7 +109,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     updater: () => {
       'worklet'
       return {
-        translateX: currentOptionIdx * biggerWidth.width,
+        translateX: currentOptionIdx * largestWidth.width,
         transition: {
           ease: 'easeInOut',
           duration: transitionDuration,
@@ -112,13 +117,13 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
         ...animationProps,
       } as AnimationProps
     },
-    dependencies: [currentOptionIdx, biggerWidth.width],
+    dependencies: [currentOptionIdx, largestWidth.width],
   })
 
   const selectedBubbleStyles = [
     variantStyles.selectedBubble,
     disabled && variantStyles['selectedBubble:disabled'],
-    biggerWidth,
+    largestWidth,
   ]
 
   return (
@@ -146,8 +151,10 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             icon={o.icon}
             selected={value === o.value}
             variantStyles={variantStyles}
-            style={biggerWidth}
+            style={largestWidth}
             disabled={disabled}
+            textProps={textProps}
+            iconProps={iconProps}
             {...props?.touchableProps}
           />
         ))}

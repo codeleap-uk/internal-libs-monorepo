@@ -1,47 +1,120 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import { NativeHTMLElement } from '../../types/utility'
-import { TextPresets } from './styles'
-import { View, ViewProps } from '../View'
+import { ComponentVariants, TypeGuards, useDefaultComponentStyle, useI18N } from '@codeleap/common'
+import React, { ComponentPropsWithoutRef, ElementType } from 'react'
+import { StylesOf } from '../../types/utility'
+import { TextComposition, TextPresets } from './styles'
 
 export * from './styles'
 
-export type TextProps<T extends NativeHTMLElement> =
-  Omit<ViewProps<T>, 'variants'|'responsiveVariants'> &
-  ComponentVariants<typeof TextPresets> &
-  {
-    text?: string
+export type TextProps<T extends ElementType> =
+  ComponentPropsWithoutRef<T> &
+  ComponentVariants<typeof TextPresets> & {
+    component?: T
+    text: string
+    styles?: StylesOf<TextComposition>
+    msg?: string
+    debugName?: string
+    debounce?: number
+    pressDisabled?: boolean
+    onPress?: (event: React.MouseEventHandler<T>) => void
   }
 
-export const Text = <T extends NativeHTMLElement>(textProps: TextProps<T>) => {
+const defaultProps: Partial<TextProps<'p'>> = {
+  debugName: 'Text component',
+  component: 'p',
+  debounce: null,
+  pressDisabled: false,
+}
+
+export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
+  const allProps = {
+    ...Text.defaultProps,
+    ...textProps,
+  }
+
   const {
     variants = [],
     responsiveVariants = {},
+    styles = {},
+    style = {},
+    css,
     text = null,
     children,
-    // style,
+    component: Component,
+    debugName,
+    msg = null,
+    onPress,
+    debounce,
+    pressDisabled,
+    onClick,
     ...props
-  } = textProps
+  } = allProps
+
+  const pressedRef = React.useRef(false)
+
+  const { t } = useI18N()
 
   const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
-    rootElement: 'text',
     responsiveVariants,
     variants,
-
+    styles,
+    rootElement: 'text',
   })
 
+  const _text = TypeGuards.isString(msg) ? msg : text
+
+  let content = t(String(_text))
+
+  if (TypeGuards.isNil(content) || !TypeGuards.isString(content) || content === 'null') {
+    content = text
+  }
+
+  const isPressable = (TypeGuards.isFunction(onPress) || TypeGuards.isFunction(onClick)) && !pressDisabled
+
+  const disabled = isPressable === false
+
+  const _onPress = (e: React.MouseEventHandler<T>) => {
+    if (disabled) return
+
+    const handlePress = () => {
+      onClick?.(e)
+      onPress?.(e)
+    }
+
+    if (TypeGuards.isNumber(debounce)) {
+      if (pressedRef.current) {
+        return
+      }
+
+      pressedRef.current = true
+      handlePress()
+      setTimeout(() => {
+        pressedRef.current = false
+      }, debounce)
+    } else {
+      handlePress()
+    }
+  }
+
+  const _styles = [
+    variantStyles.text,
+    disabled && variantStyles['text:disabled'],
+    css,
+    style,
+  ]
+
+  const pressProps = isPressable ? {
+    onClick: disabled ? null : _onPress,
+  } : {}
+
   return (
-    // @ts-ignore
-    <View
-      css={variantStyles.text}
-      component={'p'}
+    <Component
+      css={_styles}
       {...props}
+      {...pressProps}
     >
-      {text || children}
-    </View>
+      {content || children}
+    </Component>
   )
 }
+
+Text.defaultProps = defaultProps

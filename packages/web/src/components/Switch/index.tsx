@@ -14,14 +14,13 @@ export type SwitchProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
 > & {
-  variants?: ComponentVariants<typeof SwitchPresets>['variants']
   styles?: StylesOf<SwitchComposition>
   value: boolean
   onValueChange: (value: boolean) => void
   onChange?: (value: boolean) => void
   style?: PropsOf<typeof View>['style']
   switchOnLeft?: boolean
-}
+} & ComponentVariants<typeof SwitchPresets>
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
@@ -30,7 +29,9 @@ export const Switch = (props: SwitchProps) => {
     inputBaseProps,
     others,
   } = selectInputBaseProps(props)
+
   const {
+    responsiveVariants = {},
     variants = [],
     style = {},
     styles = {},
@@ -43,6 +44,7 @@ export const Switch = (props: SwitchProps) => {
   } = others
 
   const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
+    responsiveVariants,
     variants,
     styles,
     rootElement: 'wrapper',

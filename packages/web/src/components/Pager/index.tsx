@@ -20,6 +20,7 @@ import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { View, ViewProps } from '../View'
 import { Touchable } from '../Touchable'
+import { ComponentCommonProps } from '../../types'
 
 export type PagerRef = {
   goTo: (page: number) => void
@@ -37,7 +38,8 @@ export type PagerProps = Settings &
     dotsProps?: DotsProps
     pageWrapperProps?: ViewProps<'div'>
     dotsDisabled?:boolean
-  }
+    disableSwipe?: boolean
+  } & ComponentCommonProps
 
 type DotsProps = Pick<PagerProps, 'page' | 'dotsDisabled'> & {
   childArray: ReactNode[]
@@ -84,6 +86,7 @@ const PagerComponent = (
     dots = false,
     dotsDisabled = false,
     infinite = false,
+    disableSwipe = false,
     onChange,
     footer,
     dotsProps,
@@ -126,6 +129,7 @@ const PagerComponent = (
         arrows={false}
         ref={sliderRef}
         dots={false}
+        swipe={!disableSwipe}
         infinite={infinite}
         accessibility={false}
         afterChange={onChange}

@@ -3,6 +3,7 @@ import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from '@emotion/react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
+import { ComponentCommonProps } from '../../types'
 import { ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
 import { SelectPresets, SelectComposition, OptionState } from './styles'
@@ -40,7 +41,7 @@ export type ComponentPartProps = {
   variantStyles: Record<SelectComposition, React.CSSProperties>
 }
 
-export type TCustomOption = OptionProps & ComponentPartProps & {
+export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonProps & {
   optionsStyles: (state: OptionState) => OptionState['baseStyles']
   selectedIcon?: string
   itemProps?: ButtonProps
@@ -57,12 +58,12 @@ export type PlaceholderProps = NoticeProps & ComponentPartProps & {
     icon: CSSInterpolation
   }
   icon: SelectPlaceholderElement
-}
+} & ComponentCommonProps
 
 export type LoadingIndicatorProps = NoticeProps & {
   defaultStyles: { wrapper: CSSInterpolation }
   size?: number
-}
+} & ComponentCommonProps
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
   {

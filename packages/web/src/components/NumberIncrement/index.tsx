@@ -34,7 +34,6 @@ export type NumberIncrementProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
 > & {
-  variants?: ComponentVariants<typeof NumberIncrementPresets>['variants']
   styles?: StylesOf<NumberIncrementComposition>
   value: number
   onValueChange: (value: number) => void
@@ -54,7 +53,7 @@ export type NumberIncrementProps = Pick<
   _error?: string
   formatter?: FormatInputValueFunction
   placeholder?: string
-}
+} & ComponentVariants<typeof NumberIncrementPresets>
 
 export const NumberIncrement = (props: NumberIncrementProps) => {
   const {
@@ -63,6 +62,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   } = selectInputBaseProps(props)
 
   const {
+    responsiveVariants = {},
     variants = [],
     style = {},
     styles = {},
@@ -113,6 +113,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   const variantStyles = useDefaultComponentStyle<'u:NumberIncrement', typeof NumberIncrementPresets>(
     'u:NumberIncrement',
     {
+      responsiveVariants,
       variants,
       styles,
       rootElement: 'wrapper',

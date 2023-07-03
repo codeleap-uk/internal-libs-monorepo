@@ -1,7 +1,15 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common";
-import { ModalComposition } from "../Modal";
+import { createDefaultVariantFactory, includePresets } from "@codeleap/common"
+import { ActionIconComposition } from '../ActionIcon'
 
-export type DrawerComposition = ModalComposition
+export type DrawerComposition =
+  | 'wrapper'
+  | 'overlay'
+  | 'header'
+  | 'footer'
+  | `closeButton${Capitalize<ActionIconComposition>}`
+  | 'body'
+  | 'box'
+  | 'title'
 
 const createDrawerStyle = createDefaultVariantFactory<DrawerComposition>()
 

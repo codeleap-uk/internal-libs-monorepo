@@ -39,7 +39,6 @@ export type TextInputProps =
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
     debugName?: string
     visibilityToggle?: boolean
-    variants?: ComponentVariants<typeof TextInputPresets>['variants']
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
@@ -49,7 +48,7 @@ export type TextInputProps =
     _error?: boolean
     rows?: number
     masking?: TextInputMaskingProps
-  }
+  } & ComponentVariants<typeof TextInputPresets>
 
 type InputRef = HTMLInputElement & { isTextInput?: boolean }
 
@@ -62,8 +61,9 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
   } = selectInputBaseProps(props)
 
   const {
-    variants,
-    styles,
+    variants = [],
+    responsiveVariants = {},
+    styles = {},
     value,
     validate,
     debugName,
@@ -76,7 +76,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     _error,
     masking = null,
     ...textInputProps
-  } = others
+  } = others as TextInputProps
 
   const [_isFocused, setIsFocused] = useState(false)
 
@@ -92,6 +92,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
   const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
 
   const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
+    responsiveVariants,
     variants,
     styles,
   })
@@ -182,12 +183,6 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
 
   const inputBaseAction = isPressable ? 'onPress' : 'onClick'
 
-  const _wrapperOnInputFocus = {
-    [inputBaseAction]: () => {
-      innerInputRef.current?.focus?.()
-    },
-  }
-
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -213,10 +208,6 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
       }}
       rightIcon={rightIcon}
       focused={isFocused}
-      wrapperProps={{
-        ...(inputBaseProps.wrapperProps || {}),
-        ..._wrapperOnInputFocus,
-      }}
     >
 
       <InputElement

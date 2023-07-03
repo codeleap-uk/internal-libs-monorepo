@@ -1,67 +1,129 @@
-/** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react'
-import { AnyFunction, useCodeleapContext } from '@codeleap/common'
-import React, { forwardRef } from 'react'
+import { AnyFunction, ComponentVariants, onMount, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
+import React, { ComponentPropsWithRef, ElementType, forwardRef } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
-import { TouchableComposition } from './styles'
-import { StylesOf, NativeHTMLElement, HTMLProps } from '../../types'
+import { TouchableComposition, TouchablePresets } from './styles'
+import { CSSInterpolation } from '@emotion/css'
+import { StylesOf, NativeHTMLElement } from '../../types'
 
 export * from './styles'
 
-export type TouchableProps<T extends NativeHTMLElement = 'button'> = Omit<HTMLProps<T>, 'style'> & {
+export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWithRef<T> & {
+  css?: CSSInterpolation | CSSInterpolation[]
   component?: T
   disabled?: boolean
   propagate?: boolean
-  style?: CSSObject
+  style?: React.CSSObject
   onPress?: AnyFunction
+  debugName: string
   debugComponent?: string
-  debugName?: string
   styles?: StylesOf<TouchableComposition>
-}
+  debounce?: number
+  leadingDebounce?: boolean
+  setPressed?: (pressed: boolean) => void
+} & ComponentVariants<typeof TouchablePresets>
 
 export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>,
   ref,
 ) => {
   const {
-
     propagate = true,
+    debounce = null,
+    leadingDebounce,
+    setPressed,
     component: Component = View,
     disabled,
     onPress,
     onClick,
-    debugComponent,
     debugName,
+    debugComponent,
+    style = {},
+    styles = {},
+    responsiveVariants = {},
+    variants = [],
+    css = [],
     ...props
-  } = touchableProps
+  } = touchableProps as TouchableProps
+
+  const pressed = React.useRef(!!leadingDebounce)
+
+  onMount(() => {
+    if (!!leadingDebounce && !!debounce) {
+      setTimeout(() => {
+        pressed.current = false
+      }, debounce)
+    }
+  })
+
+  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchablePresets>('u:Touchable', {
+    responsiveVariants,
+    variants,
+    styles,
+    rootElement: 'wrapper'
+  })
 
   const { logger } = useCodeleapContext()
 
-  const handleClick = (event: React.MouseEvent<T>) => {
+  const notPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (disabled) return
 
     if (!propagate) stopPropagation(event)
 
-    if (!onPress && !onClick) {
-      logger.warn('No onPress passed to touchable', touchableProps)
+    if (notPressable) {
+      logger.warn(
+        'No onPress passed to touchable',
+        touchableProps,
+        'User interaction'
+      )
       return
     }
 
-    logger.log(
-      `<${debugComponent || 'Touchable'}/>  pressed`,
-      { debugName, debugComponent },
-      'User interaction',
-    )
-    // @ts-ignore
-    onClick?.(event)
-    onPress && onPress()
+    const _onPress = () => {
+      logger.log(
+        `<${debugComponent || 'Touchable'}/> pressed`,
+        { debugName, debugComponent },
+        'User interaction'
+      )
 
+      if (TypeGuards.isFunction(onClick)) onClick?.(event)
+      onPress?.()
+    }
+
+    if (TypeGuards.isNumber(debounce)) {
+      if (pressed.current) {
+        return
+      }
+      setPressed?.(true)
+      pressed.current = true
+      _onPress()
+      setTimeout(() => {
+        setPressed?.(false)
+        pressed.current = false
+      }, debounce)
+    } else {
+      _onPress()
+    }
   }
 
+  const _styles = React.useMemo(() => ([
+    variantStyles.wrapper,
+    disabled && variantStyles['wrapper:disabled'],
+    css,
+    style,
+  ]), [variantStyles, disabled])
+
   return (
-    // @ts-ignore
-    <View component={Component || 'button'} {...props} debugName={debugName} onClick={handleClick} ref={ref}/>
+    <View
+      component={Component || 'button'}
+      {...props}
+      debugName={debugName}
+      onClick={handleClick}
+      ref={ref}
+      css={_styles}
+    />
   )
 }
 

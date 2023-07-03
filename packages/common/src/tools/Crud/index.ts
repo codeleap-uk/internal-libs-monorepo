@@ -723,6 +723,12 @@ export class QueryManager<
     const update = this.useUpdate(options?.update)
     const del = this.useDelete(options?.deletion)
 
+    const queries = {
+      create,
+      update,
+      del,
+    }
+
     return {
       items: list.items,
       list,
@@ -738,6 +744,7 @@ export class QueryManager<
       isRefreshing: list.isRefreshing,
       actions: this.actions,
       updatedAt: list.query.dataUpdatedAt,
+      queries,
     }
   }
 

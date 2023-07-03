@@ -9,15 +9,18 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 import { View } from '../View'
+import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
-export type IconProps = {
+export type IconProps = ComponentCommonProps & {
   name: IconPlaceholder
-  style?: any
+  style?: React.CSSProperties
+  size?: string | number
+  color?: string
   renderEmptySpace?: boolean
   forceStyle?: CSSObject | CSSInterpolation | React.CSSProperties
-  css?: any
+  css?: CSSInterpolation | CSSInterpolation[]
 } & ComponentVariants<typeof IconStyles>
 
 const IconCP = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconProps) => {
@@ -48,7 +51,7 @@ const IconCP = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconP
     )
     return null
   }
-  return <Component css={variantStyles.icon} {...otherProps}/>
+  return <Component style={variantStyles.icon} {...otherProps}/>
 }
 
 export const Icon = IconCP as ((props: IconProps) => jsx.JSX.Element)
