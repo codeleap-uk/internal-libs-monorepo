@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.4.0...v3.5.0) (2023-07-03)
+
+
+### Features
+
+* **web:** added logic with openOnHover prop ([37e61d3](https://github.com/codeleap-uk/internal-libs-monorepo/commit/37e61d3ae329d2114983a1fcabab7d70643c48bd))
+* **web:** logic for the tooltip to open when user clicks ([a46a972](https://github.com/codeleap-uk/internal-libs-monorepo/commit/a46a9720903a5b45d1d874520764e11d66565c75))
+* **web:** searchInput created ([bc236f2](https://github.com/codeleap-uk/internal-libs-monorepo/commit/bc236f244c2095c8fc2c1af7851bd7669c968f74))
+* **web:** searchInput now works with debounce ([e049f66](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e049f66b3ffea35943a34ec0b2e11cecb6fa86d0))
+* **web:** side prop added ([2a9c955](https://github.com/codeleap-uk/internal-libs-monorepo/commit/2a9c95548319e4f673c8377cd51b77af731ee5a8))
+* **web:** tooltip - added support to other props ([912259f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/912259f797e94c1865dd5ce35d89e533683be994))
+* **web:** tooltip created ([aa298d5](https://github.com/codeleap-uk/internal-libs-monorepo/commit/aa298d57b6767e2cd8cdbae8180a8a426cea2c13))
+
+
+### Bug Fixes
+
+* **common:** variants re render ([8d13fcf](https://github.com/codeleap-uk/internal-libs-monorepo/commit/8d13fcf8b0b61a1034441ec61b00953e3ffe4401))
+* **web:** fixed types ([734807d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/734807dcc1bcb2e70873822f805fab9d938fb124))
+* **web:** modal types ([6b8bfeb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/6b8bfeb02dd3b2a22245a5749660a46334c54b2f))
+
 ## [3.4.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v2.4.6...v3.4.0) (2023-07-02)
 
 
