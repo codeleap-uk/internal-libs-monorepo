@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx, CSSObject } from '@emotion/react'
 import {
   AnyFunction,
   ComponentVariants,
@@ -142,8 +144,8 @@ const defaultProps: Partial<ModalProps> = {
   withScrollContainer: false,
 }
 
-export const ModalContent: React.FC<ModalProps & { id: string }> = (
-  modalProps,
+export const ModalContent = (
+  modalProps: ModalProps & { id: string },
 ) => {
   const {
     children,
@@ -214,7 +216,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     if (modal) modal.focus()
   }, [id])
 
-  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => {}
+  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => { }
 
   const ModalBody = renderModalBody || (scroll ? Scroll : View)
 
@@ -293,7 +295,7 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
   )
 }
 
-export const Modal: React.FC<ModalProps> = (props) => {
+export const Modal = (props) => {
   const allProps = {
     ...Modal.defaultProps,
     ...props,
@@ -359,3 +361,4 @@ export const Modal: React.FC<ModalProps> = (props) => {
 }
 
 Modal.defaultProps = defaultProps
+
