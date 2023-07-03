@@ -10,11 +10,11 @@ import {
 } from '@codeleap/common'
 import { ActivityIndicatorPresets } from './styles'
 import { CSSInterpolation } from '@emotion/css'
-import { ComponentWithDefaultProps } from '../../types'
+import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
-export type ActivityIndicatorProps = {
+export type ActivityIndicatorProps = ComponentCommonProps & {
   style?: React.CSSProperties
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSInterpolation | CSSInterpolation[]

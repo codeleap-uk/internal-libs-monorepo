@@ -56,7 +56,7 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     ListSeparatorComponent,
     virtualizerOptions = {},
     numColumns,
-    separators
+    separators,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {

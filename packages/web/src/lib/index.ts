@@ -1,3 +1,5 @@
 export * from './utils'
 export * from './hooks'
 export * from './useSearchParams'
+export * from './usePopState'
+export * from './useBreakpointMatch'

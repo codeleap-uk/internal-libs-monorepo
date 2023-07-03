@@ -1,5 +1,5 @@
 import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import { StylesOf } from '../../types'
+import { ComponentCommonProps, StylesOf } from '../../types'
 import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
 import { View } from '../View'
@@ -7,7 +7,7 @@ import { ActionIconComposition, ActionIconParts, ActionIconPresets } from './sty
 
 export * from './styles'
 
-export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & {
+export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & ComponentCommonProps & {
   iconProps?: Partial<IconProps>
   icon?: IconProps['name']
   name?: IconProps['name']
@@ -34,6 +34,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     styles = {},
     children,
     disabled,
+    debugName,
     ...touchableProps 
   } = allProps
   
@@ -64,6 +65,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     <WrapperComponent
       css={getStyles('touchableWrapper')}
       disabled={disabled}
+      debugName={debugName}
       {
         ...(isPressable && {
           onPress: handlePress,
@@ -72,6 +74,7 @@ export const ActionIcon = (props: ActionIconProps) => {
       {...touchableProps}
     >
       <Icon
+        debugName={debugName}
         name={icon ?? name}
         style={getStyles('icon')}
         {...iconProps}

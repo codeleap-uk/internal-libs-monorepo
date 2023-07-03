@@ -12,6 +12,7 @@ import {
   TypeGuards,
   useDefaultComponentStyle,
 } from '@codeleap/common'
+import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
@@ -35,7 +36,7 @@ export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPre
   wrapperProps?: Partial<typeof View>
   imageWrapperProps?: Partial<typeof View>
   indicatorProps?: Partial<ActivityIndicatorProps>
-}
+} & ComponentCommonProps
 
 const defaultProps: Partial<EmptyPlaceholderProps> = {}
 
@@ -59,6 +60,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     wrapperProps = {},
     imageWrapperProps = {},
     indicatorProps = {},
+    debugName,
   } = allProps
   
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
@@ -76,7 +78,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
   if (loading) {
     return (
       <View css={[variantStyles.wrapper, variantStyles['wrapper:loading']]}>
-        <ActivityIndicator {...indicatorProps} styles={activityIndicatorStyles}/>
+        <ActivityIndicator debugName={debugName} {...indicatorProps} styles={activityIndicatorStyles}/>
       </View>
     )
   }
@@ -102,7 +104,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     if (TypeGuards.isNil(IconEmpty)) return null
 
     if (TypeGuards.isString(IconEmpty)) {
-      return <Icon name={IconEmpty as IconPlaceholder} forceStyle={variantStyles.icon} />
+      return <Icon debugName={debugName} name={IconEmpty as IconPlaceholder} forceStyle={variantStyles.icon} />
     } else if (React.isValidElement(IconEmpty)) {
       // @ts-ignore
       return <IconEmpty {...props} />
@@ -119,12 +121,12 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
 
       {React.isValidElement(emptyText) 
         ? emptyText 
-        : <Text text={emptyText} css={variantStyles.title}/>
+        : <Text debugName={debugName} text={emptyText} css={variantStyles.title}/>
       }
       
       {React.isValidElement(description) 
         ? description 
-        : TypeGuards.isString(description) && <Text text={description} css={variantStyles.description}/>
+        : TypeGuards.isString(description) && <Text debugName={debugName} text={description} css={variantStyles.description}/>
       }
     </View>
   )

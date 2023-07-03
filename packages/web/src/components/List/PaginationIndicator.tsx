@@ -12,6 +12,7 @@ import {
 import { ActivityIndicator, ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { Text, TextProps } from '../Text'
 import { View } from '../View'
+import { ComponentCommonProps } from '../../types'
 
 export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}` | 'wrapper'
 
@@ -50,7 +51,7 @@ export type PaginationIndicatorProps = {
   style?: React.CSSProperties
   indicatorProps?: Partial<ActivityIndicatorProps>
   textProps?: Partial<TextProps<'p'>>
-} & ComponentVariants<typeof PaginationIndicatorStyles>
+} & ComponentVariants<typeof PaginationIndicatorStyles> & ComponentCommonProps
 
 const defaultProps: Partial<PaginationIndicatorProps> = {}
 
@@ -70,6 +71,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
     responsiveVariants = {},
     variants = [],
     indicatorProps = {},
+    debugName,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<
@@ -84,12 +86,12 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const loaderStyles = getNestedStylesByKey('loader', variantStyles)
 
   if (isFetching) {
-    return activityIndicator || <View css={[variantStyles.wrapper, style]}><ActivityIndicator {...indicatorProps} styles={loaderStyles}/></View>
+    return activityIndicator || <View css={[variantStyles.wrapper, style]}><ActivityIndicator debugName={debugName} {...indicatorProps} styles={loaderStyles}/></View>
   }
   
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
-      return <Text css={[variantStyles.text, style]} text={noMoreItemsText.toString()}/>
+      return <Text debugName={debugName} css={[variantStyles.text, style]} text={noMoreItemsText.toString()}/>
     }
     return noMoreItemsText
   }

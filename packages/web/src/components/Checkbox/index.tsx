@@ -12,13 +12,14 @@ import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps 
 import { useAnimatedVariantStyles } from '../..'
 import { Icon } from '../Icon'
 import { motion } from 'framer-motion'
+import { ComponentCommonProps } from '../../types/utility'
 
 export * from './styles'
 
 export type CheckboxProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
-> & {
+> & ComponentCommonProps & {
   styles?: StylesOf<CheckboxComposition>
   value: boolean
   onValueChange: (value: boolean) => void
@@ -140,6 +141,7 @@ export const Checkbox = (props: CheckboxProps) => {
         transition={variantStyles['checkmarkWrapper:transition']}
       >
         <Icon
+          debugName={debugName}
           name={'checkbox-checkmark' as any}
           css={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
         />

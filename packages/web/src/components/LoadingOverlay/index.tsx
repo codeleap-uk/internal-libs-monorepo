@@ -4,6 +4,7 @@ import { StylesOf } from '../..'
 import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
 import { View, ViewProps } from '../View'
 import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
+import { ComponentCommonProps } from '../../types/utility'
 
 export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
   visible?: boolean
@@ -11,7 +12,7 @@ export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
   style?: React.CSSProperties
   indicatorProps?: ActivityIndicatorProps
   children?: React.ReactNode
-} & ComponentVariants<typeof LoadingOverlayPresets>
+} & ComponentVariants<typeof LoadingOverlayPresets> & ComponentCommonProps
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
   const { 
@@ -21,7 +22,8 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
     variants = [],
     responsiveVariants = {},
     style = {},
-    indicatorProps, 
+    indicatorProps,
+    debugName,
     ...rest 
   } = props
 
@@ -38,7 +40,7 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
 
   return (
     <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible'], style]} {...rest}>
-      <ActivityIndicator {...indicatorProps} styles={indicatorStyles} />
+      <ActivityIndicator debugName={debugName} {...indicatorProps} styles={indicatorStyles} />
       {children}
     </View>
   )

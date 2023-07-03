@@ -3,11 +3,13 @@ import { ComponentVariants, PropsOf, StylesOf, TypeGuards, useDefaultComponentSt
 import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { BadgeComposition, BadgePresets } from './styles'
+import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
 export type BadgeProps = ComponentVariants<typeof BadgePresets>
   & ViewProps<'div'>
+  & ComponentCommonProps
   & {
     styles?: StylesOf<BadgeComposition>
     maxCount?: number

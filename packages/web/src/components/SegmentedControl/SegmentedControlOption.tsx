@@ -60,6 +60,7 @@ const SegmentedControlOptionCP = (props: SegmentedControlOptionProps, ref: Optio
       {
         !!icon && (
           <Icon
+            debugName={touchableProps?.debugName}
             name={icon}
             style={iconStyles}
             {...iconProps}
@@ -68,6 +69,7 @@ const SegmentedControlOptionCP = (props: SegmentedControlOptionProps, ref: Optio
       }
       <Text
         text={label}
+        debugName={touchableProps?.debugName}
         css={[
           variantStyles.text,
           selected && variantStyles['text:selected'],

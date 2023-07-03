@@ -9,10 +9,11 @@ import {
   useCodeleapContext,
 } from '@codeleap/common'
 import { View } from '../View'
+import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
-export type IconProps = {
+export type IconProps = ComponentCommonProps & {
   name: IconPlaceholder
   style?: React.CSSProperties
   size?: string | number

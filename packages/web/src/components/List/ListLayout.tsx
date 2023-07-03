@@ -33,6 +33,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     refreshSize,
     children,
     ref,
+    debugName,
   } = props
 
   const { Theme } = useCodeleapContext()
@@ -54,7 +55,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     <View css={[getKeyStyle('wrapper'), style]}>
       {!!ListHeaderComponent && <ListHeaderComponent />}
 
-      {isEmpty ? <ListEmptyComponent {...placeholder} /> : (
+      {isEmpty ? <ListEmptyComponent debugName={debugName} {...placeholder} /> : (
         <View
           ref={parentRef}
           css={[getKeyStyle('innerWrapper')]}
@@ -77,7 +78,8 @@ export const ListLayout = (props: ListLayoutProps) => {
                 }}
                 {...refreshControlProps}
               >
-                <ActivityIndicator 
+                <ActivityIndicator
+                  debugName={debugName}
                   size={refreshSize} 
                   style={variantStyles.refreshControlIndicator} 
                   {...refreshControlIndicatorProps} 

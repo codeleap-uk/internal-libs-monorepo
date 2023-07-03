@@ -18,7 +18,7 @@ export * from './styles'
 export * from './types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
-  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused } = props
+  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused, debugName } = props
 
   const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.styles ?? {}) })
 
@@ -30,6 +30,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         text={label}
         // @ts-ignore
         rightIcon={isSelected && selectedIcon}
+        debugName={debugName}
         {...itemProps}
         styles={styles}
       />
@@ -69,13 +70,13 @@ const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
-  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder } = props
+  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder, debugName } = props
 
   const _Text = () => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
 
     if (TypeGuards.isString(TextPlaceholder)) {
-      return <Text text={TextPlaceholder} css={[defaultStyles.text]} />
+      return <Text debugName={debugName} text={TextPlaceholder} css={[defaultStyles.text]} />
     } else if (React.isValidElement(TextPlaceholder)) {
       return TextPlaceholder as JSX.Element
     } else if (TypeGuards.isFunction(TextPlaceholder)) {
@@ -87,7 +88,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isNil(_IconPlaceholder)) return null
 
     if (TypeGuards.isString(_IconPlaceholder)) {
-      return <Icon name={_IconPlaceholder as IconPlaceholder} forceStyle={defaultStyles.icon as React.CSSProperties} />
+      return <Icon debugName={debugName} name={_IconPlaceholder as IconPlaceholder} forceStyle={defaultStyles.icon as React.CSSProperties} />
     } else if (React.isValidElement(_IconPlaceholder)) {
       // @ts-ignore
       return <View style={defaultStyles.icon}>
@@ -107,11 +108,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
 }
 
 const LoadingIndicator = (props: LoadingIndicatorProps) => {
-  const { defaultStyles } = props
+  const { defaultStyles, debugName } = props
 
   return (
     <View css={[defaultStyles.wrapper]}>
-      <ActivityIndicator />
+      <ActivityIndicator debugName={debugName} />
     </View>
   )
 }
@@ -317,6 +318,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     error: !!hasError,
     disabled: isDisabled,
     variantStyles,
+    debugName: debugName,
   }
 
   const _Placeholder = (props: NoticeProps) => {
@@ -408,6 +410,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
               {...props}
               defaultStyles={loadingStyles}
               size={loadingIndicatorSize}
+              debugName={debugName}
             />
           ),
           DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,

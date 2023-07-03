@@ -5,6 +5,7 @@ import { View, ViewProps } from '../View'
 import { ListComposition, ListPresets } from './styles'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
+import { ComponentCommonProps } from '../../types'
 
 export type AugmentedRenderItemInfo<T> = VirtualItem & {
   item: T
@@ -47,4 +48,4 @@ Data = T extends Array<infer D> ? D : never
     refreshControlIndicatorProps?: Partial<ActivityIndicatorProps>
     style?: React.CSSProperties
     ref?: React.MutableRefObject<undefined>
-}
+} & ComponentCommonProps

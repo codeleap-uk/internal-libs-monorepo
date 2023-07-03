@@ -8,6 +8,7 @@ import { Touchable, TouchableProps } from '../Touchable'
 import { View, ViewProps } from '../View'
 import { OverlayComposition, OverlayPresets } from './styles'
 import { NativeHTMLElement } from '../../types'
+import { usePopState } from '../../lib'
 
 export type OverlayProps<T extends NativeHTMLElement = 'div'> = {
   visible?: boolean
@@ -26,6 +27,8 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
     responsiveVariants,
     styles,
   })
+
+  usePopState(visible, props.onPress)
 
   const Component = props.onClick || props.onPress ? Touchable : View
 

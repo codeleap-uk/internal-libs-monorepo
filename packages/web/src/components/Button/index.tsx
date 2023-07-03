@@ -12,10 +12,12 @@ import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
 import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
+import { ComponentCommonProps } from '../../types'
 
 export type ButtonProps = 
   ComponentVariants<typeof ButtonPresets> &
-  Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> & {
+  Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> &
+  ComponentCommonProps & {
     text?: string
     rightIcon?: IconPlaceholder
     icon?: IconPlaceholder
@@ -56,6 +58,7 @@ export const Button = (buttonProps: ButtonProps) => {
     rightIcon,
     selected,
     loaderProps = {},
+    debugName,
     ...props
   } = allProps
 
@@ -107,16 +110,17 @@ export const Button = (buttonProps: ButtonProps) => {
       debugComponent='Button'
       disabled={disabled}
       onPress={onPress}
+      debugName={debugName}
       {...props}
     >
-      {shouldRenderLeftIcon && <Icon name={icon} style={_styles.leftIcon} />}
-      {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text text={text} css={[_styles.text]} /> : null }
+      {shouldRenderLeftIcon && <Icon debugName={debugName} name={icon} style={_styles.leftIcon} />}
+      {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text debugName={debugName} text={text} css={[_styles.text]} /> : null }
       
       {childrenContent}
 
-      <Icon name={rightIcon} style={_styles.rightIcon}/>
+      <Icon debugName={debugName} name={rightIcon} style={_styles.rightIcon}/>
       {loading && (
-        <ActivityIndicator style={_styles.loaderWrapper} {...loaderProps} />
+        <ActivityIndicator debugName={debugName} style={_styles.loaderWrapper} {...loaderProps} />
       )}
     </Touchable>
   )

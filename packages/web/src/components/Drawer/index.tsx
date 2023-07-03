@@ -12,9 +12,10 @@ import React from 'react'
 import { Overlay } from '../Overlay'
 import { View } from '../View'
 import { Text } from '../Text'
-import { StylesOf } from '../../types/utility'
+import { ComponentCommonProps, StylesOf } from '../../types/utility'
 import { DrawerComposition, DrawerPresets } from './styles'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
+import { usePopState } from '../../lib'
 
 const axisMap = {
   top: [-1, 'Y'],
@@ -36,7 +37,7 @@ export type DrawerProps = React.PropsWithChildren<{
   style?: React.CSSProperties
   animationDuration?: string
   closeButtonProps?: Partial<ActionIconProps>
-} & ComponentVariants<typeof DrawerPresets>>
+} & ComponentVariants<typeof DrawerPresets>> & ComponentCommonProps
 
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],
@@ -89,15 +90,10 @@ export const Drawer = (props: DrawerProps) => {
     styles,
     style,
     animationDuration,
+    debugName
   } = allProps
 
-  onUpdate(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-  }, [open])
+  usePopState(open, toggle)
 
   const [hiddenStyle, axis, positioning] = resolveHiddenDrawerPosition(position)
 
@@ -125,9 +121,10 @@ export const Drawer = (props: DrawerProps) => {
   ]), [open, variantStyles])
 
   return (
-    <View css={wrapperStyles}>
+    <View debugName={debugName} css={wrapperStyles}>
       {darkenBackground && (
         <Overlay
+          debugName={debugName}
           visible={open}
           css={variantStyles.overlay}
           onPress={toggle}
@@ -155,6 +152,7 @@ export const Drawer = (props: DrawerProps) => {
               {TypeGuards.isString(title) ? <Text css={variantStyles.title} text={title} /> : title}
               {showCloseButton && (
                 <ActionIcon
+                  debugName={debugName}
                   onPress={toggle}
                   icon={'close' as IconPlaceholder}
                   {...closeButtonProps}

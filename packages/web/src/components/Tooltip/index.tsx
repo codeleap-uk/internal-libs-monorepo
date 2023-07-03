@@ -16,7 +16,7 @@ import {
 
 import { AnyFunction, ComponentVariants, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { TooltipComposition, TooltipPresets } from './styles'
-import { ComponentWithDefaultProps } from '../../types/utility'
+import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types/utility'
 import { View, ViewProps } from '../View'
 
 type TooltipComponentProps = {
@@ -45,7 +45,7 @@ export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
   onHover?: (hoverType: 'enter' | 'leave', value: boolean) => void
   onPress?: (value: boolean) => void
   children?: React.ReactNode
-} & ComponentVariants<typeof TooltipPresets>
+} & ComponentVariants<typeof TooltipPresets> & ComponentCommonProps
 
 const defaultProps: Partial<TooltipProps> = {
   openOnPress: true,

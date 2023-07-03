@@ -1,5 +1,6 @@
 import { ComponentVariants, StylesOf } from '@codeleap/common'
 import { VirtualItem } from '@tanstack/react-virtual'
+import { ComponentCommonProps } from '../../types'
 import { AugmentedRenderItemInfo, ListProps } from '../List'
 import { GridComposition, GridPresets } from './styles'
 
@@ -20,4 +21,4 @@ export type GridProps<
     styles?: StylesOf<GridComposition>
     numColumns?: number
     renderItem: (data: GridAugmentedRenderItemInfo<T>) => React.ReactElement
-  }
+  } & ComponentCommonProps
