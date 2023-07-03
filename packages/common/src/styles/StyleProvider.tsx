@@ -174,6 +174,7 @@ export function useDefaultComponentStyle<
       styles,
       props.rootElement,
       componentName,
+      JSON.stringify(props?.variants || []),
     ])
     return stylesheet as any
   } catch (e) {

@@ -126,3 +126,7 @@ export type MergeVariants<A extends VariantProp, B extends VariantProp> = (Extra
 export type AnyRef<T> = React.Ref<T> | React.MutableRefObject<T> | ((instance: T | null) => void) | null | React.ForwardedRef<T> | React.LegacyRef<T>
 
 export type Indices<T extends readonly any[]> = Exclude<Partial<T>['length'], T['length']>
+
+export type Replace<Object, Keys extends keyof Object, With = any> = Omit<Object, Keys> & {
+  [P in Keys]: With
+}

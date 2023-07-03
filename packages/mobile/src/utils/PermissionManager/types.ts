@@ -1,4 +1,5 @@
 import { PermissionTypes } from '@codeleap/common'
+import { ImageProps } from '../../components/Image'
 type NonGrantedPermissionTypes = Exclude<PermissionTypes.PermissionStatus, 'granted'>
 
 export type BasePermissionConfig = {
@@ -8,7 +9,9 @@ export type BasePermissionConfig = {
     onAllow: 'openSettings' | 'ask'
 
     description: string[]
-    icon: string
+    icon?: string
+    image?: ImageProps['source']
+    imageProps?: Omit<ImageProps, 'source'>
 }
 
 export type PermissionConfig = BasePermissionConfig &

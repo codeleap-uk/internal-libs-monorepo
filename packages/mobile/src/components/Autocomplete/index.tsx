@@ -75,6 +75,9 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     filterItems = defaultFilterFunction,
     searchInputProps: searchProps = {},
     onItemPressed = () => {},
+    listPlaceholder,
+    style,
+    loading: loadingProp = false,
     ...listProps
   } = allProps
 
@@ -197,7 +200,9 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
 
   const Search = searchComponent
 
-  return <View style={variantStyles.wrapper}>
+  const showLoading = TypeGuards.isFunction(loadingProp) ? loadingProp(loading) : (loadingProp || loading)
+
+  return <View style={[variantStyles.wrapper, style]}>
     <Search
       placeholder={placeholder}
       debugName={debugName}
@@ -220,10 +225,9 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
       // @ts-ignore
       keyExtractor={(i) => i.value}
       renderItem={renderListItem}
-      fakeEmpty={loading}
-      placeholder={{
-        loading,
-      }}
+      loading={showLoading}
+      placeholder={listPlaceholder}
+      keyboardAware={false}
       {...listProps}
     />
   </View>

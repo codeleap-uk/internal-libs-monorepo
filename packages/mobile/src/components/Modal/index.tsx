@@ -9,20 +9,20 @@ import {
   PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
+  useRef,
 } from '@codeleap/common'
 import {
   ModalComposition,
   ModalPresets,
   ModalParts,
 } from './styles'
-import { StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { StylesOf } from '../../types/utility'
 
 import { Backdrop } from '../Backdrop'
 import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { ActionIcon } from '../ActionIcon'
 
 export * from './styles'
@@ -47,7 +47,7 @@ export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
   header?: React.ReactElement
   closeOnHardwareBackPress?: boolean
   renderHeader?: (props: ModalHeaderProps) => React.ReactElement
-  keyboardAware?: GetKeyboardAwarePropsOptions
+  keyboardAware?: boolean
   scrollProps?: PropsOf<typeof Scroll, 'ref'>
 }
 
@@ -130,7 +130,7 @@ export const Modal = (modalProps:ModalProps) => {
     transform: StyleSheet.flatten,
     styles,
   }) as ModalProps['styles']
-
+  const scrollRef = useRef<ScrollView>(null)
   function getStyles(key: ModalParts) {
     const s = [
       variantStyles[key],
@@ -197,15 +197,10 @@ export const Modal = (modalProps:ModalProps) => {
         style={scrollStyle}
         contentContainerStyle={getStyles('scrollContent')}
         showsVerticalScrollIndicator={false}
-        keyboardAware= {{
-          adapt: 'maxHeight',
-          baseStyleProp: 'style',
-          animated: true,
-          enabled: visible,
-          // enableOnAndroid: true,
-        }}
+        keyboardAware
         animated
-        // ref={scrollRef}
+        // @ts-ignore
+        ref={scrollRef}
         { ...scrollProps}
       >
         {dismissOnBackdrop &&

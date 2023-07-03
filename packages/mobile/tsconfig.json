@@ -74,6 +74,9 @@
       ],
       "react-native-fast-image": [
         "../../apps/mobile/node_modules/react-native-fast-image/dist/index.d.ts"
+      ],
+      "react-native-avoid-softinput": [
+        "../../apps/mobile/node_modules/react-native-avoid-softinput/lib/typescript/index.d.ts"
       ]
     },
   },

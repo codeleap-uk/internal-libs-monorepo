@@ -7,6 +7,7 @@ import {
   useCodeleapContext,
   useMemo,
   AnyRef,
+  TypeGuards,
 } from '@codeleap/common'
 import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
@@ -22,7 +23,7 @@ export type ViewProps ={
   ref?: AnyRef<ViewRefType>
   component?: any
   animated?: boolean
-  keyboardAware?: GetKeyboardAwarePropsOptions
+  keyboardAware?: boolean
   transition?: Partial<TransitionConfig>
 }
   & NativeViewProps
@@ -55,31 +56,36 @@ export const View = forwardRef<NativeView, ViewProps>((viewProps, ref) => {
 
 type GapProps = ViewProps & {
   value: number
-
+  crossValue?: number
   defaultProps?: any
 }
 
-export const Gap = ({ children, value, defaultProps = {}, ...props }: GapProps) => {
+export const Gap = ({ children, value, defaultProps = {}, crossValue = null, ...props }: GapProps) => {
   const { Theme } = useCodeleapContext()
   const childArr = React.Children.toArray(children)
 
   const horizontal = props.variants?.includes('row')
+
   const spacings = useMemo(() => {
     return childArr.map((_, idx) => {
-      let spacingFunction = horizontal ? 'marginHorizontal' : 'marginVertical'
 
-      switch (idx) {
-        case 0:
-          spacingFunction = horizontal ? 'marginRight' : 'marginBottom'
-          break
-        case childArr.length - 1:
-          spacingFunction = horizontal ? 'marginLeft' : 'marginTop'
-          break
-        default:
-          break
+      const space = Theme.spacing.value(value)
+      const crossSpace = Theme.spacing.value(crossValue)
+
+      const isLast = idx === childArr.length - 1
+
+      const spacingProperty = horizontal ? 'marginRight' : 'marginBottom'
+      const crossSpacingProperty = horizontal ? 'marginBottom' : 'marginRight'
+
+      const style = isLast ? {} : {
+        [spacingProperty]: space,
       }
 
-      return Theme.spacing[spacingFunction](value / 2)
+      if (!TypeGuards.isNil(crossValue) && !isLast) {
+        style[crossSpacingProperty] = crossSpace
+      }
+
+      return style
     })
 
   }, [childArr.length, horizontal])

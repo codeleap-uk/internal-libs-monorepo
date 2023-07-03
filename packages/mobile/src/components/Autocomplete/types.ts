@@ -13,6 +13,7 @@ import { Text } from '../Text'
 import { SearchInputProps, TextInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
 import { AutocompleteComposition } from './styles'
+import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 
 export type AutocompleteRenderFNProps<T> = {
   styles: StylesOf<AutocompleteComposition>
@@ -68,6 +69,8 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     searchInputProps?: Partial<SearchInputProps>
     debugName: string
     searchComponent?: React.ComponentType<SearchInputProps>
+    listPlaceholder?: Partial<EmptyPlaceholderProps>
+    loading: boolean | ((isLoading: boolean) => boolean)
   }
     & Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>
     & ComponentVariants<typeof AutocompletePresets>
