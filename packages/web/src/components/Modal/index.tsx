@@ -57,6 +57,7 @@ export type ModalProps =
     overlayProps?: Partial<OverlayProps>
     zIndex?: number
     withScrollContainer?: boolean
+    scrollLocked?: boolean
   } & ComponentVariants<typeof ModalPresets> & ComponentCommonProps
 
 function focusModal(event: FocusEvent, id: string) {
@@ -146,6 +147,7 @@ const defaultProps: Partial<ModalProps> = {
   zIndex: null,
   description: null,
   withScrollContainer: false,
+  scrollLocked: true,
 }
 
 export const ModalContent = (
@@ -175,6 +177,7 @@ export const ModalContent = (
     zIndex,
     withScrollContainer,
     debugName,
+    scrollLocked,
     ...props
   } = modalProps
 
@@ -193,7 +196,7 @@ export const ModalContent = (
     if (TypeGuards.isFunction(onClose)) onClose()
   }
 
-  usePopState(visible, toggle)
+  usePopState(visible, toggle, scrollLocked)
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (!closeOnEscape) return null
@@ -238,6 +241,7 @@ export const ModalContent = (
             ? variantStyles['backdrop:visible']
             : variantStyles['backdrop:hidden'],
         ]}
+        scrollLocked={scrollLocked}
         {...overlayProps}
       />
 

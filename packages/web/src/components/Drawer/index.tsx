@@ -2,7 +2,6 @@ import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
-  onUpdate,
   TypeGuards,
   useDefaultComponentStyle,
   useNestedStylesByKey,
@@ -24,7 +23,7 @@ const axisMap = {
   right: [1, 'X'],
 } as const
 
-export type DrawerProps = React.PropsWithChildren<{
+export type DrawerProps = {
   open: boolean
   toggle: AnyFunction
   darkenBackground?: boolean
@@ -37,7 +36,9 @@ export type DrawerProps = React.PropsWithChildren<{
   style?: React.CSSProperties
   animationDuration?: string
   closeButtonProps?: Partial<ActionIconProps>
-} & ComponentVariants<typeof DrawerPresets>> & ComponentCommonProps
+  scrollLocked?: boolean
+  children?: React.ReactNode
+} & ComponentVariants<typeof DrawerPresets> & ComponentCommonProps
 
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],
@@ -65,7 +66,8 @@ const defaultProps: Partial<DrawerProps> = {
   showCloseButton: false,
   darkenBackground: true,
   size: '75vw',
-  title: null
+  title: null,
+  scrollLocked: true,
 }
 
 export const Drawer = (props: DrawerProps) => {
@@ -90,10 +92,11 @@ export const Drawer = (props: DrawerProps) => {
     styles,
     style,
     animationDuration,
-    debugName
-  } = allProps
+    debugName,
+    scrollLocked,
+  } = allProps as DrawerProps
 
-  usePopState(open, toggle)
+  usePopState(open, toggle, scrollLocked)
 
   const [hiddenStyle, axis, positioning] = resolveHiddenDrawerPosition(position)
 
@@ -128,6 +131,7 @@ export const Drawer = (props: DrawerProps) => {
           visible={open}
           css={variantStyles.overlay}
           onPress={toggle}
+          scrollLocked={scrollLocked}
         />
       )}
 
