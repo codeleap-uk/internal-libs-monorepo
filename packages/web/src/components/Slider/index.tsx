@@ -29,12 +29,11 @@ export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueC
   }
   value: number[]
   onValueChange: (val: number[]) => void
-  variants?: ComponentVariants<typeof SliderPresets>['variants']
   styles?: StylesOf<SliderComposition>
   style?: PropsOf<typeof View>['style']
   trackMarks?: Record<number, string>
   trackMarkComponent?: React.ComponentType<TrackMarkProps>
-}
+} & ComponentVariants<typeof SliderPresets>
 
 export type TrackMarkProps = {
   index: number
@@ -70,6 +69,7 @@ export const Slider = (props: SliderProps) => {
     label,
     debugName,
     styles = {},
+    responsiveVariants = {},
     style,
     disabled,
     variants,
@@ -127,6 +127,7 @@ export const Slider = (props: SliderProps) => {
   }
 
   const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
+    responsiveVariants,
     variants,
     styles,
   })

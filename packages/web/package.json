@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "@radix-ui/react-slider": "1.1.1",
+    "@radix-ui/react-tooltip": "^1.0.6",
+    "@tanstack/react-virtual": "^3.0.0-beta.54",
     "framer-motion": "^10.10.0",
     "js-cookie": "^3.0.1",
     "rc-slider": "^9.7.5",

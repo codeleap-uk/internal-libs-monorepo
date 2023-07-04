@@ -29,8 +29,7 @@ export type RadioGroupProps<T extends string|number> = WrapperProps & {
   onValueChange(value: T): void
   label: ReactNode
   styles?: StylesOf<RadioInputComposition>
-  variants?: ComponentVariants<typeof RadioInputPresets>['variants']
-}
+} & ComponentVariants<typeof RadioInputPresets>
 
 type OptionProps<T extends string|number> = {
   item: RadioOption<T>
@@ -119,13 +118,15 @@ export const RadioGroup = <T extends string|number>(
     options,
     value,
     onValueChange,
-    variants,
+    responsiveVariants = {},
+    variants = [],
     styles,
     disabled,
     debugName,
   } = others
 
   const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', {
+    responsiveVariants,
     variants,
     styles,
   })

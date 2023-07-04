@@ -10,11 +10,11 @@ import {
 } from '@codeleap/common'
 import { ActivityIndicatorPresets } from './styles'
 import { CSSInterpolation } from '@emotion/css'
-import { ComponentWithDefaultProps } from '../../types'
+import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
-export type ActivityIndicatorProps = {
+export type ActivityIndicatorProps = ComponentCommonProps & {
   style?: React.CSSProperties
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSInterpolation | CSSInterpolation[]
@@ -41,9 +41,10 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
   const variantStyles = useDefaultComponentStyle<'u:ActivityIndicator', typeof ActivityIndicatorPresets>(
     'u:ActivityIndicator',
     {
+      responsiveVariants,
       variants,
       styles,
-      responsiveVariants,
+      rootElement: 'wrapper',
     },
   )
 
@@ -55,10 +56,10 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
   }, [size])
 
   return (
-    <View css={[variantStyles.wrapper, style, _size]}>
+    <View css={[variantStyles.wrapper, _size, style]}>
       <Component
         ref={ref}
-        css={[variantStyles.wrapper, _size]}
+        css={[variantStyles.wrapper, _size, style]}
         {...props}
       />
     </View>

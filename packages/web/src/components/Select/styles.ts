@@ -3,10 +3,9 @@ import { CSSInterpolation } from '@emotion/css'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
-import { LoadingOverlayComposition } from '../LoadingOverlay'
 import { SelectProps } from './types'
 
-type ButtonParts = Exclude<_ButtonParts, `loading${Capitalize<LoadingOverlayComposition>}` | 'badgeText' | 'badgeWrapper'>
+type ButtonParts = _ButtonParts
 
 export type ItemParts = `item${Capitalize<ButtonParts>}`
 
@@ -62,6 +61,7 @@ export type OptionState = {
 
 export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
   const {
+    responsiveVariants = {},
     variants,
     styles,
   } = props
@@ -75,6 +75,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>(
     'u:Select',
     {
+      responsiveVariants,
       variants,
       styles,
     },
@@ -109,7 +110,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     text: optionStyleKey('text', state),
     leftIcon: optionStyleKey('leftIcon', state),
     icon: optionStyleKey('icon', state),
-    inner: optionStyleKey('inner', state),
+    loaderWrapper: optionStyleKey('loaderWrapper', state),
   })
 
   const placeholderStyles = {

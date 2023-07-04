@@ -30,3 +30,7 @@ export type NativeHTMLElement = keyof ElementMap
 export type HTMLProps<T extends NativeHTMLElement> = ElementMap[T]
 
 export type ComponentWithDefaultProps<P> = ((props: P) => JSX.Element) & { defaultProps?: Partial<P> }
+
+export type ComponentCommonProps = {
+  debugName: string
+}
