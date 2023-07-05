@@ -7,7 +7,7 @@ on:
       - apps/web
       - .github/workflows/website.yml
 concurrency:
-  group: ${ GIT_BRANCH_NAME }
+  group: website-${ GIT_BRANCH_NAME }
   cancel-in-progress: true
 jobs:
   build:

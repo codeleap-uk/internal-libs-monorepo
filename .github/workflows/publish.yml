@@ -7,7 +7,7 @@ on:
       - "packages/**/*"
       - .github/workflows/publish.yml
 concurrency:
-  group: ${ GIT_BRANCH_NAME }
+  group: publish-${ GIT_BRANCH_NAME }
   cancel-in-progress: true
 jobs:
   build:
