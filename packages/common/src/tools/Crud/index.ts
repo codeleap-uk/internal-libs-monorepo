@@ -124,6 +124,10 @@ export class QueryManager<
     const ids = itemArr.map((i) => {
       const id = this.extractKey(i)
       this.itemMap[id] = i
+      this.queryClient.setQueryData<T>(this.queryKeyFor(id), (old) => {
+
+        return i
+      })
       return id
     })
 
@@ -140,6 +144,7 @@ export class QueryManager<
 
         return old
       })
+
     })
 
     await Promise.all(promises)
@@ -400,9 +405,9 @@ export class QueryManager<
       queryFn: () => {
         return this.options.retrieveItem(itemId)
       },
-      select: (data) => {
+      onSuccess: (data) => {
         this.updateItems(data)
-        return data
+
       },
     })
 
