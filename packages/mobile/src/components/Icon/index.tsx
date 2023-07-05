@@ -30,6 +30,7 @@ export type IconProps = {
   wrapperProps?: Partial<PropsOf<typeof View>>
   size?: number
   styles?: StylesOf<IconComposition>
+  source?: string
 } & BadgeComponentProps
 
 export const IconComponent = (props: IconProps) => {
@@ -41,6 +42,7 @@ export const IconComponent = (props: IconProps) => {
     badgeProps = {},
     wrapperProps = {},
     styles = {},
+    source,
     ...otherProps
   } = props
 
@@ -55,16 +57,31 @@ export const IconComponent = (props: IconProps) => {
     },
     rootElement: 'icon',
   })
-  const Component = Theme?.icons?.[name]
+  const Component = Theme?.icons?.[name] || (source && Theme.icons.RenderSource)
+
   onUpdate(() => {
     if (!Component && !!name) {
       logger.warn(
         `Icon: No icon found in theme for name "${name}".`,
-        { props: { style, name, variants, variantStyles }},
+        { props: { style, name, variants, variantStyles } },
         'Component',
       )
+    } else if (!Component && !!source) {
+      logger.warn('Icon: Cannot render source, no RenderSource component in Theme.icons', {
+        source,
+        props: { style, name, variants, variantStyles },
+        Component,
+      }, 'Component')
     }
   }, [name])
+
+  if (!name && !source) {
+    return null
+  }
+
+  if (!Component) {
+    return null
+  }
 
   if (badge || TypeGuards.isNumber(badge)) {
     const badgeStyles = getNestedStylesByKey('badge', variantStyles)
@@ -80,20 +97,12 @@ export const IconComponent = (props: IconProps) => {
     ]
 
     return <View {...wrapperProps} style={wrapperStyle}>
-      <Component {...otherProps} style={variantStyles.icon} />
+      <Component {...otherProps} style={variantStyles.icon} source={source} />
       <Badge styles={badgeStyles} badge={badge} {...badgeProps} />
     </View>
   }
 
-  if (!name) {
-    return null
-  }
-
-  if (!Component) {
-
-    return null
-  }
-  return <Component {...otherProps} style={variantStyles.icon} />
+  return <Component {...otherProps} style={variantStyles.icon} source={source} />
 }
 
 function areEqual(prevProps, nextProps) {
