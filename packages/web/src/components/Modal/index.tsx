@@ -135,7 +135,7 @@ const ModalDefaultHeader = (props: ModalHeaderProps) => {
 
 const defaultProps: Partial<ModalProps> = {
   title: '',
-  closeIconName: 'close' as IconPlaceholder,
+  closeIconName: 'x' as IconPlaceholder,
   closable: true,
   withOverlay: true,
   showClose: true,

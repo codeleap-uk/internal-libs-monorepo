@@ -118,7 +118,7 @@ export const Drawer = (props: DrawerProps) => {
     {
       transition: 'visibility 0.01s ease',
       transitionDelay: open ? '0' : animationDuration,
-      visibility: open ? 'visible' : 'hidden'
+      visibility: open ? 'visible' : 'hidden',
     },
     style,
   ]), [open, variantStyles])
@@ -158,7 +158,7 @@ export const Drawer = (props: DrawerProps) => {
                 <ActionIcon
                   debugName={debugName}
                   onPress={toggle}
-                  icon={'close' as IconPlaceholder}
+                  icon={'x' as IconPlaceholder}
                   {...closeButtonProps}
                   styles={closeButtonStyles}
                 />
@@ -166,9 +166,9 @@ export const Drawer = (props: DrawerProps) => {
             </View>
           ) : null
         }
-        
+
         <View css={variantStyles.body}>{children}</View>
-        
+
         {footer && (
           <View component='footer' css={variantStyles.footer}>
             {footer}

@@ -33,7 +33,7 @@ type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps =
   Omit<InputBaseProps, 'styles' | 'variants'> &
-  Omit<NativeTextInputProps, 'value'|'crossOrigin'> & {
+  Omit<NativeTextInputProps, 'value' | 'crossOrigin'> & {
     styles?: StylesOf<TextInputComposition>
     password?: boolean
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
@@ -42,7 +42,7 @@ export type TextInputProps =
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: (textValue:string) => void
+    onChangeText?: (textValue: string) => void
     caretColor?: string
     focused?: boolean
     _error?: boolean
@@ -141,7 +141,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? 'input-visiblity:hidden' : 'input-visiblity:visible') as IconPlaceholder,
+    icon: (secureTextEntry ? 'eye-off' : 'eye') as IconPlaceholder,
     debugName: `${debugName} toggle visibility`,
   } : null
 
