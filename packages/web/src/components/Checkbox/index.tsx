@@ -118,7 +118,7 @@ export const Checkbox = (props: CheckboxProps) => {
     order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
     style={style}
     wrapperProps={{
-      onClick: handleChange
+      onClick: handleChange,
     }}
   >
     <motion.div
@@ -142,8 +142,9 @@ export const Checkbox = (props: CheckboxProps) => {
       >
         <Icon
           debugName={debugName}
-          name={'checkbox-checkmark' as any}
+          name={'check' as any}
           css={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
+          style={variantStyles.checkmark}
         />
       </motion.div>
     </motion.div>
