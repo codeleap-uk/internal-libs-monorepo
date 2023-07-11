@@ -37,6 +37,7 @@ export type DrawerProps = {
   animationDuration?: string
   closeButtonProps?: Partial<ActionIconProps>
   scrollLocked?: boolean
+  closeIcon?: IconPlaceholder
   children?: React.ReactNode
 } & ComponentVariants<typeof DrawerPresets> & ComponentCommonProps
 
@@ -68,6 +69,7 @@ const defaultProps: Partial<DrawerProps> = {
   size: '75vw',
   title: null,
   scrollLocked: true,
+  closeIcon: 'x' as IconPlaceholder,
 }
 
 export const Drawer = (props: DrawerProps) => {
@@ -94,6 +96,7 @@ export const Drawer = (props: DrawerProps) => {
     animationDuration,
     debugName,
     scrollLocked,
+    closeIcon,
   } = allProps as DrawerProps
 
   usePopState(open, toggle, scrollLocked)
@@ -118,7 +121,7 @@ export const Drawer = (props: DrawerProps) => {
     {
       transition: 'visibility 0.01s ease',
       transitionDelay: open ? '0' : animationDuration,
-      visibility: open ? 'visible' : 'hidden'
+      visibility: open ? 'visible' : 'hidden',
     },
     style,
   ]), [open, variantStyles])
@@ -158,7 +161,7 @@ export const Drawer = (props: DrawerProps) => {
                 <ActionIcon
                   debugName={debugName}
                   onPress={toggle}
-                  icon={'close' as IconPlaceholder}
+                  icon={closeIcon as IconPlaceholder}
                   {...closeButtonProps}
                   styles={closeButtonStyles}
                 />
@@ -166,9 +169,9 @@ export const Drawer = (props: DrawerProps) => {
             </View>
           ) : null
         }
-        
+
         <View css={variantStyles.body}>{children}</View>
-        
+
         {footer && (
           <View component='footer' css={variantStyles.footer}>
             {footer}

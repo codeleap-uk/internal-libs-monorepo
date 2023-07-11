@@ -38,7 +38,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
   const hasStateProps = !TypeGuards.isNil(value) && TypeGuards.isFunction(onValueChange)
 
   const [search, setSearch] = hasStateProps ? [value, onValueChange] : useState('')
-  const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
+  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
 
   const handleChangeSearch = (value: string) => {
     setSearch(value)
@@ -88,6 +88,6 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 SearchInput.defaultProps = {
   debounce: null,
   clearable: true,
-  clearIcon: 'close' as IconPlaceholder,
+  clearIcon: 'x' as IconPlaceholder,
   searchIcon: 'search' as IconPlaceholder,
 }
