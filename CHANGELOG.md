@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.6.0...v3.6.1) (2023-07-11)
+
+
+### Bug Fixes
+
+* **tooling:** try to fix workflows concurrency ([59b2e3c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/59b2e3c6e74ab295d02e504acd830a80c1478d95))
+
 ## [3.6.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.4.0...v3.6.0) (2023-07-05)
 
 
