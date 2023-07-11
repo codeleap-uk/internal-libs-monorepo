@@ -5,6 +5,7 @@ import {
   useDefaultComponentStyle,
   StylesOf,
   PropsOf,
+  IconPlaceholder,
 } from '@codeleap/common'
 import { View } from '../View'
 import { CheckboxPresets, CheckboxComposition } from './styles'
@@ -25,9 +26,14 @@ export type CheckboxProps = Pick<
   onValueChange: (value: boolean) => void
   style?: PropsOf<typeof View>['style']
   checkboxOnLeft?: boolean
+  checkIcon?: IconPlaceholder
 } & ComponentVariants<typeof CheckboxPresets>
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
+
+const defaultProps: Partial<CheckboxProps> = {
+  checkIcon: 'check' as IconPlaceholder,
+}
 
 export const Checkbox = (props: CheckboxProps) => {
   const {
@@ -45,6 +51,7 @@ export const Checkbox = (props: CheckboxProps) => {
     debugName,
     onValueChange,
     checkboxOnLeft,
+    checkIcon,
   } = others
 
   const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
@@ -142,7 +149,7 @@ export const Checkbox = (props: CheckboxProps) => {
       >
         <Icon
           debugName={debugName}
-          name={'check' as any}
+          name={checkIcon as any}
           css={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
           style={variantStyles.checkmark}
         />
@@ -150,3 +157,5 @@ export const Checkbox = (props: CheckboxProps) => {
     </motion.div>
   </InputBase>
 }
+
+Checkbox.defaultProps = defaultProps

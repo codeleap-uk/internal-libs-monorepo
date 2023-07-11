@@ -74,6 +74,8 @@ const defaultProps:Partial<SelectProps<any, boolean>> = {
   },
   outerInputComponent: OuterInput,
   searchInputProps: {},
+  arrowIconName: 'chevrons-up-down' as IconPlaceholder,
+  clearIconName: 'x' as IconPlaceholder,
 }
 
 export const Select = <T extends string|number = string, Multi extends boolean = false>(selectProps:SelectProps<T, Multi>) => {
@@ -94,8 +96,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     listProps,
     debugName,
     placeholder = 'Select',
-    arrowIconName = 'chevrons-up-down',
-    clearIconName = 'x',
+    arrowIconName,
+    clearIconName,
     clearable = false,
     selectedIcon = 'check',
     inputProps = {},
