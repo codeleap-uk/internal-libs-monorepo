@@ -26,7 +26,7 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
   })
 }
 
-const defaultProps:Partial<AutocompleteProps<any, boolean>> = {
+const defaultProps: Partial<AutocompleteProps<any, boolean>> = {
   getLabel(option) {
 
     if (TypeGuards.isArray(option)) {
@@ -45,7 +45,7 @@ const defaultProps:Partial<AutocompleteProps<any, boolean>> = {
   searchComponent: SearchInput,
 }
 
-export const Autocomplete = <T extends string|number = string, Multi extends boolean = false>(autocomplete:AutocompleteProps<T, Multi>) => {
+export const Autocomplete = <T extends string | number = string, Multi extends boolean = false>(autocomplete: AutocompleteProps<T, Multi>) => {
   const allProps = {
     ...defaultProps,
     ...autocomplete,
@@ -74,11 +74,11 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
     searchComponent,
     filterItems = defaultFilterFunction,
     searchInputProps: searchProps = {},
-    onItemPressed = () => {},
+    onItemPressed = () => { },
     listPlaceholder,
     style,
     loading: loadingProp = false,
-    ...listProps
+    listProps = {},
   } = allProps
 
   const isValueArray = TypeGuards.isArray(value) && multiple
@@ -207,7 +207,7 @@ export const Autocomplete = <T extends string|number = string, Multi extends boo
       placeholder={placeholder}
       debugName={debugName}
       onTypingChange={(isTyping) => {
-        if (searchable && !!loadOptions) {
+        if (searchable && !!loadOptions && isTyping) {
           setLoading(isTyping)
         }
       }}

@@ -54,7 +54,7 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     styles?: StylesOf<AutocompleteComposition>
     style?: TextInputProps['style']
     closeOnSelect?: boolean
-    listProps?: Partial<FlatListProps>
+
     keyboardAware?: GetKeyboardAwarePropsOptions
     multiple?: Multi
     itemProps?: Partial<
@@ -70,6 +70,7 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     debugName: string
     searchComponent?: React.ComponentType<SearchInputProps>
     listPlaceholder?: Partial<EmptyPlaceholderProps>
+    listProps?: Partial<Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>>
     loading: boolean | ((isLoading: boolean) => boolean)
   }
     & Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>
