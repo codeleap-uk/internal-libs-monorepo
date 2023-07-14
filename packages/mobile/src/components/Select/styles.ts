@@ -3,7 +3,6 @@ import { ListComposition } from '../List'
 import { ModalComposition } from '../Modal'
 type ItemStates = '' | ':selected'
 
-
 type ItemParts = ButtonComposition
 
 type ItemComposition = `${ItemParts}${ItemStates}` | ItemParts

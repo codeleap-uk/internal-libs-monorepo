@@ -124,6 +124,10 @@ export class QueryManager<
     const ids = itemArr.map((i) => {
       const id = this.extractKey(i)
       this.itemMap[id] = i
+      this.queryClient.setQueryData<T>(this.queryKeyFor(id), (old) => {
+
+        return i
+      })
       return id
     })
 
@@ -140,6 +144,7 @@ export class QueryManager<
 
         return old
       })
+
     })
 
     await Promise.all(promises)
@@ -167,21 +172,49 @@ export class QueryManager<
           const idx = old.pages.length - 1
           old.pages[idx].results.push(...itemsToAppend)
 
-          // @ts-ignore
-          old.pageParams[idx].limit += itemsToAppend.length
+          if (old.pageParams[idx]) {
+            // @ts-ignore
+            old.pageParams[idx].limit += itemsToAppend.length
+          } else {
+            old.pageParams[idx] = {
+              limit: itemsToAppend.length,
+              offset: 0,
+            }
+          }
 
         } else if (args.to === 'start') {
           old.pages[0].results.unshift(...itemsToAppend)
           // @ts-ignore
-          old.pageParams[0].limit += itemsToAppend.length
+
+          if (old.pageParams[0]) {
+            // @ts-ignore
+            old.pageParams[0].offset -= itemsToAppend.length
+            // @ts-ignore
+            old.pageParams[0].limit += itemsToAppend.length
+          } else {
+            old.pageParams[0] = {
+              limit: itemsToAppend.length,
+              offset: -itemsToAppend.length,
+            }
+          }
 
         } else if (!!args.to) {
           const appendTo = isArray(args.to) ? args.to : args.to[hashedKey]
 
           const [pageIdx, itemIdx] = appendTo
           old.pages[pageIdx].results.splice(itemIdx, 0, ...itemsToAppend)
-          // @ts-ignore
-          old.pageParams[pageIdx].limit += itemsToAppend.length
+
+          if (old.pageParams[pageIdx]) {
+            // @ts-ignore
+            old.pageParams[pageIdx].offset -= itemsToAppend.length
+            // @ts-ignore
+            old.pageParams[pageIdx].limit += itemsToAppend.length
+          } else {
+            old.pageParams[pageIdx] = {
+              limit: itemsToAppend.length,
+              offset: -itemsToAppend.length,
+            }
+          }
 
         }
         return old
@@ -372,9 +405,9 @@ export class QueryManager<
       queryFn: () => {
         return this.options.retrieveItem(itemId)
       },
-      select: (data) => {
+      onSuccess: (data) => {
         this.updateItems(data)
-        return data
+
       },
     })
 
@@ -468,7 +501,7 @@ export class QueryManager<
 
       if (tmpOptions.current?.optimistic) {
         query.mutateAsync(data)
-        res = await getOptimisticItem.await()
+        res = await getOptimisticItem._await()
       } else {
         res = await query.mutateAsync(data)
       }
@@ -553,7 +586,7 @@ export class QueryManager<
 
       if (tmpOptions.current?.optimistic) {
         query.mutateAsync(data)
-        res = await getOptimisticItem.await()
+        res = await getOptimisticItem._await()
       } else {
 
         res = await query.mutateAsync(data)
@@ -639,7 +672,7 @@ export class QueryManager<
 
       if (tmpOptions.current?.optimistic) {
         query.mutateAsync(data)
-        prevItem = await getOptimisticItem.await()
+        prevItem = await getOptimisticItem._await()
       } else {
         prevItem = await query.mutateAsync(data)
       }
@@ -691,9 +724,15 @@ export class QueryManager<
       filter: options?.filter,
       queryOptions: options?.listOptions?.queryOptions,
     })
-    const create = this.useCreate(options.creation)
-    const update = this.useUpdate(options.update)
-    const del = this.useDelete(options.deletion)
+    const create = this.useCreate(options?.creation)
+    const update = this.useUpdate(options?.update)
+    const del = this.useDelete(options?.deletion)
+
+    const queries = {
+      create,
+      update,
+      del,
+    }
 
     return {
       items: list.items,
@@ -710,6 +749,7 @@ export class QueryManager<
       isRefreshing: list.isRefreshing,
       actions: this.actions,
       updatedAt: list.query.dataUpdatedAt,
+      queries,
     }
   }
 

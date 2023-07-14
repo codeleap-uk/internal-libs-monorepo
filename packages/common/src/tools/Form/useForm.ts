@@ -1,8 +1,9 @@
 import * as FormTypes from './types'
-import { usePartialState, deepGet, deepSet, deepMerge, TypeGuards } from '../../utils'
+import { usePartialState, useMemo, deepGet, deepSet, deepMerge, TypeGuards } from '../../utils'
 import { FunctionType } from '../../types'
 import { useCodeleapContext } from '../../styles/StyleProvider'
 import { createRef, useCallback, useRef } from 'react'
+import { useI18N } from '../i18n'
 
 export * as FormTypes from './types'
 
@@ -23,8 +24,13 @@ export function useForm<
   Values extends FormTypes.MapValues<Form['config']> = FormTypes.MapValues<
     Form['config']
   >
->(formParam: () => Form | Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
-  const form = TypeGuards.isFunction(formParam) ? formParam() : formParam
+>(formParam: (() => Form) | Form, formConfig: FormTypes.UseFormConfig<Values> = {}) {
+
+  const i18n = useI18N()
+
+  const form = useMemo(() => {
+    return TypeGuards.isFunction(formParam) ? formParam() : formParam
+  }, [formParam, i18n?.locale])
 
   const config:FormTypes.UseFormConfig<Values> = {
     validateOn: 'change',
@@ -51,7 +57,7 @@ export function useForm<
     // @ts-ignore
     const val = deepSet([args[0], transform(args[1])])
 
-    if (shouldLog('setValue', config)) {
+    if (shouldLog('setValue', config) || shouldLog(`setValue.${args[0]}`, config)) {
       // @ts-ignore
       logger.log(
         // @ts-ignore
@@ -68,13 +74,14 @@ export function useForm<
     const { validate } = form.staticFieldProps[field as string]
 
     if (validate) {
+      const value = val !== undefined ? val : deepGet(field, formValues)
       // @ts-ignore
       const result = validate(
-        val !== undefined ? val : deepGet(field, formValues),
+        value,
         formValues,
       )
-      if (shouldLog('validate', config)) {
-        logger.log(`Validation for ${form.name} ->`, result, SCOPE)
+      if (shouldLog('validate', config) || shouldLog(`validate.${field}`, config)) {
+        logger.log(`Validation for ${form.name} ${field}`, { result, formValues, value }, SCOPE)
       }
 
       if (set) {
@@ -131,9 +138,10 @@ export function useForm<
 
   const registeredFields = useRef([])
   let registeredTextRefsOnThisRender = 0
-  function register(field: FieldPaths[0]) {
+  function register(field: FieldPaths[0], transformProps = (p) => p) {
     const nFields = registeredFields.current.length
-    const { changeEventName, validate, type, ...staticProps } =
+
+    const { changeEventName, validate, type, componentProps, ...staticProps } =
     // @ts-ignore
     form.staticFieldProps[field as string]
 
@@ -189,13 +197,24 @@ export function useForm<
     }
 
     registeredFields.current.push(type)
-    return {
+
+    const resolvedProps = {
       ...staticProps,
       ...dynamicProps,
       validate: (v) => {
         return validateField(field, true, v)
       },
     }
+
+    const componentPropsConfig = TypeGuards.isFunction(componentProps) ? componentProps(resolvedProps) : (componentProps || {})
+
+    const t = transformProps({
+      ...resolvedProps,
+      ...componentProps,
+      ...componentPropsConfig,
+    })
+
+    return t
   }
 
   function getTransformedValue(): Values {

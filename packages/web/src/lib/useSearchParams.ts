@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePrevious } from '../utils'
+import { usePrevious } from '@codeleap/common'
 
-type UseSearchParamsReturn<T> = [
+export type UseSearchParamsReturn<T> = [
   T,
   React.Dispatch<React.SetStateAction<T>>,
   () => void,

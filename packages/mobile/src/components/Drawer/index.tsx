@@ -23,11 +23,6 @@ export const Drawer:React.FC<DrawerProps> = (props) => {
     {...modalProps}
     scrollProps={{
       ...scrollProps,
-      keyboardAware: {
-
-        enabled: false,
-        ...scrollProps?.keyboardAware,
-      },
     }}
   />
 }

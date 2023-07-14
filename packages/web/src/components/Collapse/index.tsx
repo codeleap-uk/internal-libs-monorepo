@@ -1,10 +1,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 
-import { capitalize, TypeGuards } from '@codeleap/common'
+import { capitalize, StylesOf, TypeGuards } from '@codeleap/common'
 import { Scroll } from '../Scroll'
 import { View, ViewProps } from '../View'
 import { ElementType } from 'react'
+import { NativeHTMLElement } from '../../types'
 
 export type CollapseAxis = 'horizontal' | 'vertical'
 
@@ -51,34 +52,37 @@ export function getCollapseStyles<
   } as unknown as Return
 }
 
-export type CollapseProps<T extends ElementType = 'div'> = ViewProps<T> & {
+export type CollapseProps<T extends NativeHTMLElement = 'div'> = ViewProps<T> & {
     open: boolean
     scroll?: boolean
     size?: string | number
     direction?: CollapseAxis
     animation?: string
+    styles: StylesOf<CollapseComposition>
 }
 
-export const Collapse:React.FC<CollapseProps> = ({
+export const Collapse = ({
   open,
   size = 1000,
   scroll = false,
   children,
   direction,
   animation,
+  styles,
   ...props
-}) => {
+}:CollapseProps) => {
 
   const Component = scroll ? Scroll : View
-  const styles = getCollapseStyles({
+  const _styles = getCollapseStyles({
     value: size,
     direction,
     animation,
   })
   // @ts-ignore
   return <Component css={[
+    _styles.wrapper,
+    open ? _styles['wrapper:open'] : _styles['wrapper:closed'],
     styles.wrapper,
-    open ? styles['wrapper:open'] : styles['wrapper:closed'],
   ]} {...props}>
     {children}
   </Component>

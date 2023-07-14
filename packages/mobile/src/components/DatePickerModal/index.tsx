@@ -121,6 +121,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     description,
     showDoneButton,
     style,
+    minimumDate,
+    maximumDate,
     footerComponent,
     ...modalProps
   } = allProps
@@ -146,7 +148,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const cancelStyle = useNestedStylesByKey('cancelButton', variantStyles)
   const confirmStyle = useNestedStylesByKey('confirmButton', variantStyles)
 
-  const formattedDate = value ? formatDate(value) : placeholder
+  const formattedDate = value ? formatDate(value) : ''
   const { locale } = useI18N()
 
   const tempDate = useRef<Date|null>(null)
@@ -226,6 +228,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           textColor={variantStyles?.picker?.color}
           androidVariant='iosClone'
           onConfirm={setValue}
+          minimumDate={minimumDate}
+          maximumDate={maximumDate}
           {...datePickerProps}
           mode={mode}
 

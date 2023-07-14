@@ -1,125 +1,131 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
+import React from 'react'
 import {
   useDefaultComponentStyle,
-  ButtonStyles,
   ComponentVariants,
-  ButtonComposition,
-  ButtonParts,
-  optionalObject,
   AnyFunction,
+  TypeGuards,
+  IconPlaceholder,
+  StylesOf,
 } from '@codeleap/common'
-import React, { ComponentPropsWithRef } from 'react'
-import { StylesOf } from '../../types/utility'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
-import { ActivityIndicator } from '../ActivityIndicator'
-import { IconPlaceholder, useNestedStylesByKey } from '@codeleap/common'
-import { LoadingOverlay } from '../LoadingOverlay'
+import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
+import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
+import { ComponentCommonProps } from '../../types'
 
-type NativeButtonProps = ComponentPropsWithRef<'button'>
-
-export type ButtonProps = NativeButtonProps &
-  ComponentVariants<typeof ButtonStyles> & {
+export type ButtonProps = 
+  ComponentVariants<typeof ButtonPresets> &
+  Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> &
+  ComponentCommonProps & {
     text?: string
     rightIcon?: IconPlaceholder
     icon?: IconPlaceholder
     onPress?: AnyFunction
     styles?: StylesOf<ButtonComposition>
+    style?: React.CSSProperties
     loading?: boolean
-    debugName?: string
+    loadingShowText?: boolean
+    debugName: string
     debounce?: number
-  } & Partial<TouchableProps<any>>
+    selected?: boolean
+    children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
+    loaderProps?: Partial<ActivityIndicatorProps>
+  }
 
-export const Button: React.FC<ButtonProps> = (buttonProps) => {
+const defaultProps: Partial<ButtonProps> = {
+  debounce: 600,
+  loadingShowText: false,
+}
+
+export const Button = (buttonProps: ButtonProps) => {
+  const allProps = {
+    ...Button.defaultProps,
+    ...buttonProps
+  }
+
   const {
     variants = [],
     responsiveVariants = {},
+    styles = {},
     children,
     icon,
     text,
     loading,
-    styles,
+    loadingShowText,
     onPress,
     disabled,
     rightIcon,
-    debounce = 600,
+    selected,
+    loaderProps = {},
+    debugName,
     ...props
-  } = buttonProps
-  const [pressed, setPressed] = React.useState(false)
-  const variantStyles = useDefaultComponentStyle('Button', {
+  } = allProps
+
+  const variantStyles = useDefaultComponentStyle<'u:Button', typeof ButtonPresets>('u:Button', {
     responsiveVariants,
     variants,
     styles,
+    rootElement: 'wrapper',
   })
 
-  function handlePress(e: Parameters<ButtonProps['onPress']>[0]) {
-    if (!pressed) {
-      props?.onClick?.(e)
+  const getStyles = (key: ButtonParts) => ({
+    ...variantStyles?.[key],
+    ...(disabled ? variantStyles?.[key + ':disabled'] : {}),
+    ...(selected ? variantStyles?.[key + ':selected'] : {})
+  })
 
-      setPressed(true)
+  const iconStyles = getStyles('icon')
 
-      setTimeout(() => setPressed(false), debounce)
-
-      onPress && onPress()
-    }
+  const _styles: StylesOf<ButtonParts> = {
+    wrapper: getStyles('wrapper'),
+    text: getStyles('text'),
+    loaderWrapper: getStyles('loaderWrapper'),
+    leftIcon: {
+      ...iconStyles,
+      ...getStyles('leftIcon'),
+    },
+    rightIcon: {
+      ...iconStyles,
+      ...getStyles('rightIcon')
+    },
   }
 
-  function getStyles(key:ButtonParts) {
+  const childrenContent = TypeGuards.isFunction(children)
+    // @ts-ignore
+    ? children(allProps)
+    : children
 
-    return {
-      ...variantStyles[key],
-      ...optionalObject(disabled, variantStyles[key + ':disabled'], {}),
-    }
-  }
-  const iconStyle = getStyles('icon')
+  // TODO - This is a hack to hide the icon with display: none
+  const isLeftIconHide = _styles?.leftIcon?.display === 'none'
 
-  const loaderStyle = useNestedStylesByKey('loading', variantStyles)
+  const shouldRenderLeftIcon = !loading && !isLeftIconHide
+
+  const _hideTextOnLoading = !loadingShowText && loading
 
   return (
     <Touchable
-      css={getStyles('wrapper')}
+      css={_styles.wrapper}
       component='button'
       debugComponent='Button'
-
-      onPress={handlePress}
+      disabled={disabled}
+      onPress={onPress}
+      debugName={debugName}
       {...props}
     >
-      <LoadingOverlay
-        visible={loading}
-        styles={loaderStyle}
+      {shouldRenderLeftIcon && <Icon debugName={debugName} name={icon} style={_styles.leftIcon} />}
+      {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text debugName={debugName} text={text} css={[_styles.text]} /> : null }
+      
+      {childrenContent}
 
-      />
-      {!loading && (
-        <Icon
-          name={icon}
-          style={{ ...iconStyle, ...getStyles('leftIcon') }}
-
-        />
+      <Icon debugName={debugName} name={rightIcon} style={_styles.rightIcon}/>
+      {loading && (
+        <ActivityIndicator debugName={debugName} style={_styles.loaderWrapper} {...loaderProps} />
       )}
-      {children || (
-        <Text
-          text={text}
-          styles={{
-            text: getStyles('text'),
-          }}
-        />
-      )}
-
-      <Icon
-        name={rightIcon}
-        style={{ ...iconStyle, ...getStyles('rightIcon') }}
-
-      />
-      {loading && <ActivityIndicator styles={{
-        'wrapper': getStyles('loaderWrapper'),
-        'backCircle': getStyles('loaderBackCircle'),
-        'frontCircle': getStyles('loaderFrontCircle'),
-        'circle': getStyles('loaderCircle'),
-      }} css={getStyles('loader')}/>}
     </Touchable>
   )
 }
+
+Button.defaultProps = defaultProps
 
 export * from './styles'

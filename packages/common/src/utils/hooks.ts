@@ -97,24 +97,23 @@ export function useModal(startsOpen = false) {
 
 type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>
 
-export function usePartialState<T = any>(initial: T | (() => T)) {
-  type ValueType = T extends AnyFunction ? ReturnType<T> : T
+export function usePartialState<T= any>(initial: T | (() => T)) {
 
   const [state, setState] = useState(initial)
 
   function setPartial(
-    value: DeepPartial<ValueType> | SetPartialStateCallback<ValueType>,
+    value: DeepPartial<T> | SetPartialStateCallback<T>,
   ) {
     if (typeof value === 'function') {
-      setState((v) => deepMerge(v, value(v as ValueType)))
+      setState((v) => deepMerge(v, value(v as T)))
     } else {
       setState(deepMerge(state, value))
     }
   }
 
   return [
-    state as ValueType,
-    setPartial as React.Dispatch<React.SetStateAction<DeepPartial<ValueType>>>,
+    state as T,
+    setPartial,
   ] as const
 }
 
@@ -442,7 +441,7 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
     resolveRef.current = null
   }
 
-  const await = () => {
+  const _await = () => {
     return new Promise<T>((resolve, reject) => {
       rejectRef.current = reject
       resolveRef.current = resolve
@@ -455,8 +454,12 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
   }
 
   return {
-    await,
+    _await,
     resolve,
     reject,
   }
 }
+
+// useLayoutEffect will show warning if used during ssr, e.g. with Next.js
+// useIsomorphicEffect removes it by replacing useLayoutEffect with useEffect during ssr
+export const useIsomorphicEffect = typeof document !== 'undefined' ? useLayoutEffect : useEffect

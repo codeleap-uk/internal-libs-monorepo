@@ -5,7 +5,7 @@ import { onMount } from '../../utils'
 export const I18NRef = React.createRef<I18NContextType>()
 
 export const I18NContext = React.createContext<I18NContextType>(
-  {} as I18NContextType,
+  null as I18NContextType,
 )
 
 // @ts-expect-error
@@ -105,17 +105,18 @@ export const I18NProvider = (props: I18NContextProps) => {
   )
 }
 
-export const useI18N = () => {
+export const useI18N = <Keys extends string = string>() => {
   const ctx = React.useContext(I18NContext)
 
   if (!ctx) {
     return {
       locale: 'en',
-      setLocale: () => {},
-      t: (key: string) => key,
+      setLocale: () => { },
+      t: (key: Keys) => key,
       isSettingLocale: false,
     }
   }
 
-  return ctx
+  return ctx as I18NContextType<Keys>
 }
+

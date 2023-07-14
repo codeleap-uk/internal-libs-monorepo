@@ -1,65 +1,183 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
-
+import { jsx, CSSObject } from '@emotion/react'
 import {
   AnyFunction,
   ComponentVariants,
   IconPlaceholder,
+  TypeGuards,
+  onMount,
   onUpdate,
   useDefaultComponentStyle,
   useNestedStylesByKey,
+  useUnmount,
+  StylesOf,
+  PropsOf,
+  useIsomorphicEffect,
 } from '@codeleap/common'
 
-import { ReactNode, useEffect, useId, useLayoutEffect, useRef } from 'react'
+import React, { useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
-
 import { v4 } from 'uuid'
-
-import { StylesOf } from '../../types/utility'
-import { Button } from '../Button'
 import { View } from '../View'
 import { Text } from '../Text'
-import { Overlay } from '../Overlay'
-
-import {ModalComposition,ModalPresets} from './styles'
-import { ActionIcon } from '../ActionIcon'
+import { Overlay, OverlayProps } from '../Overlay'
+import { ModalComposition, ModalPresets } from './styles'
+import { ActionIcon, ActionIconProps } from '../ActionIcon'
+import { Scroll } from '../Scroll'
+import { usePopState } from '../../lib/usePopState'
+import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
-export type ModalProps = React.PropsWithChildren<{
-  visible: boolean
-  title?: React.ReactNode
-  toggle: AnyFunction
-  styles?: StylesOf<ModalComposition>
-  accessible?: boolean
-  showClose?: boolean
-  closable?: boolean
-  scroll?: boolean
-  footer?: ReactNode
-  debugName?: string
-} & ComponentVariants<typeof ModalPresets>
->
+export type ModalProps =
+  {
+    visible: boolean
+    children?: React.ReactNode
+    title?: React.ReactNode | string
+    description?: React.ReactNode | string
+    renderModalBody?: (props: ModalBodyProps) => React.ReactElement
+    toggle: AnyFunction
+    styles?: StylesOf<ModalComposition>
+    style?: React.CSSProperties
+    accessible?: boolean
+    showClose?: boolean
+    closable?: boolean
+    dismissOnBackdrop?: boolean
+    scroll?: boolean
+    header?: React.ReactElement
+    footer?: React.ReactNode
+    withOverlay?: boolean
+    closeIconName?: IconPlaceholder
+    keepMounted?: boolean
+    renderHeader?: (props: ModalHeaderProps) => React.ReactElement
+    debugName?: string
+    closeButtonProps?: Partial<ActionIconProps>
+    closeOnEscape?: boolean
+    onClose?: () => void
+    overlayProps?: Partial<OverlayProps>
+    zIndex?: number
+    withScrollContainer?: boolean
+    scrollLocked?: boolean
+  } & ComponentVariants<typeof ModalPresets> & ComponentCommonProps
+
 function focusModal(event: FocusEvent, id: string) {
   event.preventDefault()
   const modal = document.getElementById(id)
-  if (modal) {
-    modal.focus()
-  }
+  if (modal) modal.focus()
 }
-export const ModalContent: React.FC<ModalProps & { id: string }> = (
-  modalProps,
+
+type ModalBodyProps = {
+  id: string
+  variantStyles: PropsOf<ModalComposition>
+}
+
+type ModalHeaderProps = Partial<Omit<ModalProps, 'children'>> & {
+  id: string
+  variantStyles: PropsOf<ModalComposition>
+  onPressClose: () => void
+}
+
+const ModalDefaultHeader = (props: ModalHeaderProps) => {
+  const {
+    id,
+    variantStyles,
+    title,
+    showClose,
+    closable,
+    closeIconName,
+    onPressClose,
+    closeButtonProps = {},
+    description,
+    debugName,
+  } = props
+
+  const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
+
+  const showCloseButton = showClose && closable
+
+  const hasHeader = !!title || !!description || showCloseButton
+
+  if (!hasHeader) return null
+
+  return (
+    <View
+      id={`${id}-header`}
+      component='header'
+      css={variantStyles.header}
+      className='modal-header header'
+    >
+      <View id={`${id}-title`} css={variantStyles.titleWrapper}>
+        {TypeGuards.isString(title) ? (
+          <Text debugName={debugName} text={title} css={variantStyles.title} />
+        ) : (
+          title
+        )}
+
+        {showCloseButton && (
+          <ActionIcon
+            debugName={debugName}
+            icon={closeIconName as IconPlaceholder}
+            onPress={onPressClose}
+            {...closeButtonProps}
+            styles={closeButtonStyles}
+          />
+        )}
+      </View>
+
+      {TypeGuards.isString(description) ? (
+        <Text debugName={debugName} text={description} style={variantStyles.description} />
+      ) : (
+        description
+      )}
+    </View>
+  )
+}
+
+const defaultProps: Partial<ModalProps> = {
+  title: '',
+  closeIconName: 'x' as IconPlaceholder,
+  closable: true,
+  withOverlay: true,
+  showClose: true,
+  scroll: false,
+  closeOnEscape: true,
+  renderHeader: ModalDefaultHeader,
+  keepMounted: true,
+  dismissOnBackdrop: true,
+  zIndex: null,
+  description: null,
+  withScrollContainer: false,
+  scrollLocked: true,
+}
+
+export const ModalContent = (
+  modalProps: ModalProps & { id: string },
 ) => {
   const {
     children,
-    closable = true,
     visible,
-    title = '',
+    title,
     toggle,
-    responsiveVariants,
-    variants,
+    variants = [],
     styles,
-    showClose = true,
     footer,
+    style = {},
+    renderHeader: ModalHeader,
+    closable,
+    withOverlay,
+    showClose,
+    responsiveVariants = {},
+    closeIconName,
+    scroll,
+    renderModalBody,
+    closeOnEscape,
+    onClose,
+    overlayProps = {},
+    dismissOnBackdrop,
+    zIndex,
+    withScrollContainer,
+    debugName,
+    scrollLocked,
     ...props
   } = modalProps
 
@@ -71,45 +189,73 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
     styles,
   })
 
-  onUpdate(() => {
-    if (visible) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
+  const toggleAndReturn = () => {
+    toggle?.()
+    window.history.back()
 
-    }
-  }, [visible])
+    if (TypeGuards.isFunction(onClose)) onClose()
+  }
+
+  usePopState(visible, toggle, scrollLocked)
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'Escape') {
-      toggle()
+    if (!closeOnEscape) return null
+
+    if (e?.key === 'Escape' || e?.keyCode === 27) {
+      toggleAndReturn()
     }
   }
 
-  useLayoutEffect(() => {
+  useIsomorphicEffect(() => {
     const modal = document.getElementById(id)
-    if (modal) {
-      modal.focus()
-    }
+    if (modal) modal.focus()
   }, [id])
 
-  const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
-  const close = closable ? toggle : () => {}
+  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => { }
+
+  const ModalBody = renderModalBody || (scroll ? Scroll : View)
+
+  const ModalArea = withScrollContainer ? Scroll : View
+
+  const _zIndex = React.useMemo(() => {
+    return TypeGuards.isNumber(zIndex) ? { zIndex } : {}
+  }, [zIndex])
+
   return (
     <View
       aria-hidden={!visible}
-      css={[variantStyles.wrapper, visible ? variantStyles['wrapper:visible'] : variantStyles['wrapper:hidden']]}
+      css={[
+        variantStyles.wrapper,
+        _zIndex,
+        visible
+          ? variantStyles['wrapper:visible']
+          : variantStyles['wrapper:hidden'],
+      ]}
     >
       <Overlay
-        visible={visible}
-        
-        css={[variantStyles.backdrop, visible ? variantStyles['backdrop:visible'] : variantStyles['backdrop:hidden'] ]}
+        debugName={debugName}
+        visible={withOverlay ? visible : false}
+        css={[
+          variantStyles.backdrop,
+          visible
+            ? variantStyles['backdrop:visible']
+            : variantStyles['backdrop:hidden'],
+        ]}
+        scrollLocked={scrollLocked}
+        {...overlayProps}
       />
-      <View css={variantStyles.innerWrapper} >
-        <View css={variantStyles.backdropPressable} onClick={close}/>
+
+      <ModalArea css={variantStyles.innerWrapper}>
+        <View css={variantStyles.backdropPressable} onClick={close} />
         <View
           component='section'
-          css={[variantStyles.box, visible ? variantStyles['box:visible'] : variantStyles['box:hidden']]}
+          css={[
+            variantStyles.box,
+            visible
+              ? variantStyles['box:visible']
+              : variantStyles['box:hidden'],
+            style,
+          ]}
           className='content'
           onKeyDown={closeOnEscPress}
           tabIndex={0}
@@ -117,73 +263,100 @@ export const ModalContent: React.FC<ModalProps & { id: string }> = (
           aria-modal={true}
           role='dialog'
           aria-describedby={`${id}-title`}
-          aria-label='Close the modal by presing Escape key'
+          aria-label='Close the modal by pressing Escape key'
           {...props}
         >
-          {(title || showClose) && (
-            <View
-              component='header'
-              className='modal-header header'
-              id={`${id}-title`}
-              css={variantStyles.header}
-            >
-              {typeof title === 'string' ? <Text text={title} css={variantStyles.title} /> : title}
+          <ModalHeader
+            {...modalProps}
+            variantStyles={variantStyles}
+            id={id}
+            onPressClose={toggleAndReturn}
+            debugName={debugName}
+          />
 
-              {showClose && closable && (
-                <ActionIcon
-                  icon={'close' as IconPlaceholder}
-                  
-                  onPress={toggle}
-                  styles={closeButtonStyles}
-                />
-              )}
-            </View>
-          )}
+          <ModalBody
+            css={variantStyles.body}
+            variantStyles={variantStyles}
+            id={id}
+          >
+            {children}
+          </ModalBody>
 
-          <View css={variantStyles.body}>{children}</View>
           {footer && (
             <View component='footer' css={variantStyles.footer}>
               {footer}
             </View>
           )}
         </View>
-      </View>
+      </ModalArea>
     </View>
   )
 }
 
-export const Modal: React.FC<ModalProps> = ({ accessible, ...props }) => {
-  const modalId = useRef(v4())
+export const Modal = (props) => {
+  const allProps = {
+    ...Modal.defaultProps,
+    ...props,
+  }
 
-  useEffect(() => {
+  const {
+    accessible,
+    keepMounted,
+    visible,
+  } = allProps
+
+  const modalId = useRef(v4())
+  const [renderStatus, setRenderStatus] = React.useState(
+    keepMounted ? 'mounted' : 'unmounted',
+  )
+
+  // onUpdate(() => {
+  //   if (!keepMounted) {
+  //     if (visible) {
+  //       setRenderStatus('mounted')
+  //     } else {
+  //       setTimeout(() => setRenderStatus('unmounted'), 500)
+  //     }
+  //   }
+  // }, [keepMounted, visible])
+
+  onMount(() => {
     if (accessible) {
-      const currentId = modalId.current
+      const currentId = modalId
       const appRoot = document.body
       appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
       return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
     }
-  }, [])
+  })
 
-  useEffect(() => {
+  onUpdate(() => {
     if (accessible) {
       const appRoot = document.body
-      appRoot.setAttribute('aria-hidden', `${props.visible}`)
+      appRoot.setAttribute('aria-hidden', `${visible}`)
       appRoot.setAttribute('tabindex', `${-1}`)
     }
-  }, [props.visible])
+  }, [visible])
 
-  if (accessible) {
-    if (props.visible) {
+  onUpdate(() => {
+    if (visible) {
       document.body.style.overflow = 'hidden'
-      return ReactDOM.createPortal(
-        <ModalContent {...props} id={modalId.current} />,
-        document.body,
-      )
     } else {
       document.body.style.overflow = 'visible'
-      return null
     }
-  }
+  }, [visible])
 
-  return <ModalContent {...props} id={modalId.current} />
+  const content = <ModalContent {...props} id={modalId.current} />
+
+  // if (renderStatus === 'unmounted') return null
+
+  if (typeof window === 'undefined') return content
+
+  return ReactDOM.createPortal(
+    content,
+    document.body,
+  )
+
 }
+
+Modal.defaultProps = defaultProps
+

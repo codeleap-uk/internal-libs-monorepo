@@ -58,12 +58,12 @@ export const StyleProvider = <
   S extends Readonly<Record<string, DefaultVariantBuilder>>,
   V extends VariantProvider<any, AppTheme>
 >({
-    children,
-    variantProvider,
-    variants,
-    logger,
-    settings,
-  }: StyleContextProps<S, V>) => {
+  children,
+  variantProvider,
+  variants,
+  logger,
+  settings,
+}: StyleContextProps<S, V>) => {
   const [theme, setTheme] = useState(variantProvider.theme.theme)
 
   onMount(() => {
@@ -168,12 +168,13 @@ export function useDefaultComponentStyle<
         currentTheme as string,
       )
     }, [
-
+      JSON.stringify(props.variants),
       windowSize.height,
       windowSize.width,
       styles,
       props.rootElement,
       componentName,
+      JSON.stringify(props?.variants || []),
     ])
     return stylesheet as any
   } catch (e) {

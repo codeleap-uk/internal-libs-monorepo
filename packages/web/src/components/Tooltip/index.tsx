@@ -1,155 +1,187 @@
-/** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react'
+import React, { useState } from 'react'
 import {
-  ComponentVariants,
-  useBooleanToggle,
-  useDefaultComponentStyle,
-  useDebounce,
-} from '@codeleap/common'
-import { ReactNode } from 'react'
-import { View } from '../View'
+  Provider as TooltipContainer,
+  Root as TooltipWrapper,
+  Trigger as TooltipTrigger,
+  Portal as TooltipPortal,
+  Content as TooltipContent,
+  Arrow as TooltipArrow,
+  TooltipProps as PrimitiveTooltipProps,
+  TooltipContentProps,
+  TooltipPortalProps,
+  TooltipArrowProps,
+  TooltipTriggerProps,
+  TooltipProviderProps,
+} from '@radix-ui/react-tooltip'
 
-import { StylesOf } from '../../types/utility'
-import { Touchable } from '../Touchable'
-import { useClickOutside } from '../../lib/hooks'
+import { AnyFunction, ComponentVariants, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { TooltipComposition, TooltipPresets } from './styles'
+import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types/utility'
+import { View, ViewProps } from '../View'
 
-type TooltipPosition = 'left' | 'top' | 'bottom' | 'right'
-
-const arrowPositionStyles = {
-  left: {
-    right: `100%`,
-    top: '50%',
-    transform: 'translate(50%,-50%)',
-    borderRight: 'none',
-    borderTop: 'none',
-  },
-  right: {
-    left: `100%`,
-    top: '50%',
-    transform: 'translate(-50%,-50%)',
-    borderLeft: 'none',
-    borderBottom: 'none',
-  },
-  bottom: {
-    left: '50%',
-    top: `100%`,
-    transform: 'translate(-50%,-50%)',
-    borderTop: 'none',
-    borderLeft: 'none',
-  },
-  top: {
-    left: '50%',
-    bottom: `100%`,
-    transform: 'translate(-50%,50%)',
-    borderBottom: 'none',
-    borderRight: 'none',
-  },
+type TooltipComponentProps = {
+  contentProps?: TooltipContentProps
+  portalProps?: TooltipPortalProps
+  arrowProps?: TooltipArrowProps
+  triggerProps?: TooltipTriggerProps
+  providerProps?: TooltipProviderProps
 }
 
-const tooltipPositionStyles = {
-  left: (arrow = 0, visible = false) => ({
-    right: `calc(100% + ${arrow}px)`,
-    top: '50%',
-    transform: `translate(0%,-50%) scale(${visible ? '1' : '0'})`,
-  }),
-  right: (arrow = 0, visible = false) => ({
-    left: `calc(100% + ${arrow}px)`,
-    top: '50%',
-    transform: `translate(0%,-50%) scale(${visible ? '1' : '0'})`,
-  }),
-  bottom: (arrow = 0, visible = false) => ({
-    left: '50%',
-    top: `calc(100% + ${arrow}px)`,
-    transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
-  }),
-  top: (arrow = 0, visible = false) => ({
-    left: '50%',
-    bottom: `calc(100% + ${arrow}px)`,
-    transform: `translate(-50%,0%) scale(${visible ? '1' : '0'})`,
-  }),
-}
-
-export type TooltipProps = React.PropsWithChildren<{
-  position: TooltipPosition
+export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
+  toggle?: AnyFunction
+  visible?: boolean
+  content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
+  triggerWrapper?: React.ReactNode
+  triggerWrapperProps?: Partial<ViewProps<'div'>>
   styles?: StylesOf<TooltipComposition>
-  showOn?: 'click' | 'hover'
-  content?: string | ReactNode
-} & ComponentVariants<typeof TooltipPresets>
->
-const invert = (pos) => {
-  switch (pos) {
-    case 'left':
-      return 'right'
-    case 'right':
-      return 'left'
-    case 'top':
-      return 'bottom'
-    case 'bottom':
-      return 'top'
-  }
+  side?: 'left' | 'right' | 'bottom' | 'top'
+  openOnPress?: boolean
+  openOnHover?: boolean
+  disabled?: boolean
+  delayDuration?: number
+  onOpen?: AnyFunction
+  onClose?: AnyFunction
+  onValueChange?: (value: boolean) => void
+  onHover?: (hoverType: 'enter' | 'leave', value: boolean) => void
+  onPress?: (value: boolean) => void
+  children?: React.ReactNode
+} & ComponentVariants<typeof TooltipPresets> & ComponentCommonProps
+
+const defaultProps: Partial<TooltipProps> = {
+  openOnPress: true,
+  openOnHover: true,
+  disabled: false,
+  delayDuration: 0,
+  side: 'bottom',
+  triggerWrapper: View,
 }
 
-export const Tooltip: React.FC<TooltipProps> = (props) => {
+export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipProps) => {
+  const allProps = {
+    ...Tooltip.defaultProps,
+    ...props,
+  }
+
   const {
+    toggle: _toggle = null,
+    visible: _visible = null,
     children,
-    position = 'top',
-    styles,
-    variants,
-    responsiveVariants,
-    showOn,
-    content,
-  } = props
+    content: Content,
+    triggerWrapperProps = {},
+    triggerWrapper: TriggerWrapper,
+    side,
+    disabled,
+    delayDuration,
+    openOnPress,
+    openOnHover,
+    onOpen,
+    onClose,
+    onValueChange,
+    onHover,
+    onPress,
+    contentProps = {},
+    portalProps = {},
+    arrowProps = {},
+    triggerProps = {},
+    providerProps = {},
+    variants = [],
+    responsiveVariants = {},
+    styles = {},
+    ...rest
+  } = allProps
 
-  const [isVisible, setVisible] = useBooleanToggle(false)
-
-  const [debouncedVisible] = useDebounce(isVisible, 100)
-  const arrowPos = arrowPositionStyles[invert(position)]
-
-  const variantStyles = useDefaultComponentStyle('Tooltip', {
+  const variantsStyles = useDefaultComponentStyle<'u:Tooltip', typeof TooltipPresets>('u:Tooltip', {
     responsiveVariants,
     variants,
     styles,
   })
 
-  const style = {
-    transition: 'transform 0.2s ease',
-    '&:after': {
-      ...variantStyles.arrow,
-      ...arrowPos,
-      transform: arrowPos.transform + ' rotate(45deg)',
-    },
-    ...tooltipPositionStyles[position](10, debouncedVisible),
-    ...variantStyles.bubble,
-  } as CSSObject
+  const hasStateProps = !TypeGuards.isNil(_visible) && TypeGuards.isFunction(_toggle)
 
-  const wrapperRef = useClickOutside(
-    () => {
-      if (isVisible) {
-        setVisible(false)
-      }
-    },
-  )
+  const [visible, toggle] = hasStateProps ? [_visible, _toggle] : useState(false)
 
-  if (showOn === 'click') {
-    return (
-      <Touchable
-        onPress={() => setVisible()}
-        ref={wrapperRef}
-        css={variantStyles.wrapper}
-      >
-        <View css={style}>{content}</View>
-        {children}
-      </Touchable>
-    )
+  const tooltipDirectionStyle = React.useMemo(() => {
+    return side ? variantsStyles[`wrapper:${side}`] : variantsStyles.wrapper
+  }, [side, variantsStyles])
+
+  function handleToggle(_value: boolean, isToggle = true) {
+    if (disabled) return
+
+    if (_value === true) {
+      onOpen?.()
+    } else {
+      onClose?.()
+    }
+
+    if (isToggle) toggle(_value)
+
+    if (TypeGuards.isFunction(onValueChange)) onValueChange?.(_value)
+  }
+
+  const onOpenChange = React.useCallback((_open: boolean) => {
+    handleToggle(_open, false)
+  }, [handleToggle])
+
+  const _onHover = (type: 'enter' | 'leave') => {
+    if (!openOnHover || disabled) return
+
+    const value = !visible
+
+    if (type === 'leave' && visible === false) return
+
+    handleToggle(value)
+    if (TypeGuards.isFunction(onHover)) onHover?.(type, value)
+  }
+
+  const _onPress = () => {
+    if (!openOnPress || disabled) return
+
+    const value = !visible
+
+    handleToggle(value)
+    if (TypeGuards.isFunction(onPress)) onPress?.(value)
   }
 
   return (
-    <View onHover={setVisible} ref={wrapperRef} css={variantStyles.wrapper}>
-      <View css={style}>{content}</View>
-      {children}
-    </View>
+    <TooltipContainer {...providerProps}>
+      <TooltipWrapper
+        delayDuration={delayDuration}
+        open={visible}
+        onOpenChange={onOpenChange}
+        {...rest}
+      >
+        <TooltipTrigger
+          onClick={_onPress}
+          onMouseEnter={() => _onHover('enter')}
+          onMouseLeave={() => _onHover('leave')}
+          asChild
+          {...triggerProps}
+        >
+          <TriggerWrapper {...allProps as any} {...triggerWrapperProps}>
+            {children}
+          </TriggerWrapper>
+        </TooltipTrigger>
+        <TooltipPortal {...portalProps}>
+          <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
+            {
+              TypeGuards.isFunction(Content)
+                ? <Content
+                  {...allProps}
+                  visible={visible}
+                  toggle={toggle}
+                  variantsStyles={variantsStyles}
+                />
+                : Content
+            }
+            <TooltipArrow {...arrowProps} />
+          </TooltipContent>
+        </TooltipPortal>
+      </TooltipWrapper>
+
+    </TooltipContainer>
   )
 }
+
+Tooltip.defaultProps = defaultProps
 
 export * from './styles'

@@ -7,7 +7,7 @@ import {
   ComponentVariants,
   useCodeleapContext,
 } from '@codeleap/common'
-import { StylesOf } from '../../types'
+import { ComponentWithDefaultProps, StylesOf } from '../../types'
 import {
   ActivityIndicatorComposition,
   ActivityIndicatorPresets,
@@ -19,17 +19,19 @@ export type ActivityIndicatorProps =
  & {
   variants?: ComponentVariants<typeof ActivityIndicatorPresets>['variants']
   styles?: StylesOf<ActivityIndicatorComposition>
-  component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<Indicator>}, 'component'>>
+  component?: (props: Omit<ActivityIndicatorProps & {ref?: React.Ref<Indicator>}, 'component'>) => JSX.Element
 }
+
+type TActivityIndicator = ComponentWithDefaultProps<ActivityIndicatorProps>
 
 export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
   (activityIndicatorProps, ref) => {
-    const { 
-      variants = [], 
-      style, 
-      styles: propStyles, 
-      component, 
-      ...props 
+    const {
+      variants = [],
+      style = {},
+      styles: propStyles = {},
+      component = Indicator,
+      ...props
     } = {
       ...ActivityIndicator.defaultProps,
       ...activityIndicatorProps,
@@ -49,7 +51,6 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
     const size = styles?.height || styles?.width || 'large'
 
     const Component = component
-   
 
     return (
       <Component
@@ -62,8 +63,8 @@ export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
       />
     )
   },
-)
+) as TActivityIndicator
 
 ActivityIndicator.defaultProps = {
-  component: Indicator,
+  component: forwardRef(({ size, color, style }, ref) => <Indicator size={size} color={color} style={style} ref={ref}/>),
 }

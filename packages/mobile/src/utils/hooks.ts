@@ -4,6 +4,8 @@ import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleCon
 import AsyncStorage from '@react-native-community/async-storage'
 import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { PressableRippleProps } from '../modules/PressableRipple/type'
+import { useSoftInputState } from 'react-native-avoid-softinput'
+import { useMemo } from 'react'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -104,7 +106,7 @@ const buildAnimatedStyle = (property: AnimatableProperties, value, currentStyle,
     case 'scaleY':
     case 'translateX':
     case 'translateY':
-      if(!newStyle.transform){
+      if (!newStyle.transform) {
         newStyle.transform = []
       }
       newStyle.transform.push({
@@ -165,25 +167,21 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
   const _transition = useRef(null)
 
   if (!_transition.current) {
-    _transition.current = JSON.parse(JSON.stringify(transition||{}))
+    _transition.current = JSON.parse(JSON.stringify(transition || {}))
   }
-
-  
 
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
 
   const animated = useAnimatedStyle(() => {
     const nextState = updater(staticStyles)
 
-    
     const formatted = transformProperties(
-      nextState, 
-      _transition.current
+      nextState,
+      _transition.current,
     )
 
     return formatted
   }, dependencies)
-
 
   return animated
 }
@@ -344,3 +342,16 @@ export function useAsyncStorageState<T>(key:string, defaultValue?: T) {
   return [value, setValue] as [T, typeof setValue]
 }
 
+export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {
+  const { isSoftInputShown, softInputHeight } = useSoftInputState()
+
+  const propStyle = useMemo(() => {
+    return StyleSheet.flatten(styles)
+  }, styles)
+
+  const bottomPadding = propStyle && TypeGuards.isNumber(propStyle.paddingBottom) ? propStyle.paddingBottom : 0
+
+  const totalPadding = softInputHeight + bottomPadding
+
+  return isSoftInputShown && enabled ? [propStyle, { paddingBottom: totalPadding }] : [propStyle]
+}

@@ -6,7 +6,7 @@ on:
     paths:
       - "packages/**/*"
 concurrency:
-  group: ${ GIT_BRANCH_NAME }
+  group: pr-${ GIT_BRANCH_NAME }
   cancel-in-progress: true
 jobs:
   build:

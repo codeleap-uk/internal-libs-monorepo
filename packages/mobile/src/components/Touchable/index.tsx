@@ -1,25 +1,25 @@
 import * as React from 'react'
-import { ComponentPropsWithoutRef, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import {
   ComponentVariants,
   useDefaultComponentStyle,
-  BaseViewProps,
 
   useCodeleapContext,
   AnyFunction,
   TypeGuards,
   onMount,
 } from '@codeleap/common'
-import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
+import { Pressable, StyleSheet, View as RNView, Insets, Platform, PressableProps, ViewStyle, StyleProp } from 'react-native'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
+
 import { PressableRipple } from '../../modules/PressableRipple'
-export type TouchableProps = React.PropsWithChildren<
+export type TouchableProps =
   Omit<
-    ComponentPropsWithoutRef<typeof Pressable>,
-    'onPress'|'children'
+    PressableProps,
+    'onPress' | 'children' | 'style'
   > & {
     variants?: ComponentVariants<typeof TouchablePresets>['variants']
     component?: any
@@ -34,11 +34,13 @@ export type TouchableProps = React.PropsWithChildren<
     styles?: StylesOf<TouchableComposition>
     setPressed?: (param: boolean) => void
     rippleDisabled?: boolean
-} & BaseViewProps
->
+    children?: React.ReactNode
+    style?: StyleProp<ViewStyle>
+  }
+
 export * from './styles'
 
-export const Touchable: React.FC<TouchableProps> = forwardRef<
+const _Touchable = forwardRef<
   RNView,
   TouchableProps
 >((touchableProps, ref) => {
@@ -201,7 +203,7 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
   const disableRipple = disableFeedback || rippleDisabled || Platform.OS !== 'android'
 
   return (
-    <Wrapper style={[wrapperStyle]}>
+    <Wrapper style={[wrapperStyle]} hitSlop={hitSlop}>
       {!disableRipple ? (
         <PressableRipple
           onPress={press}
@@ -222,7 +224,6 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
         </PressableRipple>
       ) : (
         <Pressable
-          hitSlop={hitSlop}
           onPress={press}
           style={({ pressed }) => ([
             pressableStyle,
@@ -238,3 +239,5 @@ export const Touchable: React.FC<TouchableProps> = forwardRef<
     </Wrapper>
   )
 })
+
+export const Touchable = _Touchable as ((props: TouchableProps) => JSX.Element)

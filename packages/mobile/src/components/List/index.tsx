@@ -7,7 +7,7 @@ import {
   TypeGuards,
 } from '@codeleap/common'
 
-import { FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { FlatListProps as RNFlatListProps, ListRenderItemInfo, StyleSheet, FlatList } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { RefreshControl, RefreshControlProps } from '../RefreshControl'
@@ -15,6 +15,7 @@ import { ListComposition, ListPresets } from './styles'
 import { StylesOf } from '../../types'
 
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
+import { useKeyboardPaddingStyle } from '../../utils'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -51,6 +52,7 @@ export type FlatListProps<
     refreshControlProps?: Partial<RefreshControlProps>
     fakeEmpty?: boolean
     loading?: boolean
+    keyboardAware?: boolean
   } & ComponentVariants<typeof ListPresets>
 
 const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
@@ -59,7 +61,7 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   )
 }
 
-const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
+const ListCP = forwardRef<FlatList, FlatListProps>(
   (flatListProps, ref) => {
     const {
       variants = [],
@@ -69,10 +71,11 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
       component,
       refreshing,
       placeholder,
-      keyboardAware,
       refreshControlProps = {},
       loading = false,
+      keyboardAware = true,
       fakeEmpty = loading,
+      contentContainerStyle,
       ...props
     } = flatListProps
 
@@ -85,8 +88,6 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
 
     // const isEmpty = !props.data || !props.data.length
     const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
-
-    const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null
@@ -112,21 +113,23 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
       loading: TypeGuards.isBoolean(placeholder?.loading) ? placeholder.loading : loading,
     }
 
+    const keyboardStyle = useKeyboardPaddingStyle([
+      variantStyles.content,
+      contentContainerStyle,
+      isEmpty && variantStyles['content:empty'],
+    ], keyboardAware && !props.horizontal)
+
     return (
-      <KeyboardAwareFlatList
+      <FlatList
         style={[
           variantStyles.wrapper,
           style,
           isEmpty && variantStyles['wrapper:empty'],
         ]}
-        contentContainerStyle={[
-          variantStyles.content,
-          isEmpty && variantStyles['content:empty'],
-        ]}
-        // @ts-expect-error React's refs suck
+        contentContainerStyle={keyboardStyle}
+        // @ts-expect-error This works
         ItemSeparatorComponent={separator}
         ListHeaderComponentStyle={variantStyles.header}
-
         refreshControl={!!onRefresh && (
           <RefreshControl
             refreshing={refreshing}
@@ -138,7 +141,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
         ListEmptyComponent={<EmptyPlaceholder {..._placeholder}/>}
         {...props}
         data={fakeEmpty ? [] : props.data}
-        ref={ ref as React.LegacyRef<KeyboardAwareFlatList> }
+        ref={ ref }
         renderItem={renderItem}
 
       />
@@ -146,7 +149,7 @@ const ListCP = forwardRef<KeyboardAwareFlatList, FlatListProps>(
   },
 )
 
-export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => React.ReactElement
+export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => JSX.Element
 
 export const List = ListCP as unknown as ListComponentType
 

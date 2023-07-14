@@ -1,103 +1,119 @@
-import { VariableSizeList as VirtualList , VariableSizeListProps} from 'react-window'
-import { ComponentProps, CSSProperties, ReactElement } from 'react'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle
-} from '@codeleap/common'
-import { StylesOf } from '../../types/utility'
-import { CSSObject } from '@emotion/react'
-import { ListComposition, ListPresets } from './styles'
-
-export type ListRender<T> = (itemProps: {
-  item: T
-  index: number
-  style: CSSProperties
-}) => ReactElement
+import React from 'react'
+import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
+import { View, ViewProps } from '../View'
+import { EmptyPlaceholder } from '../EmptyPlaceholder'
+import { ListPresets } from './styles'
+import { VirtualItem } from '@tanstack/react-virtual'
+import { useInfiniteScroll } from './useInfiniteScroll'
+import { ListProps } from './types'
+import { ListLayout } from './ListLayout'
 
 export * from './styles'
+export * from './PaginationIndicator'
+export * from './useInfiniteScroll'
+export * from './types'
+export * from './ListLayout'
 
-export type ListProps<T> = {
-  styles?: StylesOf<ListComposition>
-  css?: CSSObject
-  data: T[]
-  getSize: (i: T, idx: number) => number
-  renderItem: ListRender<T>
-} & Omit<
-  VariableSizeListProps,
-  | 'itemCount'
-  | 'itemSize'
-  | 'itemData'
-  | 'itemHeight'
-  | 'width'
-  | 'height'
-  | 'children'
-> &
-  ComponentVariants<typeof ListPresets>
+const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
+  return (
+    <View css={[props?.separatorStyles]}></View>
+  )
+}
 
-export const List = <T extends unknown>(
-  listProps: ListProps<T>,
-) => {
+const defaultProps: Partial<ListProps> = {
+  ListFooterComponent: null,
+  ListHeaderComponent: null,
+  ListLoadingIndicatorComponent: null,
+  ListRefreshControlComponent: null,
+  ListEmptyComponent: EmptyPlaceholder,
+  ListSeparatorComponent: RenderSeparator,
+  refreshDebounce: 3000,
+  refreshSize: 40,
+  refreshThreshold: 1,
+  refreshPosition: 2,
+  refresh: true,
+}
+
+const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
+  const allProps = {
+    ...defaultProps,
+    ...flatListProps,
+  }
+
   const {
-    variants,
-    responsiveVariants,
-    styles,
+    variants = [],
+    responsiveVariants = {},
+    styles = {},
+    ListLoadingIndicatorComponent,
+    renderItem: RenderItem,
+    ListSeparatorComponent,
     data,
-    getSize,
-    renderItem: Item,
-    ...viewProps
-  } = listProps
+    separators,
+  } = allProps
 
-  const variantStyles = useDefaultComponentStyle('View', {
+  const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
     variants,
     responsiveVariants,
     styles,
   })
 
+  const {
+    items,
+    dataVirtualizer,
+    layoutProps,
+  } = useInfiniteScroll(allProps)
+
+  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+
+  const renderItem = useCallback((_item: VirtualItem) => {
+    if (!RenderItem) return null
+
+    const showIndicator = (_item?.index > data?.length - 1) && !!ListLoadingIndicatorComponent
+
+    const listLength = data?.length || 0
+
+    const isFirst = _item?.index === 0
+    const isLast = _item?.index === listLength - 1
+
+    const isOnly = isFirst && isLast
+
+    const _itemProps = {
+      ..._item,
+      isOnly,
+      isLast,
+      isFirst,
+      item: data?.[_item?.index]
+    }
+
+    return (
+      <div
+        css={[variantStyles.itemWrapper]}
+        key={_item?.key}
+        data-index={_item?.index}
+        ref={dataVirtualizer?.measureElement}
+      >
+        {!isFirst && separator}
+        {showIndicator && <ListLoadingIndicatorComponent />}
+        {!!_itemProps?.item && <RenderItem {..._itemProps} />}
+      </div>
+    )
+  }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
+
   return (
-    // @ts-ignore
-    <AutoSizer>
-      {({ height, width }) => (
-        // @ts-ignore
-        <VirtualList
-          height={height}
-          width={width}
-          itemCount={data.length}
-          itemData={data}
-          itemSize={(idx) => getSize(data[idx], idx)}
-          css={variantStyles.wrapper}
-          {...viewProps}
-        >
-          {({ style, index }) => (
-            <Item item={data[index]} style={style} index={index} />
-          )}
-        </VirtualList>
-      )}
-    </AutoSizer>
+    <ListLayout
+      {...allProps}
+      {...layoutProps}
+      variantStyles={variantStyles} // @ts-ignore
+      ref={ref}
+    >
+      {/* Necessary for correct list render */}
+      <div css={[variantStyles.list, { transform: `translateY(${items?.[0]?.start}px)` }]}>
+        {items?.map((item) => renderItem(item))}
+      </div>
+    </ListLayout>
   )
+})
 
-  // return <View {...viewProps}>
-  //   {data.map((item, idx) => <Component item={item} idx={idx} key={idx}/>)}
-  // </View>
-}
+export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
 
-// const rowHeights = new Array(1000)
-//   .fill(true)
-//   .map(() => 25 + Math.round(Math.random() * 50));
-
-// const getItemSize = index => rowHeights[index];
-
-// const Row = ({ index, style }) => (
-//   <div style={style}>Row {index}</div>
-// );
-
-// const Example = () => (
-//   <List
-//     height={150}
-//     itemCount={1000}
-//     itemSize={getItemSize}
-//     width={300}
-//   >
-//     {Row}
-//   </List>
-// );
+export const List = ListCP as unknown as ListComponentType

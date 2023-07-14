@@ -45,7 +45,7 @@ function RenderModal(props: {args:OSAlertArgs; contextProps:AlertContext ; remov
 
       footer={<>
         {
-          options.map((o, idx) => <Button key={idx} {...o} onPress={() => {
+          options.map((o, idx) => <Button debugName={`OSAlert ${title}`} key={idx} {...o} onPress={() => {
             o.onPress?.()
             toggle()
 
