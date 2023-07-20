@@ -6,22 +6,22 @@ import {
   useCallback,
 } from '@codeleap/common'
 
-import { 
-  RefreshControl, 
-  StyleSheet, 
-  RefreshControlProps, 
+import {
+  RefreshControl,
+  StyleSheet,
+  RefreshControlProps,
   SectionListRenderItemInfo,
   SectionListProps as RNSectionListProps,
+  SectionList,
 } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { StylesOf } from '../../types'
-import { KeyboardAwareSectionList } from 'react-native-keyboard-aware-scroll-view'
+import { useKeyboardPaddingStyle } from '../../utils'
 import { SectionsComposition, SectionsPresets } from './styles'
 export * from './styles'
 
 export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
-
 
 export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & {
   isFirst: boolean
@@ -43,7 +43,6 @@ export type ReplaceSectionListProps<P, T> = Omit<P, DataboundSectionListPropsTyp
 
 export * from './styles'
 
-
 export type SectionListProps<
   T = any[],
   Data = T extends Array<infer D> ? D : never
@@ -54,10 +53,10 @@ export type SectionListProps<
     styles?: StylesOf<SectionsComposition>
     refreshControlProps?: Partial<RefreshControlProps>
     fakeEmpty?: boolean
+    keyboardAware?: boolean
   } & ComponentVariants<typeof SectionsPresets>
 
-
-export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
+export const Sections = forwardRef<SectionList, SectionListProps>(
   (sectionsProps, ref) => {
     const {
       variants = [],
@@ -67,8 +66,10 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       component,
       refreshing,
       placeholder,
-      keyboardAware,
+      keyboardAware = true,
       refreshControlProps = {},
+      contentContainerStyle,
+
       fakeEmpty,
       refreshControl,
       ...props
@@ -80,12 +81,12 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       transform: StyleSheet.flatten,
 
     })
-    
-    const renderSeparator = () => {
+
+    const renderSeparator = useCallback(() => {
       return (
         <View style={variantStyles.separator}></View>
       )
-    }
+    }, [variantStyles.separator])
 
     const getItemPosition = (section, itemIdx) => {
       const listLength = section?.length || 0
@@ -130,10 +131,12 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
     const isEmpty = !props.sections || !props.sections.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
+    const keyboardStyle = useKeyboardPaddingStyle([variantStyles.content, contentContainerStyle], keyboardAware)
+
     return (
-      <KeyboardAwareSectionList
-        style={[variantStyles.wrapper,style]}
-        contentContainerStyle={[variantStyles.content]}
+      <SectionList
+        style={[variantStyles.wrapper, style]}
+        contentContainerStyle={keyboardStyle}
         showsVerticalScrollIndicator={false}
         // @ts-ignore
         ref={ref}
@@ -150,4 +153,4 @@ export const Sections = forwardRef<KeyboardAwareSectionList, SectionListProps>(
       />
     )
   },
-)
+) as unknown as <T = any>(props: SectionListProps<T>) => JSX.Element

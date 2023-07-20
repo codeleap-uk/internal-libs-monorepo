@@ -6,7 +6,7 @@ export type RefreshControlProps = {
   styles?: StylesOf<RefreshControlComposition>
 } & RNRefreshControlProps & ComponentVariants<typeof RefreshControlPresets>
 
-export const RefreshControl: React.FC<RefreshControlProps> = (props) => {
+export const RefreshControl = (props:RefreshControlProps) => {
   const { variants = [], styles } = props
 
   const variantStyles = useDefaultComponentStyle<'u:RefreshControl', typeof RefreshControlPresets>('u:RefreshControl', {

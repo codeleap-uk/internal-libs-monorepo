@@ -1,11 +1,11 @@
 type I18NSubscriber = (locale: string) => void | Promise<void>
 
-export type TFunction = (key: string, ...args: any) => string
+export type TFunction<Keys = string> = (key: Keys, ...args: any) => string
 
-export type I18NContextType = {
+export type I18NContextType<Keys extends string = string> = {
   locale: string
   setLocale: (locale: string) => void
-  t: TFunction
+  t: TFunction<Keys>
   subscribe: (callback: I18NSubscriber) => () => void
   isSettingLocale: boolean
 }
@@ -22,8 +22,8 @@ export type I18NContextProps = React.PropsWithChildren<{
   i18n: I18nType
 }>
 
-export type I18nType = {
-  t: TFunction
+export type I18nType<KeyPaths = string> = {
+  t: TFunction<KeyPaths>
   setLocale: (locale: string) => void
   locale: string
   persistor: Persistor

@@ -1,5 +1,5 @@
 import { Platform, Dimensions, StatusBar, StyleSheet } from 'react-native'
-import  DeviceInfo  from 'react-native-device-info'
+import DeviceInfo from 'react-native-device-info'
 
 type AppValues = {
   headerHeight: number

@@ -13,7 +13,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
   const [isValid, setIsValid] = useState<boolean>(true)
   const updateErrorOnChange = useRef(false)
 
-  const _validator = useMemo(() => getValidator(validator), [])
+  const _validator = useMemo(() => getValidator(validator), [validator])
 
   onUpdate(() => {
     if (!updateErrorOnChange.current || !_validator) return
@@ -26,9 +26,8 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
   return {
     onInputBlurred: () => {
-      
-      if (!_validator) return
 
+      if (!_validator) return
 
       updateErrorOnChange.current = false
       const { valid, message } = _validator(value, {})
@@ -38,8 +37,8 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
 
     },
     onInputFocused: () => {
-      
-      if (isValid ) return
+
+      if (isValid) return
       updateErrorOnChange.current = true
     },
     message: _message,
@@ -47,7 +46,7 @@ export function useValidate(value: any, validator: yup.SchemaOf<any> | Validator
     showError: !isValid && !isEmpty,
     error: {
       message: _message,
-    }
+    },
   }
 
 }

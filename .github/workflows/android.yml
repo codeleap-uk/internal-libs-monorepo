@@ -8,7 +8,7 @@ on:
       - apps/mobile
       - .github/workflows/android.yml
 concurrency:
-  group: ${ GIT_BRANCH_NAME }
+  group: android-${ GIT_BRANCH_NAME }
   cancel-in-progress: true
 jobs:
   build:

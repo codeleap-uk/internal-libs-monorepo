@@ -4,7 +4,7 @@ import { formatStrWithArgs, getNestedValues, replaceVariables } from './utils'
 
 let locale: string
 
-export function make18n(props: MakeI18nProps): I18nType {
+export function make18n<KeyPaths extends string = string>(props: MakeI18nProps): I18nType<KeyPaths> {
   const { initialLocale, persistor, languageDictionary } = props
   locale = initialLocale
 

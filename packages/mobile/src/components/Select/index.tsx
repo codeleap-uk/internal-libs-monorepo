@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { IconPlaceholder,
   useDefaultComponentStyle,
   TypeGuards,
@@ -74,6 +75,8 @@ const defaultProps:Partial<SelectProps<any, boolean>> = {
   },
   outerInputComponent: OuterInput,
   searchInputProps: {},
+  arrowIconName: 'chevrons-up-down' as IconPlaceholder,
+  clearIconName: 'x' as IconPlaceholder,
 }
 
 export const Select = <T extends string|number = string, Multi extends boolean = false>(selectProps:SelectProps<T, Multi>) => {
@@ -94,8 +97,8 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     listProps,
     debugName,
     placeholder = 'Select',
-    arrowIconName = 'chevrons-up-down',
-    clearIconName = 'x',
+    arrowIconName,
+    clearIconName,
     clearable = false,
     selectedIcon = 'check',
     inputProps = {},
@@ -313,7 +316,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
             icon: inputIcon as IconPlaceholder,
             onPress: onPressInputIcon,
           }}
-          onPress={close}
+
           currentValueLabel={currentValueLabel}
 
           debugName={`${debugName} select input`}
@@ -347,6 +350,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
         renderItem={renderListItem}
         fakeEmpty={loading}
         separators
+        keyboardAware={false}
         {...listProps}
         ListHeaderComponent={_ListHeaderComponent}
         placeholder={{

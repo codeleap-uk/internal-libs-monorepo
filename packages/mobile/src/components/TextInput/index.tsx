@@ -43,7 +43,7 @@ const defaultProps:Partial<TextInputProps> = {
   visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
 }
 
-export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
+const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
 
   const innerInputRef = React.useRef<NativeTextInput>(null)
 
@@ -217,6 +217,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 export type SearchInputProps = {
   onTypingChange: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
+  onValueChange?: (search: string) => void
   onClear?: () => void
   debugName: string
   debounce?: number
@@ -235,13 +236,15 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     searchIcon,
     debounce,
     placeholder,
+    value,
+    onValueChange,
     ...others
   } = {
     ...SearchInput.defaultProps,
     ...props,
   }
 
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
 
   const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
 
@@ -291,7 +294,10 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
   )
 }
 
+export const TextInput = TextInputComponent as ComponentWithDefaultProps<TextInputProps>
+
 TextInput.defaultProps = defaultProps
+
 SearchInput.defaultProps = {
   debounce: null,
   clearIcon: 'x' as IconPlaceholder,

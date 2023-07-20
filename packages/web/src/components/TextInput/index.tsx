@@ -1,3 +1,6 @@
+/** @jsx jsx */
+import { jsx } from '@emotion/react'
+
 import {
   ComponentVariants,
   FormTypes,
@@ -10,7 +13,6 @@ import {
   yup,
 } from '@codeleap/common'
 import React, {
-  ComponentPropsWithoutRef,
   forwardRef,
   useImperativeHandle,
   useRef,
@@ -19,7 +21,7 @@ import React, {
 import TextareaAutosize from 'react-autosize-textarea'
 import InputMask from 'react-input-mask'
 import { Touchable, TouchableProps } from '../Touchable'
-import { StylesOf } from '../../types/utility'
+import { StylesOf, HTMLProps, ComponentWithDefaultProps } from '../../types/utility'
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
@@ -27,39 +29,51 @@ import { getMaskInputProps, TextInputMaskingProps } from './mask'
 export * from './styles'
 export * from './mask'
 
-type NativeTextInputProps = ComponentPropsWithoutRef<'input'>
+type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps =
   Omit<InputBaseProps, 'styles' | 'variants'> &
-  Omit<NativeTextInputProps, 'value'|'crossOrigin'> & {
+  Omit<NativeTextInputProps, 'value' | 'crossOrigin'> & {
     styles?: StylesOf<TextInputComposition>
     password?: boolean
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
     debugName?: string
     visibilityToggle?: boolean
-    variants?: ComponentVariants<typeof TextInputPresets>['variants']
     value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: (value: string) => void
+    onChangeText?: (textValue: string) => void
     caretColor?: string
     focused?: boolean
     _error?: boolean
     rows?: number
     masking?: TextInputMaskingProps
-  }
+    visibleIcon?: IconPlaceholder
+    hiddenIcon?: IconPlaceholder
+  } & ComponentVariants<typeof TextInputPresets>
 
-export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, inputRef) => {
-  const innerInputRef = useRef<HTMLInputElement>(null)
+type InputRef = HTMLInputElement & { isTextInput?: boolean }
+
+const defaultProps:Partial<TextInputProps> = {
+  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
+  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
+}
+
+export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
+  const innerInputRef = useRef<InputRef>(null)
 
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...TextInput.defaultProps,
+    ...props,
+  })
 
   const {
-    variants,
-    styles,
+    variants = [],
+    responsiveVariants = {},
+    styles = {},
     value,
     validate,
     debugName,
@@ -71,8 +85,10 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     focused,
     _error,
     masking = null,
+    visibleIcon,
+    hiddenIcon,
     ...textInputProps
-  } = others
+  } = others as TextInputProps
 
   const [_isFocused, setIsFocused] = useState(false)
 
@@ -88,6 +104,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
   const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
 
   const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
+    responsiveVariants,
     variants,
     styles,
   })
@@ -136,7 +153,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? 'input-visiblity:hidden' : 'input-visiblity:visible') as IconPlaceholder,
+    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as IconPlaceholder,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -178,12 +195,6 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
 
   const inputBaseAction = isPressable ? 'onPress' : 'onClick'
 
-  const _wrapperOnInputFocus = {
-    [inputBaseAction]: () => {
-      innerInputRef.current?.focus?.()
-    },
-  }
-
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -201,8 +212,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
-          // @ts-ignore
-          if (isMasked) innerInputRef.current?.onFocus?.()
+          // if (isMasked) innerInputRef.current?.onFocus?.()
           innerInputRef.current?.focus?.()
           if (isPressable) onPress?.()
         },
@@ -210,11 +220,8 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
       }}
       rightIcon={rightIcon}
       focused={isFocused}
-      wrapperProps={{
-        ...(inputBaseProps.wrapperProps || {}),
-        ..._wrapperOnInputFocus,
-      }}
     >
+
       <InputElement
         editable={`${!isPressable && !isDisabled}`}
         {...buttonModeProps}
@@ -222,7 +229,9 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
         {...textInputProps}
         value={value}
         onChange={(e) => handleChange(e)}
+        // @ts-ignore
         onBlur={handleBlur}
+        // @ts-ignore
         onFocus={handleFocus}
         css={[
           variantStyles.input,
@@ -251,3 +260,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, in
     </InputBase>
   )
 })
+
+export const TextInput = TextInputComponent as ComponentWithDefaultProps<TextInputProps>
+
+TextInput.defaultProps = defaultProps

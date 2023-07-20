@@ -2,9 +2,9 @@ import { AnyFunction } from '@codeleap/common'
 
 export function stopPropagation(event: any) {
   const tryCalls = [
-    event?.stopPropagation,
-    event?.preventDefault,
-    event.nativeEvent?.stopImmediatePropagation as AnyFunction,
+    event?.stopPropagation.bind(event),
+    event?.preventDefault.bind(event),
+    event.nativeEvent?.stopImmediatePropagation.bind(event.nativeEvent) as AnyFunction,
   ]
 
   for (const call of tryCalls) {

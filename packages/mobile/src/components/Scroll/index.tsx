@@ -6,30 +6,30 @@ import {
   useDefaultComponentStyle,
   usePrevious,
 } from '@codeleap/common'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { ScrollView, StyleSheet } from 'react-native'
 import { ViewProps } from '../View'
 import { RefreshControl, RefreshControlProps } from '../RefreshControl'
-import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollPresets } from './styles'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
-
-type KeyboardAwareScrollViewProps = KeyboardAwareScrollViewTypes.KeyboardAwareScrollViewProps
-
+import { GetKeyboardAwarePropsOptions, useKeyboardPaddingStyle } from '../../utils'
+import { KeyboardAwareScrollView, KeyboardAwareScrollViewProps } from 'react-native-keyboard-aware-scroll-view'
+import { useSoftInputState } from 'react-native-avoid-softinput'
+import { useMemo } from 'react'
 export type ScrollProps = KeyboardAwareScrollViewProps &
   ViewProps & {
     onRefresh?: () => void
     refreshTimeout?: number
     changeData?: any
-    keyboardAware?: GetKeyboardAwarePropsOptions
+    keyboardAware?: boolean
     refreshing?: boolean
     styles?: StylesOf<ScrollComposition>
     refreshControlProps?: Partial<RefreshControlProps>
     debugName?: string
   }
 
-export const Scroll = forwardRef<ScrollView, ScrollProps>(
+export type ScrollRef = KeyboardAwareScrollView
+
+export const Scroll = forwardRef<ScrollRef, ScrollProps>(
   (scrollProps, ref) => {
     const {
       variants = [],
@@ -40,8 +40,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       styles = {},
       refreshControlProps = {},
       contentContainerStyle,
-      keyboardAware,
-      debugName = '',
+      keyboardAware = true,
       animated = true,
       ...props
     } = scrollProps
@@ -81,14 +80,16 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       rootElement: 'content',
     })
 
-    const Component = (animated ? KeyboardAwareScrollView : KeyboardAwareScrollView) as unknown as typeof ScrollView
+    const Component = ScrollView
+
+    const keyboardStyle = useKeyboardPaddingStyle([variantStyles.content, contentContainerStyle], keyboardAware)
 
     return (
       <Component
         style={[variantStyles.wrapper, style]}
-        contentContainerStyle={[variantStyles.content, contentContainerStyle]}
+        contentContainerStyle={keyboardStyle}
         showsVerticalScrollIndicator={false}
-        // @ts-expect-error - Refs suck
+        // @ts-ignore
         ref={ref}
         refreshControl= {
           hasRefresh && (
@@ -105,5 +106,5 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       </Component>
     )
   },
-)
+) as unknown as (props:ScrollProps) => JSX.Element
 export * from './styles'

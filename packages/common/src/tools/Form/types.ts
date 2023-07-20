@@ -57,7 +57,6 @@ export type InputValueTypes = {
   radio: any
   file: AnyFile
   multipleFile: AnyFile[]
-  composite: any
   'range-slider': number[]
   slider: number[]
   list: any[]
@@ -171,16 +170,10 @@ export type DateField = {
   defaultValue: Date
   validate?: Validator<Date>
   required?: boolean
+  minimumDate?: Date
+  maximumDate?: Date
 } & WithTransformer<Date>
 
-export type CompositeField = {
-  type: 'composite'
-  fields?: FieldsMap
-  defaultValue: Record<string, unknown>
-  validate?: never
-  required?: boolean
-
-} & WithTransformer<Record<string, unknown>>
 export type AllFields =
   | CheckboxField
   | SwitchField
@@ -188,7 +181,6 @@ export type AllFields =
   | SelectField
   | RadioField
   | FileField
-  | CompositeField
   | SliderField
   | RangeSliderField
   | ListField
@@ -208,7 +200,8 @@ export type FormField = {
   debugName?: string
   required?: boolean
   debounce?: number
-  
+  componentProps?: any
+
 } & AllFields
 
 export type FieldsMap = Record<string, Partial<FormField>>
@@ -228,17 +221,13 @@ export type ValidateFieldsMap<T extends FieldsMap> = {
 export type FormConfig<T extends FieldsMap> = ValidateFieldsMap<T>
 
 export type FlattenFields<T extends FieldsMap> = {
-  [Property in keyof T]: T[Property] extends Partial<CompositeField>
-    ? FlattenFields<T[Property]['fields']>
-    : T[Property] extends RadioField<any> | SelectField
+  [Property in keyof T]: T[Property] extends RadioField<any> | SelectField
     ? T[Property]['options'][number]['value']
     : InputValueTypes[T[Property]['type']];
 }
 
 export type MapValues<T extends FieldsMap> = {
-  [Property in keyof T]: T[Property] extends Partial<CompositeField>
-    ? MapValues<T[Property]['fields']>
-    : T[Property] extends RadioField<any> | SelectField
+  [Property in keyof T]: T[Property] extends RadioField<any> | SelectField
     ? T[Property]['options'][number]['value']
     : InputValueTypes[T[Property]['type']];
 }
@@ -251,17 +240,16 @@ export type CreateFormReturn<T extends FieldsMap> = {
   numberOfTextFields: number
 }
 
-export type FormStep = 'setValue' | 'validate'
-
-export type UseFormConfig<T> = {
-  log?: FormStep[]
+export type FormStep<Keys extends string = string> = 'setValue' | 'validate' | `validate.${Keys}` | `setValue.${Keys}`
+export type UseFormConfig<T extends Record<string, any>> = {
+  log?: FormStep<Exclude<keyof T, symbol|number>>[]
   initialState?: DeepPartial<T>
   validateOn?: 'change' | 'none'
 }
 
-export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
+export type PathsWithValues<T, D extends number = 2> = [D] extends [never]
   ? never
-  :  T extends Record<string, any>   
+  : T extends Record<string, any>
     ? {
         [K in keyof T]-?: K extends string | number
           ?
@@ -272,7 +260,8 @@ export type PathsWithValues<T, D extends number = 10> = [D] extends [never]
               ]
           : never;
       }[keyof T]
-    : '' 
+    : ''
+
 export type FormShape<Form extends CreateFormReturn<any>> = MapValues<Form['config']>
 export type FormSetters<Values> = {
   [Property in keyof Values]: (value: Values[Property]) => void

@@ -1,27 +1,31 @@
-import React, { forwardRef, useImperativeHandle } from 'react'
-import { DocumentPicker, ImageCropPicker } from '../../modules/documentPicker'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import {
-  MobileInputFile,
   parseFilePathData,
   useCodeleapContext,
   MobileFile,
+  AnyRef,
+  FormTypes,
 } from '@codeleap/common'
 import { OSAlert } from '../../utils'
-import { ImageOrVideo, Options } from 'react-native-image-crop-picker'
-import { DocumentPickerOptions } from '../../modules/types/documentPicker'
-
+import ImageCropPicker, { ImageOrVideo, Options } from 'react-native-image-crop-picker'
+import DocumentPicker, { DocumentPickerOptions } from 'react-native-document-picker'
 export * from './styles'
 
-export type FileInputRef = {
-  openFilePicker: (string?: 'camera' | 'library') => void
-}
+export const useSomething = useImperativeHandle
 
+type FileInputImageSource = 'camera' | 'library' | 'fs'
+
+type FileResult = FormTypes.AnyFile
+
+export type FileInputRef = {
+  openFilePicker: (string?: FileInputImageSource) => Promise<FileResult[]>
+}
 export type FileInputProps = {
   mode: 'hidden' | 'button'
-  onFileSelect(files: MobileInputFile<ImageOrVideo>[]): void
+  onFileSelect?: (files: FileResult[]) => void
   options?: DocumentPickerOptions<any>
 
-  ref?: FileInputRef
+  ref?: AnyRef<FileInputRef>
 
   type?: 'image' | 'anyFile'
   alertProps?: Parameters<typeof OSAlert.ask>[0]
@@ -37,7 +41,7 @@ const pickerDefaults = {
   cropping: true,
 }
 
-function parsePickerData(data:ImageOrVideo):MobileInputFile<ImageOrVideo> {
+function parsePickerData(data:ImageOrVideo):FileResult {
 
   const filePathData = parseFilePathData(data.path)
   const d:MobileFile = {
@@ -55,7 +59,7 @@ function parsePickerData(data:ImageOrVideo):MobileInputFile<ImageOrVideo> {
   }
 }
 
-export const FileInput = forwardRef<
+const _FileInput = forwardRef<
   FileInputRef,
   FileInputProps
 >((fileInputProps, ref) => {
@@ -74,7 +78,7 @@ export const FileInput = forwardRef<
     onOpenFileSystem = null,
     onError,
   } = fileInputProps
-
+  const resolveWithFile = useRef<(file:FileResult[]) => any>()
   const { logger } = useCodeleapContext()
 
   async function openFileSystem() {
@@ -84,7 +88,13 @@ export const FileInput = forwardRef<
         files = [files]
       }
 
-      onFileSelect(files.map((file) => ({ preview: file.uri, file })))
+      const filesWithPreview = files.map((file) => ({ preview: file.uri, file }))
+
+      if (resolveWithFile.current) {
+        resolveWithFile.current(filesWithPreview)
+        resolveWithFile.current = undefined
+      }
+      onFileSelect?.(filesWithPreview)
     } catch (err) {
       handleError(err)
     }
@@ -111,7 +121,7 @@ export const FileInput = forwardRef<
     }
     onFileSelect(imageArray.map(parsePickerData))
   }
-  const onPress = (open?: 'camera' | 'library' | 'fs', options?: Options) => {
+  const onPress = (open?: FileInputImageSource, options?: Options) => {
     if (open == 'fs') {
       openFileSystem()
     } else {
@@ -174,8 +184,28 @@ export const FileInput = forwardRef<
   }
 
   useImperativeHandle(ref, () => ({
-    openFilePicker,
+    openFilePicker: (imageSource: FileInputImageSource = null) => {
+      openFilePicker(imageSource)
+      return new Promise<FileResult[]>((resolve) => {
+        resolveWithFile.current = resolve
+      })
+    },
   }))
 
   return null
 })
+
+export const FileInput = _FileInput as unknown as ((props: FileInputProps) => JSX.Element)
+
+export const useFileInput = () => {
+  const inputRef = useRef<FileInputRef>(null)
+
+  const openFilePicker = (imageSource:FileInputImageSource = null):Promise<FileResult[]> => {
+    return inputRef.current?.openFilePicker(imageSource)
+  }
+
+  return {
+    openFilePicker,
+    ref: inputRef as React.MutableRefObject<FileInputRef>,
+  }
+}
