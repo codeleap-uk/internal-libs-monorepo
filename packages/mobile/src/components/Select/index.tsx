@@ -40,10 +40,11 @@ const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (p
     toggle,
     styles,
     style,
+    placeholder,
   } = props
 
   return <TextInput
-    value={TypeGuards.isString(currentValueLabel) ? currentValueLabel : ''}
+    value={TypeGuards.isString(currentValueLabel) ? currentValueLabel : null}
     rightIcon={clearIcon}
     onPress={() => toggle()}
     label={label}
@@ -53,7 +54,7 @@ const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (p
     innerWrapperProps={{
       rippleDisabled: true,
     }}
-
+    placeholder={placeholder as string}
   />
 }
 
@@ -147,7 +148,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
     const label = getLabel(
       _options,
-    ) || placeholder
+    )
 
     return label
   }, [labelOptions])
