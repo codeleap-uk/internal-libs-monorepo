@@ -18,6 +18,8 @@ export type SliderProps = Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>
     styles?: StylesOf<SliderComposition>
     style?: PropsOf<typeof View>['style']
     trackMarks?: RNSliderProps['trackMarks'] | Record<number, string>
+    trackMarksClickable?: boolean
+    labelClickable?: boolean
     trackMarkComponent?: React.ComponentType<TrackMarkProps>
 }
 
@@ -25,4 +27,5 @@ export type TrackMarkProps = {
   index: number
   content?: string | React.ReactNode
   style?: any
+  onPress?: () => void
 }
