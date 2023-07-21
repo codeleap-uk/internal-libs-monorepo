@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.7.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.0...v3.7.1) (2023-07-21)
+
+
+### Bug Fixes
+
+* **mobile:** fix label and description on slider ([9bea4f7](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9bea4f7714c87ed523721b7ef96fb0b9c1c3d536))
+* **mobile:** fix slider, permissions and etc ([d8b80d9](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d8b80d9977b2775b26cb24ca80ac4bb711b64d30))
+
 ## [3.7.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.4.0...v3.7.0) (2023-07-11)
 
 
