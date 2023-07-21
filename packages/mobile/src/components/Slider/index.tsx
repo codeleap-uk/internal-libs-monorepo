@@ -37,7 +37,7 @@ const maximumValue = 100
 
 export const Slider = (props:SliderProps) => {
   const {
-    inputBaseProps,
+    inputBaseProps: { label: _label, description: _description, ..._inputBaseProps },
     others,
   } = selectInputBaseProps(props)
 
@@ -58,7 +58,6 @@ export const Slider = (props:SliderProps) => {
     trackMarkComponent = DefaultSliderTrackMark,
     ...sliderProps
   } = others
-
   const SliderTrackMark = trackMarkComponent
   const [_value, _setValue] = React.useState(value)
 
@@ -127,7 +126,7 @@ export const Slider = (props:SliderProps) => {
 
   return (
     <InputBase
-      {...inputBaseProps}
+      {..._inputBaseProps}
       disabled={disabled}
       styles={variantStyles}
       labelAsRow

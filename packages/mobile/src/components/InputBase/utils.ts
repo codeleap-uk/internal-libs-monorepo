@@ -13,14 +13,14 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
   others: OmitDiff<T, T>
 } {
   const varList:InputBaseKey[] = [
-    // 'label',
+    'label',
     'style',
     'error',
     'innerWrapper',
     'leftIcon',
     'rightIcon',
     // 'styles',
-    // 'description',
+    'description',
     'wrapper',
     'children',
     'innerWrapperProps',
