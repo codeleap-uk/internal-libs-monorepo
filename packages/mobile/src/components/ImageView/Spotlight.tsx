@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { deepEqual, onUpdate, ReactState, TypeGuards, usePrevious, useUnmount } from '@codeleap/common'
 
 import uuid from 'react-native-uuid'
-import { ImageView } from './component'
+import { ImageView, ImageViewProps } from './component'
 import { ImageProps } from '../Image'
 import { ImageURISource, ImageRequireSource } from 'react-native'
 type ImageSource = ImageURISource | ImageRequireSource
@@ -143,7 +143,12 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
   }
 }
 
-export const Spotlight = ({ name }: {name: string}) => {
+type SpotlightProps = {
+  name?: string
+} & ImageViewProps
+
+
+export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
   const spotlight = useSpotlight(name)
   useUnmount(() => {
     spotlight.clear()
@@ -154,6 +159,6 @@ export const Spotlight = ({ name }: {name: string}) => {
     keyExtractor={(_, index) => index.toString()}
     onRequestClose={spotlight.close}
     visible={typeof spotlight.currentIndex !== 'undefined'}
-
+    {...rest}
   />
 }
