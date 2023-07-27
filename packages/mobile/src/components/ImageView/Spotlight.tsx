@@ -143,7 +143,12 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
   }
 }
 
-export const Spotlight = ({ name }: {name: string}) => {
+type SpotlightProps = {
+  name?: string
+}
+
+
+export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
   const spotlight = useSpotlight(name)
   useUnmount(() => {
     spotlight.clear()
@@ -154,6 +159,6 @@ export const Spotlight = ({ name }: {name: string}) => {
     keyExtractor={(_, index) => index.toString()}
     onRequestClose={spotlight.close}
     visible={typeof spotlight.currentIndex !== 'undefined'}
-
+    {...rest}
   />
 }
