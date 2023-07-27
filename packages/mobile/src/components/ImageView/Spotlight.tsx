@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { deepEqual, onUpdate, ReactState, TypeGuards, usePrevious, useUnmount } from '@codeleap/common'
 
 import uuid from 'react-native-uuid'
-import { ImageView } from './component'
+import { ImageView, ImageViewProps } from './component'
 import { ImageProps } from '../Image'
 import { ImageURISource, ImageRequireSource } from 'react-native'
 type ImageSource = ImageURISource | ImageRequireSource
@@ -145,7 +145,7 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
 
 type SpotlightProps = {
   name?: string
-}
+} & ImageViewProps
 
 
 export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
