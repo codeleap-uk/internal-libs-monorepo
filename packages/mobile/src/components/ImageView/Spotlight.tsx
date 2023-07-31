@@ -8,9 +8,9 @@ import { ImageURISource, ImageRequireSource } from 'react-native'
 type ImageSource = ImageURISource | ImageRequireSource
 
 type TImage = {
-    source: ImageSource
-    created: number
-    id: string
+  source: ImageSource
+  created: number
+  id: string
 
 }
 type ImageList = Record<string, TImage>
@@ -18,19 +18,19 @@ type ImageList = Record<string, TImage>
 type SpotlightState = ReactState<Record<string, ImageList>>
 type IndexState = ReactState<Record<string, number>>
 type TSpotlightCtx = {
-    spotlights: SpotlightState[0]
-    setSpotlights: SpotlightState[1]
-    indexes: IndexState[0]
-    setIndexes: IndexState[1]
+  spotlights: SpotlightState[0]
+  setSpotlights: SpotlightState[1]
+  indexes: IndexState[0]
+  setIndexes: IndexState[1]
 
 }
 
 const SpotlightCtx = React.createContext({} as TSpotlightCtx)
 
-export const SpotlightProvider:React.FC<React.PropsWithChildren<any>> = ({ children }) => {
+export const SpotlightProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const [spotlights, setSpotlights] = useState<TSpotlightCtx['spotlights']>({})
   const [indexes, setIndexes] = useState<TSpotlightCtx['indexes']>({})
-  const ctxValue:TSpotlightCtx = {
+  const ctxValue: TSpotlightCtx = {
     spotlights,
     setSpotlights,
     indexes,
@@ -143,12 +143,18 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
   }
 }
 
+type HeaderComponentProps = {
+  imageIndex: number
+  spotlight: ReturnType<typeof useSpotlight>
+}
+
 type SpotlightProps = {
   name?: string
+  HeaderComponent?: (props: HeaderComponentProps) => JSX.Element
+  showFooter?: boolean
 } & ImageViewProps
 
-
-export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
+export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, showFooter, ...rest }) => {
   const spotlight = useSpotlight(name)
   useUnmount(() => {
     spotlight.clear()
@@ -159,6 +165,8 @@ export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
     keyExtractor={(_, index) => index.toString()}
     onRequestClose={spotlight.close}
     visible={typeof spotlight.currentIndex !== 'undefined'}
+    showFooter={showFooter}
     {...rest}
+    HeaderComponent={({ imageIndex }) => <HeaderComponent spotlight={spotlight} imageIndex={imageIndex} />}
   />
 }
