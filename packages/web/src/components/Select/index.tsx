@@ -219,13 +219,17 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       filterItems = null,
       itemProps = {},
       loadingIndicatorSize,
+      selectedOption: _selectedOption,
+      setSelectedOption: _setSelectedOption,
       ...otherProps
     } = selectProps
 
     const innerInputRef = useRef<any>(null)
     const innerWrapperRef = useRef(null)
 
-    const [selectedOption, setSelectedOption] = useState(value)
+    const hasSelectedOptionState = !TypeGuards.isNil(_selectedOption) && TypeGuards.isFunction(_setSelectedOption)
+
+    const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(value)
 
     const [_isFocused, setIsFocused] = useState(false)
 

@@ -18,6 +18,7 @@ import { AnyFunction, ComponentVariants, StylesOf, TypeGuards, useDefaultCompone
 import { TooltipComposition, TooltipPresets } from './styles'
 import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types/utility'
 import { View, ViewProps } from '../View'
+import { useClickOutsideElement } from '../../lib'
 
 type TooltipComponentProps = {
   contentProps?: TooltipContentProps
@@ -39,6 +40,7 @@ export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
   openOnHover?: boolean
   disabled?: boolean
   delayDuration?: number
+  closeOnClickOutside?: boolean
   onOpen?: AnyFunction
   onClose?: AnyFunction
   onValueChange?: (value: boolean) => void
@@ -52,6 +54,7 @@ const defaultProps: Partial<TooltipProps> = {
   openOnHover: true,
   disabled: false,
   delayDuration: 0,
+  closeOnClickOutside: false,
   side: 'bottom',
   triggerWrapper: View,
 }
@@ -87,6 +90,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     variants = [],
     responsiveVariants = {},
     styles = {},
+    closeOnClickOutside,
     ...rest
   } = allProps
 
@@ -142,6 +146,12 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     if (TypeGuards.isFunction(onPress)) onPress?.(value)
   }
 
+  const clickOutside = useClickOutsideElement((isOutside) => {
+    if (closeOnClickOutside && isOutside) {
+      handleToggle(false)
+    }
+  })
+
   return (
     <TooltipContainer {...providerProps}>
       <TooltipWrapper
@@ -162,7 +172,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
           </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
-          <TooltipContent css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
+          <TooltipContent ref={clickOutside?.ref} css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
             {
               TypeGuards.isFunction(Content)
                 ? <Content
