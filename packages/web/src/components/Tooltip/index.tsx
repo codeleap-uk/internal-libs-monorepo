@@ -148,9 +148,11 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
 
   const triggerRef = React.useRef(null)
 
-  const clickOutside = useClickOutsideElement((isOutside) => {
-    if (isOutside) handleToggle(false)
-  }, [closeOnClickOutside, visible, !openOnHover], [triggerRef])
+  const contentRef = useClickOutsideElement((isOutside) => {
+    if (isOutside && closeOnClickOutside && !openOnHover && visible) {
+      handleToggle(false)
+    }
+  }, [triggerRef])
 
   return (
     <TooltipContainer {...providerProps}>
@@ -173,7 +175,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
           </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
-          <TooltipContent ref={clickOutside?.ref} css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
+          <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
             {
               TypeGuards.isFunction(Content)
                 ? <Content
