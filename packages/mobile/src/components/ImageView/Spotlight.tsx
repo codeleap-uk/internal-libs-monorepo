@@ -5,6 +5,9 @@ import uuid from 'react-native-uuid'
 import { ImageView, ImageViewProps } from './component'
 import { ImageProps } from '../Image'
 import { ImageURISource, ImageRequireSource } from 'react-native'
+import { View } from '../View'
+import { Text } from '../Text'
+
 type ImageSource = ImageURISource | ImageRequireSource
 
 type TImage = {
@@ -22,7 +25,6 @@ type TSpotlightCtx = {
   setSpotlights: SpotlightState[1]
   indexes: IndexState[0]
   setIndexes: IndexState[1]
-
 }
 
 const SpotlightCtx = React.createContext({} as TSpotlightCtx)
@@ -148,25 +150,43 @@ type HeaderComponentProps = {
   spotlight: ReturnType<typeof useSpotlight>
 }
 
+type DefaultFooterComponentType = React.ComponentType<{
+  imageIndex: number
+  imagesLength: number
+}>
+
+type FooterComponentProps = HeaderComponentProps
+
 type SpotlightProps = {
   name?: string
   HeaderComponent?: (props: HeaderComponentProps) => JSX.Element
+  FooterComponent?: (props: FooterComponentProps) => JSX.Element
   showFooter?: boolean
 } & ImageViewProps
 
-export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, showFooter, ...rest }) => {
+const DefaultFooterComponent: DefaultFooterComponentType = ({ imageIndex, imagesLength }) => (
+  <View variants={['marginBottom:5', 'alignCenter']}>
+    <Text text={imageIndex + 1 + '/' + imagesLength} />
+  </View>
+)
+
+export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, FooterComponent, ...rest }) => {
   const spotlight = useSpotlight(name)
   useUnmount(() => {
     spotlight.clear()
   })
+
   return <ImageView
     imageIndex={spotlight.currentIndex}
     images={spotlight.images.map(x => x.source)}
     keyExtractor={(_, index) => index.toString()}
     onRequestClose={spotlight.close}
     visible={typeof spotlight.currentIndex !== 'undefined'}
-    showFooter={showFooter}
     {...rest}
+    FooterComponent={({ imageIndex }) => !!FooterComponent ?
+      <FooterComponent imageIndex={imageIndex} spotlight={spotlight} /> :
+      <DefaultFooterComponent imageIndex={imageIndex} imagesLength={spotlight.images.length} />
+    }
     HeaderComponent={!!HeaderComponent ? ({ imageIndex }) => <HeaderComponent spotlight={spotlight} imageIndex={imageIndex} /> : undefined}
   />
 }
