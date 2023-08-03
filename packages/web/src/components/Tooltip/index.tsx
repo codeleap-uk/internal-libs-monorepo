@@ -146,11 +146,11 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     if (TypeGuards.isFunction(onPress)) onPress?.(value)
   }
 
+  const triggerRef = React.useRef(null)
+
   const clickOutside = useClickOutsideElement((isOutside) => {
-    if (closeOnClickOutside && isOutside) {
-      handleToggle(false)
-    }
-  })
+    if (isOutside) handleToggle(false)
+  }, [closeOnClickOutside, visible, !openOnHover], [triggerRef])
 
   return (
     <TooltipContainer {...providerProps}>
@@ -165,6 +165,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
           onMouseEnter={() => _onHover('enter')}
           onMouseLeave={() => _onHover('leave')}
           asChild
+          ref={triggerRef}
           {...triggerProps}
         >
           <TriggerWrapper {...allProps as any} {...triggerWrapperProps}>
