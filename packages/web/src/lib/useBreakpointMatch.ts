@@ -1,14 +1,13 @@
-import { useCodeleapContext, useMemo } from '@codeleap/common'
+import React from 'react'
+import { useCodeleapContext } from '@codeleap/common'
 import { useMediaQuery } from './hooks'
 
-export type BreakpointsMatch = Record<string, any> & {
-  defaultMedia: string
-}
+export type BreakpointsMatch<T extends string = string> = Record<T, any>
 
-export const useBreakpointMatch = (values: BreakpointsMatch) => {
+export function useBreakpointMatch<T extends string = string>(values: BreakpointsMatch<T>) {
   const { Theme } = useCodeleapContext()
 
-  const breakpoints = useMemo(() => {
+  const breakpoints: Record<string, number> = React.useMemo(() => {
     const breaks = Object.entries(Theme.breakpoints as Record<string, number>)
 
     breaks?.sort((a, b) => a?.[1] - b?.[1])
@@ -18,16 +17,34 @@ export const useBreakpointMatch = (values: BreakpointsMatch) => {
     return sortBreakpoints
   }, [])
 
+  const breakpointValues: Array<string> = React.useMemo(() => Object.keys(breakpoints), [])
+
   const breakpointMatches = {}
 
   for (const breakpoint in breakpoints) {
-    const matchesDown = useMediaQuery(Theme.media.down(breakpoint))
-    const matchesUp = useMediaQuery(Theme.media.up(breakpoint))
+    const matchesDown = useMediaQuery(Theme.media.down(breakpoint), { getInitialValueInEffect: false })
+    const matchesUp = useMediaQuery(Theme.media.up(breakpoint), { getInitialValueInEffect: false })
 
     breakpointMatches[breakpoint] = !matchesUp && matchesDown
   }
 
-  const breakpoint = Object.keys(breakpointMatches).find((key) => breakpointMatches[key])
+  const currentBreakpoint = Object.keys(breakpointMatches).find((key) => breakpointMatches[key])
 
-  return values[breakpoint] ?? values[values.defaultMedia]
+  const validBreakpoints = React.useMemo(() => {
+    const validBreakpointIndex = breakpointValues?.findIndex(_breakpoint => _breakpoint === currentBreakpoint)
+
+    return breakpointValues.slice(validBreakpointIndex, 100)
+  }, [currentBreakpoint])
+
+  const breakpoint = React.useMemo(() => {
+    const value = validBreakpoints.find((currentValue) => {
+      if (Object?.keys(values).includes(currentValue)) {
+        return currentValue
+      }
+    })
+
+    return value
+  }, [validBreakpoints])
+
+  return values[breakpoint]
 }
