@@ -5,12 +5,15 @@ import uuid from 'react-native-uuid'
 import { ImageView, ImageViewProps } from './component'
 import { ImageProps } from '../Image'
 import { ImageURISource, ImageRequireSource } from 'react-native'
+import { View } from '../View'
+import { Text } from '../Text'
+
 type ImageSource = ImageURISource | ImageRequireSource
 
 type TImage = {
-    source: ImageSource
-    created: number
-    id: string
+  source: ImageSource
+  created: number
+  id: string
 
 }
 type ImageList = Record<string, TImage>
@@ -18,19 +21,18 @@ type ImageList = Record<string, TImage>
 type SpotlightState = ReactState<Record<string, ImageList>>
 type IndexState = ReactState<Record<string, number>>
 type TSpotlightCtx = {
-    spotlights: SpotlightState[0]
-    setSpotlights: SpotlightState[1]
-    indexes: IndexState[0]
-    setIndexes: IndexState[1]
-
+  spotlights: SpotlightState[0]
+  setSpotlights: SpotlightState[1]
+  indexes: IndexState[0]
+  setIndexes: IndexState[1]
 }
 
 const SpotlightCtx = React.createContext({} as TSpotlightCtx)
 
-export const SpotlightProvider:React.FC<React.PropsWithChildren<any>> = ({ children }) => {
+export const SpotlightProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const [spotlights, setSpotlights] = useState<TSpotlightCtx['spotlights']>({})
   const [indexes, setIndexes] = useState<TSpotlightCtx['indexes']>({})
-  const ctxValue:TSpotlightCtx = {
+  const ctxValue: TSpotlightCtx = {
     spotlights,
     setSpotlights,
     indexes,
@@ -143,16 +145,37 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
   }
 }
 
+type HeaderComponentProps = {
+  imageIndex: number
+  spotlight: ReturnType<typeof useSpotlight>
+}
+
+type DefaultFooterComponentType = React.ComponentType<{
+  imageIndex: number
+  imagesLength: number
+}>
+
+type FooterComponentProps = HeaderComponentProps
+
 type SpotlightProps = {
   name?: string
+  HeaderComponent?: (props: HeaderComponentProps) => JSX.Element
+  FooterComponent?: (props: FooterComponentProps) => JSX.Element
+  showFooter?: boolean
 } & ImageViewProps
 
+const DefaultFooterComponent: DefaultFooterComponentType = ({ imageIndex, imagesLength }) => (
+  <View variants={['marginBottom:5', 'alignCenter']}>
+    <Text text={imageIndex + 1 + '/' + imagesLength} />
+  </View>
+)
 
-export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
+export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, FooterComponent, ...rest }) => {
   const spotlight = useSpotlight(name)
   useUnmount(() => {
     spotlight.clear()
   })
+
   return <ImageView
     imageIndex={spotlight.currentIndex}
     images={spotlight.images.map(x => x.source)}
@@ -160,5 +183,10 @@ export const Spotlight: React.FC<SpotlightProps> = ({ name, ...rest}) => {
     onRequestClose={spotlight.close}
     visible={typeof spotlight.currentIndex !== 'undefined'}
     {...rest}
+    FooterComponent={({ imageIndex }) => !!FooterComponent ?
+      <FooterComponent imageIndex={imageIndex} spotlight={spotlight} /> :
+      <DefaultFooterComponent imageIndex={imageIndex} imagesLength={spotlight.images.length} />
+    }
+    HeaderComponent={!!HeaderComponent ? ({ imageIndex }) => <HeaderComponent spotlight={spotlight} imageIndex={imageIndex} /> : undefined}
   />
 }
