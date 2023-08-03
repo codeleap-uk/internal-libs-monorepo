@@ -167,6 +167,6 @@ export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, sho
     visible={typeof spotlight.currentIndex !== 'undefined'}
     showFooter={showFooter}
     {...rest}
-    HeaderComponent={({ imageIndex }) => <HeaderComponent spotlight={spotlight} imageIndex={imageIndex} />}
+    HeaderComponent={!!HeaderComponent ? ({ imageIndex }) => <HeaderComponent spotlight={spotlight} imageIndex={imageIndex} /> : undefined}
   />
 }
