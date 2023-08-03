@@ -30,21 +30,19 @@ export function useBreakpointMatch<T extends string = string>(values: Breakpoint
 
   const currentBreakpoint = Object.keys(breakpointMatches).find((key) => breakpointMatches[key])
 
-  const validBreakpoints = React.useMemo(() => {
+  const breakpoint = React.useMemo(() => {
     const validBreakpointIndex = breakpointValues?.findIndex(_breakpoint => _breakpoint === currentBreakpoint)
 
-    return breakpointValues.slice(validBreakpointIndex, 100)
-  }, [currentBreakpoint])
+    const validBreakpoints = breakpointValues.slice(validBreakpointIndex, 100)
 
-  const breakpoint = React.useMemo(() => {
-    const value = validBreakpoints.find((currentValue) => {
+    const validBreakpoint = validBreakpoints.find((currentValue) => {
       if (Object?.keys(values).includes(currentValue)) {
         return currentValue
       }
     })
 
-    return value
-  }, [validBreakpoints])
+    return validBreakpoint
+  }, [currentBreakpoint])
 
   return values[breakpoint]
 }
