@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.1...v3.8.0) (2023-08-07)
+
+
+### Features
+
+* **mobile:** spotlight customFooter ([972fb7d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/972fb7d6c407f34e0657a08fc10fe9c18f453c95))
+* **mobile:** spotlight customHeader ([72dee01](https://github.com/codeleap-uk/internal-libs-monorepo/commit/72dee012d6abf221e92de86d1720ecc57c63d177))
+
+
+### Bug Fixes
+
+* **mobile:** crash if HeaderComponent was not defined ([0fd650f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0fd650f88fa68444c9a5525667f2b18266f6edf7))
+
 ### [3.7.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.0...v3.7.1) (2023-07-21)
 
 
