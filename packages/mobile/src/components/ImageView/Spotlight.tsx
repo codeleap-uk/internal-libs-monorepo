@@ -145,27 +145,27 @@ export const useImageSpotlight = (name: string | null, src: ImageProps['source']
   }
 }
 
-type HeaderComponentProps = {
+export type SpotlightHeaderComponent = {
   imageIndex: number
   spotlight: ReturnType<typeof useSpotlight>
 }
 
-type FooterComponentType = React.ComponentType<{
+export type SpootlightFooterComponent = React.ComponentType<{
   imageIndex: number
   imagesLength: number
   spotlight: ReturnType<typeof useSpotlight>
 }>
 
-type FooterComponentProps = HeaderComponentProps
+type FooterComponentProps = SpotlightHeaderComponent
 
 export type SpotlightProps = {
   name?: string
-  HeaderComponent?: (props: HeaderComponentProps) => JSX.Element
+  HeaderComponent?: (props: SpotlightHeaderComponent) => JSX.Element
   FooterComponent?: (props: FooterComponentProps) => JSX.Element
   showFooter?: boolean
 } & ImageViewProps
 
-const DefaultFooterComponent: FooterComponentType = ({ imageIndex, imagesLength }) => (
+const DefaultFooterComponent: SpootlightFooterComponent = ({ imageIndex, imagesLength }) => (
   <View variants={['marginBottom:5', 'alignCenter']}>
     <Text text={imageIndex + 1 + '/' + imagesLength} />
   </View>
