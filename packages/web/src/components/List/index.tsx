@@ -14,6 +14,8 @@ export * from './useInfiniteScroll'
 export * from './types'
 export * from './ListLayout'
 
+export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
+
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
     <View css={[props?.separatorStyles]}></View>
@@ -29,14 +31,14 @@ const defaultProps: Partial<ListProps> = {
   ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
   refreshSize: 40,
-  refreshThreshold: 1,
+  refreshThreshold: 0.5,
   refreshPosition: 2,
   refresh: true,
 }
 
-const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
-  const allProps = {
-    ...defaultProps,
+export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
+  const allProps = { // @ts-ignore
+    ...List.defaultProps,
     ...flatListProps,
   }
 
@@ -114,6 +116,5 @@ const ListCP = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
   )
 })
 
-export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
-
-export const List = ListCP as unknown as ListComponentType
+// @ts-ignore
+List.defaultProps = defaultProps

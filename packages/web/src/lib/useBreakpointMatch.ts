@@ -1,15 +1,16 @@
-import { useCodeleapContext, useMemo } from '@codeleap/common'
+import React from 'react'
+import { TypeGuards, useCodeleapContext } from '@codeleap/common'
 import { useMediaQuery } from './hooks'
 
-export type BreakpointsMatch = Record<string, any> & {
-  defaultMedia: string
-}
+export type BreakpointsMatch<T extends string = string> = Record<T, any>
 
-export const useBreakpointMatch = (values: BreakpointsMatch) => {
+export function useBreakpointMatch<T extends string = string>(values: BreakpointsMatch<T>) {
   const { Theme } = useCodeleapContext()
 
-  const breakpoints = useMemo(() => {
-    const breaks = Object.entries(Theme.breakpoints as Record<string, number>)
+  const themeBreakpoints: Record<string, number> = Theme?.breakpoints
+
+  const breakpoints: Record<string, number> = React.useMemo(() => {
+    const breaks = Object.entries(themeBreakpoints)
 
     breaks?.sort((a, b) => a?.[1] - b?.[1])
 
@@ -18,16 +19,42 @@ export const useBreakpointMatch = (values: BreakpointsMatch) => {
     return sortBreakpoints
   }, [])
 
+  const breakpointValues: Array<string> = React.useMemo(() => {
+    const _breakpoints = Object.keys(breakpoints)
+
+    return _breakpoints.sort((a, b) => breakpoints?.[a] - breakpoints?.[b])
+  }, [])
+
   const breakpointMatches = {}
 
   for (const breakpoint in breakpoints) {
-    const matchesDown = useMediaQuery(Theme.media.down(breakpoint))
-    const matchesUp = useMediaQuery(Theme.media.up(breakpoint))
+    const matchesDown = useMediaQuery(Theme.media.down(breakpoint), { getInitialValueInEffect: false })
+    const matchesUp = useMediaQuery(Theme.media.up(breakpoint), { getInitialValueInEffect: false })
 
     breakpointMatches[breakpoint] = !matchesUp && matchesDown
   }
 
-  const breakpoint = Object.keys(breakpointMatches).find((key) => breakpointMatches[key])
+  const currentBreakpoint = Object.keys(breakpointMatches)?.find((key) => breakpointMatches?.[key])
 
-  return values[breakpoint] ?? values[values.defaultMedia]
+  const breakpoint = React.useMemo(() => {
+    const validBreakpointIndex = breakpointValues?.findIndex(_breakpoint => _breakpoint === currentBreakpoint)
+
+    const validBreakpoints = breakpointValues?.slice(validBreakpointIndex, 100)
+
+    let validBreakpoint = null
+
+    validBreakpoint = validBreakpoints?.find((currentValue) => {
+      if (Object?.keys(values)?.includes(currentValue)) {
+        return currentValue
+      }
+    })
+
+    if (TypeGuards.isNil(validBreakpoint)) {
+      validBreakpoint = breakpointValues?.reverse()?.find(_breakpoint => !!values?.[_breakpoint])
+    }
+
+    return validBreakpoint
+  }, [currentBreakpoint])
+
+  return values?.[breakpoint]
 }
