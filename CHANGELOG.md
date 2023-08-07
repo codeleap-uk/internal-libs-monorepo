@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.9.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.8.0...v3.9.0) (2023-08-07)
+
+
+### Features
+
+* **web:** click outside hook - Tooltip prop close outside - Select state prop ([e711075](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e711075622034cad96d45ec2d0fbd0dfe733d6ae))
+
 ## [3.8.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.1...v3.8.0) (2023-08-07)
 
 
