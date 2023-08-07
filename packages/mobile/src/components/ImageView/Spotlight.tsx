@@ -150,32 +150,36 @@ type HeaderComponentProps = {
   spotlight: ReturnType<typeof useSpotlight>
 }
 
-type DefaultFooterComponentType = React.ComponentType<{
+type FooterComponentType = React.ComponentType<{
   imageIndex: number
   imagesLength: number
+  spotlight: ReturnType<typeof useSpotlight>
 }>
 
 type FooterComponentProps = HeaderComponentProps
 
-type SpotlightProps = {
+export type SpotlightProps = {
   name?: string
   HeaderComponent?: (props: HeaderComponentProps) => JSX.Element
   FooterComponent?: (props: FooterComponentProps) => JSX.Element
   showFooter?: boolean
 } & ImageViewProps
 
-const DefaultFooterComponent: DefaultFooterComponentType = ({ imageIndex, imagesLength }) => (
+const DefaultFooterComponent: FooterComponentType = ({ imageIndex, imagesLength }) => (
   <View variants={['marginBottom:5', 'alignCenter']}>
     <Text text={imageIndex + 1 + '/' + imagesLength} />
   </View>
 )
 
-export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, FooterComponent, ...rest }) => {
+export const Spotlight = (props: SpotlightProps) => {
+  const { name, HeaderComponent, showFooter, FooterComponent, ...rest } = props
   const spotlight = useSpotlight(name)
+
   useUnmount(() => {
     spotlight.clear()
   })
 
+  const Footer = showFooter ? FooterComponent || DefaultFooterComponent : (() => null)
   return <ImageView
     imageIndex={spotlight.currentIndex}
     images={spotlight.images.map(x => x.source)}
@@ -183,10 +187,7 @@ export const Spotlight: React.FC<SpotlightProps> = ({ name, HeaderComponent, Foo
     onRequestClose={spotlight.close}
     visible={typeof spotlight.currentIndex !== 'undefined'}
     {...rest}
-    FooterComponent={({ imageIndex }) => !!FooterComponent ?
-      <FooterComponent imageIndex={imageIndex} spotlight={spotlight} /> :
-      <DefaultFooterComponent imageIndex={imageIndex} imagesLength={spotlight.images.length} />
-    }
+    FooterComponent={({ imageIndex }) => <Footer imageIndex={imageIndex} spotlight={spotlight} imagesLength={spotlight.images.length} />}
     HeaderComponent={!!HeaderComponent ? ({ imageIndex }) => <HeaderComponent spotlight={spotlight} imageIndex={imageIndex} /> : undefined}
   />
 }

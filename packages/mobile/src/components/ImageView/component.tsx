@@ -5,7 +5,8 @@ import _ImageView from 'react-native-image-viewing'
 import { StatusBar } from 'react-native'
 
 export type ImageViewProps = PropsOf<typeof _ImageView>
-export const ImageView: React.FC<ImageViewProps> = (props) => {
+
+export const ImageView = (props: ImageViewProps) => {
   onUpdate(() => {
     StatusBar.setHidden(props.visible)
   }, [props.visible])
