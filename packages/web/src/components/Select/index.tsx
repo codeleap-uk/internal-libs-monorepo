@@ -168,6 +168,7 @@ const defaultProps: Partial<SelectProps> = {
   itemProps: {} as ButtonProps,
   loadingIndicatorSize: 20,
   options: [],
+  loadInitialValue: false,
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
@@ -195,6 +196,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadOptions,
       multiple,
       limit = null,
+      loadInitialValue,
       focused,
       _error,
       renderItem: OptionComponent = null,
@@ -229,7 +231,11 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const hasSelectedOptionState = !TypeGuards.isNil(_selectedOption) && TypeGuards.isFunction(_setSelectedOption)
 
-    const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(value)
+    const initialValue = (loadInitialValue && !TypeGuards.isNil(options)) 
+      ? options?.find((option) => option?.value === value) 
+      : value 
+
+    const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(initialValue ?? value)
 
     const [_isFocused, setIsFocused] = useState(false)
 
@@ -275,6 +281,11 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             cb(options)
             return options
           })
+
+          if (loadInitialValue && !TypeGuards.isNil(_options)) {
+            const _initialValue = _options?.find?.((option) => option?.value === value)
+            if (!!_initialValue) setSelectedOption(_initialValue)
+          }
 
           return _options
         } catch (err) {
