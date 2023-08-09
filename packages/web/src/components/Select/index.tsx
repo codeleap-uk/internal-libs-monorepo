@@ -238,7 +238,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(initialValue ?? value)
 
     const [_isFocused, setIsFocused] = useState(false)
-
+    const [loadedOptions, setLoadedOptions] = useState(false)
     const [keyDownActive, setKeyDownActive] = useState(false)
 
     const isFocused = _isFocused || focused
@@ -282,10 +282,12 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             return options
           })
 
-          if (loadInitialValue && !TypeGuards.isNil(_options)) {
+          if (loadInitialValue && !TypeGuards.isNil(_options) && !loadedOptions) {
             const _initialValue = _options?.find?.((option) => option?.value === value)
             if (!!_initialValue) setSelectedOption(_initialValue)
           }
+
+          setLoadedOptions(true)
 
           return _options
         } catch (err) {
