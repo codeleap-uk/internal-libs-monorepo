@@ -93,6 +93,8 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     itemProps?: ButtonProps
     loadingIndicatorSize?: number
     limit?: number
+    loadInitialValue?: boolean
+    loadingMessage?: string
     selectedOption?: ReactSelectProps<T>['value']
     setSelectedOption?: ReactSelectProps<T>['onValueChange']
   } & Omit<
