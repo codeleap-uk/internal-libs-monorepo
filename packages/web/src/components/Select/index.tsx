@@ -169,6 +169,7 @@ const defaultProps: Partial<SelectProps> = {
   loadingIndicatorSize: 20,
   options: [],
   loadInitialValue: false,
+  loadingMessage: 'loading...',
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
@@ -223,6 +224,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadingIndicatorSize,
       selectedOption: _selectedOption,
       setSelectedOption: _setSelectedOption,
+      loadingMessage,
       ...otherProps
     } = selectProps
 
@@ -414,7 +416,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           ref={innerInputRef}
           closeMenuOnSelect={closeOnSelect}
           menuPortalTarget={innerWrapperRef.current}
-          placeholder={placeholder}
+          placeholder={(loadOptionsOnMount && !loadedOptions) ? loadingMessage : placeholder}
           isDisabled={isDisabled}
           isClearable={clearable}
           isSearchable={searchable}
