@@ -1,29 +1,36 @@
-import { AnyFunction, onMount, onUpdate, StyleContextProps, StyleProvider, useBooleanToggle, usePrevious } from '@codeleap/common'
-import { Modal, Text, Button } from '../components/components'
+import { AnyFunction, onMount, onUpdate, useBooleanToggle, usePrevious } from '@codeleap/common'
 import ReactDOM from 'react-dom'
 import React from 'react'
-
+import { v4 as uuid } from 'uuid'
 type AlertButton = {
-    text: string
-    onPress: AnyFunction
-    variants?: any[]
+  text: string
+  onPress: AnyFunction
+  variants?: any[]
 }
 
 type OSAlertArgs = {
   title: string
   body?: string
   options?: AlertButton[]
+  onDismiss?: AnyFunction
+  onAction?: AnyFunction
 }
 type AlertEvent = AlertButton['onPress']
 // type OSAlertType = 'info' | 'error' | 'warn' | 'ask'
 type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
-type AlertContext = StyleContextProps<any, any>
-function RenderModal(props: {args:OSAlertArgs; contextProps:AlertContext ; removeSelf:AnyFunction}) {
+
+export type GlobalAlertType = 'info' | 'error' | 'warn' | 'ask'
+
+export type GlobalAlertComponentProps = {
+  args: OSAlertArgs
+  removeSelf: AnyFunction
+  type: GlobalAlertType
+}
+
+export function useGlobalAlertComponent(props: GlobalAlertComponentProps) {
   const [visible, toggle] = useBooleanToggle(false)
 
   const previousVisible = usePrevious(visible)
-
-  const { title, body, options = [] } = props.args
 
   onMount(() => {
     toggle()
@@ -35,35 +42,28 @@ function RenderModal(props: {args:OSAlertArgs; contextProps:AlertContext ; remov
     }
   }, [visible])
 
-  return <StyleProvider {...props.contextProps}>
-    <Modal
-      visible={visible}
-      toggle={toggle}
-      title={title}
-      showClose={false}
-      closable={false}
+  return {
+    visible,
+    toggle,
+  }
+}
 
-      footer={<>
-        {
-          options.map((o, idx) => <Button debugName={`OSAlert ${title}`} key={idx} {...o} onPress={() => {
-            o.onPress?.()
-            toggle()
+function RenderModal(props: GlobalAlertComponentProps) {
 
-          }}/>)
-        }
-      </>}
-    >
-      <Text text={body || ''} />
-
-    </Modal>
-  </StyleProvider>
+  return null
 }
 
 const MODAL_ID = '__CODELEAP_MODAL__'
 
-function OSAlert(props:OSAlertArgs & {context: AlertContext}) {
+function OSAlert(props: OSAlertArgs & { type: GlobalAlertType }) {
   if (!document) return
-  let modalDiv = document.getElementById(MODAL_ID)
+
+  const modalId = MODAL_ID + '_' + uuid()
+
+  const modalsRootDiv = document.getElementById(MODAL_ID)
+
+  let modalDiv = document.getElementById(modalId)
+
   const remove = () => {
     ReactDOM.unmountComponentAtNode(modalDiv)
   }
@@ -73,30 +73,39 @@ function OSAlert(props:OSAlertArgs & {context: AlertContext}) {
 
     modalDiv.setAttribute('id', MODAL_ID)
 
-    document.body.appendChild(modalDiv)
-  } else {
-    remove()
+    modalsRootDiv.appendChild(modalDiv)
+
   }
 
-  ReactDOM.render(
-    <RenderModal
-      contextProps={props.context}
+  ReactDOM.render(<>
+
+    <OSAlert.Component
       removeSelf={remove}
       args={props}
-    />, modalDiv,
-  )
-}
+      type={props.type}
+      id={modalId}
+    />
 
-export function CreateOSAlert(context: AlertContext) {
+  </>, modalDiv)
+
+}
+OSAlert.Component = RenderModal
+
+export function CreateOSAlert(Component) {
+
+  OSAlert.Component = Component
+
   function ask({ title, body, options }: OSAlertArgs) {
     if (!title) {
       title = 'Quick quetion'
     }
     OSAlert({
-      context,
       title,
       body,
       options,
+      type: 'ask',
+      onAction: null,
+      onDismiss: null,
     })
   }
 
@@ -114,17 +123,11 @@ export function CreateOSAlert(context: AlertContext) {
     }
     OSAlert({
       title,
-      context,
-      body,
-      options: [
-        {
-          text: 'OK',
-          onPress: () => {
 
-            args?.onDismiss?.()
-          },
-        },
-      ],
+      body,
+      type: 'error',
+      onAction: args.onDismiss,
+      onDismiss: args.onDismiss,
     })
   }
 
@@ -137,25 +140,13 @@ export function CreateOSAlert(context: AlertContext) {
     } = args
 
     OSAlert({
-      context,
+
       title,
       body,
-      options: [
-        {
-          text: 'Cancel',
-          onPress: () => {
+      type: 'warn',
+      onAction: onAccept,
+      onDismiss: onReject,
 
-            onReject()
-          },
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-
-            onAccept?.()
-          },
-        },
-      ],
     })
   }
 
@@ -168,18 +159,10 @@ export function CreateOSAlert(context: AlertContext) {
     } = args
 
     OSAlert({
-      context,
       title,
       body,
-      options: [
-        {
-          text: 'OK',
-          onPress: () => {
-
-            onDismiss?.()
-          },
-        },
-      ],
+      type: 'info',
+      onDismiss,
     })
   }
   return {
@@ -188,4 +171,8 @@ export function CreateOSAlert(context: AlertContext) {
     info,
     error: OSError,
   }
+}
+
+export const AlertOutlet = () => {
+  return <div id={MODAL_ID} />
 }

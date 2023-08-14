@@ -15,8 +15,12 @@ import { deepMerge, onMount, onUpdate } from '../utils'
 import { StyleContextProps, StyleContextValue } from './types'
 
 export const StyleContext = createContext(
-  {} as StyleContextValue<Record<string, DefaultVariantBuilder>>,
+  {
+    found: false,
+  } as StyleContextValue<Record<string, DefaultVariantBuilder>>,
 )
+
+export const StyleContextRef = React.createRef<StyleContextValue<any>>()
 
 function useWindowSize() {
   const window = global?.window || { process: null }
@@ -71,17 +75,22 @@ export const StyleProvider = <
       setTheme(t.theme as string)
     })
   })
+  const value: StyleContextValue<any> = {
+    Theme: variantProvider.theme,
+    currentTheme: theme,
+    ComponentVariants: variants,
+    provider: variantProvider,
+    logger: logger || silentLogger,
+    Settings: settings,
+    found: true,
+
+  }
+  // @ts-ignore
+  StyleContextRef.current = value
 
   return (
     <StyleContext.Provider
-      value={{
-        Theme: variantProvider.theme,
-        currentTheme: theme,
-        ComponentVariants: variants,
-        provider: variantProvider,
-        logger: logger || silentLogger,
-        Settings: settings,
-      }}
+      value={value}
     >
       {children}
     </StyleContext.Provider>
@@ -89,7 +98,8 @@ export const StyleProvider = <
 }
 
 export function useCodeleapContext() {
-  return useContext(StyleContext)
+  const ctx = useContext(StyleContext)
+  return ctx?.found ? ctx : StyleContextRef.current
 }
 
 type ComponentNameArg = keyof DEFAULT_VARIANTS

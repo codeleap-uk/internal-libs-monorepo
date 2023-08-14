@@ -233,6 +233,7 @@ export type StyleContextValue<
   provider: VariantProvider<any, any>
   ComponentVariants: C
   logger: Logger
+  found?: boolean
   Settings: AppSettings
 
 }
