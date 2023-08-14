@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.10.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.0...v3.10.2) (2023-08-11)
+
+### [3.10.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.0...v3.10.1) (2023-08-09)
+
+## [3.10.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.8.1...v3.10.0) (2023-08-07)
+
+
+### Features
+
+* **web:** click outside hook - Tooltip prop close outside - Select state prop ([e711075](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e711075622034cad96d45ec2d0fbd0dfe733d6ae))
+
+## [3.9.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.8.0...v3.9.0) (2023-08-07)
+
+
+### Features
+
+* **web:** click outside hook - Tooltip prop close outside - Select state prop ([e711075](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e711075622034cad96d45ec2d0fbd0dfe733d6ae))
+
+## [3.8.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.1...v3.8.0) (2023-08-07)
+
+
+### Features
+
+* **mobile:** spotlight customFooter ([972fb7d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/972fb7d6c407f34e0657a08fc10fe9c18f453c95))
+* **mobile:** spotlight customHeader ([72dee01](https://github.com/codeleap-uk/internal-libs-monorepo/commit/72dee012d6abf221e92de86d1720ecc57c63d177))
+
+
+### Bug Fixes
+
+* **mobile:** crash if HeaderComponent was not defined ([0fd650f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0fd650f88fa68444c9a5525667f2b18266f6edf7))
+
+### [3.7.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.0...v3.7.1) (2023-07-21)
+
+
+### Bug Fixes
+
+* **mobile:** fix label and description on slider ([9bea4f7](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9bea4f7714c87ed523721b7ef96fb0b9c1c3d536))
+* **mobile:** fix slider, permissions and etc ([d8b80d9](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d8b80d9977b2775b26cb24ca80ac4bb711b64d30))
+
 ## [3.7.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.4.0...v3.7.0) (2023-07-11)
 
 

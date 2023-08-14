@@ -12,11 +12,12 @@ import { InputBase, selectInputBaseProps } from '../InputBase'
 import { SliderPresets } from './styles'
 import { Text } from '../Text'
 import { View } from '../View'
+import { Touchable } from '../Touchable'
 
 export * from './styles'
 
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
-  const { index, content, style } = props
+  const { index, content, style, onPress } = props
 
   if (!TypeGuards.isString(props.content)) {
     return <>
@@ -27,12 +28,16 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
   return <Text
     text={props.content}
     style={style}
+    onPress={onPress}
   />
 }
 
+const minimumValue = 0
+const maximumValue = 100
+
 export const Slider = (props:SliderProps) => {
   const {
-    inputBaseProps,
+    inputBaseProps: { label: _label, description: _description, ..._inputBaseProps },
     others,
   } = selectInputBaseProps(props)
 
@@ -41,16 +46,18 @@ export const Slider = (props:SliderProps) => {
     onValueChange,
     value,
     label,
+    description,
     debugName,
     styles = {},
     style,
     disabled,
     variants,
     trackMarks,
+    trackMarksClickable = false,
+    labelClickable = false,
     trackMarkComponent = DefaultSliderTrackMark,
     ...sliderProps
   } = others
-
   const SliderTrackMark = trackMarkComponent
   const [_value, _setValue] = React.useState(value)
 
@@ -119,11 +126,33 @@ export const Slider = (props:SliderProps) => {
 
   return (
     <InputBase
-      {...inputBaseProps}
+      {..._inputBaseProps}
       disabled={disabled}
       styles={variantStyles}
       labelAsRow
     >
+      {label || description ? (
+        <View style={variantStyles.labelRow}>
+          {label ? (
+            <Touchable
+              onPress={() => labelClickable ? onValueChange(sliderProps?.minimumValue || minimumValue) : null}
+              styles={variantStyles.labelBtn}
+              debugName='slider title'
+            >
+              <Text style={variantStyles.label} text={label}/>
+            </Touchable>
+          ) : null}
+          {description ? (
+            <Touchable
+              onPress={() => labelClickable ? onValueChange(sliderProps?.maximumValue || maximumValue) : null}
+              styles={variantStyles.descriptionBtn}
+              debugName='slider description'
+            >
+              <Text style={variantStyles.description} text={description}/>
+            </Touchable>
+          ) : null}
+        </View>
+      ) : null}
       <RNSlider
         value={_value}
         onValueChange={_setValue}
@@ -134,8 +163,8 @@ export const Slider = (props:SliderProps) => {
         minimumTrackStyle={selectedTrackStyle}
         maximumTrackStyle={unselectedTrackStyle}
         containerStyle={containerStyle}
-        minimumValue={0}
-        maximumValue={100}
+        minimumValue={minimumValue}
+        maximumValue={maximumValue}
         onSlidingComplete={() => {
           onValueChange(_value)
         }}
@@ -165,13 +194,20 @@ export const Slider = (props:SliderProps) => {
                     index={idx}
                     style={style}
                     key={idx}
+                    onPress={() => trackMarksClickable ? onValueChange(trackMarksProp[idx]) : null}
                   />
                 }
 
                 const relativeValue = trackMarksProp[idx]
                 const content = trackMarks[relativeValue]
 
-                return <SliderTrackMark index={idx} content={content} style={style} key={idx}/>
+                return <SliderTrackMark
+                  index={idx}
+                  content={content}
+                  style={style}
+                  key={idx}
+                  onPress={() => trackMarksClickable ? onValueChange(trackMarksProp[idx]) : null}
+                />
               })
             }
           </View>

@@ -150,7 +150,7 @@ const _FileInput = forwardRef<
                   onPress('camera')
                 }
               },
-              ...alertProps?.options[1],
+              ...alertProps?.options?.[1],
             },
             {
               text: 'Library',
@@ -161,13 +161,13 @@ const _FileInput = forwardRef<
                   onPress('library')
                 }
               },
-              ...alertProps?.options[2],
+              ...alertProps?.options?.[2],
             },
             {
               text: 'Cancel',
               style: 'cancel',
               onPress: () => {},
-              ...alertProps?.options[0],
+              ...alertProps?.options?.[0],
             },
           ],
         })

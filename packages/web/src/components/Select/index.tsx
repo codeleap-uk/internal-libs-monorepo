@@ -168,6 +168,8 @@ const defaultProps: Partial<SelectProps> = {
   itemProps: {} as ButtonProps,
   loadingIndicatorSize: 20,
   options: [],
+  loadInitialValue: false,
+  loadingMessage: 'loading...',
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
@@ -195,6 +197,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadOptions,
       multiple,
       limit = null,
+      loadInitialValue,
       focused,
       _error,
       renderItem: OptionComponent = null,
@@ -219,16 +222,25 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       filterItems = null,
       itemProps = {},
       loadingIndicatorSize,
+      selectedOption: _selectedOption,
+      setSelectedOption: _setSelectedOption,
+      loadingMessage,
       ...otherProps
     } = selectProps
 
     const innerInputRef = useRef<any>(null)
     const innerWrapperRef = useRef(null)
 
-    const [selectedOption, setSelectedOption] = useState(value)
+    const hasSelectedOptionState = !TypeGuards.isNil(_selectedOption) && TypeGuards.isFunction(_setSelectedOption)
+
+    const initialValue = (loadInitialValue && !TypeGuards.isNil(options)) 
+      ? options?.find((option) => option?.value === value) 
+      : value 
+
+    const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(initialValue ?? value)
 
     const [_isFocused, setIsFocused] = useState(false)
-
+    const [loadedOptions, setLoadedOptions] = useState(false)
     const [keyDownActive, setKeyDownActive] = useState(false)
 
     const isFocused = _isFocused || focused
@@ -271,6 +283,13 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             cb(options)
             return options
           })
+
+          if (loadInitialValue && !TypeGuards.isNil(_options) && !loadedOptions) {
+            const _initialValue = _options?.find?.((option) => option?.value === value)
+            if (!!_initialValue) setSelectedOption(_initialValue)
+          }
+
+          setLoadedOptions(true)
 
           return _options
         } catch (err) {
@@ -397,7 +416,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           ref={innerInputRef}
           closeMenuOnSelect={closeOnSelect}
           menuPortalTarget={innerWrapperRef.current}
-          placeholder={placeholder}
+          placeholder={(loadOptionsOnMount && !loadedOptions) ? loadingMessage : placeholder}
           isDisabled={isDisabled}
           isClearable={clearable}
           isSearchable={searchable}
