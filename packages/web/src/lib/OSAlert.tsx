@@ -1,6 +1,6 @@
+import React from 'react'
 import { AnyFunction, onMount, onUpdate, useBooleanToggle, usePrevious } from '@codeleap/common'
 import ReactDOM from 'react-dom'
-import React from 'react'
 import { v4 as uuid } from 'uuid'
 type AlertButton = {
   text: string
@@ -16,7 +16,7 @@ type OSAlertArgs = {
   onAction?: AnyFunction
 }
 type AlertEvent = AlertButton['onPress']
-// type OSAlertType = 'info' | 'error' | 'warn' | 'ask'
+
 type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
 export type GlobalAlertType = 'info' | 'error' | 'warn' | 'ask'
@@ -25,6 +25,7 @@ export type GlobalAlertComponentProps = {
   args: OSAlertArgs
   removeSelf: AnyFunction
   type: GlobalAlertType
+  id: string
 }
 
 export function useGlobalAlertComponent(props: GlobalAlertComponentProps) {
