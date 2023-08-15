@@ -96,12 +96,11 @@ export function List<T = any>(props: ListProps<T>) {
       variantStyles={variantStyles}
     >
       <ListMasonry
-        items={data}
-        rowGutter={rowItemsSpacing}
-        overscanBy={overscan}
+        items={data || []}
         render={renderItem}
-        onRender={onLoadMore}
         itemKey={item => item?.id}
+        rowGutter={rowItemsSpacing}
+        onRender={onLoadMore}
         {...masonryProps}
       />
     </ListLayout>

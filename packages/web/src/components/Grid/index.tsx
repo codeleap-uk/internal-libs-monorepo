@@ -97,14 +97,13 @@ export function Grid<T = any>(props: GridProps<T>) {
       variantStyles={variantStyles}
     >
       <GridMasonry
-        items={data}
+        items={data || []}
+        render={renderItem}
+        itemKey={item => item?.id}
         columnGutter={columnItemsSpacing}
         rowGutter={rowItemsSpacing}
-        overscanBy={overscan}
-        render={renderItem}
-        onRender={onLoadMore}
-        itemKey={item => item?.id}
         columnCount={numColumns}
+        onRender={onLoadMore}
         {...masonryProps}
       />
     </ListLayout>
