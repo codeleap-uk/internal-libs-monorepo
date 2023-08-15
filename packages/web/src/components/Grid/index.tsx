@@ -68,11 +68,10 @@ export function Grid<T = any>(props: GridProps<T>) {
   const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null
 
-    const index = _item?.index
     const gridLength = data?.length || 0
 
-    const isFirst = index === 0
-    const isLast = index === gridLength - 1
+    const isFirst = _item?.index === 0
+    const isLast = _item?.index === gridLength - 1
     const isOnly = isFirst && isLast
 
     const _itemProps = {
@@ -86,7 +85,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     if (!_itemProps?.item) return null
 
     return <>
-      {index <= numColumns ? null : separator}
+      {_item?.index <= numColumns ? null : separator}
       <RenderItem {..._itemProps} />
     </>
   }, [])

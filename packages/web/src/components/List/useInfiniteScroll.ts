@@ -1,12 +1,12 @@
 import React from 'react'
-import { onUpdate, TypeGuards } from '@codeleap/common'
+import { AnyFunction, onUpdate, TypeGuards } from '@codeleap/common'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
 import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions, useContainerPosition, useScroller } from 'masonic'
 
 export type UseInfiniteScrollArgs<Item extends Element = any> = {
   threshold?: number
-  onLoadMore?: LoadMoreItemsCallback<Item>
+  onLoadMore?: AnyFunction
   loadMoreOptions?: Partial<UseInfiniteLoaderOptions<Item>>
 }
 
@@ -93,7 +93,7 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
       if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
     },
     {
-      isItemLoaded: (index, items) => !!items[index],
+      isItemLoaded: (index, items) => !!items?.[index],
       minimumBatchSize: 32,
       threshold: threshold,
       ...loadMoreOptions,
@@ -109,7 +109,7 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     }
   )
 
-  const isEmpty = !data || !data?.length
+  const isEmpty = React.useMemo(() => (!data || !data?.length), [data?.length])
 
   return {
     onLoadMore: infiniteLoader,

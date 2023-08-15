@@ -73,7 +73,6 @@ export function List<T = any>(props: ListProps<T>) {
 
     const isFirst = _item?.index === 0
     const isLast = _item?.index === listLength - 1
-
     const isOnly = isFirst && isLast
 
     const _itemProps = {
