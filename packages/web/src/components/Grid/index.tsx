@@ -80,7 +80,7 @@ export function Grid<T = any>(props: GridProps<T>) {
       isOnly,
       isLast,
       isFirst,
-      item: _item.data
+      item: _item?.data
     }
 
     if (!_itemProps?.item) return null

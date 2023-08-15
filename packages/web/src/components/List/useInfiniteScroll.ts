@@ -28,13 +28,20 @@ export type UseInfiniteScrollReturn<Item extends Element = any> = {
 type UseRefreshOptions = {
   threshold: number
   debounce: number
+  enabled: boolean
 }
 
 export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) => {
   const {
     threshold,
     debounce,
+    enabled,
   } = options
+
+  if (!enabled) return {
+    refresh: false,
+    scrollableRef: null,
+  }
 
   const [refresh, setRefresh] = React.useState(false)
 
@@ -71,6 +78,7 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     onRefresh,
     data,
     hasNextPage,
+    refresh: refreshEnabled,
     fetchNextPage,
     refreshThreshold,
     refreshDebounce,
@@ -85,7 +93,7 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
       if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
     },
     {
-      isItemLoaded: (index, items) => !!items?.[index],
+      isItemLoaded: (index, items) => !!items[index],
       minimumBatchSize: 32,
       threshold: threshold,
       ...loadMoreOptions,
@@ -96,7 +104,8 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     onRefresh, 
     { 
       threshold: refreshThreshold, 
-      debounce: refreshDebounce 
+      debounce: refreshDebounce,
+      enabled: refreshEnabled,
     }
   )
 
