@@ -1,66 +1,68 @@
-import { onUpdate } from '@codeleap/common'
-import { useVirtualizer, VirtualItem, Virtualizer, VirtualizerOptions } from '@tanstack/react-virtual'
 import React from 'react'
+import { onUpdate, TypeGuards } from '@codeleap/common'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
+import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions } from 'masonic'
 
-export type UseInfiniteScrollProps<TS extends Element = any, T extends Element = any> = 
-  ListProps & 
-  GridProps & 
-  Pick<VirtualizerOptions<TS, T>, 'overscan'>
+export type UseInfiniteScrollProps<Item extends Element = any> = 
+  Partial<ListProps> & 
+  Partial<GridProps> & {
+    threshold?: number
+    onLoadMore?: LoadMoreItemsCallback<Item>
+    loadMoreOptions?: Partial<UseInfiniteLoaderOptions<Item>>
+  }
 
-export type UseInfiniteScrollReturn<TS extends Element = any, T extends Element = any> = {
-  dataVirtualizer: Virtualizer<TS, T>
-  count: number
-  items: VirtualItem[]
+export type UseInfiniteScrollReturn<Item extends Element = any> = {
+  onLoadMore: LoadMoreItemsCallback<Item>
   isRefresh: boolean
-  parentRef: React.MutableRefObject<undefined>
   layoutProps: {
     isEmpty: boolean
     refreshing: boolean
     parentRef: React.MutableRefObject<undefined>
-    dataVirtualizer: Virtualizer<TS, T>
   }
 }
 
-export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScrollReturn => {
+export function useInfiniteScroll<Item extends Element = any>(props: UseInfiniteScrollProps<Item>): UseInfiniteScrollReturn<Item> {
   const {
     onRefresh,
     data,
     hasNextPage,
-    isFetchingNextPage,
     fetchNextPage,
-    virtualizerOptions = {},
     refreshDebounce,
     refreshThreshold,
-    overscan = 10,
-    numColumns = 1,
+    loadMoreOptions = {},
+    onLoadMore,
+    threshold = 3,
   } = props
 
   const parentRef = React.useRef()
 
   const [refreshing, setRefreshing] = React.useState(false)
 
-  const count = hasNextPage ? data?.length + 1 : data?.length
-
-  const dataVirtualizer = useVirtualizer({
-    count,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => null,
-    overscan,
-    ...virtualizerOptions,
-  })
+  const infiniteLoader = useInfiniteLoader(
+    async (args) => {
+      if (hasNextPage) await fetchNextPage?.()
+      if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
+      console.log('HERE', args)
+    },
+    {
+      isItemLoaded: (index, items) => !!items?.[index],
+      minimumBatchSize: 32,
+      threshold: threshold,
+      ...loadMoreOptions,
+    },
+  )
 
   const isRefresh = React.useMemo(() => {
-    const _offset = dataVirtualizer?.scrollOffset
-    const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
+    // const _offset = dataVirtualizer?.scrollOffset
+    // const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
 
-    return _refresh
-  }, [dataVirtualizer?.scrollOffset, dataVirtualizer?.isScrolling])
+    // return _refresh
+
+    return false
+  }, [])
 
   const isEmpty = !data || !data?.length
-
-  const items = dataVirtualizer?.getVirtualItems()
 
   onUpdate(() => {
     if (isRefresh) {
@@ -73,41 +75,13 @@ export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScr
     }
   }, [!!isRefresh])
 
-  onUpdate(() => {
-    const [lastItem] = [...(items ?? [])]?.reverse()
-
-    if (!lastItem) {
-      return
-    }
-
-    const itemsLength = (data?.length / numColumns) - 1
-
-    if (
-      lastItem?.index >= itemsLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage?.()
-    }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    data?.length,
-    isFetchingNextPage,
-    items,
-  ])
-
   return {
-    items,
-    dataVirtualizer,
+    onLoadMore: infiniteLoader,
     isRefresh,
-    count,
-    parentRef,
     layoutProps: {
       parentRef,
       refreshing,
       isEmpty,
-      dataVirtualizer
     }
   }
 }

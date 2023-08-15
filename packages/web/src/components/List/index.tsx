@@ -3,10 +3,11 @@ import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { ListPresets } from './styles'
-import { VirtualItem } from '@tanstack/react-virtual'
+// import { VirtualItem } from '@tanstack/react-virtual'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
+import { Masonry, RenderComponentProps as MasonryItemProps, List as ListMasonry, ListProps as ListMasonryProps } from 'masonic'
 
 export * from './styles'
 export * from './PaginationIndicator'
@@ -36,10 +37,10 @@ const defaultProps: Partial<ListProps> = {
   refresh: true,
 }
 
-export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
-  const allProps = { // @ts-ignore
+export const List = (props: ListProps) => {
+  const allProps = {
     ...List.defaultProps,
-    ...flatListProps,
+    ...props,
   }
 
   const {
@@ -59,18 +60,12 @@ export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatL
     styles,
   })
 
-  const {
-    items,
-    dataVirtualizer,
-    layoutProps,
-  } = useInfiniteScroll(allProps)
+  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
   const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
-  const renderItem = useCallback((_item: VirtualItem) => {
+  const renderItem = useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null
-
-    const showIndicator = (_item?.index > data?.length - 1) && !!ListLoadingIndicatorComponent
 
     const listLength = data?.length || 0
 
@@ -84,37 +79,28 @@ export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatL
       isOnly,
       isLast,
       isFirst,
-      item: data?.[_item?.index]
+      item: _item?.data,
     }
 
-    return (
-      <div
-        css={[variantStyles.itemWrapper]}
-        key={_item?.key}
-        data-index={_item?.index}
-        ref={dataVirtualizer?.measureElement}
-      >
-        {!isFirst && separator}
-        {showIndicator && <ListLoadingIndicatorComponent />}
-        {!!_itemProps?.item && <RenderItem {..._itemProps} />}
-      </div>
-    )
-  }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
+    return <RenderItem {..._itemProps} />
+  }, [])
 
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
       variantStyles={variantStyles} // @ts-ignore
-      ref={ref}
     >
-      {/* Necessary for correct list render */}
-      <div css={[variantStyles.list, { transform: `translateY(${items?.[0]?.start}px)` }]}>
-        {items?.map((item) => renderItem(item))}
-      </div>
+      <ListMasonry
+        items={data}
+        rowGutter={8} // The amount of vertical space in pixels to add between list item cards.
+        overscanBy={3}
+        render={renderItem}
+        onRender={onLoadMore}
+        itemKey={item => item?.id}
+      />
     </ListLayout>
   )
-})
+}
 
-// @ts-ignore
 List.defaultProps = defaultProps

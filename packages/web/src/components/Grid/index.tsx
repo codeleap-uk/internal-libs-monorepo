@@ -65,6 +65,8 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     styles,
   })
 
+  return null
+
   const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
   const {
