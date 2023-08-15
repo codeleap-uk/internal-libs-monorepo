@@ -1,13 +1,12 @@
 import React from 'react'
-import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
+import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { ListPresets } from './styles'
-// import { VirtualItem } from '@tanstack/react-virtual'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
-import { Masonry, RenderComponentProps as MasonryItemProps, List as ListMasonry, ListProps as ListMasonryProps } from 'masonic'
+import { RenderComponentProps as MasonryItemProps, List as ListMasonry } from 'masonic'
 
 export * from './styles'
 export * from './PaginationIndicator'
@@ -27,14 +26,15 @@ const defaultProps: Partial<ListProps> = {
   ListFooterComponent: null,
   ListHeaderComponent: null,
   ListLoadingIndicatorComponent: null,
-  ListRefreshControlComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
   refreshSize: 40,
-  refreshThreshold: 0.5,
+  refreshThreshold: 0.1,
   refreshPosition: 2,
   refresh: true,
+  rowItemsSpacing: 8,
+  overscan: 3,
 }
 
 export const List = (props: ListProps) => {
@@ -47,11 +47,13 @@ export const List = (props: ListProps) => {
     variants = [],
     responsiveVariants = {},
     styles = {},
-    ListLoadingIndicatorComponent,
     renderItem: RenderItem,
+    rowItemsSpacing,
     ListSeparatorComponent,
     data,
+    overscan,
     separators,
+    masonryProps = {},
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -64,7 +66,7 @@ export const List = (props: ListProps) => {
 
   const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
 
-  const renderItem = useCallback((_item: MasonryItemProps<any>) => {
+  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null
 
     const listLength = data?.length || 0
@@ -82,22 +84,26 @@ export const List = (props: ListProps) => {
       item: _item?.data,
     }
 
-    return <RenderItem {..._itemProps} />
+    return <>
+      {isFirst ? null : separator}
+      <RenderItem {..._itemProps} />
+    </>
   }, [])
 
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={variantStyles} // @ts-ignore
+      variantStyles={variantStyles}
     >
       <ListMasonry
         items={data}
-        rowGutter={8} // The amount of vertical space in pixels to add between list item cards.
-        overscanBy={3}
+        rowGutter={rowItemsSpacing}
+        overscanBy={overscan}
         render={renderItem}
         onRender={onLoadMore}
         itemKey={item => item?.id}
+        {...masonryProps}
       />
     </ListLayout>
   )

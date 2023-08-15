@@ -1,5 +1,5 @@
 import React from 'react'
-import { StylesOf, TypeGuards } from '@codeleap/common'
+import { StylesOf } from '@codeleap/common'
 import { ListComposition, ListParts } from './styles'
 import { ListProps } from './types'
 import { View } from '../View'
@@ -12,25 +12,63 @@ type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['
   children?: React.ReactNode
 }
 
+type ListRefreshControlComponent = Partial<ListLayoutProps> & {
+  enabled: boolean
+  variantStyles: StylesOf<ListComposition>
+}
+
+const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
+  const { 
+    refreshing, 
+    variantStyles, 
+    refreshPosition, 
+    refreshControlProps, 
+    debugName, 
+    refreshSize, 
+    refreshControlIndicatorProps,
+    enabled,
+  } = props
+
+  if (!enabled) return null
+  
+  return (
+    <motion.div
+      css={[variantStyles?.refreshControl]}
+      initial={false}
+      animate={{
+        opacity: refreshing ? 1 : 0,
+        top: refreshing ? refreshPosition : 0
+      }}
+      {...refreshControlProps}
+    >
+      <ActivityIndicator
+        debugName={debugName + 'refresh-indicator'}
+        size={refreshSize}
+        style={variantStyles.refreshControlIndicator}
+        {...refreshControlIndicatorProps}
+      />
+    </motion.div>
+  )
+}
+
 export const ListLayout = (props: ListLayoutProps) => {
   const {
     ListEmptyComponent,
     ListFooterComponent,
     ListHeaderComponent,
-    ListRefreshControlComponent,
+    refresh,
+    ListRefreshControlComponent = DefaultRefreshIndicator,
     variantStyles,
     isEmpty,
     isLoading,
-    refreshPosition,
     placeholder = {},
     style,
-    refresh,
-    refreshing,
-    refreshControlProps,
-    refreshControlIndicatorProps = {},
-    refreshSize,
     children,
     debugName,
+    isFetching,
+    isFetchingNextPage,
+    ListLoadingIndicatorComponent,
+    scrollableRef,
   } = props
 
   const getKeyStyle = React.useCallback((key: ListParts) => ([
@@ -39,44 +77,25 @@ export const ListLayout = (props: ListLayoutProps) => {
     isEmpty && variantStyles[`${key}:empty`],
   ]), [isLoading, isEmpty])
 
-  const RefreshIndicator = React.useCallback(() => {
-    if (TypeGuards.isNil(ListRefreshControlComponent) && refresh) {
-      return (
-        <motion.div
-          css={[variantStyles?.refreshControl]}
-          initial={false}
-          animate={{
-            opacity: refreshing ? 1 : 0,
-            top: refreshing ? refreshPosition : 0
-          }}
-          {...refreshControlProps}
-        >
-          <ActivityIndicator
-            debugName={debugName}
-            size={refreshSize}
-            style={variantStyles.refreshControlIndicator}
-            {...refreshControlIndicatorProps}
-          />
-        </motion.div>
-      )
-    } else {
-      return <ListRefreshControlComponent /> ?? null
-    }
-  }, [refresh, refreshing])
-
   return (
-    // @ts-ignore
-    <View css={[getKeyStyle('wrapper'), style]}>
+    <View css={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
       {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
 
       {isEmpty
         ? <ListEmptyComponent debugName={debugName} {...placeholder} />
         : (
           <View css={[getKeyStyle('innerWrapper')]}>
-            <RefreshIndicator />
+            <ListRefreshControlComponent
+              {...props}
+              enabled={refresh}
+              variantStyles={variantStyles}
+            />
+
             {children}
           </View>
         )}
+
+      {(isFetching || isFetchingNextPage) ? <ListLoadingIndicatorComponent /> : null}
 
       {!!ListFooterComponent ? <ListFooterComponent /> : null}
     </View>

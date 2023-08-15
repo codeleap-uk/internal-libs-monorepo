@@ -2,10 +2,10 @@ import React from 'react'
 import { onUpdate, TypeGuards } from '@codeleap/common'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
-import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions } from 'masonic'
+import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions, useContainerPosition, useScroller } from 'masonic'
 
-export type UseInfiniteScrollProps<Item extends Element = any> = 
-  Partial<ListProps> & 
+export type UseInfiniteScrollProps<Item extends Element = any> =
+  Partial<ListProps> &
   Partial<GridProps> & {
     threshold?: number
     onLoadMore?: LoadMoreItemsCallback<Item>
@@ -18,7 +18,48 @@ export type UseInfiniteScrollReturn<Item extends Element = any> = {
   layoutProps: {
     isEmpty: boolean
     refreshing: boolean
-    parentRef: React.MutableRefObject<undefined>
+    scrollableRef: React.MutableRefObject<undefined>
+  }
+}
+
+type UseRefreshOptions = {
+  threshold: number
+  debounce: number
+}
+
+export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) => {
+  const {
+    threshold,
+    debounce,
+  } = options
+
+  const [refresh, setRefresh] = React.useState(false)
+
+  const containerRef = React.useRef(null)
+
+  const { offset } = useContainerPosition(containerRef)
+  const { scrollTop, isScrolling } = useScroller(offset, 2)
+
+  const handleRefresh = React.useCallback(() => {
+    if (!refresh && isScrolling) {
+      setRefresh(true)
+      onRefresh?.()
+
+      setTimeout(() => {
+        setRefresh(false)
+      }, debounce)
+    }
+  }, [refresh, isScrolling])
+
+  onUpdate(() => {
+    if (scrollTop <= threshold) {
+      handleRefresh()
+    }
+  }, [scrollTop])
+
+  return {
+    refresh,
+    scrollableRef: containerRef,
   }
 }
 
@@ -28,22 +69,17 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     data,
     hasNextPage,
     fetchNextPage,
-    refreshDebounce,
     refreshThreshold,
+    refreshDebounce,
     loadMoreOptions = {},
     onLoadMore,
     threshold = 3,
   } = props
 
-  const parentRef = React.useRef()
-
-  const [refreshing, setRefreshing] = React.useState(false)
-
   const infiniteLoader = useInfiniteLoader(
     async (args) => {
       if (hasNextPage) await fetchNextPage?.()
       if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
-      console.log('HERE', args)
     },
     {
       isItemLoaded: (index, items) => !!items?.[index],
@@ -53,34 +89,22 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     },
   )
 
-  const isRefresh = React.useMemo(() => {
-    // const _offset = dataVirtualizer?.scrollOffset
-    // const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
-
-    // return _refresh
-
-    return false
-  }, [])
+  const { refresh, scrollableRef } = useRefresh(
+    onRefresh, 
+    { 
+      threshold: refreshThreshold, 
+      debounce: refreshDebounce 
+    }
+  )
 
   const isEmpty = !data || !data?.length
 
-  onUpdate(() => {
-    if (isRefresh) {
-      setRefreshing(true)
-      onRefresh?.()
-
-      setTimeout(() => {
-        setRefreshing(false)
-      }, refreshDebounce)
-    }
-  }, [!!isRefresh])
-
   return {
     onLoadMore: infiniteLoader,
-    isRefresh,
+    isRefresh: refresh,
     layoutProps: {
-      parentRef,
-      refreshing,
+      scrollableRef,
+      refreshing: refresh,
       isEmpty,
     }
   }
