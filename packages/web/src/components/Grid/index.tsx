@@ -29,7 +29,7 @@ const defaultProps: Partial<GridProps> = {
   refresh: true,
   columnItemsSpacing: 8,
   rowItemsSpacing: 8,
-  overscan: 5,
+  overscan: 2,
 }
 
 export function Grid<T = any>(props: GridProps<T>) {

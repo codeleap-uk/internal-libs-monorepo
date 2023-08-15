@@ -32,7 +32,7 @@ const defaultProps: Partial<ListProps> = {
   refreshPosition: 16,
   refresh: true,
   rowItemsSpacing: 8,
-  overscan: 3,
+  overscan: 2,
 }
 
 export function List<T = any>(props: ListProps<T>) {
