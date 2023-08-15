@@ -4,13 +4,16 @@ import { ListProps } from '.'
 import { GridProps } from '../Grid'
 import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions, useContainerPosition, useScroller } from 'masonic'
 
+export type UseInfiniteScrollArgs<Item extends Element = any> = {
+  threshold?: number
+  onLoadMore?: LoadMoreItemsCallback<Item>
+  loadMoreOptions?: Partial<UseInfiniteLoaderOptions<Item>>
+}
+
 export type UseInfiniteScrollProps<Item extends Element = any> =
   Partial<ListProps> &
-  Partial<GridProps> & {
-    threshold?: number
-    onLoadMore?: LoadMoreItemsCallback<Item>
-    loadMoreOptions?: Partial<UseInfiniteLoaderOptions<Item>>
-  }
+  Partial<GridProps> & 
+  UseInfiniteScrollArgs<Item>
 
 export type UseInfiniteScrollReturn<Item extends Element = any> = {
   onLoadMore: LoadMoreItemsCallback<Item>

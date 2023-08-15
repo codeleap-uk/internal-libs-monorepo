@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
 import { RenderComponentProps, ListProps as ListMasonryProps } from 'masonic'
+import { UseInfiniteScrollArgs } from './useInfiniteScroll'
 
 export type AugmentedRenderItemInfo<T> = RenderComponentProps<T> & {
   item: T
@@ -50,4 +51,4 @@ Data = T extends Array<infer D> ? D : never
     rowItemsSpacing?: number
     overscan?: number
     masonryProps?: Partial<ListMasonryProps<T>>
-} & ComponentCommonProps
+} & ComponentCommonProps & UseInfiniteScrollArgs

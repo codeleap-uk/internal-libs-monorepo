@@ -14,8 +14,6 @@ export * from './useInfiniteScroll'
 export * from './types'
 export * from './ListLayout'
 
-export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
-
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
     <View css={[props?.separatorStyles]}></View>
@@ -37,11 +35,11 @@ const defaultProps: Partial<ListProps> = {
   overscan: 3,
 }
 
-export const List = (props: ListProps) => {
+export function List<T = any>(props: ListProps<T>) {
   const allProps = {
     ...List.defaultProps,
     ...props,
-  }
+  } as ListProps
 
   const {
     variants = [],
