@@ -29,7 +29,7 @@ const defaultProps: Partial<ListProps> = {
   refreshDebounce: 3000,
   refreshSize: 40,
   refreshThreshold: 0.1,
-  refreshPosition: 2,
+  refreshPosition: 16,
   refresh: true,
   rowItemsSpacing: 8,
   overscan: 3,
@@ -62,7 +62,9 @@ export function List<T = any>(props: ListProps<T>) {
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
-  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = React.useMemo(() => {
+    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+  }, [])
 
   const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null

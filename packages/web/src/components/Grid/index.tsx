@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
+import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridPresets } from './styles'
@@ -25,11 +25,11 @@ const defaultProps: Partial<GridProps> = {
   refreshDebounce: 3000,
   refreshSize: 40,
   refreshThreshold: 0.1,
-  refreshPosition: 2,
+  refreshPosition: 16,
   refresh: true,
   columnItemsSpacing: 8,
   rowItemsSpacing: 8,
-  overscan: 3,
+  overscan: 5,
 }
 
 export function Grid<T = any>(props: GridProps<T>) {
@@ -61,9 +61,11 @@ export function Grid<T = any>(props: GridProps<T>) {
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
-  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = React.useMemo(() => {
+    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+  }, [])
 
-  const renderItem = useCallback((_item: MasonryItemProps<any>) => {
+  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null
 
     const index = _item?.index
@@ -84,7 +86,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     if (!_itemProps?.item) return null
 
     return <>
-      {isFirst ? null : separator}
+      {index <= numColumns ? null : separator}
       <RenderItem {..._itemProps} />
     </>
   }, [])
