@@ -87,7 +87,7 @@ export function List<T = any>(props: ListProps<T>) {
       {isFirst ? null : separator}
       <RenderItem {..._itemProps} />
     </>
-  }, [])
+  }, [RenderItem])
 
   return (
     <ListLayout
@@ -101,6 +101,7 @@ export function List<T = any>(props: ListProps<T>) {
         itemKey={item => item?.id}
         rowGutter={rowItemsSpacing}
         onRender={onLoadMore}
+        overscanBy={overscan}
         {...masonryProps}
       />
     </ListLayout>

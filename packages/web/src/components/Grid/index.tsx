@@ -88,7 +88,7 @@ export function Grid<T = any>(props: GridProps<T>) {
       {_item?.index <= numColumns ? null : separator}
       <RenderItem {..._itemProps} />
     </>
-  }, [])
+  }, [RenderItem])
 
   return (
     <ListLayout
@@ -104,6 +104,7 @@ export function Grid<T = any>(props: GridProps<T>) {
         rowGutter={rowItemsSpacing}
         columnCount={numColumns}
         onRender={onLoadMore}
+        overscanBy={overscan}
         {...masonryProps}
       />
     </ListLayout>

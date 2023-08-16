@@ -13,7 +13,6 @@ type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['
 }
 
 type ListRefreshControlComponent = Partial<ListLayoutProps> & {
-  enabled: boolean
   variantStyles: StylesOf<ListComposition>
 }
 
@@ -26,11 +25,8 @@ const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
     debugName, 
     refreshSize, 
     refreshControlIndicatorProps,
-    enabled,
   } = props
 
-  if (!enabled) return null
-  
   return (
     <motion.div
       css={[variantStyles?.refreshControl]}
@@ -85,11 +81,12 @@ export const ListLayout = (props: ListLayoutProps) => {
         ? <ListEmptyComponent debugName={debugName} {...placeholder} />
         : (
           <View css={[getKeyStyle('innerWrapper')]}>
-            <ListRefreshControlComponent
-              {...props}
-              enabled={refresh}
-              variantStyles={variantStyles}
-            />
+            {(!ListRefreshControlComponent || !refresh) ? null : (
+              <ListRefreshControlComponent
+                {...props}
+                variantStyles={variantStyles}
+              />
+            )}
 
             {children}
           </View>
