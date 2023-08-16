@@ -22,7 +22,7 @@ const defaultProps: Partial<GridProps> = {
   ListLoadingIndicatorComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
-  refreshDebounce: 3000,
+  refreshDebounce: 1500,
   refreshSize: 40,
   refreshThreshold: 0.1,
   refreshPosition: 16,

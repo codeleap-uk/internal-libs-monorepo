@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnyFunction, onUpdate, TypeGuards } from '@codeleap/common'
+import { AnyFunction, onUpdate, TypeGuards, useEffect } from '@codeleap/common'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
 import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions, useContainerPosition, useScroller } from 'masonic'
@@ -31,6 +31,19 @@ type UseRefreshOptions = {
   enabled: boolean
 }
 
+const scrollDebounce = (func, delay) => {
+  const timerRef = React.useRef(null)
+
+  const scrollDebounce = (...args) => {
+    clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      func(...args)
+    }, delay)
+  }
+
+  return scrollDebounce
+}
+
 export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) => {
   const {
     threshold,
@@ -44,28 +57,51 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
   }
 
   const [refresh, setRefresh] = React.useState(false)
+  const pushTopTopRef = React.useRef(0)
 
   const containerRef = React.useRef(null)
 
-  const { offset } = useContainerPosition(containerRef)
-  const { scrollTop, isScrolling } = useScroller(offset, 2)
+  const refresher = React.useCallback(async () => {
+    setRefresh(true)
+    await onRefresh?.()
 
-  const handleRefresh = React.useCallback(() => {
-    if (!refresh && isScrolling) {
-      setRefresh(true)
-      onRefresh?.()
+    setTimeout(() => {
+      setRefresh(false)
+      pushTopTopRef.current = 0
+    }, 2000)
+  }, [])
 
-      setTimeout(() => {
-        setRefresh(false)
-      }, debounce)
+  const onScroll = scrollDebounce(() => {
+    if (containerRef.current) {
+      const rect = containerRef.current?.getBoundingClientRect()
+      const scrollTop = window?.pageYOffset || document?.documentElement?.scrollTop
+      
+      const containerTop = rect.top + scrollTop
+      const containerHeight = rect.height
+
+      const distanceFromTop = Math.max(0, scrollTop - containerTop)
+      const distanceFromBottom = Math.max(0, containerTop + containerHeight - scrollTop)
+
+      const totalDistance = containerHeight + distanceFromTop + distanceFromBottom
+      const percentage = (distanceFromTop / totalDistance) * 100
+
+      if (percentage < threshold) {
+        pushTopTopRef.current = pushTopTopRef.current + 1
+
+        if (pushTopTopRef.current === 3) {
+          refresher()
+        }
+      }
     }
-  }, [refresh, isScrolling])
+  }, debounce)
 
-  onUpdate(() => {
-    if (scrollTop <= threshold) {
-      handleRefresh()
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
     }
-  }, [scrollTop])
+  }, [])
 
   return {
     refresh,
