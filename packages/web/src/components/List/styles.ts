@@ -6,12 +6,9 @@ type ListStates = 'empty' | 'loading'
 export type ListParts = 
   ViewComposition | 
   'innerWrapper' | 
-  'content' | 
   'separator' | 
-  'itemWrapper' |
   'refreshControl' |
-  'refreshControlIndicator' |
-  'list'
+  'refreshControlIndicator'
 
 export type ListComposition = `${ListParts}:${ListStates}` | ListParts
 

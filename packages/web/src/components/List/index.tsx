@@ -1,20 +1,18 @@
 import React from 'react'
-import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
+import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { ListPresets } from './styles'
-import { VirtualItem } from '@tanstack/react-virtual'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
+import { RenderComponentProps as MasonryItemProps, List as ListMasonry } from 'masonic'
 
 export * from './styles'
 export * from './PaginationIndicator'
 export * from './useInfiniteScroll'
 export * from './types'
 export * from './ListLayout'
-
-export type ListComponentType = <T extends any[] = any[]>(props: ListProps<T>) => React.ReactElement
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
@@ -26,31 +24,34 @@ const defaultProps: Partial<ListProps> = {
   ListFooterComponent: null,
   ListHeaderComponent: null,
   ListLoadingIndicatorComponent: null,
-  ListRefreshControlComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 3000,
   refreshSize: 40,
-  refreshThreshold: 0.5,
-  refreshPosition: 2,
+  refreshThreshold: 0.1,
+  refreshPosition: 16,
   refresh: true,
+  rowItemsSpacing: 8,
+  overscan: 2,
 }
 
-export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatListProps, ref) => {
-  const allProps = { // @ts-ignore
+export function List<T = any>(props: ListProps<T>) {
+  const allProps = {
     ...List.defaultProps,
-    ...flatListProps,
-  }
+    ...props,
+  } as ListProps
 
   const {
     variants = [],
     responsiveVariants = {},
     styles = {},
-    ListLoadingIndicatorComponent,
     renderItem: RenderItem,
+    rowItemsSpacing,
     ListSeparatorComponent,
     data,
+    overscan,
     separators,
+    masonryProps = {},
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -59,24 +60,19 @@ export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatL
     styles,
   })
 
-  const {
-    items,
-    dataVirtualizer,
-    layoutProps,
-  } = useInfiniteScroll(allProps)
+  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
-  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const separator = React.useMemo(() => {
+    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+  }, [])
 
-  const renderItem = useCallback((_item: VirtualItem) => {
+  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null
-
-    const showIndicator = (_item?.index > data?.length - 1) && !!ListLoadingIndicatorComponent
 
     const listLength = data?.length || 0
 
     const isFirst = _item?.index === 0
     const isLast = _item?.index === listLength - 1
-
     const isOnly = isFirst && isLast
 
     const _itemProps = {
@@ -84,37 +80,31 @@ export const List: ListComponentType = React.forwardRef<'div', ListProps>((flatL
       isOnly,
       isLast,
       isFirst,
-      item: data?.[_item?.index]
+      item: _item?.data,
     }
 
-    return (
-      <div
-        css={[variantStyles.itemWrapper]}
-        key={_item?.key}
-        data-index={_item?.index}
-        ref={dataVirtualizer?.measureElement}
-      >
-        {!isFirst && separator}
-        {showIndicator && <ListLoadingIndicatorComponent />}
-        {!!_itemProps?.item && <RenderItem {..._itemProps} />}
-      </div>
-    )
-  }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
+    return <>
+      {isFirst ? null : separator}
+      <RenderItem {..._itemProps} />
+    </>
+  }, [])
 
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={variantStyles} // @ts-ignore
-      ref={ref}
+      variantStyles={variantStyles}
     >
-      {/* Necessary for correct list render */}
-      <div css={[variantStyles.list, { transform: `translateY(${items?.[0]?.start}px)` }]}>
-        {items?.map((item) => renderItem(item))}
-      </div>
+      <ListMasonry
+        items={data || []}
+        render={renderItem}
+        itemKey={item => item?.id}
+        rowGutter={rowItemsSpacing}
+        onRender={onLoadMore}
+        {...masonryProps}
+      />
     </ListLayout>
   )
-})
+}
 
-// @ts-ignore
 List.defaultProps = defaultProps

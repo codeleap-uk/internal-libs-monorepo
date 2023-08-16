@@ -1,13 +1,14 @@
 import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
-import { VirtualItem, VirtualizerOptions } from '@tanstack/react-virtual'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { View, ViewProps } from '../View'
 import { ListComposition, ListPresets } from './styles'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
+import { RenderComponentProps, ListProps as ListMasonryProps } from 'masonic'
+import { UseInfiniteScrollArgs } from './useInfiniteScroll'
 
-export type AugmentedRenderItemInfo<T> = VirtualItem & {
+export type AugmentedRenderItemInfo<T> = RenderComponentProps<T> & {
   item: T
   isFirst: boolean
   isLast: boolean
@@ -38,7 +39,6 @@ Data = T extends Array<infer D> ? D : never
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
     ListHeaderComponent?: () => React.ReactElement
-    virtualizerOptions?: Partial<VirtualizerOptions<any, any>>
     refreshDebounce?: number
     refreshSize?: number
     refreshThreshold?: number
@@ -48,4 +48,7 @@ Data = T extends Array<infer D> ? D : never
     refreshControlIndicatorProps?: Partial<ActivityIndicatorProps>
     style?: React.CSSProperties
     ref?: React.MutableRefObject<undefined>
-} & ComponentCommonProps
+    rowItemsSpacing?: number
+    overscan?: number
+    masonryProps?: Partial<ListMasonryProps<T>>
+} & ComponentCommonProps & UseInfiniteScrollArgs
