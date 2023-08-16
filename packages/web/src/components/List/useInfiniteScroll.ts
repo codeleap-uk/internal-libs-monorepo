@@ -1,8 +1,8 @@
 import React from 'react'
-import { AnyFunction, onUpdate, TypeGuards, useEffect } from '@codeleap/common'
+import { AnyFunction, TypeGuards, useEffect } from '@codeleap/common'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
-import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions, useContainerPosition, useScroller } from 'masonic'
+import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions } from 'masonic'
 
 export type UseInfiniteScrollArgs<Item extends Element = any> = {
   threshold?: number
@@ -57,8 +57,8 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
   }
 
   const [refresh, setRefresh] = React.useState(false)
-  const pushTopTopRef = React.useRef(0)
 
+  const pushToTopRef = React.useRef(0)
   const containerRef = React.useRef(null)
 
   const refresher = React.useCallback(async () => {
@@ -67,7 +67,7 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
 
     setTimeout(() => {
       setRefresh(false)
-      pushTopTopRef.current = 0
+      pushToTopRef.current = 0
     }, 2000)
   }, [])
 
@@ -86,11 +86,11 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
       const percentage = (distanceFromTop / totalDistance) * 100
 
       if (percentage < threshold) {
-        pushTopTopRef.current = pushTopTopRef.current + 1
-
-        if (pushTopTopRef.current === 3) {
+        if (pushToTopRef.current === 2) {
           refresher()
         }
+
+        pushToTopRef.current = pushToTopRef.current + 1
       }
     }
   }, debounce)
