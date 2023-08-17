@@ -9,7 +9,6 @@ import {
   onUpdate,
   useDefaultComponentStyle,
   useNestedStylesByKey,
-  useUnmount,
   StylesOf,
   PropsOf,
   useIsomorphicEffect,
@@ -24,8 +23,8 @@ import { Overlay, OverlayProps } from '../Overlay'
 import { ModalComposition, ModalPresets } from './styles'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
 import { Scroll } from '../Scroll'
-import { usePopState } from '../../lib/usePopState'
 import { ComponentCommonProps } from '../../types'
+import { Touchable, TouchableProps } from '../Touchable'
 
 export * from './styles'
 
@@ -58,6 +57,7 @@ export type ModalProps =
     zIndex?: number
     withScrollContainer?: boolean
     scrollLocked?: boolean
+    backdropProps?: Partial<TouchableProps>
   } & ComponentVariants<typeof ModalPresets> & ComponentCommonProps
 
 function focusModal(event: FocusEvent, id: string) {
@@ -178,6 +178,7 @@ export const ModalContent = (
     withScrollContainer,
     debugName,
     scrollLocked,
+    backdropProps = {},
     ...props
   } = modalProps
 
@@ -195,8 +196,6 @@ export const ModalContent = (
 
     if (TypeGuards.isFunction(onClose)) onClose()
   }
-
-  usePopState(visible, toggle, scrollLocked)
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (!closeOnEscape) return null
@@ -246,7 +245,12 @@ export const ModalContent = (
       />
 
       <ModalArea css={variantStyles.innerWrapper}>
-        <View css={variantStyles.backdropPressable} onClick={close} />
+        <Touchable 
+          css={variantStyles.backdropPressable} 
+          onPress={close} 
+          debounce={1000} 
+          {...backdropProps} 
+        />
         <View
           component='section'
           css={[
@@ -322,9 +326,7 @@ export const Modal = (props) => {
       appRoot.setAttribute('aria-hidden', `${visible}`)
       appRoot.setAttribute('tabindex', `${-1}`)
     }
-  }, [visible])
 
-  onUpdate(() => {
     if (visible) {
       document.body.style.overflow = 'hidden'
     } else {
