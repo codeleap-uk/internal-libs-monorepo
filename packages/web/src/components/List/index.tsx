@@ -26,7 +26,7 @@ const defaultProps: Partial<ListProps> = {
   ListLoadingIndicatorComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
-  refreshDebounce: 3000,
+  refreshDebounce: 1500,
   refreshSize: 40,
   refreshThreshold: 0.1,
   refreshPosition: 16,
@@ -87,7 +87,7 @@ export function List<T = any>(props: ListProps<T>) {
       {isFirst ? null : separator}
       <RenderItem {..._itemProps} />
     </>
-  }, [])
+  }, [RenderItem])
 
   return (
     <ListLayout
@@ -101,6 +101,7 @@ export function List<T = any>(props: ListProps<T>) {
         itemKey={item => item?.id}
         rowGutter={rowItemsSpacing}
         onRender={onLoadMore}
+        overscanBy={overscan}
         {...masonryProps}
       />
     </ListLayout>
