@@ -306,19 +306,6 @@ export const Modal = (props) => {
   } = allProps
 
   const modalId = useRef(v4())
-  const [renderStatus, setRenderStatus] = React.useState(
-    keepMounted ? 'mounted' : 'unmounted',
-  )
-
-  // onUpdate(() => {
-  //   if (!keepMounted) {
-  //     if (visible) {
-  //       setRenderStatus('mounted')
-  //     } else {
-  //       setTimeout(() => setRenderStatus('unmounted'), 500)
-  //     }
-  //   }
-  // }, [keepMounted, visible])
 
   onMount(() => {
     if (accessible) {
