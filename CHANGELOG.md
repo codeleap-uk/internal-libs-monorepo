@@ -2,7 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.10.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.0...v3.10.2) (2023-08-11)
+### [3.10.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.6...v3.10.7) (2023-08-18)
+
+### [3.10.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.2...v3.10.6) (2023-08-18)
+
+### [3.10.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.4...v3.10.5) (2023-08-17)
+
+### [3.10.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.3...v3.10.4) (2023-08-16)
+
+### [3.10.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.2...v3.10.3) (2023-08-15)
+
+### [3.10.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.1...v3.10.2) (2023-08-15)
 
 ### [3.10.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.0...v3.10.1) (2023-08-09)
 

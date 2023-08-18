@@ -1,4 +1,4 @@
-import { ComponentVariants, TypeGuards, useDefaultComponentStyle, useI18N } from '@codeleap/common'
+import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import React, { ComponentPropsWithoutRef, ElementType } from 'react'
 import { StylesOf } from '../../types/utility'
 import { TextComposition, TextPresets } from './styles'
@@ -51,22 +51,12 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 
   const pressedRef = React.useRef(false)
 
-  const { t } = useI18N()
-
   const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
     responsiveVariants,
     variants,
     styles,
     rootElement: 'text',
   })
-
-  const _text = TypeGuards.isString(msg) ? msg : text
-
-  let content = t(String(_text))
-
-  if (TypeGuards.isNil(content) || !TypeGuards.isString(content) || content === 'null') {
-    content = text
-  }
 
   const isPressable = (TypeGuards.isFunction(onPress) || TypeGuards.isFunction(onClick)) && !pressDisabled
 
@@ -95,12 +85,12 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     }
   }
 
-  const _styles = [
+  const _styles = React.useMemo(() => ([
     variantStyles.text,
     disabled && variantStyles['text:disabled'],
     css,
     style,
-  ]
+  ]), [css, style, disabled])
 
   const pressProps = isPressable ? {
     onClick: disabled ? null : _onPress,
@@ -112,7 +102,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
       {...props}
       {...pressProps}
     >
-      {content || children}
+      {text || children}
     </Component>
   )
 }

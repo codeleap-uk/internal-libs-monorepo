@@ -14,6 +14,7 @@ export type SearchInputProps = {
   onTypingChange?: (isTyping: boolean) => void
   onValueChange?: (search: string) => void
   onClear?: AnyFunction
+  defaultValue?: string
 } & Partial<TextInputProps>
 
 export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
@@ -29,6 +30,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     debounce,
     value,
     onValueChange,
+    defaultValue,
     ...rest
   } = {
     ...SearchInput.defaultProps,
@@ -37,7 +39,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 
   const hasStateProps = !TypeGuards.isNil(value) && TypeGuards.isFunction(onValueChange)
 
-  const [search, setSearch] = hasStateProps ? [value, onValueChange] : useState('')
+  const [search, setSearch] = hasStateProps ? [value, onValueChange] : useState(defaultValue)
   const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
 
   const handleChangeSearch = (value: string) => {

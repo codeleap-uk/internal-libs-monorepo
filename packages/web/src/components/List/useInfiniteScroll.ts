@@ -1,113 +1,159 @@
-import { onUpdate } from '@codeleap/common'
-import { useVirtualizer, VirtualItem, Virtualizer, VirtualizerOptions } from '@tanstack/react-virtual'
 import React from 'react'
+import { AnyFunction, TypeGuards, useEffect } from '@codeleap/common'
 import { ListProps } from '.'
 import { GridProps } from '../Grid'
+import { useInfiniteLoader, LoadMoreItemsCallback, UseInfiniteLoaderOptions } from 'masonic'
 
-export type UseInfiniteScrollProps<TS extends Element = any, T extends Element = any> = 
-  ListProps & 
-  GridProps & 
-  Pick<VirtualizerOptions<TS, T>, 'overscan'>
+export type UseInfiniteScrollArgs<Item extends Element = any> = {
+  threshold?: number
+  onLoadMore?: AnyFunction
+  loadMoreOptions?: Partial<UseInfiniteLoaderOptions<Item>>
+}
 
-export type UseInfiniteScrollReturn<TS extends Element = any, T extends Element = any> = {
-  dataVirtualizer: Virtualizer<TS, T>
-  count: number
-  items: VirtualItem[]
+export type UseInfiniteScrollProps<Item extends Element = any> =
+  Partial<ListProps> &
+  Partial<GridProps> & 
+  UseInfiniteScrollArgs<Item>
+
+export type UseInfiniteScrollReturn<Item extends Element = any> = {
+  onLoadMore: LoadMoreItemsCallback<Item>
   isRefresh: boolean
-  parentRef: React.MutableRefObject<undefined>
   layoutProps: {
     isEmpty: boolean
     refreshing: boolean
-    parentRef: React.MutableRefObject<undefined>
-    dataVirtualizer: Virtualizer<TS, T>
+    scrollableRef: React.MutableRefObject<undefined>
   }
 }
 
-export const useInfiniteScroll = (props: UseInfiniteScrollProps): UseInfiniteScrollReturn => {
+type UseRefreshOptions = {
+  threshold: number
+  debounce: number
+  enabled: boolean
+}
+
+const scrollDebounce = (func, delay) => {
+  const timerRef = React.useRef(null)
+
+  const scrollDebounce = (...args) => {
+    clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      func(...args)
+    }, delay)
+  }
+
+  return scrollDebounce
+}
+
+export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) => {
+  const {
+    threshold,
+    debounce,
+    enabled,
+  } = options
+
+  if (!enabled) return {
+    refresh: false,
+    scrollableRef: null,
+  }
+
+  const [refresh, setRefresh] = React.useState(false)
+
+  const pushToTopRef = React.useRef(0)
+  const containerRef = React.useRef(null)
+
+  const refresher = React.useCallback(async () => {
+    setRefresh(true)
+    await onRefresh?.()
+
+    setTimeout(() => {
+      setRefresh(false)
+      pushToTopRef.current = 0
+    }, 2000)
+  }, [])
+
+  const onScroll = scrollDebounce(() => {
+    if (containerRef.current) {
+      const rect = containerRef.current?.getBoundingClientRect()
+      const scrollTop = window?.pageYOffset || document?.documentElement?.scrollTop
+      
+      const containerTop = rect.top + scrollTop
+      const containerHeight = rect.height
+
+      const distanceFromTop = Math.max(0, scrollTop - containerTop)
+      const distanceFromBottom = Math.max(0, containerTop + containerHeight - scrollTop)
+
+      const totalDistance = containerHeight + distanceFromTop + distanceFromBottom
+      const percentage = (distanceFromTop / totalDistance) * 100
+
+      if (percentage < threshold) {
+        if (pushToTopRef.current === 2) {
+          refresher()
+        }
+
+        pushToTopRef.current = pushToTopRef.current + 1
+      }
+    }
+  }, debounce)
+
+  useEffect(() => {
+    window.addEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
+  return {
+    refresh,
+    scrollableRef: containerRef,
+  }
+}
+
+export function useInfiniteScroll<Item extends Element = any>(props: UseInfiniteScrollProps<Item>): UseInfiniteScrollReturn<Item> {
   const {
     onRefresh,
     data,
     hasNextPage,
-    isFetchingNextPage,
+    refresh: refreshEnabled,
     fetchNextPage,
-    virtualizerOptions = {},
-    refreshDebounce,
     refreshThreshold,
-    overscan = 10,
-    numColumns = 1,
+    refreshDebounce,
+    loadMoreOptions = {},
+    onLoadMore,
+    threshold = 3,
   } = props
 
-  const parentRef = React.useRef()
+  const infiniteLoader = useInfiniteLoader(
+    async (args) => {
+      if (hasNextPage) await fetchNextPage?.()
+      if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
+    },
+    {
+      isItemLoaded: (index, items) => !!items?.[index],
+      minimumBatchSize: 32,
+      threshold: threshold,
+      ...loadMoreOptions,
+    },
+  )
 
-  const [refreshing, setRefreshing] = React.useState(false)
-
-  const count = hasNextPage ? data?.length + 1 : data?.length
-
-  const dataVirtualizer = useVirtualizer({
-    count,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => null,
-    overscan,
-    ...virtualizerOptions,
-  })
-
-  const isRefresh = React.useMemo(() => {
-    const _offset = dataVirtualizer?.scrollOffset
-    const _refresh = _offset <= refreshThreshold && dataVirtualizer?.isScrolling
-
-    return _refresh
-  }, [dataVirtualizer?.scrollOffset, dataVirtualizer?.isScrolling])
-
-  const isEmpty = !data || !data?.length
-
-  const items = dataVirtualizer?.getVirtualItems()
-
-  onUpdate(() => {
-    if (isRefresh) {
-      setRefreshing(true)
-      onRefresh?.()
-
-      setTimeout(() => {
-        setRefreshing(false)
-      }, refreshDebounce)
+  const { refresh, scrollableRef } = useRefresh(
+    onRefresh, 
+    { 
+      threshold: refreshThreshold, 
+      debounce: refreshDebounce,
+      enabled: refreshEnabled,
     }
-  }, [!!isRefresh])
+  )
 
-  onUpdate(() => {
-    const [lastItem] = [...(items ?? [])]?.reverse()
-
-    if (!lastItem) {
-      return
-    }
-
-    const itemsLength = (data?.length / numColumns) - 1
-
-    if (
-      lastItem?.index >= itemsLength &&
-      hasNextPage &&
-      !isFetchingNextPage
-    ) {
-      fetchNextPage?.()
-    }
-  }, [
-    hasNextPage,
-    fetchNextPage,
-    data?.length,
-    isFetchingNextPage,
-    items,
-  ])
+  const isEmpty = React.useMemo(() => (!data || !data?.length), [data?.length])
 
   return {
-    items,
-    dataVirtualizer,
-    isRefresh,
-    count,
-    parentRef,
+    onLoadMore: infiniteLoader,
+    isRefresh: refresh,
     layoutProps: {
-      parentRef,
-      refreshing,
+      scrollableRef,
+      refreshing: refresh,
       isEmpty,
-      dataVirtualizer
     }
   }
 }
