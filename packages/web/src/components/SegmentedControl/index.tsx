@@ -28,7 +28,7 @@ export type SegmentedControlProps<T = string> = ComponentVariants<typeof Segment
   styles?: StylesOf<SegmentedControlComposition>
 
   /**  view style */
-  style: PropsOf<typeof View>['style']
+  style?: PropsOf<typeof View>['style']
 
   /**  prop to control when te value of the segmented control changes */
   onValueChange?: (v: any) => void
@@ -93,7 +93,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     },
   )
 
-  const currentOptionIdx = options?.findIndex(o => o?.value === value) || 0
+  const currentOptionIdx = React.useMemo(() => {
+    return options?.findIndex(o => o?.value === value) || 0
+  }, [value])
 
   const maxDivWidthRef = useRef(null)
 

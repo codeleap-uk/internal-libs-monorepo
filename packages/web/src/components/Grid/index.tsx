@@ -1,23 +1,14 @@
 import React from 'react'
-import { useDefaultComponentStyle, useCallback } from '@codeleap/common'
+import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridPresets } from './styles'
-import { useVirtualizer, VirtualItem } from '@tanstack/react-virtual'
 import { GridProps } from './types'
 import { ListLayout, useInfiniteScroll } from '../List'
+import { RenderComponentProps as MasonryItemProps, Masonry as GridMasonry } from 'masonic'
 
 export * from './styles'
 export * from './types'
-
-const generateColumns = (count: number) => {
-  return new Array(count).fill(0).map((_, i) => {
-    const key: string = i.toString()
-    return {
-      key,
-    }
-  })
-}
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
@@ -29,34 +20,37 @@ const defaultProps: Partial<GridProps> = {
   ListFooterComponent: null,
   ListHeaderComponent: null,
   ListLoadingIndicatorComponent: null,
-  ListRefreshControlComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
-  refreshDebounce: 3000,
+  refreshDebounce: 1500,
   refreshSize: 40,
-  refreshThreshold: 0.5,
-  refreshPosition: 2,
+  refreshThreshold: 0.1,
+  refreshPosition: 16,
   refresh: true,
-  numColumns: 2,
+  columnItemsSpacing: 8,
+  rowItemsSpacing: 8,
+  overscan: 2,
 }
 
-const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
+export function Grid<T = any>(props: GridProps<T>) {
   const allProps = {
-    ...defaultProps,
-    ...flatGridProps,
-  }
+    ...Grid.defaultProps,
+    ...props,
+  } as GridProps
 
   const {
     variants = [],
     responsiveVariants = {},
     styles = {},
     renderItem: RenderItem,
-    data,
-    ListLoadingIndicatorComponent,
+    columnItemsSpacing,
+    rowItemsSpacing,
     ListSeparatorComponent,
-    virtualizerOptions = {},
-    numColumns,
+    data,
+    overscan,
     separators,
+    masonryProps = {},
+    numColumns,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
@@ -65,105 +59,56 @@ const GridCP = React.forwardRef<'div', GridProps>((flatGridProps, ref) => {
     styles,
   })
 
-  const separator = separators && <ListSeparatorComponent separatorStyles={variantStyles.separator} />
+  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
-  const {
-    dataVirtualizer,
-    parentRef,
-    items,
-    layoutProps,
-  } = useInfiniteScroll({
-    ...allProps,
-    overscan: 5,
-  })
+  const separator = React.useMemo(() => {
+    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+  }, [])
 
-  const columns = React.useMemo(() => {
-    return generateColumns(numColumns)
-  }, [numColumns])
-
-  const columnVirtualizer = useVirtualizer({
-    horizontal: true,
-    count: columns?.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => null,
-    overscan: 5,
-    ...virtualizerOptions,
-  })
-
-  const columnItems = columnVirtualizer.getVirtualItems()
-
-  const renderItem = useCallback((_item: VirtualItem) => {
+  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
     if (!RenderItem) return null
-
-    const showIndicator = (_item?.index === (data?.length / numColumns)) && !!ListLoadingIndicatorComponent
 
     const gridLength = data?.length || 0
 
+    const isFirst = _item?.index === 0
+    const isLast = _item?.index === gridLength - 1
+    const isOnly = isFirst && isLast
+
+    const _itemProps = {
+      ..._item,
+      isOnly,
+      isLast,
+      isFirst,
+      item: _item?.data
+    }
+
+    if (!_itemProps?.item) return null
+
     return <>
-      {/* Necessary for correct list render */}
-      <div
-        css={[
-          variantStyles.itemWrapper,
-          { transform: `translateY(${_item?.start - dataVirtualizer?.options?.scrollMargin}px)` }
-        ]}
-        key={_item?.key}
-        data-index={_item?.index}
-        ref={dataVirtualizer?.measureElement}
-      >
-        {_item?.index !== 0 ? separator : null}
-
-        <View css={[variantStyles.column]}>
-          {columnItems.map(column => {
-            const rowIndex = _item?.index
-            const columnIndex = column?.index
-            const itemIndex = (rowIndex * numColumns) + columnIndex
-            
-            const isFirst = itemIndex === 0
-            const isLast = itemIndex === gridLength - 1
-            const isOnly = isFirst && isLast
-        
-            const isLastInRow = columnIndex === numColumns
-            const isFirstInRow = columnIndex === 0
-            const isOnlyInRow = isFirstInRow && isLastInRow
-
-            const _itemProps = {
-              ..._item,
-              key: itemIndex,
-              index: itemIndex,
-              isOnly,
-              isLast,
-              isFirst,
-              column,
-              isFirstInRow,
-              isLastInRow,
-              isOnlyInRow,
-              rowIndex,
-              item: data?.[itemIndex]
-            }
-
-            if (!_itemProps?.item) return null
-
-            return <RenderItem {..._itemProps} />
-          })}
-        </View>
-
-        {showIndicator && <ListLoadingIndicatorComponent />}
-      </div>
+      {_item?.index <= numColumns ? null : separator}
+      <RenderItem {..._itemProps} />
     </>
-  }, [RenderItem, data?.length, dataVirtualizer?.measureElement])
+  }, [RenderItem])
 
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={variantStyles} // @ts-ignore
-      ref={ref}
+      variantStyles={variantStyles}
     >
-      {items?.map((item) => renderItem(item))}
+      <GridMasonry
+        items={data || []}
+        render={renderItem}
+        itemKey={item => item?.id}
+        columnGutter={columnItemsSpacing}
+        rowGutter={rowItemsSpacing}
+        columnCount={numColumns}
+        onRender={onLoadMore}
+        overscanBy={overscan}
+        {...masonryProps}
+      />
     </ListLayout>
   )
-})
+}
 
-export type GridComponentType = <T extends any[] = any[]>(props: GridProps<T>) => React.ReactElement
-
-export const Grid = GridCP as unknown as GridComponentType
+Grid.defaultProps = defaultProps

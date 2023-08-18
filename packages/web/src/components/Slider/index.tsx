@@ -33,6 +33,8 @@ export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueC
   style?: PropsOf<typeof View>['style']
   trackMarks?: Record<number, string>
   trackMarkComponent?: React.ComponentType<TrackMarkProps>
+  onPressThumbSetValue?: boolean
+  onPressThumb?: (value: number, thumbIndex: number) => void
 } & ComponentVariants<typeof SliderPresets>
 
 export type TrackMarkProps = {
@@ -82,6 +84,8 @@ export const Slider = (props: SliderProps) => {
     description = null,
     minStepsBetweenThumbs = 8,
     step = 1,
+    onPressThumbSetValue = false,
+    onPressThumb = null,
     ...sliderProps
   } = others
 
@@ -246,7 +250,11 @@ export const Slider = (props: SliderProps) => {
             // @ts-ignore
             index={i}
             style={thumbStyle}
-            onClick={() => currentThumbRef.current = i}
+            onClick={() => {
+              if (onPressThumbSetValue) onValueChange?.([Number(_thumbValue)])
+              if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(_thumbValue, i)
+              currentThumbRef.current = i
+            }}
             onMouseEnter={() => currentThumbRef.current = i}
           />
         ))}
