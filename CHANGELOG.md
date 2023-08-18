@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.11.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.7...v3.11.0) (2023-08-18)
+
+
+### Features
+
+* **web:** Global alert ([7bd430a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/7bd430a3c4bd66c87023abc6244f7f532ee74405))
+
+
+### Bug Fixes
+
+* **web:** types, cript ([d249e29](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d249e29bfb4357ca1221b653ad1deb925ea84381))
+
 ### [3.10.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.6...v3.10.7) (2023-08-18)
 
 ### [3.10.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.2...v3.10.6) (2023-08-18)
