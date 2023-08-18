@@ -30,7 +30,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     debounce,
     value,
     onValueChange,
-    defaultValue,
+    defaultValue = '',
     ...rest
   } = {
     ...SearchInput.defaultProps,
