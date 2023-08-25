@@ -16,6 +16,7 @@ export type CreateOptions<T extends QueryManagerItem> = {
   appendTo?: 'start' | 'end' | [number, number] | Record<string, [number, number]>
   optimistic?: boolean
   mutationOptions?: Partial<OmitMutationKeys<UseMutationOptions<T, unknown, Partial<T>, MutationCtx<T>>>>
+  onListsWithFilters?: any
 }
 
 export type UpdateOptions<T extends QueryManagerItem> = {
@@ -120,6 +121,7 @@ export type AppendToPaginationParams<TItem extends QueryManagerItem, Filters=any
   item: TItem|TItem[]
   to?: CreateOptions<TItem>['appendTo']
   refreshKey?: string
+  onListsWithFilters?: any
 }
 
 export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>

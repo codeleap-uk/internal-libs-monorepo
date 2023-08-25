@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query'
 
 import { useEffect, useRef, useState } from 'react'
-import { deepMerge, usePromise } from '../..'
+import { TypeGuards, deepMerge, usePromise } from '../..'
 import { isArray } from '../../utils/typeGuards'
 import {
   QueryManagerItem,
@@ -163,8 +163,16 @@ export class QueryManager<
   }
 
   addItem: AppendToPagination<T> = async (args) => {
+    const updateOnList = TypeGuards.isUndefined(args?.onListsWithFilters) ? undefined : hashQueryKey(
+      this.filteredQueryKey(args.onListsWithFilters),
+    )
 
     const promises = Object.entries(this.queryStates).map(async ([hashedKey, { key }]) => {
+      if (!TypeGuards.isUndefined(updateOnList)) {
+        if (updateOnList !== hashedKey) {
+          return
+        }
+      }
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
@@ -463,6 +471,7 @@ export class QueryManager<
           this.addItem({
             item: addedItem,
             to: managerOptions.creation?.appendTo || 'start',
+            onListsWithFilters: tmpOptions.current?.onListsWithFilters,
           })
 
           return {
@@ -483,6 +492,7 @@ export class QueryManager<
           this.addItem({
             item: data,
             to: managerOptions.creation?.appendTo || 'start',
+            onListsWithFilters: tmpOptions?.current?.onListsWithFilters,
           })
 
         } else {
@@ -492,7 +502,7 @@ export class QueryManager<
     })
 
     const createItem = async (data: Partial<T>, options?: CreateOptions<T>) => {
-      const prevOptions = tmpOptions.current
+      const prevOptions = { ...(tmpOptions.current ?? {}) }
       if (!!options) {
 
         tmpOptions.current = options
