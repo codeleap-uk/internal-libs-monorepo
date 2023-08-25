@@ -41,10 +41,10 @@ const pickerDefaults = {
   cropping: true,
 }
 
-function parsePickerData(data:ImageOrVideo):FileResult {
+function parsePickerData(data: ImageOrVideo): FileResult {
 
   const filePathData = parseFilePathData(data.path)
-  const d:MobileFile = {
+  const d: MobileFile = {
     ...data,
     name: filePathData.name,
     size: data.size,
@@ -78,8 +78,16 @@ const _FileInput = forwardRef<
     onOpenFileSystem = null,
     onError,
   } = fileInputProps
-  const resolveWithFile = useRef<(file:FileResult[]) => any>()
+  const resolveWithFile = useRef<(file: FileResult[]) => any>()
   const { logger } = useCodeleapContext()
+
+  const handleResolve = (files: Array<FileResult>) => {
+    if (resolveWithFile.current) {
+      resolveWithFile?.current?.(files)
+      resolveWithFile.current = null
+    }
+    onFileSelect?.(files)
+  }
 
   async function openFileSystem() {
     try {
@@ -88,13 +96,9 @@ const _FileInput = forwardRef<
         files = [files]
       }
 
-      const filesWithPreview = files.map((file) => ({ preview: file.uri, file }))
+      const filesWithPreview = files.map((file) => ({ preview: file.uri, file })) as FileResult[]
 
-      if (resolveWithFile.current) {
-        resolveWithFile.current(filesWithPreview)
-        resolveWithFile.current = undefined
-      }
-      onFileSelect?.(filesWithPreview)
+      handleResolve?.(filesWithPreview)
     } catch (err) {
       handleError(err)
     }
@@ -113,13 +117,13 @@ const _FileInput = forwardRef<
   } as Options
 
   const handlePickerResolution = (data: ImageOrVideo | ImageOrVideo[]) => {
-    let imageArray:ImageOrVideo[] = []
+    let imageArray: ImageOrVideo[] = []
     if (!Array.isArray(data)) {
       imageArray = [data]
     } else {
       imageArray = data
     }
-    onFileSelect(imageArray.map(parsePickerData))
+    handleResolve?.(imageArray.map(parsePickerData))
   }
   const onPress = (open?: FileInputImageSource, options?: Options) => {
     if (open == 'fs') {
@@ -166,7 +170,7 @@ const _FileInput = forwardRef<
             {
               text: 'Cancel',
               style: 'cancel',
-              onPress: () => {},
+              onPress: () => { },
               ...alertProps?.options?.[0],
             },
           ],
@@ -200,7 +204,7 @@ export const FileInput = _FileInput as unknown as ((props: FileInputProps) => JS
 export const useFileInput = () => {
   const inputRef = useRef<FileInputRef>(null)
 
-  const openFilePicker = (imageSource:FileInputImageSource = null):Promise<FileResult[]> => {
+  const openFilePicker = (imageSource: FileInputImageSource = null): Promise<FileResult[]> => {
     return inputRef.current?.openFilePicker(imageSource)
   }
 
