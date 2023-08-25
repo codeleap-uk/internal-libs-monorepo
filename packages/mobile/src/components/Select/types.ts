@@ -59,6 +59,7 @@ export type ValueBoundSelectProps<
   getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
   outerInputComponent?: OuterInputComponent<T, Multi>
   inputProps?: Partial<SelectOuterInputProps<T, Multi>>
+  disabled?: boolean
 }
 
 export type ReplaceSelectProps<Props, T, Multi extends boolean = false> = Omit<
