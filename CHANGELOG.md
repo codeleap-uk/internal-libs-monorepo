@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.12.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.11.1...v3.12.0) (2023-08-25)
+
+
+### Features
+
+* **common:** Filters for adding item ([ee5995f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ee5995fc0eb1b86950d43a62bbf73c7064735014))
+
+
+### Bug Fixes
+
+* **mobile:** async file input ([390bb72](https://github.com/codeleap-uk/internal-libs-monorepo/commit/390bb72bd508e028837b69f68dd0638970d78065))
+
 ### [3.11.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.11.0...v3.11.1) (2023-08-24)
 
 ## [3.11.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.10.7...v3.11.0) (2023-08-18)
