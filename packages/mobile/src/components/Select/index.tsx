@@ -42,12 +42,15 @@ const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (p
     styles,
     style,
     placeholder,
+    disabled = false,
   } = props
 
+  
   return <TextInput
     value={TypeGuards.isString(currentValueLabel) ? currentValueLabel : null}
     rightIcon={clearIcon}
-    onPress={() => toggle()}
+    onPress={disabled ? null : () => toggle()}
+    disabled={disabled}
     label={label}
     debugName={debugName}
     styles={styles}
@@ -120,6 +123,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
     getLabel,
     searchInputProps,
     outerInputComponent,
+    disabled = false,
     ...modalProps
   } = allProps
 
@@ -314,7 +318,7 @@ export const Select = <T extends string|number = string, Multi extends boolean =
 
           clearIcon={{
             icon: inputIcon as IconPlaceholder,
-            onPress: onPressInputIcon,
+            onPress: disabled ? null : onPressInputIcon,
           }}
 
           currentValueLabel={currentValueLabel}
