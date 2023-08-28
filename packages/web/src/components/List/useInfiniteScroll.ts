@@ -124,9 +124,9 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
   } = props
 
   const infiniteLoader = useInfiniteLoader(
-    (args) => {
-      if (hasNextPage) fetchNextPage?.()
-      if (TypeGuards.isFunction(onLoadMore)) onLoadMore?.(args)
+    async (args) => {
+      if (hasNextPage) await fetchNextPage?.()
+      if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
     },
     {
       isItemLoaded: (index, items) => !!items?.[index],

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StylesOf } from '@codeleap/common'
+import { StylesOf, TypeGuards } from '@codeleap/common'
 import { ListComposition, ListParts } from './styles'
 import { ListProps } from './types'
 import { View } from '../View'
@@ -17,13 +17,13 @@ type ListRefreshControlComponent = Partial<ListLayoutProps> & {
 }
 
 const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
-  const { 
-    refreshing, 
-    variantStyles, 
-    refreshPosition, 
-    refreshControlProps, 
-    debugName, 
-    refreshSize, 
+  const {
+    refreshing,
+    variantStyles,
+    refreshPosition,
+    refreshControlProps,
+    debugName,
+    refreshSize,
     refreshControlIndicatorProps,
   } = props
 
@@ -77,22 +77,22 @@ export const ListLayout = (props: ListLayoutProps) => {
     <View css={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
       {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
 
-      {isEmpty
-        ? <ListEmptyComponent debugName={debugName} {...placeholder} />
-        : (
-          <View css={[getKeyStyle('innerWrapper')]}>
-            {(!ListRefreshControlComponent || !refresh) ? null : (
-              <ListRefreshControlComponent
-                {...props}
-                variantStyles={variantStyles}
-              />
-            )}
+      {isEmpty ? <ListEmptyComponent debugName={debugName} {...placeholder} /> : null}
 
-            {children}
-          </View>
+      <View css={[getKeyStyle('innerWrapper'), isEmpty && { display: 'none' }]}>
+        {(!ListRefreshControlComponent || !refresh) ? null : (
+          <ListRefreshControlComponent
+            {...props}
+            variantStyles={variantStyles}
+          />
         )}
 
-      {(isFetching || isFetchingNextPage) ? <ListLoadingIndicatorComponent /> : null}
+        {children}
+      </View>
+
+      {((isFetching || isFetchingNextPage) && !TypeGuards.isNil(ListLoadingIndicatorComponent))
+        ? <ListLoadingIndicatorComponent />
+        : null}
 
       {!!ListFooterComponent ? <ListFooterComponent /> : null}
     </View>
