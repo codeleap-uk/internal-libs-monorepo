@@ -1,6 +1,6 @@
 import React from 'react'
 import { useWindowSize } from '@react-hook/window-size'
-import { arePropsEqual, usePrevious } from '@codeleap/common'
+import { usePrevious } from '@codeleap/common'
 
 import {
   useMasonry,
@@ -29,30 +29,38 @@ export function ListMasonry<Item>(props: MasonryProps<Item>) {
 
   const containerRef = React.useRef(null)
 
-  const [windowWidth, height] = useWindowSize()
+  const windowSize = useWindowSize({
+    initialWidth: props.ssrWidth,
+    initialHeight: props.ssrHeight,
+  })
 
-  const { offset, width } = useContainerPosition(containerRef, [
-    windowWidth,
-    height
-  ])
+  const containerPosition = useContainerPosition(containerRef, windowSize)
 
-  const { scrollTop, isScrolling } = useScroller(offset)
+  const listProps = Object.assign(
+    {
+      offset: containerPosition?.offset,
+      width: containerPosition?.width || containerRef?.current?.clientWidth || windowSize[0],
+      height: windowSize?.[1],
+      containerRef,
+      scrollFps: 12,
+    },
+    props
+  ) as any
 
-  const positioner = usePositioner(
-    { width },
-    [masonryUpdater]
-  )
+  listProps.positioner = usePositioner({ 
+    width: listProps?.width, 
+    columnGutter: listProps.columnGutter, 
+    columnWidth: listProps.columnWidth 
+  }, [masonryUpdater])
 
-  const resizeObserver = useResizeObserver(positioner)
+  const { scrollTop, isScrolling } = useScroller(listProps?.offset, listProps?.scrollFps)
+
+  listProps.resizeObserver = useResizeObserver(listProps.positioner)
 
   return useMasonry({
-    positioner,
+    ...listProps,
     scrollTop,
     isScrolling,
-    height,
-    containerRef,
-    resizeObserver,
-    ...props,
     items: data,
   })
 }
