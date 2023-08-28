@@ -120,17 +120,16 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     refreshDebounce,
     loadMoreOptions = {},
     onLoadMore,
-    threshold = 3,
+    threshold = 16,
   } = props
 
   const infiniteLoader = useInfiniteLoader(
-    async (args) => {
-      if (hasNextPage) await fetchNextPage?.()
-      if (TypeGuards.isFunction(onLoadMore)) await onLoadMore?.(args)
+    (args) => {
+      if (hasNextPage) fetchNextPage?.()
+      if (TypeGuards.isFunction(onLoadMore)) onLoadMore?.(args)
     },
     {
       isItemLoaded: (index, items) => !!items?.[index],
-      minimumBatchSize: 32,
       threshold: threshold,
       ...loadMoreOptions,
     },

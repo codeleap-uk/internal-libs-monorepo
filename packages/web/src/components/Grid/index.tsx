@@ -5,7 +5,7 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridPresets } from './styles'
 import { GridProps } from './types'
 import { ListLayout, useInfiniteScroll } from '../List'
-import { RenderComponentProps as MasonryItemProps, Masonry as GridMasonry } from 'masonic'
+import { ItemMasonryProps, ListMasonry } from '../../lib'
 
 export * from './styles'
 export * from './types'
@@ -65,7 +65,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
   }, [])
 
-  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
+  const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
     if (!RenderItem) return null
 
     const gridLength = data?.length || 0
@@ -96,8 +96,8 @@ export function Grid<T = any>(props: GridProps<T>) {
       {...layoutProps}
       variantStyles={variantStyles}
     >
-      <GridMasonry
-        items={data || []}
+      <ListMasonry
+        items={data}
         render={renderItem}
         itemKey={item => item?.id}
         columnGutter={columnItemsSpacing}

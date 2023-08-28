@@ -6,7 +6,7 @@ import { ListPresets } from './styles'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
-import { RenderComponentProps as MasonryItemProps, List as ListMasonry } from 'masonic'
+import { ItemMasonryProps, ListMasonry } from '../../lib'
 
 export * from './styles'
 export * from './PaginationIndicator'
@@ -66,7 +66,7 @@ export function List<T = any>(props: ListProps<T>) {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
   }, [])
 
-  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
+  const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
     if (!RenderItem) return null
 
     const listLength = data?.length || 0
@@ -96,12 +96,13 @@ export function List<T = any>(props: ListProps<T>) {
       variantStyles={variantStyles}
     >
       <ListMasonry
-        items={data || []}
+        items={data}
         render={renderItem}
         itemKey={item => item?.id}
         rowGutter={rowItemsSpacing}
         onRender={onLoadMore}
         overscanBy={overscan}
+        columnCount={1}
         {...masonryProps}
       />
     </ListLayout>
