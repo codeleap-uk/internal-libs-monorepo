@@ -60,7 +60,7 @@ export function List<T = any>(props: ListProps<T>) {
     styles,
   })
 
-  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
+  const { layoutProps, onLoadMore, onRefreshItems } = useInfiniteScroll(allProps)
 
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
@@ -103,6 +103,7 @@ export function List<T = any>(props: ListProps<T>) {
         onRender={onLoadMore}
         overscanBy={overscan}
         columnCount={1}
+        onRefreshItems={onRefreshItems}
         {...masonryProps}
       />
     </ListLayout>

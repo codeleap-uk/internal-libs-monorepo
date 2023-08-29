@@ -23,6 +23,7 @@ export type UseInfiniteScrollReturn<Item extends Element = any> = {
     refreshing: boolean
     scrollableRef: React.MutableRefObject<undefined>
   }
+  onRefreshItems: AnyFunction
 }
 
 type UseRefreshOptions = {
@@ -51,25 +52,27 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
     enabled,
   } = options
 
-  if (!enabled) return {
-    refresh: false,
-    scrollableRef: null,
-  }
-
   const [refresh, setRefresh] = React.useState(false)
 
   const pushToTopRef = React.useRef(0)
-  const containerRef = React.useRef(null)
 
-  const refresher = React.useCallback(async () => {
+  const refresher = React.useCallback(async (_onRefresh: AnyFunction) => {
     setRefresh(true)
-    await onRefresh?.()
+    await _onRefresh?.()
 
     setTimeout(() => {
       setRefresh(false)
       pushToTopRef.current = 0
-    }, 2000)
+    }, 2500)
   }, [])
+
+  if (!enabled) return {
+    refresh: refresh,
+    scrollableRef: null,
+    refresher,
+  }
+
+  const containerRef = React.useRef(null)
 
   const onScroll = scrollDebounce(() => {
     if (containerRef.current) {
@@ -87,7 +90,7 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
 
       if (percentage < threshold) {
         if (pushToTopRef.current === 2) {
-          refresher()
+          refresher(onRefresh)
         }
 
         pushToTopRef.current = pushToTopRef.current + 1
@@ -106,6 +109,7 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
   return {
     refresh,
     scrollableRef: containerRef,
+    refresher,
   }
 }
 
@@ -135,7 +139,7 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
     },
   )
 
-  const { refresh, scrollableRef } = useRefresh(
+  const refreshHookReturn = useRefresh(
     onRefresh, 
     { 
       threshold: refreshThreshold, 
@@ -148,11 +152,12 @@ export function useInfiniteScroll<Item extends Element = any>(props: UseInfinite
 
   return {
     onLoadMore: infiniteLoader,
-    isRefresh: refresh,
+    isRefresh: refreshHookReturn.refresh,
     layoutProps: {
-      scrollableRef,
-      refreshing: refresh,
+      scrollableRef: refreshHookReturn.scrollableRef,
+      refreshing: refreshHookReturn.refresh,
       isEmpty,
-    }
+    },
+    onRefreshItems: refreshHookReturn.refresher,
   }
 }

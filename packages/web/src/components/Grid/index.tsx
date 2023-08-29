@@ -59,7 +59,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     styles,
   })
 
-  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
+  const { layoutProps, onLoadMore, onRefreshItems } = useInfiniteScroll(allProps)
 
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
@@ -106,6 +106,7 @@ export function Grid<T = any>(props: GridProps<T>) {
         maxColumnCount={numColumns}
         onRender={onLoadMore}
         overscanBy={overscan}
+        onRefreshItems={onRefreshItems}
         {...masonryProps}
       />
     </ListLayout>

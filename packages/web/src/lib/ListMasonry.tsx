@@ -1,6 +1,6 @@
 import React from 'react'
 import { useWindowSize } from '@react-hook/window-size'
-import { usePrevious } from '@codeleap/common'
+import { AnyFunction, onUpdate, TypeGuards, usePrevious } from '@codeleap/common'
 
 import {
   useMasonry,
@@ -14,7 +14,7 @@ import {
 
 export type ItemMasonryProps<T> = RenderComponentProps<T>
 
-export function ListMasonry<Item>(props: MasonryProps<Item>) {
+export function ListMasonry<Item>(props: MasonryProps<Item> & { onRefreshItems: AnyFunction }) {
   const data = props?.items || []
 
   const dataPreviousLength = usePrevious(data?.length)
@@ -26,6 +26,12 @@ export function ListMasonry<Item>(props: MasonryProps<Item>) {
       return false
     }
   }, [dataPreviousLength, data?.length])
+
+  onUpdate(() => {
+    if (!!masonryUpdater) {
+      props?.onRefreshItems?.(() => null)
+    }
+  }, [masonryUpdater])
 
   const containerRef = React.useRef(null)
 
