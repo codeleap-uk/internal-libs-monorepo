@@ -30,8 +30,8 @@ export function ListMasonry<Item>(props: MasonryProps<Item>) {
   const containerRef = React.useRef(null)
 
   const windowSize = useWindowSize({
-    initialWidth: props.ssrWidth,
-    initialHeight: props.ssrHeight,
+    initialWidth: props?.ssrWidth,
+    initialHeight: props?.ssrHeight,
   })
 
   const containerPosition = useContainerPosition(containerRef, windowSize)
@@ -39,18 +39,21 @@ export function ListMasonry<Item>(props: MasonryProps<Item>) {
   const listProps = Object.assign(
     {
       offset: containerPosition?.offset,
-      width: containerPosition?.width || containerRef?.current?.clientWidth || windowSize[0],
+      width: containerPosition?.width || containerRef?.current?.clientWidth || windowSize?.[0],
       height: windowSize?.[1],
       containerRef,
-      scrollFps: 12,
+      scrollFps: props?.scrollFps || 12,
     },
     props
   ) as any
 
   listProps.positioner = usePositioner({ 
     width: listProps?.width, 
-    columnGutter: listProps.columnGutter, 
-    columnWidth: listProps.columnWidth 
+    columnGutter: listProps?.columnGutter, 
+    columnWidth: listProps?.columnWidth,
+    columnCount: listProps?.columnCount,
+    maxColumnCount: listProps?.columnCount,
+    rowGutter: listProps?.rowGutter
   }, [masonryUpdater])
 
   const { scrollTop, isScrolling } = useScroller(listProps?.offset, listProps?.scrollFps)

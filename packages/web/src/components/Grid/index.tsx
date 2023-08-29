@@ -103,6 +103,7 @@ export function Grid<T = any>(props: GridProps<T>) {
         columnGutter={columnItemsSpacing}
         rowGutter={rowItemsSpacing}
         columnCount={numColumns}
+        maxColumnCount={numColumns}
         onRender={onLoadMore}
         overscanBy={overscan}
         {...masonryProps}
