@@ -52,6 +52,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     separators,
     masonryProps = {},
     numColumns,
+    enabledItemsRehydrateIndicator,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {

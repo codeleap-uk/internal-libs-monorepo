@@ -53,6 +53,7 @@ export function List<T = any>(props: ListProps<T>) {
     overscan,
     separators,
     masonryProps = {},
+    enabledItemsRehydrateIndicator,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
