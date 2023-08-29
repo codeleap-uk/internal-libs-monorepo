@@ -51,4 +51,5 @@ Data = T extends Array<infer D> ? D : never
     rowItemsSpacing?: number
     overscan?: number
     masonryProps?: Partial<ListMasonryProps<T>>
+    enabledItemsRehydrateIndicator?: boolean
 } & ComponentCommonProps & UseInfiniteScrollArgs

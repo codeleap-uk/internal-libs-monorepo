@@ -30,6 +30,7 @@ const defaultProps: Partial<GridProps> = {
   columnItemsSpacing: 8,
   rowItemsSpacing: 8,
   overscan: 2,
+  enabledItemsRehydrateIndicator: true
 }
 
 export function Grid<T = any>(props: GridProps<T>) {
@@ -107,6 +108,7 @@ export function Grid<T = any>(props: GridProps<T>) {
         onRender={onLoadMore}
         overscanBy={overscan}
         onRefreshItems={onRefreshItems}
+        itemsRehydrateIndicator={enabledItemsRehydrateIndicator}
         {...masonryProps}
       />
     </ListLayout>

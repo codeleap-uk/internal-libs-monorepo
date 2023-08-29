@@ -33,6 +33,7 @@ const defaultProps: Partial<ListProps> = {
   refresh: true,
   rowItemsSpacing: 8,
   overscan: 2,
+  enabledItemsRehydrateIndicator: true,
 }
 
 export function List<T = any>(props: ListProps<T>) {
@@ -104,6 +105,7 @@ export function List<T = any>(props: ListProps<T>) {
         overscanBy={overscan}
         columnCount={1}
         onRefreshItems={onRefreshItems}
+        itemsRehydrateIndicator={enabledItemsRehydrateIndicator}
         {...masonryProps}
       />
     </ListLayout>
