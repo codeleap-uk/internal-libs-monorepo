@@ -86,7 +86,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     } else {
       return <IconEmpty {...props} />
     }
-  }, [])
+  }, [IconEmpty])
 
   if (loading) {
     return (

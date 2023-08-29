@@ -66,12 +66,6 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
     }, 2500)
   }, [])
 
-  if (!enabled) return {
-    refresh: refresh,
-    scrollableRef: null,
-    refresher,
-  }
-
   const containerRef = React.useRef(null)
 
   const onScroll = scrollDebounce(() => {
@@ -99,12 +93,14 @@ export const useRefresh = (onRefresh = () => null, options: UseRefreshOptions) =
   }, debounce)
 
   useEffect(() => {
-    window.addEventListener('scroll', onScroll)
+    if (enabled) {
+      window.addEventListener('scroll', onScroll)
 
-    return () => {
-      window.removeEventListener('scroll', onScroll)
+      return () => {
+        window.removeEventListener('scroll', onScroll)
+      }
     }
-  }, [])
+  }, [enabled])
 
   return {
     refresh,
