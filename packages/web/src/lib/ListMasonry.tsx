@@ -72,7 +72,7 @@ export type ItemMasonryProps<T> = RenderComponentProps<T>
 
 export type ListMasonryProps<T> = MasonryProps<T> & {
   previousItemsLength: number
-  reloadTimeout: UseMasonryReloadArgs['reloadTimeout']
+  reloadingLayout: boolean
 }
 
 export function MasonryComponent<Item>(props: ListMasonryProps<Item>) {
@@ -119,15 +119,8 @@ export function MasonryComponent<Item>(props: ListMasonryProps<Item>) {
   })
 }
 
-export function ListMasonry<Item>(props: Omit<ListMasonryProps<Item>, 'previousItemsLength'>) {
-  const data = props?.items || []
-
-  const { reloadingLayout, previousLength } = useMasonryReload({
-    data,
-    reloadTimeout: props?.reloadTimeout,
-  })
-
-  if (reloadingLayout) {
+export function ListMasonry<Item>(props: ListMasonryProps<Item>) {
+  if (props?.reloadingLayout) {
     return (
       <EmptyPlaceholder loading title={''} description={null} />
     )
@@ -135,8 +128,7 @@ export function ListMasonry<Item>(props: Omit<ListMasonryProps<Item>, 'previousI
     return (
       <MasonryComponent 
         {...props}
-        items={data}
-        previousItemsLength={previousLength}
+        items={props?.items || []}
       />
     )
   }

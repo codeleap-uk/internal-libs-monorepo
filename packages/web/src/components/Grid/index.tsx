@@ -5,7 +5,7 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridPresets } from './styles'
 import { GridProps } from './types'
 import { ListLayout, useInfiniteScroll } from '../List'
-import { ItemMasonryProps, ListMasonry } from '../../lib'
+import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
 
 export * from './styles'
 export * from './types'
@@ -31,6 +31,7 @@ const defaultProps: Partial<GridProps> = {
   rowItemsSpacing: 8,
   overscan: 2,
   reloadTimeout: 350,
+  showFooter: true,
 }
 
 export function Grid<T = any>(props: GridProps<T>) {
@@ -53,6 +54,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     masonryProps = {},
     numColumns,
     reloadTimeout,
+    showFooter,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
@@ -62,6 +64,11 @@ export function Grid<T = any>(props: GridProps<T>) {
   })
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
+
+  const { reloadingLayout, previousLength } = useMasonryReload({
+    data,
+    reloadTimeout,
+  })
 
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
@@ -97,6 +104,7 @@ export function Grid<T = any>(props: GridProps<T>) {
       {...allProps}
       {...layoutProps}
       variantStyles={variantStyles}
+      showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
         items={data}
@@ -108,7 +116,8 @@ export function Grid<T = any>(props: GridProps<T>) {
         maxColumnCount={numColumns}
         onRender={onLoadMore}
         overscanBy={overscan}
-        reloadTimeout={reloadTimeout}
+        previousItemsLength={previousLength}
+        reloadingLayout={reloadingLayout}
         {...masonryProps}
       />
     </ListLayout>

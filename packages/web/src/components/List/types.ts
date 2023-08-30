@@ -50,6 +50,7 @@ Data = T extends Array<infer D> ? D : never
     ref?: React.MutableRefObject<undefined>
     rowItemsSpacing?: number
     overscan?: number
-    masonryProps?: Partial<Omit<ListMasonryProps<T>, 'previousItemsLength'>>
+    masonryProps?: Partial<ListMasonryProps<T>>
     reloadTimeout?: number
+    showFooter?: boolean
 } & ComponentCommonProps & UseInfiniteScrollArgs

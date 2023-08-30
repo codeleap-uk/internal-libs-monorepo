@@ -6,7 +6,7 @@ import { ListPresets } from './styles'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
-import { ItemMasonryProps, ListMasonry } from '../../lib'
+import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
 
 export * from './styles'
 export * from './PaginationIndicator'
@@ -34,6 +34,7 @@ const defaultProps: Partial<ListProps> = {
   rowItemsSpacing: 8,
   overscan: 2,
   reloadTimeout: 350,
+  showFooter: true,
 }
 
 export function List<T = any>(props: ListProps<T>) {
@@ -54,6 +55,7 @@ export function List<T = any>(props: ListProps<T>) {
     separators,
     masonryProps = {},
     reloadTimeout,
+    showFooter,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -63,6 +65,11 @@ export function List<T = any>(props: ListProps<T>) {
   })
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
+
+  const { reloadingLayout, previousLength } = useMasonryReload({
+    data,
+    reloadTimeout,
+  })
 
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
@@ -96,6 +103,7 @@ export function List<T = any>(props: ListProps<T>) {
       {...allProps}
       {...layoutProps}
       variantStyles={variantStyles}
+      showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
         items={data}
@@ -105,7 +113,8 @@ export function List<T = any>(props: ListProps<T>) {
         onRender={onLoadMore}
         overscanBy={overscan}
         columnCount={1}
-        reloadTimeout={reloadTimeout}
+        previousItemsLength={previousLength}
+        reloadingLayout={reloadingLayout}
         {...masonryProps}
       />
     </ListLayout>

@@ -10,6 +10,7 @@ import { motion } from 'framer-motion'
 type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
   variantStyles: StylesOf<ListComposition>
   children?: React.ReactNode
+  showFooter?: boolean
 }
 
 type ListRefreshControlComponent = Partial<ListLayoutProps> & {
@@ -65,6 +66,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     isFetchingNextPage,
     ListLoadingIndicatorComponent,
     scrollableRef,
+    showFooter = true,
   } = props
 
   const getKeyStyle = React.useCallback((key: ListParts) => ([
@@ -94,7 +96,7 @@ export const ListLayout = (props: ListLayoutProps) => {
         ? <ListLoadingIndicatorComponent />
         : null}
 
-      {!!ListFooterComponent ? <ListFooterComponent /> : null}
+      {(!!ListFooterComponent && showFooter) ? <ListFooterComponent /> : null}
     </View>
   )
 }
