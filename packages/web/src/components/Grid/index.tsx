@@ -30,7 +30,7 @@ const defaultProps: Partial<GridProps> = {
   columnItemsSpacing: 8,
   rowItemsSpacing: 8,
   overscan: 2,
-  enabledItemsRehydrateIndicator: true
+  reloadTimeout: 350,
 }
 
 export function Grid<T = any>(props: GridProps<T>) {
@@ -52,7 +52,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     separators,
     masonryProps = {},
     numColumns,
-    enabledItemsRehydrateIndicator,
+    reloadTimeout,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
@@ -61,7 +61,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     styles,
   })
 
-  const { layoutProps, onLoadMore, onRefreshItems } = useInfiniteScroll(allProps)
+  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
@@ -101,15 +101,14 @@ export function Grid<T = any>(props: GridProps<T>) {
       <ListMasonry
         items={data}
         render={renderItem}
-        itemKey={item => item?.id}
+        itemKey={(item, _index) => (item?.id ?? _index)}
         columnGutter={columnItemsSpacing}
         rowGutter={rowItemsSpacing}
         columnCount={numColumns}
         maxColumnCount={numColumns}
         onRender={onLoadMore}
         overscanBy={overscan}
-        onRefreshItems={onRefreshItems}
-        itemsRehydrateIndicator={enabledItemsRehydrateIndicator}
+        reloadTimeout={reloadTimeout}
         {...masonryProps}
       />
     </ListLayout>

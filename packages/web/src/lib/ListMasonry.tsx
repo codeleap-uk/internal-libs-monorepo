@@ -1,6 +1,7 @@
 import React from 'react'
 import { useWindowSize } from '@react-hook/window-size'
-import { AnyFunction, onUpdate, usePrevious } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
+import { EmptyPlaceholder } from '../components/EmptyPlaceholder'
 
 import {
   useMasonry,
@@ -12,32 +13,69 @@ import {
   RenderComponentProps,
 } from 'masonic'
 
+function fillItems(arr: Array<any>, toCount: number, fillContent = {}) {
+  if (!arr || !TypeGuards.isArray(arr)) return []
+
+  if (toCount === arr?.length) return arr
+
+  const diff = toCount - arr?.length
+
+  if (diff < 0) return arr
+
+  const right = Array(diff).fill(fillContent)
+
+  return arr.concat(right)
+}
+
+type UseMasonryReloadArgs = {
+  data: Array<any>
+  reloadTimeout: number
+}
+
+export const useMasonryReload = (args: UseMasonryReloadArgs) => {
+  const {
+    data,
+    reloadTimeout = 350,
+  } = args
+
+  const [reloadingLayout, setReloadingLayout] = React.useState(false)
+  const previousLengthRef = React.useRef(data?.length ?? 0)
+
+  const updater = () => {
+    previousLengthRef.current = (data?.length ?? 0)
+  }
+
+  React.useEffect(() => {
+    if (previousLengthRef.current > data?.length) {
+      setReloadingLayout(true)
+
+      setTimeout(() => {
+        updater()
+
+        setTimeout(() => {
+          setReloadingLayout(false)
+        }, reloadTimeout)
+      }, reloadTimeout)
+    } else {
+      updater()
+    }
+  }, [data?.length])
+
+  return {
+    reloadingLayout,
+    setReloadingLayout,
+    previousLength: previousLengthRef.current,
+  }
+}
+
 export type ItemMasonryProps<T> = RenderComponentProps<T>
 
 export type ListMasonryProps<T> = MasonryProps<T> & {
-  onRefreshItems: AnyFunction
-  itemsRehydrateIndicator: boolean
+  previousItemsLength: number
+  reloadTimeout: UseMasonryReloadArgs['reloadTimeout']
 }
 
-export function ListMasonry<Item>(props: ListMasonryProps<Item>) {
-  const data = props?.items || []
-
-  const dataPreviousLength = usePrevious(data?.length)
-
-  const masonryUpdater = React.useMemo(() => {
-    if (data?.length < dataPreviousLength) {
-      return data?.length
-    } else {
-      return false
-    }
-  }, [dataPreviousLength, data?.length])
-
-  onUpdate(() => {
-    if (!!masonryUpdater && !!props?.itemsRehydrateIndicator) {
-      props?.onRefreshItems?.(() => null)
-    }
-  }, [masonryUpdater])
-
+export function MasonryComponent<Item>(props: ListMasonryProps<Item>) {
   const containerRef = React.useRef(null)
 
   const windowSize = useWindowSize({
@@ -58,23 +96,48 @@ export function ListMasonry<Item>(props: ListMasonryProps<Item>) {
     props
   ) as any
 
-  listProps.positioner = usePositioner({ 
+  const positioner = usePositioner({ 
     width: listProps?.width, 
     columnGutter: listProps?.columnGutter, 
     columnWidth: listProps?.columnWidth,
     columnCount: listProps?.columnCount,
     maxColumnCount: listProps?.columnCount,
     rowGutter: listProps?.rowGutter
-  }, [masonryUpdater])
+  })
 
   const { scrollTop, isScrolling } = useScroller(listProps?.offset, listProps?.scrollFps)
 
-  listProps.resizeObserver = useResizeObserver(listProps.positioner)
+  const resizeObserver = useResizeObserver(positioner)
 
   return useMasonry({
     ...listProps,
+    resizeObserver,
+    positioner,
     scrollTop,
     isScrolling,
-    items: data,
+    items: fillItems(props?.items, props?.previousItemsLength)
   })
+}
+
+export function ListMasonry<Item>(props: Omit<ListMasonryProps<Item>, 'previousItemsLength'>) {
+  const data = props?.items || []
+
+  const { reloadingLayout, previousLength } = useMasonryReload({
+    data,
+    reloadTimeout: props?.reloadTimeout,
+  })
+
+  if (reloadingLayout) {
+    return (
+      <EmptyPlaceholder loading title={''} description={null} />
+    )
+  } else {
+    return (
+      <MasonryComponent 
+        {...props}
+        items={data}
+        previousItemsLength={previousLength}
+      />
+    )
+  }
 }

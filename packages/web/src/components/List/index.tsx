@@ -33,7 +33,7 @@ const defaultProps: Partial<ListProps> = {
   refresh: true,
   rowItemsSpacing: 8,
   overscan: 2,
-  enabledItemsRehydrateIndicator: true,
+  reloadTimeout: 350,
 }
 
 export function List<T = any>(props: ListProps<T>) {
@@ -53,7 +53,7 @@ export function List<T = any>(props: ListProps<T>) {
     overscan,
     separators,
     masonryProps = {},
-    enabledItemsRehydrateIndicator,
+    reloadTimeout,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -62,7 +62,7 @@ export function List<T = any>(props: ListProps<T>) {
     styles,
   })
 
-  const { layoutProps, onLoadMore, onRefreshItems } = useInfiniteScroll(allProps)
+  const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
@@ -100,13 +100,12 @@ export function List<T = any>(props: ListProps<T>) {
       <ListMasonry
         items={data}
         render={renderItem}
-        itemKey={item => item?.id}
+        itemKey={(item, _index) => (item?.id ?? _index)}
         rowGutter={rowItemsSpacing}
         onRender={onLoadMore}
         overscanBy={overscan}
         columnCount={1}
-        onRefreshItems={onRefreshItems}
-        itemsRehydrateIndicator={enabledItemsRehydrateIndicator}
+        reloadTimeout={reloadTimeout}
         {...masonryProps}
       />
     </ListLayout>

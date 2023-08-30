@@ -5,10 +5,10 @@ import { ListComposition, ListPresets } from './styles'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
-import { RenderComponentProps, ListProps as ListMasonryProps } from 'masonic'
 import { UseInfiniteScrollArgs } from './useInfiniteScroll'
+import { ItemMasonryProps, ListMasonryProps } from '../../lib'
 
-export type AugmentedRenderItemInfo<T> = RenderComponentProps<T> & {
+export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   item: T
   isFirst: boolean
   isLast: boolean
@@ -50,6 +50,6 @@ Data = T extends Array<infer D> ? D : never
     ref?: React.MutableRefObject<undefined>
     rowItemsSpacing?: number
     overscan?: number
-    masonryProps?: Partial<ListMasonryProps<T>>
-    enabledItemsRehydrateIndicator?: boolean
+    masonryProps?: Partial<Omit<ListMasonryProps<T>, 'previousItemsLength'>>
+    reloadTimeout?: number
 } & ComponentCommonProps & UseInfiniteScrollArgs
