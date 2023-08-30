@@ -68,7 +68,7 @@ const defaultProps: Partial<DrawerProps> = {
   darkenBackground: true,
   size: '75vw',
   title: null,
-  scrollLocked: true,
+  scrollLocked: false,
   closeIcon: 'x' as IconPlaceholder,
 }
 
