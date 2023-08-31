@@ -7,7 +7,7 @@ import { UseInfiniteScrollReturn } from './useInfiniteScroll'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { motion } from 'framer-motion'
 
-type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
+export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
   variantStyles: StylesOf<ListComposition>
   children?: React.ReactNode
   showFooter?: boolean
@@ -96,7 +96,7 @@ export const ListLayout = (props: ListLayoutProps) => {
         ? <ListLoadingIndicatorComponent />
         : null}
 
-      {(!!ListFooterComponent && showFooter) ? <ListFooterComponent /> : null}
+      {(!!ListFooterComponent && showFooter) ? <ListFooterComponent {...props} /> : null}
     </View>
   )
 }

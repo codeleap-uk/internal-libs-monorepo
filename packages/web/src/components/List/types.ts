@@ -7,6 +7,7 @@ import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
 import { UseInfiniteScrollArgs } from './useInfiniteScroll'
 import { ItemMasonryProps, ListMasonryProps } from '../../lib'
+import { ListLayoutProps } from './ListLayout'
 
 export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   item: T
@@ -30,7 +31,7 @@ Data = T extends Array<infer D> ? D : never
     styles?: StylesOf<ListComposition>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
-    ListFooterComponent?: () => React.ReactElement
+    ListFooterComponent?: (props: ListLayoutProps) => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
     ListRefreshControlComponent?: () => React.ReactElement
     ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
