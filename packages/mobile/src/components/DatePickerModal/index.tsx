@@ -113,7 +113,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     footer,
     variants = [],
     styles = {},
-    placeholder = '',
     datePickerProps,
     mode,
     label,
@@ -154,7 +153,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const tempDate = useRef<Date|null>(null)
 
   const onConfirm = () => {
-    if (commitDate == 'onConfirm') {
+
+    if (commitDate == 'onConfirm' && !!tempDate.current) {
       setValue(tempDate.current)
     }
 
