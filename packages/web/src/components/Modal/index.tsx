@@ -335,9 +335,11 @@ export const Modal = (props) => {
     if (visible) {
       document.body.style.overflowY = 'hidden'
       document.body.style.overflowX = 'hidden'
+      document.body.style.maxHeight = '100svh'
     } else {
       document.body.style.overflowY = 'visible'
       document.body.style.overflowX = 'hidden'
+      document.body.style.maxHeight = 'unset'
     }
   }, [visible])
 
