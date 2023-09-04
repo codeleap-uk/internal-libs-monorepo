@@ -75,6 +75,19 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     return getNestedStylesByKey('loader', variantStyles)
   }, [variantStyles])
 
+  const _Image = React.useMemo(() => {
+    if (TypeGuards.isNil(IconEmpty)) return null
+
+    if (TypeGuards.isString(IconEmpty)) {
+      return <Icon debugName={debugName} name={IconEmpty as IconPlaceholder} forceStyle={variantStyles.icon} />
+    } else if (React.isValidElement(IconEmpty)) {
+      // @ts-ignore
+      return <IconEmpty {...props} />
+    } else {
+      return <IconEmpty {...props} />
+    }
+  }, [IconEmpty])
+
   if (loading) {
     return (
       <View css={[variantStyles.wrapper, variantStyles['wrapper:loading']]}>
@@ -99,20 +112,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
       </View>
     )
   }
-
-  const _Image = React.useMemo(() => {
-    if (TypeGuards.isNil(IconEmpty)) return null
-
-    if (TypeGuards.isString(IconEmpty)) {
-      return <Icon debugName={debugName} name={IconEmpty as IconPlaceholder} forceStyle={variantStyles.icon} />
-    } else if (React.isValidElement(IconEmpty)) {
-      // @ts-ignore
-      return <IconEmpty {...props} />
-    } else {
-      return <IconEmpty {...props} />
-    }
-  }, [])
-
+  
   return (
     <View {...wrapperProps} css={[variantStyles.wrapper, style]}>
       <View {...imageWrapperProps} css={variantStyles.imageWrapper}>

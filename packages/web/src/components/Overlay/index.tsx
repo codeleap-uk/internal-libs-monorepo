@@ -25,7 +25,7 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
     responsiveVariants, 
     variants, 
     styles, 
-    scrollLocked = true, 
+    scrollLocked = false, 
     ...props 
   } = overlayProps
 

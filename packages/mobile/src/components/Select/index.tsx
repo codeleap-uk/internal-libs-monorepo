@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
-import { IconPlaceholder,
+import {
+  IconPlaceholder,
   useDefaultComponentStyle,
   TypeGuards,
   useNestedStylesByKey,
@@ -32,7 +33,7 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
   })
 }
 
-const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (props) => {
+const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (props) => {
   const {
     currentValueLabel,
     debugName,
@@ -43,9 +44,9 @@ const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (p
     style,
     placeholder,
     disabled = false,
+    inputProps = {},
   } = props
 
-  
   return <TextInput
     value={TypeGuards.isString(currentValueLabel) ? currentValueLabel : null}
     rightIcon={clearIcon}
@@ -58,11 +59,12 @@ const OuterInput:ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (p
     innerWrapperProps={{
       rippleDisabled: true,
     }}
-    placeholder={placeholder as string}
+    placeholder={placeholder as any}
+    {...inputProps}
   />
 }
 
-const defaultProps:Partial<SelectProps<any, boolean>> = {
+const defaultProps: Partial<SelectProps<any, boolean>> = {
   getLabel(option) {
 
     if (TypeGuards.isArray(option)) {
@@ -82,7 +84,7 @@ const defaultProps:Partial<SelectProps<any, boolean>> = {
   clearIconName: 'x' as IconPlaceholder,
 }
 
-export const Select = <T extends string|number = string, Multi extends boolean = false>(selectProps:SelectProps<T, Multi>) => {
+export const Select = <T extends string | number = string, Multi extends boolean = false>(selectProps: SelectProps<T, Multi>) => {
   const allProps = {
     ...defaultProps,
     ...selectProps,

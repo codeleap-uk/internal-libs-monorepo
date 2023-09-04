@@ -5,10 +5,11 @@ import { ListComposition, ListPresets } from './styles'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
-import { RenderComponentProps, ListProps as ListMasonryProps } from 'masonic'
 import { UseInfiniteScrollArgs } from './useInfiniteScroll'
+import { ItemMasonryProps, ListMasonryProps } from '../../lib'
+import { ListLayoutProps } from './ListLayout'
 
-export type AugmentedRenderItemInfo<T> = RenderComponentProps<T> & {
+export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   item: T
   isFirst: boolean
   isLast: boolean
@@ -30,7 +31,7 @@ Data = T extends Array<infer D> ? D : never
     styles?: StylesOf<ListComposition>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
-    ListFooterComponent?: () => React.ReactElement
+    ListFooterComponent?: (props: ListLayoutProps) => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
     ListRefreshControlComponent?: () => React.ReactElement
     ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
@@ -51,4 +52,6 @@ Data = T extends Array<infer D> ? D : never
     rowItemsSpacing?: number
     overscan?: number
     masonryProps?: Partial<ListMasonryProps<T>>
+    reloadTimeout?: number
+    showFooter?: boolean
 } & ComponentCommonProps & UseInfiniteScrollArgs

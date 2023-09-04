@@ -5,7 +5,7 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridPresets } from './styles'
 import { GridProps } from './types'
 import { ListLayout, useInfiniteScroll } from '../List'
-import { RenderComponentProps as MasonryItemProps, Masonry as GridMasonry } from 'masonic'
+import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
 
 export * from './styles'
 export * from './types'
@@ -30,6 +30,8 @@ const defaultProps: Partial<GridProps> = {
   columnItemsSpacing: 8,
   rowItemsSpacing: 8,
   overscan: 2,
+  reloadTimeout: 350,
+  showFooter: true,
 }
 
 export function Grid<T = any>(props: GridProps<T>) {
@@ -51,6 +53,8 @@ export function Grid<T = any>(props: GridProps<T>) {
     separators,
     masonryProps = {},
     numColumns,
+    reloadTimeout,
+    showFooter,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
@@ -61,11 +65,16 @@ export function Grid<T = any>(props: GridProps<T>) {
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
+  const { reloadingLayout, previousLength } = useMasonryReload({
+    data,
+    reloadTimeout,
+  })
+
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
   }, [])
 
-  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
+  const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
     if (!RenderItem) return null
 
     const gridLength = data?.length || 0
@@ -95,16 +104,20 @@ export function Grid<T = any>(props: GridProps<T>) {
       {...allProps}
       {...layoutProps}
       variantStyles={variantStyles}
+      showFooter={reloadingLayout ? false : showFooter}
     >
-      <GridMasonry
-        items={data || []}
+      <ListMasonry
+        items={data}
         render={renderItem}
-        itemKey={item => item?.id}
+        itemKey={(item, _index) => (item?.id ?? _index)}
         columnGutter={columnItemsSpacing}
         rowGutter={rowItemsSpacing}
         columnCount={numColumns}
+        maxColumnCount={numColumns}
         onRender={onLoadMore}
         overscanBy={overscan}
+        previousItemsLength={previousLength}
+        reloadingLayout={reloadingLayout}
         {...masonryProps}
       />
     </ListLayout>

@@ -6,7 +6,7 @@ import { ListPresets } from './styles'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
-import { RenderComponentProps as MasonryItemProps, List as ListMasonry } from 'masonic'
+import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
 
 export * from './styles'
 export * from './PaginationIndicator'
@@ -33,6 +33,8 @@ const defaultProps: Partial<ListProps> = {
   refresh: true,
   rowItemsSpacing: 8,
   overscan: 2,
+  reloadTimeout: 350,
+  showFooter: true,
 }
 
 export function List<T = any>(props: ListProps<T>) {
@@ -52,6 +54,8 @@ export function List<T = any>(props: ListProps<T>) {
     overscan,
     separators,
     masonryProps = {},
+    reloadTimeout,
+    showFooter,
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -62,11 +66,16 @@ export function List<T = any>(props: ListProps<T>) {
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
+  const { reloadingLayout, previousLength } = useMasonryReload({
+    data,
+    reloadTimeout,
+  })
+
   const separator = React.useMemo(() => {
     return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
   }, [])
 
-  const renderItem = React.useCallback((_item: MasonryItemProps<any>) => {
+  const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
     if (!RenderItem) return null
 
     const listLength = data?.length || 0
@@ -94,14 +103,18 @@ export function List<T = any>(props: ListProps<T>) {
       {...allProps}
       {...layoutProps}
       variantStyles={variantStyles}
+      showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
-        items={data || []}
+        items={data}
         render={renderItem}
-        itemKey={item => item?.id}
+        itemKey={(item, _index) => (item?.id ?? _index)}
         rowGutter={rowItemsSpacing}
         onRender={onLoadMore}
         overscanBy={overscan}
+        columnCount={1}
+        previousItemsLength={previousLength}
+        reloadingLayout={reloadingLayout}
         {...masonryProps}
       />
     </ListLayout>

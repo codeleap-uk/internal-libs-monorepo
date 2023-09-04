@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.12.17](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.16...v3.12.17) (2023-09-04)
+
+### [3.12.16](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.10...v3.12.16) (2023-09-04)
+
+### [3.12.15](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.14...v3.12.15) (2023-09-02)
+
+### [3.12.14](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.13...v3.12.14) (2023-09-02)
+
+### [3.12.13](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.12...v3.12.13) (2023-09-02)
+
+### [3.12.12](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.11...v3.12.12) (2023-09-02)
+
+### [3.12.11](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.0...v3.12.11) (2023-09-01)
+
+### [3.12.10](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.9...v3.12.10) (2023-08-31)
+
+### [3.12.9](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.8...v3.12.9) (2023-08-30)
+
+### [3.12.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.7...v3.12.8) (2023-08-30)
+
+### [3.12.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.6...v3.12.7) (2023-08-30)
+
+### [3.12.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.5...v3.12.6) (2023-08-30)
+
+### [3.12.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.4...v3.12.5) (2023-08-30)
+
+### [3.12.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.3...v3.12.4) (2023-08-29)
+
+### [3.12.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.2...v3.12.3) (2023-08-29)
+
+### [3.12.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.1...v3.12.2) (2023-08-29)
+
+### [3.12.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.0...v3.12.1) (2023-08-29)
+
 ## [3.12.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.11.1...v3.12.0) (2023-08-25)
 
 

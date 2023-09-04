@@ -375,6 +375,14 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       setKeyDownActive(true)
     }
 
+    const MenuComponent = React.useCallback((props) => {
+      return <CustomMenu {...props} Footer={FooterComponent} />
+    }, [])
+
+    const MenuListComponent = React.useCallback((props) => {
+      return <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />
+    }, [])
+
     return (
       <InputBase
         {...inputBaseProps}
@@ -434,8 +442,8 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             ),
             DropdownIndicator: props => showDropdownIcon ? <components.DropdownIndicator {...props} /> : null,
             NoOptionsMessage: props => <_Placeholder {...props} />,
-            Menu: props => <CustomMenu {...props} Footer={FooterComponent} />,
-            MenuList: props => <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />,
+            Menu: MenuComponent,
+            MenuList: MenuListComponent,
             Option: props => (
               <DefaultOption
                 {...props}
