@@ -58,6 +58,7 @@ export type ModalProps =
     withScrollContainer?: boolean
     scrollLocked?: boolean
     backdropProps?: Partial<TouchableProps>
+    alterHistory?: boolean
   } & ComponentVariants<typeof ModalPresets> & ComponentCommonProps
 
 function focusModal(event: FocusEvent, id: string) {
@@ -179,6 +180,7 @@ export const ModalContent = (
     debugName,
     scrollLocked,
     backdropProps = {},
+    alterHistory = false,
     ...props
   } = modalProps
 
@@ -192,7 +194,10 @@ export const ModalContent = (
 
   const toggleAndReturn = () => {
     toggle?.()
-    window.history.back()
+
+    if (alterHistory) {
+      window.history.back()
+    }
 
     if (TypeGuards.isFunction(onClose)) onClose()
   }
@@ -245,11 +250,11 @@ export const ModalContent = (
       />
 
       <ModalArea css={variantStyles.innerWrapper}>
-        <Touchable 
-          css={variantStyles.backdropPressable} 
-          onPress={close} 
-          debounce={1000} 
-          {...backdropProps} 
+        <Touchable
+          css={variantStyles.backdropPressable}
+          onPress={close}
+          debounce={1000}
+          {...backdropProps}
         />
         <View
           component='section'
@@ -328,9 +333,11 @@ export const Modal = (props) => {
     }
 
     if (visible) {
-      document.body.style.overflow = 'hidden'
+      document.body.style.overflowY = 'hidden'
+      document.body.style.overflowX = 'hidden'
     } else {
-      document.body.style.overflow = 'visible'
+      document.body.style.overflowY = 'visible'
+      document.body.style.overflowX = 'hidden'
     }
   }, [visible])
 
