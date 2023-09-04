@@ -59,7 +59,7 @@ const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (
     innerWrapperProps={{
       rippleDisabled: true,
     }}
-    placeholder={placeholder as string}
+    placeholder={placeholder as any}
     {...inputProps}
   />
 }
