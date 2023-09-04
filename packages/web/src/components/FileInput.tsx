@@ -9,18 +9,19 @@ import { HTMLProps } from '../types'
 
 export type FileInputRef = {
   openFilePicker: () => Promise<WebInputFile[]>
+  clear: () => void
 }
 
-export type FileInputProps = Omit<HTMLProps<'input'>, 'type'|'ref'> & {
+export type FileInputProps = Omit<HTMLProps<'input'>, 'type' | 'ref'> & {
   onFileSelect?: (files: WebInputFile[]) => void
 }
 
-export const _FileInput = (inputProps: FileInputProps, ref:React.Ref<FileInputRef>) => {
+export const _FileInput = (inputProps: FileInputProps, ref: React.Ref<FileInputRef>) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { onFileSelect, ...props } = inputProps
 
-  const resolveWithFile = useRef<(file:WebInputFile[]) => any>()
+  const resolveWithFile = useRef<(file: WebInputFile[]) => any>()
 
   useImperativeHandle(ref, () => ({
     openFilePicker: () => {
@@ -29,6 +30,10 @@ export const _FileInput = (inputProps: FileInputProps, ref:React.Ref<FileInputRe
       return new Promise<WebInputFile[]>((resolve) => {
         resolveWithFile.current = resolve
       })
+    },
+    clear: () => {
+      if (!inputRef.current) return
+      inputRef.current.value = null
     },
   }))
 
@@ -66,7 +71,7 @@ export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(_FileInp
 )
 
 export const useFileInput = () => {
-  const inputRef = useRef<FileInputRef|null>(null)
+  const inputRef = useRef<FileInputRef | null>(null)
 
   const openFilePicker = () => {
     return inputRef.current?.openFilePicker()
