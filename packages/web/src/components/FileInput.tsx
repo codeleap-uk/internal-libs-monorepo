@@ -4,7 +4,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from 'react'
-import { WebInputFile } from '@codeleap/common'
+import { WebInputFile, useCallback } from '@codeleap/common'
 import { HTMLProps } from '../types'
 
 export type FileInputRef = {
@@ -14,14 +14,20 @@ export type FileInputRef = {
 
 export type FileInputProps = Omit<HTMLProps<'input'>, 'type' | 'ref'> & {
   onFileSelect?: (files: WebInputFile[]) => void
+  autoClear?: boolean
 }
 
 export const _FileInput = (inputProps: FileInputProps, ref: React.Ref<FileInputRef>) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { onFileSelect, ...props } = inputProps
+  const { onFileSelect, autoClear = true, ...props } = inputProps
 
   const resolveWithFile = useRef<(file: WebInputFile[]) => any>()
+
+  const clearInput = useCallback(() => {
+    if (!inputRef.current) return
+    inputRef.current.value = null
+  }, [])
 
   useImperativeHandle(ref, () => ({
     openFilePicker: () => {
@@ -31,13 +37,10 @@ export const _FileInput = (inputProps: FileInputProps, ref: React.Ref<FileInputR
         resolveWithFile.current = resolve
       })
     },
-    clear: () => {
-      if (!inputRef.current) return
-      inputRef.current.value = null
-    },
+    clear: clearInput,
   }))
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files.length) return
     inputProps.onChange && inputProps.onChange(e)
     const fileArray = Array.from(e.target?.files || []) as File[]
@@ -50,8 +53,12 @@ export const _FileInput = (inputProps: FileInputProps, ref: React.Ref<FileInputR
     onFileSelect && onFileSelect(files)
 
     if (resolveWithFile.current) {
-      resolveWithFile.current(files)
+      await resolveWithFile.current(files)
       resolveWithFile.current = undefined
+    }
+
+    if (autoClear) {
+      clearInput()
     }
   }
 
