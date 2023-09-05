@@ -377,7 +377,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const MenuComponent = React.useCallback((props) => {
       return <CustomMenu {...props} Footer={FooterComponent} />
-    }, [])
+    }, [FooterComponent])
 
     const MenuListComponent = React.useCallback((props) => {
       return <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />
