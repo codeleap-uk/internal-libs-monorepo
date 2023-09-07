@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.13.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.1...v3.13.0) (2023-09-07)
+
+
+### Features
+
+* **common:** Filters for adding item ([ee5995f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ee5995fc0eb1b86950d43a62bbf73c7064735014))
+* **mobile:** spotlight customFooter ([972fb7d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/972fb7d6c407f34e0657a08fc10fe9c18f453c95))
+* **mobile:** spotlight customHeader ([72dee01](https://github.com/codeleap-uk/internal-libs-monorepo/commit/72dee012d6abf221e92de86d1720ecc57c63d177))
+* **web:** click outside hook - Tooltip prop close outside - Select state prop ([e711075](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e711075622034cad96d45ec2d0fbd0dfe733d6ae))
+* **web:** Global alert ([7bd430a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/7bd430a3c4bd66c87023abc6244f7f532ee74405))
+
+
+### Bug Fixes
+
+* **mobile:** adjs ([9161f8e](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9161f8e9f7038aabac5493349c100da44722155e))
+* **mobile:** async file input ([390bb72](https://github.com/codeleap-uk/internal-libs-monorepo/commit/390bb72bd508e028837b69f68dd0638970d78065))
+* **mobile:** crash if HeaderComponent was not defined ([0fd650f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0fd650f88fa68444c9a5525667f2b18266f6edf7))
+* **web:** types, cript ([d249e29](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d249e29bfb4357ca1221b653ad1deb925ea84381))
+
 ### [3.12.23](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.22...v3.12.23) (2023-09-07)
 
 ### [3.12.22](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.21...v3.12.22) (2023-09-06)
