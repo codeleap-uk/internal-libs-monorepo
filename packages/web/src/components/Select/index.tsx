@@ -410,6 +410,8 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
+          escapeRemoves={true}
+          deleteRemoves={true}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
