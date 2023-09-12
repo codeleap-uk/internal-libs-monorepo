@@ -71,7 +71,7 @@
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "release": "standard-version",
-    "prerelease": "git rev-parse --abbrev-ref HEAD | standard-version --prerelease",
+    "releaserc": "git rev-parse --abbrev-ref HEAD | standard-version --prerelease",
     "notifyVersion": "node notifyVersion.js",
     "lint-deps": "syncpack list-mismatches",
     "fix-deps": "syncpack fix-mismatches"
