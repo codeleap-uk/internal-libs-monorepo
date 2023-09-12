@@ -161,3 +161,5 @@ export const Touchable = forwardRef(TouchableCP) as (<T extends NativeHTMLElemen
 ) => JSX.Element) & {
   defaultProps: Partial<TouchableProps<'button'>>
 }
+
+Touchable.defaultProps = defaultProps
