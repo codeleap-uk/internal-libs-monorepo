@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/cli",
-  "version": "3.13.4",
+  "version": "3.13.5",
   "main": "./dist/index.js",
   "repository": "git@github.com:codeleap-uk/codeleap-lib.git",
   "author": "Paulo Henrique De Souza <paulosouza300272@gmail.com>",
