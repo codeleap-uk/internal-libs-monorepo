@@ -36,10 +36,21 @@ export type TouchableProps =
     rippleDisabled?: boolean
     children?: React.ReactNode
     style?: StyleProp<ViewStyle>
+    analyticsEnabled?: boolean
+    analyticsName?: string
+    analyticsData?: Record<string, any>
   }
 
 export * from './styles'
-
+const defaultProps: Partial<TouchableProps> = {
+  variants: [],
+  debounce: 500,
+  noFeedback: false,
+  rippleDisabled: false,
+  analyticsEnabled: false,
+  analyticsName: null,
+  analyticsData: {},
+}
 const _Touchable = forwardRef<
   RNView,
   TouchableProps
@@ -51,14 +62,20 @@ const _Touchable = forwardRef<
     style,
     debugName,
     debugComponent,
-    debounce = 500,
+    debounce,
     leadingDebounce,
-    noFeedback = false,
+    noFeedback,
     styles,
     setPressed,
-    rippleDisabled = false,
+    rippleDisabled,
+    analyticsEnabled,
+    analyticsName,
+    analyticsData = {},
     ...props
-  } = touchableProps
+  } = {
+    ...defaultProps,
+    ...touchableProps,
+  }
 
   const pressed = React.useRef(!!leadingDebounce)
 
@@ -92,6 +109,12 @@ const _Touchable = forwardRef<
         debugName || variants,
         'User interaction',
       )
+      if (analyticsEnabled) {
+        const name = analyticsName || debugName
+        if (!!name?.trim?.()) {
+          logger.analytics?.interaction(name, analyticsData)
+        }
+      }
       onPress && onPress()
     }
     if (TypeGuards.isNumber(debounce)) {
@@ -240,4 +263,8 @@ const _Touchable = forwardRef<
   )
 })
 
-export const Touchable = _Touchable as ((props: TouchableProps) => JSX.Element)
+export const Touchable = _Touchable as ((props: TouchableProps) => JSX.Element) & {
+  defaultProps: Partial<TouchableProps>
+}
+
+Touchable.defaultProps = defaultProps
