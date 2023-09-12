@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.13.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.1-0...v3.13.1) (2023-09-12)
+
 ### [3.13.1-0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0...v3.13.1-0) (2023-09-12)
 
 ## [3.13.0-touchable-analytics.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.2...v3.13.0-touchable-analytics.3) (2023-09-12)
