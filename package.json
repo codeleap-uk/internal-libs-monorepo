@@ -63,6 +63,7 @@
     "docs": "yarn workspace codeleap-docs",
     "web": "yarn workspace web-template",
     "common": "yarn workspace @codeleap/common",
+    "styles": "yarn workspace @codeleap/styles",
     "cli": "yarn workspace @codeleap/cli",
     "config": "yarn workspace @codeleap/config",
     "mobile": "yarn workspace mobile-template",
@@ -85,7 +86,7 @@
     "syncpack": "^9.8.4",
     "ts-node-dev": "^1.1.8",
     "turbo": "1.1.2",
-    "typedoc": "^0.22.10",
+    "typedoc": "^0.25.1",
     "typescript": "5.0.4"
   },
   "engines": {

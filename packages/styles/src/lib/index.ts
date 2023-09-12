@@ -1,0 +1,1 @@
+export { validateTheme } from './validateTheme'
