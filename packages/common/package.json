@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "3.12.19",
+  "version": "3.13.0-touchable-analytics.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",

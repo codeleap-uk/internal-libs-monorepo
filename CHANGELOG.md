@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.13.0-touchable-analytics.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.19...v3.13.0-touchable-analytics.0) (2023-09-12)
+
+
+### Features
+
+* **mobile:** add analytics integration to touchable ([931c7b6](https://github.com/codeleap-uk/internal-libs-monorepo/commit/931c7b68903ad064e1ed58509ffe72943a090095))
+* **web:** add analytics integration to touchable ([f367efb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f367efb76ceefbaf9fff86d125ad8d95e98c9f74))
+
 ### [3.12.19](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.18...v3.12.19) (2023-09-05)
 
 ### [3.12.18](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.15...v3.12.18) (2023-09-04)
