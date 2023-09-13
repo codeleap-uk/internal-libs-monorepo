@@ -1,1 +1,5 @@
 export { validateTheme } from './validateTheme'
+export { themeStore } from './themeStore'
+export { createTheme } from './createTheme'
+export { createStyles } from './createStyles'
+export { CodeleapStyleRegistry } from './StyleRegistry'

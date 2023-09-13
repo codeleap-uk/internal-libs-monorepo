@@ -18,6 +18,7 @@
   },
   "peerDependencies": {
     "@codeleap/common": "*",
+    "@codeleap/styles": "*",
     "@react-native-community/async-storage": "1.12.1",
     "@react-native-firebase/messaging": "14.4.0",
     "@react-navigation/bottom-tabs": "6.5.3",
