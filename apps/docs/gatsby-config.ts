@@ -28,10 +28,13 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        mdxOptions: {
-          remarkPlugins: [],
-          rehypePlugins: [],
-        },
+        // mdxOptions: {
+        //   remarkPlugins: [],
+        //   rehypePlugins: [],
+        // },
+        // defaultLayouts: {
+        //   default: require.resolve('./src/components/Article/Layout.tsx'),
+        // },
         extensions: ['.mdx', '.md'],
       },
     },
@@ -59,7 +62,7 @@ const config: GatsbyConfig = {
       options: {
         name: 'articles',
         path: `${__dirname}/src/articles`,
-        ignore: ['**/.tsx*', '**/*.{tsx, png, jsx, js, jpg, webp}'],
+        ignore: ['**/*.{tsx, png, jsx, js, jpg, webp, json}'],
       },
     },
     {
@@ -69,13 +72,13 @@ const config: GatsbyConfig = {
         ignore: [`**/*.ts`, `**/_*`],
       },
     },
-    {
-      resolve: `gatsby-plugin-page-creator`,
-      options: {
-        path: `${__dirname}/src/articles`,
-        ignore: ['**/.tsx*', '**/*.{tsx, png, jsx, js, jpg, webp}'],
-      },
-    },
+    // {
+    //   resolve: `gatsby-plugin-page-creator`,
+    //   options: {
+    //     path: `${__dirname}/src/articles`,
+    //     ignore: ['**/*.{tsx, png, jsx, js, jpg, webp, json}'],
+    //   },
+    // },
     {
       resolve: `gatsby-plugin-google-fonts`,
       options: {

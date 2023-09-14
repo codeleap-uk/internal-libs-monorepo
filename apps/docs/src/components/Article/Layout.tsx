@@ -50,14 +50,24 @@ const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
   },
 }))
 
-function ArticlePage({ children, pageContext, ...rest }) {
+function ArticlePage(props) {
   console.log({
-    ...rest,
-    pageContext,
-    children
+    props
   })
+
+  // const post = data.mdx;
+
+  return (
+    <div>
+      'HELOO'
+      {/* <h1>{post.frontmatter.title}</h1>
+      <p>{post.frontmatter.date}</p>
+      <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
+    </div>
+  );
+
   const { title } = pageContext.frontmatter
-  // const { allMdx } = useStaticQuery(pageQuery)
+  const { allMdx } = useStaticQuery(query)
 
   return <main>
     <h1>{title} - Fuck</h1>
@@ -111,22 +121,15 @@ const style = variantProvider.createComponentStyle(theme => ({
   }
 }), true)
 
-// const query = graphql`
-//   query {
-//     allMdx(filter: {}) {
-//       edges {
-//         node {
-//           frontmatter {
-//             title
-//           }
-//           internal {
-//             contentFilePath
-//           }
-//         }
-//       }
-//     }
-// }
-// `
+export const query = graphql`
+  query ($id: String) {
+    mdx(id: { eq: $id }) {
+      frontmatter {
+        title
+      }
+    }
+  }
+`;
 
 // export const pageQuery = graphql`
 //   query PostTemplate($id: String!) {
