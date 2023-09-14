@@ -1,53 +1,38 @@
-import { Theme, React, variantProvider, Touchable, Settings } from '@/app'
-import { onUpdate, useCodeleapContext, useState } from '@codeleap/common'
-import { Session } from '@/redux'
-import { Image } from './Image'
+import { AppImages, Breakpoint, Settings, TCSS, Theme } from '@/app'
+import { ComponentVariants, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
+import { Text, Touchable } from '@/components'
+import { LogoStyles, LogoComposition } from '../app/stylesheets/Logo'
+import { StylesOf, useMediaQuery } from '@codeleap/web'
+
 type LogoProps = {
-  variants?: string | string[]
+  styles?: StylesOf<LogoComposition>
+  style?: TCSS
   switchServerOnPress?: boolean
-  style?: {}
-}
+  breakpoint?: Breakpoint
+  responsive?: boolean
+  image?: any
+} & ComponentVariants<typeof LogoStyles> & Omit<PropsOf<typeof Touchable>, 'variants'|'styles'>
 
 export function Logo(props: LogoProps) {
-  const {
-    style,
-    switchServerOnPress,
+  const { responsiveVariants, variants, styles, switchServerOnPress, image = null, breakpoint = 'mid', responsive = true } = props
 
-  } = props
-  const { currentTheme } = useCodeleapContext()
+  const mediaQuery = Theme.media.down(breakpoint)
+  const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
-  const source = (props.variants?.includes('black') || (currentTheme === 'light' && !props.variants)) ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
+  let logoImage = AppImages.LogoTemplate
 
-  const [numberOfPresses, setPresses] = useState(0)
-
-  onUpdate(() => {
-    if (numberOfPresses === 10) {
-      Session.setMode().then(() => {
-        setPresses(0)
-      })
-    }
-  }, [numberOfPresses])
-
-  const image = <Image
-    source={source}
-    css={[styles.image, style]}
-    {...props}
-  />
-
-  if (switchServerOnPress && Settings.Environment.IsDev) {
-    return <Touchable onPress={() => setPresses(n => n + 1) }
-      debugName={'Click on Logo'}>
-      {image}
-    </Touchable>
+  if (responsive) {
+    logoImage = isMobile ? AppImages.LogoTemplateMobile : AppImages.LogoTemplate
   }
 
-  return image
-}
+  const variantStyles = useDefaultComponentStyle<'u:Logo', typeof LogoStyles>('u:Logo', {
+    responsiveVariants,
+    rootElement: 'wrapper',
+    styles,
+    variants,
+  })
 
-const styles = variantProvider.createComponentStyle({
-  image: {
-    height: undefined,
-    width: '75%',
-    alignSelf: 'center',
-  },
-}, true)
+  return (
+    <Text variants={['h4']} text={Settings.AppName} style={variantStyles.image} />
+  )
+}

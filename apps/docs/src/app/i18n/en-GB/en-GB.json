@@ -1,0 +1,31 @@
+{
+  "test": "Test",
+  "language": "Language",
+  "formatting": "%s Mi/h",
+  "__LABEL": "English",
+  "something": "Testing the i18n",
+  "openModal": "Open Modal",
+  "translatedText": "Translated Text",
+  "submit": "Submit",
+  "showAppStatus": "Show App Status",
+  "hierarchy": "Hierarchy",
+  "size": "Size",
+  "selectedIcon": "Select Icon",
+  "playground": "Playground",
+  "default": "Default",
+  "states": "States",
+  "rightIcon": "Right Icon",
+  "leftIcon": "Left Icon",
+  "disabled": "Disabled",
+  "languageSelector": "Language: {{language}}",
+
+  "form": {
+    "validations": {
+      "email": "Invalid email",
+      "required": "This is a required field",
+      "min": "Minimum of {{min}} characters",
+      "max": "Maximum of {{max}} characters",
+      "url": "Invalid URL"
+    }
+  }
+}

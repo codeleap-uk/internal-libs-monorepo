@@ -1,44 +1,36 @@
-import { ActivityIndicatorComposition, getActivityIndicatorBaseStyles } from '@codeleap/common'
-import { WebActivityIndicatorStyles } from '@codeleap/web'
-import { variantProvider } from '../theme'
+import { ActivityIndicatorComposition, ActivityIndicatorPresets } from "@codeleap/web"
+import { variantProvider } from "../theme"
 
-const createActivityIndicatorStyle =
-  variantProvider.createVariantFactory<ActivityIndicatorComposition>()
-const defaultStyles = WebActivityIndicatorStyles
+const createActivityIndicatorStyle = variantProvider.createVariantFactory<ActivityIndicatorComposition>()
+
+
 
 export const AppActivityIndicatorStyles = {
-  ...defaultStyles,
-  
-  small: createActivityIndicatorStyle((theme) => {
-    const baseStyles = getActivityIndicatorBaseStyles(theme.values.buttons.large.height)
+  ...ActivityIndicatorPresets,
 
-    return {
-      ...baseStyles,
-      backCircle: {
-        ...baseStyles.backCircle,
-        borderColor: theme.colors.primary,
-      },
-      frontCircle: {
-        ...baseStyles.frontCircle,
-        borderTopColor: theme.colors.primary,
-      },
-    }
-
-  }),
-  large: createActivityIndicatorStyle((theme) => {
-    const baseStyles = getActivityIndicatorBaseStyles(theme.values.buttons.large.height)
-
-    return {
-      ...baseStyles,
-      backCircle: {
-        ...baseStyles.backCircle,
-        borderColor: theme.colors.primary,
-      },
-      frontCircle: {
-        ...baseStyles.frontCircle,
-        borderTopColor: theme.colors.primary,
-      },
-    }
-
-  }),
+  default: createActivityIndicatorStyle((theme) => ({
+    wrapper: {
+      height: theme.values.iconSize[6],
+      width: theme.values.iconSize[6],
+      zIndex: 99,
+    },
+  })),
+  tiny: createActivityIndicatorStyle((theme) => ({
+    wrapper: {
+      height: theme.values.iconSize[2],
+      width: theme.values.iconSize[2],
+    },
+  })),
+  small: createActivityIndicatorStyle((theme) => ({
+    wrapper: {
+      height: theme.values.iconSize[4],
+      width: theme.values.iconSize[4],
+    },
+  })),
+  medium: createActivityIndicatorStyle((theme) => ({
+    wrapper: {
+      height: theme.values.iconSize[5],
+      width: theme.values.iconSize[5],
+    },
+  })),
 }

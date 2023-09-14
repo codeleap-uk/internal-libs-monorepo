@@ -1,7 +1,8 @@
-import { Text, variantProvider, View } from '@/app'
+import { React, variantProvider } from '@/app'
 import { useComponentStyle } from '@codeleap/common'
 import {PhotoProvider} from 'react-photo-view'
-export const Article:React.FC = ({ children, title= '' }) => {
+import {Text, View } from '@/components'
+export const Article = ({ children, title= '' }) => {
 
   const styles = useComponentStyle(_styles)
  return <PhotoProvider> 

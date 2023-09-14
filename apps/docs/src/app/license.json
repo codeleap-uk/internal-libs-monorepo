@@ -17,6 +17,12 @@
         "licenseUrl": "https://github.com/mdx-js/mdx/raw/master/license",
         "parents": "codeleap-docs"
     },
+    "@radix-ui/react-tooltip@1.0.6": {
+        "licenses": "MIT",
+        "repository": "https://github.com/radix-ui/primitives",
+        "licenseUrl": "https://github.com/radix-ui/primitives",
+        "parents": "codeleap-docs"
+    },
     "@reach/router@1.3.4": {
         "licenses": "MIT",
         "repository": "https://github.com/reach/router",
@@ -30,6 +36,12 @@
         "parents": "codeleap-docs"
     },
     "@sentry/browser@7.48.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/getsentry/sentry-javascript",
+        "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
+    "@sentry/gatsby@7.57.0": {
         "licenses": "MIT",
         "repository": "https://github.com/getsentry/sentry-javascript",
         "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
@@ -71,6 +83,12 @@
         "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "gatsby-plugin-react-i18next@3.0.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/microapps/gatsby-plugin-react-i18next",
+        "licenseUrl": "https://github.com/microapps/gatsby-plugin-react-i18next/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "gatsby-plugin-sitemap@6.8.0": {
         "licenses": "MIT",
         "repository": "https://github.com/gatsbyjs/gatsby",
@@ -81,6 +99,12 @@
         "licenses": "MIT",
         "repository": "https://github.com/gatsbyjs/gatsby",
         "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
+    "lottie-web@5.12.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/airbnb/lottie-web",
+        "licenseUrl": "https://github.com/airbnb/lottie-web/raw/master/LICENSE.md",
         "parents": "codeleap-docs"
     },
     "md5-file@5.0.0": {
@@ -105,6 +129,12 @@
         "licenses": "MIT",
         "repository": "https://github.com/nfl/react-helmet",
         "licenseUrl": "https://github.com/nfl/react-helmet/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
+    "react-i18next@12.3.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/i18next/react-i18next",
+        "licenseUrl": "https://github.com/i18next/react-i18next/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
     "react-icons@4.8.0": {

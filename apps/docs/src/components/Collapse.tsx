@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 
-import { Scroll, View } from '@/app'
+import { Scroll, View } from '@/components'
 import { TypeGuards } from '@codeleap/common'
 
 type CollapseProps = {
@@ -9,6 +9,7 @@ type CollapseProps = {
     height?: number
     css?:any
     scroll?: boolean
+    children: React.ReactNode
 }
 
 export const Collapse:React.FC<CollapseProps> = ({ open, height = 1000, scroll, children, ...props }) => {

@@ -1,13 +1,25 @@
-import { ImageComposition } from '@codeleap/common'
-import { variantProvider } from '../theme'
+import { includePresets } from "@codeleap/common"
+import { variantProvider } from "../theme"
 
-const createImageStyle =
-  variantProvider.createVariantFactory<ImageComposition>()
-const defaultStyles = variantProvider.getDefaultVariants('Image')
+export type ImageComposition = 'wrapper'
+
+const createImageStyle = variantProvider.createVariantFactory<ImageComposition>()
+
+export const ImagePresets = includePresets((styles) => createImageStyle(() => ({ wrapper: styles })))
 
 export const AppImageStyles = {
-  ...defaultStyles,
-  default: createImageStyle((theme) => ({
-    ...defaultStyles.default,
+  ...ImagePresets,
+  default: createImageStyle(() => ({
+    wrapper: {},
+  })),
+  skeleton: createImageStyle(theme => ({
+    wrapper: {
+      backgroundColor: theme.colors.neutral2,
+    },
+  })),
+  round: createImageStyle(theme => ({
+    wrapper: {
+      borderRadius: theme.borderRadius.rounded,
+    },
   })),
 }

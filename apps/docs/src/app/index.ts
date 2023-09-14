@@ -1,56 +1,24 @@
+import React from 'react'
 export * from './Settings'
-export * from './components'
 export * from './logger'
 export * from './theme'
-export { LocalStorageKeys } from './constants'
+export * from './performance'
+export { LocalStorageKeys, IS_SSR } from './constants'
+
 export * from './api'
+
 export type { AppIcon } from './assets/icons'
+export { IconNames, iconImages } from './assets/icons'
+import * as AppImages from './assets/images' 
+import * as ComponentStyleSheets from './stylesheets'
 
-import LibComponents, { variants } from './components'
-import React from 'react'
-import { CreateOSAlert } from '@codeleap/web'
-import { variantProvider } from './theme'
-import { Settings } from './Settings'
+export { default as licenses } from './license.json'
+export { default as timestamp } from './timestamp.json'
 
-export const allComponents = {
-  ...LibComponents,
-
-}
-
-export const {
-  View,
-  Checkbox,
-  Button,
-  Text,
-  Icon,
-  FileInput,
-  TextInput,
-  Select,
-  MyComponent,
-  Touchable,
-  Slider,
-  CenterWrapper,
-  Scroll,
-  List,
-  Drawer,
-  Overlay,
-  ActivityIndicator,
-  RadioInput,
-  ContentView,
-  RouterPage,
-  Menu,
-  Tooltip,
-  Modal,
-
-} = allComponents
+export { assignTextStyle } from './stylesheets/Text'
 
 export {
   React,
+  AppImages,
+  ComponentStyleSheets,
 }
-
-export const OSAlert = CreateOSAlert({
-  variantProvider,
-  variants,
-  settings: Settings,
-  logger,
-})

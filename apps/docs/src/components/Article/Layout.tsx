@@ -6,7 +6,8 @@ import { SectionMap } from './SectionMap'
 import { mdxTransforms } from './mdxTransforms'
 import { Navbar } from './Navbar'
 import { Article } from './Article'
-import { React, Icon, Theme, Touchable, View, Text, variantProvider } from '@/app'
+import { React, Theme, variantProvider } from '@/app'
+import { Icon,  Touchable, View, Text } from '@/components'
 import { Header } from '../Header'
 import { SearchBar } from './SearchBar'
 import { capitalize, useComponentStyle, useMemo } from '@codeleap/common'
@@ -27,37 +28,39 @@ const PageNavButton = ({ data, type = 'previous' }) => {
 
 const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
-    ...theme.border.neutral(1),
+    ...theme.border.neutral1(1),
     borderRadius: theme.borderRadius.medium,
     cursor: 'pointer',
     transition: 'border-color 0.2s ease',
     '&:hover': {
-      borderColor: theme.colors.primary,
+      borderColor: theme.colors.primary1,
       'svg, p': {
-        color: theme.colors.primary,
+        color: theme.colors.primary1,
       },
 
     },
   },
   icon: {
     transition: 'color 0.2s ease',
-    color: theme.colors.neutral,
+    color: theme.colors.neutral1,
     size: 25,
   },
   text: {
-    color: theme.colors.neutral,
+    color: theme.colors.neutral1,
     transition: 'color 0.2s ease',
   },
 }))
 
 function ArticlePage({ children, pageContext }) {
   const { title } = pageContext.frontmatter
-  const { allMdx } = useStaticQuery(query)
+  // const { allMdx } = useStaticQuery(query)
 
-  const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
+  // const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
 
   const isMobile = Theme.hooks.down('mid')
   const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
+
+  return null
 
   return <Page title={title} header={
     <Header >
@@ -95,27 +98,22 @@ function ArticlePage({ children, pageContext }) {
 
 const style = variantProvider.createComponentStyle(theme => ({
   bottomSeparator: {
-    ...theme.border.grayFade({
-      directions: ['top'],
-      width: 1,
-
-    }),
     ...theme.presets.fullWidth
   }
 }), true)
 export default ArticlePage
 
-const query = graphql`
-  query {
-    allMdx(filter: {}) {
-      edges {
-        node {
-          fileAbsolutePath
-          frontmatter {
-            title
-          }
-        }
-      }
-    }
-}
-`
+// const query = graphql`
+//   query {
+//     allMdx(filter: {}) {
+//       edges {
+//         node {
+//           fileAbsolutePath
+//           frontmatter {
+//             title
+//           }
+//         }
+//       }
+//     }
+// }
+// `

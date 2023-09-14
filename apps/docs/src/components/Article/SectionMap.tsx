@@ -1,5 +1,6 @@
-import { React, Text, variantProvider, View } from '@/app'
+import { React, variantProvider } from '@/app'
 import { useComponentStyle } from '@codeleap/common'
+import { View, Text } from '@/components'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
 const headings = ['h1', 'h2'] as const
@@ -59,7 +60,7 @@ const SectionText = (props:{node:Node}) => {
   }
 }
 
-export const SectionMap:React.FC = ({ content }) => {
+export const SectionMap = ({ content }) => {
   const contentSections = mapSections(content)
   const styles = useComponentStyle(componentStyles)
   return <View css={styles.wrapper}>
@@ -81,19 +82,11 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     ...theme.spacing.padding(2),
     ...theme.presets.alignSelfStretch,
     ...theme.presets.column,
-    ...theme.border.grayFade({
-      width: 1,
-      directions: ['left'],
-    }),
     ...theme.spacing.gap(2),
     flexBasis: '25%',
     [theme.media.down('mid')]: {
       position: 'static',
       order: -1,
-      ...theme.border.grayFade({
-        width: 1,
-        directions: ['bottom'],
-      }),
 
     },
   },

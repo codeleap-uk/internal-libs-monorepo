@@ -1,8 +1,9 @@
-import { React, Text, View, Button, variantProvider, Theme, Drawer } from '@/app'
+import { React, variantProvider, Theme } from '@/app'
 import { Collapse } from '../Collapse'
 import { MdxMetadata } from 'types/mdx'
 import { useBooleanToggle, useComponentStyle } from '@codeleap/common'
 import { Link } from '../Link'
+import { View, Button, Drawer, Text } from '@/components'
 
 type NavbarProps = {
   pages: [string, MdxMetadata[]][]
@@ -23,7 +24,7 @@ const Category = ({ name, items }) => {
   }
 
   return <View variants={['column', 'fullWidth']}>
-    <Button text={name} onPress={toggle} rightIcon='arrowDownWhite' variants={['categoryButton']} styles={{
+    <Button text={name} onPress={toggle} rightIcon='arrowDownWhite' styles={{
       rightIcon: {
         transform: `rotate(${open ? 180 : 0}deg)`,
       },
@@ -85,12 +86,6 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     backgroundColor: theme.colors.background,
     ...theme.presets.column,
     ...theme.presets.alignSelfStretch,
-    ...theme.border.grayFade({
-      width: 1,
-      directions: ['right'],
-    }),
-    // width: 240,
-    // minWidth: 240,
     flexBasis: '20%',
 
   },

@@ -1,0 +1,21 @@
+{
+  "test": "Teste",
+  "language": "Linguagem",
+  "formatting": "%s Km/h",
+  "__LABEL": "Português Brasil",
+  "something": "Testando o i18n",
+  "openModal": "Abrir Modal",
+  "translatedText": "Texto traduzido",
+  "showAppStatus": "Mostrar status do app",
+  "languageSelector": "Linguagem: {{language}}",
+
+  "form": {
+    "validations": {
+      "email": "E-mail inválido",
+      "required": "Este é um campo obrigatório",
+      "min": "Mínimo de {{min}} caracteres",
+      "max": "Máximo de {{max}} caracteres",
+      "url": "URL inválido"
+    }
+  }
+}

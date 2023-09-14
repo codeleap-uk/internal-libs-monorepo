@@ -1,9 +1,10 @@
-import { View, variantProvider, RouterPage, CenterWrapper, Settings, LocalStorageKeys } from '@/app'
+import { variantProvider, Settings } from '@/app'
 
 import { Footer } from './Footer'
 import { Header } from './Header'
 import { Helmet } from 'react-helmet'
 import { onMount, PropsOf, useComponentStyle } from '@codeleap/common'
+import { CenterWrapper, View } from '@/components'
 
 type PageProps = PropsOf<typeof CenterWrapper> & {
   center?: boolean
@@ -31,9 +32,9 @@ export const Page: React.FC<PageProps> = (props) => {
   } = props
 
   const content = withRouter ? (
-    <RouterPage basePath={basePath} title={title}>
+    <>
       {children}
-    </RouterPage>
+    </>
   ) : (
     children
   )
@@ -52,7 +53,7 @@ export const Page: React.FC<PageProps> = (props) => {
         </View>
       )}
 
-      {footer && <Footer />}
+      {/* {footer && <Footer />} */}
     </View>
   )
 }

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-import { View, Text, CenterWrapper, Theme } from '@/app'
+import { View, Text, CenterWrapper } from '@/components'
 import { Link } from './Link'
-import { variantProvider } from '@/app/theme'
+import { Theme, variantProvider } from '@/app'
 
 import { Settings } from '../app/Settings'
 
@@ -155,13 +155,13 @@ export const Footer: React.FC<FooterProps> = () => {
   )
 }
 
-const styles = variantProvider.createComponentStyle({
+const styles = variantProvider.createComponentStyle(theme => ({
   wrapper: {
     position: 'relative',
     zIndex: 1,
     display: 'flex',
     color: '#bd1738',
-    backgroundColor: Theme.colors.light.primary,
+    backgroundColor: theme.colors.primary3,
     width: '100%',
     minHeight: 480,
     [Theme.media.down('small')]: {
@@ -196,7 +196,7 @@ const styles = variantProvider.createComponentStyle({
   link: {
     fontWeight: 'inherit',
     textDecorationLine: 'none',
-    textDecorationColor: Theme.colors.light.white,
+    textDecorationColor: theme.colors.neutral1,
     color: 'white',
     '&:hover': {
       color: 'white',
@@ -256,7 +256,7 @@ const styles = variantProvider.createComponentStyle({
   footerNavText: {
     marginTop: Theme.spacing.value(1),
     marginBottom: Theme.spacing.value(1),
-    color: Theme.colors.light.white,
+    color: theme.colors.neutral10,
   },
   logoImage: {
     width: 200,
@@ -312,4 +312,4 @@ const styles = variantProvider.createComponentStyle({
     },
   },
 
-}, true)
+}), true)

@@ -1,12 +1,13 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 
-import { React, TextInput, Text, variantProvider, View } from '@/app'
+import { React, variantProvider } from '@/app'
 import { capitalize, onUpdate, useComponentStyle, useDebounce, useMemo, useState } from '@codeleap/common'
 import { useClickOutside } from '@codeleap/web'
 import { MdxMetadata } from 'types/mdx'
 import { Collapse } from '../Collapse'
 import { Link } from '../Link'
+import { View, TextInput, Text } from '@/components'
 
 export const SearchBar = (props:{items:MdxMetadata[]}) => {
   const [search, setSearch] = useState('')
@@ -63,7 +64,7 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
           <Text text={title} variants={['inline']}/>
           {
             category !== 'root' ?
-              <Text text={ `- ${capitalize(category)}`} variants={['inline', 'marginLeft:1', 'subtle']}/>
+              <Text text={ `- ${capitalize(category)}`} variants={['inline', 'marginLeft:1']}/>
               : null
           }
         </Link>
@@ -88,6 +89,7 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
       leftIcon={{
         name: 'search',
       }}
+      debugName=''
       placeholder='What are you looking for?'
       variants={['pill', 'fullWidth']}
       onChangeText={setSearch}
@@ -129,7 +131,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     left: 0,
     right: 0,
     top: '100%',
-    backgroundColor: theme.colors.backgroundSecondary,
+    backgroundColor: theme.colors.background,
     borderRadius: theme.borderRadius.medium,
 
   },
