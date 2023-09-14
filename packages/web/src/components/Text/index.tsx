@@ -1,22 +1,10 @@
-import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import React, { ComponentPropsWithoutRef, ElementType } from 'react'
-import { StylesOf } from '../../types/utility'
-import { TextComposition, TextPresets } from './styles'
+import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import React, { ElementType } from 'react'
+import { TextPresets } from './styles'
+import { TextProps } from './types'
 
 export * from './styles'
-
-export type TextProps<T extends ElementType> =
-  ComponentPropsWithoutRef<T> &
-  ComponentVariants<typeof TextPresets> & {
-    component?: T
-    text: string
-    styles?: StylesOf<TextComposition>
-    msg?: string
-    debugName?: string
-    debounce?: number
-    pressDisabled?: boolean
-    onPress?: (event: React.MouseEventHandler<T>) => void
-  }
+export * from './types'
 
 const defaultProps: Partial<TextProps<'p'>> = {
   debugName: 'Text component',

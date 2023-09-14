@@ -85,7 +85,7 @@
     "syncpack": "^9.8.4",
     "ts-node-dev": "^1.1.8",
     "turbo": "1.1.2",
-    "typedoc": "^0.22.10",
+    "typedoc": "0.25.1",
     "typescript": "5.0.4"
   },
   "engines": {
@@ -137,5 +137,9 @@
         "cache": false
       }
     }
+  },
+  "dependencies": {
+    "openai": "^4.6.0",
+    "typedoc-json-parser": "^8.2.0"
   }
 }
