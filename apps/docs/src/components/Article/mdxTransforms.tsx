@@ -1,15 +1,11 @@
 import { React,  Theme, variantProvider } from '@/app'
 import { Text, View, Icon, Checkbox } from '@/components'
-import { copyToClipboard } from '@/utils/misc'
 import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor, useBooleanToggle, onMount } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Image } from '../Image'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
 import {PhotoView} from 'react-photo-view'
-function copy(text:string) {
-  return copyToClipboard(text)
-}
 
 const quoteTypes = {
   info: 'INFO',
@@ -51,7 +47,6 @@ export const mdxTransforms = {
   h5: ({ children }) => <Text variants={['h5']} text={children}/>,
   h6: ({ children }) => <Text variants={['h6']} text={children}/>,
   blockquote: ({ children }) => {
-
     const quoteType = useMemo(() => {
 
       let elChildren = Array.isArray(children) ? children : children?.props?.children

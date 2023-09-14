@@ -1,22 +1,23 @@
 import { React, variantProvider } from '@/app'
-import { useComponentStyle } from '@codeleap/common'
-import {PhotoProvider} from 'react-photo-view'
-import {Text, View } from '@/components'
-export const Article = ({ children, title= '' }) => {
+import { PhotoProvider } from 'react-photo-view'
+import { Text, View } from '@/components'
 
-  const styles = useComponentStyle(_styles)
- return <PhotoProvider> 
-    <View variants={['column', 'flex', 'padding:5', 'alignStart', 'gap:2']} responsiveVariants={{
-        mid: ['padding:1'],
-      }} css={styles.wrapper}>
+export const Article = ({ children, title = '' }) => {
+  return (
+    <PhotoProvider>
+      <View 
+        variants={['column', 'flex', 'padding:5', 'alignStart', 'gap:2']} 
+        responsiveVariants={{ mid: ['padding:1'] }} 
+        css={styles.wrapper}
+      >
         <Text variants={['h1']} text={title} />
         {children}
       </View>
- </PhotoProvider>
-
+    </PhotoProvider>
+  )
 }
 
-const _styles = variantProvider.createComponentStyle((theme) => ({
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     maxWidth: 700,
     [theme.media.down('large')]: {
@@ -24,4 +25,4 @@ const _styles = variantProvider.createComponentStyle((theme) => ({
       maxWidth: 500,
     },
   },
-}))
+}), true)

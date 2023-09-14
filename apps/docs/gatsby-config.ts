@@ -25,15 +25,16 @@ const config: GatsbyConfig = {
         'icon': 'src/images/favicon.png',
       },
     },
-    // {
-    //   resolve: `gatsby-plugin-mdx`,
-    //   options: {
-    //     defaultLayouts: {
-    //       default: require.resolve('./src/components/Article/Layout.tsx'),
-    //     },
-    //     extensions: ['.mdx', '.md'],
-    //   },
-    // },
+    {
+      resolve: `gatsby-plugin-mdx`,
+      options: {
+        mdxOptions: {
+          remarkPlugins: [],
+          rehypePlugins: [],
+        },
+        extensions: ['.mdx', '.md'],
+      },
+    },
     'gatsby-transformer-remark',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
@@ -68,13 +69,13 @@ const config: GatsbyConfig = {
         ignore: [`**/*.ts`, `**/_*`],
       },
     },
-    // {
-    //   resolve: `gatsby-plugin-page-creator`,
-    //   options: {
-    //     path: `${__dirname}/src/articles`,
-    //     ignore: ['**/.tsx*', '**/*.{tsx, png, jsx, js, jpg, webp}'],
-    //   },
-    // },
+    {
+      resolve: `gatsby-plugin-page-creator`,
+      options: {
+        path: `${__dirname}/src/articles`,
+        ignore: ['**/.tsx*', '**/*.{tsx, png, jsx, js, jpg, webp}'],
+      },
+    },
     {
       resolve: `gatsby-plugin-google-fonts`,
       options: {

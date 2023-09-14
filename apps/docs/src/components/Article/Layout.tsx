@@ -7,8 +7,7 @@ import { mdxTransforms } from './mdxTransforms'
 import { Navbar } from './Navbar'
 import { Article } from './Article'
 import { React, Theme, variantProvider } from '@/app'
-import { Icon,  Touchable, View, Text } from '@/components'
-import { Header } from '../Header'
+import { Icon,  Touchable, View, Text, Header } from '@/components'
 import { SearchBar } from './SearchBar'
 import { capitalize, useComponentStyle, useMemo } from '@codeleap/common'
 
@@ -51,16 +50,26 @@ const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
   },
 }))
 
-function ArticlePage({ children, pageContext }) {
+function ArticlePage({ children, pageContext, ...rest }) {
+  console.log({
+    ...rest,
+    pageContext,
+    children
+  })
   const { title } = pageContext.frontmatter
-  // const { allMdx } = useStaticQuery(query)
+  // const { allMdx } = useStaticQuery(pageQuery)
 
-  // const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
+  return <main>
+    <h1>{title} - Fuck</h1>
+    {children}
+  </main>
+
+  const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
 
   const isMobile = Theme.hooks.down('mid')
   const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
 
-  return null
+  // return null
 
   return <Page title={title} header={
     <Header >
@@ -101,19 +110,32 @@ const style = variantProvider.createComponentStyle(theme => ({
     ...theme.presets.fullWidth
   }
 }), true)
-export default ArticlePage
 
 // const query = graphql`
 //   query {
 //     allMdx(filter: {}) {
 //       edges {
 //         node {
-//           fileAbsolutePath
 //           frontmatter {
 //             title
+//           }
+//           internal {
+//             contentFilePath
 //           }
 //         }
 //       }
 //     }
 // }
 // `
+
+// export const pageQuery = graphql`
+//   query PostTemplate($id: String!) {
+//     mdx(id: { eq: $id }) {
+//       frontmatter {
+//         title
+//       }
+//     }
+//   }
+// `
+
+export default ArticlePage
