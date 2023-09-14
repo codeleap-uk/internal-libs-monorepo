@@ -34,7 +34,7 @@ export function useMdx(allMdx, pageContext) {
     let pages = {}
     const flatData = []
     allMdx.edges.forEach(edge => {
-      const properties = inferProperties(edge.node.fileAbsolutePath)
+      const properties = inferProperties(edge.node.internal.contentFilePath)
       const frontMatter = edge.node.frontmatter
 
       const itemData:MdxMetadata = {

@@ -55,31 +55,16 @@ function ArticlePage(props) {
     props
   })
 
-  // const post = data.mdx;
+  const { pageContext } = props
 
-  return (
-    <div>
-      'HELOO'
-      {/* <h1>{post.frontmatter.title}</h1>
-      <p>{post.frontmatter.date}</p>
-      <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
-    </div>
-  );
-
+  const allMdx = pageContext.allMdx
+  const body = pageContext.body
   const { title } = pageContext.frontmatter
-  const { allMdx } = useStaticQuery(query)
-
-  return <main>
-    <h1>{title} - Fuck</h1>
-    {children}
-  </main>
 
   const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
 
   const isMobile = Theme.hooks.down('mid')
   const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
-
-  // return null
 
   return <Page title={title} header={
     <Header >
@@ -90,9 +75,12 @@ function ArticlePage(props) {
   }} variants={['mainContent']}>
     <Navbar pages={pages} title={navTitle}/>
     {isMobile && <SearchBar items={flatData}/>}
+
+    
+
     <Article title={title}>
       <MDXProvider components={mdxTransforms}>
-        {children}
+        {body}
         {
           (next || previous) && <>
             <View  css={style.bottomSeparator} />
@@ -109,7 +97,7 @@ function ArticlePage(props) {
         }
       </MDXProvider>
     </Article>
-    <SectionMap content={children}/>
+    {/* <SectionMap content={body}/> */}
 
   </Page>
 
@@ -127,18 +115,9 @@ export const query = graphql`
       frontmatter {
         title
       }
+      body
     }
   }
 `;
-
-// export const pageQuery = graphql`
-//   query PostTemplate($id: String!) {
-//     mdx(id: { eq: $id }) {
-//       frontmatter {
-//         title
-//       }
-//     }
-//   }
-// `
 
 export default ArticlePage
