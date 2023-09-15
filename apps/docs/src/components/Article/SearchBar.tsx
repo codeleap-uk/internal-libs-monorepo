@@ -116,7 +116,7 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
 
 const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
-    ...theme.spacing.marginRight(1),
+    ...theme.spacing.marginRight(2),
     ...theme.presets.relative,
     gap: 16,
     [theme.media.down('mid')]: {

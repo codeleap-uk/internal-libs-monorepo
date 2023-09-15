@@ -26,7 +26,7 @@ export const Page: React.FC<PageProps> = (props) => {
     title,
     appendNameToTitle = true,
     header = true,
-    footer = true,
+    footer = false,
     withRouter,
     className,
     contentStyle = {},
@@ -51,7 +51,7 @@ export const Page: React.FC<PageProps> = (props) => {
       {center ? (
         <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>
       ) : (
-        <View style={contentStyle}>
+        <View style={{...contentStyle, position: 'relative'}}>
 
           {content}
         </View>
@@ -63,6 +63,7 @@ export const Page: React.FC<PageProps> = (props) => {
 }
 const componentStyles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
+    position: 'relative',
     minHeight: '100vh',
     width: '100vw',
     maxWidth: '100%',

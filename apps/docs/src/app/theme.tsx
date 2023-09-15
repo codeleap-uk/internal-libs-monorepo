@@ -46,6 +46,11 @@ const light = {
   'caption': '#999999',
   ripple: '#0002',
   transparent: '#FFF0',
+  info: '#00b9f7',
+      danger: '#fc3c5c',
+      warning: '#fcfc41',
+      tip: '#6fb539',
+      note: '#5b5b5a',
 }
 
 const dark = {
@@ -87,6 +92,11 @@ const dark = {
   'caption': '#666666',
   ripple: '#0002',
   transparent: '#FFF0',
+  info: '#00b9f7',
+      danger: '#fc3c5c',
+      warning: '#fcfc41',
+      tip: '#6fb539',
+      note: '#5b5b5a',
 }
 
 const themeObj = validateTheme({

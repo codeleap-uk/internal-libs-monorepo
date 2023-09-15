@@ -50,11 +50,25 @@ export const mdxTransforms = {
   blockquote: ({ children }) => {
     const quoteType = useMemo(() => {
 
-      let elChildren = Array.isArray(children) ? children : children?.props?.children
-      if (!Array.isArray(elChildren)) elChildren = [elChildren]
-      const qt = elChildren?.[0]
+      let elChildren: Array<any> = Array.isArray(children) ? children : children?.props?.children
+      if (!Array.isArray(elChildren)) elChildren = ['', elChildren]
+      let qt = elChildren?.[1]?.props?.children
+
+      if (TypeGuards.isArray(qt)) {
+        for (const quote_content of qt) {
+          if (TypeGuards.isString(quote_content)) {
+            quote_content?.split(' ')?.find(partial_str => {
+              if (!!quoteTypes?.[partial_str.toLocaleLowerCase()]) {
+                qt = partial_str
+              }
+            })
+          }
+        }
+      }
 
       if (TypeGuards.isString(qt)) {
+        
+
         const typeEntry = Object.entries(quoteTypes).find(t => qt.startsWith(t[1]))
 
         if (!typeEntry) {
@@ -83,13 +97,15 @@ export const mdxTransforms = {
       }
     }, [children?.props?.children?.[0]])
 
+    console.log('s', quoteType)
+
     return <View component='blockquote' variants={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
       {
         quoteType?.key && (
-          <Icon name={`docsquote-${quoteType?.key}`} style={blockquoteStyles[quoteType.key + '-icon']}/>
+          <Icon name={`docsquote-${quoteType?.key}`} size={24} style={blockquoteStyles[quoteType.key + '-icon']}/>
         )
       }
-      <Text>
+      <Text style={{ textDecoration: 'none' }}>
 
         {
           quoteType.formattedChildren.map((c, idx, arr) => {

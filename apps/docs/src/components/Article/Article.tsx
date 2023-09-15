@@ -18,25 +18,27 @@ export const Article = ({ children, title = '', source = '', description = '', l
           </View>
           {!!description && <Text variants={['p2', 'color:neutral7']} text={description} />}
 
-          <View variants={['column', 'marginTop:3', 'gap:2']}>
-            {!!source && (
-              <View variants={['gap:4']}>
-                <Text variants={['p4', 'color:primary3']} text={'Source'} />
-                <Link to={source} variants={['noUnderline']} target='_blank'>
-                  <Text variants={['p4', 'color:neutral10']} text={'View source code'} />
-                </Link>
-              </View>
-            )}
+          {(!!source || lib?.includes('@/')) && (
+            <View variants={['column', 'marginTop:3', 'gap:2']}>
+              {!!source && (
+                <View variants={['gap:4']}>
+                  <Text variants={['p4', 'color:primary3']} text={'Source'} />
+                  <Link to={source} variants={['noUnderline']} target='_blank'>
+                    <Text variants={['p4', 'color:neutral10']} text={'View source code'} />
+                  </Link>
+                </View>
+              )}
 
-            {lib?.includes('@/') && (
-              <View variants={['gap:4']}>
-                <Text variants={['p4', 'color:primary3']} text={'Package'} />
-                <Text variants={['p4', 'color:neutral10']} text={lib} />
-              </View>
-            )}
-          </View>
+              {lib?.includes('@') && (
+                <View variants={['gap:4']}>
+                  <Text variants={['p4', 'color:primary3']} text={'Package'} />
+                  <Text variants={['p4', 'color:neutral10']} text={lib} />
+                </View>
+              )}
+            </View>
+          )}
         </View>
-        
+
         <View variants={['column', 'flex', 'alignStart', 'gap:2', 'paddingHorizontal:3', 'paddingTop:2']}>
           {children}
         </View>

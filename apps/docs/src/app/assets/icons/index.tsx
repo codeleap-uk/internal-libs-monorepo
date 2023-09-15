@@ -10,6 +10,14 @@ import { IoMdEye, IoMdEyeOff } from 'react-icons/io'
 import PlaceholderSelect from './placeholder_select.png'
 import PlaceholderNoItemsSelect from './placeholderNoItems_select.png'
 
+import {
+  MdInfo,
+  MdWarning,
+  MdDangerous,
+  MdLightbulbOutline,
+  MdNotes,
+} from 'react-icons/md'
+
 export const iconImages = {
   'apple': require('./apple.svg'),
   'archive': require('./archive.svg'),
@@ -73,6 +81,12 @@ export const iconImages = {
   'input-visiblity:visible': IoMdEye,
   'input-visiblity:hidden': IoMdEyeOff,
   'linkedin': FaLinkedin,
+
+  'docsquote-info': MdInfo,
+  'docsquote-warning': MdWarning,
+  'docsquote-danger': MdDangerous,
+  'docsquote-tip': MdLightbulbOutline,
+  'docsquote-note': MdNotes,
 }
 
 const applyFill = {

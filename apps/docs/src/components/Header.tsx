@@ -134,7 +134,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     ...theme.presets.alignCenter,
   },
   floatingHeader: {
-    position: 'sticky',
+    position: 'static',
     zIndex: 2,
     top: 0,
     left: 0,

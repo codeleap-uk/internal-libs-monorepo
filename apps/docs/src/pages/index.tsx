@@ -74,7 +74,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     ...theme.spacing.gap(7),
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    ...theme.spacing.paddingTop(7),
+    ...theme.spacing.paddingVertical(7),
   },
   link: {
     maxWidth: 250,
