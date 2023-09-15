@@ -2,42 +2,97 @@ import { graphql, navigate } from 'gatsby'
 import { MDXProvider } from '@mdx-js/react'
 import { useMdx } from './utils'
 import { Page } from '../Page'
-// import { SectionMap } from './SectionMap'
+import { SectionMap } from './SectionMap'
 import { mdxTransforms } from './mdxTransforms'
 import { Navbar } from './Navbar'
 import { Article } from './Article'
 import { Theme, variantProvider } from '@/app'
-import { Icon,  Touchable, View, Text, Header } from '@/components'
+import { Button, View, Text } from '@/components'
 import { SearchBar } from './SearchBar'
-import { capitalize, useComponentStyle } from '@codeleap/common'
+import { capitalize } from '@codeleap/common'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
-  const style = useComponentStyle(PageNavButtonStyles)
   const onPress = () => navigate('/' + data.path)
-  return <Touchable variants={['padding:1', 'gap:1', 'alignCenter']} onPress={onPress} css={style.wrapper}>
-    {type === 'previous' && <Icon name='arrowBack' variants={['marginRight:auto']} style={style.icon}/>}
-    <View variants={['column']}>
-      <Text text={capitalize(type)} variants={['h6']} css={style.text}/>
-      <Text text={data.title} css={style.text}/>
-    </View>
-    {type === 'next' && <Icon name='arrowForward' variants={['marginLeft:auto']} style={style.icon}/>}
 
-  </Touchable>
+  return (
+    <Button variants={['padding:1', 'gap:1', 'alignStart', 'column']} onPress={onPress}>
+      <Text text={capitalize(type)} variants={['h6']} css={styles.text} />
+      <Text text={data.title} css={styles.text} />
+    </Button>
+  )
 }
 
-const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
+function ArticlePage(props) {
+  console.log({
+    props
+  })
+
+  const { pageContext, children } = props
+
+  const allMdx = pageContext.allMdx
+  const { title } = pageContext.frontmatter
+
+  const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
+
+  const isMobile = Theme.hooks.down('mid')
+  const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
+
+  console.log(pages)
+
+  return (
+    <Page
+      title={title}
+      responsiveVariants={{ mid: ['column'] }}
+      center={false}
+      contentStyle={styles.content}
+    >
+      <Navbar pages={pages} title={navTitle} />
+      {/* <SearchBar items={flatData} /> */}
+
+      <Article title={title}>
+        <MDXProvider components={mdxTransforms}>
+          {children}
+
+          {
+            (next || previous) && <>
+              <View variants={['justifySpaceBetween', 'fullWidth']}>
+                {
+                  previous && <PageNavButton data={previous} type='previous' />
+                }
+                {
+                  next && <PageNavButton data={next} type='next' />
+                }
+
+              </View>
+            </>
+          }
+        </MDXProvider>
+      </Article>
+
+      <SectionMap content={children} />
+    </Page>
+  )
+}
+
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     ...theme.border.neutral1(1),
     borderRadius: theme.borderRadius.medium,
     cursor: 'pointer',
     transition: 'border-color 0.2s ease',
+
     '&:hover': {
       borderColor: theme.colors.primary1,
       'svg, p': {
         color: theme.colors.primary1,
       },
-
     },
+  },
+  content: {
+    marginTop: 24,
+    paddingLeft: 24,
+    paddingRight: 24,
+    height: '100%',
   },
   icon: {
     transition: 'color 0.2s ease',
@@ -48,68 +103,6 @@ const PageNavButtonStyles = variantProvider.createComponentStyle((theme) => ({
     color: theme.colors.neutral1,
     transition: 'color 0.2s ease',
   },
-}))
-
-function ArticlePage(props) {
-  console.log({
-    props
-  })
-
-  const { pageContext, pageResources, children } = props
-
-  const allMdx = pageContext.allMdx
-  const body = pageContext.body
-  const { title } = pageContext.frontmatter
-
-  const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
-
-  const isMobile = Theme.hooks.down('mid')
-  const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
-
-  // const Content = require(`../../articles/${pageContext?.pagePath}.mdx`)
-
-  console.log(`../../articles/${pageContext?.pagePath}.mdx`)
-
-  return <Page title={title} header={
-    <Header >
-      {!isMobile && <SearchBar items={flatData}/>}
-    </Header>
-  } responsiveVariants={{
-    mid: ['column'],
-  }} variants={['mainContent']}>
-    <Navbar pages={pages} title={navTitle}/>
-    {isMobile && <SearchBar items={flatData}/>}
-
-    <Article title={title}>
-      <MDXProvider components={mdxTransforms}>
-        {/* {compileMDX({ absolutePath: pageContext?.filePath, 'source': body }, { }, null, { })} */}
-        {children}
-        {
-          (next || previous) && <>
-            <View  css={style.bottomSeparator} />
-            <View variants={['justifySpaceBetween', 'fullWidth']}>
-              {
-                previous && <PageNavButton data={previous} type='previous'/>
-              }
-              {
-                next && <PageNavButton data={next} type='next'/>
-              }
-
-            </View>
-          </>
-        }
-      </MDXProvider>
-    </Article>
-    {/* <SectionMap content={body}/> */}
-
-  </Page>
-
-}
-
-const style = variantProvider.createComponentStyle(theme => ({
-  bottomSeparator: {
-    ...theme.presets.fullWidth
-  }
 }), true)
 
 export const query = graphql`

@@ -1,6 +1,7 @@
 import { variantProvider } from '../theme'
 import { ButtonComposition, ButtonPresets } from '@codeleap/web'
 import { shadeColor } from '@codeleap/common'
+import { assignTextStyle } from './Text'
 
 const createButtonStyle = variantProvider.createVariantFactory<ButtonComposition>()
 
@@ -69,6 +70,44 @@ export const AppButtonStyles = {
       },
     },
   })),
+
+  docItem: createButtonStyle((theme) => ({
+    wrapper: {
+      cursor: 'pointer',
+      border: 'none',
+      outline: 'none',
+      ...theme.presets.row,
+      ...theme.presets.relative,
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.small,
+      transitionProperty: 'background, color, border, filter',
+      transitionDuration: '0.2s',
+      ...theme.presets.alignCenter,
+      ...theme.presets.justifyStart,
+      width: 'auto',
+      ...theme.spacing.padding(0),
+      ...theme.spacing.paddingHorizontal(0),
+      ...theme.spacing.gap(1),
+      
+      '&:hover': {
+        backgroundColor: theme.colors.background,
+      },
+    },
+    text: {
+      width: '100%',
+      textAlign: 'start',
+      color: theme.colors.neutral10,
+      ...assignTextStyle('p2')(theme).text,
+      fontWeight: 700,
+    },
+  })),
+
+  hiddenIcon: createButtonStyle((theme) => ({
+    icon: {
+      opacity: 0,
+    }
+  })),
+
   large: createButtonStyle((theme) => ({
     wrapper: {
       height: theme.values.itemHeight.default,

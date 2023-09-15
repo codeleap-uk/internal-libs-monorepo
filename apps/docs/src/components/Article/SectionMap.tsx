@@ -12,11 +12,13 @@ type Node = {
 }
 
 function mapSections(content) {
+  
   const nodes:Node[] = []
   if (!Array.isArray(content)) {
     content = [content]
   }
   content.forEach(({ props }) => {
+    console.log(props)
     const lastNode = nodes[nodes.length - 1]
     if (headings.includes(props?.mdxType)) {
       const level = Number(props.mdxType.replace('h', ''))
@@ -62,6 +64,7 @@ const SectionText = (props:{node:Node}) => {
 
 export const SectionMap = ({ content }) => {
   const contentSections = mapSections(content)
+  console.log(contentSections)
   const styles = useComponentStyle(componentStyles)
   return <View css={styles.wrapper}>
     <Text variants={['h4', 'primary']} text={'Table of contents'}/>
@@ -79,11 +82,15 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     bottom: 0,
     top: theme.values.headerHeight,
     maxHeight: theme.values.height - theme.values.headerHeight,
-    ...theme.spacing.padding(2),
+    ...theme.spacing.paddingLeft(3),
+    ...theme.spacing.paddingRight(3),
     ...theme.presets.alignSelfStretch,
     ...theme.presets.column,
     ...theme.spacing.gap(2),
     flexBasis: '25%',
+
+    borderLeft: `1px solid ${theme.colors.neutral3}`,
+
     [theme.media.down('mid')]: {
       position: 'static',
       order: -1,

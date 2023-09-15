@@ -84,16 +84,19 @@ const DrawerMenu = ({ isMobile }) => {
   </>
 }
 
-export const Header = () => {
+export const Header = ({ center }) => {
   const mediaQuery = Theme.media.down(BREAKPOINT)
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
+  const Wrapper = center ? CenterWrapper : View
+
   return (
-    <CenterWrapper
+    <Wrapper
       styles={{
         innerWrapper: styles.wrapper,
         wrapper: styles.floatingHeader as any,
       }}
+      style={styles.floatingHeader}
       variants={['paddingVertical:2']}
     >
       <Link to={'/'} css={styles.logoWrapper}>
@@ -109,7 +112,7 @@ export const Header = () => {
           </View>
         )
       }
-    </CenterWrapper>
+    </Wrapper>
   )
 }
 
@@ -127,8 +130,13 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: theme.colors.background + '55',
+    backgroundColor: theme.colors.background,
     backdropFilter: 'blur(4px)',
+
+    paddingLeft: 40,
+    paddingRight: 40,
+
+    borderBottom: `1px solid ${theme.colors.neutral3}`
   },
   logo: {
     width: logoSize * 4,

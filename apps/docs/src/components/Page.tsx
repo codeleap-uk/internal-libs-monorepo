@@ -28,6 +28,7 @@ export const Page: React.FC<PageProps> = (props) => {
     footer = true,
     withRouter,
     className,
+    contentStyle = {},
     ...centerWrapperProps
   } = props
 
@@ -47,7 +48,7 @@ export const Page: React.FC<PageProps> = (props) => {
       {center ? (
         <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>
       ) : (
-        <View>
+        <View style={contentStyle}>
 
           {content}
         </View>
