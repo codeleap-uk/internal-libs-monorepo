@@ -88,6 +88,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     ...theme.presets.column,
     ...theme.spacing.gap(2),
     flexBasis: '25%',
+    paddingTop: 24,
 
     borderLeft: `1px solid ${theme.colors.neutral3}`,
 

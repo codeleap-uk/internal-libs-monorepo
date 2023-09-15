@@ -1,9 +1,3 @@
-export * from './AppStatus'
-export * from './Logo'
-export * from './Link'
-export * from './Header'
-export * from './Page'
-
 import { React, variantProvider } from '@/app'
 import { IconPlaceholder } from '@codeleap/common'
 import * as LibComponents from '@codeleap/web'
@@ -125,7 +119,6 @@ export const {
   Grid,
 } = allComponents
 
-export * from './AppStatus'
 export * from './Header'
 export * from './Footer'
 export * from './Page'

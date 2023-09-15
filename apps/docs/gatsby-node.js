@@ -38,6 +38,9 @@ exports.createPages = async ({ actions, graphql }) => {
             id
             frontmatter {
               title
+              description
+              source
+              tag
             }
             internal {
               contentFilePath
@@ -74,6 +77,9 @@ exports.createPages = async ({ actions, graphql }) => {
         frontmatter: node.frontmatter,
         id: node.id,
         title: node.frontmatter.title,
+        description: node.frontmatter.description,
+        source: node.frontmatter.source,
+        tag: node.frontmatter.tag,
         noder: node,
         pagePath: pageInfo.path,
         module: pageInfo.module,

@@ -7,5 +7,8 @@ export const effects = {
   },
   heavy: {
     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.35)'
-  }
+  },
+  thin: {
+    boxShadow: '0px 8px 16px rgba(153, 153, 153, 0.1)'
+  },
 }

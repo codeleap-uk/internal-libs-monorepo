@@ -8,7 +8,7 @@ const enableSentry = !IsDevEnv
 const ENV = IsDevEnv ? 'development' : 'production'
 
 let _Settings = createSettings({
-  AppName: 'Codeleap UI',
+  AppName: 'CodeLeap UI',
   CompanyName: 'Example Ltd.',
   Description: 'This is a template',
   Environment: {
