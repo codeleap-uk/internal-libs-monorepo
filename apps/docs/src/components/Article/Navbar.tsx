@@ -125,8 +125,9 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   // },
   sidebar: {
     height: '100%',
-    minWidth: 250,
-    maxWidth: 250,
+    position: 'static',
+    minWidth: 280,
+    maxWidth: 280,
     minHeight: '90svh',
     borderRight: `1px solid ${theme.colors.neutral3}`,
     paddingTop: 24,

@@ -28,10 +28,12 @@ export const Article = ({ children, title = '', source = '', description = '', l
               </View>
             )}
 
-            <View variants={['gap:4']}>
-              <Text variants={['p4', 'color:primary3']} text={'Package'} />
-              <Text variants={['p4', 'color:neutral10']} text={lib} />
-            </View>
+            {lib?.includes('@/') && (
+              <View variants={['gap:4']}>
+                <Text variants={['p4', 'color:primary3']} text={'Package'} />
+                <Text variants={['p4', 'color:neutral10']} text={lib} />
+              </View>
+            )}
           </View>
         </View>
         

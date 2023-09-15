@@ -143,6 +143,12 @@
         "licenseUrl": "https://github.com:react-icons/react-icons/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "react-particles@2.12.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/tsparticles/react",
+        "licenseUrl": "https://github.com/tsparticles/react",
+        "parents": "codeleap-docs"
+    },
     "react-photo-view@1.2.3": {
         "licenses": "Apache-2.0",
         "repository": "https://github.com/MinJieLiu/react-photo-view",

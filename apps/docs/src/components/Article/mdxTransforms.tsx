@@ -6,6 +6,7 @@ import { Image } from '../Image'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
 import {PhotoView} from 'react-photo-view'
+import CodeThemes from '../../app/stylesheets/Code'
 
 const quoteTypes = {
   info: 'INFO',
@@ -147,8 +148,10 @@ export const mdxTransforms = {
 
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => {
-          return <View variants={['column', 'relative', 'fullWidth', 'codeWrapper']} onHover={setHover} css={{
+          return <View variants={['column', 'relative', 'fullWidth', 'padding:2', 'border-radius:small']} onHover={setHover} css={{
             backgroundColor: style.backgroundColor,
+            overflowX: 'scroll',
+            maxWidth: 'calc(100vw - 620px)',
           }}>
             {/* <Button icon='copy' className='code_copy_btn' variants={['icon']} css={{
               position: 'sticky',

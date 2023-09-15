@@ -93,6 +93,9 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     flexBasis: '25%',
     paddingTop: 24,
 
+    minWidth: 280,
+    maxWidth: 280,
+
     borderLeft: `1px solid ${theme.colors.neutral3}`,
 
     [theme.media.down('mid')]: {

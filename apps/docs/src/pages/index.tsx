@@ -1,6 +1,7 @@
 import React from 'react'
-import { Text, View, Page, Link } from '@/components'
+import { Text, View, Page, Link, Button, Icon } from '@/components'
 import { Settings, variantProvider } from '@/app'
+import { Particles } from '../components/Particles'
 
 const packages = [
   {
@@ -23,44 +24,60 @@ const packages = [
 
 export default () => {
   const renderItem = React.useCallback((item) => (
-    <Link to={item?.url} variants={['column', 'padding:4', 'flex', 'gap:2']} style={styles.link}>
-      <Text text={item?.name} variants={['h2']} />
-      <Text text={item?.description} />
+    <Link to={item?.url + '/index'} variants={['noUnderline']}>
+      <View style={styles.link}>
+        <View variants={['backgroundColor:primary3', 'padding:1', 'border-radius:small']}>
+          <Icon debugName='' name='layers' size={24} />
+        </View>
+        <Text text={item?.name} variants={['h5']} />
+        <Text text={item?.description} variants={['p4']} />
+      </View>
     </Link>
   ), [])
 
-  return (
-    <Page title='Home'>
+  return <>
+    <Page title='Home' headerCenter={false}>
       <View style={styles.wrapper}>
         <View variants={['column', 'gap:2']}>
-          <Text text={Settings.AppName} variants={['h1']} />
-          <Text text='Build your next website even faster with premade responsive components designed and built by Codeleap maintainers. All components are free forever for everyone.' variants={['p1']} />
+          <Text text={'A full featured library of React for mobile and web platforms'} variants={['h1']} style={styles.title} />
+          <Text text='Create complete web and mobile applications with a single code with various hooks and features to create your project 2x faster' variants={['h3']} />
         </View>
 
-        <View variants={['row', 'gap:2', 'justifySpaceBetween', 'alignCenter']}>
+        <View variants={['row', 'gap:4']}>
           {packages?.map(renderItem)}
+        </View>
+
+        <View variants={['row', 'gap:2']}>
+          <Button variants={['padding:2', 'w:200px']} text='Get started' />
+          <Button variants={['padding:2', 'w:200px']} text='GitHub' />
         </View>
       </View>
     </Page>
-  )
+
+    <Particles id='particles-home' />
+  </>
 }
 
 const styles = variantProvider.createComponentStyle((theme) => ({
+  title: {
+    fontSize: 64,
+    fontWeight: 'bold'
+  },
   wrapper: {
     width: '100vw',
     minHeight: '80vh',
     ...theme.presets.column,
-    ...theme.spacing.gap(4),
+    ...theme.spacing.gap(6),
     alignItems: 'flex-start',
-    justifyContent: 'center'
+    justifyContent: 'flex-start',
+    ...theme.spacing.paddingTop(6),
   },
   link: {
-    background: theme.colors.primary2,
-    borderRadius: theme.borderRadius.medium,
-    height: '100%',
-    flex: 1,
+    maxWidth: 250,
+    ...theme.presets.column,
+    ...theme.spacing.gap(1.5),
     textDecoration: 'none',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-  }
+  },
 }), true)

@@ -139,7 +139,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.transparent,
     backdropFilter: 'blur(4px)',
 
     paddingLeft: 40,

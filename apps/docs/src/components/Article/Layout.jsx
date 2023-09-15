@@ -50,7 +50,7 @@ function ArticlePage(props) {
 
   const Footer = () => {
     return (
-      <View variants={['justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex']}>
+      <View variants={['justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex', 'gap:2', 'marginVertical:2']}>
         <PageNavButton data={previous} type='previous' />
         <PageNavButton data={next} type='next' />
       </View>
