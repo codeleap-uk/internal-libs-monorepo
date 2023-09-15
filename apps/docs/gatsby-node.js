@@ -1,6 +1,7 @@
 const path = require('path');
 const slugify = require('slugify');
 const fs = require('fs');
+const template = path.resolve(`./src/components/Article/Layout.jsx`)
 
 function inferProperties(absolutePath) {
   let parts = absolutePath.split('/')
@@ -34,6 +35,7 @@ exports.createPages = async ({ actions, graphql }) => {
       allMdx {
         edges {
           node {
+            id
             frontmatter {
               title
             }
@@ -66,10 +68,11 @@ exports.createPages = async ({ actions, graphql }) => {
 
     createPage({
       path: pageInfo.path, // Use o slug como o caminho da página
-      component: path.resolve('./src/components/Article/Layout.tsx'),
+      // component: path.resolve('./src/components/Article/Layout.tsx'),
+      component: `${template}?__contentFilePath=${node.internal.contentFilePath}`,
       context: {
         frontmatter: node.frontmatter,
-        id: node.frontmatter.title,
+        id: node.id,
         title: node.frontmatter.title,
         noder: node,
         pagePath: pageInfo.path,

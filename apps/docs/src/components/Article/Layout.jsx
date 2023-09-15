@@ -1,16 +1,15 @@
-import { graphql, navigate, useStaticQuery } from 'gatsby'
+import { graphql, navigate } from 'gatsby'
 import { MDXProvider } from '@mdx-js/react'
 import { useMdx } from './utils'
 import { Page } from '../Page'
-import { SectionMap } from './SectionMap'
+// import { SectionMap } from './SectionMap'
 import { mdxTransforms } from './mdxTransforms'
 import { Navbar } from './Navbar'
 import { Article } from './Article'
-import { React, Theme, variantProvider } from '@/app'
+import { Theme, variantProvider } from '@/app'
 import { Icon,  Touchable, View, Text, Header } from '@/components'
 import { SearchBar } from './SearchBar'
-import { capitalize, useComponentStyle, useMemo } from '@codeleap/common'
-import MDX from '../../articles/web/components/button.mdx'
+import { capitalize, useComponentStyle } from '@codeleap/common'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
   const style = useComponentStyle(PageNavButtonStyles)
@@ -114,14 +113,13 @@ const style = variantProvider.createComponentStyle(theme => ({
 }), true)
 
 export const query = graphql`
-  query ($id: String) {
+  query($id: String!) {
     mdx(id: { eq: $id }) {
       frontmatter {
         title
       }
-      body
     }
   }
-`;
+`
 
 export default ArticlePage
