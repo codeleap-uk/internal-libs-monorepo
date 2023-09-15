@@ -2,6 +2,7 @@ import React from 'react'
 import { Text, View, Page, Link, Button, Icon } from '@/components'
 import { Settings, variantProvider } from '@/app'
 import { Particles } from '../components/Particles'
+import { navigate } from 'gatsby'
 
 const packages = [
   {
@@ -48,13 +49,16 @@ export default () => {
         </View>
 
         <View variants={['row', 'gap:2']}>
-          <Button variants={['padding:2', 'w:200px']} text='Get started' />
-          <Button variants={['padding:2', 'w:200px']} text='GitHub' />
+          <Button variants={['padding:2', 'w:200px']} text='Get started' onPress={() => navigate('/concepts/index/')} />
+          
+          <Link variants={['noUnderline']} to='https://github.com/codeleap-uk/internal-libs-monorepo' target='_blank'>
+            <Button variants={['padding:2', 'w:200px']} text='GitHub' />
+          </Link>
         </View>
       </View>
     </Page>
 
-    <Particles id='particles-home' />
+    <Particles id='particles-home' opacity={0.2} />
   </>
 }
 
@@ -67,10 +71,10 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     width: '100vw',
     minHeight: '80vh',
     ...theme.presets.column,
-    ...theme.spacing.gap(6),
+    ...theme.spacing.gap(7),
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
-    ...theme.spacing.paddingTop(6),
+    ...theme.spacing.paddingTop(7),
   },
   link: {
     maxWidth: 250,
