@@ -10,6 +10,7 @@ import { React, Theme, variantProvider } from '@/app'
 import { Icon,  Touchable, View, Text, Header } from '@/components'
 import { SearchBar } from './SearchBar'
 import { capitalize, useComponentStyle, useMemo } from '@codeleap/common'
+import MDX from '../../articles/web/components/button.mdx'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
   const style = useComponentStyle(PageNavButtonStyles)
@@ -55,7 +56,7 @@ function ArticlePage(props) {
     props
   })
 
-  const { pageContext } = props
+  const { pageContext, pageResources, children } = props
 
   const allMdx = pageContext.allMdx
   const body = pageContext.body
@@ -65,6 +66,10 @@ function ArticlePage(props) {
 
   const isMobile = Theme.hooks.down('mid')
   const navTitle = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
+
+  // const Content = require(`../../articles/${pageContext?.pagePath}.mdx`)
+
+  console.log(`../../articles/${pageContext?.pagePath}.mdx`)
 
   return <Page title={title} header={
     <Header >
@@ -76,11 +81,10 @@ function ArticlePage(props) {
     <Navbar pages={pages} title={navTitle}/>
     {isMobile && <SearchBar items={flatData}/>}
 
-    
-
     <Article title={title}>
       <MDXProvider components={mdxTransforms}>
-        {body}
+        {/* {compileMDX({ absolutePath: pageContext?.filePath, 'source': body }, { }, null, { })} */}
+        {children}
         {
           (next || previous) && <>
             <View  css={style.bottomSeparator} />

@@ -81,6 +81,7 @@ exports.createPages = async ({ actions, graphql }) => {
         allMdx: result.data.allMdx,
         mdx: node.body,
         body: node.body,
+        mdxFilePath: filepath,
       },
     });
   });
