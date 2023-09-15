@@ -45,7 +45,7 @@ const Category = ({ name, items, location }) => {
   }, [selected])
 
   return (
-    <View variants={['column', 'fullWidth']}>
+    <View variants={['column', 'fullWidth', 'gap:0.5']}>
       <Button
         text={name}
         onPress={toggle}
@@ -65,7 +65,7 @@ const Category = ({ name, items, location }) => {
   )
 }
 
-export const Navbar = ({ pages, title, location }: NavbarProps) => {
+export const Navbar = ({ pages, title, location, children }: NavbarProps) => {
   const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
 
   const isMobile = Theme.hooks.down('mid')
@@ -81,7 +81,7 @@ export const Navbar = ({ pages, title, location }: NavbarProps) => {
     </>
   )
 
-  return <View variants={['column']} style={styles.sidebar}>
+  return <View variants={['column', 'gap:0.5']} style={styles.sidebar}>
     {/* <Button variants={['circle']} icon='chevronLeft' styles={{
       icon: {
         transform: `rotate(${isDrawerOpen ? 0 : 180}deg)`,
@@ -125,6 +125,8 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   // },
   sidebar: {
     height: '100%',
+    minWidth: 250,
+    maxWidth: 250,
     minHeight: '90svh',
     borderRight: `1px solid ${theme.colors.neutral3}`,
     paddingTop: 24,

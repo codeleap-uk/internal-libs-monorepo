@@ -1,6 +1,6 @@
 import { React, variantProvider } from '@/app'
 import { useComponentStyle } from '@codeleap/common'
-import { View, Text } from '@/components'
+import { View, Text, Icon } from '@/components'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
 const headings = ['h1', 'h2'] as const
@@ -67,7 +67,10 @@ export const SectionMap = ({ content }) => {
   console.log(contentSections)
   const styles = useComponentStyle(componentStyles)
   return <View css={styles.wrapper}>
-    <Text variants={['h4', 'primary']} text={'Table of contents'}/>
+    <View variants={['alignCenter', 'gap:2']}>
+      <Icon name='layers' size={20} />
+      <Text variants={['h4', 'primary']} text={'Table of contents'}/>
+    </View>
     {
       contentSections.map((node,idx)=> <SectionText node={node} key={idx}/>)
     }

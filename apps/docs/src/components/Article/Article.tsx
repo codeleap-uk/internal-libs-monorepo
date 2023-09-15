@@ -7,7 +7,7 @@ export const Article = ({ children, title = '', source = '', description = '', l
   return (
     <PhotoProvider>
       <View css={styles.wrapper}>
-        <View variants={['column', 'padding:4', 'gap:1']} style={{ background: '#f8f8f8' }}>
+        <View variants={['column', 'padding:4', 'gap:1', 'backgroundColor:body']}>
           <View variants={['row', 'center', 'justifyStart', 'gap:2']}>
             <Text variants={['h1', 'bold']} text={title} />
             {!!tag && (
@@ -16,7 +16,7 @@ export const Article = ({ children, title = '', source = '', description = '', l
               </View>
             )}
           </View>
-          {!!description && <Text variants={['p2']} text={description} />}
+          {!!description && <Text variants={['p2', 'color:neutral7']} text={description} />}
 
           <View variants={['column', 'marginTop:3', 'gap:2']}>
             {!!source && (

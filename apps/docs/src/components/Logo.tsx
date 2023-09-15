@@ -33,6 +33,6 @@ export function Logo(props: LogoProps) {
   })
 
   return (
-    <Text variants={['h4', 'bold']} text={Settings.AppName} style={variantStyles.image} />
+    <Text variants={['h4', 'bold', 'color:neutral10']} text={Settings.AppName} style={variantStyles.image} />
   )
 }

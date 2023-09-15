@@ -16,7 +16,7 @@ export function assignTextStyle(name: Fonts, add = {}) {
 
     return {
       text: {
-        color: name.startsWith('h') ? theme.colors.headlines : theme.colors.body,
+        color: name.startsWith('h') ? theme.colors.headlines : theme.colors.neutral8,
         fontWeight,
         fontFamily,
         fontSize,

@@ -2,6 +2,7 @@ import { variantProvider, Theme, assignTextStyle, React } from '@/app'
 import { View, CenterWrapper, Drawer, Logo, Link, ActionIcon, Text } from '@/components'
 import { onUpdate, useState } from '@codeleap/common'
 import { useMediaQuery } from '@codeleap/web'
+import { useLocation } from '@reach/router'
 
 const navItems = [
   {
@@ -16,23 +17,29 @@ const navItems = [
     name: 'Mobile',
     url: '/mobile',
   },
-
+  {
+    name: 'Concepts',
+    url: '/concepts',
+  },
 ]
 
 const BREAKPOINT = 'mid'
 
 const NavContent = () => {
+  const location = useLocation()
+
   return (
-    <View variants={['gap:4', 'center']} responsiveVariants={{ [BREAKPOINT]: ['column', 'gap:2', 'alignStart', 'paddingVertical:3'] }}>
+    <View variants={['gap:1', 'center']} responsiveVariants={{ [BREAKPOINT]: ['column', 'gap:2', 'alignStart', 'paddingVertical:3'] }}>
       {
         navItems.map(i => {
+          const isSelected = location?.pathname?.includes(i?.url)
           return (
             <Link
               key={i.url}
               text={i.name}
-              to={i.url}
+              to={i.url + '/index'}
               variants={['noUnderline']}
-              css={[styles.navItem]}
+              css={[styles.navItem, isSelected && styles['navItem:selected']]}
             />
           )
         })
@@ -84,7 +91,7 @@ const DrawerMenu = ({ isMobile }) => {
   </>
 }
 
-export const Header = ({ center }) => {
+export const Header = ({ center, searchBar = null }) => {
   const mediaQuery = Theme.media.down(BREAKPOINT)
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
@@ -102,6 +109,8 @@ export const Header = ({ center }) => {
       <Link to={'/'} css={styles.logoWrapper}>
         <Logo style={styles.logo} />
       </Link>
+
+      {searchBar}
 
       {
         isMobile ? (
@@ -136,7 +145,9 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     paddingLeft: 40,
     paddingRight: 40,
 
-    borderBottom: `1px solid ${theme.colors.neutral3}`
+    borderBottom: `1px solid ${theme.colors.neutral3}`,
+    // justifyContent: 'center',
+    alignItems: 'center'
   },
   logo: {
     width: logoSize * 4,
@@ -194,11 +205,14 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     textOverflow: 'ellipsis',
   },
   navItem: {
-    ...assignTextStyle('h4')(theme).text,
+    ...assignTextStyle('h5')(theme).text,
     ...theme.presets.textCenter,
     color: theme.colors.neutral9,
     fontWeight: '600',
     textDecoration: 'none',
+    ...theme.spacing.paddingHorizontal(2),
+    ...theme.spacing.paddingVertical(0.5),
+    borderRadius: theme.borderRadius.rounded,
 
     [Theme.media.down(BREAKPOINT)]: {
       width: '100%',
@@ -213,6 +227,8 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   },
   'navItem:selected': {
     color: theme.colors.primary3,
+
+    backgroundColor: theme.colors.primary1,
 
     [Theme.media.down(BREAKPOINT)]: {
       backgroundColor: theme.colors.primary1,

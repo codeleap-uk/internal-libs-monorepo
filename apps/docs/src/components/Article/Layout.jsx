@@ -63,9 +63,9 @@ function ArticlePage(props) {
       responsiveVariants={{ mid: ['column'] }}
       center={false}
       contentStyle={styles.content}
+      searchBar={<SearchBar items={flatData} />}
     >
       <Navbar pages={pages} title={lib} location={location} />
-      {/* <SearchBar items={flatData} /> */}
 
       <Article title={title} description={description} source={source} lib={lib} tag={tag}>
         <MDXProvider components={mdxTransforms}>
