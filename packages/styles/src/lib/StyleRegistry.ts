@@ -19,7 +19,7 @@ export class CodeleapStyleRegistry {
     return [
       componentName,
       currentColorScheme,
-      ...variants,
+      ...variants.filter(Boolean),
     ].join('-')
   }
 
@@ -35,16 +35,13 @@ export class CodeleapStyleRegistry {
     if (!stylesheet) {
       throw new Error(`No variants registered for ${componentName}`)
     }
-    console.log('stylesheet', stylesheet)
-    console.log('variants', variants)
+
     const variantStyles = variants.map((variant) => {
       return stylesheet[variant]
     })
-    console.log('variantStyles', variantStyles)
+
     // @ts-ignore
     const mergedComposition = deepmerge({ all: true })(...variantStyles)
-
-    console.log('mergedComposition', mergedComposition)
 
     this.variantStyles[key] = Object.fromEntries(
       Object.entries(mergedComposition).map(([key, value]) => {
@@ -54,8 +51,6 @@ export class CodeleapStyleRegistry {
         ]
       }),
     )
-
-    console.log('this.variantStyles[key]', this.variantStyles[key])
 
     return [this.variantStyles[key], key]
 
@@ -67,7 +62,7 @@ export class CodeleapStyleRegistry {
     })
   }
 
-  styleFor(componentName:string, style: StyleProp) {
+  styleFor<T = unknown>(componentName:string, style: StyleProp<T>): T {
     const isStyleArray = Array.isArray(style)
     const registeredComponent = this.components[componentName]
 
@@ -90,7 +85,7 @@ export class CodeleapStyleRegistry {
 
       return this.mergeStyles(
         [isCompositionStyle ? style : { [registeredComponent.rootElement]: style }],
-        this.hashStyle(style),
+        this.hashStyle(style, []),
       )
     }
 
@@ -98,6 +93,7 @@ export class CodeleapStyleRegistry {
       let variants:string[] = []
       const styles:ICSS[] = []
       let idx = 0
+      const variantKeys:string[] = []
 
       for (const s of style) {
         if (typeof s === 'string') {
@@ -108,6 +104,7 @@ export class CodeleapStyleRegistry {
           if (variants.length > 0) {
             const [computedStyle, key] = this.computeVariantStyle(componentName, variants)
             styles.push(computedStyle)
+            variantKeys.push(key)
 
             variants = []
           }
@@ -117,7 +114,7 @@ export class CodeleapStyleRegistry {
 
         if (idx === style.length - 1 && variants.length > 0) {
           const [computedStyle, key] = this.computeVariantStyle(componentName, variants)
-
+          variantKeys.push(key)
           styles.push(computedStyle)
 
         }
@@ -125,12 +122,12 @@ export class CodeleapStyleRegistry {
         idx++
       }
 
-      return this.mergeStyles(styles, this.hashStyle(style))
+      return this.mergeStyles(styles, this.hashStyle(style, variantKeys))
     }
 
     console.warn('Invalid style prop for ', componentName, style)
 
-    return {}
+    return {} as T
   }
 
   registerVariants(componentName:string, variants: VariantStyleSheet) {
@@ -149,7 +146,7 @@ export class CodeleapStyleRegistry {
     * These should be overriden by the end-user to support
     * custom style merging logic, such as StyleSheet.flatten
     */
-  mergeStyles(styles: ICSS[], key: string) {
+  mergeStyles<T>(styles: ICSS[], key: string) : T {
     throw new Error('mergeStyles: Not implemented')
   }
 
@@ -157,8 +154,12 @@ export class CodeleapStyleRegistry {
     throw new Error('createStyle: Not implemented')
   }
 
-  hashStyle(style: StyleProp):string {
+  hashStyle(style: StyleProp, keys: string[]):string {
     throw new Error('HashStyle: Not implemented')
   }
 
+  wipeCache() {
+    this.variantStyles = {}
+    this.styles = {}
+  }
 }

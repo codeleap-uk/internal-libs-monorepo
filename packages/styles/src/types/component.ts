@@ -1,20 +1,36 @@
+import { AnyRecord, IJSX } from './core'
 import { StyleProp, VariantStyleSheet } from './style'
 
-type PropsWithVariants<Props, VariantStyles, Composition> = Omit<Props, 'style'> & {
-  style?: StyleProp<Composition, keyof VariantStyles>
+export type PropsWithVariants<Props extends AnyRecord, VariantStyles extends AnyRecord> = Omit<Props, 'style'> & {
+  style?: StyleProp<
+    Extract<keyof Props, 'style'> extends never ? VariantStyles[keyof VariantStyles] : (
+      Props['style'] extends StyleProp<infer C> ? C : VariantStyles[keyof VariantStyles]
+    ),
+    keyof VariantStyles
+  >
 }
 
 export type AnyFunction = (...args: any[]) => any
 
-export type StyledComponentProps<Props, VariantStyles, Composition> = PropsWithVariants<Props, VariantStyles, Composition>
+export type StyledComponentProps<Props extends AnyRecord, VariantStyles> = PropsWithVariants<Props, VariantStyles>
 
-export type GenericStyledComponent<T extends AnyFunction, Composition> = T & {
+export type StyledComponent<VariantStyles, Props extends AnyRecord = AnyRecord> = (
+  (props: StyledComponentProps<Props, VariantStyles>) => IJSX
+) & {
   styleRegistryName?: string
-  withVariantTypes?: <VariantStyles extends VariantStyleSheet>(variants: VariantStyles) => (
-    (props: StyledComponentProps<Parameters<T>[0], VariantStyles, Composition>) => ReturnType<T>
-  )
   elements?: string[]
   rootElement?: string
 }
 
-export type AnyStyledComponent = GenericStyledComponent<AnyFunction, any>
+export type GenericStyledComponentAttributes<Props> = {
+  styleRegistryName?: string
+  withVariantTypes?: <VariantStyles extends VariantStyleSheet>(variants: VariantStyles) => StyledComponent<VariantStyles, Props>
+  elements?: string[]
+  rootElement?: string
+}
+
+export type GenericStyledComponent<
+  Props extends AnyRecord
+> = ((props: Props) => IJSX) & GenericStyledComponentAttributes<Props>
+
+export type AnyStyledComponent = GenericStyledComponent<any>

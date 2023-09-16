@@ -31,4 +31,3 @@ export function createStyles<Composition extends Record<any, any> = DefaultStyle
     },
   })
 }
-

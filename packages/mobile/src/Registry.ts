@@ -1,4 +1,4 @@
-import { AnyFunction, CodeleapStyleRegistry, GenericStyledComponent, ICSS, de, deepmerge } from '@codeleap/styles'
+import { AnyFunction, AnyStyledComponent, CodeleapStyleRegistry, GenericStyledComponent, ICSS, deepmerge } from '@codeleap/styles'
 import { ReactQuery } from '@codeleap/common'
 import { StyleSheet } from 'react-native'
 
@@ -14,26 +14,26 @@ export class MobileStyleRegistry extends CodeleapStyleRegistry {
       this.registerComponent(component)
     })
     if (!instance) {
+      // eslint-disable-next-line consistent-this
       instance = this
     }
     return instance
   }
 
-  hashStyle(style: any): string {
-    console.log('hashStyle', style)
-    return ReactQuery.hashQueryKey([style])
+  hashStyle(style: any, keys: string[]): string {
+
+    return ReactQuery.hashQueryKey([...keys, style])
   }
 
   createStyle(css: ICSS): ICSS {
-    console.log('createStyle', css)
+
     return StyleSheet.create({
       a: css,
     }).a
   }
 
-  mergeStyles(styles: ICSS[], key: string): ICSS {
-    console.log('mergeStyles', JSON.stringify(styles), key)
-
+  mergeStyles<T = ICSS>(styles: ICSS[], key: string): T {
+    console.log('mergeStyles', key, typeof key)
     if (!this.styles[key]) {
       const mergedStyles = deepmerge({ all: true })(...styles)
 
@@ -41,14 +41,14 @@ export class MobileStyleRegistry extends CodeleapStyleRegistry {
 
     }
 
-    return this.styles[key]
+    return this.styles[key] as T
   }
 
   static get current() {
     return instance
   }
 
-  static registerComponent(component: GenericStyledComponent<AnyFunction, any>) {
+  static registerComponent(component: AnyStyledComponent) {
     components.push(component)
     if (instance) {
       instance.registerComponent(component)

@@ -1,25 +1,27 @@
+import React, { forwardRef } from 'react'
 import { View } from 'react-native'
-import { GenericStyledComponent, StyleProp, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponent, IJSX, StyleProp, StyledComponentProps } from '@codeleap/styles'
 import { ViewV2Composition } from './styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { PropsOf } from '@codeleap/common'
 
-type ViewV2Props = {
+type ViewV2Props<T extends React.ComponentType = typeof View> = {
+  component?: T
   style?: StyleProp<ViewV2Composition>
-}
+
+} & PropsOf<T>
 
 export * from './styles'
 
-const ViewV2CP = (props: ViewV2Props) => {
+export const ViewV2 = <T extends React.ComponentType = typeof View>(props: ViewV2Props<T>) => {
+  const { style, component: Component = View } = props
 
-  const styles = MobileStyleRegistry.current.styleFor(ViewV2.styleRegistryName, props.style)
-  console.log('styles', styles)
+  const styles = MobileStyleRegistry.current.styleFor(ViewV2.styleRegistryName, style)
 
   return (
-    <View {...props} style={styles.wrapper} />
+    <Component {...props} style={[styles.wrapper]} />
   )
 }
-
-export const ViewV2: GenericStyledComponent<typeof ViewV2CP, ViewV2Composition> = ViewV2CP
 
 ViewV2.styleRegistryName = 'ViewV2'
 
@@ -27,10 +29,12 @@ ViewV2.elements = ['wrapper']
 
 ViewV2.rootElement = 'wrapper'
 
-ViewV2.withVariantTypes = (styles) => {
-  return ViewV2 as (
-    (props: StyledComponentProps<ViewV2Props, typeof styles, ViewV2Composition>) => ReturnType<typeof ViewV2CP>
-  )
+// If this component wasn't polymorphic, we could just do:
+// ViewV2.withVariantTypes = () => ViewV2
+
+ViewV2.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ViewV2 as (<T extends React.ComponentType = typeof View>(props: StyledComponentProps<ViewV2Props<T>, typeof styles>) => IJSX)
 }
 
 MobileStyleRegistry.registerComponent(ViewV2)
+

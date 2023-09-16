@@ -9,3 +9,13 @@ export interface ITheme {
 
 }
 
+export interface IJSX {
+
+}
+export interface IBreakpoints {
+
+}
+
+export type AnyRecord = Record<string, any>
+
+export type Breakpoint = keyof IBreakpoints

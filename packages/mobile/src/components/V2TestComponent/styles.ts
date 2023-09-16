@@ -1,9 +1,7 @@
 import { ICSS } from '@codeleap/styles'
 
 export type ViewV2Composition = {
-  wrapper: ICSS
+  wrapper?: ICSS
+  wrapperSelected?: ICSS
 }
 
-export const ViewV2CompositionCompositionIds = [
-  'wrapper',
-]
