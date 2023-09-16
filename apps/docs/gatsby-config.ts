@@ -84,12 +84,12 @@ const config: GatsbyConfig = {
       options: {
         fonts: [
           {
-            family: 'Karla',
+            family: 'Roboto',
             weights: ['100', '200', '300', '400', '500', '600', '700', '800'],
           },
           {
-            family: 'DMSans',
-            weights: ['400', '600', '700'],
+            family: 'Roboto',
+            weights: ['100', '200', '300', '400', '500', '600', '700', '800'],
           },
         ],
         display: `swap`,

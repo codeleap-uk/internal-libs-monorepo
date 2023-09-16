@@ -46,6 +46,7 @@ exports.createPages = async ({ actions, graphql }) => {
               contentFilePath
             }
             body
+            tableOfContents
           }
         }
       }
@@ -90,6 +91,7 @@ exports.createPages = async ({ actions, graphql }) => {
         allMdx: result.data.allMdx,
         mdx: node.body,
         body: node.body,
+        tableOfContents: node.tableOfContents,
         mdxFilePath: filepath,
       },
     });

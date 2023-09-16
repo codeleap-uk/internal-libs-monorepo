@@ -37,4 +37,34 @@ export const LinkStyles = {
       textDecoration: 'none',
     },
   })),
+  hx: assignTextStyle('hx'),
+  h0: assignTextStyle('h0'),
+  h1: assignTextStyle('h1'),
+  h2: assignTextStyle('h2'),
+  h3: assignTextStyle('h3'),
+  h4: assignTextStyle('h4'),
+  h5: assignTextStyle('h5'),
+  p1: assignTextStyle('p1'),
+  p2: assignTextStyle('p2'),
+  p3: createLinkStyle(theme => ({
+    anchor: {
+      ...assignTextStyle('p3')(theme).text,
+    },
+  })),
+  p4: createLinkStyle(theme => ({
+    anchor: {
+      ...assignTextStyle('p4')(theme).text,
+    },
+  })),
+  p5: assignTextStyle('p5'),
+  primary3: createLinkStyle(theme => ({
+    anchor: {
+      color: theme.colors.primary3
+    },
+  })),
+  primary2: createLinkStyle(theme => ({
+    anchor: {
+      color: theme.colors.primary2
+    },
+  })),
 }

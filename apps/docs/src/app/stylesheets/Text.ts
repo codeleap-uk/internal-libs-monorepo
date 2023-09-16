@@ -168,4 +168,11 @@ export const AppTextStyles = {
       fontWeight: '100',
     },
   })),
+  'ellipsis': createTextStyle(() => ({
+    text: {
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
+  })),
 }

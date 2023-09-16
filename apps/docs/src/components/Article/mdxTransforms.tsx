@@ -40,13 +40,17 @@ const blockquoteStyles = variantProvider.createComponentStyle((theme) => {
   return s
 }, true)
 
+const getSectionId = (content: string) => {
+  return content?.toLocaleLowerCase()?.replaceAll(' ', '-')?.replaceAll('?', '')
+}
+
 export const mdxTransforms = {
-  h1: ({ children }) => <Text variants={['h1']} id={getHeadingId(children)} text={children}/>,
-  h2: ({ children }) => <Text variants={['h2']} id={getHeadingId(children)} text={children}/>,
-  h3: ({ children }) => <Text variants={['h3']} text={children}/>,
+  h1: ({ children }) => <Text variants={['h1']} id={getSectionId(children)} text={children}/>,
+  h2: ({ children }) => <Text variants={['h2']} id={getSectionId(children)} text={children}/>,
+  h3: ({ children }) => <Text variants={['h3']} id={getSectionId(children)} text={children}/>,
   h4: ({ children }) => <Text variants={['h4']} text={children}/>,
   h5: ({ children }) => <Text variants={['h5']} text={children}/>,
-  h6: ({ children }) => <Text variants={['h6']} text={children}/>,
+  h6: ({ children }) => <Text variants={['p1']} text={children}/>,
   blockquote: ({ children }) => {
     const quoteType = useMemo(() => {
 
@@ -96,8 +100,6 @@ export const mdxTransforms = {
         formattedChildren: elChildren,
       }
     }, [children?.props?.children?.[0]])
-
-    console.log('s', quoteType)
 
     return <View component='blockquote' variants={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
       {
@@ -204,12 +206,14 @@ export const mdxTransforms = {
     )
   },
   img: (props) => {
-
+    console.log('Image', props)
     const fullSrc = `/images/${props.src}`
+
+    console.log('Image', fullSrc)
     
     return <>
         <PhotoView src={fullSrc}>
-          <Image source={props.src} alt={props.alt} />
+          <Image source={fullSrc} alt={props.alt} />
           </PhotoView>
         <Text text={props.alt} variants={['textCenter', 'subtle']}/>
       </>
@@ -229,7 +233,7 @@ export const mdxTransforms = {
       return false
     }, [props.href])
 
-    return <Link to={props.href} text={props.children} variants={['primary']} openNewTab={isExternal}/>
+    return <Link to={props.href} text={props.children} variants={['color:primary3', 'noUnderline']} openNewTab={isExternal}/>
   },
 }
 

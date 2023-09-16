@@ -1,83 +1,49 @@
 import { React, variantProvider } from '@/app'
-import { useComponentStyle } from '@codeleap/common'
 import { View, Text, Icon } from '@/components'
+import { useLocation, WindowLocation } from '@reach/router'
 import { Link } from '../Link'
-import { getHeadingId } from './utils'
-const headings = ['h1', 'h2'] as const
 
 type Node = {
-  level: number
-  text: string
-  children?: Node[]
+  title: string
+  url: string
+  items: Node[]
 }
 
-function mapSections(content) {
-  
-  const nodes:Node[] = []
-  if (!Array.isArray(content)) {
-    content = [content]
-  }
-  content.forEach(({ props }) => {
-    console.log(props)
-    const lastNode = nodes[nodes.length - 1]
-    if (headings.includes(props?.mdxType)) {
-      const level = Number(props.mdxType.replace('h', ''))
+const SectionText = (props: { node: Node; subContent?: boolean; pathOrigin: string; location: WindowLocation<any> }) => {
+  const { node, subContent = false, pathOrigin, location } = props
 
-      if (lastNode && level > lastNode?.level) {
-        nodes[nodes.length - 1].children.push({
-          level,
-          text: props.children,
-          children: [],
-        })
-      } else {
-        nodes.push({
-          level,
-          text: props.children,
-          children: [],
-        })
-      }
-    }
-  })
+  const isSelected = location?.href?.includes(node?.url)
 
-  return nodes
-
-}
-
-const SectionText = (props:{node:Node}) => {
-  const { node } = props
-
-  const nodeId = getHeadingId(node.text)
-
-  if (node.level === 1) {
-    return <View variants={['column', 'gap:2']}>
-      <Link variants={['h4']} text={node.text} to={`#${nodeId}`} />
-      {
-        node.children?.map((node,idx) => <SectionText node={node} key={idx} />)
-      }
+  return (
+    <View variants={['column', 'gap:2']}>
+      <Link 
+        variants={['p3', 'noUnderline', subContent && 'marginLeft:1', isSelected && 'primary3']} 
+        text={node?.title} 
+        to={pathOrigin + node?.url} 
+      />
+      {node.items?.map((node, idx) => <SectionText location={location} subContent node={node} key={idx} pathOrigin={pathOrigin} />)}
     </View>
-
-  } else {
-
-    return <Link variants={['h5', 'marginLeft:3']} text={node.text} to={`#${nodeId}`} />
-  }
+  )
 }
 
-export const SectionMap = ({ content }) => {
-  const contentSections = mapSections(content)
-  console.log(contentSections)
-  const styles = useComponentStyle(componentStyles)
-  return <View css={styles.wrapper}>
-    <View variants={['alignCenter', 'gap:2']}>
-      <Icon name='layers' size={20} />
-      <Text variants={['h4', 'primary']} text={'Table of contents'}/>
+export const SectionMap = ({ content = [] }) => {
+  const location = useLocation()
+
+  const pathOrigin = location?.origin + location?.pathname
+
+  return (
+    <View css={styles.wrapper}>
+      <View variants={['alignCenter', 'gap:2']}>
+        <Icon debugName='table content' name='layers' size={20} />
+        <Text variants={['h4', 'primary']} text={'Table of contents'} />
+      </View>
+
+      {content?.map((node, idx) => <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />)}
     </View>
-    {
-      contentSections.map((node,idx)=> <SectionText node={node} key={idx}/>)
-    }
-  </View>
+  )
 }
 
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     backgroundColor: theme.colors.background,
     position: 'sticky',
@@ -105,4 +71,4 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
       minHeight: 'unset',
     },
   },
-}))
+}), true)

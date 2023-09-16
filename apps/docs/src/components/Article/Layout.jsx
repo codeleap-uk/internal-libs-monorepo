@@ -26,7 +26,7 @@ const PageNavButton = ({ data, type = 'previous' }) => {
 
       <View variants={['column', 'fullHeight', 'alignStart', 'gap:1']}>
         <Text text={capitalize(type)} variants={['h5', 'color:primary3']} />
-        <Text text={data?.title ?? 'Not found'} variants={['p2', 'color:neutral7']} />
+        <Text text={data?.title ?? 'Not found'} variants={['p2', 'color:neutral7', 'ellipsis']} />
       </View>
 
       {isNext && <Icon name={'chevron-right'} size={24} color={Theme.colors.light.neutral7} />}
@@ -72,7 +72,7 @@ function ArticlePage(props) {
       searchBar={!isMobile && <SearchBar items={flatData} />}
     >
       <Navbar pages={pages} title={lib} location={location} />
-      {isMobile && <SectionMap content={children} />}
+      {isMobile && <SectionMap content={pageContext?.tableOfContents?.items} />}
 
       <Article title={title} description={description} source={source} lib={lib} tag={tag}>
         <MDXProvider components={mdxTransforms}>
@@ -82,7 +82,7 @@ function ArticlePage(props) {
         <Footer />
       </Article>
 
-      {!isMobile && <SectionMap content={children} />}
+      {!isMobile && <SectionMap content={pageContext?.tableOfContents?.items} />}
     </Page>
   )
 }

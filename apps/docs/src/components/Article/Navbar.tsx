@@ -54,7 +54,7 @@ const Category = ({ name, items, location }) => {
         variants={['docItem']}
         styles={{
           text: {
-            fontWeight: 800
+            fontWeight: 900
           },
           icon: {
             transform: `rotate(${open ? 90 : 0}deg)`,

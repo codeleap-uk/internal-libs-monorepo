@@ -96,7 +96,7 @@ export const AppButtonStyles = {
       textAlign: 'start',
       ...assignTextStyle('p2')(theme).text,
       color: theme.colors.neutral10,
-      fontWeight: 600,
+      fontWeight: 400,
     },
   })),
   'docItem:selected': createButtonStyle((theme) => ({

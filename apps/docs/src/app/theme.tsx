@@ -111,11 +111,11 @@ const themeObj = validateTheme({
   },
   typography: {
     base: {
-      fontFamily: 'Karla',
+      fontFamily: 'Roboto',
       styles: textStyles,
     },
     quotes: {
-      fontFamily: '',
+      fontFamily: 'Roboto',
       styles: textStyles,
     },
   },
