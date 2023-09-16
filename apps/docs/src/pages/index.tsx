@@ -40,19 +40,35 @@ export default () => {
     <Page title='Home' headerCenter={false}>
       <View style={styles.wrapper}>
         <View variants={['column', 'gap:2']}>
-          <Text text={'A full featured library of React for mobile and web platforms'} variants={['h1']} style={styles.title} />
-          <Text text='Create complete web and mobile applications with a single code with various hooks and features to create your project 2x faster' variants={['h3']} />
+          <Text 
+            text={'A full featured library of React for mobile and web platforms'} 
+            variants={['h1']}
+            responsiveVariants={{ mid: ['h1'] }}
+            style={styles.title}
+          />
+          <Text 
+            text='Create complete web and mobile applications with a single code with various hooks and features to create your project 2x faster' 
+            variants={['h3']}
+            responsiveVariants={{ mid: ['p1'] }}
+          />
         </View>
 
-        <View variants={['row', 'gap:4']}>
+        <View variants={['row', 'gap:4']} responsiveVariants={{ mid: ['column'] }}>
           {packages?.map(renderItem)}
         </View>
 
-        <View variants={['row', 'gap:2']}>
-          <Button variants={['padding:2', 'w:200px']} text='Get started' onPress={() => navigate('/concepts/index/')} />
+        <View variants={['row', 'gap:2']} responsiveVariants={{ mid: ['column'] }}>
+          <Button 
+            variants={['padding:2', 'w:200px']}
+            text='Get started' 
+            onPress={() => navigate('/concepts/index/')} 
+          />
           
           <Link variants={['noUnderline']} to='https://github.com/codeleap-uk/internal-libs-monorepo' target='_blank'>
-            <Button variants={['padding:2', 'w:200px']} text='GitHub' />
+            <Button 
+              variants={['padding:2', 'w:200px']}
+              text='GitHub'
+            />
           </Link>
         </View>
       </View>
@@ -83,5 +99,9 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     textDecoration: 'none',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+
+    [theme.media.down('mid')]: {
+      maxWidth: '100%'
+    }
   },
 }), true)

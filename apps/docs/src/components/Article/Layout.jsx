@@ -12,8 +12,6 @@ import { SearchBar } from './SearchBar'
 import { capitalize } from '@codeleap/common'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
-  if (!data) return null
-
   const isNext = type === 'next'
   const onPress = () => navigate('/' + data.path)
 
@@ -21,12 +19,13 @@ const PageNavButton = ({ data, type = 'previous' }) => {
     <Button 
       variants={['alignCenter', 'alignSelfEnd', 'docNavAction']} 
       onPress={onPress}
+      disabled={!data}
     >
       {!isNext && <Icon name={'chevron-left'} size={24} color={Theme.colors.light.neutral7} />}
 
       <View variants={['column', 'fullHeight', 'alignStart', 'gap:1']}>
         <Text text={capitalize(type)} variants={['h5', 'color:primary3']} />
-        <Text text={data.title} variants={['p2', 'color:neutral7']} />
+        <Text text={data?.title ?? 'Not found'} variants={['p2', 'color:neutral7']} />
       </View>
 
       {isNext && <Icon name={'chevron-right'} size={24} color={Theme.colors.light.neutral7} />}
@@ -81,22 +80,10 @@ function ArticlePage(props) {
 }
 
 const styles = variantProvider.createComponentStyle((theme) => ({
-  wrapper: {
-    ...theme.border.neutral1(1),
-    borderRadius: theme.borderRadius.medium,
-    cursor: 'pointer',
-    transition: 'border-color 0.2s ease',
-
-    '&:hover': {
-      borderColor: theme.colors.primary1,
-      'svg, p': {
-        color: theme.colors.primary1,
-      },
-    },
-  },
   content: {
     height: '100%',
     minHeight: '90svh',
+    paddingBottom: 24,
   },
   icon: {
     transition: 'color 0.2s ease',

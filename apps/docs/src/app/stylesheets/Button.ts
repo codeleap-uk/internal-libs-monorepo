@@ -1,6 +1,5 @@
 import { variantProvider } from '../theme'
 import { ButtonComposition, ButtonPresets } from '@codeleap/web'
-import { shadeColor } from '@codeleap/common'
 import { assignTextStyle } from './Text'
 
 const createButtonStyle = variantProvider.createVariantFactory<ButtonComposition>()
@@ -25,12 +24,8 @@ export const AppButtonStyles = {
       '&:hover': {
         backgroundColor: theme.colors.primary4,
       },
-      // '&:active': {
-      //   backgroundColor: theme.colors.primary3,
-      // },
       ...theme.spacing.padding(1),
       ...theme.spacing.paddingHorizontal(2)
-
     },
     text: {
       textAlign: 'center',
@@ -149,5 +144,14 @@ export const AppButtonStyles = {
         ...theme.effects.thin
       },
     },
+    'wrapper:disabled': {
+      border: `1px solid ${theme.colors.neutral2}`,
+      backgroundColor: theme.colors.neutral2,
+
+      '&:hover': {
+        backgroundColor: theme.colors.neutral2,
+        boxShadow: 'unset'
+      },
+    }
   })),
 }
