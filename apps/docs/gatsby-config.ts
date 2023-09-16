@@ -4,14 +4,12 @@ process.env.SITE_URL = process.env.SITE_URL || 'http://localhost:8000/'
 
 const config: GatsbyConfig = {
   siteMetadata: {
-    title: `Codeleap Web Template`,
+    title: `Codeleap Docs`,
     titleTemplate: 'CodeLeap | %s',
-    description:
-      'CodeLeap specialises in design and development of premium mobile & web apps. We are passionate about making beautiful user experiences. Based in London, UK. Get in touch!',
+    description: 'The codeleap documentation',
     url: process.env.SITE_URL,
     siteUrl: process.env.SITE_URL,
-    image: '/images/codeleap-share.png', // Path to your image you placed in the 'static' folder
-    twitterUsername: '@vrgimael',
+    image: '/images/codeleap-share.png',
   },
   graphqlTypegen: true,
   plugins: [
@@ -37,14 +35,9 @@ const config: GatsbyConfig = {
           },],
           rehypePlugins: [],
         },
-        // defaultLayouts: {
-        //   default: require.resolve('./src/components/Article/Layout.tsx'),
-        // },
-
         extensions: ['.mdx', '.md'],
       },
     },
-    // 'gatsby-transformer-remark',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     {
@@ -89,13 +82,6 @@ const config: GatsbyConfig = {
         ignore: [`**/*.ts`, `**/_*`],
       },
     },
-    // {
-    //   resolve: `gatsby-plugin-page-creator`,
-    //   options: {
-    //     path: `${__dirname}/src/articles`,
-    //     ignore: ['**/*.{tsx, png, jsx, js, jpg, webp, json}'],
-    //   },
-    // },
     {
       resolve: `gatsby-plugin-google-fonts-v2`,
       options: {

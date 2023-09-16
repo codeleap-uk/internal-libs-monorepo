@@ -1,23 +1,6 @@
 import { capitalize, TypeGuards, usePrevious, useRef } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 
-const characterReplaceMap = new Map([
-  [/\s/g, '-'],
-  [/\./g, '-'],
-  [/[\?,’'"…]/g, ''],
-  // [/\,/g, ''],
-])
-
-export function getHeadingId(content:string) {
-  let sectionId = content
-
-  characterReplaceMap.forEach((replaceWith, replace) => {
-    sectionId = sectionId.replace(replace, replaceWith)
-  })
-
-  return `section-${sectionId}`
-}
-
 const { inferProperties } = require('./inferProperties')
 
 export {

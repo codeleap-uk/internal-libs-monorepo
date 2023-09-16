@@ -82,10 +82,10 @@ export const AppButtonStyles = {
       width: '100%',
       ...theme.spacing.gap(1),
 
-      paddingTop: 8,
-      paddingBottom: 8,
-      paddingLeft: 40,
-      paddingRight: 40,
+      paddingTop: theme.spacing.value(1),
+      paddingBottom: theme.spacing.value(1),
+      paddingLeft: theme.spacing.value(5),
+      paddingRight: theme.spacing.value(5),
       
       '&:hover': {
         backgroundColor: theme.colors.background,
@@ -116,7 +116,7 @@ export const AppButtonStyles = {
   })),
   'docItem:list': createButtonStyle((theme) => ({
     wrapper: {
-      paddingLeft: 62,
+      paddingLeft: theme.spacing.value(5) + theme.spacing.value(2.8),
     },
   })),
 

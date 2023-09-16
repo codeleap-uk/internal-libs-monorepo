@@ -1,14 +1,9 @@
-
-// Links
-// https://particles.js.org/docs/interfaces/Options_Interfaces_IOptions.IOptions.html
-// https://github.com/matteobruni/tsparticles/tree/main/components/react
-
-import { Theme } from '@/app';
-import { IOptions, RecursivePartial } from "tsparticles-engine";
+import { Theme } from '@/app'
+import { IOptions, RecursivePartial } from "tsparticles-engine"
 
 type PropsGet = {
-  opacity?: number;
-};
+  opacity?: number
+}
 
 const defaultConfig = {
   background: {

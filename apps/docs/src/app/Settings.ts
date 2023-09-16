@@ -10,7 +10,7 @@ const ENV = IsDevEnv ? 'development' : 'production'
 let _Settings = createSettings({
   AppName: 'CodeLeap UI',
   CompanyName: 'Example Ltd.',
-  Description: 'This is a template',
+  Description: 'The codeleap documentations',
   Environment: {
     IsDev: IsDevEnv,
     Type: ENV,

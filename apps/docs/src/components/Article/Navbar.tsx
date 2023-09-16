@@ -69,7 +69,7 @@ const Category = ({ name, items, location }) => {
   )
 }
 
-export const Navbar = ({ pages, title, location }: NavbarProps) => {
+export const Navbar = ({ pages, location }: NavbarProps) => {
   const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
 
   const isMobile = useMediaQuery(Theme.media.down('mid'), { getInitialValueInEffect: false })
@@ -99,15 +99,17 @@ export const Navbar = ({ pages, title, location }: NavbarProps) => {
   </View>
 }
 
+const SECTION_WIDTH = 280
+
 const styles = variantProvider.createComponentStyle((theme) => ({
   sidebar: {
     height: '100%',
     position: 'static',
-    minWidth: 280,
-    maxWidth: 280,
+    minWidth: SECTION_WIDTH,
+    maxWidth: SECTION_WIDTH,
     minHeight: '90svh',
     borderRight: `1px solid ${theme.colors.neutral3}`,
-    paddingTop: 24,
+    paddingTop: theme.spacing.value(3),
 
     [theme.media.down('mid')]: {
       minWidth: '100vw',

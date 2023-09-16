@@ -47,10 +47,10 @@ const light = {
   ripple: '#0002',
   transparent: '#FFF0',
   info: '#00b9f7',
-      danger: '#fc3c5c',
-      warning: '#fcfc41',
-      tip: '#6fb539',
-      note: '#5b5b5a',
+  danger: '#fc3c5c',
+  warning: '#fcfc41',
+  tip: '#6fb539',
+  note: '#5b5b5a',
 }
 
 const dark = {
@@ -93,10 +93,10 @@ const dark = {
   ripple: '#0002',
   transparent: '#FFF0',
   info: '#00b9f7',
-      danger: '#fc3c5c',
-      warning: '#fcfc41',
-      tip: '#6fb539',
-      note: '#5b5b5a',
+  danger: '#fc3c5c',
+  warning: '#fcfc41',
+  tip: '#6fb539',
+  note: '#5b5b5a',
 }
 
 const themeObj = validateTheme({

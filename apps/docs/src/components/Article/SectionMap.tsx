@@ -9,7 +9,14 @@ type Node = {
   items: Node[]
 }
 
-const SectionText = (props: { node: Node; subContent?: boolean; pathOrigin: string; location: WindowLocation<any> }) => {
+type SectionTextProps = { 
+  node: Node
+  subContent?: boolean 
+  pathOrigin: string 
+  location: WindowLocation<any> 
+}
+
+const SectionText = (props: SectionTextProps) => {
   const { node, subContent = false, pathOrigin, location } = props
 
   const isSelected = location?.href?.includes(node?.url)
@@ -21,7 +28,9 @@ const SectionText = (props: { node: Node; subContent?: boolean; pathOrigin: stri
         text={node?.title} 
         to={pathOrigin + node?.url} 
       />
-      {node.items?.map((node, idx) => <SectionText location={location} subContent node={node} key={idx} pathOrigin={pathOrigin} />)}
+      {node.items?.map((node, idx) => (
+        <SectionText location={location} subContent node={node} key={idx} pathOrigin={pathOrigin} />
+      ))}
     </View>
   )
 }
@@ -38,10 +47,14 @@ export const SectionMap = ({ content = [] }) => {
         <Text variants={['h4', 'primary']} text={'Table of contents'} />
       </View>
 
-      {content?.map((node, idx) => <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />)}
+      {content?.map((node, idx) => (
+        <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />
+      ))}
     </View>
   )
 }
+
+const SECTION_WIDTH = 280
 
 const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
@@ -58,11 +71,9 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     ...theme.presets.column,
     ...theme.spacing.gap(2),
     flexBasis: '25%',
-    paddingTop: 24,
-
-    minWidth: 280,
-    maxWidth: 280,
-
+    paddingTop: theme.spacing.value(3),
+    minWidth: SECTION_WIDTH,
+    maxWidth: SECTION_WIDTH,
     borderLeft: `1px solid ${theme.colors.neutral3}`,
 
     [theme.media.down('mid')]: {

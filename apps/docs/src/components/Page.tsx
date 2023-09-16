@@ -1,9 +1,7 @@
 import { variantProvider, Settings } from '@/app'
-
-import { Footer } from './Footer'
 import { Header } from './Header'
 import { Helmet } from 'react-helmet'
-import { onMount, PropsOf, useComponentStyle } from '@codeleap/common'
+import { PropsOf } from '@codeleap/common'
 import { CenterWrapper, View } from '@/components'
 
 type PageProps = PropsOf<typeof CenterWrapper> & {
@@ -18,7 +16,7 @@ type PageProps = PropsOf<typeof CenterWrapper> & {
   headerCenter?: boolean
 }
 
-export const Page: React.FC<PageProps> = (props) => {
+export const Page = (props: PageProps) => {
   const {
     children,
     center = true,
@@ -35,33 +33,22 @@ export const Page: React.FC<PageProps> = (props) => {
     ...centerWrapperProps
   } = props
 
-  const content = withRouter ? (
-    <>
-      {children}
-    </>
-  ) : (
-    children
-  )
-
-  const styles = useComponentStyle(componentStyles)
   return (
     <View variants={['column']} css={[styles.wrapper, !center && centerWrapperProps?.styles?.wrapper]} className={className}>
       {!withRouter && <Helmet>{title && <title>{title} {appendNameToTitle ? ` | ${Settings.AppName}` : ''}</title>}</Helmet>}
       {header && typeof header === 'boolean' ? <Header center={headerCenter ? center : false} searchBar={searchBar} /> : header}
       {center ? (
-        <CenterWrapper {...centerWrapperProps}>{content}</CenterWrapper>
+        <CenterWrapper {...centerWrapperProps}>{children}</CenterWrapper>
       ) : (
         <View style={{...contentStyle, position: 'relative'}}>
-
-          {content}
+          {children}
         </View>
       )}
-
-      {/* {footer && <Footer />} */}
     </View>
   )
 }
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
+
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     position: 'relative',
     minHeight: '100vh',
@@ -69,4 +56,4 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     maxWidth: '100%',
     backgroundColor: theme.colors.background,
   },
-}))
+}), true)

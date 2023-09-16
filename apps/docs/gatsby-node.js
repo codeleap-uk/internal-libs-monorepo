@@ -1,6 +1,5 @@
-const path = require('path');
-const slugify = require('slugify');
-const fs = require('fs');
+const path = require('path')
+const fs = require('fs')
 const template = path.resolve(`./src/components/Article/Layout.jsx`)
 
 function inferProperties(absolutePath) {
@@ -28,7 +27,7 @@ function inferProperties(absolutePath) {
 }
 
 exports.createPages = async ({ actions, graphql }) => {
-  const { createPage } = actions;
+  const { createPage } = actions
 
   const result = await graphql(`
     query {
@@ -51,7 +50,7 @@ exports.createPages = async ({ actions, graphql }) => {
         }
       }
     }
-  `);
+  `)
 
   const moduleOrders = {}
 
@@ -71,8 +70,7 @@ exports.createPages = async ({ actions, graphql }) => {
     }
 
     createPage({
-      path: pageInfo.path, // Use o slug como o caminho da página
-      // component: path.resolve('./src/components/Article/Layout.tsx'),
+      path: pageInfo.path,
       component: `${template}?__contentFilePath=${node.internal.contentFilePath}`,
       context: {
         frontmatter: node.frontmatter,
@@ -81,7 +79,6 @@ exports.createPages = async ({ actions, graphql }) => {
         description: node.frontmatter.description,
         source: node.frontmatter.source,
         tag: node.frontmatter.tag,
-        noder: node,
         pagePath: pageInfo.path,
         module: pageInfo.module,
         isLibrary: pageInfo.isLibrary,
@@ -94,6 +91,6 @@ exports.createPages = async ({ actions, graphql }) => {
         tableOfContents: node.tableOfContents,
         mdxFilePath: filepath,
       },
-    });
-  });
-};
+    })
+  })
+}

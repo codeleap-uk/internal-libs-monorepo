@@ -1,5 +1,5 @@
 import { React, Theme, variantProvider } from '@/app'
-import { capitalize, onUpdate, useDebounce, useMemo, useRef, useState } from '@codeleap/common'
+import { capitalize, useDebounce, useMemo, useState } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 import { Collapse } from '../Collapse'
 import { Link } from '../Link'
@@ -8,7 +8,6 @@ import { View, TextInput, Text } from '@/components'
 export const SearchBar = (props: { items: MdxMetadata[] }) => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 400)
-  const [focus, setFocus] = useState(false)
 
   const { results, hasResults } = useMemo(() => {
     if (!debouncedSearch) {
@@ -67,12 +66,6 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
 
   const isDropdownOpen = debouncedSearch.length > 0
 
-  onUpdate(() => {
-    if (debouncedSearch.length) {
-      setFocus(true)
-    }
-  }, [debouncedSearch])
-
   const NotFound = () => {
     return <View variants={['fullHeight', 'center', 'flex']}>
       <Text text={'No results found'} />
@@ -91,21 +84,15 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
         variants={['pill', 'fullWidth', 'noError', 'docSearch']}
         onChangeText={setSearch}
         value={search}
-        onFocus={ () => setFocus(true)}
-        onBlur={ () => setFocus(false)}
       />
 
       <Collapse 
         css={[
           styles.dropdown,
-          isDropdownOpen && {
-            ...Theme.effects.light,
-            padding: 16,
-            minHeight: 250,
-          }
+          isDropdownOpen && styles['dropdown:open']
         ]} 
         open={isDropdownOpen && search?.length > 0} 
-        height={250} 
+        height={MIN_HEIGHT} 
         scroll
       >
         {hasResults ? resultList : <NotFound />}
@@ -114,11 +101,14 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
   )
 }
 
+const MIN_HEIGHT = 250
+
 const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     ...theme.spacing.marginRight(2),
     ...theme.presets.relative,
-    gap: 16,
+    gap: theme.spacing.value(2),
+
     [theme.media.down('mid')]: {
       order: -2,
       ...theme.spacing.marginHorizontal(1),
@@ -128,13 +118,18 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   dropdown: {
     ...theme.presets.absolute,
     ...theme.presets.column,
-    gap: 16,
+    gap: theme.spacing.value(2),
     left: 0,
     right: 0,
     top: 50,
     backgroundColor: theme.colors.background,
     borderRadius: theme.borderRadius.medium,
     border: 'none'
+  },
+  'dropdown:open': {
+    ...theme.effects.light,
+    padding: theme.spacing.value(2),
+    minHeight: MIN_HEIGHT,
   },
   result: {
     ...theme.spacing.marginLeft(3),

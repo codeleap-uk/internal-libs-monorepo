@@ -86,7 +86,7 @@ export default () => {
 
 const styles = variantProvider.createComponentStyle((theme) => ({
   title: {
-    fontSize: 64,
+    fontSize: 64, // yes, it is quite
     fontWeight: '900'
   },
   wrapper: {

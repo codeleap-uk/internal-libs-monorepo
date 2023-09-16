@@ -1,8 +1,2 @@
-export { default as LogoImage } from './codeleap_logo_black.png'
-export { default as Placeholder } from './placeholder.png'
 export { default as loadingAnimation } from '../images/loadingAnimation.json'
-export { default as LogoTemplate } from './logo-template.png'
-export { default as LogoTemplateMobile } from './logo-template-mobile.png'
-export { default as RocketImage } from './rocket.jpeg'
 export { default as HomeImage } from './home.png'
-export { default as SignUp } from './SignUp.png'

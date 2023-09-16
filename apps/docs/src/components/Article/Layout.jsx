@@ -35,10 +35,6 @@ const PageNavButton = ({ data, type = 'previous' }) => {
 }
 
 function ArticlePage(props) {
-  console.log({
-    props
-  })
-
   const { pageContext, children, location } = props
 
   const allMdx = pageContext.allMdx
@@ -91,7 +87,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   content: {
     height: '100%',
     minHeight: '90svh',
-    paddingBottom: 24,
+    paddingBottom: theme.spacing.value(3),
 
     [theme.media.down('mid')]: {
       ...theme.presets.column,
@@ -100,7 +96,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   icon: {
     transition: 'color 0.2s ease',
     color: theme.colors.neutral1,
-    size: 25,
+    size: 24,
   },
   text: {
     color: theme.colors.neutral10,

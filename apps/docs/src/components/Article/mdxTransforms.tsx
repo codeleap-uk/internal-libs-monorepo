@@ -1,13 +1,11 @@
 import { React, Theme, variantProvider } from '@/app'
 import { Text, View, Icon, Checkbox } from '@/components'
-import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor, useBooleanToggle, onMount } from '@codeleap/common'
+import { useCodeleapContext, useState, useMemo, TypeGuards, useBooleanToggle } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Image } from '../Image'
 import { Link } from '../Link'
-import { getHeadingId } from './utils'
 import { PhotoView } from 'react-photo-view'
 import CodeThemes from '../../app/stylesheets/Code'
-import { generateImageData } from 'gatsby-plugin-image'
 
 const quoteTypes = {
   info: 'INFO',
@@ -218,16 +216,14 @@ export const mdxTransforms = {
   },
   a: (props) => {
     const isExternal = useMemo(() => {
-
       try {
         const url = new URL(props.href)
 
         if (url.origin !== window.location.origin) {
           return true
         }
-      } catch (e) {
-
-      }
+      } catch (e) {}
+      
       return false
     }, [props.href])
 
