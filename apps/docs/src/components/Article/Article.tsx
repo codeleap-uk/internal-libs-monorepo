@@ -22,17 +22,17 @@ export const Article = ({ children, title = '', source = '', description = '', l
             <View variants={['column', 'marginTop:3', 'gap:2']}>
               {!!source && (
                 <View variants={['gap:4']}>
-                  <Text variants={['p4', 'color:primary3']} text={'Source'} />
+                  <Text variants={['p3', 'color:primary3']} text={'Source'} />
                   <Link to={source} variants={['noUnderline']} target='_blank'>
-                    <Text variants={['p4', 'color:neutral10']} text={'View source code'} />
+                    <Text variants={['p3', 'color:neutral10']} text={'View source code'} />
                   </Link>
                 </View>
               )}
 
               {lib?.includes('@') && (
                 <View variants={['gap:4']}>
-                  <Text variants={['p4', 'color:primary3']} text={'Package'} />
-                  <Text variants={['p4', 'color:neutral10']} text={lib} />
+                  <Text variants={['p3', 'color:primary3']} text={'Package'} />
+                  <Text variants={['p3', 'color:neutral10']} text={lib} />
                 </View>
               )}
             </View>

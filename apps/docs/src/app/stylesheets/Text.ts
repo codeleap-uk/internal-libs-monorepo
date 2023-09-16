@@ -123,6 +123,11 @@ export const AppTextStyles = {
       color: theme.colors['alert-1'],
     },
   })),
+  hugeBold: createTextStyle((theme) => ({
+    text: {
+      fontWeight: '900',
+    },
+  })),
   extraBold: createTextStyle((theme) => ({
     text: {
       fontWeight: '800',

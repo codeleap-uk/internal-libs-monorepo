@@ -53,6 +53,9 @@ const Category = ({ name, items, location }) => {
         icon='chevron-right'
         variants={['docItem']}
         styles={{
+          text: {
+            fontWeight: 800
+          },
           icon: {
             transform: `rotate(${open ? 90 : 0}deg)`,
           }

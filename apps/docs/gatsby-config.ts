@@ -80,11 +80,17 @@ const config: GatsbyConfig = {
     //   },
     // },
     {
-      resolve: `gatsby-plugin-google-fonts`,
+      resolve: `gatsby-plugin-google-fonts-v2`,
       options: {
         fonts: [
-          `Inter: 100, 200, 300, 400, 500, 600, 700, 800`,
-          `DMSans: 400, 600, 700`,
+          {
+            family: 'Karla',
+            weights: ['100', '200', '300', '400', '500', '600', '700', '800'],
+          },
+          {
+            family: 'DMSans',
+            weights: ['400', '600', '700'],
+          },
         ],
         display: `swap`,
       },

@@ -48,7 +48,7 @@ export default () => {
           />
           <Text 
             text='Create complete web and mobile applications with a single code with various hooks and features to create your project 2x faster' 
-            variants={['h3']}
+            variants={['h3', 'thin']}
             responsiveVariants={{ mid: ['p1'] }}
           />
         </View>
@@ -62,12 +62,18 @@ export default () => {
             variants={['padding:2', 'w:200px']}
             text='Get started' 
             onPress={() => navigate('/concepts/index/')} 
+            styles={{
+              'text': { fontWeight: 700 }
+            }}
           />
           
           <Link variants={['noUnderline']} to='https://github.com/codeleap-uk/internal-libs-monorepo' target='_blank'>
             <Button 
               variants={['padding:2', 'w:200px']}
               text='GitHub'
+              styles={{
+                'text': { fontWeight: 700 }
+              }}
             />
           </Link>
         </View>
@@ -81,7 +87,7 @@ export default () => {
 const styles = variantProvider.createComponentStyle((theme) => ({
   title: {
     fontSize: 64,
-    fontWeight: 'bold'
+    fontWeight: '900'
   },
   wrapper: {
     width: '100vw',
