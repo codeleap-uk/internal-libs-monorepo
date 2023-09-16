@@ -73,7 +73,8 @@
     "release": "standard-version",
     "notifyVersion": "node notifyVersion.js",
     "lint-deps": "syncpack list-mismatches",
-    "fix-deps": "syncpack fix-mismatches"
+    "fix-deps": "syncpack fix-mismatches",
+    "gen-docs": "clear && ts-node-dev ./docs/generator/main.ts"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",

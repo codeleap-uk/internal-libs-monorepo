@@ -1,0 +1,22 @@
+# IconButton
+
+## Description
+IconButton component is used to display an icon and allows the user to interact with it.
+
+## Props
+- `icon` (optional): The name of the icon to be displayed. This prop should be a string and it must match one of the available icon names.
+- `name` (optional): Another option for specifying the icon name to be displayed. This prop should also be a string and it must match one of the available icon names.
+
+## Example Usage
+```jsx
+import { IconButton } from "@codeleap/web";
+
+function App() {
+  return (
+    <div>
+      <IconButton icon="heart" />
+      <IconButton name="star" />
+    </div>
+  );
+}
+```
