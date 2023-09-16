@@ -28,26 +28,43 @@ const config: GatsbyConfig = {
     {
       resolve: `gatsby-plugin-mdx`,
       options: {
-        // mdxOptions: {
-        //   remarkPlugins: [],
-        //   rehypePlugins: [],
-        // },
+        mdxOptions: {
+          remarkPlugins: [{
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 1200,
+            },
+          },],
+          rehypePlugins: [],
+        },
         // defaultLayouts: {
         //   default: require.resolve('./src/components/Article/Layout.tsx'),
         // },
+
         extensions: ['.mdx', '.md'],
       },
     },
-    'gatsby-transformer-remark',
+    // 'gatsby-transformer-remark',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 800,
+            },
+          },
+        ],
+      },
+    },
+    {
       resolve: 'gatsby-source-filesystem',
       options: {
-        'name': 'images',
-        'path': './src/images/',
+        'path': `${__dirname}/src/images/`,
       },
-      __key: 'images',
     },
     {
       resolve: 'gatsby-source-filesystem',

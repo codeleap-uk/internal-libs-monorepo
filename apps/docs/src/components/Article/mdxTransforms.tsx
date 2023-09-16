@@ -1,12 +1,13 @@
-import { React,  Theme, variantProvider } from '@/app'
+import { React, Theme, variantProvider } from '@/app'
 import { Text, View, Icon, Checkbox } from '@/components'
 import { useCodeleapContext, useState, useMemo, TypeGuards, shadeColor, useBooleanToggle, onMount } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Image } from '../Image'
 import { Link } from '../Link'
 import { getHeadingId } from './utils'
-import {PhotoView} from 'react-photo-view'
+import { PhotoView } from 'react-photo-view'
 import CodeThemes from '../../app/stylesheets/Code'
+import { generateImageData } from 'gatsby-plugin-image'
 
 const quoteTypes = {
   info: 'INFO',
@@ -28,7 +29,7 @@ const blockquoteStyles = variantProvider.createComponentStyle((theme) => {
       backgroundColor: theme.colors[k] + '20',
       borderRadius: theme.borderRadius.small,
     }
-    
+
     s[`${k}-icon`] = {
       color: theme.colors[k],
       height: 24,
@@ -45,12 +46,12 @@ const getSectionId = (content: string) => {
 }
 
 export const mdxTransforms = {
-  h1: ({ children }) => <Text variants={['h1']} id={getSectionId(children)} text={children}/>,
-  h2: ({ children }) => <Text variants={['h2']} id={getSectionId(children)} text={children}/>,
-  h3: ({ children }) => <Text variants={['h3']} id={getSectionId(children)} text={children}/>,
-  h4: ({ children }) => <Text variants={['h4']} text={children}/>,
-  h5: ({ children }) => <Text variants={['h5']} text={children}/>,
-  h6: ({ children }) => <Text variants={['p1']} text={children}/>,
+  h1: ({ children }) => <Text variants={['h1']} id={getSectionId(children)} text={children} />,
+  h2: ({ children }) => <Text variants={['h2']} id={getSectionId(children)} text={children} />,
+  h3: ({ children }) => <Text variants={['h3']} id={getSectionId(children)} text={children} />,
+  h4: ({ children }) => <Text variants={['h4']} text={children} />,
+  h5: ({ children }) => <Text variants={['h5']} text={children} />,
+  h6: ({ children }) => <Text variants={['p1']} text={children} />,
   blockquote: ({ children }) => {
     const quoteType = useMemo(() => {
 
@@ -71,7 +72,7 @@ export const mdxTransforms = {
       }
 
       if (TypeGuards.isString(qt)) {
-        
+
 
         const typeEntry = Object.entries(quoteTypes).find(t => qt.startsWith(t[1]))
 
@@ -104,7 +105,7 @@ export const mdxTransforms = {
     return <View component='blockquote' variants={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
       {
         quoteType?.key && (
-          <Icon name={`docsquote-${quoteType?.key}`} size={24} style={blockquoteStyles[quoteType.key + '-icon']}/>
+          <Icon name={`docsquote-${quoteType?.key}`} size={24} style={blockquoteStyles[quoteType.key + '-icon']} />
         )
       }
       <Text style={{ textDecoration: 'none' }}>
@@ -125,13 +126,13 @@ export const mdxTransforms = {
   },
   input: (props) => {
     const [checked, setChecked] = useBooleanToggle(props.checked)
-    return <Checkbox {...props} variants={['inline']} checked={checked} onValueChange={setChecked}/>
+    return <Checkbox {...props} variants={['inline']} checked={checked} onValueChange={setChecked} />
   },
   p: ({ children }) => <Text text={children} />,
   inlineCode: ({ children }) => {
 
     return <View variants={['inlineFlex', 'paddingHorizontal:0.5']}>
-      <Text text={children} variants={['code', 'inline']}/>
+      <Text text={children} variants={['code', 'inline']} />
     </View>
   },
   ul: ({ children }) => {
@@ -143,7 +144,7 @@ export const mdxTransforms = {
     return <View variants={['column', 'gap:1', 'paddingLeft:2']} component='l'> {children} </View>
   },
   li: ({ children }) => {
-    return <Text component='li' text={children}/>
+    return <Text component='li' text={children} />
   },
   pre: (props) => {
     const className = props.children.props.className || ''
@@ -206,17 +207,14 @@ export const mdxTransforms = {
     )
   },
   img: (props) => {
-    console.log('Image', props)
     const fullSrc = `/images/${props.src}`
 
-    console.log('Image', fullSrc)
-    
     return <>
-        <PhotoView src={fullSrc}>
-          <Image source={fullSrc} alt={props.alt} />
-          </PhotoView>
-        <Text text={props.alt} variants={['textCenter', 'subtle']}/>
-      </>
+      <PhotoView src={fullSrc}>
+        <Image source={fullSrc} alt={props?.alt} style={{ height: undefined, maxWidth: '100%', objectFit: 'contain' }} />
+      </PhotoView>
+      <Text text={props.alt} variants={['textCenter']} />
+    </>
   },
   a: (props) => {
     const isExternal = useMemo(() => {
@@ -233,7 +231,7 @@ export const mdxTransforms = {
       return false
     }, [props.href])
 
-    return <Link to={props.href} text={props.children} variants={['color:primary3', 'noUnderline']} openNewTab={isExternal}/>
+    return <Link to={props.href} text={props.children} variants={['color:primary3', 'noUnderline']} openNewTab={isExternal} />
   },
 }
 

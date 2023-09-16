@@ -43,7 +43,7 @@ export const Image:React.FC<ImageProps> = (imageProps) => {
 
 const query = graphql`
   query {
-    allFile(filter: { internal: { mediaType: { regex: "/image/" } } }) {
+    allFile(filter: { internal: { mediaType: { regex: "/images/" } } }) {
       nodes {
         childImageSharp {
           gatsbyImageData
