@@ -10,6 +10,7 @@ import { Theme, variantProvider } from '@/app'
 import { Button, View, Text, Icon } from '@/components'
 import { SearchBar } from './SearchBar'
 import { capitalize } from '@codeleap/common'
+import { useMediaQuery } from '@codeleap/web'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
   const isNext = type === 'next'
@@ -47,9 +48,15 @@ function ArticlePage(props) {
 
   const lib = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
 
+  const mediaQuery = Theme.media.down('mid')
+  const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
+
   const Footer = () => {
     return (
-      <View variants={['justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex', 'gap:2', 'marginVertical:2']}>
+      <View 
+        variants={['justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex', 'gap:2', 'marginVertical:2']}
+        responsiveVariants={{ mid: ['column'] }}
+      >
         <PageNavButton data={previous} type='previous' />
         <PageNavButton data={next} type='next' />
       </View>
@@ -62,9 +69,10 @@ function ArticlePage(props) {
       responsiveVariants={{ mid: ['column'] }}
       center={false}
       contentStyle={styles.content}
-      searchBar={<SearchBar items={flatData} />}
+      searchBar={!isMobile && <SearchBar items={flatData} />}
     >
       <Navbar pages={pages} title={lib} location={location} />
+      {isMobile && <SectionMap content={children} />}
 
       <Article title={title} description={description} source={source} lib={lib} tag={tag}>
         <MDXProvider components={mdxTransforms}>
@@ -74,7 +82,7 @@ function ArticlePage(props) {
         <Footer />
       </Article>
 
-      <SectionMap content={children} />
+      {!isMobile && <SectionMap content={children} />}
     </Page>
   )
 }
@@ -84,6 +92,10 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     height: '100%',
     minHeight: '90svh',
     paddingBottom: 24,
+
+    [theme.media.down('mid')]: {
+      ...theme.presets.column,
+    }
   },
   icon: {
     transition: 'color 0.2s ease',

@@ -168,6 +168,10 @@ export const mdxTransforms = {
             backgroundColor: style.backgroundColor,
             overflowX: 'scroll',
             maxWidth: 'calc(100vw - 620px)',
+
+            [Theme.media.down('mid')]: {
+              maxWidth: 'calc(100vw)',
+            }
           }}>
             {/* <Button icon='copy' className='code_copy_btn' variants={['icon']} css={{
               position: 'sticky',

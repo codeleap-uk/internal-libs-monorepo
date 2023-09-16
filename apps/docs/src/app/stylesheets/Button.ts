@@ -154,4 +154,28 @@ export const AppButtonStyles = {
       },
     }
   })),
+
+  docNavbar: createButtonStyle((theme) => ({
+    wrapper: {
+      ...theme.presets.row,
+      backgroundColor: theme.colors.primary1,
+      borderRadius: 0,
+      borderBottom: `1px solid ${theme.colors.primary3}`,
+      width: '100%',
+      ...theme.presets.flex,
+      ...theme.spacing.gap(1),
+      ...theme.spacing.padding(2),
+      transitionProperty: 'background, color, border, filter, box-shadow',
+      
+      '&:hover': {
+        backgroundColor: theme.colors.background,
+        ...theme.effects.thin
+      },
+    },
+    text: {
+      width: '100%',
+      ...assignTextStyle('p3')(theme).text,
+      color: theme.colors.primary3,
+    },
+  })),
 }

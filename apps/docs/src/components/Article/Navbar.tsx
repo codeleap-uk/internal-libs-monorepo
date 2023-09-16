@@ -5,6 +5,7 @@ import { onUpdate, useBooleanToggle } from '@codeleap/common'
 import { Link } from '../Link'
 import { View, Button, Drawer, Text } from '@/components'
 import { Location } from '@reach/router'
+import { useMediaQuery } from '@codeleap/web'
 
 type NavbarProps = {
   pages: [string, MdxMetadata[]][]
@@ -65,64 +66,37 @@ const Category = ({ name, items, location }) => {
   )
 }
 
-export const Navbar = ({ pages, title, location, children }: NavbarProps) => {
+export const Navbar = ({ pages, title, location }: NavbarProps) => {
   const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
 
-  const isMobile = Theme.hooks.down('mid')
+  const isMobile = useMediaQuery(Theme.media.down('mid'), { getInitialValueInEffect: false })
 
-  const WrapperComponent = isMobile ? Drawer : View
-
-  const Items = () => (
-    <>
-      {/* <Text variants={['h4', 'alignSelfCenter', 'marginVertical:2']} text={title} responsiveVariants={{ small: ['h3'] }}/> */}
-      {pages.map?.(([category, items]) => {
-        return <Category items={items} name={category} key={category} location={location} />
-      })}
-    </>
-  )
+  const Items = () => <>
+    {pages.map?.(([category, items]) => {
+      return <Category items={items} name={category} key={category} location={location} />
+    })}
+  </>
 
   return <View variants={['column', 'gap:0.5']} style={styles.sidebar}>
-    {/* <Button variants={['circle']} icon='chevronLeft' styles={{
-      icon: {
-        transform: `rotate(${isDrawerOpen ? 0 : 180}deg)`,
-        transition: 'transform 0.3s ease',
-      },
-      wrapper: {
-        ...styles.toggleButton,
-        transform: isMobile ? `scale(${isDrawerOpen ? 0 : 1})` : 'scale(0)',
-      },
-    }} onPress={toggleDrawer}/> */}
+    {isMobile && <Button text='Open navigation' onPress={toggleDrawer} variants={['docNavbar']} />}
 
-    <Items />
+    {!isMobile && <Items />}
 
-    {/* <WrapperComponent
-      debugName='drawer'
-      // css={styles.wrapper}
-      open={isDrawerOpen}
-      position='left'
-      toggle={toggleDrawer}
-      size='50%'
-    >
-      
-
-    </WrapperComponent> */}
+    {isMobile && (
+      <Drawer
+        debugName='drawer'
+        open={isDrawerOpen}
+        position='left'
+        toggle={toggleDrawer}
+        size='85vw'
+      >
+        <Items />
+      </Drawer>
+    )}
   </View>
 }
 
 const styles = variantProvider.createComponentStyle((theme) => ({
-  // wrapper: {
-  //   position: 'sticky',
-  //   left: 0,
-  //   bottom: 0,
-  //   top: theme.values.headerHeight,
-  //   maxHeight: theme.values.height - theme.values.headerHeight,
-  //   overflowY: 'hidden',
-  //   backgroundColor: theme.colors.background,
-  //   ...theme.presets.column,
-  //   ...theme.presets.alignSelfStretch,
-  //   flexBasis: '20%',
-
-  // },
   sidebar: {
     height: '100%',
     position: 'static',
@@ -131,6 +105,13 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     minHeight: '90svh',
     borderRight: `1px solid ${theme.colors.neutral3}`,
     paddingTop: 24,
+
+    [theme.media.down('mid')]: {
+      minWidth: '100vw',
+      maxWidth: '100vw',
+      minHeight: 'unset',
+      paddingTop: 0,
+    }
   },
   toggleButton: {
     transition: 'transform 0.3s ease',

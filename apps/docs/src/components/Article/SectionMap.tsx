@@ -87,6 +87,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     maxHeight: theme.values.height - theme.values.headerHeight,
     ...theme.spacing.paddingLeft(3),
     ...theme.spacing.paddingRight(3),
+    ...theme.spacing.paddingBottom(3),
     ...theme.presets.alignSelfStretch,
     ...theme.presets.column,
     ...theme.spacing.gap(2),
@@ -99,9 +100,9 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     borderLeft: `1px solid ${theme.colors.neutral3}`,
 
     [theme.media.down('mid')]: {
-      position: 'static',
-      order: -1,
-
+      minWidth: '100vw',
+      maxWidth: '100vw',
+      minHeight: 'unset',
     },
   },
 }))
