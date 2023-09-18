@@ -8,14 +8,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.16.0]
     
     steps:
       - name: ⏬ Cloning current repo
-        uses: actions/checkout@v2
-
-      - uses: actions/setup-node@v3
+        uses: actions/checkout@v3
         with:
-          node-version: '18.16.0'
+          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
+
+      - name:  Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
           cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
 
@@ -26,9 +34,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: eu-west-2
 
-      - name: Version update detected
+      - name: Yarn Install
         run: |
           yarn install
           yarn build
+
+      - name: Deploy
+        run: |
           yarn docs build-web
           yarn docs deploy
