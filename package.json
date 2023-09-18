@@ -89,7 +89,9 @@
     "ts-node-dev": "^1.1.8",
     "turbo": "1.1.2",
     "typedoc": "0.25.1",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "openai": "^4.6.0",
+    "typedoc-json-parser": "^8.2.0"
   },
   "engines": {
     "npm": ">=7.0.0",
@@ -140,9 +142,5 @@
         "cache": false
       }
     }
-  },
-  "dependencies": {
-    "openai": "^4.6.0",
-    "typedoc-json-parser": "^8.2.0"
   }
 }
