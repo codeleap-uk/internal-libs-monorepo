@@ -1,6 +1,6 @@
 import React from 'react'
 import { graphql } from 'gatsby'
-import { FormTypes, StylesOf, TypeGuards } from '@codeleap/common'
+import { FormTypes, TypeGuards } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/serialize'
 
 type CommonProps = {
