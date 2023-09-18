@@ -1,6 +1,24 @@
 import os
 import re
 
+def extract_variables(article_variables: list):
+  separator = '---'
+  frontmatter = ''
+
+  for idx, variable in enumerate(article_variables):
+    isFirst = idx == 0
+    isLast = idx == (len(article_variables) - 1)
+
+    if isFirst:
+      frontmatter = frontmatter + f'{separator}'
+    
+    frontmatter = frontmatter + f"\n{variable['name']}: '{variable['value']}'"
+
+    if isLast:
+      frontmatter = frontmatter + f'\n{separator}'
+
+  return frontmatter
+
 def insert_frontmatter(file: str):
   article_content = None
 
@@ -20,12 +38,12 @@ def insert_frontmatter(file: str):
   description = re.sub(r'\n-+\n', ' ', description_content)
   source = f'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/web/src/components/{title}/index.tsx'
 
-  frontmatter = f'''---
-title: '{title}'
-description: '{description}'
-tag: '{tag}'
-source: '{source}'
----'''
+  frontmatter = extract_variables([
+    { 'name': 'title', 'value': title },
+    { 'name': 'description', 'value': description },
+    { 'name': 'tag', 'value': tag },
+    { 'name': 'source', 'value': source }
+  ])
 
   article_content = re.sub(description_pattern, '\n', article_content)
 
