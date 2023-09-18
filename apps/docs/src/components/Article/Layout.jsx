@@ -26,7 +26,7 @@ const PageNavButton = ({ data, type = 'previous' }) => {
 
       <View variants={['column', 'fullHeight', 'alignStart', 'gap:1']}>
         <Text text={capitalize(type)} variants={['h5', 'color:primary3']} />
-        <Text text={data?.title ?? 'Not found'} variants={['p2', 'color:neutral7', 'ellipsis']} />
+        <Text text={data?.title ?? 'No article'} variants={['p2', 'color:neutral7', 'ellipsis']} />
       </View>
 
       {isNext && <Icon name={'chevron-right'} size={24} color={Theme.colors.light.neutral7} />}

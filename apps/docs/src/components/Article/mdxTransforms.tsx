@@ -174,16 +174,6 @@ export const mdxTransforms = {
               maxWidth: 'calc(100vw)',
             }
           }}>
-            {/* <Button icon='copy' className='code_copy_btn' variants={['icon']} css={{
-              position: 'sticky',
-
-              top: 8,
-              left: '100%',
-
-              zIndex: 1,
-              transition: 'opacity 0.2s ease',
-              opacity: hover ? 1 : 0,
-            }} onPress={() => copy(code)}/> */}
             <pre
               className={className + ' code_style'}
               style={style}

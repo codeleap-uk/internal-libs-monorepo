@@ -7,7 +7,6 @@ function inferProperties(absolutePath) {
   const sliceFrom = parts.lastIndexOf('articles')
   const articlesPath = parts.slice(0, sliceFrom + 1)
   parts = parts.slice(sliceFrom + 1)
-  // const sliceFrom = parts.indexOf('articles')
   const [pageModule, categoryOrFileName, ...others] = parts
   let pagePath = `${pageModule}/${categoryOrFileName.toLowerCase()}`
 

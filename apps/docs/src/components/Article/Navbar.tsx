@@ -3,7 +3,7 @@ import { Collapse } from '../Collapse'
 import { MdxMetadata } from 'types/mdx'
 import { onUpdate, useBooleanToggle } from '@codeleap/common'
 import { Link } from '../Link'
-import { View, Button, Drawer, Text } from '@/components'
+import { View, Button, Drawer } from '@/components'
 import { Location } from '@reach/router'
 import { useMediaQuery } from '@codeleap/web'
 

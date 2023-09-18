@@ -1,4 +1,4 @@
-import { React, Theme, variantProvider } from '@/app'
+import { React, variantProvider } from '@/app'
 import { capitalize, useDebounce, useMemo, useState } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 import { Collapse } from '../Collapse'
