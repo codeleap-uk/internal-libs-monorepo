@@ -12,3 +12,4 @@
 - Header fixo
 - Trocar font dos docs
 - Considerar composition dos styles
+- Colocar comentário nas props
