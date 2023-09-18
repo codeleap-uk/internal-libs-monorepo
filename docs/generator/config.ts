@@ -7,7 +7,7 @@ const config = {
   environment: '../.env',
   articleGeneratorExtension: 'mdx',
   package: 'web',
-  maxTypedocsGenerator: 1,
+  maxTypedocsGenerator: 5,
 }
 
 export const GeneratorConfig = config

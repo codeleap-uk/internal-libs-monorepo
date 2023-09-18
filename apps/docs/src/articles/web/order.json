@@ -8,8 +8,11 @@
     {
         "name": "components",
         "items": [
-            "button",
-            "ActionIcon"
+            "Button",
+            "ActionIcon",
+            "ActivityIndicator",
+            "Badge",
+            "Checkbox"
         ]
     }
 ]

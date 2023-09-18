@@ -76,7 +76,7 @@
     "fix-deps": "syncpack fix-mismatches",
     "doc:generate": "clear && ts-node-dev ./docs/generator/main.ts",
     "doc:process": "clear && python ./docs/processor/main.py",
-    "doc:fullcycle": "doc:generate && doc:process"
+    "doc:fullcycle": "yarn doc:generate && yarn doc:process"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",
