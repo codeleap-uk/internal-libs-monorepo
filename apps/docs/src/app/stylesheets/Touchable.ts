@@ -1,13 +1,18 @@
-import { TouchableComposition } from '@codeleap/common'
-import { variantProvider } from '../theme'
+import { TouchableComposition, TouchablePresets } from "@codeleap/web"
+import { variantProvider } from ".."
 
-const createTouchableStyle =
-  variantProvider.createVariantFactory<TouchableComposition>()
-const defaultStyles = variantProvider.getDefaultVariants('Touchable')
+const createTouchableStyle = variantProvider.createVariantFactory<TouchableComposition>()
 
 export const AppTouchableStyles = {
-  ...defaultStyles,
+  ...TouchablePresets,
   default: createTouchableStyle((theme) => ({
-    ...defaultStyles.default,
+    wrapper: {
+      ...theme.presets.center,
+      cursor: 'pointer',
+      userSelect: 'none',
+    },
+    'wrapper:disabled': {
+      cursor: 'default',
+    }
   })),
 }

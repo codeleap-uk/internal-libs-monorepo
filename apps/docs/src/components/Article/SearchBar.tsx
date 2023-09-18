@@ -1,17 +1,13 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
-
-import { React, TextInput, Text, variantProvider, View } from '@/app'
-import { capitalize, onUpdate, useComponentStyle, useDebounce, useMemo, useState } from '@codeleap/common'
-import { useClickOutside } from '@codeleap/web'
+import { React, variantProvider } from '@/app'
+import { capitalize, useDebounce, useMemo, useState } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 import { Collapse } from '../Collapse'
 import { Link } from '../Link'
+import { View, TextInput, Text } from '@/components'
 
-export const SearchBar = (props:{items:MdxMetadata[]}) => {
+export const SearchBar = (props: { items: MdxMetadata[] }) => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebounce(search, 400)
-  const [focus, setFocus] = useState(false)
 
   const { results, hasResults } = useMemo(() => {
     if (!debouncedSearch) {
@@ -45,98 +41,97 @@ export const SearchBar = (props:{items:MdxMetadata[]}) => {
       results,
       hasResults: Object.keys(results).length > 0,
     }
-
   }, [debouncedSearch])
 
-  const styles = useComponentStyle(componentStyles)
-
   const resultList = hasResults ? Object.entries<MdxMetadata[]>(results).map(([moduleName, moduleResults], idx, arr) => {
-    return <View variants={[
-      idx === 0 ? 'marginTop:2' : 'marginTop:0',
-      idx === arr.length - 1 ? 'marginBottom:2' : 'marginBottom:0',
-      'column',
-      'gap:2',
-    ]} css={styles.resultWrapper}>
-      <Text text={`@codeleap/${moduleName}`}/>
-      {moduleResults.map(({ title, path, category }) => (
-        <Link css={styles.result} to={`/${path}`}>
-          <Text text={title} variants={['inline']}/>
-          {
-            category !== 'root' ?
-              <Text text={ `- ${capitalize(category)}`} variants={['inline', 'marginLeft:1', 'subtle']}/>
-              : null
-          }
-        </Link>
-      ))}
-    </View>
+    return (
+      <View variants={[
+        'column',
+        'gap:2',
+      ]}>
+        <Text text={`@codeleap/${moduleName}`} />
+        {moduleResults.map(({ title, path, category }) => (
+          <Link css={styles.result} to={`/${path}`}>
+            <Text text={title} variants={['inline']} />
+            {
+              category !== 'root' ?
+                <Text text={`- ${capitalize(category)}`} variants={['inline', 'marginLeft:1']} />
+                : null
+            }
+          </Link>
+        ))}
+      </View>
+    )
   }) : null
 
   const isDropdownOpen = debouncedSearch.length > 0
 
-  useClickOutside(() => {
-    setFocus(false)
-  }, [])
+  const NotFound = () => {
+    return <View variants={['fullHeight', 'center', 'flex']}>
+      <Text text={'No results found'} />
+    </View>
+  }
 
-  onUpdate(() => {
-    if (debouncedSearch.length) {
-      setFocus(true)
-    }
-  }, [debouncedSearch])
+  return (
+    <View css={styles.wrapper} id='SearchBar'>
+      <TextInput
+        leftIcon={{
+          name: 'search',
+          iconProps: { size: 16 }
+        }}
+        debugName='SearchBar'
+        placeholder='Search'
+        variants={['pill', 'fullWidth', 'noError', 'docSearch']}
+        onChangeText={setSearch}
+        value={search}
+      />
 
-  return <View css={styles.wrapper} id='SearchBar'>
-    <TextInput
-      leftIcon={{
-        name: 'search',
-      }}
-      placeholder='What are you looking for?'
-      variants={['pill', 'fullWidth']}
-      onChangeText={setSearch}
-      value={search}
-      onFocus={ () => setFocus(true)}
-      onBlur={ () => setFocus(false)}
-    />
-    <Collapse css={[
-      styles.dropdown,
-      isDropdownOpen && {
-        boxShadow: '0 0 1px 2px #0002',
-      },
-    ]} open={isDropdownOpen && focus} height={300} scroll>
-      {
-        hasResults ?
-          resultList :
-          <Text text={'No results found'} variants={['alignSelfCenter', 'marginHorizontal:auto', 'marginVertical:2']} />
-      }
-    </Collapse>
-  </View>
+      <Collapse 
+        css={[
+          styles.dropdown,
+          isDropdownOpen && styles['dropdown:open']
+        ]} 
+        open={isDropdownOpen && search?.length > 0} 
+        height={MIN_HEIGHT} 
+        scroll
+      >
+        {hasResults ? resultList : <NotFound />}
+      </Collapse>
+    </View>
+  )
 }
 
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
+const MIN_HEIGHT = 250
+
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
-    ...theme.spacing.marginRight('auto'),
+    ...theme.spacing.marginRight(2),
     ...theme.presets.relative,
-    flex: 0.6,
+    gap: theme.spacing.value(2),
+
     [theme.media.down('mid')]: {
       order: -2,
       ...theme.spacing.marginHorizontal(1),
-      ...theme.spacing.marginVertical(2),
       ...theme.presets.alignSelfStretch,
     },
   },
   dropdown: {
     ...theme.presets.absolute,
     ...theme.presets.column,
-    // ...theme.spacing.gap(2),
+    gap: theme.spacing.value(2),
     left: 0,
     right: 0,
-    top: '100%',
-    backgroundColor: theme.colors.backgroundSecondary,
+    top: 50,
+    backgroundColor: theme.colors.background,
     borderRadius: theme.borderRadius.medium,
-
+    border: 'none'
+  },
+  'dropdown:open': {
+    ...theme.effects.light,
+    padding: theme.spacing.value(2),
+    minHeight: MIN_HEIGHT,
   },
   result: {
     ...theme.spacing.marginLeft(3),
   },
-  resultWrapper: {
-    ...theme.spacing.padding(1.5),
-  },
-}))
+}), true)

@@ -1,11 +1,8 @@
-import { React, Button, CenterWrapper, variantProvider, View, Tooltip, Theme, Drawer, List, LocalStorageKeys } from '@/app'
-import { Logo } from './Logo'
-import { Link } from './Link'
-import { onMount, onUpdate, useBooleanToggle, useCodeleapContext, useComponentStyle } from '@codeleap/common'
-import { AppStatus, Session, useAppSelector } from '@/redux'
-import { Avatar } from './Avatar'
-import { AuthModal } from './AuthModal'
-import { navigate } from 'gatsby'
+import { variantProvider, Theme, assignTextStyle, React } from '@/app'
+import { View, CenterWrapper, Drawer, Logo, Link, ActionIcon, Text } from '@/components'
+import { onUpdate, useState } from '@codeleap/common'
+import { useMediaQuery } from '@codeleap/web'
+import { useLocation } from '@reach/router'
 
 const navItems = [
   {
@@ -20,215 +17,223 @@ const navItems = [
     name: 'Mobile',
     url: '/mobile',
   },
-
+  {
+    name: 'Concepts',
+    url: '/concepts',
+  },
 ]
 
-const ViewWrapper = ({ styles, children }) => {
-  return <View css={styles.wrapper}>
-    <View css={styles.innerWrapper}>
-      {children}
+const BREAKPOINT = 'mid'
+
+const NavContent = () => {
+  const location = useLocation()
+
+  return (
+    <View variants={['gap:1', 'center']} responsiveVariants={{ [BREAKPOINT]: ['column', 'gap:2', 'alignStart', 'paddingVertical:3'] }}>
+      {
+        navItems.map(i => {
+          const isSelected = location?.pathname?.includes(i?.url)
+          return (
+            <Link
+              key={i.url}
+              text={i.name}
+              to={i.url + '/index'}
+              variants={['noUnderline']}
+              css={[styles.navItem, isSelected && styles['navItem:selected']]}
+            />
+          )
+        })
+      }
     </View>
-  </View>
+  )
 }
 
-export const Header = ({ center = true, children = null }) => {
-  const { currentTheme } = useCodeleapContext()
-  const { isLoggedIn, profile } = useAppSelector(store => store.Session)
-  const styles = useComponentStyle(componentStyles)
-  const [drawerOpen, setDrawer] = useBooleanToggle(false)
+const DrawerMenu = ({ isMobile }) => {
+  const [drawerOpen, setDrawer] = useState(false)
 
-  const toggleTheme = () => {
-    variantProvider.setColorScheme(currentTheme == 'dark' ? 'light' : 'dark')
-  }
-
-  const isMobile = Theme.hooks.down('small')
-
-  const toggleDrawer = () => {
-    if (drawerOpen) {
-      document.body.style.overflow = 'auto'
-    } else {
+  const toggleDrawer = (to = !drawerOpen) => {
+    if (to) {
       document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
     }
 
-    setDrawer()
+    setDrawer(to)
   }
 
   onUpdate(() => {
-
     if (!isMobile && drawerOpen) {
-      toggleDrawer()
+      toggleDrawer(false)
     }
-
   }, [drawerOpen, isMobile])
 
-  const NavComponent = isMobile ? Drawer : View
-  const WrapperComponent = center ? CenterWrapper : ViewWrapper
-  const DesktopAvatar = () => (
-    isLoggedIn ?
-      <Tooltip
-        content={
-          <View variants={['column']}>
-            <Button text={'Profile'} variants={['list']} icon={'user'} onPress={() => navigate('/profile')}/>
-            <Button text={'Logout'} variants={['list', 'text:negative']} icon={'exit'} onPress={() => Session.logout()}/>
-          </View>
-        }
-        position='bottom'
-        showOn='click'>
-        <Avatar
-          profile={profile}
-          variants={['small', 'alignSelfCenter']}
-          debugName={'Header Avatar'}
-        />
-      </Tooltip> : <Avatar
-        profile={profile}
-        variants={['small', 'alignSelfCenter']}
-        debugName={'Header Avatar'}
-        onPress={ () => AppStatus.setModal('auth')}
-      />
-  )
-
   return <>
-    <WrapperComponent styles={{ innerWrapper: styles.wrapper, wrapper: styles.floatingHeader }}>
-      <Link to={'/'} css={styles.logoWrapper}>
-        <Logo variants={currentTheme === 'dark' ? 'white' : 'black'} style={styles.logo}/>
-      </Link>
+    <Drawer
+      styles={{
+        box: styles.drawer,
+      }}
+      css={[styles.drawer]}
+      open={drawerOpen}
+      size='75vw'
+      position='right'
+      toggle={toggleDrawer}
+      showCloseButton
+    >
 
-      {children}
+      <NavContent />
+    </Drawer>
 
-      <NavComponent styles={{
-        box: styles.nav,
-
-      }} css={styles.nav} open={drawerOpen} size='80%' position='left' toggle={toggleDrawer} >
-        {
-          isMobile && <Link to={'/'} css={styles.logoWrapper}>
-            <Logo
-              variants={currentTheme === 'dark' ? 'white' : 'black'}
-              style={styles.logo}
-            />
-          </Link>
-        }
-        <View variants={['gap:2', 'padding:1']} responsiveVariants={{ small: ['column'] }}>
-
-          {
-            navItems.map(i => (
-              <Link key={i.url} text={i.name} to={i.url} css={styles.navLink} />
-            ))
-          }
-        </View>
-        <Button
-          variants={['icon', 'marginRight:1']}
-
-          responsiveVariants={{
-
-            small: ['marginHorizontal:auto', 'marginVertical:3'],
-          }}
-          styles={{ icon: styles.themeSwitch }}
-          onPress={toggleTheme}
-          icon={currentTheme === 'dark' ? 'darkMode' : 'lightMode'}
-        />
-        {
-          isMobile && <View variants={['separator', 'marginVertical:3']} />
-        }
-        {/* {
-          isMobile ?
-            <View variants={['column', 'alignCenter', 'paddingHorizontal:5', 'gap:3']}>
-              <Avatar
-                profile={profile}
-                variants={['small']}
-                debugName={'Header Avatar'}
-                onPress={() => {
-                  if (isLoggedIn) {
-                    navigate('/profile')
-                  } else {
-                    AppStatus.setModal('auth')
-                  }
-                }}
-              />
-              {
-                isLoggedIn &&
-                <Button variants={['negative', 'alignSelfStretch']} text={'Logout'} icon='exit' onPress={Session.logout}/>
-              }
-            </View>
-            :
-            <DesktopAvatar />
-        } */}
-
-      </NavComponent>
-      {
-        isMobile && (
-          <Button
-            icon='menu'
-            variants={['marginLeft:auto', 'icon', currentTheme === 'dark' ? 'icon:white' : 'icon:black']}
-            onPress={() => toggleDrawer()}
-          />
-        )
-      }
-    </WrapperComponent>
-    <AuthModal/>
+    <ActionIcon
+      icon='menu'
+      variants={['marginLeft:auto', 'minimal', 'neutral10']}
+      onPress={toggleDrawer}
+    />
   </>
 }
 
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
+export const Header = ({ center, searchBar = null }) => {
+  const mediaQuery = Theme.media.down(BREAKPOINT)
+  const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
+
+  const Wrapper = center ? CenterWrapper : View
+
+  return (
+    <Wrapper
+      styles={{
+        innerWrapper: styles.wrapper,
+        wrapper: styles.floatingHeader as any,
+      }}
+      style={styles.floatingHeader}
+      variants={['paddingVertical:2']}
+    >
+      <Link to={'/'} css={styles.logoWrapper}>
+        <Logo style={styles.logo} />
+      </Link>
+
+      {searchBar}
+
+      {
+        isMobile ? (
+          <DrawerMenu isMobile={isMobile} />
+        ) : (
+          <View variants={['alignCenter']}>
+            <NavContent />
+          </View>
+        )
+      }
+    </Wrapper>
+  )
+}
+
+const closeIconSize = 24
+const logoSize = 32
+
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     ...theme.presets.row,
-    ...theme.presets.justifySpaceBetween,
     ...theme.presets.alignCenter,
-    ...theme.spacing.padding(1),
-    ...theme.presets.flex,
-  },
-  logo: {
-    width: 140,
-    [theme.media.down('small')]: {
-      width: 120,
-
-    },
-
-  },
-  logoWrapper: {
-    marginRight: 'auto',
-    [theme.media.down('small')]: {
-      display: 'flex',
-      ...theme.presets.justifyCenter,
-      marginRight: 'unset',
-    },
   },
   floatingHeader: {
-    position: 'sticky',
-    zIndex: theme.values.zIndex.header,
-
+    position: 'static',
+    zIndex: 2,
     top: 0,
     left: 0,
     right: 0,
-    backgroundColor: theme.colors.background + '55',
+    backgroundColor: theme.colors.transparent,
     backdropFilter: 'blur(4px)',
 
-  },
-  nav: {
+    paddingLeft: 40,
+    paddingRight: 40,
 
-    ...theme.presets.row,
+    borderBottom: `1px solid ${theme.colors.neutral3}`,
+    // justifyContent: 'center',
+    alignItems: 'center'
+  },
+  logo: {
+    width: logoSize * 4,
+    [Theme.media.down(BREAKPOINT)]: {
+      width: logoSize,
+    },
+  },
+  logoWrapper: {
+    marginRight: 'auto',
+    textDecoration: 'none',
+
+    [Theme.media.down(BREAKPOINT)]: {
+      marginRight: theme.spacing.value(0),
+      display: 'flex',
+      ...theme.presets.justifyCenter,
+    },
+  },
+  drawer: {
+    ...theme.presets.column,
     ...theme.presets.alignCenter,
     gap: theme.spacing.value(2),
+    backgroundColor: theme.colors.background,
+    alignItems: 'stretch',
+  },
+  close: {
+    backgroundColor: theme.colors.transparent,
+    color: theme.colors.neutral9,
+    width: closeIconSize,
+    height: closeIconSize,
+  },
+  closeWrapper: {
+    width: closeIconSize,
+    marginLeft: 'auto',
+    ...theme.spacing.marginBottom(2),
+  },
+  profileWrapper: {
+    borderRadius: theme.borderRadius.small,
+    ...theme.border.neutral5({ width: 1 }),
+    ...theme.presets.centerRow,
+    ...theme.spacing.padding(2),
+    ...theme.presets.fullWidth,
+    ...theme.spacing.gap(2),
+    ...theme.spacing.marginBottom(1),
+  },
+  profileInfos: {
+    width: `calc(100% - ${theme.values.itemHeight.small + theme.spacing.value(3)}px)`,
+    ...theme.presets.column,
+    ...theme.presets.justifySpaceBetween,
+    ...theme.spacing.gap(0.5),
+  },
+  email: {
+    color: theme.colors.neutral8,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  navItem: {
+    ...assignTextStyle('h5')(theme).text,
+    ...theme.presets.textCenter,
+    color: theme.colors.neutral9,
+    fontWeight: '600',
+    textDecoration: 'none',
+    ...theme.spacing.paddingHorizontal(2),
+    ...theme.spacing.paddingVertical(0.5),
+    borderRadius: theme.borderRadius.rounded,
 
-    [theme.media.down('small')]: {
-      ...theme.presets.column,
-      backgroundColor: theme.colors.background,
-      alignItems: 'stretch',
-      height: '100vh',
+    [Theme.media.down(BREAKPOINT)]: {
+      width: '100%',
+      ...assignTextStyle('p1')(theme).text,
+      ...theme.presets.textLeft,
+      ...theme.spacing.padding(2),
+      backgroundColor: theme.colors.transparent,
+      borderRadius: theme.borderRadius.small,
+      color: theme.colors.neutral10,
+      fontWeight: '400',
     },
   },
-  navButton: {
+  'navItem:selected': {
+    color: theme.colors.primary3,
 
-  },
-  navLink: {
+    backgroundColor: theme.colors.primary1,
 
-    [theme.media.down('small')]: {
-      ...theme.presets.textCenter,
-      textDecoration: 'none',
+    [Theme.media.down(BREAKPOINT)]: {
+      backgroundColor: theme.colors.primary1,
+      color: theme.colors.primary3,
+      fontWeight: '600',
     },
   },
-  themeSwitch: {
-    color: theme.colors.textH,
-
-  },
-
-}))
+}), true)

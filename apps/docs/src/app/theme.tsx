@@ -1,87 +1,138 @@
-import { createTheme, VariantProvider } from '@codeleap/common'
+import { createTheme, validateTheme, VariantProvider } from '@codeleap/common'
 import { textStyles } from './textStyles'
-import { CSSObject } from '@emotion/css'
 import { Icons } from './assets/icons'
+import { logger } from './logger'
+import { CSSObject } from '@emotion/react'
+import { effects } from './effects'
 
-const IS_SSR = typeof window === 'undefined'
+const themeSpacing = 8
 
-const getWindowDimensions = () => {
-  if (IS_SSR) {
-    return {
-      height: 0,
-      width: 0,
-    }
-
-  }
-  return {
-    width: window?.innerWidth || 0,
-    height: window?.innerHeight || 0,
-  }
+const light = {
+  'primary1': '#E0F3F9',
+  'primary2': '#BCE8F4',
+  'primary3': '#4CB8D6',
+  'primary4': '#3A8CA3',
+  'primary5': '#235260',
+  'secondary1': '#E4E4F8',
+  'secondary2': '#B3B4F8',
+  'secondary3': '#8183F8',
+  'secondary4': '#6668C4',
+  'secondary5': '#4C4D91',
+  'neutral1': '#FFFFFF',
+  'neutral2': '#F2F2F2',
+  'neutral3': '#E5E5E5',
+  'neutral4': '#D9D9D9',
+  'neutral5': '#CCCCCC',
+  'neutral6': '#B3B3B3',
+  'neutral7': '#999999',
+  'neutral8': '#666666',
+  'neutral9': '#333333',
+  'neutral10': '#000000',
+  'positive1': '#4CB7D5',
+  'positive2': '#F5F0D1',
+  'warning1': '#F3DBDB',
+  'warning2': '#4CB7D5',
+  'alert1': '#E4C000',
+  'alert2': '#F33F3F',
+  'destructive1': '#F3DBDB',
+  'destructive2': '#F33F3F',
+  'background': '#FFFFFF',
+  'card': '#4CB7D5',
+  'separator': '#E5E5E5',
+  'border': '#CCCCCC',
+  'overlay': '#000000',
+  'headlines': '#000',
+  'body': '#f8f8f8',
+  'caption': '#999999',
+  ripple: '#0002',
+  transparent: '#FFF0',
+  info: '#00b9f7',
+  danger: '#fc3c5c',
+  warning: '#fcfc41',
+  tip: '#6fb539',
+  note: '#5b5b5a',
 }
 
-const themeObj = {
-  colors: {
-    light: {
-      primary: '#7695EC',
-      icon: '#000',
-      border: '#7695EC',
-      disabled: '#a4aabc',
-      text: '#000000',
-      background: '#ffffff',
-      backgroundSecondary: '#fff',
-      gray: '#333',
-      lightGray: '#ccc',
-      veryLightGray: '#f7f7f7',
-      negative: '#a11',
-      positive: '#ada',
-      secondary: '#000',
-      black: '#000',
-      borders: '#ccc',
-      placeholder: '#ccc',
-      neutral: '#5f5f5f',
-      white: '#fff',
-      green: 'green',
-      textH: '#333',
-      textP: '#555',
-      grayFade: '#5552',
-      inlineCode: '#7695EC',
-      info: '#00b9f7',
-      danger: '#fc3c5c',
-      warning: '#fcfc41',
-      tip: '#6fb539',
-      note: '#5b5b5a',
+const dark = {
+  'primary1': '#173740',
+  'primary2': '#286070',
+  'primary3': '#4FBCDB',
+  'primary4': '#43A2BD',
+  'primary5': '#A9D0DB',
+  'secondary1': '#2F2F59',
+  'secondary2': '#434480',
+  'secondary3': '#8B8DF8',
+  'secondary4': '#7475B2',
+  'secondary5': '#A3A4CC',
+  'neutral1': '#1A1A1A',
+  'neutral2': '#333333',
+  'neutral3': '#4D4D4D',
+  'neutral4': '#D9D9D9',
+  'neutral5': '#737373',
+  'neutral6': '#B3B3B3',
+  'neutral7': '#999999',
+  'neutral8': '#CCCCCC',
+  'neutral9': '#333333',
+  'neutral10': '#FFFFFF',
+  'positive1': '#3D6652',
+  'positive2': '#42C586',
+  'warning1': '#66603D',
+  'warning2': '#E4C000',
+  'alert1': '#663D3D',
+  'alert2': '#FF4E4E',
+  'destructive1': '#663D3D',
+  'destructive2': '#FF4E4E',
+  'background': '#1A1A1A',
+  'card': '#333333',
+  'separator': '#4D4D4D',
+  'border': '#737373',
+  'overlay': '#000000',
+  'headlines': '#FFFFFF',
+  'body': '#242424',
+  'caption': '#666666',
+  ripple: '#0002',
+  transparent: '#FFF0',
+  info: '#00b9f7',
+  danger: '#fc3c5c',
+  warning: '#fcfc41',
+  tip: '#6fb539',
+  note: '#5b5b5a',
+}
+
+const themeObj = validateTheme({
+  colors: { light, dark },
+  initialTheme: 'light',
+  spacing: themeSpacing,
+  borderRadius: {
+    tiny: 4,
+    small: 8,
+    medium: 24,
+    rounded: 999999,
+  },
+  typography: {
+    base: {
+      fontFamily: 'Roboto',
+      styles: textStyles,
     },
-    dark: {
-      primary: '#7695EC',
-      icon: '#fff',
-      border: '#7695EC',
-      disabled: '#a4aabc',
-      text: '#fff',
-      background: '#222222',
-      backgroundSecondary: '#303030',
-      gray: '#333',
-      neutral: '#777777bb',
-      lightGray: '#ccc',
-      black: '#000',
-      veryLightGray: '#f7f7f7',
-      negative: '#a11',
-      positive: '#ada',
-      secondary: '#000',
-      borders: '#ccc',
-      placeholder: '#ccc',
-      white: '#fff',
-      green: 'green',
-      textH: '#fff',
-      textP: '#fff',
-      grayFade: '#5552',
-      inlineCode: '#7695EC',
-      info: '#00b9f7',
-      danger: '#fc3c5c',
-      warning: '#fcfc41',
-      tip: '#6fb539',
-      note: '#5b5b5a',
+    quotes: {
+      fontFamily: 'Roboto',
+      styles: textStyles,
     },
   },
+  icons: Icons,
+  presets: {
+    debugger: function (color: 'blue' | 'red' | 'yellow' | 'green' | 'purple' = 'red', background = false) {
+      const hex = color === 'purple' ? '#9400D3' : color
+
+      return {
+        borderWidth: 1,
+        borderColor: hex,
+        color: hex,
+        ...(background ? { backgroundColor: hex } : {}),
+      }
+    },
+  },
+  effects,
   breakpoints: {
     zero: 0,
     tinyest: 290,
@@ -95,72 +146,46 @@ const themeObj = {
     xxlarge: 1800,
     huge: 2559,
   },
-  spacing: 8,
-  borderRadius: {
-    large: 15,
-    medium: 10,
-    small: 5,
-  },
-  typography: {
-    baseFontSize: 18,
-    hColor: '#333',
-    pColor: '#555',
-    fontFamily: 'Helvetica',
-    styles: textStyles,
-  },
-  icons: Icons,
-  presets: {
-    something: {
-      backgroundColor: 'red',
-    },
-    elevated: {
-      shadowOffset: { width: 0, height: 0 },
-      shadowColor: 'rgba(0, 0, 0, 0.5)',
-      shadowRadius: 20,
-      shadowOpacity: 0.3,
-      elevation: 8,
-    },
-  },
+
   values: {
-    ...getWindowDimensions(),
-
-    headerHeight: 56,
-    navBarHeight: 100,
-    buttons: {
-      small: {
-        height: 20,
-      },
-      default: {
-        height: 35,
-      },
-      large: {
-        height: 60,
-      },
+    height: 10,
+    width: 10,
+    pixel: 1,
+    innerSpacing: { X: 2, Y: 2, value: 16 },
+    outerSpacing: { X: 2, Y: 2, value: 16 },
+    gap: 2,
+    smallGap: 1,
+    itemHeight: {
+      default: 48,
+      small: 32,
+      tiny: 20,
     },
-    zIndex: {
-      header: 2,
-      footer: 1,
-      appStatusOverlay: 6,
-
+    iconSize: {
+      1: 16,
+      2: 20,
+      3: 24,
+      4: 32,
+      5: 48,
+      6: 64,
+    },
+    headerHeight: 60,
+    borderWidth: {
+      small: 1,
+      medium: 2,
     },
   },
-  initialTheme: IS_SSR ? 'light' : (window.___savedTheme || 'light'),
-} as const
-
-let windowSize = [0, 0]
-
-export function setWindowSize(to: typeof windowSize) {
-
-  windowSize = to
-}
-
-const appTheme = createTheme(themeObj, {
-  screenSize: () => windowSize,
 })
 
+const appTheme = createTheme(themeObj, {
+  screenSize: () => [0, 0],
+})
+
+export type TCSS = CSSObject
+
 const styleGetter = (
-  style: CSSObject,
+  style: TCSS,
 ) => {
+
   return style
 }
 
@@ -169,6 +194,10 @@ type StyleGetter = typeof styleGetter
 export const variantProvider = new VariantProvider<
   StyleGetter,
   typeof themeObj
->(appTheme, styleGetter)
+>(appTheme, styleGetter, logger)
 
 export const Theme = variantProvider.theme
+
+export type AppThemeModes = keyof typeof themeObj.colors
+
+export type Breakpoint = keyof typeof themeObj.breakpoints

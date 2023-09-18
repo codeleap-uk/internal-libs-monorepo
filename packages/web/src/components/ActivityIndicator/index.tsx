@@ -14,11 +14,14 @@ import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
+/** * LoadingIndicator */
 export type ActivityIndicatorProps = ComponentCommonProps & {
   style?: React.CSSProperties
   styles?: StylesOf<ActivityIndicatorComposition>
   css?: CSSInterpolation | CSSInterpolation[]
+  /** prop */
   component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<any>}, 'component'>>
+  /** prop */
   size?: number
 } & ComponentVariants<typeof ActivityIndicatorStyles>
 

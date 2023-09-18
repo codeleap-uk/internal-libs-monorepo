@@ -1,53 +1,25 @@
-import { Theme, React, variantProvider, Touchable, Settings } from '@/app'
-import { onUpdate, useCodeleapContext, useState } from '@codeleap/common'
-import { Session } from '@/redux'
-import { Image } from './Image'
+import { Settings, TCSS } from '@/app'
+import { ComponentVariants, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
+import { Text, Touchable } from '@/components'
+import { LogoStyles, LogoComposition } from '../app/stylesheets/Logo'
+import { StylesOf } from '@codeleap/web'
+
 type LogoProps = {
-  variants?: string | string[]
-  switchServerOnPress?: boolean
-  style?: {}
-}
+  styles?: StylesOf<LogoComposition>
+  style?: TCSS
+} & ComponentVariants<typeof LogoStyles> & Omit<PropsOf<typeof Touchable>, 'variants'|'styles'>
 
 export function Logo(props: LogoProps) {
-  const {
-    style,
-    switchServerOnPress,
+  const { responsiveVariants, variants, styles } = props
 
-  } = props
-  const { currentTheme } = useCodeleapContext()
+  const variantStyles = useDefaultComponentStyle<'u:Logo', typeof LogoStyles>('u:Logo', {
+    responsiveVariants,
+    rootElement: 'wrapper',
+    styles,
+    variants,
+  })
 
-  const source = (props.variants?.includes('black') || (currentTheme === 'light' && !props.variants)) ? 'codeleap_logo_black.png' : 'codeleap_logo_white.png'
-
-  const [numberOfPresses, setPresses] = useState(0)
-
-  onUpdate(() => {
-    if (numberOfPresses === 10) {
-      Session.setMode().then(() => {
-        setPresses(0)
-      })
-    }
-  }, [numberOfPresses])
-
-  const image = <Image
-    source={source}
-    css={[styles.image, style]}
-    {...props}
-  />
-
-  if (switchServerOnPress && Settings.Environment.IsDev) {
-    return <Touchable onPress={() => setPresses(n => n + 1) }
-      debugName={'Click on Logo'}>
-      {image}
-    </Touchable>
-  }
-
-  return image
+  return (
+    <Text variants={['h4', 'extraBold', 'color:neutral10']} text={Settings.AppName} style={variantStyles.image} />
+  )
 }
-
-const styles = variantProvider.createComponentStyle({
-  image: {
-    height: undefined,
-    width: '75%',
-    alignSelf: 'center',
-  },
-}, true)

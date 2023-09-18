@@ -7,19 +7,27 @@ import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
+/** * Badge */
 export type BadgeProps = ComponentVariants<typeof BadgePresets>
   & ViewProps<'div'>
   & ComponentCommonProps
   & {
     styles?: StylesOf<BadgeComposition>
+    /** prop */
     maxCount?: number
+    /** prop */
     minCount?: number
+    /** prop */
     debugName?: string
     innerWrapperProps?: Partial<PropsOf<typeof View>>
     textProps?: Partial<PropsOf<typeof Text>>
+    /** prop */
     getBadgeContent?: (props: BadgeContent) => string
+    /** prop */
     renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
+    /** prop */
     disabled?: boolean
+    /** prop */
     badge?: number | boolean
   }
 

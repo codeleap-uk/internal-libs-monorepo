@@ -103,16 +103,16 @@ Clone the `internal-libs-monorepo` repository and navigate to `apps/docs/src/art
 
 The structure of this folder is as follows:
 
-- {module}
-    - {category}
+- Module
+    - Category
         - ...articles
     - ...articles without category
     - order.json (file used for determining order of articles on navbar and automatically assigning previous and next buttons at their end)
 
 Where:
 
-- {module} is one of: mobile, common, web, cli or "concepts", which is a category of it's own dedicated to holding documentation about our culture, procedures, and overarching technical concepts
-- {category} is the subgroup of articles inside the documentation of a module, so for a component library, you could have `components` and `hooks` categories to separate content. If a category is not specified (the .mdx file is at the root of the module's folder), it's simply placed at the root in the navbar.
+- Module is one of: mobile, common, web, cli or "concepts", which is a category of it's own dedicated to holding documentation about our culture, procedures, and overarching technical concepts
+- Category is the subgroup of articles inside the documentation of a module, so for a component library, you could have `components` and `hooks` categories to separate content. If a category is not specified (the .mdx file is at the root of the module's folder), it's simply placed at the root in the navbar.
 
 The `order.json` file at the root of each `module` has the following structure:
 ```json

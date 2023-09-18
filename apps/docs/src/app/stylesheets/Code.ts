@@ -51,7 +51,7 @@ const light = {
   }, {
     types: ['function', 'keyword'],
     style: {
-      color: 'rgb(0, 0, 255)',
+      color: 'rgb(4, 81, 165)',
     },
   }, {
     types: ['class-name'],
@@ -120,4 +120,3 @@ const CodeThemes = {
 }
 
 export default CodeThemes
-

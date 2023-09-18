@@ -1,20 +1,39 @@
-import { React, Text, View, Button, variantProvider, Theme, Drawer } from '@/app'
+import { React, variantProvider, Theme } from '@/app'
 import { Collapse } from '../Collapse'
 import { MdxMetadata } from 'types/mdx'
-import { useBooleanToggle, useComponentStyle } from '@codeleap/common'
+import { onUpdate, useBooleanToggle } from '@codeleap/common'
 import { Link } from '../Link'
+import { View, Button, Drawer } from '@/components'
+import { Location } from '@reach/router'
+import { useMediaQuery } from '@codeleap/web'
 
 type NavbarProps = {
   pages: [string, MdxMetadata[]][]
   title: string
+  location: Location
 }
 
-const ArticleLink = ({ title, path }) => <Link text={title} to={path} variants={['padding:1']}/>
-const Category = ({ name, items }) => {
+const ArticleLink = ({ title, path, selected, isRoot }) => (
+  <Link to={path} variants={['noUnderline']}>
+    <Button
+      text={title}
+      onPress={() => null}
+      variants={['docItem', 'hiddenIcon', selected && 'docItem:selected', !isRoot && 'docItem:list']}
+    />
+  </Link>
+)
+
+const Category = ({ name, items, location }) => {
   const [open, toggle] = useBooleanToggle(false)
+  let selected = false
 
   const isRoot = name === 'Root'
-  const _items = items.map((p, idx) => <ArticleLink title={p.title} key={idx} path={'/' + p.path} />)
+
+  const _items = items.map((p, idx) => {
+    const isSelected = location?.pathname?.includes(p?.path)
+    if (isSelected) selected = true
+    return <ArticleLink title={p.title} key={idx} path={'/' + p.path} selected={isSelected} isRoot={isRoot} />
+  })
 
   if (isRoot) {
     return <>
@@ -22,79 +41,83 @@ const Category = ({ name, items }) => {
     </>
   }
 
-  return <View variants={['column', 'fullWidth']}>
-    <Button text={name} onPress={toggle} rightIcon='arrowDownWhite' variants={['categoryButton']} styles={{
-      rightIcon: {
-        transform: `rotate(${open ? 180 : 0}deg)`,
-      },
-    }}/>
-    <Collapse open={open} height={items.length * 80} css={staticStyles.collapsibleList}>
-      {_items}
-    </Collapse>
+  onUpdate(() => {
+    if (selected) toggle()
+  }, [selected])
+
+  return (
+    <View variants={['column', 'fullWidth', 'gap:0.5']}>
+      <Button
+        text={name}
+        onPress={toggle}
+        icon='chevron-right'
+        variants={['docItem']}
+        styles={{
+          text: {
+            fontWeight: 900
+          },
+          icon: {
+            transform: `rotate(${open ? 90 : 0}deg)`,
+          }
+        }}
+      />
+
+      <Collapse open={open} height={items.length * 80} css={styles.collapsibleList}>
+        {_items}
+      </Collapse>
+    </View>
+  )
+}
+
+export const Navbar = ({ pages, location }: NavbarProps) => {
+  const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
+
+  const isMobile = useMediaQuery(Theme.media.down('mid'), { getInitialValueInEffect: false })
+
+  const Items = () => <>
+    {pages.map?.(([category, items]) => {
+      return <Category items={items} name={category} key={category} location={location} />
+    })}
+  </>
+
+  return <View variants={['column', 'gap:0.5']} style={styles.sidebar}>
+    {isMobile && <Button text='Open navigation' onPress={toggleDrawer} variants={['docNavbar']} />}
+
+    {!isMobile && <Items />}
+
+    {isMobile && (
+      <Drawer
+        debugName='drawer'
+        open={isDrawerOpen}
+        position='left'
+        toggle={toggleDrawer}
+        size='85vw'
+      >
+        <Items />
+      </Drawer>
+    )}
   </View>
 }
 
-export const Navbar:React.FC<NavbarProps> = ({ pages, title }) => {
-  const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
+const SECTION_WIDTH = 280
 
-  const styles = useComponentStyle(componentStyles)
+const styles = variantProvider.createComponentStyle((theme) => ({
+  sidebar: {
+    height: '100%',
+    position: 'static',
+    minWidth: SECTION_WIDTH,
+    maxWidth: SECTION_WIDTH,
+    minHeight: '90svh',
+    borderRight: `1px solid ${theme.colors.neutral3}`,
+    paddingTop: theme.spacing.value(3),
 
-  const isMobile = Theme.hooks.down('mid')
-
-  const WrapperComponent = isMobile ? Drawer : View
-
-  return <>
-    <Button variants={['circle']} icon='chevronLeft' styles={{
-      icon: {
-        transform: `rotate(${isDrawerOpen ? 0 : 180}deg)`,
-        transition: 'transform 0.3s ease',
-      },
-      wrapper: {
-        ...styles.toggleButton,
-        transform: isMobile ? `scale(${isDrawerOpen ? 0 : 1})` : 'scale(0)',
-      },
-    }} onPress={toggleDrawer}/>
-    <WrapperComponent
-      css={styles.wrapper}
-      open={isDrawerOpen}
-      position='left'
-      toggle={toggleDrawer}
-      size='50%'
-    >
-      <Text variants={['h4', 'alignSelfCenter', 'marginVertical:2']} text={title} responsiveVariants={{ small: ['h3'] }}/>
-      {
-        pages.map?.(([category, items]) => {
-
-          return <Category items={items} name={category} key={category}/>
-
-        })
-      }
-
-    </WrapperComponent>
-  </>
-}
-
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
-  wrapper: {
-    position: 'sticky',
-    left: 0,
-    bottom: 0,
-    top: theme.values.headerHeight,
-    maxHeight: theme.values.height - theme.values.headerHeight,
-    overflowY: 'hidden',
-    backgroundColor: theme.colors.background,
-    ...theme.presets.column,
-    ...theme.presets.alignSelfStretch,
-    ...theme.border.grayFade({
-      width: 1,
-      directions: ['right'],
-    }),
-    // width: 240,
-    // minWidth: 240,
-    flexBasis: '20%',
-
+    [theme.media.down('mid')]: {
+      minWidth: '100vw',
+      maxWidth: '100vw',
+      minHeight: 'unset',
+      paddingTop: 0,
+    }
   },
-
   toggleButton: {
     transition: 'transform 0.3s ease',
     ...theme.presets.fixed,
@@ -102,12 +125,7 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     right: theme.spacing.value(3),
     bottom: theme.spacing.value(3),
   },
-}))
-
-const staticStyles = variantProvider.createComponentStyle((theme) => ({
   collapsibleList: {
-    ...theme.spacing.paddingLeft(2),
-    ...theme.presets.alignStretch,
     ...theme.presets.column,
   },
 }), true)

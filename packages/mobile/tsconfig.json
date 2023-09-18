@@ -90,9 +90,9 @@
   ],
   "typedocOptions": {
     "entryPoints": [
-      "src/index.ts"
+      "src/index.ts",
     ],
     "out": "docs",
     "name": "CodeLeap web lib"
-  }
+  },
 }

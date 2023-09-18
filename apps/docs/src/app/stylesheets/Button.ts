@@ -1,273 +1,181 @@
-import { ButtonComposition, getActivityIndicatorBaseStyles } from '@codeleap/common'
-import { Theme } from '..'
 import { variantProvider } from '../theme'
+import { ButtonComposition, ButtonPresets } from '@codeleap/web'
+import { assignTextStyle } from './Text'
 
-const defaultStyle = variantProvider.getDefaultVariants('Button')
-const createButtonVariant =
-  variantProvider.createVariantFactory<ButtonComposition>()
+const createButtonStyle = variantProvider.createVariantFactory<ButtonComposition>()
 
-const defaultVariant = createButtonVariant((theme) => {
-
-  const loaderStyle = getActivityIndicatorBaseStyles(theme.values.buttons.default.height * 0.6)
-  return {
-    ...defaultStyle.default(theme),
-    ...defaultStyle.pill(theme),
+export const AppButtonStyles = {
+  ...ButtonPresets,
+  default: createButtonStyle((theme) => ({
     wrapper: {
-      ...defaultStyle.default(theme).wrapper,
-      ...defaultStyle.pill(theme).wrapper,
-      height: theme.values.buttons.default.height,
-      justifyContent: 'center',
-    },
-    icon: {
-      ...defaultStyle.default(theme).icon,
-      color: theme.colors.white,
-      size: 22,
-
-    },
-    loaderWrapper: {
-      ...loaderStyle.wrapper,
-    },
-    loaderCircle: {
-      ...loaderStyle.circle,
-    },
-    loaderFrontCircle: {
-      ...defaultStyle.default(theme).loaderFrontCircle,
-      ...loaderStyle.frontCircle,
-      borderTopColor: theme.colors.white,
-    },
-    loaderBackCircle: {
-      ...defaultStyle.default(theme).loaderBackCircle,
-      ...loaderStyle.backCircle,
-      borderColor: theme.colors.white,
-    },
-    text: {
-      ...defaultStyle.default(theme).text,
-      color: theme.colors.white,
-    },
-  }
-})
-
-export const AppButtonStyle = {
-  ...defaultStyle,
-  default: defaultVariant,
-  neutral: createButtonVariant((theme) => ({
-    ...defaultVariant(theme),
-    wrapper: {
-      ...defaultVariant(theme).wrapper,
-      backgroundColor: theme.colors.neutral,
-    },
-  })),
-  text: createButtonVariant((theme) => ({
-    ...defaultStyle.default(theme),
-    wrapper: {
-      ...defaultStyle.default(theme).wrapper,
-
-      backgroundColor: 'rgba(0,0,0,0)',
-      '&:hover': {
-        backgroundColor: 'rgba(0,0,0,0)',
-      },
-    },
-    text: {
-      color: theme.typography.pColor,
-    },
-  })),
-  'icon:black': createButtonVariant((theme) => ({
-    ...defaultStyle.icon,
-    icon: {
-      color: theme.colors.black,
-    },
-  })),
-  'icon:white': createButtonVariant((theme) => ({
-    ...defaultStyle.icon,
-    icon: {
-      color: theme.colors.white,
-    },
-  })),
-  'icon:primary': createButtonVariant((theme) => ({
-
-    ...defaultVariant,
-    ...defaultStyle.icon,
-    icon: {
-      ...defaultVariant(theme).icon,
-      color: theme.colors.primary,
-    },
-  })),
-  'icon:navBar': createButtonVariant((theme) => ({
-    ...defaultStyle.icon,
-    icon: {
-      color: theme.colors.primary,
-      // color: theme.typography.pColor,
-      size: 25,
-    },
-  })),
-  list: createButtonVariant((theme) => ({
-    ...defaultVariant(theme),
-    wrapper: {
-      ...defaultVariant(theme).wrapper,
-      height: 'auto',
-      ...theme.spacing.padding(1),
-      backgroundColor: 'transparent',
+      cursor: 'pointer',
+      border: 'none',
+      outline: 'none',
+      ...theme.presets.row,
+      ...theme.presets.relative,
+      backgroundColor: theme.colors.primary3,
+      borderRadius: theme.borderRadius.small,
+      transitionProperty: 'background, color, border, filter',
+      transitionDuration: '0.2s',
       ...theme.presets.alignCenter,
-      borderRadius: 0,
-      width: '100%',
-      '&:hover': {
-        backgroundColor: theme.colors.grayFade,
-
-      },
-    },
-    text: {
-      ...defaultVariant(theme).text,
-      color: theme.colors.textH,
-      textAlign: 'center',
-    },
-    icon: {
-      ...defaultVariant(theme).icon,
-      size: 16,
-      color: theme.colors.icon,
-    },
-  })),
-  noHover: createButtonVariant((theme) => ({
-
-    wrapper: {
-
-      '&:hover': {
-        backgroundColor: 'transparent',
-
-      },
-    },
-  })),
-  'text:negative': createButtonVariant((theme) => ({
-    icon: {
-      color: theme.colors.negative,
-    },
-    text: {
-      color: theme.colors.negative,
-
-    },
-  })),
-  icon: createButtonVariant((theme) => ({
-    ...defaultStyle.icon(theme),
-    wrapper: {
-      ...defaultStyle.icon(theme).wrapper,
+      ...theme.presets.justifyCenter,
       width: 'auto',
+      
+      '&:hover': {
+        backgroundColor: theme.colors.primary4,
+      },
+      ...theme.spacing.padding(1),
+      ...theme.spacing.paddingHorizontal(2)
+    },
+    text: {
+      textAlign: 'center',
+      color: theme.colors.neutral10,
+    },
+    'text:disabled': {
+      color: theme.colors.neutral5,
+    },
+    'loaderWrapper': {
+      height: theme.values.iconSize[4],
+      width: theme.values.iconSize[4],
     },
     icon: {
-      ...defaultStyle.icon(theme).icon,
-      color: theme.colors.textH,
-      '&:hover': {
-        color: theme.colors.primary,
-      },
+      color: theme.colors.neutral10,
+      width: theme.values.iconSize[1],
+      height: theme.values.iconSize[1],
     },
-
-  })),
-  'list:selected': createButtonVariant((theme) => ({
-    wrapper: {
-      backgroundColor: theme.colors.primary,
-      '&:hover': {
-        backgroundColor: theme.colors.primary,
-
-      },
-    },
-    text: {
-      color: theme.colors.white,
-    },
-  })),
-  outline: createButtonVariant((theme) => ({
-    ...defaultVariant(theme),
-    wrapper: {
-      ...defaultVariant(theme).wrapper,
-      backgroundColor: 'transparent',
-      '&:hover': {
-        backgroundColor: 'transparent',
-      },
-      ...theme.border.primary(1),
-    },
-    text: {
-      ...defaultVariant(theme).text,
-      color: theme.colors.primary,
-
-    },
-  })),
-
-  gray: createButtonVariant((theme) => ({
-    wrapper: {
-      ...defaultStyle.default(theme).wrapper,
-      backgroundColor: theme.colors.gray,
-    },
-    text: {
-      ...defaultStyle.default(theme).text,
-      color: theme.colors.white,
-    },
-    icon: {
-      ...defaultStyle.default(theme).icon,
-      color: theme.colors.white,
-      width: 24,
-      height: 24,
-    },
-  })),
-  positive: createButtonVariant((theme) => ({
-    wrapper: {
-      backgroundColor: theme.colors.positive,
-    },
-  })),
-  small: createButtonVariant((theme) => ({
-
-    wrapper: {
-      height: 'auto',
-      minHeight: theme.values.buttons.small.height,
-    },
-  })),
-  large: createButtonVariant((theme) => ({
-    wrapper: {
-      height: theme.values.buttons.large.height,
-    },
-  })),
-  link: createButtonVariant((theme) => ({
-    wrapper: {
-      padding: 0,
-      height: 'auto',
-    },
-    text: {
-      color: theme.colors.textH,
-      textDecoration: 'underline',
-      '&:hover': {
-        color: theme.colors.primary,
-      },
-    },
-  })),
-  categoryButton: createButtonVariant((theme) => ({
-    // ...defaultVariant(theme),
-    wrapper: {
-      // ...defaultVariant(theme).wrapper,
-      backgroundColor: 'transparent',
-      transition: 'background-color 0.2s ease',
-      borderRadius: 0,
-      ...theme.presets.alignSelfStretch,
-      '&:hover': {
-        backgroundColor: Theme.colors[theme.theme == 'light' ? 'dark' : 'light'].background + '22',
-      },
-    },
-    text: {
-      ...defaultVariant(theme).text,
-      color: theme.colors.textH,
-      textTransform: 'capitalize',
-      textAlign: 'left'
-
-    },
-    rightIcon: {
-      ...defaultVariant(theme).rightIcon,
-      color: theme.colors.textH,
-      transition: 'transform 0.2s ease',
+    'icon:disabled': {
+      color: theme.colors.neutral5,
     },
     leftIcon: {
-      size: 0,
-      height: 0,
-      width: 0
+      ...theme.spacing.marginRight('auto'),
+    },
+    rightIcon: {
+      ...theme.spacing.marginLeft('auto'),
+    },
+    'wrapper:disabled': {
+      backgroundColor: theme.colors.neutral2,
+
+      cursor: 'not-allowed',
+
+      '&:hover': {
+        backgroundColor: theme.colors.neutral2,
+      },
+      '&:active': {
+        backgroundColor: theme.colors.neutral2,
+      },
+    },
+  })),
+
+  docItem: createButtonStyle((theme) => ({
+    wrapper: {
+      cursor: 'pointer',
+      border: 'none',
+      outline: 'none',
+      ...theme.presets.row,
+      ...theme.presets.relative,
+      backgroundColor: theme.colors.background,
+      borderRadius: 0,
+      transitionProperty: 'background, color, border, filter',
+      transitionDuration: '0.2s',
+      ...theme.presets.alignCenter,
+      ...theme.presets.justifyStart,
+      width: '100%',
+      ...theme.spacing.gap(1),
+
+      paddingTop: theme.spacing.value(1),
+      paddingBottom: theme.spacing.value(1),
+      paddingLeft: theme.spacing.value(5),
+      paddingRight: theme.spacing.value(5),
+      
+      '&:hover': {
+        backgroundColor: theme.colors.background,
+      },
+    },
+    text: {
+      width: '100%',
+      textAlign: 'start',
+      ...assignTextStyle('p2')(theme).text,
+      color: theme.colors.neutral10,
+      fontWeight: 400,
+    },
+  })),
+  'docItem:selected': createButtonStyle((theme) => ({
+    wrapper: {
+      backgroundColor: theme.colors.primary1,
+      
+      '&:hover': {
+        backgroundColor: theme.colors.primary1,
+      },
+    },
+    text: {
+      width: '100%',
+      textAlign: 'start',
+      ...assignTextStyle('p2')(theme).text,
+      color: theme.colors.primary3,
+    },
+  })),
+  'docItem:list': createButtonStyle((theme) => ({
+    wrapper: {
+      paddingLeft: theme.spacing.value(5) + theme.spacing.value(2.8),
+    },
+  })),
+
+  hiddenIcon: createButtonStyle((theme) => ({
+    icon: {
+      opacity: 0,
     }
   })),
-  'icon:small': createButtonVariant(() => ({
-    icon: {
-      size: '16px',
+
+  'docNavAction': createButtonStyle((theme) => ({
+    wrapper: {
+      ...theme.presets.row,
+      backgroundColor: theme.colors.background,
+      borderRadius: theme.borderRadius.small,
+      border: `1px solid ${theme.colors.primary3}`,
+      ...theme.presets.justifySpaceBetween,
+      width: '100%',
+      ...theme.presets.flex,
+      ...theme.spacing.gap(1),
+      ...theme.spacing.padding(2),
+      transitionProperty: 'background, color, border, filter, box-shadow',
+      
+      '&:hover': {
+        backgroundColor: theme.colors.background,
+        ...theme.effects.thin
+      },
+    },
+    'wrapper:disabled': {
+      border: `1px solid ${theme.colors.neutral2}`,
+      backgroundColor: theme.colors.neutral2,
+
+      '&:hover': {
+        backgroundColor: theme.colors.neutral2,
+        boxShadow: 'unset'
+      },
+    }
+  })),
+
+  docNavbar: createButtonStyle((theme) => ({
+    wrapper: {
+      ...theme.presets.row,
+      backgroundColor: theme.colors.primary1,
+      borderRadius: 0,
+      borderBottom: `1px solid ${theme.colors.primary3}`,
+      width: '100%',
+      ...theme.presets.flex,
+      ...theme.spacing.gap(1),
+      ...theme.spacing.padding(2),
+      transitionProperty: 'background, color, border, filter, box-shadow',
+      
+      '&:hover': {
+        backgroundColor: theme.colors.background,
+        ...theme.effects.thin
+      },
+    },
+    text: {
+      width: '100%',
+      ...assignTextStyle('p3')(theme).text,
+      color: theme.colors.primary3,
     },
   })),
 }

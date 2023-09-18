@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
+    "target": "ES2018", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
     "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "lib": [
       "ESNext",
       "DOM"
     ], /* Specify library files to be included in the compilation. */
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "allowJs": true, /* Allow javascript files to be compiled. */
-    "jsx": "react-jsx", /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
     "noEmit": true, /* Do not emit outputs. */
     "isolatedModules": true, /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
     "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
@@ -15,14 +16,12 @@
     "esModuleInterop": true, /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
     "skipLibCheck": true, /* Skip type checking of declaration files. */
     "resolveJsonModule": true, /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
-    "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
     "paths": {
-        "@/*": [
-          "./src/*"
-        ]
+      "@/*": [
+        "./src/*"
+      ]
     }
-
   },
   "include": [
     "**/*.ts",
@@ -30,9 +29,9 @@
     "**/*.tsx",
     "**/*.jsx",
   ],
-  
   "exclude": [
     "node_modules",
+    "!node_modules/@tanstack/**/*",
     "babel.config.js",
     "metro.config.js",
     "jest.config.js",

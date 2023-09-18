@@ -1,102 +1,93 @@
 export const textStyles = {
+  hx: {
+    sizeMultiplier: 2.4,
+    weight: 700,
+    size: 72,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
+  },
+  h0: {
+    sizeMultiplier: 2,
+    weight: 700,
+    size: 40,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
+  },
   h1: {
-    lineHeight: 1,
-    size: {
-      max: 26,
-      min: 22,
-      viewport: 0.45,
-      multiplier: 1.2,
-    },
-    weight: 750,
+    sizeMultiplier: 2.4,
+    weight: 700,
+    size: 32,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   h2: {
-    lineHeight: 1.4,
-    size: {
-      max: 20,
-      min: 16,
-      viewport: 1,
-      multiplier: 1,
-    },
+    sizeMultiplier: 2,
     weight: 700,
+    size: 24,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   h3: {
-    lineHeight: 1.4,
-    size: {
-      max: 20,
-      min: 16,
-      viewport: 1,
-      multiplier: 0.2,
-    },
-    weight: 600,
+    sizeMultiplier: 1.4,
+    weight: 700,
+    size: 20,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   h4: {
-    lineHeight: 1,
-    size: {
-      max: 18,
-      min: 16,
-      viewport: 0.4,
-      multiplier: 0.7,
-    },
-    weight: 400,
+    sizeMultiplier: 1,
+    weight: 700,
+    size: 18,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   h5: {
-    lineHeight: 1,
-    size: {
-      max: 16,
-      min: 14,
-      viewport: 0.4,
-      multiplier: 0.63,
-    },
-    weight: 400,
+    sizeMultiplier: 0.8,
+    weight: 700,
+    size: 16,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   h6: {
-    lineHeight: 1,
-    size: {
-      max: 14,
-      min: 12,
-      viewport: 0.4,
-      multiplier: 0.5,
-    },
-    weight: 400,
+    sizeMultiplier: 0.8,
+    weight: 700,
+    size: 16,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   p1: {
-    lineHeight: 1.4,
-    size: {
-      max: 20,
-      min: 16,
-      viewport: 1,
-      multiplier: 0.2,
-    },
+    sizeMultiplier: 1,
     weight: 400,
+    size: 16,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   p2: {
-    lineHeight: 1,
-    size: {
-      max: 16,
-      min: 14,
-      viewport: 0.3,
-      multiplier: 0.44,
-    },
+    sizeMultiplier: 0.8,
     weight: 400,
+    size: 14,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   p3: {
-    lineHeight: 1,
-    size: {
-      max: 12,
-      min: 11,
-      viewport: 0.3,
-      multiplier: 0.44,
-    },
+    sizeMultiplier: 0.65,
     weight: 400,
+    size: 14,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
   p4: {
-    lineHeight: 1,
-    size: {
-      max: 11,
-      min: 10,
-      viewport: 0.3,
-      multiplier: 0.44,
-    },
+    sizeMultiplier: 0.44,
     weight: 400,
+    size: 12,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
+  },
+  p5: {
+    sizeMultiplier: 0.44,
+    weight: 400,
+    size: 10,
+    lineHeight: 1.5,
+    letterSpacing: 1.3
   },
 }

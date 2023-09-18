@@ -1,0 +1,35 @@
+---
+title: 'Checkbox'
+description: '
+The Checkbox component displays a checkbox on the screen. The user can interact with it by clicking on it to toggle its value.
+'
+tag: 'component'
+source: 'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/web/src/components/Checkbox/index.tsx'
+---
+
+## Props
+- `checkIcon` (optional): It accepts an IconPlaceholder component to be displayed inside the checkbox when the value is true.
+- `checkboxOnLeft` (optional): A boolean value indicating whether the checkbox should be positioned on the left side.
+- `value` (required): A boolean value representing the current state of the checkbox.
+
+## Example Usage
+```jsx
+import { Checkbox } from '@codeleap/web';
+
+function App() {
+  const [checked, setChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setChecked(!checked);
+  };
+
+  return (
+    <Checkbox
+      checkIcon={<IconPlaceholder />}
+      checkboxOnLeft={true}
+      value={checked}
+      onChange={handleCheckboxChange}
+    />
+  );
+}
+```

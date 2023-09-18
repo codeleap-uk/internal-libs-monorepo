@@ -1,26 +1,56 @@
-import { Text, variantProvider, View } from '@/app'
-import { useComponentStyle } from '@codeleap/common'
-import {PhotoProvider} from 'react-photo-view'
-export const Article:React.FC = ({ children, title= '' }) => {
+import { React, variantProvider } from '@/app'
+import { PhotoProvider } from 'react-photo-view'
+import { Text, View, Link } from '@/components'
+import { capitalize } from '@codeleap/common'
 
-  const styles = useComponentStyle(_styles)
- return <PhotoProvider> 
-    <View variants={['column', 'flex', 'padding:5', 'alignStart', 'gap:2']} responsiveVariants={{
-        mid: ['padding:1'],
-      }} css={styles.wrapper}>
-        <Text variants={['h1']} text={title} />
-        {children}
+export const Article = ({ children, title = '', source = '', description = '', lib = '', tag = '' }) => {
+  return (
+    <PhotoProvider>
+      <View css={styles.wrapper}>
+        <View variants={['column', 'padding:4', 'gap:1', 'backgroundColor:body']}>
+          <View variants={['row', 'center', 'justifyStart', 'gap:2']}>
+            <Text variants={['h1', 'bold']} text={title} />
+            {!!tag && (
+              <View variants={['paddingHorizontal:2', 'paddingVertical:0.5', 'backgroundColor:primary1', 'border-radius:rounded', 'h:auto']}>
+                <Text variants={['p4', 'bold', 'color:primary3']} text={capitalize(tag)} />
+              </View>
+            )}
+          </View>
+          {!!description && <Text variants={['p2', 'color:neutral7']} text={description} />}
+
+          {(!!source || lib?.includes('@/')) && (
+            <View variants={['column', 'marginTop:3', 'gap:2']}>
+              {!!source && (
+                <View variants={['gap:4']}>
+                  <Text variants={['p3', 'color:primary3']} text={'Source'} />
+                  <Link to={source} variants={['noUnderline']} target='_blank'>
+                    <Text variants={['p3', 'color:neutral10']} text={'View source code'} />
+                  </Link>
+                </View>
+              )}
+
+              {lib?.includes('@') && (
+                <View variants={['gap:4']}>
+                  <Text variants={['p3', 'color:primary3']} text={'Package'} />
+                  <Text variants={['p3', 'color:neutral10']} text={lib} />
+                </View>
+              )}
+            </View>
+          )}
+        </View>
+
+        <View variants={['column', 'flex', 'alignStart', 'gap:2', 'paddingHorizontal:3', 'paddingTop:2']}>
+          {children}
+        </View>
       </View>
- </PhotoProvider>
-
+    </PhotoProvider>
+  )
 }
 
-const _styles = variantProvider.createComponentStyle((theme) => ({
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
-    maxWidth: 700,
-    [theme.media.down('large')]: {
-
-      maxWidth: 500,
-    },
+    flex: 1,
+    ...theme.presets.column,
+    minHeight: '80svh'
   },
-}))
+}), true)

@@ -17,15 +17,20 @@ import { ComponentCommonProps } from '../../types/utility'
 
 export * from './styles'
 
+/** * Checkbox */
 export type CheckboxProps = Pick<
   InputBaseProps,
   'debugName' | 'disabled' | 'label'
 > & ComponentCommonProps & {
   styles?: StylesOf<CheckboxComposition>
+  /** prop */
   value: boolean
+  /** prop */
   onValueChange: (value: boolean) => void
   style?: PropsOf<typeof View>['style']
+  /** prop */
   checkboxOnLeft?: boolean
+  /** prop */
   checkIcon?: IconPlaceholder
 } & ComponentVariants<typeof CheckboxPresets>
 

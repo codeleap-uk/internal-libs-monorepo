@@ -7,10 +7,14 @@ import { ActionIconComposition, ActionIconParts, ActionIconPresets } from './sty
 
 export * from './styles'
 
+/** IconButton */
 export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & ComponentCommonProps & {
   iconProps?: Partial<IconProps>
+  /** prop */
   icon?: IconProps['name']
+  /** prop */
   name?: IconProps['name']
+
   styles?: StylesOf<ActionIconComposition>
 } & ComponentVariants<typeof ActionIconPresets>
 
