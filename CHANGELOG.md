@@ -2,17 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.13.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.2...v3.13.3) (2023-09-08)
+### [3.13.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.4...v3.13.5) (2023-09-12)
 
-### [3.13.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.1...v3.13.2) (2023-09-08)
+### [3.13.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.3...v3.13.4) (2023-09-12)
 
-### [3.13.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.23...v3.13.1) (2023-09-08)
+### [3.13.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.2...v3.13.3) (2023-09-12)
 
+### [3.13.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.1...v3.13.2) (2023-09-12)
+
+
+### Bug Fixes
+
+* **tooling:** fix script ([9d4a899](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9d4a899a544db0b63a21846148a9537650b85d9f))
+
+### [3.13.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.1-0...v3.13.1) (2023-09-12)
+
+### [3.13.1-0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0...v3.13.1-0) (2023-09-12)
+
+## [3.13.0-touchable-analytics.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.2...v3.13.0-touchable-analytics.3) (2023-09-12)
+
+
+### Bug Fixes
+
+* **web:** assign touchable default props ([b277979](https://github.com/codeleap-uk/internal-libs-monorepo/commit/b277979dd9a3647f457b0a53b1cda93d130692cd))
+
+## [3.13.0-touchable-analytics.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.1...v3.13.0-touchable-analytics.2) (2023-09-12)
+
+## [3.13.0-touchable-analytics.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.0...v3.13.0-touchable-analytics.1) (2023-09-12)
+
+## [3.13.0-touchable-analytics.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.19...v3.13.0-touchable-analytics.0) (2023-09-12)
 ## [3.13.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.1...v3.13.0) (2023-09-07)
 
 
 ### Features
 
+* **mobile:** add analytics integration to touchable ([931c7b6](https://github.com/codeleap-uk/internal-libs-monorepo/commit/931c7b68903ad064e1ed58509ffe72943a090095))
+* **web:** add analytics integration to touchable ([f367efb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f367efb76ceefbaf9fff86d125ad8d95e98c9f74))
 * **common:** Filters for adding item ([ee5995f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ee5995fc0eb1b86950d43a62bbf73c7064735014))
 * **mobile:** spotlight customFooter ([972fb7d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/972fb7d6c407f34e0657a08fc10fe9c18f453c95))
 * **mobile:** spotlight customHeader ([72dee01](https://github.com/codeleap-uk/internal-libs-monorepo/commit/72dee012d6abf221e92de86d1720ecc57c63d177))
