@@ -1,24 +1,12 @@
+import { Settings } from './types'
+
 const fs = require('fs')
 
-type Settings = {
-  articlesOutputDir: string
-  typedocsOutputDir: string
-  typedocsDir: string
-  articlesDir: string
-  environment: string
-  articleGeneratorExtension: string
-
-  maxTypedocsGenerator: number
-  generateEnabled: boolean
-  typedocDocumentedTypes: boolean
-
-  module: 'components' | 'styles'
-  package: 'web' | 'common' | 'mobile'
-  mode: 'test' | 'prod' | 'diff'
-}
+const timestamp = String(new Date().getTime())
 
 function config(): Settings {
   const settingsJSON = fs.readFileSync(`./docs/settings.json`).toString()
+
   let settings: Settings = JSON.parse(settingsJSON)
 
   const isTestMode = settings.mode === 'test'
@@ -28,16 +16,16 @@ function config(): Settings {
     let finalDir: string = settings.module
 
     if (isDiffMode) {
-      finalDir = `diff_` + String(new Date().getTime())
+      fs.writeFileSync('./docs/diff_timestamp.json', timestamp, {
+        'encoding': 'ascii'
+      })
+
+      finalDir = `diff_` + timestamp
     } else if (isTestMode) {
       finalDir = 'test_' + settings.module
     }
 
     return path + '/' + settings.package + '/' + finalDir
-  }
-
-  if (isTestMode || isDiffMode) {
-    settings.articleGeneratorExtension = 'test.mdx'
   }
 
   return {

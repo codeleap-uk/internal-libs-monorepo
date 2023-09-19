@@ -7,7 +7,7 @@ import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
 import { ActionIconComposition, ActionIconPresets } from './styles'
 
-/** * IconButton */
+/** ActionIcon */
 export type ActionIconProps= {
     iconProps?: Partial<IconProps>
     /** prop */

@@ -41,5 +41,7 @@ test_area
 docs/.env.json
 docs/processor/__pycache__
 docs/articles/**/**/*.test.mdx
+docs/articles/**/test_*/*.mdx
+docs/articles/**/diff_*/*.mdx
 docs/typedocs/**/test_*/*.json
 docs/typedocs/**/diff_*/*.json

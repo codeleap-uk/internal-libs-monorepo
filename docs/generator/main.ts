@@ -1,7 +1,7 @@
 const fs = require('fs')
 
 import { GenLogger } from './logger'
-import { deleteComponentDocsDir } from './cleaners'
+import { clean } from './cleaners'
 import { getComponents } from './getComponents'
 import { generateComponentsTypeDocs } from './typedoc'
 import { GeneratorIA } from './ia'
@@ -10,7 +10,7 @@ import { GeneratorConfig } from './config'
 async function main() {
   GenLogger.log('Starting...')
 
-  deleteComponentDocsDir()
+  await clean()
 
   const components = await getComponents()
 

@@ -4,7 +4,7 @@ import { GenLogger } from './logger'
 const fs = require('fs')
 const path = require('path')
 
-export function deleteComponentDocsDir() {
+export function deleteDocsDir() {
   if (!fs.existsSync(GeneratorConfig.articlesOutputDir)) return
 
   GenLogger.echo('Deleting', { dir: GeneratorConfig.articlesOutputDir })
@@ -13,7 +13,7 @@ export function deleteComponentDocsDir() {
     const filePath = path.join(GeneratorConfig.articlesOutputDir, file);
 
     if (fs.lstatSync(filePath).isDirectory()) {
-      deleteComponentDocsDir()
+      deleteDocsDir()
     } else {
       fs.unlinkSync(filePath)
     }
@@ -22,4 +22,8 @@ export function deleteComponentDocsDir() {
   fs.rmdirSync(GeneratorConfig.articlesOutputDir)
 
   console.log('deleted component docs dir')
+}
+
+export async function clean() {
+  deleteDocsDir()
 }
