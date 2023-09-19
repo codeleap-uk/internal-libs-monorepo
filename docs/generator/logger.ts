@@ -20,7 +20,7 @@ function exception(args: object | string) {
 }
 
 function echo(msg, args) {
-  console.log('Generator (error) -> ' + msg, args)
+  console.log('Generator (echo) -> ' + msg, args)
 }
 
 export const GenLogger = {

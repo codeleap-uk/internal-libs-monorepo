@@ -38,7 +38,7 @@ function ArticlePage(props) {
   const { pageContext, children, location } = props
 
   const allMdx = pageContext.allMdx
-  const { title, description, source, tag } = pageContext.frontmatter
+  const { title, description, source, tag, verified, author, reviewer } = pageContext.frontmatter
 
   const { pages, flatData, previous = null, next = null } = useMdx(allMdx, pageContext)
 
@@ -48,15 +48,29 @@ function ArticlePage(props) {
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
   const Footer = () => {
-    return (
+    return <View variants={['column', 'marginBottom:2', 'marginTop:4', 'fullWidth', 'gap:2', 'alignSelfEnd', 'flex']}>
+      {!!author && (
+        <Text variants={['p4']}>
+          <strong>Author </strong>
+          {author}
+        </Text>
+      )}
+
+      {!!reviewer && (
+        <Text variants={['p4']}>
+          <strong>Reviewer </strong>
+          {reviewer}
+        </Text>
+      )}
+
       <View 
-        variants={['justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex', 'gap:2', 'marginVertical:2']}
+        variants={['justifySpaceBetween', 'fullWidth', 'gap:2']}
         responsiveVariants={{ mid: ['column'] }}
       >
         <PageNavButton data={previous} type='previous' />
         <PageNavButton data={next} type='next' />
       </View>
-    )
+    </View>
   }
 
   return (
@@ -70,7 +84,7 @@ function ArticlePage(props) {
       <Navbar pages={pages} title={lib} location={location} />
       {isMobile && <SectionMap content={pageContext?.tableOfContents?.items} />}
 
-      <Article title={title} description={description} source={source} lib={lib} tag={tag}>
+      <Article title={title} description={description} source={source} lib={lib} tag={tag} verified={verified ?? undefined}>
         <MDXProvider components={mdxTransforms}>
           {children}
         </MDXProvider>
@@ -112,6 +126,9 @@ export const query = graphql`
         description
         source
         tag
+        verified
+        author
+        reviewer
       }
     }
   }

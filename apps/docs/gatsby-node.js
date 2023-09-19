@@ -39,6 +39,9 @@ exports.createPages = async ({ actions, graphql }) => {
               description
               source
               tag
+              verified
+              author
+              reviewer
             }
             internal {
               contentFilePath
@@ -78,6 +81,9 @@ exports.createPages = async ({ actions, graphql }) => {
         description: node.frontmatter.description,
         source: node.frontmatter.source,
         tag: node.frontmatter.tag,
+        verified: node.frontmatter.verified,
+        author: node.frontmatter.author,
+        reviewer: node.frontmatter.reviewer,
         pagePath: pageInfo.path,
         module: pageInfo.module,
         isLibrary: pageInfo.isLibrary,

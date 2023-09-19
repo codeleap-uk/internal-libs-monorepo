@@ -42,7 +42,10 @@ def insert_frontmatter(file: str):
     { 'name': 'title', 'value': title },
     { 'name': 'description', 'value': description },
     { 'name': 'tag', 'value': tag },
-    { 'name': 'source', 'value': source }
+    { 'name': 'source', 'value': source },
+    { 'name': 'verified', 'value': 'false'  },
+    { 'name': 'author', 'value': 'Docs Generator' },
+    { 'name': 'reviewer', 'value': '' }
   ])
 
   article_content = re.sub(description_pattern, '\n', article_content)

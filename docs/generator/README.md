@@ -13,3 +13,8 @@
 - Trocar font dos docs
 - Considerar composition dos styles
 - Colocar comentário nas props
+- Melhorar o code preview
+- Melhorar a forma como as props do componente aparecem no doc
+- Separar por data e hora os articles gerados e nao apagar
+- Verified system
+- Gerar automaticamente nas actions

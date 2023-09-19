@@ -3,7 +3,9 @@ import { PhotoProvider } from 'react-photo-view'
 import { Text, View, Link } from '@/components'
 import { capitalize } from '@codeleap/common'
 
-export const Article = ({ children, title = '', source = '', description = '', lib = '', tag = '' }) => {
+export const Article = ({ children, title = '', source = '', description = '', lib = '', tag = '', verified = 'true' }) => {
+  const isVerified = verified !== 'false'
+
   return (
     <PhotoProvider>
       <View css={styles.wrapper}>
@@ -13,6 +15,16 @@ export const Article = ({ children, title = '', source = '', description = '', l
             {!!tag && (
               <View variants={['paddingHorizontal:2', 'paddingVertical:0.5', 'backgroundColor:primary1', 'border-radius:rounded', 'h:auto']}>
                 <Text variants={['p4', 'bold', 'color:primary3']} text={capitalize(tag)} />
+              </View>
+            )}
+            {!!verified && (
+              <View 
+                variants={['paddingHorizontal:2', 'paddingVertical:0.5', isVerified ? 'backgroundColor:positive1' : 'backgroundColor:destructive1', 'border-radius:rounded', 'h:auto']}
+              >
+                <Text 
+                  variants={['p4', 'bold', isVerified ? 'color:positive2' : 'color:destructive2']} 
+                  text={capitalize(isVerified ? 'verified' : 'not verified')} 
+                />
               </View>
             )}
           </View>
