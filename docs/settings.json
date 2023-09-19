@@ -1,0 +1,15 @@
+{
+  "articlesOutputDir": "./docs/articles",
+  "typedocsOutputDir": "./docs/typedocs",
+  "typedocsDir": "typedocs",
+  "articlesDir": "articles",
+  "environment": "../.env",
+  "articleGeneratorExtension": "mdx",
+  
+  "maxTypedocsGenerator": 1,
+  "generateEnabled": true,
+  "typedocDocumentedTypes": true,
+
+  "module": "components",
+  "package": "web"
+}

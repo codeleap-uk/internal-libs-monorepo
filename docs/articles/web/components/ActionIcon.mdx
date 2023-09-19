@@ -1,0 +1,22 @@
+## Description
+The ActionIcon component is a React component that renders an icon inside a touchable or view wrapper. It can be used to create interactive icons with optional text or additional components.
+
+## Args
+- `icon` (IconProps['name'], optional): The name of the icon to display. This prop is used to set the `name` prop of the underlying Icon component.
+- `name` (IconProps['name'], optional): An alternative way to specify the name of the icon to display. This prop is also used to set the `name` prop of the underlying Icon component. If both `icon` and `name` are provided, `icon` will take precedence.
+
+## Example Usage
+```jsx
+import { ActionIcon } from '@codeleap/web'
+
+const MyComponent = () => {
+  return (
+    <div>
+      <ActionIcon icon="heart" />
+      <ActionIcon name="star" />
+    </div>
+  )
+}
+```
+
+In the above example, two ActionIcon components are rendered. The first one displays an icon with the name "heart", while the second one displays an icon with the name "star".

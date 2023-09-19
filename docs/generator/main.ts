@@ -5,6 +5,7 @@ import { deleteComponentDocsDir } from './cleaners'
 import { getComponents } from './getComponents'
 import { generateComponentsTypeDocs } from './typedoc'
 import { GeneratorIA } from './ia'
+import { GeneratorConfig } from './config'
 
 async function main() {
   GenLogger.log('Starting...')
@@ -19,7 +20,7 @@ async function main() {
     'withFileTypes': true,
   })
 
-  // return null
+  if (!GeneratorConfig.generateEnabled) return null
 
   const openai = await GeneratorIA.initialize()
 

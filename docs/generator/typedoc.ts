@@ -16,7 +16,7 @@ export async function generateComponentsTypeDocs(components: Component[]): Promi
       'excludeReferences': true,
       'excludeExternals': true,
       'excludeInternal': true,
-      'excludeNotDocumented': true, // TODO filtrar o children que tem comment
+      'excludeNotDocumented': GeneratorConfig.typedocDocumentedTypes, // TODO filtrar o children que tem comment
       // @ts-ignore
       'excludeCategories': true,
       'categorizeByGroup': true,
