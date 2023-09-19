@@ -11,5 +11,6 @@
   "typedocDocumentedTypes": true,
 
   "module": "components",
-  "package": "web"
+  "package": "web",
+  "mode": "test"
 }

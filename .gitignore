@@ -37,6 +37,9 @@ dist
 public
 test_area
 
-# generator
+# docs generator
 docs/.env.json
 docs/processor/__pycache__
+docs/articles/**/**/*.test.mdx
+docs/typedocs/**/test_*/*.json
+docs/typedocs/**/diff_*/*.json
