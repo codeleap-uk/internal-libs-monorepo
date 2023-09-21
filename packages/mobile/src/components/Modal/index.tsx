@@ -162,8 +162,8 @@ export const Modal = (modalProps: ModalProps) => {
   const ScrollComponent = scroll ? Scroll : View
   const scrollStyle = scroll ? getStyles('scroll') : getStyles('innerWrapper')
 
-  const heightThreesold = 1000
-  const topSpacing = modalHeight > heightThreesold ? Theme.spacing.paddingTop(4) : Theme.spacing.paddingTop(0)
+  const heightThreshold = Theme.values.height * 0.75
+  const topSpacing = modalHeight > heightThreshold ? variantStyles.topSpacing : Theme.spacing.paddingTop(0)
 
   const headerProps: ModalHeaderProps = {
 
@@ -189,6 +189,7 @@ export const Modal = (modalProps: ModalProps) => {
   const onModalLayout = (event) => {
     const { height } = event.nativeEvent.layout
     setModalHeight(height)
+    props?.onLayout?.(event)
   }
 
   return (
@@ -230,8 +231,8 @@ export const Modal = (modalProps: ModalProps) => {
         <View
           animated
           style={[getStyles('box'), boxAnimationStyles]}
-          onLayout={onModalLayout}
           {...props}
+          onLayout={onModalLayout}
         >
 
           {header ? header : <Header {...headerProps} />}
