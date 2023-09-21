@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.14.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.0...v3.14.0) (2023-09-21)
+
+
+### Features
+
+* **mobile:** add analytics integration to touchable ([931c7b6](https://github.com/codeleap-uk/internal-libs-monorepo/commit/931c7b68903ad064e1ed58509ffe72943a090095))
+* **web:** add analytics integration to touchable ([f367efb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f367efb76ceefbaf9fff86d125ad8d95e98c9f74))
+
+
+### Bug Fixes
+
+* **mobile:** add top space to modal ([faff542](https://github.com/codeleap-uk/internal-libs-monorepo/commit/faff542bc5024d3b8e49994f26248cd72eca3f38))
+* **tooling:** fix script ([9d4a899](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9d4a899a544db0b63a21846148a9537650b85d9f))
+* **web:** assign touchable default props ([b277979](https://github.com/codeleap-uk/internal-libs-monorepo/commit/b277979dd9a3647f457b0a53b1cda93d130692cd))
+
 ### [3.13.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.4...v3.13.5) (2023-09-12)
 
 ### [3.13.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.3...v3.13.4) (2023-09-12)
