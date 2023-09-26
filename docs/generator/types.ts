@@ -26,3 +26,71 @@ export type ComponentPropDoc = {
   type: string
   optional: boolean
 }
+
+// export type Type = {
+//   type: TypeName
+//   target: {
+//     sourceFileName: 'string'
+//     qualifiedName: string
+//   }
+//   name: string
+//   typeArguments: {
+//     type: TypeName
+//     target: {
+//       sourceFileName: 'string'
+//       qualifiedName: string
+//     }
+//     name: string
+//     typeArguments: {
+//       type: TypeName
+//       value: string
+//       types: {
+//         type: TypeName
+//         name: string
+//       }[]
+//     }[]
+//   }[]
+// }
+
+type TypeTarget = {
+  sourceFileName: string
+  qualifiedName: string
+}
+
+export type Type = {
+  type: 'reference'
+  typeArguments?: Type[]
+  target: TypeTarget
+} | {
+  type: 'intersection'
+  types?: Type[]
+} | {
+  type: 'intrinsic'
+  name: string
+} | {
+  type: 'union'
+  types?: Type[]
+} | {
+  type: 'array'
+  elementType: Type
+} | {
+  type: 'reflection'
+  declaration: {
+    children?: Type[]
+  }
+}
+
+export type TypeDocChildren = {
+  id: number
+  name: string
+  variant: 'declaration'
+  flags: {
+    isOptional: boolean
+  }
+  comment: {
+    summary: {
+      text: string
+    }[]
+  }
+  type: Type
+}

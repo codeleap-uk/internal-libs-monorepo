@@ -10,9 +10,7 @@ export * from './styles'
 /** ActionIcon */
 export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & ComponentCommonProps & {
   iconProps?: Partial<IconProps>
-  /** prop */
   icon?: IconProps['name']
-  /** prop */
   name?: IconProps['name']
 
   styles?: StylesOf<ActionIconComposition>

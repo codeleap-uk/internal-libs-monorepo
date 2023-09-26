@@ -1,13 +1,13 @@
 import OpenAIClass, { OpenAI } from 'openai'
 import { GenLogger } from './logger'
 import { GeneratorConfig } from './config'
-import { ComponentPropDoc } from './types'
+import { ComponentPropDoc, TypeDocChildren } from './types'
 
 const fs = require('fs')
 
 function initialize(): OpenAI {
   GenLogger.log('initialize OpenAI')
-  
+
   const env = fs.readFileSync(`./docs/.env.json`).toString()
   const variables = JSON.parse(env)
 
@@ -23,12 +23,12 @@ export async function articleGenerator(openai: OpenAI, _docs: any[]) {
 
   for (const docDir of docs) {
     let componentName = docDir.name?.split('.')?.[0]
-    let componentOtherName = null
+    let componentOtherName: any = null
 
     GenLogger.log(componentName)
 
     const docContent = fs.readFileSync(`${GeneratorConfig.typedocsOutputDir}/${docDir.name}`).toString()
-    const data = JSON.parse(docContent)
+    const data: { children: any } = JSON.parse(docContent)
 
     const { children } = data
 
@@ -36,28 +36,38 @@ export async function articleGenerator(openai: OpenAI, _docs: any[]) {
 
     for (const _child of children) {
       componentOtherName = _child?.comment?.summary?.[0]?.text ?? null
-      
+
       for (const _type of _child.type.types) {
         if (typeof _type?.declaration === 'object') {
           for (const _prop of _type.declaration.children) {
 
-            if (_prop?.comment?.summary) {
-              const isIndexedAccess = _prop?.type?.type === 'indexedAccess'
+            // if (!_prop?.comment?.summary) return
 
-              let propType = ''
+            const isIndexedAccess = _prop?.type?.type === 'indexedAccess'
+            const isReference = _prop?.type?.type === 'reference'
 
-              if (isIndexedAccess) {
-                const referenceType = _prop?.type?.objectType?.name
-                const referenceName = _prop?.type?.indexType?.value
+            let propType = ''
 
-                propType = `${referenceType}['${referenceName}']`
-              } else {
-                propType = _prop?.type?.name
-              }
+            if (isReference) {
+              const referenceName = _prop?.type?.typeArguments?.[0]?.name
 
+              propType = referenceName
+
+            } else if (isIndexedAccess) {
+              const referenceType = _prop?.type?.objectType?.name
+              const referenceName = _prop?.type?.indexType?.value
+
+              propType = `${referenceType}['${referenceName}']`
+            } else {
+              propType = _prop?.type?.name
+            }
+
+            console.log(['styles', 'css', 'style', 'variants', 'responsiveVariants'].includes(_prop?.name) === true)
+
+            if (['styles', 'css', 'style', 'variants', 'responsiveVariants'].includes(_prop?.name) === false) {
               propsDoc.push({
                 name: _prop?.name,
-                optional: _prop?.flags?.isOptional,
+                optional: _prop?.flags?.isOptional ?? false,
                 type: propType,
               })
             }
@@ -68,6 +78,8 @@ export async function articleGenerator(openai: OpenAI, _docs: any[]) {
     }
 
     console.log(propsDoc)
+
+    // return
 
     let propsPrompt = {}
 
@@ -113,12 +125,12 @@ export async function articleGenerator(openai: OpenAI, _docs: any[]) {
     const propsOpenai = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
-        { 
-          role: "user", 
+        {
+          role: "user",
           content: promptSourceCode
         },
-        { 
-          role: "user", 
+        {
+          role: "user",
           content: prompt
         }
       ],
@@ -130,12 +142,12 @@ export async function articleGenerator(openai: OpenAI, _docs: any[]) {
       fs.mkdirSync(GeneratorConfig.articlesOutputDir, {
         'recursive': true,
       })
-    } catch(e) {
+    } catch (e) {
       GenLogger.exception(e)
     }
 
     const articlePath = `${GeneratorConfig.articlesOutputDir}/${componentName}.${GeneratorConfig.articleGeneratorExtension}`
-    
+
     // @ts-ignore
     fs.writeFileSync(articlePath, propsOpenai?.choices?.[0]?.message?.content, {
       'encoding': 'ascii'

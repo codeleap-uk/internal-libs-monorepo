@@ -7,7 +7,7 @@ import { ComponentCommonProps } from '../../types'
 
 export * from './styles'
 
-/** * Badge */
+/** Badge */
 export type BadgeProps = ComponentVariants<typeof BadgePresets>
   & ViewProps<'div'>
   & ComponentCommonProps

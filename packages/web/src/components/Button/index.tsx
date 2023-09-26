@@ -14,7 +14,7 @@ import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
 import { ComponentCommonProps } from '../../types'
 
-/** * Button */
+/** Button */
 export type ButtonProps = 
   ComponentVariants<typeof ButtonPresets> &
   Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> &

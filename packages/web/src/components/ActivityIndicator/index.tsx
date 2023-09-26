@@ -14,7 +14,7 @@ import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 
-/** * LoadingIndicator */
+/** LoadingIndicator */
 export type ActivityIndicatorProps = ComponentCommonProps & {
   style?: React.CSSProperties
   styles?: StylesOf<ActivityIndicatorComposition>
