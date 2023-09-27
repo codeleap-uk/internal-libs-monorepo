@@ -87,6 +87,7 @@ const defaultProps:Partial<DatePickerModalProps> = {
   commitDate: 'onConfirm',
   showDoneButton: true,
   isCustomModal: true,
+  toggleOnConfirm: true,
 }
 
 export const DatePickerModal = (props: DatePickerModalProps) => {
@@ -123,6 +124,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     minimumDate,
     maximumDate,
     footerComponent,
+    toggleOnConfirm,
+    onConfirm: _onConfirm,
     ...modalProps
   } = allProps
 
@@ -153,13 +156,16 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const tempDate = useRef<Date|null>(null)
 
   const onConfirm = () => {
-
     if (commitDate == 'onConfirm' && !!tempDate.current) {
       setValue(tempDate.current)
     }
 
-    if (isCustomModal) {
+    if (isCustomModal && toggleOnConfirm) {
       toggle()
+    }
+
+    if (TypeGuards.isFunction(_onConfirm)) {
+      _onConfirm?.(tempDate.current)
     }
   }
 
