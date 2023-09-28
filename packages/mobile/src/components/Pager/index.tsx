@@ -44,6 +44,8 @@ export type PagerProps = React.PropsWithChildren<{
   pageWrapperProps?: any
   width?: number
   onScroll: ScrollProps['onScroll']
+  isScrolling?: boolean
+  toggleScrolling?: (state?: boolean) => void
    /** If TRUE render page, nextPage and prevPage only */
    windowing?:boolean
 } & ScrollViewProps>
@@ -62,6 +64,8 @@ export const Pager = (pagerProps:PagerProps) => {
     windowing = false,
     setPage,
     scrollEnabled = true,
+    isScrolling,
+    toggleScrolling = null,
   } = pagerProps
 
   const childArr = React.Children.toArray(children)
@@ -108,8 +112,9 @@ export const Pager = (pagerProps:PagerProps) => {
         setPage(toPage)
         setPositionX(toPage * width)
       }
+      toggleScrolling?.(false)
     },
-    [childArr, page, setPage],
+    [childArr, page, setPage, isScrolling],
   )
 
   onUpdate(() => {
@@ -124,51 +129,56 @@ export const Pager = (pagerProps:PagerProps) => {
   }, [page])
 
   return (
-    <ScrollView
-      ref={scrollRef}
-      horizontal
-      pagingEnabled
-      onMomentumScrollEnd={handleScrollEnd}
-      scrollEventThrottle={300}
-      showsHorizontalScrollIndicator={false}
-      style={[variantStyles.wrapper, style]}
-      {...pagerProps}
-      scrollEnabled={childArr.length > 1 && scrollEnabled}
-    >
-      {childArr.map((child: PagerProps['children'][number], index) => {
+    <>
+      <ScrollView
+        ref={scrollRef}
+        horizontal
+        pagingEnabled
+        onMomentumScrollEnd={handleScrollEnd}
+        scrollEventThrottle={300}
+        showsHorizontalScrollIndicator={false}
+        style={[variantStyles.wrapper, style]}
+        {...pagerProps}
+        scrollEnabled={childArr.length > 1 && scrollEnabled}
+      >
+        {childArr.map((child: PagerProps['children'][number], index) => {
 
-        const isActive = index === page
-        const isLast = index === lastPage
-        const isFirst = index === 0
-        const isNext = index === page + 1
-        const isPrevious = index === page - 1
+          const isActive = index === page
+          const isLast = index === lastPage
+          const isFirst = index === 0
+          const isNext = index === page + 1
+          const isPrevious = index === page - 1
 
-        const shouldRender = windowing ? (isActive || isNext || isPrevious) : true
+          const shouldRender = windowing ? (isActive || isNext || isPrevious) : true
 
-        if (!shouldRender && returnEarly) {
-          return <View style={{ height: '100%', width }} />
-        }
+          if (!shouldRender && returnEarly) {
+            return <View style={{ height: '100%', width }} />
+          }
 
-        const pageProps:PageProps = {
-          isLast,
-          isActive,
-          isFirst,
-          isNext,
-          isPrevious,
-          index,
-          page,
-        }
+          const pageProps:PageProps = {
+            isLast,
+            isActive,
+            isFirst,
+            isNext,
+            isPrevious,
+            index,
+            page,
+          }
 
-        const content = typeof child === 'function' ? child(pageProps) : child
+          const content = typeof child === 'function' ? child(pageProps) : child
 
-        const wrapperProps = {
-          key: index,
-          style: [{ height: '100%', width }, variantStyles.page],
-          ...pageWrapperProps,
-        }
+          const wrapperProps = {
+            key: index,
+            style: [{ height: '100%', width }, variantStyles.page],
+            ...pageWrapperProps,
+          }
 
-        return <WrapperComponent {...wrapperProps}>{content}</WrapperComponent>
-      })}
-    </ScrollView>
+          return <WrapperComponent {...wrapperProps}>{content}</WrapperComponent>
+        })}
+      </ScrollView>
+      {isScrolling ? (
+        <View variants={['absolute', 'fullHeight', 'fullWidth']} />
+      ) : null}
+    </>
   )
 }
