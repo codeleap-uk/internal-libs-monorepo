@@ -64,7 +64,7 @@ export const Pager = (pagerProps:PagerProps) => {
     windowing = false,
     setPage,
     scrollEnabled = true,
-    isScrolling,
+    isScrolling = false,
     toggleScrolling = null,
   } = pagerProps
 
