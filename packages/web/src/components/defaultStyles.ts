@@ -26,6 +26,7 @@ import { PagerPresets } from './Pager/styles'
 import { EmptyPlaceholderPresets } from './EmptyPlaceholder/styles'
 import { GridPresets } from './Grid/styles'
 import { BadgePresets } from './Badge/styles'
+import { TagPresets } from './Tag/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -58,6 +59,7 @@ export const defaultStyles = {
   PaginationIndicator: PaginationIndicatorStyles,
   Grid: GridPresets,
   Badge: BadgePresets,
+  Tag: TagPresets,
 }
 
 import createCache from '@emotion/cache'
