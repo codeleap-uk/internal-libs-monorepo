@@ -27,8 +27,8 @@ export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueC
     separator?: string
     transformer?: (value: number[], defaultValue: PrimitiveSliderProps['defaultValue']) => string
   }
-  value: number[]
-  onValueChange: (val: number[]) => void
+  value: number | number[]
+  onValueChange: (val: number | number[]) => void
   styles?: StylesOf<SliderComposition>
   style?: PropsOf<typeof View>['style']
   trackMarks?: Record<number, string>
@@ -67,7 +67,7 @@ export const Slider = (props: SliderProps) => {
   const {
     debounce = null,
     onValueChange,
-    value,
+    value: _value,
     label,
     debugName,
     styles = {},
@@ -89,6 +89,7 @@ export const Slider = (props: SliderProps) => {
     ...sliderProps
   } = others
 
+  const value = TypeGuards.isArray(_value) ? _value : [_value]
   const defaultValueRef = useRef<PrimitiveSliderProps['defaultValue']>(_defaultValue)
   const defaultValue = defaultValueRef.current
 
@@ -103,8 +104,13 @@ export const Slider = (props: SliderProps) => {
   const currentThumbRef = useRef(null)
 
   const handleChange: SliderProps['onValueChange'] = (newValue) => {
-    if (newValue.length <= 1) {
-      onValueChange(newValue)
+    if (TypeGuards.isArray(newValue) && newValue.length <= 1) {
+      if (TypeGuards.isArray(_value)) {
+        onValueChange(newValue)
+      } else {
+        console.log('newValue: ', newValue?.[0])
+        onValueChange(newValue?.[0])
+      }
       return
     }
 
@@ -114,7 +120,7 @@ export const Slider = (props: SliderProps) => {
     const _newValue = newValue[currentThumbRef.current]
 
     const hasLeftThumb = i !== 0
-    const hasRightThumb = i + 1 < newValue.length
+    const hasRightThumb = TypeGuards.isArray(newValue) && i + 1 < newValue.length
 
     const previousThumbValue = hasLeftThumb ? (copyValue[i - 1] + minStepsBetweenThumbs) : null
     const nextThumbValue = hasRightThumb ? (copyValue[i + 1] - minStepsBetweenThumbs) : null
