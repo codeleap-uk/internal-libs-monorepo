@@ -49,6 +49,8 @@ export type SegmentedControlProps<T = string> = ComponentVariants<typeof Segment
   RenderAnimatedView?: ForwardRefComponent<HTMLDivElement, any>
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
   iconProps?: Partial<IconProps>
+  debounce?: number
+  debounceEnabled?: boolean
 }
 
 const defaultProps: Partial<SegmentedControlProps> = {
@@ -81,6 +83,8 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     textProps = {},
     iconProps = {},
     debugName,
+    debounce = 1000,
+    debounceEnabled = true,
     ...rest
   } = allProps
 
@@ -98,6 +102,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   }, [value])
 
   const maxDivWidthRef = useRef(null)
+  const sectionRef = useRef(null)
 
   const largestWidth = React.useMemo(() => {
     return {
@@ -128,6 +133,16 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     largestWidth,
   ]
 
+  const onSelectTab = (option: SegmentedControlOptionProps) => {
+    if (sectionRef.current !== null) return
+
+    onValueChange(option.value)
+    sectionRef.current = setTimeout(() => {
+      clearInterval(sectionRef.current)
+      sectionRef.current = null
+    }, debounce)
+  }
+
   return (
     <View css={[variantStyles.wrapper, style]} {...rest}>
       {label && <Text text={label} css={[variantStyles.label, disabled && variantStyles['label:disabled']]} />}
@@ -148,7 +163,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             debugName={debugName}
             label={o.label}
             value={o.value}
-            onPress={() => onValueChange(o.value)}
+            onPress={debounceEnabled ? () => onSelectTab(o) : () => onValueChange(o.value)}
             key={idx}
             icon={o.icon}
             selected={value === o.value}
