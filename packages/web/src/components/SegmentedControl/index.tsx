@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from '../View'
 import { SegmentedControlOption } from './SegmentedControlOption'
-import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder, StylesOf, useRef } from '@codeleap/common'
+import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder, StylesOf, useRef, TypeGuards } from '@codeleap/common'
 import { SegmentedControlPresets } from './styles'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
@@ -58,6 +58,8 @@ const defaultProps: Partial<SegmentedControlProps> = {
   transitionDuration: 0.2,
   disabled: false,
   RenderAnimatedView: motion.div,
+  debounce: 1000,
+  debounceEnabled: true,
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
@@ -83,8 +85,8 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     textProps = {},
     iconProps = {},
     debugName,
-    debounce = 1000,
-    debounceEnabled = true,
+    debounce,
+    debounceEnabled,
     ...rest
   } = allProps
 
@@ -102,7 +104,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   }, [value])
 
   const maxDivWidthRef = useRef(null)
-  const sectionRef = useRef(null)
+  const sectionPressedRef = useRef(null)
 
   const largestWidth = React.useMemo(() => {
     return {
@@ -134,12 +136,17 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   ]
 
   const onSelectTab = (option: SegmentedControlOptionProps) => {
-    if (sectionRef.current !== null) return
+    if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
+      onValueChange(option.value)
+      return
+    }
+
+    if (sectionPressedRef.current !== null) return
 
     onValueChange(option.value)
-    sectionRef.current = setTimeout(() => {
-      clearInterval(sectionRef.current)
-      sectionRef.current = null
+    sectionPressedRef.current = setTimeout(() => {
+      clearInterval(sectionPressedRef.current)
+      sectionPressedRef.current = null
     }, debounce)
   }
 
@@ -163,7 +170,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             debugName={debugName}
             label={o.label}
             value={o.value}
-            onPress={debounceEnabled ? () => onSelectTab(o) : () => onValueChange(o.value)}
+            onPress={() => onSelectTab(o)}
             key={idx}
             icon={o.icon}
             selected={value === o.value}
