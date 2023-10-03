@@ -1,6 +1,6 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type CropPickerComposition = 'wrapper' | 'crop' | 'preview' | 'controls' | 'button' | 'input'
+export type CropPickerComposition = 'wrapper' | 'cropPreview' | 'previewSize'
 
 const createCropPickerStyle = createDefaultVariantFactory<CropPickerComposition>()
 
