@@ -108,7 +108,6 @@ export const Slider = (props: SliderProps) => {
       if (TypeGuards.isArray(_value)) {
         onValueChange(newValue)
       } else {
-        console.log('newValue: ', newValue?.[0])
         onValueChange(newValue?.[0])
       }
       return
