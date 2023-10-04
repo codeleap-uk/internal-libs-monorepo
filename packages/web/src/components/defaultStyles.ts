@@ -58,9 +58,11 @@ export const defaultStyles = {
   PaginationIndicator: PaginationIndicatorStyles,
   Grid: GridPresets,
   Badge: BadgePresets,
+  Dropzone: DropzonePresets,
 }
 
 import createCache from '@emotion/cache'
+import { DropzonePresets } from './Dropzone/styles'
 
 export const createCodeleapWebCache = () => {
   return createCache({
