@@ -12,7 +12,13 @@ import { Crop } from 'react-image-crop'
 import { cropImage, readImage } from './utils'
 import { FileInputRef } from '../FileInput'
 
-export function useCropPicker({ onFileSelect, ref, aspect, minWidth: minW, minHeight: minH }: useCropPickerProps) {
+export function useCropPicker({
+  onFileSelect,
+  ref,
+  aspect,
+  minWidth: minW,
+  minHeight: minH,
+}: useCropPickerProps) {
   const [visible, toggle] = useBooleanToggle(false)
   const [image, setImage] = useState<ImageReading>(null)
   const [crop, setCrop] = useState<Crop>()
@@ -51,15 +57,16 @@ export function useCropPicker({ onFileSelect, ref, aspect, minWidth: minW, minHe
     const imageData = await readImage(file)
     const { naturalWidth, naturalHeight } = imageData
     const imageAspect = naturalWidth / naturalHeight
-    const v = imageAspect >= aspect
-      ? {
-        width: ((naturalHeight * aspect) / naturalWidth) * 100,
-        height: 100,
-      }
-      : {
-        width: 100,
-        height: (naturalWidth / aspect / naturalHeight) * 100,
-      }
+    const v =
+      imageAspect >= aspect
+        ? {
+          width: ((naturalHeight * aspect) / naturalWidth) * 100,
+          height: 100,
+        }
+        : {
+          width: 100,
+          height: (naturalWidth / aspect / naturalHeight) * 100,
+        }
     const initialCrop = {
       ...v,
       x: (100 - v.width) / 2,

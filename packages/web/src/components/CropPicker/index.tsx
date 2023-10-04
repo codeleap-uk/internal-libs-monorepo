@@ -4,7 +4,7 @@ import { useDefaultComponentStyle } from '@codeleap/common'
 import { CropPickerPresets } from './styles'
 import { CropPickerProps } from './types'
 import { useCropPicker } from './useCropPicker'
-import { Modal, View, Button, FileInput, FileInputRef } from '../components'
+import { Modal, Button, FileInput, FileInputRef } from '../components'
 
 import 'react-image-crop/dist/ReactCrop.css'
 
