@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from '@codeleap/common'
-import { ImageReading, useCropPickerProps } from './types'
+import { ImageReading, UseCropPickerProps } from './types'
 import { Crop } from 'react-image-crop'
 import { cropImage, readImage } from './utils'
 import { FileInputRef } from '../FileInput'
@@ -18,7 +18,7 @@ export function useCropPicker({
   aspect,
   minWidth: minW,
   minHeight: minH,
-}: useCropPickerProps) {
+}: UseCropPickerProps) {
   const [visible, toggle] = useBooleanToggle(false)
   const [image, setImage] = useState<ImageReading>(null)
   const [crop, setCrop] = useState<Crop>()

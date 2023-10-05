@@ -4,6 +4,7 @@ import { CropPickerComposition, CropPickerPresets } from './styles'
 import { StylesOf } from '../../types'
 import { ReactCropProps } from 'react-image-crop'
 import { ModalProps } from '../Modal'
+import { useCropPicker } from './useCropPicker'
 
 export type CropPickerProps = Partial<FileInputProps> &
   ComponentVariants<typeof CropPickerPresets> & {
@@ -13,11 +14,13 @@ export type CropPickerProps = Partial<FileInputProps> &
     modalProps?: Partial<ModalProps>
     title?: string
     confirmButton?: string
+    debugName: string
+    handle?: ReturnType<typeof useCropPicker>
   }
 
 export type ImageReading = HTMLImageElement
 
-export type useCropPickerProps = Partial<ReactCropProps> & {
+export type UseCropPickerProps = Partial<ReactCropProps> & {
   onFileSelect: FileInputProps['onFileSelect']
   ref: React.MutableRefObject<FileInputRef> | React.Ref<FileInputRef>
 }

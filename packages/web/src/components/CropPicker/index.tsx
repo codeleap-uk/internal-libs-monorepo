@@ -1,6 +1,9 @@
 import React, { forwardRef } from 'react'
 import { ReactCrop } from 'react-image-crop'
-import { useDefaultComponentStyle } from '@codeleap/common'
+import {
+  getNestedStylesByKey,
+  useDefaultComponentStyle,
+} from '@codeleap/common'
 import { CropPickerPresets } from './styles'
 import { CropPickerProps } from './types'
 import { useCropPicker } from './useCropPicker'
@@ -14,8 +17,8 @@ export * from './utils'
 export * from './useCropPicker'
 
 export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
-  (
-    {
+  (props, ref) => {
+    const {
       onFileSelect,
       targetCrop,
       variants = [],
@@ -24,10 +27,11 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       modalProps = {},
       title = 'Crop Image',
       confirmButton = 'Confirm Crop',
+      debugName,
+      handle,
       ...fileInputProps
-    },
-    ref,
-  ) => {
+    } = props as CropPickerProps
+
     const {
       onConfirmCrop,
       onFilesReturned,
@@ -38,7 +42,7 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       crop,
       setRelativeCrop,
       handleCropChange,
-    } = useCropPicker({ onFileSelect, ref, ...targetCrop })
+    } = handle || useCropPicker({ onFileSelect, ref, ...targetCrop })
 
     const variantStyles = useDefaultComponentStyle<
       'u:CropPicker',
@@ -48,6 +52,9 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       responsiveVariants,
       styles,
     })
+
+    const buttonStyles = getNestedStylesByKey('confirmButton', variantStyles)
+    const modalStyles = getNestedStylesByKey('modal', variantStyles)
 
     return (
       <>
@@ -60,14 +67,13 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
           visible={visible}
           toggle={onClose}
           title={title}
-          variants={['centered']}
-          style={variantStyles.wrapper}
+          styles={modalStyles}
           footer={
             <Button
               text={confirmButton}
-              variants={['primary', 'fullWidth'] as any}
+              styles={buttonStyles}
               onPress={onConfirmCrop}
-              debugName={'confirm-crop'}
+              debugName={debugName}
             />
           }
           {...modalProps}
@@ -76,7 +82,6 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
             <ReactCrop
               crop={crop}
               onChange={handleCropChange}
-              ruleOfThirds
               onComplete={(_, relCrop) => setRelativeCrop(relCrop)}
               style={variantStyles.previewSize}
               {...targetCrop}
