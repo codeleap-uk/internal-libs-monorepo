@@ -1,3 +1,4 @@
+import React from 'react'
 import { onMount, TypeGuards, useState } from '@codeleap/common'
 
 export class LocalStorage<T extends Record<string, any>> {
@@ -114,5 +115,31 @@ export class LocalStorage<T extends Record<string, any>> {
     }
 
     return [_value, setValue]
+  }
+
+  public listen(
+    key: keyof T, 
+    listener: (newValue: string | null | undefined, event: StorageEvent) => void, 
+    options: AddEventListenerOptions = {}
+  ) {
+    React.useEffect(() => {
+      if (typeof window === 'undefined') {
+        return null
+      }
+
+      const handler = (event: StorageEvent) => {
+        const storageKey = this.getStorageKey(key)
+  
+        if (event?.key === storageKey) {
+          listener(event?.newValue, event)
+        }
+      }
+
+      window.addEventListener('storage', handler, options)
+
+      return () => {
+        window.removeEventListener('storage', handler)
+      }
+    }, [])
   }
 }
