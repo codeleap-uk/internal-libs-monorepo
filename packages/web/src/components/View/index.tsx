@@ -17,7 +17,7 @@ import {
 import { ViewPresets } from './styles'
 import { useMediaQuery } from '../../lib/hooks'
 import { HTMLProps, NativeHTMLElement } from '../../types'
-
+import { motion, MotionProps } from 'framer-motion'
 export * from './styles'
 
 export type ViewProps<T extends NativeHTMLElement> =
@@ -33,6 +33,8 @@ export type ViewProps<T extends NativeHTMLElement> =
     up?: BreakpointPlaceholder
     down?: BreakpointPlaceholder
     onHover?: (isMouseOverElement: boolean) => void
+    animated?: boolean
+    animatedProps?: Partial<MotionProps>
   } & BaseViewProps
 
 export const ViewCP = (
@@ -43,7 +45,7 @@ export const ViewCP = (
   const {
     responsiveVariants = {},
     variants = [],
-    component: Component = 'div',
+    component = 'div',
     children,
     is,
     not,
@@ -54,9 +56,13 @@ export const ViewCP = (
     scroll = false,
     debug = false,
     style,
+    animated = false,
     css = [],
+    animatedProps = { },
     ...props
   } = viewProps
+
+  const Component = animated ? (motion?.[component] || motion.div) : (component || 'div')
 
   const variantStyles = useDefaultComponentStyle<'u:View', typeof ViewPresets>('u:View', {
     responsiveVariants,
@@ -107,6 +113,7 @@ export const ViewCP = (
       ref={ref}
       {...onHoverProps}
       {...props}
+      {...animatedProps}
     >
       {children}
     </Component>
