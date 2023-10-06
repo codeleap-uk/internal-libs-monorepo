@@ -89,7 +89,8 @@ export const Slider = (props: SliderProps) => {
     ...sliderProps
   } = others
 
-  const value = TypeGuards.isArray(_value) ? _value : [_value]
+  const isMultiThumbs = TypeGuards.isArray(_value)
+  const value = isMultiThumbs ? _value : [_value]
   const defaultValueRef = useRef<PrimitiveSliderProps['defaultValue']>(_defaultValue)
   const defaultValue = defaultValueRef.current
 
@@ -105,7 +106,7 @@ export const Slider = (props: SliderProps) => {
 
   const handleChange: SliderProps['onValueChange'] = (newValue) => {
     if (TypeGuards.isArray(newValue) && newValue.length <= 1) {
-      if (TypeGuards.isArray(_value)) {
+      if (isMultiThumbs) {
         onValueChange(newValue)
       } else {
         onValueChange(newValue?.[0])
@@ -249,20 +250,28 @@ export const Slider = (props: SliderProps) => {
           <SliderRange style={selectedTrackStyle} />
         </SliderTrack>
 
-        {defaultValue.map((_thumbValue, i) => (
-          <SliderThumb
-            key={i}
-            // @ts-ignore
-            index={i}
-            style={thumbStyle}
-            onClick={() => {
-              if (onPressThumbSetValue) onValueChange?.([Number(_thumbValue)])
-              if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(_thumbValue, i)
-              currentThumbRef.current = i
-            }}
-            onMouseEnter={() => currentThumbRef.current = i}
-          />
-        ))}
+        {defaultValue.map((_thumbValue, i) => {
+          return (
+            <SliderThumb
+              key={i}
+              // @ts-ignore
+              index={i}
+              style={thumbStyle}
+              onClick={() => {
+                if (onPressThumbSetValue) {
+                  if (isMultiThumbs) {
+                    onValueChange?.([Number(_thumbValue)])
+                  } else {
+                    onValueChange?.(Number(_thumbValue))
+                  }
+                }
+                if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(_thumbValue, i)
+                currentThumbRef.current = i
+              }}
+              onMouseEnter={() => currentThumbRef.current = i}
+            />
+          )
+        })}
       </SliderContainer>
 
       {trackMarksProp ?
