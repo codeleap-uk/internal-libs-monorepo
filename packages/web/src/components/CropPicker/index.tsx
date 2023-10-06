@@ -17,7 +17,7 @@ export * from './utils'
 export * from './useCropPicker'
 
 export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
-  (props, ref) => {
+  (props: CropPickerProps, ref) => {
     const {
       onFileSelect,
       targetCrop,
@@ -30,7 +30,7 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       debugName,
       handle,
       ...fileInputProps
-    } = props as CropPickerProps
+    } = props
 
     const {
       onConfirmCrop,
@@ -98,4 +98,4 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
   },
 )
 
-export const CropPicker = React.memo(_CropPicker)
+export const CropPicker = React.memo(_CropPicker) as (props: CropPickerProps) => JSX.Element
