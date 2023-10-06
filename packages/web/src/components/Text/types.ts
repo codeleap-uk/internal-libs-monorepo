@@ -1,4 +1,5 @@
 import { StylesOf, ComponentVariants } from '@codeleap/common'
+import { MotionProps } from 'framer-motion'
 import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { TextComposition, TextPresets } from './styles'
 
@@ -13,4 +14,6 @@ ComponentVariants<typeof TextPresets> & {
   debounce?: number
   pressDisabled?: boolean
   onPress?: (event: React.MouseEventHandler<T>) => void
+  animated?: boolean
+  animatedProps?: Partial<MotionProps>
 }
