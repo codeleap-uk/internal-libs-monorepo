@@ -145,7 +145,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
 
     onValueChange(option.value)
     sectionPressedRef.current = setTimeout(() => {
-      clearInterval(sectionPressedRef.current)
+      clearTimeout(sectionPressedRef.current)
       sectionPressedRef.current = null
     }, debounce)
   }
