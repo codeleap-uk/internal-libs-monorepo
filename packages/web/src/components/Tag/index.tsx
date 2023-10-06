@@ -1,4 +1,4 @@
-import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards, useDefaultComponentStyle, useNestedStylesByKey } from '@codeleap/common'
 import { TagPresets } from './styles'
 import { TagProps } from './types'
 import { Icon } from '../Icon'
@@ -38,9 +38,10 @@ export const Tag = (props: TagProps) => {
     leftBadge,
     rightBadge,
     rightBadgeProps,
+    children,
     onPress,
-    ...rest }
-    = allProps
+    ...touchableProps
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:Tag', typeof TagPresets>('u:Tag', {
     variants,
@@ -48,25 +49,28 @@ export const Tag = (props: TagProps) => {
     styles,
   })
 
+  const leftBadgeStyles = useNestedStylesByKey('leftBadge', variantStyles)
+  const rightBadgeStyles = useNestedStylesByKey('rightBadge', variantStyles)
+
   const isPressable = TypeGuards.isFunction(onPress)
 
+  const Wrapper = isPressable ? Touchable : View
+
+  const pressableProps = isPressable ? { onPress, ...touchableProps } : {}
+
   return (
-    <View css={[variantStyles.wrapper, style]}
-      {...rest}>
-      <Touchable disabled={!isPressable}
-        onPress={onPress}>
-        <View
-          style={variantStyles.innerWrapper}>
-          {leftComponent}
-          {leftBadge && <Badge css={variantStyles.leftBadge} {...leftBadgeProps} />}
-          {leftIcon && <Icon css={variantStyles.leftIcon} name={leftIcon} {...leftIconProps} />}
-          {!!text && <Text text={text} style={variantStyles.text} {...textProps} />}
-          {rightIcon && <Icon css={variantStyles.rightIcon} name={rightIcon} {...rightIconProps} />}
-          {rightBadge && <Badge css={variantStyles.rightBadge} {...rightBadgeProps} />}
-          {rightComponent}
-        </View>
-      </Touchable>
-    </View>
+    <Wrapper css={[variantStyles.wrapper, style]} {...pressableProps}>
+      <View style={variantStyles.innerWrapper}>
+        {leftComponent}
+        {leftBadge && <Badge styles={leftBadgeStyles} {...leftBadgeProps} />}
+        {!TypeGuards.isNil(leftIcon) && <Icon debugName='Tag:leftIcon' css={variantStyles.leftIcon} name={leftIcon} {...leftIconProps} />}
+        {TypeGuards.isString(text) ? <Text text={text} style={variantStyles.text} {...textProps} /> : text}
+        {children}
+        {!TypeGuards.isNil(rightIcon) && <Icon debugName='Tag:rightIcon' css={variantStyles.rightIcon} name={rightIcon} {...rightIconProps} />}
+        {rightBadge && <Badge styles={rightBadgeStyles} {...rightBadgeProps} />}
+        {rightComponent}
+      </View>
+    </Wrapper>
   )
 }
 

@@ -1,4 +1,5 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { BadgeComposition } from '../Badge'
 
 export type TagComposition =
   | 'wrapper'
@@ -6,10 +7,8 @@ export type TagComposition =
   | 'text'
   | 'leftIcon'
   | 'rightIcon'
-  | 'leftWrapper'
-  | 'rightWrapper'
-  | 'leftBadge'
-  | 'rightBadge'
+  | `leftBadge${Capitalize<BadgeComposition>}`
+  | `rightBadge${Capitalize<BadgeComposition>}`
 
 const createTagStyle = createDefaultVariantFactory<TagComposition>()
 

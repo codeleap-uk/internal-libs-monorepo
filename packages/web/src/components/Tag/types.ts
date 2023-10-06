@@ -4,26 +4,29 @@ import { TagComposition, TagPresets } from './styles'
 import { BadgeProps } from '../Badge'
 import { TextProps } from '../Text'
 import { IconProps } from '../Icon'
-import { ViewProps } from '../View'
 import { ComponentCommonProps } from '../../types'
+import { TouchableProps } from '../Touchable'
+import { ViewProps } from '../View'
 
 export type TagProps = ComponentVariants<typeof TagPresets> &
-  ViewProps<'div'> &
+  Omit<ViewProps<'div'>, 'styles' | 'variants' | 'responsiveVariants'> &
+  Omit<TouchableProps, 'styles' | 'variants' | 'responsiveVariants'> &
+  ComponentVariants<typeof TagPresets> &
   ComponentCommonProps & {
     styles?: StylesOf<TagComposition>
-    text: string
-    textProps?: TextProps<'p'>
+    text?: TextProps<'p'>['text'] | ReactElement
+    textProps?: Partial<TextProps<'p'>>
     leftIcon?: IconPlaceholder
-    leftIconProps?: IconProps
+    leftIconProps?: Partial<IconProps>
     rightIcon?: IconPlaceholder
-    rightIconProps?: IconProps
+    rightIconProps?: Partial<IconProps>
 
     leftComponent?: ReactElement
     rightComponent?: ReactElement
 
-    leftBadge?: boolean
-    rightBadge?: boolean
-    leftBadgeProps?: BadgeProps
-    rightBadgeProps?: BadgeProps
+    leftBadge?: BadgeProps['badge']
+    rightBadge?: BadgeProps['badge']
+    leftBadgeProps?: Partial<BadgeProps>
+    rightBadgeProps?: Partial<BadgeProps>
     onPress?: (event: React.MouseEventHandler) => void
   }
