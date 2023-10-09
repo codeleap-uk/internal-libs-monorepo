@@ -1,7 +1,7 @@
 import { ProgressBarPresets } from './styles'
 import { useDefaultComponentStyle } from '@codeleap/common'
 import { Root, Indicator } from '@radix-ui/react-progress'
-import { Text, View } from '../../components'
+import { Icon, Text, View } from '../../components'
 import { ProgressBarProps } from './types'
 
 export * from './types'
@@ -10,14 +10,18 @@ export * from './styles'
 export const ProgressBar = (props: ProgressBarProps) => {
   const {
     progress = 0,
-    text,
     variants = [],
     responsiveVariants = {},
     styles = {},
     textProps = {},
     progressIndicatorProps = {},
     progressRootProps = {},
-    hideText = false,
+    showProgress = false,
+    leftIcon,
+    rightIcon,
+    leftText,
+    rightText,
+    debugName,
     ...rest
   } = props
 
@@ -30,8 +34,24 @@ export const ProgressBar = (props: ProgressBarProps) => {
     styles,
   })
 
+  const hasDecimal = progress % 1 != 0 && !isNaN(progress % 1)
+
   return (
-    <View css={variantStyles.wrapper} {...rest}>
+    <View css={variantStyles.wrapper} debugName={debugName} {...rest}>
+      {leftIcon && (
+        <Icon
+          name={leftIcon}
+          style={{ ...variantStyles.icon, ...variantStyles.leftIcon }}
+          debugName={`leftIcon-${debugName}`}
+        />
+      )}
+      {leftText && (
+        <Text
+          text={leftText}
+          css={[variantStyles.text, variantStyles.leftText]}
+          {...textProps}
+        />
+      )}
       <Root
         css={variantStyles.progress}
         value={progress}
@@ -45,7 +65,27 @@ export const ProgressBar = (props: ProgressBarProps) => {
           {...progressIndicatorProps}
         />
       </Root>
-      {!hideText && <Text css={variantStyles.text} {...textProps} text={`${text ?? progress + '%'}`} />}
+      {showProgress && (
+        <Text
+          css={variantStyles.text}
+          text={`${progress.toFixed(hasDecimal ? 2 : 0)}%`}
+          {...textProps}
+        />
+      )}
+      {rightIcon && (
+        <Icon
+          name={rightIcon}
+          style={{ ...variantStyles.icon, ...variantStyles.rightIcon }}
+          debugName={`rightIcon-${debugName}`}
+        />
+      )}
+      {rightText && (
+        <Text
+          text={rightText}
+          css={[variantStyles.text, variantStyles.rightText]}
+          {...textProps}
+        />
+      )}
     </View>
   )
 }

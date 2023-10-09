@@ -1,6 +1,6 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
-export type ProgressBarComposition = 'wrapper' | 'progress' | 'indicator' | 'text'
+export type ProgressBarComposition = 'wrapper' | 'progress' | 'indicator' | 'text' | 'icon' | 'leftIcon' | 'leftText' | 'rightIcon' | 'rightText'
 
 const createProgressBarStyle = createDefaultVariantFactory<ProgressBarComposition>()
 
