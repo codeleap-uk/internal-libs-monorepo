@@ -16,11 +16,11 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     text,
     progress,
     icon,
-    variants,
-    styles,
+    variants = [],
+    styles = {},
     debugName,
-    showProgress,
-    responsiveVariants,
+    showProgress = false,
+    responsiveVariants = {},
     children,
     ...rest
   } = props
@@ -41,11 +41,24 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     variantStyles.circle?.height ??
     0
 
+  const InnerIcon = () => (
+    <Icon
+      name={icon}
+      style={variantStyles.icon}
+      debugName={`innerIcon-${debugName}`}
+    />
+  )
+
+  const _Text = () => (
+    <Text style={variantStyles.text} text={showProgress ? formatProgress(progress) : text} />
+  )
+
   return (
-    <View variants={['alignCenter']} debugName={debugName} {...rest}>
+    <View debugName={debugName} {...rest}>
       <CircularProgressbarWithChildren
         value={progress}
         css={{
+          ...variantStyles.circle,
           width: wrapperSize,
           height: wrapperSize,
         }}
@@ -55,17 +68,7 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
           strokeLinecap: 'butt',
         })}
       >
-        {children ??
-          (icon && (
-            <Icon
-              name={icon}
-              style={variantStyles.icon}
-              debugName={`innerIcon-${debugName}`}
-            />
-          )) ??
-          (showProgress && (
-            <Text style={variantStyles.text} text={formatProgress(progress)} />
-          ))}
+        {children ?? (icon && <InnerIcon />) ?? <_Text />}
       </CircularProgressbarWithChildren>
     </View>
   )
