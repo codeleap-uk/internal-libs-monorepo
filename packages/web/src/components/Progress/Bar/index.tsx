@@ -3,6 +3,7 @@ import { useDefaultComponentStyle } from '@codeleap/common'
 import { Root, Indicator } from '@radix-ui/react-progress'
 import { Icon, Text, View } from '../../components'
 import { ProgressBarProps } from './types'
+import { formatProgress } from '../utils'
 
 export * from './types'
 export * from './styles'
@@ -33,8 +34,6 @@ export const ProgressBar = (props: ProgressBarProps) => {
     responsiveVariants,
     styles,
   })
-
-  const hasDecimal = progress % 1 != 0 && !isNaN(progress % 1)
 
   return (
     <View css={variantStyles.wrapper} debugName={debugName} {...rest}>
@@ -68,7 +67,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
       {showProgress && (
         <Text
           css={variantStyles.text}
-          text={`${progress.toFixed(hasDecimal ? 2 : 0)}%`}
+          text={formatProgress(progress)}
           {...textProps}
         />
       )}
