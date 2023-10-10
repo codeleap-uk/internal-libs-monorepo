@@ -1,7 +1,7 @@
 import { Crop } from 'react-image-crop'
 import { ImageReading } from './types'
 
-export const readImage = (file: File | Blob): Promise<ImageReading> => {
+export function readImage(file: File | Blob): Promise<ImageReading> {
   const reader = new FileReader()
   return new Promise<ImageReading>((resolve) => {
     reader.onload = () => {
