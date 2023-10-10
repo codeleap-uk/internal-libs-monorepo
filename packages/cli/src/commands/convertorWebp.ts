@@ -23,11 +23,6 @@ export const convertorWebpCommand = codeleapCommand(
   async (argv) => {
     const { flags, _ } = argv
     
-    let settingsPath = _.settingsPath
-
-    if (!settingsPath) {
-      const answers = await inquirer.prompt([
-        {
     let settingsPath = CODELEAP_CLI_SETTINGS_PATH
 
     if (!fs.existsSync(settingsPath)) {
