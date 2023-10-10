@@ -23,7 +23,7 @@ export const convertorWebpCommand = codeleapCommand(
   async (argv) => {
     const { flags, _ } = argv
     
-    let settingsPath = CODELEAP_CLI_SETTINGS_PATH
+    const settingsPath = CODELEAP_CLI_SETTINGS_PATH
 
     if (!fs.existsSync(settingsPath)) {
       console.error('Settings not found, check path:', settingsPath)
@@ -62,6 +62,7 @@ export const convertorWebpCommand = codeleapCommand(
           error: e,
         })
         process.exit(1)
+        return
       }
     }
     
