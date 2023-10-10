@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react'
-import { ReactCrop } from 'react-image-crop'
 import {
   getNestedStylesByKey,
   useDefaultComponentStyle,
@@ -8,6 +7,10 @@ import { CropPickerPresets } from './styles'
 import { CropPickerProps } from './types'
 import { useCropPicker } from './useCropPicker'
 import { Modal, Button, FileInput, FileInputRef } from '../components'
+
+// With this approach, we can use the component without build errors, but the lib is being imported twice
+import { Component } from 'react-image-crop'
+const ReactCrop: React.FC<Component> = require('react-image-crop').default
 
 import 'react-image-crop/dist/ReactCrop.css'
 
