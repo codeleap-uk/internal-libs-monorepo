@@ -16,7 +16,7 @@ export const convertorWebpCommand = codeleapCommand(
     help: {
       description: 'Command for easily convertor to webp, compression and resize images.',
       examples: [
-        `codeleap ${commandName} ./src/app/assets/convertor.settings.json`,
+        `codeleap ${commandName}`,
       ],
     },
   },
