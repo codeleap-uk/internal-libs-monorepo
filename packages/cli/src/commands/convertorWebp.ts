@@ -124,7 +124,7 @@ export const convertorWebpCommand = codeleapCommand(
 
       const hasAlfaChannels = img_metadata.channels && img_metadata.channels >= 4
 
-      if (hasAlfaChannels) {
+      if (hasAlfaChannels && !!settings.convertor.processColorChannels) {
         imageProcessing = imageProcessing.toColorspace('srgb')
       }
 

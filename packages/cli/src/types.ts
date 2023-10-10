@@ -10,6 +10,7 @@ export type CodeleapCLISettings = {
     convertor: {
       compressionQuality: number
       resizeWidth: number
+      processColorChannels: boolean
       inputFormats: string[]
       ignoreFiles: string[]
     }
