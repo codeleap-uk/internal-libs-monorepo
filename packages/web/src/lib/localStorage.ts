@@ -1,8 +1,13 @@
 import React from 'react'
 import { onMount, TypeGuards, useState } from '@codeleap/common'
 
-export class LocalStorage<T extends Record<string, any>> {
+export type LocalStorageHandler<T> = (key: T, event: StorageEvent) => void
+export type Key<T> = keyof T
+
+export class LocalStorage<T extends Record<string, string>> {
   public storageKeys: T
+
+  private storageListeners: LocalStorageHandler<Key<T>>[] = []
 
   constructor(keys: T) {
     this.storageKeys = keys
@@ -15,7 +20,7 @@ export class LocalStorage<T extends Record<string, any>> {
     return localStorage
   }
 
-  public getStorageKey(key: keyof T): string {
+  public getStorageKey(key: Key<T>): string {
     return String(this.storageKeys[key] ?? key)
   }
 
@@ -24,7 +29,7 @@ export class LocalStorage<T extends Record<string, any>> {
     return JSON.stringify(value)
   }
 
-  public replaceItem(key: keyof T, value: any): string {
+  public replaceItem(key: Key<T>, value: any): string {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
     storage.removeItem(storageKey)
@@ -33,19 +38,19 @@ export class LocalStorage<T extends Record<string, any>> {
     return parsedValue
   }
 
-  public getItem(key: keyof T): string | null {
+  public getItem(key: Key<T>): string | null {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
     return storage.getItem(storageKey)
   }
 
-  public removeItem(key: keyof T): void {
+  public removeItem(key: Key<T>): void {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
     storage.removeItem(storageKey)
   }
 
-  public setItem(key: keyof T, value: any): string {
+  public setItem(key: Key<T>, value: any): string {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
     const parsedValue = this.parseValue(value)
@@ -58,19 +63,19 @@ export class LocalStorage<T extends Record<string, any>> {
     storage.clear()
   }
 
-  public multiSet(keyValuePairs: Array<[keyof T, any]>): void {
+  public multiSet(keyValuePairs: Array<[Key<T>, any]>): void {
     for (const [key, value] of keyValuePairs) {
       this.setItem(key, value)
     }
   }
 
-  public multiRemove(keys: (keyof T)[]): void {
+  public multiRemove(keys: Key<T>[]): void {
     for (const key of keys) {
       this.removeItem(key)
     }
   }
 
-  public multiGet(keys: (keyof T)[]): Record<string, any> {
+  public multiGet(keys: Key<T>[]): Record<string, any> {
     const storage = this.getLocalStorage()
     const values: Record<string, any> = {}
 
@@ -84,7 +89,7 @@ export class LocalStorage<T extends Record<string, any>> {
     return values
   }
 
-  public use<S = any>(key: keyof T, value: any): [S, (to: S | ((prev: S) => S)) => any] {
+  public use<S = any>(key: Key<T>, value: any): [S, (to: S | ((prev: S) => S)) => any] {
     const [_value, _setValue] = useState<S>(value)
 
     onMount(() => {
@@ -117,9 +122,18 @@ export class LocalStorage<T extends Record<string, any>> {
     return [_value, setValue]
   }
 
-  public listen(
-    key: keyof T, 
-    listener: (newValue: string | null | undefined, event: StorageEvent) => void, 
+  public listen(key: Key<T>, handler: LocalStorageHandler<Key<T>>) {
+    const newLength = this.storageListeners.push(handler)
+
+    return () => {
+      this.storageListeners.splice(newLength - 1, 1)
+    }
+  }
+
+  public useValue(
+    key: Key<T>, 
+    handler: (newValue: string | null | undefined, event: StorageEvent) => void, 
+    deps: Array<any>,
     options: AddEventListenerOptions = {}
   ) {
     React.useEffect(() => {
@@ -127,19 +141,19 @@ export class LocalStorage<T extends Record<string, any>> {
         return null
       }
 
-      const handler = (event: StorageEvent) => {
+      const listener = (event: StorageEvent) => {
         const storageKey = this.getStorageKey(key)
   
         if (event?.key === storageKey) {
-          listener(event?.newValue, event)
+          handler(event?.newValue, event)
         }
       }
 
-      window.addEventListener('storage', handler, options)
+      window.addEventListener('storage', listener, options)
 
       return () => {
-        window.removeEventListener('storage', handler)
+        window.removeEventListener('storage', listener)
       }
-    }, [])
+    }, deps)
   }
 }
