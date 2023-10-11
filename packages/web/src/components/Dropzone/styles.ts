@@ -1,4 +1,5 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ActionIconComposition } from '../ActionIcon'
 
 export type DropzoneComposition =
   | 'wrapper'
@@ -8,13 +9,13 @@ export type DropzoneComposition =
   | 'filesWrapper'
   | 'fileWrapper'
   | 'fileLeftIcon'
-  | 'fileRightIcon'
   | 'fileName'
   | 'fileError'
   | 'fileErrors'
   | 'fileNameWrapper'
   | 'fileImage'
   | 'iconWrapper'
+  | `fileRightIcon${Capitalize<ActionIconComposition>}`
 
 const createDropzoneStyle = createDefaultVariantFactory<DropzoneComposition>()
 

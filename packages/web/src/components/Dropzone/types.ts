@@ -12,6 +12,7 @@ import {
   DropzoneRef as ReactDropzoneRef,
 } from 'react-dropzone'
 import { ReactDispatch } from 'react'
+import { ActionIconComposition } from '../ActionIcon'
 
 export type DropzoneFile = File
 
@@ -26,16 +27,25 @@ export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
     acceptedFiles: File[]
     rejectedFiles?: DropzoneFileRejection[]
     setAcceptedFiles: ReactDispatch<React.SetStateAction<DropzoneFile[]>>
-    setRejectedFiles?: ReactDispatch<React.SetStateAction<DropzoneFileRejection[]>>
+    setRejectedFiles?: ReactDispatch<
+      React.SetStateAction<DropzoneFileRejection[]>
+    >
     onRemove?: (file: DropzoneFile) => void
     children?: React.ReactNode
+    fileRightIcon?: IconPlaceholder
+    fileLeftIcon?: IconPlaceholder
+    withImagePreview?: boolean
   }
 
-export type DropzoneFilePreviewProps = {
+export type DropzoneFilePreviewProps = Pick<
+  DropzoneProps,
+  'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview'
+> & {
   file: DropzoneFile
   errors?: DropzoneFileRejection['errors']
   variantStyles: StylesOf<DropzoneComposition>
   onRemove?: () => void
+  fileRightIconStyles?: StylesOf<ActionIconComposition>
 }
 
 export type DropzoneRef = ReactDropzoneRef & {
