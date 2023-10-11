@@ -27,6 +27,7 @@
     "masonic": "^3.7.0",
     "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",
+    "react-dropzone": "^14.2.3",
     "react-image-crop": "^10.1.8",
     "react-input-mask": "^2.0.4",
     "react-number-format": "^5.2.1",
