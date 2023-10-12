@@ -1,0 +1,54 @@
+---
+title: 'WebP Convertor'
+description: '
+Script to convert images to webp, compress and resize to reduce their size and improve loading speed in browsers. Everything completely configurable through a JSON file.
+'
+tag: 'CLI'
+source: 'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/cli/src/commands/convertorWebp.ts'
+---
+
+## How to use
+
+First you need to have a JSON file in the project root with the following name: **codeleapcli.config.json**.
+
+### JSON Example
+```json
+{
+  "convertor-webp": {
+    "input": "./src/app/assets/images",
+    "output": "./src/app/assets/images_webp",
+    "convertor": {
+      "compressionQuality": 50,
+      "resizeWidth": 1000,
+      "processColorChannels": true,
+      "inputFormats": ["png", "jpeg"],
+      "ignoreFiles": ["home"]
+    },
+    "mode": "multi"
+  } 
+}
+```
+
+### Settings
+
+- **input**: Path to the directory where the images that will be used for conversion are located.
+- **output**: Directory path where the converted images will be placed.
+- **compressionQuality**: Compression quality, 100 is the highest, original quality of the image, and lower values reduce the quality along with the file size, ideally values between 90 and 70.
+- **resizeWidth**: Very large images are extremely problematic for browsers to load, and this configuration deals with that. Values that are greater than **resizeWidth** will be resized to the configured value, without losing the aspect ratio, and smaller values will not undergo resizing.
+- **processColorChannels**: The library we use for conversion has the option to process the alpha channels of the image, and this also helps to reduce the final size of the image.
+- **inputFormats**: The input file formats that must be accepted.
+- **ignoreFiles**: The names of the files that should be ignored during conversion.
+- **mode**: Conversion mode
+  - **multi**: The converter will take all images from the input directory and apply processing to them all following the configuration of the JSON file.
+  - **single**: The converter will just take an image and apply the treatment, the terminal will ask what its filename is and will look for it in the input directory.
+
+#### Run command
+
+Open the terminal and type:
+
+
+```
+yarn codeleap convertor-webp
+```
+
+The conversion process will happen automatically, and any configuration errors will be shown in the terminal.

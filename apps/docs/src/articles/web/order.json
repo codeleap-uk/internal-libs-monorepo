@@ -6,6 +6,12 @@
         ]
     },
     {
+        "name": "commands",
+        "items": [
+            "WebP_convertor"
+        ]
+    },
+    {
         "name": "button",
         "items": [
             "Button",
