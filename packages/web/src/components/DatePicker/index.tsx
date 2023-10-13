@@ -37,10 +37,15 @@ export function DatePicker(props: DatePickerProps) {
     defaultValue,
     outerInputComponent: OuterInput,
     headerComponent: Header,
-    disabled,
     datePickerProps,
     ...otherProps
   } = allProps
+
+  const {
+    minDate = new Date(1950, 0, 1),
+    maxDate,
+    startDate = new Date(),
+  } = datePickerProps || {}
 
   const [visible, setVisible] = useState(false)
   const [yearShow, setYearShow] = useState(false)
@@ -54,35 +59,58 @@ export function DatePicker(props: DatePickerProps) {
     styles,
   })
 
-  const DayContentComponent = useCallback((param) => {
-    const { day, date: _date } = param
+  const DayContentComponent = useCallback(
+    (param) => {
+      const { day, date: _date } = param
 
-    let selected = false
-    const date = format(new Date(_date), 'eee MMM dd yyyy')
-    const dateValue = value ? format(new Date(value), 'eee MMM dd yyyy') : ''
+      const date = format(new Date(_date), 'eee MMM dd yyyy')
+      const dateValue = value ? format(new Date(value), 'eee MMM dd yyyy') : ''
 
-    if (date === dateValue) {
-      selected = true
-    }
+      return (
+        <View
+          css={[
+            variantStyles.dayWrapper,
+            date === dateValue && variantStyles['dayWrapper:selected'],
+          ]}
+        >
+          <Text
+            style={[
+              variantStyles.day,
+              date === dateValue && variantStyles['day:selected'],
+            ]}
+            text={day}
+          />
+        </View>
+      )
+    },
+    [value],
+  )
 
-    return (
-      <View css={[variantStyles.dayWrapper, selected && variantStyles['dayWrapper:selected']]}>
-        <Text style={[variantStyles.day, selected && variantStyles['day:selected']]} text={day} />
-      </View>
-    )
-  }, [value])
+  const YearContentComponent = useCallback(
+    (param) => {
+      const { year } = param
 
-  const YearContentComponent = useCallback((param) => {
-    const { year } = param
+      const selected = String(value)?.includes(year)
 
-    const selected = String(value)?.includes(year)
-
-    return (
-      <View css={[variantStyles.yearWrapper, selected && variantStyles['yearWrapper:selected']]}>
-        <Text style={[variantStyles.year, selected && variantStyles['year:selected']]} text={year} />
-      </View>
-    )
-  }, [value])
+      return (
+        <View
+          css={[
+            variantStyles.yearWrapper,
+            selected && variantStyles['yearWrapper:selected'],
+          ]}
+        >
+          <Text
+            style={[
+              variantStyles.year,
+              selected && variantStyles['year:selected'],
+            ]}
+            text={year}
+          />
+        </View>
+      )
+    },
+    [value],
+  )
 
   const inputStyles = getNestedStylesByKey('outerInput', variantStyles)
   const headerStyles = getNestedStylesByKey('header', variantStyles)
@@ -93,15 +121,15 @@ export function DatePicker(props: DatePickerProps) {
         onChange={onValueChange}
         open={visible}
         selected={value}
-        todayButton={null}
         shouldCloseOnSelect={false}
         openToDate={defaultValue ?? value}
         dateFormat='dd/MM/yyyy'
         formatWeekDay={(t) => t[0]}
         calendarStartDay={1}
         placeholderText={otherProps?.placeholder}
-        disabled={disabled}
-        renderDayContents={(day, date) => <DayContentComponent day={day} date={date} />}
+        renderDayContents={(day, date) => (
+          <DayContentComponent day={day} date={date} />
+        )}
         customInput={
           <OuterInput
             styles={inputStyles}
@@ -125,6 +153,13 @@ export function DatePicker(props: DatePickerProps) {
           setVisible(false)
           setYearShow(false)
         }}
+        minDate={minDate}
+        maxDate={maxDate}
+        yearItemNumber={
+          (maxDate ?? new Date()).getFullYear() - minDate.getFullYear()
+        }
+        startDate={startDate}
+        endDate={maxDate}
         onYearChange={() => setYearShow(false)}
         showYearPicker={yearShow}
         renderYearContent={(year) => <YearContentComponent year={year} />}
