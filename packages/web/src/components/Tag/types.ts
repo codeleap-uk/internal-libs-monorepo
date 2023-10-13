@@ -8,7 +8,7 @@ import { ComponentCommonProps } from '../../types'
 import { TouchableProps } from '../Touchable'
 import { ViewProps } from '../View'
 
-export type TagProps = ComponentVariants<typeof TagPresets> &
+export type TagProps = 
   Omit<ViewProps<'div'>, 'styles' | 'variants' | 'responsiveVariants'> &
   Omit<TouchableProps, 'styles' | 'variants' | 'responsiveVariants'> &
   ComponentVariants<typeof TagPresets> &
@@ -20,13 +20,10 @@ export type TagProps = ComponentVariants<typeof TagPresets> &
     leftIconProps?: Partial<IconProps>
     rightIcon?: IconPlaceholder
     rightIconProps?: Partial<IconProps>
-
     leftComponent?: ReactElement
     rightComponent?: ReactElement
-
     leftBadge?: BadgeProps['badge']
     rightBadge?: BadgeProps['badge']
     leftBadgeProps?: Partial<BadgeProps>
     rightBadgeProps?: Partial<BadgeProps>
-    onPress?: (event: React.MouseEventHandler) => void
   }

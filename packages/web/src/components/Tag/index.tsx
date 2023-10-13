@@ -1,5 +1,6 @@
+import React from 'react'
 import { TypeGuards, useDefaultComponentStyle, useNestedStylesByKey } from '@codeleap/common'
-import { TagPresets } from './styles'
+import { TagParts, TagPresets } from './styles'
 import { TagProps } from './types'
 import { Icon } from '../Icon'
 import { Text } from '../Text'
@@ -12,10 +13,10 @@ export * from './types'
 
 const defaultProps: Partial<TagProps> = {
   debugName: 'Tag component',
+  disabled: false,
 }
 
 export const Tag = (props: TagProps) => {
-
   const allProps = {
     ...Tag.defaultProps,
     ...props,
@@ -28,6 +29,7 @@ export const Tag = (props: TagProps) => {
     responsiveVariants,
     styles,
     style,
+    css,
     leftIcon,
     text,
     textProps,
@@ -40,6 +42,7 @@ export const Tag = (props: TagProps) => {
     rightBadgeProps,
     children,
     onPress,
+    disabled,
     ...touchableProps
   } = allProps
 
@@ -54,22 +57,38 @@ export const Tag = (props: TagProps) => {
 
   const isPressable = TypeGuards.isFunction(onPress)
 
-  const Wrapper = isPressable ? Touchable : View
+  const Wrapper: any = isPressable ? Touchable : View
 
-  const pressableProps = isPressable ? { onPress, ...touchableProps } : {}
+  const wrapperProps = isPressable ? { onPress, ...touchableProps } : touchableProps
+
+  const getStylesByKey = (styleKey: TagParts) => ([
+    variantStyles?.[styleKey],
+    isPressable && variantStyles[`${styleKey}:pressable`],
+    disabled && variantStyles[`${styleKey}:disabled`],
+  ])
+
+  const wrapperStyles = React.useMemo(() => ([
+    getStylesByKey('wrapper'),
+    css,
+    style,
+  ]), [variantStyles, disabled, isPressable, style])
+
+  const textStyles = React.useMemo(() => getStylesByKey('text'), [variantStyles, disabled, isPressable])
+  const leftIconStyles = React.useMemo(() => getStylesByKey('leftIcon'), [variantStyles, disabled, isPressable])
+  const rightIconStyles = React.useMemo(() => getStylesByKey('rightIcon'), [variantStyles, disabled, isPressable])
 
   return (
-    <Wrapper css={[variantStyles.wrapper, style]} {...pressableProps}>
-      <View style={variantStyles.innerWrapper}>
-        {leftComponent}
-        {leftBadge && <Badge styles={leftBadgeStyles} {...leftBadgeProps} />}
-        {!TypeGuards.isNil(leftIcon) && <Icon debugName='Tag:leftIcon' css={variantStyles.leftIcon} name={leftIcon} {...leftIconProps} />}
-        {TypeGuards.isString(text) ? <Text text={text} style={variantStyles.text} {...textProps} /> : text}
-        {children}
-        {!TypeGuards.isNil(rightIcon) && <Icon debugName='Tag:rightIcon' css={variantStyles.rightIcon} name={rightIcon} {...rightIconProps} />}
-        {rightBadge && <Badge styles={rightBadgeStyles} {...rightBadgeProps} />}
-        {rightComponent}
-      </View>
+    <Wrapper css={wrapperStyles} disabled={disabled} {...wrapperProps}>
+      {leftComponent}
+      {leftBadge && <Badge styles={leftBadgeStyles} badge={leftBadge} disabled={disabled} {...leftBadgeProps} />}
+      {!TypeGuards.isNil(leftIcon) && <Icon debugName='Tag:leftIcon' css={leftIconStyles} name={leftIcon} {...leftIconProps} />}
+      
+      {TypeGuards.isString(text) ? <Text text={text} css={textStyles} {...textProps} /> : text}
+      {children}
+      
+      {!TypeGuards.isNil(rightIcon) && <Icon debugName='Tag:rightIcon' css={rightIconStyles} name={rightIcon} {...rightIconProps} />}
+      {rightBadge && <Badge styles={rightBadgeStyles} badge={rightBadge} disabled={disabled} {...rightBadgeProps} />}
+      {rightComponent}
     </Wrapper>
   )
 }
