@@ -88,7 +88,6 @@ export const mdxTransforms = {
           key: typeEntry[0],
           value: typeEntry[1],
           formattedChildren: [
-            qt.slice(removeIdx),
             ...elChildren?.slice(1),
           ],
         }
