@@ -1,21 +1,49 @@
-import { useDefaultComponentStyle } from '@codeleap/common'
+import {
+  getNestedStylesByKey,
+  useCallback,
+  useDefaultComponentStyle,
+  useState,
+} from '@codeleap/common'
+import { Text, View } from '../components'
 import { DatePickerPresets } from './styles'
 import { DatePickerProps } from './types'
 import _DatePicker from 'react-datepicker'
-
-import 'react-datepicker/dist/react-datepicker.css'
+import { Header, OuterInput } from './defaultComponents'
+import { format } from 'date-fns'
 
 export * from './styles'
 export * from './types'
+export * from './defaultComponents'
+
+const defaultComponents = {
+  outerInputComponent: OuterInput,
+  headerComponent: Header,
+}
 
 export function DatePicker(props: DatePickerProps) {
+  const allProps = {
+    ...defaultComponents,
+    ...props,
+  }
+
   const {
-    date,
-    onDateChange,
+    hideInput,
+    value,
+    onValueChange,
     variants = [],
-    responsiveVariants = {},
     styles = {},
-  } = props
+    style,
+    responsiveVariants,
+    defaultValue,
+    outerInputComponent: OuterInput,
+    headerComponent: Header,
+    disabled,
+    datePickerProps,
+    ...otherProps
+  } = allProps
+
+  const [visible, setVisible] = useState(false)
+  const [yearShow, setYearShow] = useState(false)
 
   const variantStyles = useDefaultComponentStyle<
     'u:DatePicker',
@@ -26,12 +54,82 @@ export function DatePicker(props: DatePickerProps) {
     styles,
   })
 
+  const DayContentComponent = useCallback((param) => {
+    const { day, date: _date } = param
+
+    let selected = false
+    const date = format(new Date(_date), 'eee MMM dd yyyy')
+    const dateValue = value ? format(new Date(value), 'eee MMM dd yyyy') : ''
+
+    if (date === dateValue) {
+      selected = true
+    }
+
+    return (
+      <View css={[variantStyles.dayWrapper, selected && variantStyles['dayWrapper:selected']]}>
+        <Text style={[variantStyles.day, selected && variantStyles['day:selected']]} text={day} />
+      </View>
+    )
+  }, [value])
+
+  const YearContentComponent = useCallback((param) => {
+    const { year } = param
+
+    const selected = String(value)?.includes(year)
+
+    return (
+      <View css={[variantStyles.yearWrapper, selected && variantStyles['yearWrapper:selected']]}>
+        <Text style={[variantStyles.year, selected && variantStyles['year:selected']]} text={year} />
+      </View>
+    )
+  }, [value])
+
+  const inputStyles = getNestedStylesByKey('outerInput', variantStyles)
+  const headerStyles = getNestedStylesByKey('header', variantStyles)
+
   return (
-    <_DatePicker
-      style={variantStyles.wrapper}
-      selected={date}
-      onChange={onDateChange}
-      {...props}
-    />
+    <View css={variantStyles.wrapper}>
+      <_DatePicker
+        onChange={onValueChange}
+        open={visible}
+        selected={value}
+        todayButton={null}
+        shouldCloseOnSelect={false}
+        openToDate={defaultValue ?? value}
+        dateFormat='dd/MM/yyyy'
+        formatWeekDay={(t) => t[0]}
+        calendarStartDay={1}
+        placeholderText={otherProps?.placeholder}
+        disabled={disabled}
+        renderDayContents={(day, date) => <DayContentComponent day={day} date={date} />}
+        customInput={
+          <OuterInput
+            styles={inputStyles}
+            focused={visible}
+            hideInput={hideInput}
+            {...otherProps}
+          />
+        }
+        renderCustomHeader={(headerProps) => (
+          <Header
+            styles={headerStyles}
+            setYearShow={setYearShow}
+            prevYearButtonDisabled={yearShow}
+            nextYearButtonDisabled={yearShow}
+            {...headerProps}
+          />
+        )}
+        onFocus={() => setVisible(true)}
+        onSelect={() => (yearShow ? setYearShow(false) : setVisible(false))}
+        onClickOutside={() => {
+          setVisible(false)
+          setYearShow(false)
+        }}
+        onYearChange={() => setYearShow(false)}
+        showYearPicker={yearShow}
+        renderYearContent={(year) => <YearContentComponent year={year} />}
+        {...datePickerProps}
+      />
+    </View>
   )
 }

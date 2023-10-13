@@ -1,12 +1,30 @@
-import { ComponentVariants, StylesOf } from '@codeleap/common'
-import { DatePickerComposition, DatePickerPresets } from './styles'
-import DatePicker from 'react-datepicker'
+import { FormTypes } from '@codeleap/common'
+import { ReactDatePickerCustomHeaderProps, ReactDatePickerProps } from 'react-datepicker'
+import { ActionIconProps, TextInputProps } from '../components'
+import { DatePickerComposition, DatePickerHeaderComposition } from './styles'
 
-console.log(DatePicker.defaultProps)
-
-export type DatePickerProps = ComponentVariants<typeof DatePickerPresets> & {
-  date: Date
-  onDateChange: (date: Date) => void
-  styles?: StylesOf<DatePickerComposition>
-  style?: React.CSSProperties
+export type DatePickerOuterInputProps = TextInputProps & {
+  valueLabel: FormTypes.Label
+  hideInput?: boolean
 }
+
+export type DatePickerHeaderComponent = ReactDatePickerCustomHeaderProps & {
+  styles?: DatePickerHeaderComposition
+}
+
+export type DatePickerArrowProps = Partial<ActionIconProps> & {
+  direction: 'left' | 'right'
+}
+
+export type DatePickerProps = {
+  styles?: DatePickerComposition
+  style?: any
+  hideInput?: boolean
+  value: Date
+  outerInputComponent?: React.ComponentType<Partial<DatePickerOuterInputProps>>
+  headerComponent?: React.ComponentType<DatePickerHeaderComponent>
+  formatDate?: (date: Date | string) => FormTypes.Label
+  datePickerProps?: Omit<Partial<ReactDatePickerProps>, 'customInput' | 'renderCustomHeader'>
+  onValueChange: (date: Date) => void
+  defaultValue?: Date
+} & Omit<TextInputProps, 'defaultValue'>
