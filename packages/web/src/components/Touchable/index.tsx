@@ -142,7 +142,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     disabled && variantStyles['wrapper:disabled'],
     css,
     style,
-  ]), [variantStyles, disabled])
+  ]), [variantStyles, disabled, style])
 
   return (
     <View
