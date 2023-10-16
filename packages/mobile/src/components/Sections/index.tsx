@@ -35,7 +35,7 @@ export type ReplaceSectionListProps<P, T> = Omit<P, DataboundSectionListPropsTyp
   renderItem: (data: AugmentedSectionRenderItemInfo<T>) => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
-    data:T,
+    data: T,
     index: number,
   ) => { length: number; offset: number; index: number })
   fakeEmpty?: boolean
@@ -56,6 +56,13 @@ export type SectionListProps<
     keyboardAware?: boolean
   } & ComponentVariants<typeof SectionsPresets>
 
+const defaultProps: Partial<SectionListProps> = {
+  keyboardShouldPersistTaps: 'handled',
+  refreshControlProps: {},
+  keyboardAware: true,
+
+}
+
 export const Sections = forwardRef<SectionList, SectionListProps>(
   (sectionsProps, ref) => {
     const {
@@ -66,14 +73,17 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       component,
       refreshing,
       placeholder,
-      keyboardAware = true,
-      refreshControlProps = {},
+      keyboardAware,
+      refreshControlProps,
       contentContainerStyle,
 
       fakeEmpty,
       refreshControl,
       ...props
-    } = sectionsProps
+    } = {
+      ...defaultProps,
+      ...sectionsProps,
+    }
 
     const variantStyles = useDefaultComponentStyle<'u:Sections', typeof SectionsPresets>('u:Sections', {
       variants,
@@ -153,4 +163,6 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       />
     )
   },
-) as unknown as <T = any>(props: SectionListProps<T>) => JSX.Element
+) as unknown as (<T = any>(props: SectionListProps<T>) => JSX.Element) & {
+  defaultProps: Partial<SectionListProps>
+}
