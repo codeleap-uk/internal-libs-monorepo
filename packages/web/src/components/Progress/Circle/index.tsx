@@ -11,19 +11,32 @@ import { formatProgress } from '../utils'
 export * from './styles'
 export * from './types'
 
+const defaultProps: Partial<ProgressCircleProps> = {
+  progress: 0,
+  variants: [],
+  responsiveVariants: {},
+  styles: {},
+  showProgress: false,
+}
+
 export const ProgressCircle = (props: ProgressCircleProps) => {
+  const allProps = {
+    ...ProgressCircle.defaultProps,
+    ...props,
+  }
+
   const {
     text,
     progress,
     icon,
-    variants = [],
-    styles = {},
+    variants,
+    styles,
     debugName,
-    showProgress = false,
-    responsiveVariants = {},
+    showProgress,
+    responsiveVariants,
     children,
     ...rest
-  } = props
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<
     'u:ProgressCircle',
@@ -73,3 +86,5 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     </View>
   )
 }
+
+ProgressCircle.defaultProps = defaultProps

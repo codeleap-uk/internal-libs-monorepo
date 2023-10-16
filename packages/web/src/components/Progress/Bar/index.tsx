@@ -8,23 +8,39 @@ import { formatProgress } from '../utils'
 export * from './types'
 export * from './styles'
 
+const defaultProps: Partial<ProgressBarProps> = {
+  progress: 0,
+  variants: [],
+  responsiveVariants: {},
+  styles: {},
+  textProps: {},
+  progressIndicatorProps: {},
+  progressRootProps: {},
+  showProgress: false,
+}
+
 export const ProgressBar = (props: ProgressBarProps) => {
+  const allProps = {
+    ...ProgressBar.defaultProps,
+    ...props,
+  }
+
   const {
-    progress = 0,
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
-    textProps = {},
-    progressIndicatorProps = {},
-    progressRootProps = {},
-    showProgress = false,
+    progress,
+    variants,
+    responsiveVariants,
+    styles,
+    textProps,
+    progressIndicatorProps,
+    progressRootProps,
+    showProgress,
     leftIcon,
     rightIcon,
     leftText,
     rightText,
     debugName,
     ...rest
-  } = props
+  } = allProps
 
   const variantStyles = useDefaultComponentStyle<
     'u:ProgressBar',
@@ -88,3 +104,5 @@ export const ProgressBar = (props: ProgressBarProps) => {
     </View>
   )
 }
+
+ProgressBar.defaultProps = defaultProps
