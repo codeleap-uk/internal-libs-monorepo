@@ -13,7 +13,9 @@ export type ProgressBarProps = ComponentVariants<typeof ProgressBarPresets> &
     progressRootProps?: ProgressProps
     showProgress?: boolean
     leftIcon?: IconProps['name']
+    leftIconProps?: Partial<IconProps>
     rightIcon?: IconProps['name']
+    rightIconProps?: Partial<IconProps>
     leftText?: string | number
     rightText?: string | number
     debugName?: string

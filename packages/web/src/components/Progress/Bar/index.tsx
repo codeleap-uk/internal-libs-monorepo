@@ -35,7 +35,9 @@ export const ProgressBar = (props: ProgressBarProps) => {
     progressRootProps,
     showProgress,
     leftIcon,
+    leftIconProps,
     rightIcon,
+    rightIconProps,
     leftText,
     rightText,
     debugName,
@@ -58,6 +60,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
           name={leftIcon}
           style={{ ...variantStyles.icon, ...variantStyles.leftIcon }}
           debugName={`leftIcon-${debugName}`}
+          {...leftIconProps}
         />
       )}
       {leftText && (
@@ -92,6 +95,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
           name={rightIcon}
           style={{ ...variantStyles.icon, ...variantStyles.rightIcon }}
           debugName={`rightIcon-${debugName}`}
+          {...rightIconProps}
         />
       )}
       {rightText && (

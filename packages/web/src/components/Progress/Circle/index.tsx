@@ -29,6 +29,7 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     text,
     progress,
     icon,
+    iconProps,
     variants,
     styles,
     debugName,
@@ -59,6 +60,7 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
       name={icon}
       style={variantStyles.icon}
       debugName={`innerIcon-${debugName}`}
+      {...iconProps}
     />
   )
 
