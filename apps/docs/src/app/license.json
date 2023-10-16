@@ -47,6 +47,12 @@
         "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "@tanstack/react-query@4.29.14": {
+        "licenses": "MIT",
+        "repository": "https://github.com/tanstack/query",
+        "licenseUrl": "https://github.com/tanstack/query/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "beautiful-react-hooks@1.2.0": {
         "licenses": "MIT",
         "repository": "https://github.com/antonioru/beautiful-react-hooks",
@@ -119,7 +125,7 @@
         "licenseUrl": "https://github.com/FormidableLabs/prism-react-renderer/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "react-dom@18.1.0": {
+    "react-dom@18.2.0": {
         "licenses": "MIT",
         "repository": "https://github.com/facebook/react",
         "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
