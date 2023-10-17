@@ -19,7 +19,10 @@ export * from './useCropPicker'
 
 export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
   (props: CropPickerProps, ref) => {
-    const allProps = { ...props, ...CropPicker.defaultProps }
+    const allProps = {
+      ...CropPicker.defaultProps,
+      ...props,
+    }
 
     const {
       onFileSelect,
