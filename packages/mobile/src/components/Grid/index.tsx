@@ -125,7 +125,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
   },
 )
 
-export type GridComponentType = (<T extends any[] = any[]>(props: GridProps<T>) => React.ReactElement) & {
+export type GridComponentType = <T extends any[] = any[]>(props: GridProps<T>) => React.ReactElement & {
   defaultProps?: Partial<GridProps<T>>
 }
 
