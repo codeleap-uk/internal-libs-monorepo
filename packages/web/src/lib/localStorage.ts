@@ -7,7 +7,7 @@ export type Key<T> = keyof T
 export class LocalStorage<T extends Record<string, string>> {
   public storageKeys: T
 
-  private storageListeners: LocalStorageHandler<Key<T>>[] = []
+  private storageListeners: ((event: StorageEvent) => void)[] = []
 
   constructor(keys: T) {
     this.storageKeys = keys
@@ -22,6 +22,14 @@ export class LocalStorage<T extends Record<string, string>> {
 
   public getStorageKey(key: Key<T>): string {
     return String(this.storageKeys[key] ?? key)
+  }
+
+  private serializeValue(value: any) {
+    try {
+      return JSON.parse(value)
+    } catch (e) {
+      return value
+    }
   }
 
   private parseValue(value: any): string {
@@ -93,14 +101,20 @@ export class LocalStorage<T extends Record<string, string>> {
     const [_value, _setValue] = useState<S>(value)
 
     onMount(() => {
-      let initialValue = value
-      let storedValue = this.getItem(key)
+      const handler = () => {
+        let initialValue = value
+        let storedValue = this.getItem(key)
 
-      if (TypeGuards.isString(storedValue)) {
-        initialValue = JSON.parse(storedValue)
+        if (!TypeGuards.isNil(storedValue)) {
+          initialValue = this.serializeValue(storedValue)
+        }
+
+        _setValue(initialValue)
       }
 
-      _setValue(initialValue)
+      handler()
+
+      return this.listen(key, handler)
     })
 
     const setValue = (to: S | ((prev:S) => S)) => {
@@ -122,8 +136,24 @@ export class LocalStorage<T extends Record<string, string>> {
     return [_value, setValue]
   }
 
+  private triggerListeners() {
+    const trigger = e => {
+      for (const listener of this.storageListeners) {
+        listener(e)
+      }
+    }
+
+    window.addEventListener('storage', trigger)
+
+    return () => {
+      window.removeEventListener('storage', trigger)
+    }
+  }
+
   public listen(key: Key<T>, handler: LocalStorageHandler<Key<T>>) {
-    const newLength = this.storageListeners.push(handler)
+    const newLength = this.storageListeners.push((event: any) => handler(key, event))
+
+    this.triggerListeners()
 
     return () => {
       this.storageListeners.splice(newLength - 1, 1)
@@ -133,7 +163,7 @@ export class LocalStorage<T extends Record<string, string>> {
   public useValue(
     key: Key<T>, 
     handler: (newValue: string | null | undefined, event: StorageEvent) => void, 
-    deps: Array<any>,
+    deps: Array<any> = [],
     options: AddEventListenerOptions = {}
   ) {
     React.useEffect(() => {
