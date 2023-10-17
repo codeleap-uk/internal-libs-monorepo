@@ -38,7 +38,7 @@ export type TextInputProps =
     _error?: string
   } & Pick<PropsOf<typeof Touchable>, 'onPress'>
 
-const defaultProps:Partial<TextInputProps> = {
+const defaultProps: Partial<TextInputProps> = {
   hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
   visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
 }
@@ -182,6 +182,7 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
       ...(inputBaseProps.innerWrapperProps || {}),
       onPress,
       debugName,
+      dismissKeyboard: false,
     }}
     rightIcon={rightIcon}
     focused={isFocused}
@@ -246,7 +247,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 
   const [search, setSearch] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
 
-  const setSearchTimeout = React.useRef<NodeJS.Timeout|null>(null)
+  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
 
   const handleChangeSearch = (value: string) => {
     setSearch(value)
