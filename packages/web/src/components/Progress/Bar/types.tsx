@@ -1,22 +1,24 @@
-import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
+import { ComponentVariants, IconPlaceholder, PropsOf, StylesOf } from '@codeleap/common'
 import { ProgressBarComposition, ProgressBarPresets } from './styles'
-import { ProgressProps, ProgressIndicatorProps } from '@radix-ui/react-progress'
+import {
+  ProgressProps,
+  ProgressIndicatorProps,
+} from '@radix-ui/react-progress'
 import { IconProps, View } from '../../components'
+import { TextProps, ProgressPropsRoot } from '..'
 
 export type ProgressBarProps = ComponentVariants<typeof ProgressBarPresets> &
-  Omit<PropsOf<typeof View>, 'variants' | 'responsiveVariants' | 'styles'> & {
-    progress: number
-    style?: React.CSSProperties
+  Omit<PropsOf<typeof View>, 'variants' | 'responsiveVariants' | 'styles'> &
+  ProgressPropsRoot & {
     styles?: StylesOf<ProgressBarComposition>
-    textProps?: PropsOf<typeof Text>
     progressIndicatorProps?: ProgressIndicatorProps
     progressRootProps?: ProgressProps
-    showProgress?: boolean
-    leftIcon?: IconProps['name']
+    leftIcon?: IconPlaceholder
     leftIconProps?: Partial<IconProps>
-    rightIcon?: IconProps['name']
+    rightIcon?: IconPlaceholder
     rightIconProps?: Partial<IconProps>
-    leftText?: string | number
-    rightText?: string | number
-    debugName?: string
+    leftText?: TextProps['text'] | JSX.Element
+    leftTextProps?: Partial<TextProps>
+    rightText?: TextProps['text'] | JSX.Element
+    rightTextProps?: Partial<TextProps>
   }

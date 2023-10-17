@@ -1,9 +1,9 @@
 import { ProgressBarPresets } from './styles'
-import { useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { Root, Indicator } from '@radix-ui/react-progress'
 import { Icon, Text, View } from '../../components'
 import { ProgressBarProps } from './types'
-import { formatProgress } from '../utils'
+import { formatProgress as _formatProgress } from '../utils'
 
 export * from './types'
 export * from './styles'
@@ -17,6 +17,7 @@ const defaultProps: Partial<ProgressBarProps> = {
   progressIndicatorProps: {},
   progressRootProps: {},
   showProgress: false,
+  formatProgress: _formatProgress,
 }
 
 export const ProgressBar = (props: ProgressBarProps) => {
@@ -39,8 +40,11 @@ export const ProgressBar = (props: ProgressBarProps) => {
     rightIcon,
     rightIconProps,
     leftText,
+    leftTextProps,
     rightText,
+    rightTextProps,
     debugName,
+    formatProgress,
     ...rest
   } = allProps
 
@@ -55,20 +59,23 @@ export const ProgressBar = (props: ProgressBarProps) => {
 
   return (
     <View css={variantStyles.wrapper} debugName={debugName} {...rest}>
-      {leftIcon && (
+      {!TypeGuards.isNil(leftIcon) ? (
         <Icon
           name={leftIcon}
           style={{ ...variantStyles.icon, ...variantStyles.leftIcon }}
           debugName={`leftIcon-${debugName}`}
           {...leftIconProps}
         />
-      )}
-      {leftText && (
+      ) : null}
+      {TypeGuards.isString(leftText) ? (
         <Text
           text={leftText}
           css={[variantStyles.text, variantStyles.leftText]}
           {...textProps}
+          {...leftTextProps}
         />
+      ) : (
+        leftText
       )}
       <Root
         css={variantStyles.progress}
@@ -83,27 +90,30 @@ export const ProgressBar = (props: ProgressBarProps) => {
           {...progressIndicatorProps}
         />
       </Root>
-      {showProgress && (
+      {!!showProgress ? (
         <Text
           css={variantStyles.text}
           text={formatProgress(progress)}
           {...textProps}
         />
-      )}
-      {rightIcon && (
+      ) : null}
+      {!TypeGuards.isNil(rightIcon) ? (
         <Icon
           name={rightIcon}
           style={{ ...variantStyles.icon, ...variantStyles.rightIcon }}
           debugName={`rightIcon-${debugName}`}
           {...rightIconProps}
         />
-      )}
-      {rightText && (
+      ) : null}
+      {TypeGuards.isString(rightText) ? (
         <Text
           text={rightText}
           css={[variantStyles.text, variantStyles.rightText]}
           {...textProps}
+          {...rightTextProps}
         />
+      ) : (
+        rightText
       )}
     </View>
   )

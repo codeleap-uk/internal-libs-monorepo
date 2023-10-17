@@ -1,30 +1,25 @@
-import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
+import { ComponentVariants, IconPlaceholder, PropsOf, StylesOf } from '@codeleap/common'
 import {
-  Icon,
+  IconProps,
   ProgressCircleComposition,
   ProgressCirclePresets,
-  Text,
   View,
 } from '../../components'
+import { ProgressPropsRoot, TextProps } from '..'
 import { buildStyles } from 'react-circular-progressbar'
 
-type TextProps = PropsOf<typeof Text>
-type IconProps = PropsOf<typeof Icon>
 type ChildrenProps = { progress?: number }
 
 export type ProgressCircleProps = Omit<
   PropsOf<typeof View>,
   'styles' | 'variants' | 'children'
 > &
-  ComponentVariants<typeof ProgressCirclePresets> & {
-    progress?: number
-    text?: TextProps['text']
-    textProps?: Partial<TextProps>
-    icon?: IconProps['name']
+  ComponentVariants<typeof ProgressCirclePresets> &
+  ProgressPropsRoot & {
+    text?: TextProps['text'] | JSX.Element
+    icon?: IconPlaceholder
     iconProps?: Partial<IconProps>
     styles?: StylesOf<ProgressCircleComposition>
     children?: ((props: ChildrenProps) => JSX.Element) | JSX.Element
     circleProps?: ReturnType<typeof buildStyles>
-    debugName?: string
-    showProgress?: boolean
   }

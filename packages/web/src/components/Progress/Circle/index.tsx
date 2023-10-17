@@ -3,10 +3,11 @@ import {
   buildStyles,
 } from 'react-circular-progressbar'
 import { View, Text, Icon } from '../../components'
-import { useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
 import { ProgressCirclePresets } from './styles'
 import { ProgressCircleProps } from './types'
-import { formatProgress } from '../utils'
+import { formatProgress as _formatProgress } from '../utils'
+import { useMemo } from '@codeleap/common'
 
 export * from './styles'
 export * from './types'
@@ -17,6 +18,7 @@ const defaultProps: Partial<ProgressCircleProps> = {
   responsiveVariants: {},
   styles: {},
   showProgress: false,
+  formatProgress: _formatProgress,
 }
 
 export const ProgressCircle = (props: ProgressCircleProps) => {
@@ -35,7 +37,9 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     debugName,
     showProgress,
     responsiveVariants,
+    circleProps,
     children,
+    formatProgress,
     ...rest
   } = allProps
 
@@ -49,41 +53,41 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     rootElement: 'wrapper',
   })
 
-  const wrapperSize =
-    variantStyles.circle?.size ??
-    variantStyles.circle?.width ??
-    variantStyles.circle?.height ??
-    0
-
-  const InnerIcon = () => (
-    <Icon
-      name={icon}
-      style={variantStyles.icon}
-      debugName={`innerIcon-${debugName}`}
-      {...iconProps}
-    />
-  )
-
-  const _Text = () => (
-    <Text style={variantStyles.text} text={showProgress ? formatProgress(progress) : text} />
-  )
+  const wrapperSize = useMemo(() => {
+    const { size, width, height } = variantStyles.circle
+    const value = size ?? width ?? height
+    return value ?? 0
+  }, [variantStyles.circle])
 
   return (
-    <View debugName={debugName} {...rest}>
+    <View debugName={debugName} css={variantStyles.wrapper} {...rest}>
       <CircularProgressbarWithChildren
         value={progress}
-        css={{
-          ...variantStyles.circle,
-          width: wrapperSize,
-          height: wrapperSize,
-        }}
+        css={[
+          variantStyles.circle,
+          { width: wrapperSize, height: wrapperSize },
+        ]}
         styles={buildStyles({
           pathColor: variantStyles.line?.borderColor,
           trailColor: variantStyles.line?.backgroundColor,
           strokeLinecap: 'butt',
+          ...circleProps,
         })}
       >
-        {children ?? (icon && <InnerIcon />) ?? <_Text />}
+        {children}
+        {!TypeGuards.isNil(icon) ? (
+          <Icon
+            name={icon}
+            style={variantStyles.icon}
+            debugName={`innerIcon-${debugName}`}
+          />
+        ) : null}
+        {TypeGuards.isString(text) || showProgress ? (
+          <Text
+            style={variantStyles.text}
+            text={showProgress ? formatProgress(progress) : text}
+          />
+        ) : text}
       </CircularProgressbarWithChildren>
     </View>
   )

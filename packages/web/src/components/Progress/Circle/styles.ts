@@ -1,7 +1,7 @@
 import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import 'react-circular-progressbar/dist/styles.css'
 
-export type ProgressCircleComposition = 'wrapper' | 'innerWrapper' | 'line' | 'circle' | 'text' | 'icon' | 'text' | 'image' | 'label' | '__props'
+export type ProgressCircleComposition = 'wrapper' | 'line' | 'circle' | 'text' | 'icon' | 'text'
 
 const createProgressCircleStyle = createDefaultVariantFactory<ProgressCircleComposition>()
 
