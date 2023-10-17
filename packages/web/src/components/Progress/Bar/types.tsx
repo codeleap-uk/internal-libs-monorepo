@@ -4,8 +4,9 @@ import {
   ProgressProps,
   ProgressIndicatorProps,
 } from '@radix-ui/react-progress'
-import { IconProps, View } from '../../components'
-import { TextProps, ProgressPropsRoot } from '..'
+import { IconProps, View, TextProps } from '../../components'
+import { ProgressPropsRoot } from '..'
+import { ElementType } from 'react'
 
 export type ProgressBarProps = ComponentVariants<typeof ProgressBarPresets> &
   Omit<PropsOf<typeof View>, 'variants' | 'responsiveVariants' | 'styles'> &
@@ -17,8 +18,8 @@ export type ProgressBarProps = ComponentVariants<typeof ProgressBarPresets> &
     leftIconProps?: Partial<IconProps>
     rightIcon?: IconPlaceholder
     rightIconProps?: Partial<IconProps>
-    leftText?: TextProps['text'] | JSX.Element
-    leftTextProps?: Partial<TextProps>
-    rightText?: TextProps['text'] | JSX.Element
-    rightTextProps?: Partial<TextProps>
+    leftText?: TextProps<ElementType>['text'] | JSX.Element
+    leftTextProps?: Partial<TextProps<ElementType>>
+    rightText?: TextProps<ElementType>['text'] | JSX.Element
+    rightTextProps?: Partial<TextProps<ElementType>>
   }

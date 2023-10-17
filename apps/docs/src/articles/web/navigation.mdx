@@ -1,0 +1,91 @@
+---
+title: 'Navigation'
+description: 'Web navigation system'
+tag: 'tools'
+source: 'https://github.com/codeleap-uk/web-template/blob/master/src/utils/navigation.ts'
+---
+
+## What is it
+
+> INFO The base logic of this tool is complete, but we are still improving it and the documentation will be updated with the improvements.
+
+It is common to repeat this code in several places:
+
+```tsx
+navigate('/auth/login')
+```
+
+This is not scalable and is problematic since on many occasions a certain path can change due to customer request or project needs, and the result is changing a line of code in several parts of the code, which can easily cause bugs.
+
+Finally, this new Navigation system was created, where all the application's routes are concentrated in one variable, making changes **faster** and **safer**.
+
+Other important details are:
+
+- The way to write the route was created to completely mirror mobile navigation so that the developer does not feel so much difference between platforms.
+- The navigate function has full typescript support, so when the developer needs to write, he will have a list of available routes:
+
+![](navigation_ts_example.png)
+
+## ROUTES variable
+
+It is located in: **src/app/constants.ts**
+
+```ts
+export const ROUTES = {
+  Home: '/',
+  Profile: {
+    Edit: '/profile/edit',
+  },
+  Auth: {
+    Login: '/auth/login',
+    Signup: '/auth/signup',
+    ForgotPassword: '/auth/forgot',
+  },
+  About: '/about',
+  CrudExample: '/crud',
+  Playground: '/playground'
+}
+```
+
+For you to add a new route or change one, you must follow the same pattern as the others.
+
+## How to use
+
+You can call any function, just like the default **navigate**.
+
+```tsx
+import { Navigation } from '@/utils'
+
+Navigation.navigate('Route.Example')
+```
+
+Routes with dynamic parameters or search params can be written as:
+
+```tsx
+import { Navigation } from '@/utils'
+
+Navigation.navigate('Route.Example', { 
+  route: '12', 
+  params:  {
+    name: 'Test',
+    email: 'test@email.com'
+  }
+})
+```
+The **route** property will be concatenated to the route path, and everything in **params** will be concatenated as search params to the route, the result of the route will be:
+
+```
+route/example/12?name=Test&email=test@email.com
+```
+
+This writing system and typescript support is also available in the **Link** and **Redirect** components
+
+```tsx
+return <>
+  <Link route='Route.Example'>
+    Link
+  </Link>
+
+  <Redirect to='Route.Example' />
+</>
+```

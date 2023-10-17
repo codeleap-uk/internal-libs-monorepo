@@ -4,9 +4,11 @@ import {
   ProgressCircleComposition,
   ProgressCirclePresets,
   View,
+  TextProps,
 } from '../../components'
-import { ProgressPropsRoot, TextProps } from '..'
+import { ProgressPropsRoot } from '..'
 import { buildStyles } from 'react-circular-progressbar'
+import { ElementType } from 'react'
 
 type ChildrenProps = { progress?: number }
 
@@ -16,7 +18,7 @@ export type ProgressCircleProps = Omit<
 > &
   ComponentVariants<typeof ProgressCirclePresets> &
   ProgressPropsRoot & {
-    text?: TextProps['text'] | JSX.Element
+    text?: TextProps<ElementType>['text'] | JSX.Element
     icon?: IconPlaceholder
     iconProps?: Partial<IconProps>
     styles?: StylesOf<ProgressCircleComposition>

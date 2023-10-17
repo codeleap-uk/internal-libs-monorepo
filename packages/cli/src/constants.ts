@@ -26,3 +26,5 @@ export const USER_CONFIG = {
   ... _userConf
 }
 export const MOBILE_TEMPLATE_URL = `git@github.com:${orgName}/mobile-template.git`
+
+export const CODELEAP_CLI_SETTINGS_PATH = './codeleapcli.config.json'

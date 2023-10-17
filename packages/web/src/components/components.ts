@@ -30,5 +30,8 @@ export * from './Pager'
 export * from './EmptyPlaceholder'
 export * from './Grid'
 export * from './Badge'
+export * from './CropPicker'
+export * from './Dropzone'
 export * from './Progress'
+
 export * from './defaultStyles'
