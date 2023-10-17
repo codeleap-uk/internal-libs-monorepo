@@ -351,22 +351,3 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
 
   return animated
 }
-
-type eventKey = 'enter'
-
-export function useKeydown(handler: AnyFunction, deps: Array<any> = [], key: eventKey) {
-  onUpdate(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === capitalize(key)) {
-        handler?.()
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyPress)
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress)
-    }
-  }, deps)
-}
-
