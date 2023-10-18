@@ -136,27 +136,15 @@ export class LocalStorage<T extends Record<string, string>> {
     return [_value, setValue]
   }
 
-  private triggerListeners() {
-    const trigger = e => {
-      for (const listener of this.storageListeners) {
-        listener(e)
-      }
-    }
+  public listen(key: Key<T>, handler: LocalStorageHandler<Key<T>>) {
+    const trigger = (event) => handler(key, event)
 
+    const newLength = this.storageListeners.push(trigger)
     window.addEventListener('storage', trigger)
 
     return () => {
-      window.removeEventListener('storage', trigger)
-    }
-  }
-
-  public listen(key: Key<T>, handler: LocalStorageHandler<Key<T>>) {
-    const newLength = this.storageListeners.push((event: any) => handler(key, event))
-
-    this.triggerListeners()
-
-    return () => {
       this.storageListeners.splice(newLength - 1, 1)
+      window.removeEventListener('storage', trigger)
     }
   }
 
