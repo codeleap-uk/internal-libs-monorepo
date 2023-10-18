@@ -1,8 +1,14 @@
 import React from 'react'
 import { onMount, TypeGuards, useState } from '@codeleap/common'
 
-export type LocalStorageHandler<T> = (key: T, event: StorageEvent) => void
+export type LocalStorageHandler<T> = (key: T, event: StorageEvent, value: any) => void
 export type Key<T> = keyof T
+
+type UseLocalStorageOptions = {
+  disableListen?: boolean
+  setItemValueOnMutate?: boolean
+  getItemValueOnMount?: boolean
+}
 
 export class LocalStorage<T extends Record<string, string>> {
   public storageKeys: T
@@ -24,7 +30,7 @@ export class LocalStorage<T extends Record<string, string>> {
     return String(this.storageKeys[key] ?? key)
   }
 
-  private serializeValue(value: any) {
+  private parseValue(value: any) {
     try {
       return JSON.parse(value)
     } catch (e) {
@@ -32,16 +38,21 @@ export class LocalStorage<T extends Record<string, string>> {
     }
   }
 
-  private parseValue(value: any): string {
+  private serializeValue(value: any): string {
     if (TypeGuards.isString(value)) return value
-    return JSON.stringify(value)
+
+    try {
+      return JSON.stringify(value)
+    } catch (e) {
+      return value
+    }
   }
 
   public replaceItem(key: Key<T>, value: any): string {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
     storage.removeItem(storageKey)
-    const parsedValue = this.parseValue(value)
+    const parsedValue = this.serializeValue(value)
     storage.setItem(storageKey, parsedValue)
     return parsedValue
   }
@@ -61,7 +72,7 @@ export class LocalStorage<T extends Record<string, string>> {
   public setItem(key: Key<T>, value: any): string {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
-    const parsedValue = this.parseValue(value)
+    const parsedValue = this.serializeValue(value)
     storage.setItem(storageKey, parsedValue)
     return parsedValue
   }
@@ -97,24 +108,36 @@ export class LocalStorage<T extends Record<string, string>> {
     return values
   }
 
-  public use<S = any>(key: Key<T>, value: any): [S, (to: S | ((prev: S) => S)) => any] {
-    const [_value, _setValue] = useState<S>(value)
+  public use<S = any>(
+    key: Key<T>, 
+    initialValue: any = null,
+    options: UseLocalStorageOptions = {}
+  ): [S, (to: S | ((prev: S) => S)) => any] {
+    const { 
+      disableListen = false, 
+      setItemValueOnMutate = true,
+      getItemValueOnMount = true,
+    } = options
 
+    const [value, _setValue] = useState<S>(() => {
+      return getItemValueOnMount ? (this.getItem(key) ?? initialValue) : initialValue
+    })
+    
     onMount(() => {
       const handler = () => {
-        let initialValue = value
+        let _initialValue = initialValue
         let storedValue = this.getItem(key)
 
-        if (!TypeGuards.isNil(storedValue)) {
-          initialValue = this.serializeValue(storedValue)
+        if (!TypeGuards.isNil(storedValue) && getItemValueOnMount) {
+          _initialValue = this.parseValue(storedValue)
         }
 
-        _setValue(initialValue)
+        _setValue(_initialValue)
       }
 
       handler()
 
-      return this.listen(key, handler)
+      return disableListen ? null : this.listen(key, handler)
     })
 
     const setValue = (to: S | ((prev:S) => S)) => {
@@ -124,20 +147,29 @@ export class LocalStorage<T extends Record<string, string>> {
         if (!TypeGuards.isFunction(to)) {
           newValue = to
         } else {
-          newValue = to(value)
+          const fn = to as ((prev:S) => S)
+          newValue = fn(value)
         }
 
-        this.setItem(key, newValue)
+        if (setItemValueOnMutate) {
+          this.setItem(key, newValue)
+        }
 
         return newValue
       })
     }
 
-    return [_value, setValue]
+    return [value, setValue]
   }
 
   public listen(key: Key<T>, handler: LocalStorageHandler<Key<T>>) {
-    const trigger = (event) => handler(key, event)
+    const trigger = (event: StorageEvent) => {
+      const storageKey = this.getStorageKey(key)
+
+      if (event?.key === storageKey) {
+        handler(key, event, this.parseValue(event?.newValue))
+      }
+    }
 
     const newLength = this.storageListeners.push(trigger)
     window.addEventListener('storage', trigger)
@@ -146,32 +178,5 @@ export class LocalStorage<T extends Record<string, string>> {
       this.storageListeners.splice(newLength - 1, 1)
       window.removeEventListener('storage', trigger)
     }
-  }
-
-  public useValue(
-    key: Key<T>, 
-    handler: (newValue: string | null | undefined, event: StorageEvent) => void, 
-    deps: Array<any> = [],
-    options: AddEventListenerOptions = {}
-  ) {
-    React.useEffect(() => {
-      if (typeof window === 'undefined') {
-        return null
-      }
-
-      const listener = (event: StorageEvent) => {
-        const storageKey = this.getStorageKey(key)
-  
-        if (event?.key === storageKey) {
-          handler(event?.newValue, event)
-        }
-      }
-
-      window.addEventListener('storage', listener, options)
-
-      return () => {
-        window.removeEventListener('storage', listener)
-      }
-    }, deps)
   }
 }
