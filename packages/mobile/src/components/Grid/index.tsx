@@ -41,6 +41,11 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   )
 }
 
+const defaultProps: Partial<GridProps> = {
+  keyboardShouldPersistTaps: 'handled',
+  refreshControlProps: {},
+}
+
 const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
   (flatGridProps, ref) => {
     const {
@@ -54,7 +59,11 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
       spacing,
       numColumns,
       ...props
-    } = flatGridProps
+    } = {
+      ...defaultProps,
+      ...flatGridProps,
+    }
+
     const { Theme } = useCodeleapContext()
     const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
       variants,
@@ -90,12 +99,12 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
     }, [props?.renderItem, props?.data?.length])
 
     const separatorStyles = { height: Theme.spacing.value(spacing), ...variantStyles.separator }
-    const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles}/> : null)
-    const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps}/>
+    const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
+    const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
     const _gridProps = {
       ...props,
       ref: ref,
-      ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
+      ListEmptyComponent: <EmptyPlaceholder {...placeholder} />,
       ListHeaderComponentStyle: variantStyles.header,
       ListFooterComponentStyle: variantStyles.footer,
       ItemSeparatorComponent: separator,
@@ -116,7 +125,11 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
   },
 )
 
-export type GridComponentType = <T extends any[] = any[]>(props: GridProps<T>) => React.ReactElement
+export type GridComponentType = (<T extends any[] = any[]>(props: GridProps<T>) => JSX.Element) & {
+  defaultProps?: Partial<GridProps>
+}
 
 export const Grid = GridCP as unknown as GridComponentType
+
+Grid.defaultProps = defaultProps
 
