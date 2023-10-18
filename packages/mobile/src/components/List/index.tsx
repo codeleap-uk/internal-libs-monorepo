@@ -31,7 +31,7 @@ export type ReplaceFlatlistProps<P, T> = Omit<P, DataboundFlatListPropsTypes> & 
   renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
   onRefresh?: () => void
   getItemLayout?: ((
-    data:T,
+    data: T,
     index: number,
   ) => { length: number; offset: number; index: number })
   fakeEmpty?: boolean
@@ -61,23 +61,36 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   )
 }
 
+const defaultProps: Partial<FlatListProps> = {
+  keyboardShouldPersistTaps: 'handled',
+  styles: {},
+  variants: [],
+  refreshControlProps: {},
+  fakeEmpty: false,
+  loading: false,
+  keyboardAware: true,
+}
+
 const ListCP = forwardRef<FlatList, FlatListProps>(
   (flatListProps, ref) => {
     const {
-      variants = [],
+      variants,
       style,
-      styles = {},
+      styles,
       onRefresh,
       component,
       refreshing,
       placeholder,
-      refreshControlProps = {},
-      loading = false,
-      keyboardAware = true,
+      refreshControlProps,
+      loading,
+      keyboardAware,
       fakeEmpty = loading,
       contentContainerStyle,
       ...props
-    } = flatListProps
+    } = {
+      ...defaultProps,
+      ...flatListProps,
+    }
 
     const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
       variants,
@@ -87,7 +100,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     })
 
     // const isEmpty = !props.data || !props.data.length
-    const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator}/>
+    const separator = props?.separators && <RenderSeparator separatorStyles={variantStyles.separator} />
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null
@@ -138,10 +151,10 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
           />
         )}
 
-        ListEmptyComponent={<EmptyPlaceholder {..._placeholder}/>}
+        ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
         {...props}
         data={fakeEmpty ? [] : props.data}
-        ref={ ref }
+        ref={ref}
         renderItem={renderItem}
 
       />
@@ -149,7 +162,10 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
   },
 )
 
-export type ListComponentType = <T extends any[] = any[]>(props: FlatListProps<T>) => JSX.Element
-
+export type ListComponentType = (<T extends any[] = any[]>(props: FlatListProps<T>) => JSX.Element) & {
+  defaultProps: Partial<FlatListProps>
+}
 export const List = ListCP as unknown as ListComponentType
+
+List.defaultProps = defaultProps
 
