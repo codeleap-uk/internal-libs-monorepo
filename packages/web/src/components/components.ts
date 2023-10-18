@@ -33,5 +33,6 @@ export * from './Badge'
 export * from './CropPicker'
 export * from './Dropzone'
 export * from './Progress'
+export * from './Tag'
 
 export * from './defaultStyles'

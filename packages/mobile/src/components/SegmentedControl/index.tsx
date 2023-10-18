@@ -20,7 +20,7 @@ export type SegmentedControlRef = ScrollRef & {
   scrollToCurrent: () => void
 }
 
-const DefaultBubble = (props:Partial<SegmentedControlProps>) => {
+const DefaultBubble = (props: Partial<SegmentedControlProps>) => {
   const {
     style,
 
@@ -32,20 +32,20 @@ const DefaultBubble = (props:Partial<SegmentedControlProps>) => {
 }
 
 export type SegmentedControlProps<T = string> = ScrollProps & {
-    options : SegmentedControlOptionProps[]
-    onValueChange: (value: T) => any
-    value: T
-    debugName: string
-    animation?: TransitionConfig
-    textProps?: Partial<PropsOf<typeof Text>>
-    touchableProps?: Partial<PropsOf<typeof Touchable>>
-    styles?: StylesOf<SegmentedControlComposition>
-    scrollProps?: any
-    label?: FormTypes.Label
-    renderOption?: (props: SegmentedControlOptionProps) => JSX.Element
-    renderBubble?: (props: Partial<SegmentedControlProps>) => JSX.Element
-    getItemWidth?: (item:{label: string; value: T }, idx: number, arr: {label: string; value: T }[]) => number
-    scrollToCurrentOptionOnMount?: boolean
+  options: SegmentedControlOptionProps[]
+  onValueChange: (value: T) => any
+  value: T
+  debugName: string
+  animation?: TransitionConfig
+  textProps?: Partial<PropsOf<typeof Text>>
+  touchableProps?: Partial<PropsOf<typeof Touchable>>
+  styles?: StylesOf<SegmentedControlComposition>
+  scrollProps?: any
+  label?: FormTypes.Label
+  renderOption?: (props: SegmentedControlOptionProps) => JSX.Element
+  renderBubble?: (props: Partial<SegmentedControlProps>) => JSX.Element
+  getItemWidth?: (item: { label: string; value: T }, idx: number, arr: { label: string; value: T }[]) => number
+  scrollToCurrentOptionOnMount?: boolean
 }
 
 const defaultAnimation = {
@@ -72,6 +72,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     renderBubble,
     scrollToCurrentOptionOnMount = true,
     renderOption,
+    touchableProps,
   } = {
     ...(_SegmentedControl.defaultProps || {}),
     ...props,
@@ -92,7 +93,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const scrollRef = useRef<SegmentedControlRef>(null)
 
-  function scrollTo(idx:number) {
+  function scrollTo(idx: number) {
     if (!scrollRef.current) return
     setTimeout(() => {
       scrollRef.current?.scrollToPosition?.(widthStyle.width * idx, 0, true)
@@ -115,7 +116,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const currentOptionIdx = options.findIndex(o => o.value === value) || 0
 
-  const onPress = (txt:string, idx: number) => {
+  const onPress = (txt: string, idx: number) => {
     return () => {
       onValueChange(txt)
       scrollTo(idx)
@@ -167,7 +168,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   const largestWidth = useRef(0)
 
   return (<View style={variantStyles.wrapper}>
-    <InputLabel label={label} styles={labelStyles} required={false}/>
+    <InputLabel label={label} styles={labelStyles} required={false} />
     <Scroll
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -213,6 +214,7 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
                 largestWidth.current = 0
               }
             }}
+            {...touchableProps}
           />
         ))}
       </View>
@@ -225,8 +227,9 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 _SegmentedControl.defaultProps = {
   renderBubble: DefaultBubble,
   renderOption: SegmentedControlOption,
+  touchableProps: {},
 }
 
-type SegControlComponent = <T = string>(props: SegmentedControlProps<T> & {ref?: React.Ref<SegmentedControlRef>}) => ReactElement
+type SegControlComponent = <T = string>(props: SegmentedControlProps<T> & { ref?: React.Ref<SegmentedControlRef> }) => ReactElement
 
 export const SegmentedControl = _SegmentedControl as SegControlComponent

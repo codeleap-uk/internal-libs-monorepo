@@ -44,11 +44,21 @@ export type PagerProps = React.PropsWithChildren<{
   pageWrapperProps?: any
   width?: number
   onScroll: ScrollProps['onScroll']
-   /** If TRUE render page, nextPage and prevPage only */
-   windowing?:boolean
+  /** If TRUE render page, nextPage and prevPage only */
+  windowing?: boolean
 } & ScrollViewProps>
 
-export const Pager = (pagerProps:PagerProps) => {
+const defaultProps: Partial<PagerProps> = {
+  variants: [],
+  styles: {},
+  page: 0,
+  returnEarly: true,
+  windowing: false,
+  scrollEnabled: true,
+  keyboardShouldPersistTaps: 'handled',
+}
+
+export const Pager = (pagerProps: PagerProps) => {
   const {
     styles,
     variants,
@@ -62,7 +72,10 @@ export const Pager = (pagerProps:PagerProps) => {
     windowing = false,
     setPage,
     scrollEnabled = true,
-  } = pagerProps
+  } = {
+    ...defaultProps,
+    ...pagerProps,
+  }
 
   const childArr = React.Children.toArray(children)
   const scrollRef = useRef<ScrollView>(null)
@@ -134,6 +147,7 @@ export const Pager = (pagerProps:PagerProps) => {
       style={[variantStyles.wrapper, style]}
       {...pagerProps}
       scrollEnabled={childArr.length > 1 && scrollEnabled}
+
     >
       {childArr.map((child: PagerProps['children'][number], index) => {
 
@@ -149,7 +163,7 @@ export const Pager = (pagerProps:PagerProps) => {
           return <View style={{ height: '100%', width }} />
         }
 
-        const pageProps:PageProps = {
+        const pageProps: PageProps = {
           isLast,
           isActive,
           isFirst,
@@ -172,3 +186,5 @@ export const Pager = (pagerProps:PagerProps) => {
     </ScrollView>
   )
 }
+
+Pager.defaultProps = defaultProps
