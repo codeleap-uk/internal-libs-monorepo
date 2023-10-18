@@ -2,13 +2,8 @@
     {
         "name": "root",
         "items": [
-            "ïndex"
-        ]
-    },
-    {
-        "name": "commands",
-        "items": [
-            "WebP_convertor"
+            "ïndex",
+            "navigation"
         ]
     },
     {

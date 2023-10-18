@@ -18,6 +18,10 @@ const navItems = [
     url: '/mobile',
   },
   {
+    name: 'CLI',
+    url: '/cli',
+  },
+  {
     name: 'Concepts',
     url: '/concepts',
   },

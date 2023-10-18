@@ -9,7 +9,7 @@ import {
 import { ScrollView, StyleSheet } from 'react-native'
 import { ViewProps } from '../View'
 import { RefreshControl, RefreshControlProps } from '../RefreshControl'
-import { StylesOf } from '../../types'
+import { ComponentWithDefaultProps, StylesOf } from '../../types'
 import { ScrollComposition, ScrollPresets } from './styles'
 import { GetKeyboardAwarePropsOptions, useKeyboardPaddingStyle } from '../../utils'
 import { KeyboardAwareScrollView, KeyboardAwareScrollViewProps } from 'react-native-keyboard-aware-scroll-view'
@@ -29,6 +29,10 @@ export type ScrollProps = KeyboardAwareScrollViewProps &
 
 export type ScrollRef = KeyboardAwareScrollView
 
+const defaultProps: Partial<ScrollProps> = {
+  keyboardShouldPersistTaps: 'handled',
+}
+
 export const Scroll = forwardRef<ScrollRef, ScrollProps>(
   (scrollProps, ref) => {
     const {
@@ -43,7 +47,10 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
       keyboardAware = true,
       animated = true,
       ...props
-    } = scrollProps
+    } = {
+      ...defaultProps,
+      ...scrollProps,
+    }
     const hasRefresh = !!props.onRefresh
     const [refreshingState, setRefreshing] = useState(false)
     const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshingState
@@ -91,7 +98,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
         showsVerticalScrollIndicator={false}
         // @ts-ignore
         ref={ref}
-        refreshControl= {
+        refreshControl={
           hasRefresh && (
             <RefreshControl
               refreshing={refreshingDisplay}
@@ -106,5 +113,8 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
       </Component>
     )
   },
-) as unknown as (props:ScrollProps) => JSX.Element
+) as unknown as ComponentWithDefaultProps<ScrollProps>
+
+Scroll.defaultProps = defaultProps
+
 export * from './styles'
