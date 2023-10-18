@@ -52,9 +52,9 @@ export class LocalStorage<T extends Record<string, string>> {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
     storage.removeItem(storageKey)
-    const parsedValue = this.serializeValue(value)
-    storage.setItem(storageKey, parsedValue)
-    return parsedValue
+    const serializedValue = this.serializeValue(value)
+    storage.setItem(storageKey, serializedValue)
+    return serializedValue
   }
 
   public getItem(key: Key<T>): string | null {
@@ -72,9 +72,9 @@ export class LocalStorage<T extends Record<string, string>> {
   public setItem(key: Key<T>, value: any): string {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
-    const parsedValue = this.serializeValue(value)
-    storage.setItem(storageKey, parsedValue)
-    return parsedValue
+    const serializedValue = this.serializeValue(value)
+    storage.setItem(storageKey, serializedValue)
+    return serializedValue
   }
 
   public clear(): void {
