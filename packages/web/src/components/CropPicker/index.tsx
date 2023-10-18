@@ -10,6 +10,7 @@ import { Modal, Button, FileInput, FileInputRef } from '../components'
 
 const ReactCrop: React.Component = require('react-image-crop').Component
 import 'react-image-crop/dist/ReactCrop.css'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 export * from './types'
@@ -18,6 +19,11 @@ export * from './useCropPicker'
 
 export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
   (props: CropPickerProps, ref) => {
+    const allProps = {
+      ...CropPicker.defaultProps,
+      ...props,
+    }
+
     const {
       onFileSelect,
       targetCrop,
@@ -30,7 +36,7 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       debugName,
       handle,
       ...fileInputProps
-    } = props
+    } = allProps
 
     const {
       onConfirmCrop,
@@ -98,4 +104,4 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
   },
 )
 
-export const CropPicker = React.memo(_CropPicker) as (props: CropPickerProps) => JSX.Element
+export const CropPicker = React.memo(_CropPicker) as ComponentWithDefaultProps<CropPickerProps>
