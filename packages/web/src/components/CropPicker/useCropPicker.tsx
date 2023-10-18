@@ -33,9 +33,10 @@ export function useCropPicker({
   }
 
   const cleanup = () => {
-    setImage(null)
+    toggle()
     setRelativeCrop(null)
     setCrop(undefined)
+    setTimeout(() => setImage(null), 500)
   }
 
   const onConfirmCrop = async () => {
@@ -46,7 +47,6 @@ export function useCropPicker({
         preview,
       },
     ])
-    toggle()
     setTimeout(() => cleanup())
   }
 
@@ -80,7 +80,6 @@ export function useCropPicker({
   }
 
   const onClose = () => {
-    toggle()
     onCancel()
     setTimeout(() => cleanup())
   }
