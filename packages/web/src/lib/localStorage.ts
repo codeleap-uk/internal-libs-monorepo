@@ -8,6 +8,7 @@ type UseLocalStorageOptions = {
   disableListen?: boolean
   setItemValueOnMutate?: boolean
   getItemValueOnMount?: boolean
+  parseValueOnGet?: boolean
 }
 
 export class LocalStorage<T extends Record<string, string>> {
@@ -57,10 +58,17 @@ export class LocalStorage<T extends Record<string, string>> {
     return serializedValue
   }
 
-  public getItem(key: Key<T>): string | null {
+  public getItem(key: Key<T>, parseValue = true): string | null {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
-    return storage.getItem(storageKey)
+
+    let value = storage.getItem(storageKey)
+
+    if (parseValue) {
+      value = this.parseValue(value)
+    }
+
+    return value
   }
 
   public removeItem(key: Key<T>): void {
@@ -117,16 +125,17 @@ export class LocalStorage<T extends Record<string, string>> {
       disableListen = false, 
       setItemValueOnMutate = true,
       getItemValueOnMount = true,
+      parseValueOnGet = true,
     } = options
 
     const [value, _setValue] = useState<S>(() => {
-      return getItemValueOnMount ? (this.getItem(key) ?? initialValue) : initialValue
+      return getItemValueOnMount ? (this.getItem(key, parseValueOnGet) ?? initialValue) : initialValue
     })
     
     onMount(() => {
       const handler = () => {
         let _initialValue = initialValue
-        let storedValue = this.getItem(key)
+        let storedValue = this.getItem(key, parseValueOnGet)
 
         if (!TypeGuards.isNil(storedValue) && getItemValueOnMount) {
           _initialValue = this.parseValue(storedValue)
