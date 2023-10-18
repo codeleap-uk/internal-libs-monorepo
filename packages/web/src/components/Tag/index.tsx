@@ -80,14 +80,44 @@ export const Tag = (props: TagProps) => {
   return (
     <Wrapper css={wrapperStyles} disabled={disabled} {...wrapperProps}>
       {leftComponent}
-      {leftBadge && <Badge styles={leftBadgeStyles} badge={leftBadge} disabled={disabled} {...leftBadgeProps} />}
-      {!TypeGuards.isNil(leftIcon) && <Icon debugName='Tag:leftIcon' css={leftIconStyles} name={leftIcon} {...leftIconProps} />}
-      
+      {leftBadge && (
+        <Badge
+          debugName={`${touchableProps?.debugName}:leftBadge`}
+          styles={leftBadgeStyles}
+          badge={leftBadge}
+          disabled={disabled}
+          {...leftBadgeProps}
+        />
+      )}
+      {!TypeGuards.isNil(leftIcon) && (
+        <Icon
+          debugName={`${touchableProps?.debugName}:leftIcon`}
+          css={leftIconStyles}
+          name={leftIcon}
+          {...leftIconProps}
+        />
+      )}
+
       {TypeGuards.isString(text) ? <Text text={text} css={textStyles} {...textProps} /> : text}
       {children}
-      
-      {!TypeGuards.isNil(rightIcon) && <Icon debugName='Tag:rightIcon' css={rightIconStyles} name={rightIcon} {...rightIconProps} />}
-      {rightBadge && <Badge styles={rightBadgeStyles} badge={rightBadge} disabled={disabled} {...rightBadgeProps} />}
+
+      {!TypeGuards.isNil(rightIcon) && (
+        <Icon
+          debugName={`${touchableProps?.debugName}:rightIcon`}
+          css={rightIconStyles}
+          name={rightIcon}
+          {...rightIconProps}
+        />
+      )}
+      {rightBadge && (
+        <Badge
+          debugName={`${touchableProps?.debugName}:rightBadge`}
+          styles={rightBadgeStyles}
+          badge={rightBadge}
+          disabled={disabled}
+          {...rightBadgeProps}
+        />
+      )}
       {rightComponent}
     </Wrapper>
   )
