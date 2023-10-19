@@ -31,20 +31,22 @@ export const ProgressBar = (props: ProgressBarProps) => {
     variants,
     responsiveVariants,
     styles,
-    textProps,
+    debugName,
+    formatProgress,
     progressIndicatorProps,
     progressRootProps,
     showProgress,
+
     leftIcon,
     leftIconProps,
     rightIcon,
     rightIconProps,
+
+    textProps,
     leftText,
     leftTextProps,
     rightText,
     rightTextProps,
-    debugName,
-    formatProgress,
     ...rest
   } = allProps
 
@@ -71,7 +73,6 @@ export const ProgressBar = (props: ProgressBarProps) => {
         <Text
           text={leftText}
           css={[variantStyles.text, variantStyles.leftText]}
-          {...textProps}
           {...leftTextProps}
         />
       ) : (
@@ -109,7 +110,6 @@ export const ProgressBar = (props: ProgressBarProps) => {
         <Text
           text={rightText}
           css={[variantStyles.text, variantStyles.rightText]}
-          {...textProps}
           {...rightTextProps}
         />
       ) : (

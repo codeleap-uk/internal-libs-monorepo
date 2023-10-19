@@ -40,6 +40,9 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     circleProps,
     children,
     formatProgress,
+    circleStyles,
+    textProps,
+    size: propSize,
     ...rest
   } = allProps
 
@@ -55,8 +58,8 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
 
   const wrapperSize = useMemo(() => {
     const { size, width, height } = variantStyles.circle
-    const value = size ?? width ?? height
-    return value ?? 0
+    const value = propSize ?? size ?? width ?? height
+    return TypeGuards.isNumber(value) ? value : 0
   }, [variantStyles.circle])
 
   return (
@@ -71,8 +74,9 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
           pathColor: variantStyles.line?.borderColor,
           trailColor: variantStyles.line?.backgroundColor,
           strokeLinecap: 'butt',
-          ...circleProps,
+          ...circleStyles,
         })}
+        {...circleProps}
       >
         {children}
         {!TypeGuards.isNil(icon) ? (
@@ -80,12 +84,14 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
             name={icon}
             style={variantStyles.icon}
             debugName={`innerIcon-${debugName}`}
+            {...iconProps}
           />
         ) : null}
         {TypeGuards.isString(text) || showProgress ? (
           <Text
             style={variantStyles.text}
             text={showProgress ? formatProgress(progress) : text}
+            {...textProps}
           />
         ) : text}
       </CircularProgressbarWithChildren>
