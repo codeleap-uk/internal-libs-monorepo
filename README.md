@@ -28,6 +28,9 @@ cd internal-libs-monorepo
 # Pulls git submodules for templates
 git submodule update --init --recursive
 
+# Install turborepo for running commands with caching
+yarn global add turbo
+
 # Must use node 18+
 nvm use 18.15.0
 
