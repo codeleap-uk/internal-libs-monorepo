@@ -10,6 +10,7 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@codeleap/config": "*",
+    "@codeleap/common": "*",
     "@emotion/react": "link:../../apps/web/node_modules/@emotion/react",
     "@types/react-slick": "^0.23.10",
     "@types/react-window": "1.8.5",

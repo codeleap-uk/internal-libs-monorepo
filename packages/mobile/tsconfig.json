@@ -24,7 +24,7 @@
     "baseUrl": ".",
     "paths": {
       "react-native-reanimated": [
-        "../../apps/mobile/node_modules/react-native-reanimated/react-native-reanimated.d.ts",
+        "../../apps/mobile/node_modules/react-native-reanimated/lib/typescript/index.d.ts",
       ],
       "@react-native-community/async-storage": [
         "../../apps/mobile/node_modules/@react-native-community/async-storage/types/index.d.ts"
@@ -36,7 +36,7 @@
         "../../apps/mobile/node_modules/react-native-image-viewing/dist/index.d.ts"
       ],
       "react-native": [
-        "../../apps/mobile/node_modules/@types/react-native/index.d.ts"
+        "../../apps/mobile/node_modules/react-native/types/index.d.ts"
       ],
       "react": [
         "../../apps/mobile/node_modules/@types/react/index.d.ts",

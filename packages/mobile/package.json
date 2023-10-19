@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@codeleap/config": "*",
-    "@types/react-native": "link:../../apps/mobile/node_modules/@types/react-native"
+    "@codeleap/common": "*"
   },
   "scripts": {
     "build": "tsc --build",

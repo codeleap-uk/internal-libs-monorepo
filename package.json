@@ -52,14 +52,11 @@
     ]
   },
   "scripts": {
-    "build": "turbo run build",
-    "dev:packages": "yarn build --parallel && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/web/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn build --parallel\"",
-    "dev:yarn-run-build": "yarn --cwd ./packages/mobile build & yarn --cwd ./packages/common build",
-    "dev:packages-yarn": "yarn dev:yarn-run-build && watchman-make -p \"packages/mobile/src/**/*.*\" \"packages/common/src/**/*.*\" --run \"yarn dev:yarn-run-build\"",
+    "build": "turbo run build --filter='./packages/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clear": "rm -rf node_modules apps/mobile/node_modules packages/cli/node_modules apps/web/node_modules apps/docs/node_modules packages/common/node_modules packages/mobile/node_modules packages/web/node_modules",
-    "clear:dist": "rm -rf packages/cli/dist packages/common/dist packages/mobile/dist packages/web/dist",
+    "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules",
+    "clear:dist": "rm -rf packages/*/dist",
     "docs": "yarn workspace codeleap-docs",
     "web": "yarn workspace web-template",
     "common": "yarn workspace @codeleap/common",
@@ -88,7 +85,6 @@
     "standard-version": "^9.5.0",
     "syncpack": "^9.8.4",
     "ts-node-dev": "^1.1.8",
-    "turbo": "1.1.2",
     "typedoc": "0.25.1",
     "typescript": "5.0.4",
     "openai": "^4.6.0",
@@ -98,50 +94,5 @@
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "yarn@1.22.17",
-  "turbo": {
-    "pipeline": {
-      "build": {
-        "dependsOn": [
-          "^build"
-        ],
-        "outputs": [
-          "dist/**"
-        ]
-      },
-      "lint": {
-        "outputs": []
-      },
-      "dev": {
-        "cache": false
-      },
-      "dev:packages": {
-        "cache": false
-      },
-      "dev:web": {
-        "cache": false
-      },
-      "dev:docs": {
-        "cache": false
-      },
-      "dev:ios": {
-        "cache": false
-      },
-      "dev:android": {
-        "cache": false
-      },
-      "dev:cli": {
-        "cache": false
-      },
-      "dev:mobile": {
-        "cache": false
-      },
-      "test": {
-        "outputs": []
-      },
-      "publish": {
-        "cache": false
-      }
-    }
-  }
+  "packageManager": "yarn@1.22.17"
 }

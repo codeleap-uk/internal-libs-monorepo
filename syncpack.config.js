@@ -27,11 +27,7 @@ module.exports = {
       packages: ["**"],
       pinVersion: "18.0.35"
     },
-    {
-      dependencies: ["@types/react-native"],
-      packages: ["**"],
-      pinVersion: "0.70.13"
-    },
+
     {
       dependencies: ["@types/react-dom"],
       packages: ["**"],
