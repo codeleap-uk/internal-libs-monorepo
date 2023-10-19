@@ -2648,7 +2648,7 @@
     xcode "^3.0.1"
     xml2js "0.4.23"
 
-"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.1.5":
+"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.18", "@expo/config-plugins@^4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-4.1.5.tgz#9d357d2cda9c095e511b51583ede8a3b76174068"
   integrity sha512-RVvU40RtZt12HavuDAe+LDIq9lHj7sheOfMEHdmpJ/uTA8pgvkbc56XF6JHQD+yRr6+uhhb+JnAasGq49dsQbw==
@@ -5674,37 +5674,37 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/netinfo/-/netinfo-8.3.1.tgz#c880407c660475d1fa0afa92fa259aae0e9e2dc9"
   integrity sha512-CYZXW3wZJ8Ac7FQjrDfqITFZ6Ex+dCOOKQv0LvjQUI811otSBATyEZrBVWc+1GpZExbKTlulyE0X3W4v5YN1hQ==
 
-"@react-native-firebase/analytics@18.5.0":
-  version "18.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-18.5.0.tgz#cca5858e44f3f8cbf387fa7cd6debb95fbcf8023"
-  integrity sha512-+8fkDedcftieOBEkNdqEW0lS/FB9SKzfUc3yYXnJcLTy3Ceg9JZga/tWz4BGbbxPddUy1Sm2UuWDuOxsdkFUyA==
+"@react-native-firebase/analytics@14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-14.4.0.tgz#cc2fb6801f59f5e4a6e22f963f4e3be04e5641f9"
+  integrity sha512-fGmjLOz+FZSrcnkuhfNq26QTCKrJTN1QP6V8tlKe+OTshHyAN/9Rv8QibfVfpKiYEwq7p5mWfUwb4v4jbPkC3Q==
 
-"@react-native-firebase/app@18.5.0":
-  version "18.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.5.0.tgz#198a133229d1b8710f257e76d9703dcb7e4cd6e0"
-  integrity sha512-AhHQi5KFDlKZn/lH7rEYtLfpsGamEq+P/cXZWcNPcP0WGlmi++abk7Pxnn4MjnG7TNhEyG/C9uq//qb6VhXaZg==
+"@react-native-firebase/app@14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-14.4.0.tgz#642b403c75898025850db9bf56fec5276336049e"
+  integrity sha512-02+gxXZCMkjVRrLNiTx9Wo2fcK0mc2D9btTUwGlf5cpTw9N9TKTw187bwNsvy4PjvldGuNC5TA2tOGpW99eAXQ==
   dependencies:
+    "@expo/config-plugins" "^4.0.18"
     opencollective-postinstall "^2.0.1"
     superstruct "^0.6.2"
 
-"@react-native-firebase/auth@18.5.0":
-  version "18.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-18.5.0.tgz#9969d0b756c7f68b9f46813759b1f7ca0c9f2c2d"
-  integrity sha512-RGuqXVQWIRc0edomtS8JxsfEZD7PKUz95L5Q1t+kLI+4lULOFamKlYY5sadv+QnMkYmMmcbKpTeTWfnf+WvHcQ==
-  dependencies:
-    plist "^3.1.0"
+"@react-native-firebase/auth@14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-14.4.0.tgz#2d9a6c026f9878048185d387c13e010e1e7d7653"
+  integrity sha512-tM4osTmb+Ktqd+eiIPTBVP3SUSafZNDGlC3GihoDq2vxlmb7S9sZe/xgBsgNksEeYzfIyREKDe8JA6rPxoZC5Q==
 
-"@react-native-firebase/crashlytics@18.5.0":
-  version "18.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/crashlytics/-/crashlytics-18.5.0.tgz#b5c1e15d260d5243c5ffb2963114bb7e42fe2b7f"
-  integrity sha512-i/jt/kNyhLws10/DeYgSQbGIekNPCAdtdg36NmFSw7URZf+1JUczKePbHqq3TvMFZJi5OjnDj06Fj9oenQKjWA==
+"@react-native-firebase/crashlytics@14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/crashlytics/-/crashlytics-14.4.0.tgz#423d37b84c9514570f85971cef9bea8e3b7a0ff8"
+  integrity sha512-Mrx1ak9rXZ+n/ZeuJGbj7d/QDaowNwbANSYiMqgvX6doffCKpZ7kfsq1n6WzuAIO7jy9L35a7cq9qIFlNlXU9w==
   dependencies:
+    "@expo/config-plugins" "^4.0.18"
     stacktrace-js "^2.0.0"
 
-"@react-native-firebase/messaging@18.5.0":
-  version "18.5.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.5.0.tgz#2a80b25816470e9843682e031a3a113566067ce6"
-  integrity sha512-y1FApYxBMcygmbWBqUPFC+fCfvx6Yf6TdZewun7kPwx+S+tkYzoKx1IsXtxOXtqyJjCNEYirjFgNrs5SSd02zA==
+"@react-native-firebase/messaging@14.4.0":
+  version "14.4.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-14.4.0.tgz#3f251584560e72052fee5d29dd5825f330acb7bd"
+  integrity sha512-EBz5xABhSDqlSgsrbmZD3Nk/JV3Mka+0iTIQ4vaUa/4xOJ4faio6FDMhn1OUJt9pXkq3M0TBVHHZ8lDBf13R3w==
 
 "@react-native-google-signin/google-signin@10.0.1":
   version "10.0.1"
@@ -7551,11 +7551,6 @@
   integrity sha512-FQgi90jvC9uw2aALlonJfqaWOvU5UUBBVvdAnS2iryXwCc4YJkKsPJY5Y/LzaND3OIyk8XGUn1vTRn6hcem28Q==
   dependencies:
     lodash "^4"
-
-"@xmldom/xmldom@^0.8.8":
-  version "0.8.10"
-  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99"
-  integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 
 "@xmldom/xmldom@~0.7.0", "@xmldom/xmldom@~0.7.7":
   version "0.7.10"
@@ -17381,10 +17376,10 @@ loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
-lottie-ios@3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/lottie-ios/-/lottie-ios-3.4.0.tgz#a23be299760aefb44298b9cb5f60df489030adbf"
-  integrity sha512-qnV8UrawwnBRf5V0no2yxlPUE69vzfFqpxEEXGTZhb1/WX1xewqVNYvtbguqwQkdu9IT9D5WC1U9CHZ1KbkGDw==
+lottie-ios@4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/lottie-ios/-/lottie-ios-4.3.3.tgz#7d03ad201783e84593582631df5f2e1ad02843d7"
+  integrity sha512-MNZHaz0pyTZagIypCbkRfRJBtJemAJsu3Vf/A1k2at2F1ychZFpy9Zj+CO6YkCLtNIs6WeVHaal+Z4r54bWmkQ==
 
 lottie-react-native@6.3.1:
   version "6.3.1"
@@ -20482,15 +20477,6 @@ plist@^3.0.5:
     base64-js "^1.5.1"
     xmlbuilder "^15.1.1"
 
-plist@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/plist/-/plist-3.1.0.tgz#797a516a93e62f5bde55e0b9cc9c967f860893c9"
-  integrity sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==
-  dependencies:
-    "@xmldom/xmldom" "^0.8.8"
-    base64-js "^1.5.1"
-    xmlbuilder "^15.1.1"
-
 pngjs@3.4.0, pngjs@^3.3.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"
@@ -21585,10 +21571,10 @@ react-native-fbsdk-next@10.1.0:
     "@expo/config-plugins" "^4.1.5"
     xml2js "^0.4.23"
 
-react-native-flipper@0.131.1:
-  version "0.131.1"
-  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.131.1.tgz#b1a43e40a442187fa78c5ed6d478471ff4a2686c"
-  integrity sha512-X65VbZgwVRVYAc3OBdHi0h8dJR/Mgxdg8WoQLGgaYyhHcaqsF06GjOzBJLwNjN3TK5Gih228IFqLqI9Rwl2dEA==
+react-native-flipper@0.212.0:
+  version "0.212.0"
+  resolved "https://registry.yarnpkg.com/react-native-flipper/-/react-native-flipper-0.212.0.tgz#b3fdd47676ecd09a25edd77a1466acace6276762"
+  integrity sha512-bDRfIgE3v/jjEEdnvGP0T6maDD+bXhDAQ/SZUYTKd/CQ6YIU1c0EF+e0urU62LNMv6XEFQKz226McdddyVhYZA==
 
 react-native-gesture-handler@2.9.0:
   version "2.9.0"

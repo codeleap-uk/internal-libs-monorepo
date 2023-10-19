@@ -20,65 +20,7 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "declaration": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "react-native-reanimated": [
-        "../../apps/mobile/node_modules/react-native-reanimated/lib/typescript/index.d.ts",
-      ],
-      "@react-native-community/async-storage": [
-        "../../apps/mobile/node_modules/@react-native-community/async-storage/types/index.d.ts"
-      ],
-      "react-native-keyboard-aware-scroll-view": [
-        "../../apps/mobile/node_modules/react-native-keyboard-aware-scroll-view/index.d.ts"
-      ],
-      "react-native-image-viewing": [
-        "../../apps/mobile/node_modules/react-native-image-viewing/dist/index.d.ts"
-      ],
-      "react-native": [
-        "../../apps/mobile/node_modules/react-native/types/index.d.ts"
-      ],
-      "react": [
-        "../../apps/mobile/node_modules/@types/react/index.d.ts",
-        "../../@types/react/index.d.ts"
-      ],
-      "react-native-super-grid": [
-        "../../apps/mobile/node_modules/react-native-super-grid/index.d.ts"
-      ],
-      "react-native-device-info": [
-        "../../apps/mobile/node_modules/react-native-device-info/lib/typescript/index.d.ts"
-      ],
-      "react-native-date-picker": [
-        "../../apps/mobile/node_modules/react-native-date-picker/index.d.ts"
-      ],
-      "@react-navigation/stack": [
-        "../../apps/mobile/node_modules/@react-navigation/stack/lib/typescript/src/index.d.ts"
-      ],
-      "@react-navigation/drawer": [
-        "../../apps/mobile/node_modules/@react-navigation/drawer/lib/typescript/src/index.d.ts"
-      ],
-      "@react-navigation/bottom-tabs": [
-        "../../apps/mobile/node_modules/@react-navigation/bottom-tabs/lib/typescript/src/index.d.ts"
-      ],
-      "@react-navigation/core": [
-        "../../apps/mobile/node_modules/@react-navigation/core/lib/typescript/src/index.d.ts"
-      ],
-      "@react-navigation/native": [
-        "../../apps/mobile/node_modules/@react-navigation/native/lib/typescript/src/index.d.ts"
-      ],
-      "react-native-document-picker": [
-        "../../apps/mobile/node_modules/react-native-document-picker/lib/typescript/index.d.ts"
-      ],
-      "react-native-image-crop-picker": [
-        "../../apps/mobile/node_modules/react-native-image-crop-picker/index.d.ts"
-      ],
-      "react-native-fast-image": [
-        "../../apps/mobile/node_modules/react-native-fast-image/dist/index.d.ts"
-      ],
-      "react-native-avoid-softinput": [
-        "../../apps/mobile/node_modules/react-native-avoid-softinput/lib/typescript/index.d.ts"
-      ]
-    },
+    "sourceMap": true
   },
   "include": [
     "src/**/*.ts",
