@@ -10,7 +10,7 @@ export * from './styles'
 export * from './utils'
 export * from './types'
 
-export const InputBaseDefaultOrder:InputBaseProps['order'] = [
+export const InputBaseDefaultOrder: InputBaseProps['order'] = [
   'label',
   'description',
   'innerWrapper',
@@ -52,6 +52,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     // @ts-ignore
     styles: _styles.leftIconStyles,
     debugName: `${debugName} left icon`,
+    dismissKeyboard: false,
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
@@ -59,13 +60,14 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     // @ts-ignore
     styles: _styles.rightIconStyles,
     debugName: `${debugName} right icon`,
+    dismissKeyboard: false,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle}/> : label
+  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle} /> : label
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle}/> : error
+  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle} /> : error
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/> : description
+  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle} /> : description
 
   const parts = {
     label: labelAsRow ? <View style={_styles.labelRowStyle}>
@@ -81,7 +83,7 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
       {_rightIcon}
     </InnerWrapperComponent>,
     error: hideErrorMessage ? null : (
-      _error || <Text text={''} style={_styles.errorStyle}/>
+      _error || <Text text={''} style={_styles.errorStyle} />
     ),
   }
 

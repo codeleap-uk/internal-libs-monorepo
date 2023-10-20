@@ -14,12 +14,13 @@ type OSAlertArgs = {
   options?: AlertButton[]
   onDismiss?: AnyFunction
   onAction?: AnyFunction
+  type?: Exclude<GlobalAlertType, 'custom'> | string
 }
 type AlertEvent = AlertButton['onPress']
 
 type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
-export type GlobalAlertType = 'info' | 'error' | 'warn' | 'ask'
+export type GlobalAlertType = 'info' | 'error' | 'warn' | 'ask' | 'custom'
 
 export type GlobalAlertComponentProps = {
   args: OSAlertArgs
@@ -166,11 +167,29 @@ export function CreateOSAlert(Component) {
       onDismiss,
     })
   }
+
+  function custom(args: OSAlertArgs & {type: string}) {
+    const {
+      title = 'Hang on',
+      body = 'Are you sure?',
+      type,
+      ...rest
+    } = args
+
+    OSAlert({
+      title,
+      body,
+      type: type as GlobalAlertType,
+      ...rest,
+    })
+  }
+
   return {
     ask,
     warn,
     info,
     error: OSError,
+    custom,
   }
 }
 
