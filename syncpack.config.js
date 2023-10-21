@@ -27,7 +27,11 @@ module.exports = {
       packages: ["**"],
       pinVersion: "18.0.35"
     },
-
+    {
+      dependencies: ["patch-package"],
+      packages: ["**"],
+      pinVersion: "8.0.0"
+    },
     {
       dependencies: ["@types/react-dom"],
       packages: ["**"],
