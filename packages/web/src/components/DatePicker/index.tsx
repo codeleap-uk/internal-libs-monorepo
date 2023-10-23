@@ -9,20 +9,23 @@ import { DatePickerPresets } from './styles'
 import { DatePickerProps } from './types'
 import _DatePicker from 'react-datepicker'
 import { Header, OuterInput } from './defaultComponents'
-import { format } from 'date-fns'
+import { format, isBefore, isAfter } from 'date-fns'
 
 export * from './styles'
 export * from './types'
 export * from './defaultComponents'
 
-const defaultComponents = {
+const defaultProps = {
+  variants: [],
+  styles: {},
+  minDate: new Date(1950, 0, 1),
   outerInputComponent: OuterInput,
   headerComponent: Header,
 }
 
 export function DatePicker(props: DatePickerProps) {
   const allProps = {
-    ...defaultComponents,
+    ...defaultProps,
     ...props,
   }
 
@@ -30,22 +33,19 @@ export function DatePicker(props: DatePickerProps) {
     hideInput,
     value,
     onValueChange,
-    variants = [],
-    styles = {},
+    variants,
+    styles,
     style,
     responsiveVariants,
     defaultValue,
-    outerInputComponent: OuterInput,
-    headerComponent: Header,
+    outerInputComponent,
+    headerComponent,
     datePickerProps,
+    minDate,
+    maxDate,
+    startDate,
     ...otherProps
   } = allProps
-
-  const {
-    minDate = new Date(1950, 0, 1),
-    maxDate,
-    startDate = new Date(),
-  } = datePickerProps || {}
 
   const [visible, setVisible] = useState(false)
   const [yearShow, setYearShow] = useState(false)
@@ -63,21 +63,30 @@ export function DatePicker(props: DatePickerProps) {
     (param) => {
       const { day, date: _date } = param
 
-      const date = format(new Date(_date), 'eee MMM dd yyyy')
-      const dateValue = value ? format(new Date(value), 'eee MMM dd yyyy') : ''
+      const date = format(new Date(_date), 'dd MMM yyyy')
+      const dateValue = value ? format(new Date(value), 'dd MMM yyyy') : ''
+
+      const isSelected = date === dateValue
+
+      const isDisabled = [
+        isBefore(_date, minDate),
+        isAfter(_date, maxDate),
+      ].some(Boolean)
 
       return (
         <View
           css={[
             variantStyles.dayWrapper,
-            date === dateValue && variantStyles['dayWrapper:selected'],
+            isSelected && variantStyles['dayWrapper:selected'],
           ]}
         >
           <Text
             style={[
               variantStyles.day,
-              date === dateValue && variantStyles['day:selected'],
+              isSelected && variantStyles['day:selected'],
+              !isSelected && isDisabled && variantStyles['day:disabled'],
             ]}
+            disabled={isDisabled}
             text={day}
           />
         </View>
@@ -155,11 +164,7 @@ export function DatePicker(props: DatePickerProps) {
         }}
         minDate={minDate}
         maxDate={maxDate}
-        yearItemNumber={
-          (maxDate ?? new Date()).getFullYear() - minDate.getFullYear()
-        }
         startDate={startDate}
-        endDate={maxDate}
         onYearChange={() => setYearShow(false)}
         showYearPicker={yearShow}
         renderYearContent={(year) => <YearContentComponent year={year} />}
@@ -168,3 +173,5 @@ export function DatePicker(props: DatePickerProps) {
     </View>
   )
 }
+
+DatePicker.defaultProps = defaultProps
