@@ -20,6 +20,7 @@
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
+    "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-slider": "1.1.1",
     "@radix-ui/react-tooltip": "^1.0.6",
     "framer-motion": "^10.10.0",
@@ -27,6 +28,7 @@
     "masonic": "^3.7.0",
     "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",
+    "react-circular-progressbar": "^2.1.0",
     "react-dropzone": "^14.2.3",
     "react-image-crop": "^10.1.8",
     "react-input-mask": "^2.0.4",
