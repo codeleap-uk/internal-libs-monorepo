@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { cwd } from '../../constants'
+import { subprocess } from '../utils'
 
 export const getIosBundleId = (pbxProjectContent: string) => {
   const pkgStr = 'PRODUCT_BUNDLE_IDENTIFIER ='
@@ -25,4 +26,3 @@ export const getIosAppName = (pbxProjectContent: string) => {
   //   ).toString(),
   // ).name
 }
-

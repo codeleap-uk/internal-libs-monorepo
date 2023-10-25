@@ -3,12 +3,18 @@ import cp from 'child_process'
 export const getNewBundleName = (newName:string) => `uk.co.codeleap.${newName.trim()}`
 
 export function subprocess(name:string, ...params: Parameters<typeof cp.spawn>) {
-  return new Promise<void|number|null>((resolve, reject) => {
+  return new Promise<{stdout: string[]; stderr: string[]}>((resolve, reject) => {
+    const stdout = []
+    const stderr = []
+
     console.log(`Running ${params[0]} ${params[1].join(' ')}`)
     const child = cp.spawn(
       params[0],
-      params[1].map(x => JSON.stringify(x)),
-      params[2]
+      params[1].map(x => {
+        if (typeof x === 'string') return x
+        return JSON.stringify(x)
+      }),
+      params[2],
     )
 
     child.on('error', (err) => {
@@ -21,23 +27,28 @@ export function subprocess(name:string, ...params: Parameters<typeof cp.spawn>) 
       if (code !== 0) {
         reject(`${name} finieshed with non zero exit code`)
       } else {
-        resolve(code)
+        resolve({
+          stdout,
+          stderr,
+        })
       }
     })
 
     child.stdout?.on?.('data', (outdata) => {
       console.log(outdata.toString())
+      stdout.push(outdata.toString())
     })
 
     child.stderr?.on?.('data', (errdata) => {
       console.error(errdata.toString())
+      stderr.push(errdata.toString())
     })
   })
 }
 
-export function listPrompt(items:string[], numbered=false){
+export function listPrompt(items:string[], numbered = false) {
   const textArr = items.map((i, idx) => {
-    const prefix = numbered ? `${idx+1}. ` : '- '
+    const prefix = numbered ? `${idx + 1}. ` : '- '
 
     return `${prefix}${i}`
   })
@@ -52,9 +63,9 @@ export {
   fs, path,
 }
 
-export function findExecutable(exec: string){
-  if(os.platform() === 'win32') return
-  
+export function findExecutable(exec: string) {
+  if (os.platform() === 'win32') return
+
   return cp.execSync('which ' + exec).toString().replace(/\n/g, '')
 }
 

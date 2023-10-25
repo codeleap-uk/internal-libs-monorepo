@@ -17,6 +17,9 @@ export const octokit = new Octokit({
 export * from './utils'
 export * from './walk'
 export * from './android'
+export * from './getCliSettings'
+export * from './git'
+export * from './appcenter'
 export * from './ios'
 
 export { createMobileApp } from './createApp/mobile'

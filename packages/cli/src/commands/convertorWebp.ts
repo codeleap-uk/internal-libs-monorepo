@@ -2,7 +2,7 @@ import { codeleapCommand } from '../lib/Command'
 import fs from 'fs'
 import path from 'path'
 import sharp from 'sharp'
-import { inquirer } from '../lib'
+import { getCliSettings, inquirer } from '../lib'
 import '../lib/firebase'
 import { CodeleapCLISettings } from '../types'
 import { CODELEAP_CLI_SETTINGS_PATH } from '../constants'
@@ -22,18 +22,8 @@ export const convertorWebpCommand = codeleapCommand(
   },
   async (argv) => {
     const { flags, _ } = argv
-    
-    const settingsPath = CODELEAP_CLI_SETTINGS_PATH
 
-    if (!fs.existsSync(settingsPath)) {
-      console.error('Settings not found, check path:', settingsPath)
-      process.exit(1)
-      return
-    }
-
-    const settingsJSON = fs.readFileSync(settingsPath).toString()
-
-    let settings: CodeleapCLISettings['convertor-webp'] = JSON.parse(settingsJSON)['convertor-webp']
+    const settings = getCliSettings()['convertor-webp']
 
     const isMultipleConversion = settings.mode === 'multi'
     const isSingleConversion = settings.mode === 'single'
@@ -65,8 +55,8 @@ export const convertorWebpCommand = codeleapCommand(
         return
       }
     }
-    
-    let files = []
+
+    const files = []
 
     if (fs.existsSync(settings.input)) {
       const inputFiles: string[] = fs.readdirSync(settings.input)
@@ -74,11 +64,11 @@ export const convertorWebpCommand = codeleapCommand(
       if (isMultipleConversion) {
         for (const inputFile of inputFiles) {
           const isCorrectFormat = settings?.convertor?.inputFormats?.some(
-            _format => inputFile?.endsWith(_format)
+            _format => inputFile?.endsWith(_format),
           )
-  
+
           const isIgnoredFile = settings.convertor.ignoreFiles.includes(inputFile?.split('.')[0])
-  
+
           if (isCorrectFormat && !isIgnoredFile) {
             files.push(inputFile)
           }
@@ -101,7 +91,7 @@ export const convertorWebpCommand = codeleapCommand(
     console.log('Files to convert', files)
 
     for (const file of files) {
-      const inputPath = path.join(settings.input, file);
+      const inputPath = path.join(settings.input, file)
       const outputPath = path.join(settings.output, path.parse(file).name + '.webp')
 
       if (fs.existsSync(outputPath)) {

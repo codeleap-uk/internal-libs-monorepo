@@ -22,8 +22,8 @@ try {
 }
 export const orgName = 'codeleap-uk'
 export const USER_CONFIG = {
- SHELL: true,
-  ... _userConf
+  SHELL: true,
+  ... _userConf,
 }
 export const MOBILE_TEMPLATE_URL = `git@github.com:${orgName}/mobile-template.git`
 

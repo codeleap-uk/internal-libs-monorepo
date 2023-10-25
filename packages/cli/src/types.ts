@@ -3,6 +3,11 @@ export type CodeleapCLIUserConfig = {
   SHELL?: string
 }
 
+export type CodepushAppConfig = {
+  ApplicationName: string
+  ApiToken: string
+}
+
 export type CodeleapCLISettings = {
   'convertor-webp': {
     input: string
@@ -15,5 +20,10 @@ export type CodeleapCLISettings = {
       ignoreFiles: string[]
     }
     mode: 'multi' | 'single'
+  }
+  'codepush': {
+    OwnerName: string
+    ios: CodepushAppConfig
+    android: CodepushAppConfig
   }
 }

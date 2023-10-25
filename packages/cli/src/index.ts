@@ -7,6 +7,7 @@ import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 import { syncIconsCommand } from './commands/syncIcons'
 import { convertorWebpCommand } from './commands/convertorWebp'
+import { codepushDeploy } from './commands/codepushDeploy'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
@@ -14,16 +15,19 @@ const packageJson = require('../package.json')
 cli({
   name: 'codeleap',
   commands: [
-    generateReleaseKey, 
-    renameMobileCommand, 
-    createAppCommand, 
+    generateReleaseKey,
+    renameMobileCommand,
+    createAppCommand,
     configureCommand,
     downloadKeystores,
     syncIconsCommand,
-    convertorWebpCommand
+    convertorWebpCommand,
+    codepushDeploy,
+
   ],
   version: packageJson.version,
 
 })
 
-export {}
+export type * from './types'
+
