@@ -21,7 +21,7 @@ export type ProgressBarProps = ComponentVariants<typeof ProgressBarPresets> &
     leftIconProps?: Partial<IconProps>
     rightIcon?: IconPlaceholder
     rightIconProps?: Partial<IconProps>
-
+    text?: string
     textProps?: Partial<TextProps>
     leftText?: TextProps['text'] | JSX.Element
     leftTextProps?: Partial<TextProps>

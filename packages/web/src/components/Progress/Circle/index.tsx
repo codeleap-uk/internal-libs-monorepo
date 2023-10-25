@@ -19,6 +19,7 @@ const defaultProps: Partial<ProgressCircleProps> = {
   styles: {},
   showProgress: false,
   formatProgress: _formatProgress,
+  size: null,
 }
 
 export const ProgressCircle = (props: ProgressCircleProps) => {
@@ -57,9 +58,10 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
   })
 
   const wrapperSize = useMemo(() => {
+    if (TypeGuards.isNumber(propSize)) return propSize
     const { size, width, height } = variantStyles.circle
-    const value = propSize ?? size ?? width ?? height
-    return TypeGuards.isNumber(value) ? value : 0
+    const value = size ?? width ?? height
+    return value ?? 0
   }, [variantStyles.circle])
 
   return (

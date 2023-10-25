@@ -11,7 +11,6 @@ import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-pro
 import { ElementType } from 'react'
 
 type TextProps = _TextProps<ElementType>
-type ChildrenProps = { progress?: number }
 
 export type ProgressCircleProps = Omit<
   PropsOf<typeof View>,
@@ -22,7 +21,7 @@ export type ProgressCircleProps = Omit<
     styles?: StylesOf<ProgressCircleComposition>
     circleProps?: PropsOf<typeof CircularProgressbarWithChildren>
     circleStyles?: Parameters<typeof buildStyles>[0]
-    children?: ((props: ChildrenProps) => JSX.Element) | JSX.Element
+    children?: React.ReactNode
     size?: number
 
     text?: TextProps['text'] | JSX.Element

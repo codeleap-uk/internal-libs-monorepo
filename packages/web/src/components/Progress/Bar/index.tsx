@@ -41,7 +41,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
     leftIconProps,
     rightIcon,
     rightIconProps,
-
+    text,
     textProps,
     leftText,
     leftTextProps,
@@ -91,13 +91,13 @@ export const ProgressBar = (props: ProgressBarProps) => {
           {...progressIndicatorProps}
         />
       </Root>
-      {!!showProgress ? (
+      {TypeGuards.isString(text) || showProgress ? (
         <Text
-          css={variantStyles.text}
-          text={formatProgress(progress)}
+          style={variantStyles.text}
+          text={showProgress ? formatProgress(progress) : text}
           {...textProps}
         />
-      ) : null}
+      ) : text}
       {!TypeGuards.isNil(rightIcon) ? (
         <Icon
           name={rightIcon}
