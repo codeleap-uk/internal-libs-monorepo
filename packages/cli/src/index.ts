@@ -7,6 +7,7 @@ import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 import { syncIconsCommand } from './commands/syncIcons'
 import { convertorWebpCommand } from './commands/convertorWebp'
+import { codepushBootstrap } from './commands/codepushBootstrap'
 import { codepushDeploy } from './commands/codepushDeploy'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -23,6 +24,7 @@ cli({
     syncIconsCommand,
     convertorWebpCommand,
     codepushDeploy,
+    codepushBootstrap,
 
   ],
   version: packageJson.version,

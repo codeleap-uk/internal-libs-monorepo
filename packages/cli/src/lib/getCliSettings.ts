@@ -1,7 +1,7 @@
 import { CODELEAP_CLI_SETTINGS_PATH } from '../constants'
 import { CodeleapCLISettings } from '../types'
 import { fs } from './utils'
-let cachedSettings: CodeleapCLISettings = null
+export let cachedSettings: CodeleapCLISettings = null
 
 export function getCliSettings(required = true) {
   if (cachedSettings) {
@@ -25,4 +25,8 @@ export function getCliSettings(required = true) {
     process.exit(1)
 
   }
+}
+
+export function invalidateSettingsCache(withValue: CodeleapCLISettings = null) {
+  cachedSettings = withValue
 }

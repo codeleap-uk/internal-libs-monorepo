@@ -19,6 +19,7 @@ export * from './walk'
 export * from './android'
 export * from './getCliSettings'
 export * from './git'
+export * from './alterCliSettings'
 export * from './appcenter'
 export * from './ios'
 

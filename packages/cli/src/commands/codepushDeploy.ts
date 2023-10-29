@@ -7,12 +7,12 @@ export const codepushDeploy = codeleapCommand(
   {
     name: commandName,
     parameters: [
-      '[name]',
+
     ],
     help: {
       description: 'Update the codepush deployment from the current branch, creating it if it does not exist',
       examples: [
-        `codeleap ${commandName} myAppName`,
+        `codeleap ${commandName}`,
       ],
     },
 

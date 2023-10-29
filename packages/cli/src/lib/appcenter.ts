@@ -13,6 +13,11 @@ async function getApplication(platform: ApplicationPlatform) {
 
   const platformSettings = settings[platform]
 
+  if (!platformSettings) {
+    const predictedName = `${settings.ApplicationName}-${platform}`
+    return `${settings.OwnerName}/${predictedName}`
+  }
+
   return `${settings.OwnerName}/${platformSettings.ApplicationName}`
 }
 
@@ -46,16 +51,67 @@ export async function deploymentExists(name: string, platform: ApplicationPlatfo
 
     return response.status === 200
   } catch (e) {
-    // console.error('error checking deployment', e)
+    console.error('Error checking deployment', e)
     process.exit(1)
 
   }
   return false
 }
 
+export const createApplication = async (platform: ApplicationPlatform, token: string) => {
+  const settings = getCliSettings().codepush
+  const name = await getApplication(platform)
+
+  const platformName = {
+    ios: 'iOS',
+    android: 'Android',
+  }[platform]
+
+  const appName = `${settings.ApplicationName}-${platformName}`
+
+  const createAppResponse = await axios.post(`https://api.appcenter.ms/v0.1/orgs/${settings.OwnerName}/apps`, {
+    'description': appName,
+    'release_type': `Beta`,
+    'display_name': appName,
+    'name': appName,
+    'os': platformName,
+    'platform': 'React-Native',
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Token': token,
+      'Accept': 'application/json',
+    },
+  })
+
+  const createTokenResponse = await axios.post(`https://api.appcenter.ms/v0.1/apps/${name}/api_tokens`, {
+    description: 'Automation token',
+    scope: [
+      'all',
+    ],
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-Token': token,
+      'Accept': 'application/json',
+    },
+  })
+
+  const appToken = createTokenResponse.data.api_token
+
+  const app = createAppResponse.data
+
+  return {
+    app,
+    appToken,
+  }
+
+}
+
 export const Codepush = {
   getApplication,
   addDeployment,
   updateDeployment,
+  createApplication,
   deploymentExists,
 }
