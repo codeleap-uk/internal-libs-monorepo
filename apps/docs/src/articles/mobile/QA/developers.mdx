@@ -1,0 +1,72 @@
+---
+title: 'For developers'
+description: 'How to use codepush or integrate it into apps'
+tag: 'guide'
+---
+
+# Setup
+
+1. Install and log into the [App Center CLI](https://learn.microsoft.com/en-us/appcenter/cli/) (the example uses npm, but you can also use yarn)
+2. If you're not a member of the codeleap team yet, ask someone to add you
+
+# Usage
+
+After you have finished making changes to the source code, you may release changes for the QA team to validate:
+1. Make sure you are on the branch which corresponds to your feature
+2. Make sure you have followed the setup instructions above
+3. Make sure your project has codepush configured (see below)
+4. Run the following command on your project directory:
+
+```bash
+yarn codeleap codepush-deploy
+```
+
+## 2a. You're setting up codepush for a new app (Template 4+)
+Apps created with the template 4+ already have codepush configured. You just need to run the command below on your project directory:
+
+```bash
+yarn codeleap codepush-bootstrap
+```
+
+The command should provide you with any additional instructions you need to follow.
+
+## 2b. You're setting up codepush for an existing app
+
+1. Make sure the package `@codeleap/cli` is installed and up to date
+2. Create `codeleapcli.config.json` on your project directory with the following contents:
+```json
+{
+  "codepush": {
+    "OwnerName": "Codeleap",
+    "ApplicationName": "your-app-name"
+  }
+}
+```
+3. Run the command below
+
+```bash
+yarn codeleap codepush-bootstrap
+```
+The command should provide you with any additional instructions if needed.
+
+4. Get the deployment keys for the apps on both platforms by running
+```bash
+appcenter codepush deployment list --app Codeleap/<your-app-name>-Android -k # For Android
+appcenter codepush deployment list --app Codeleap/<your-app-name>-iOS -k # For iOS
+```
+
+5. Follow the setup instructions for [react-native-code-push](
+  https://github.com/microsoft/react-native-code-push
+). They mention the deployment keys which you got in the previous step.
+
+6. Adapt the changes made [in this PR](https://github.com/codeleap-uk/mobile-template/pull/82) to your project. The changes made in xcode are not really visible in the diff, so here's an overview of the needed steps:
+
+- Create a new build configuration for codepush, named QA
+- Create a new scheme for codepush, with the QA build configuration, name `Your app name QA`
+- Under your target's build settings, add a user defined setting called `BUILD_CONFIGURATION_NAME`, and set it for each build configuration (Release = release, Debug = debug, QA = qa)
+- On your target's Info.plist, add a key called `BuildConfiguration`, with the value `$(BUILD_CONFIGURATION_NAME)`
+- You may run the app once all the other changes visible in the diff are done
+
+
+
+

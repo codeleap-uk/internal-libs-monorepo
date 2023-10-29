@@ -1,0 +1,22 @@
+---
+title: 'For testers'
+description: 'How to use codepush effectively for testing'
+tag: 'guide'
+---
+
+Clone a repository, and make sure you have the release keystores and their configurations on the android/app/keystores folder. A device or emulator should also be available
+
+Run the following commands
+``` 
+adb reverse tcp:8081 tcp:8081
+yarn
+yarn installQa
+```
+
+This should install the app to the device/emulator
+
+Once a developer has created a branch and uploaded it's contents to codepush, you may switch to it by:
+
+1. Pressing "Change deployment" on the initial screen of the app (while logged out)
+2. Selecting the branch you want to test
+3. Pressing "Sync" on the modal that pops up

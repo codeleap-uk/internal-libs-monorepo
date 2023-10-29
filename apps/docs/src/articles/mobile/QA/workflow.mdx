@@ -1,0 +1,17 @@
+---
+title: 'QA Mobile testing workflow'
+description: 'QA Mobile testing workflow'
+tag: 'process'
+---
+
+# QA Mobile testing workflow
+Android and iOS builds take a while to finish, and for testers that need to switch branches often, it can be a pain to wait for the build to finish. We use [Microsoft Codepush](https://microsoft.github.io/code-push/) to allow developers to release updates for the QA team to test without having to wait for a new build.
+
+## Process
+
+1. The tester installs the QA variant of the app
+2. A developer makes changes to the app and opens a pull request
+3. Once the PR is open, the developer pushes the changes to a codepush deployment
+4. The tester installs the codepush deployment to test the changes through the in-app UI 
+
+> TODO: Add screenshots of the in-app UI, and a flowchart
