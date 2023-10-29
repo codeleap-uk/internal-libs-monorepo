@@ -24,7 +24,7 @@ export type CodeleapCLISettings = {
   'codepush': {
     ApplicationName: string
     OwnerName: string
-    ios: CodepushAppConfig
-    android: CodepushAppConfig
+    ios?: CodepushAppConfig
+    android?: CodepushAppConfig
   }
 }

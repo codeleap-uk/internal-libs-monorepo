@@ -1,5 +1,5 @@
 import cp from 'child_process'
-
+import { isAxiosError } from 'axios'
 export const getNewBundleName = (newName:string) => `uk.co.codeleap.${newName.trim()}`
 
 export function subprocess(name:string, ...params: Parameters<typeof cp.spawn>) {
@@ -91,4 +91,27 @@ export function parseFilePathData(path: string) {
     extension: ext,
     name: fileName,
   }
+}
+
+export function formatError(err: any) {
+  let content = []
+
+  if (isAxiosError(err)) {
+    const fullUrl = err.request?.res?.responseUrl
+    const message = `Request to ${fullUrl} failed with status ${err.response?.status}`
+
+    if (!!err?.response?.data) {
+      content = [message, err.response?.data]
+    }
+  } else {
+    content = [err]
+  }
+
+  return content
+}
+
+export async function waitFor(ms = 1000) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 }

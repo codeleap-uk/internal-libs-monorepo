@@ -9,6 +9,22 @@ export async function getCurrentBranch() {
   )
 
   const branchName = stdout.join('').trim()
-  console.log('branchName', branchName)
+
+  return branchName
+}
+
+export async function getDefaultBranchName() {
+  const { stdout } = await subprocess(
+    'Get default branch',
+    'git',
+    ['symbolic-ref', '--short', 'refs/remotes/origin/HEAD'],
+    {},
+  )
+
+  let branchName = stdout.join('').trim()
+
+  if (branchName.startsWith('origin/')) {
+    branchName = branchName.replace('origin/', '')
+  }
   return branchName
 }

@@ -1,4 +1,4 @@
-import { Codepush, alterCliSettings, getCliSettings } from '../lib'
+import { Codepush, alterCliSettings, getCliSettings, getDefaultBranchName, formatError } from '../lib'
 import { codeleapCommand } from '../lib/Command'
 
 const commandName = 'codepush-bootstrap'
@@ -34,12 +34,14 @@ export const codepushBootstrap = codeleapCommand(
       ].join('\n'))
       return
     }
+    const defaultBranchName = await getDefaultBranchName()
 
     console.log('Creating applications...')
 
     try {
       const iosApp = await Codepush.createApplication('ios', apiToken)
       console.log('iOS application created')
+
       alterCliSettings((currentSettings) => {
         currentSettings.codepush.ios = {
           ApplicationName: iosApp.app.name,
@@ -48,8 +50,9 @@ export const codepushBootstrap = codeleapCommand(
         return currentSettings
       })
 
+      await Codepush.createDeployment(defaultBranchName, 'ios')
     } catch (e) {
-      console.error('Error creating iOS application', e)
+      console.error('Error creating iOS application', ...formatError(e))
       process.exit(1)
       return
     }
@@ -64,8 +67,9 @@ export const codepushBootstrap = codeleapCommand(
         }
         return currentSettings
       })
+      await Codepush.createDeployment(defaultBranchName, 'android')
     } catch (e) {
-      console.error('Error creating Android application', e)
+      console.error('Error creating Android application', ...formatError(e))
       process.exit(1)
       return
     }
