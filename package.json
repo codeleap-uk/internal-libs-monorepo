@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "build": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build --filter='./packages/mobile'  --filter='./packages/web'  --filter='./packages/cli'  --filter='./packages/common'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules",
