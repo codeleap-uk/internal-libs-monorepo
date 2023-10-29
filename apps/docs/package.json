@@ -17,8 +17,7 @@
     "dev": "gatsby develop",
     "start": "gatsby develop",
     "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "build": "gatsby build"
+    "clean": "gatsby clean"
   },
   "dependencies": {
     "@codeleap/common": "*",
