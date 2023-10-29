@@ -34,7 +34,8 @@
     "doc:process": "clear && python ./docs/processor/main.py",
     "doc:fullcycle": "yarn doc:generate && yarn doc:process",
     "postinstall": "yarn patch-package",
-    "link-mobile-patches": "ln -s apps/mobile/patches ./patches"
+    "link-mobile-patches": "ln -s apps/mobile/patches ./patches",
+    "link-mobile-patches-win": "mklink /D patches apps\\mobile\\patches"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",
