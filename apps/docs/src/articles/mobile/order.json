@@ -12,5 +12,13 @@
             "problem",
             "our_solution"
         ]
+    },
+    {
+        "name": "Testing",
+        "items": [
+            "index",
+            "testers",
+            "developers"
+        ]
     }
 ]
