@@ -18,6 +18,10 @@ export interface IRequestClient {
   queue: Record<string, RequestQueueItem>
   setInQueue(req: RequestQueueItem): void
   setConfig(config:Partial<RequestClientConfig>):void
+  branches: {
+    config: RequestClientConfig
+    client: IRequestClient
+  }[]
 }
 
 type MultipartConfig = {

@@ -17,9 +17,13 @@ export class RequestClient implements IRequestClient {
 
   toMultipart: RequestClientConfig['multipartParser']
 
+  branches: IRequestClient['branches']
+
   constructor({ logger, multipartParser = toMultipart, ...config }:RequestClientConfig) {
     this.config = config
     this.logger = logger || silentLogger
+
+    this.branches = []
 
     this.axios = axios.create(config)
 
@@ -65,6 +69,8 @@ export class RequestClient implements IRequestClient {
     })
 
     this.applyInterceptors()
+
+    this.updateBranches()
   }
 
   removeFromQueue(req: RequestQueueItem) {
@@ -205,7 +211,7 @@ export class RequestClient implements IRequestClient {
     })
   }
 
-  branch(branchConfig?: RequestClientConfig) {
+  private getBranchConfig(branchConfig?: RequestClientConfig) {
     const config:RequestClientConfig = {
       ...this.config,
       ...branchConfig,
@@ -217,7 +223,26 @@ export class RequestClient implements IRequestClient {
       config.baseURL = this.config.baseURL + branchConfig.baseURL
     }
 
-    return new RequestClient(config)
+    return config
+  }
+
+  private updateBranches() {
+    this.branches.forEach(({ client, config: branchConfig }) => {
+      client.setConfig(this.getBranchConfig(branchConfig))
+    })
+  }
+
+  branch(branchConfig?: RequestClientConfig) {
+    const config = this.getBranchConfig(branchConfig)
+
+    const branch = new RequestClient(config)
+
+    this.branches.push({
+      config: branchConfig,
+      client: branch,
+    })
+
+    return branch
   }
 
 }
