@@ -22,8 +22,14 @@ export class LocalStorage<T extends Record<string, string>> {
 
   public getLocalStorage(): Storage {
     if (typeof window === 'undefined') {
-      return {} as Storage
+      return {
+        getItem: () => null,
+        setItem: () => null,
+        clear: () => null,
+        removeItem: () => null,
+      } as any
     }
+
     return localStorage
   }
 
