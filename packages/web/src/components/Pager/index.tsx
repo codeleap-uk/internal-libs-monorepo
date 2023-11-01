@@ -1,170 +1,103 @@
-import {
-  ComponentVariants,
-  StylesOf,
-  onUpdate,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import Slider, { Settings } from 'react-slick'
+import React from 'react'
+import { AnyFunction, ComponentVariants, onUpdate, StylesOf, useDefaultComponentStyle, useRef, useState } from '@codeleap/common'
 import { PagerComposition, PagerPresets } from './styles'
-import React, {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  ReactNode,
-  ReactElement,
-  CSSProperties,
-} from 'react'
-
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
 import { View, ViewProps } from '../View'
 import { Touchable } from '../Touchable'
 import { ComponentCommonProps } from '../../types'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useResize } from '../../lib/useResize'
 
-export type PagerRef = {
-  goTo: (page: number) => void
-}
+export * from './styles'
 
-export type PagerProps = Settings &
+export type PagerProps =
   ComponentVariants<typeof PagerPresets> & {
     styles?: StylesOf<PagerComposition>
-    page?: number
-    style?: CSSProperties
-    children: ReactNode
+    page: number
+    style?: React.CSSProperties
+    children: React.ReactNode
     onChange?: (page: number) => void
-    renderPageWrapper?: React.FC
-    footer?: ReactElement
-    dotsProps?: DotsProps
-    pageWrapperProps?: ViewProps<'div'>
-    dotsDisabled?:boolean
-    disableSwipe?: boolean
-  } & ComponentCommonProps
+    footer?: React.ReactElement
+  }
 
-type DotsProps = Pick<PagerProps, 'page' | 'dotsDisabled'> & {
-  childArray: ReactNode[]
-  onPress?: (index: number) => void
-  variantStyles: StylesOf<PagerComposition>
-}
+// type DotsProps = Pick<PagerProps, 'page' | 'dotsDisabled'> & {
+//   childArray: React.ReactNode[]
+//   onPress?: (index: number) => void
+//   variantStyles: StylesOf<PagerComposition>
+// }
 
-const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsProps) => {
-  return (
-    <View style={variantStyles.dots}>
-      {childArray.map((_, index) => {
-        const isSelected = index === page
-        const css = [
-          variantStyles[isSelected ? 'dot:selected' : 'dot'],
-          dotsDisabled && variantStyles['dot:disabled'],
-        ]
+// const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsProps) => {
+//   return (
+//     <View style={variantStyles.dots}>
+//       {childArray.map((_, index) => {
+//         const isSelected = index === page
+//         const css = [
+//           variantStyles[isSelected ? 'dot:selected' : 'dot'],
+//           dotsDisabled && variantStyles['dot:disabled'],
+//         ]
 
-        return (
-          <Touchable
-            key={index}
-            onPress={() => onPress?.(index)}
-            css={css}
-            disabled={dotsDisabled}
-          />
-        )
-      })}
-    </View>
-  )
-}
+//         return (
+//           <Touchable
+//             key={index}
+//             onPress={() => onPress?.(index)}
+//             css={css}
+//             disabled={dotsDisabled}
+//           />
+//         )
+//       })}
+//     </View>
+//   )
+// }
 
-const PagerComponent = (
-  props: PagerProps,
-  ref: React.ForwardedRef<PagerRef>,
-) => {
-  const sliderRef = useRef<Slider>()
+export const Pager = (props: PagerProps) => {
   const {
     styles,
     style,
     variants,
     children,
-    renderPageWrapper,
     responsiveVariants,
     page,
-    dots = false,
-    dotsDisabled = false,
-    infinite = false,
-    disableSwipe = false,
-    onChange,
     footer,
-    dotsProps,
-    pageWrapperProps,
-    ...rest
   } = props
 
-  const variantStyles = useDefaultComponentStyle<
-    'u:Pager',
-    typeof PagerPresets
-  >('u:Pager', {
+  const [pageSize, setPageSize] = useState({})
+  const pageRef = useRef(null)
+
+  const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>('u:Pager', {
     variants,
     responsiveVariants,
     styles,
-    rootElement: 'wrapper',
   })
 
+  useResize(() => {
+    if (pageRef.current) {
+      setPageSize({ 
+        width: pageRef.current.clientWidth, 
+        height: pageRef.current.clientHeight 
+      })
+    }
+  }, [pageRef.current, page])
+
   const childArray = React.Children.toArray(children)
-  const PageWrapper = renderPageWrapper || View
-
-  const goTo = useCallback(
-    (page: number) => {
-      if (sliderRef.current) sliderRef.current.slickGoTo(page)
-    },
-    [sliderRef?.current],
-  )
-
-  useImperativeHandle(ref, () => ({
-    goTo,
-  }))
-
-  onUpdate(() => {
-    goTo(page)
-  }, [page])
 
   return (
-    <View css={[variantStyles.wrapper, style]}>
-      <Slider
-        {...rest}
-        arrows={false}
-        ref={sliderRef}
-        dots={false}
-        swipe={!disableSwipe}
-        infinite={infinite}
-        accessibility={false}
-        afterChange={onChange}
-      >
-        {childArray.map((child, index) => {
-          return (
-            <PageWrapper
-              key={index}
-              css={variantStyles.pageWrapper}
-              {...pageWrapperProps}
-            >
-              {child}
-            </PageWrapper>
-          )
-        })}
-      </Slider>
-
-      <View css={variantStyles.footerWrapper}>
-        {footer}
-
-        {dots && (
-          <Dots
-            page={page}
-            onPress={onChange}
-            childArray={childArray}
-            variantStyles={variantStyles}
-            dotsDisabled={dotsDisabled}
-            {...dotsProps}
-          />
-        )}
+    <View css={[variantStyles.wrapper, style, { overflow: 'hidden' }]}>
+      <View style={{ display: 'flex', flexDirection: 'row', position: 'relative', height: pageSize?.height, width: pageSize?.width }}>
+        <AnimatePresence initial={false} custom={page}>
+          <motion.div
+            key={page}
+            custom={page}
+            initial={{ x: pageSize?.width, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -pageSize?.width, opacity: 0 }}
+            transition={{ type: 'tween', duration: 0.3 }}
+            style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
+          >
+            <div ref={pageRef}>{childArray[page]}</div>
+          </motion.div>
+        </AnimatePresence>
       </View>
+
+      {footer}
     </View>
   )
 }
-
-export const Pager = forwardRef(PagerComponent)
-
-export * from './styles'
