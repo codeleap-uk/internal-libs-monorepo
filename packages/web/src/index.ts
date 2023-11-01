@@ -10,3 +10,4 @@ export { CreateOSAlert, useGlobalAlertComponent, AlertOutlet } from './lib/OSAle
 export type { GlobalAlertComponentProps, GlobalAlertType } from './lib/OSAlert'
 export * from './lib/keyboard'
 export * from './lib/localStorage'
+export * from './lib/scrollLock'
