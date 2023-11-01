@@ -4,7 +4,9 @@ import { create } from 'zustand'
 type TModalStore = { 
   identifier: string | null
   indexes: Record<string, number>
+  modals: Record<string, boolean>
   setIndex: (visible: boolean, modalIdentifier: string) => void
+  toggle: (id: string, to?: boolean) => void
 }
 
 const INDEX = 99
@@ -12,6 +14,7 @@ const INDEX = 99
 export const ModalStore = create<TModalStore>((set) => ({ 
   identifier: null,
   indexes: {},
+  modals: {},
   setIndex: (visible: boolean, modalIdentifier: string) => set(store => {
     const indexes = store.indexes
 
@@ -33,7 +36,21 @@ export const ModalStore = create<TModalStore>((set) => ({
 
     return { indexes }
   }),
+  toggle: (id: string, to = null) => set(store => {
+    const modals = store.modals
+
+    const hasModal = TypeGuards.isBoolean(modals?.[id])
+    const visible = TypeGuards.isBoolean(to) ? to : (hasModal ? !modals?.[id] : true)
+
+    modals[id] = visible
+
+    return { modals }
+  })
 }))
+
+export function toggleModal(id: string, to: boolean = null) {
+  ModalStore.getState().toggle(id, to)
+}
 
 export function modalScrollLock(to: boolean, modalIdentifier: string) {
   let modalId = ModalStore.getState().identifier

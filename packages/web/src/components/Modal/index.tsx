@@ -31,12 +31,12 @@ export * from './styles'
 
 export type ModalProps =
   {
-    visible: boolean
+    visible?: boolean
     children?: React.ReactNode
     title?: React.ReactNode | string
     description?: React.ReactNode | string
     renderModalBody?: (props: ModalBodyProps) => React.ReactElement
-    toggle: AnyFunction
+    toggle?: AnyFunction
     styles?: StylesOf<ModalComposition>
     style?: React.CSSProperties
     accessible?: boolean
@@ -318,14 +318,17 @@ export const Modal = (props) => {
 
   const {
     accessible,
-    visible,
+    visible: _visible,
     scrollLock,
     modalId: _modalId,
     autoIndex,
+    toggle: _toggle,
   } = allProps
 
   const modalId = useRef(_modalId ?? v4())
   const setIndex = ModalStore(store => store.setIndex)
+  const visible = TypeGuards.isBoolean(_visible) ? _visible : ModalStore(store => store.modals?.[_modalId] ?? false)
+  const toggle = TypeGuards.isFunction(_toggle) ? _toggle : ModalStore(store => () => store.toggle(_modalId))
 
   onMount(() => {
     if (accessible) {
@@ -347,7 +350,7 @@ export const Modal = (props) => {
     if (autoIndex) setIndex(visible, modalId.current)
   }, [visible])
 
-  const content = <ModalContent {...props} id={modalId.current} />
+  const content = <ModalContent {...props} visible={visible} toggle={toggle} id={modalId.current} />
 
   // if (renderStatus === 'unmounted') return null
 
