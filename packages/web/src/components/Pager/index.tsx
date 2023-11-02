@@ -1,7 +1,7 @@
 import React from 'react'
-import { AnyFunction, ComponentVariants, onUpdate, StylesOf, useDefaultComponentStyle, useRef, useState } from '@codeleap/common'
+import { AnyFunction, ComponentVariants, StylesOf, useDefaultComponentStyle, useRef, useState } from '@codeleap/common'
 import { PagerComposition, PagerPresets } from './styles'
-import { View, ViewProps } from '../View'
+import { View } from '../View'
 import { ComponentCommonProps } from '../../types'
 import { motion, AnimatePresence, useDragControls } from 'framer-motion'
 import { useResize } from '../../lib/useResize'
@@ -16,38 +16,8 @@ export type PagerProps =
     setPage: AnyFunction
     style?: React.CSSProperties
     children: React.ReactNode
-    onChange?: (page: number) => void
     footer?: React.ReactElement
   }
-
-// type DotsProps = Pick<PagerProps, 'page' | 'dotsDisabled'> & {
-//   childArray: React.ReactNode[]
-//   onPress?: (index: number) => void
-//   variantStyles: StylesOf<PagerComposition>
-// }
-
-// const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsProps) => {
-//   return (
-//     <View style={variantStyles.dots}>
-//       {childArray.map((_, index) => {
-//         const isSelected = index === page
-//         const css = [
-//           variantStyles[isSelected ? 'dot:selected' : 'dot'],
-//           dotsDisabled && variantStyles['dot:disabled'],
-//         ]
-
-//         return (
-//           <Touchable
-//             key={index}
-//             onPress={() => onPress?.(index)}
-//             css={css}
-//             disabled={dotsDisabled}
-//           />
-//         )
-//       })}
-//     </View>
-//   )
-// }
 
 export const Pager = (props: PagerProps) => {
   const {
@@ -78,11 +48,22 @@ export const Pager = (props: PagerProps) => {
         height: pageRef.current.clientHeight
       })
     }
-  }, [pageRef.current, currentPage])
+  }, [pageRef.current])
 
   const dragControls = useDragControls()
 
   const childArray = React.Children.toArray(children)
+
+  const isFirst = page <= 0
+  const isLast = page >= (childArray?.length - 1)
+
+  const next = () => {
+    setCurrentPage(isLast ? currentPage : currentPage + 1)
+  }
+
+  const previous = () => {
+    setCurrentPage(isFirst ? currentPage : currentPage - 1)
+  }
 
   return (
     <View css={[variantStyles.wrapper, style, { overflow: 'hidden' }]}>
@@ -91,31 +72,32 @@ export const Pager = (props: PagerProps) => {
           <motion.div
             key={currentPage}
             custom={currentPage}
-            animate={{ x: 0, opacity: 1 }}
-            initial={(custom) => {
-              return { x: custom ? pageSize?.width : -pageSize?.width, opacity: 0 }
+            animate={{ 
+              x: 0, 
+              opacity: 1 
             }}
-            exit={(custom) => {
-              return { x: custom ? -pageSize?.width : pageSize?.width, opacity: 0 }
+            initial={{ 
+              x: pageSize?.width, 
+              opacity: 0 
+            }}
+            exit={{ 
+              x: -pageSize?.width, 
+              opacity: 0 
             }}
             transition={{ type: 'tween', duration: 0.3 }}
             style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
             drag='x'
             dragControls={dragControls}
-            onDrag={(event, info) => {
-              console.log(info)
-              if (info.offset.x > 80) {
-                setCurrentPage(currentPage - 1)
-              } else if (info.offset.x < -80) {
-                setCurrentPage(currentPage + 1)
-              }
+            dragElastic={0.2}
+            dragConstraints={{
+              left: isLast ? 0 : -30,
+              right: isFirst ? 0 : 30,
             }}
-            onDragEnd={(event, info) => {
-              console.log('end', info)
+            onDragEnd={(_, info) => {
               if (info.offset.x > 0) {
-                setCurrentPage(currentPage - 1)
+                previous()
               } else if (info.offset.x < 0) {
-                setCurrentPage(currentPage + 1)
+                next()
               }
             }}
           >
