@@ -78,7 +78,7 @@
     "doc:generate": "clear && ts-node-dev ./docs/generator/main.ts",
     "doc:process": "clear && python ./docs/processor/main.py",
     "doc:fullcycle": "yarn doc:generate && yarn doc:process",
-    "doc:test": "clear && ts-node-dev ./docs/generator/test.ts"
+    "doc:test": "clear && TS_NODE_PROJECT=./docs/tsconfig.json ts-node-dev ./docs/generator/test.ts"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",

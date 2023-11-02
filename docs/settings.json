@@ -6,8 +6,8 @@
   "environment": "../.env",
   "articleGeneratorExtension": "mdx",
   
-  "maxTypedocsGenerator": 2,
-  "generateEnabled": true,
+  "maxTypedocsGenerator": 5,
+  "generateEnabled": false,
   "typedocDocumentedTypes": true,
 
   "module": "components",
