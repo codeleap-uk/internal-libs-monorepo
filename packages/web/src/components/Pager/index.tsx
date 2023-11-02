@@ -48,7 +48,7 @@ export const Pager = (props: PagerProps) => {
         height: pageRef.current.clientHeight
       })
     }
-  }, [pageRef.current])
+  }, [pageRef.current, page])
 
   const dragControls = useDragControls()
 
@@ -72,19 +72,16 @@ export const Pager = (props: PagerProps) => {
           <motion.div
             key={currentPage}
             custom={currentPage}
-            animate={{ 
-              x: 0, 
-              opacity: 1 
+            animate={{
+              x: 0,
             }}
-            initial={{ 
-              x: pageSize?.width, 
-              opacity: 0 
+            initial={{
+              x: pageSize.width,
             }}
-            exit={{ 
-              x: -pageSize?.width, 
-              opacity: 0 
+            exit={{
+              x: -pageSize.width,
             }}
-            transition={{ type: 'tween', duration: 0.3 }}
+            transition={{ type: 'tween', duration: 0.25 }}
             style={{ position: 'absolute', top: 0, left: 0, bottom: 0, right: 0 }}
             drag='x'
             dragControls={dragControls}
