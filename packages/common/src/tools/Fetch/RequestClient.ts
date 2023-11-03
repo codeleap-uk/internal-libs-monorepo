@@ -68,6 +68,11 @@ export class RequestClient implements IRequestClient {
       ...to,
     })
 
+    this.config = {
+      ...this.config,
+      ...to,
+    }
+
     this.applyInterceptors()
 
     this.updateBranches()
