@@ -39,7 +39,8 @@
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-text-input-mask": "3.1.4",
     "@react-native-community/async-storage": "*",
-    "react-native-device-info": "^10.3.0"
+    "react-native-device-info": "^10.3.0",
+    "react-native-avoid-softinput": "^3.1.5"
   },
   "dependencies": {
     "@gorhom/portal": "^1.0.13",

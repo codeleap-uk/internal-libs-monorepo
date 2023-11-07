@@ -1,7 +1,9 @@
-import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useState } from '@codeleap/common'
-import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler } from 'react-native'
+import { onMount, onUpdate, shadeColor, TypeGuards, useMemo, usePrevious, useRef, useState } from '@codeleap/common'
+import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, StyleSheet } from 'react-native'
 // @ts-ignore
 import AsyncStorage from '@react-native-community/async-storage'
+import { useSoftInputState } from 'react-native-avoid-softinput'
+import { ViewStyle } from 'react-native'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -211,3 +213,16 @@ export function useAsyncStorageState<T>(key:string, defaultValue?: T) {
   return [value, setValue] as [T, typeof setValue]
 }
 
+export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {
+  const { isSoftInputShown, softInputHeight } = useSoftInputState()
+
+  const propStyle = useMemo(() => {
+    return StyleSheet.flatten(styles)
+  }, styles)
+
+  const bottomPadding = propStyle && TypeGuards.isNumber(propStyle.paddingBottom) ? propStyle.paddingBottom : 0
+
+  const totalPadding = softInputHeight + bottomPadding
+
+  return isSoftInputShown && enabled ? [propStyle, { paddingBottom: totalPadding }] : [propStyle]
+}

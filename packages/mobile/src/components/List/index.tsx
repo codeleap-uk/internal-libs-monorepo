@@ -13,7 +13,7 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder, EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ListComposition, ListStyles } from './styles'
 import { StylesOf } from '../../types'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
+import { GetKeyboardAwarePropsOptions, useKeyboardAwareView, useKeyboardPaddingStyle } from '../../utils'
 
 export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
 
@@ -55,6 +55,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       placeholder,
       keyboardAware,
       refreshControlProps = {},
+      contentContainerStyle,
       ...props
     } = flatListProps
 
@@ -77,9 +78,15 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
     const Component:any = component || FlatList
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
 
+    const keyboardStyle = useKeyboardPaddingStyle([
+      variantStyles.content,
+      contentContainerStyle,
+      isEmpty && variantStyles['content:empty'],
+    ], keyboardAware && !props.horizontal)
+
     const _listProps = {
       style: [variantStyles.wrapper, style],
-      contentContainerStyle: variantStyles.content,
+      contentContainerStyle: keyboardStyle,
       ref: ref as unknown as FlatList,
       ItemSeparatorComponent: separator,
       refreshControl: !!onRefresh && (

@@ -12,7 +12,7 @@ import { ViewProps } from '../View'
 import { KeyboardAwareScrollViewTypes } from '../../modules'
 import { StylesOf } from '../../types'
 import { ScrollComposition, ScrollStyles } from './styles'
-import { GetKeyboardAwarePropsOptions, useKeyboardAwareView } from '../../utils'
+import { GetKeyboardAwarePropsOptions, useKeyboardAwareView, useKeyboardPaddingStyle } from '../../utils'
 import { ScrollView as MotiScrollView } from 'moti'
 // import { KeyboardAwareScrollView } from '../../utils'
 
@@ -85,7 +85,6 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     const refreshStyles = StyleSheet.flatten([variantStyles.refreshControl, styles.refreshControl])
     const _scrollProps = {
       style: [variantStyles.wrapper, style],
-      contentContainerStyle: [variantStyles.content, contentContainerStyle],
       ref: ref as unknown as ScrollView,
       refreshControl: hasRefresh && (
         <RefreshControl
@@ -109,12 +108,17 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       ...keyboardAware,
 
     })
+
     const Component = animated ? MotiScrollView : ScrollView
+    const keyboardStyle = useKeyboardPaddingStyle(
+      [variantStyles.content, contentContainerStyle],
+      keyboardAware.enabled,
+    )
 
     return (
       <Component
         {...rootProps}
-
+        contentContainerStyle={keyboardStyle}
       >
         {children}
       </Component>
