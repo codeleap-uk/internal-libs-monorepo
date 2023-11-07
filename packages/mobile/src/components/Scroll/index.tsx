@@ -112,7 +112,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
     const Component = animated ? MotiScrollView : ScrollView
     const keyboardStyle = useKeyboardPaddingStyle(
       [variantStyles.content, contentContainerStyle],
-      keyboardAware.enabled,
+      keyboardAware?.enabled,
     )
 
     return (
