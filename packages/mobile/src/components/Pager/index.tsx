@@ -15,7 +15,6 @@ import {
   StyleSheet,
 } from 'react-native'
 import { StylesOf } from '../../types/utility'
-import { ScrollProps } from '../Scroll'
 import { View } from '../View'
 import { PagerPresets, PagerComposition } from './styles'
 export * from './styles'
@@ -43,11 +42,12 @@ export type PagerProps = React.PropsWithChildren<{
   renderPageWrapper?: React.FC<PageProps>
   pageWrapperProps?: any
   width?: number
-  onScroll?: ScrollProps['onScroll']
+  onScroll?: (event: ScrollEvent, args: { isLeft: boolean; isRight: boolean; x: number; }) => void
   /** If TRUE render page, nextPage and prevPage only */
   windowing?: boolean
   scrollRightEnabled?: boolean
   scrollLeftEnabled?: boolean
+  scrollDirectionThrottle?: number
 } & ScrollViewProps>
 
 const defaultProps: Partial<PagerProps> = {
@@ -59,7 +59,8 @@ const defaultProps: Partial<PagerProps> = {
   keyboardShouldPersistTaps: 'handled',
   scrollEnabled: true,
   scrollRightEnabled: false,
-  scrollLeftEnabled: true
+  scrollLeftEnabled: true,
+  scrollDirectionThrottle: 650
 }
 
 export const Pager = (pagerProps: PagerProps) => {
@@ -79,6 +80,7 @@ export const Pager = (pagerProps: PagerProps) => {
     scrollLeftEnabled,
     scrollRightEnabled,
     onScroll,
+    scrollDirectionThrottle,
   } = {
     ...defaultProps,
     ...pagerProps,
@@ -87,9 +89,9 @@ export const Pager = (pagerProps: PagerProps) => {
   const childArr = React.Children.toArray(children)
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
+  const [scrollPositionX, setScrollPositionX] = React.useState(0)
 
   const [_scrollEnabled, setScrollEnabled] = React.useState(true)
-  const scrollTimerRef = useRef(null)
 
   const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
@@ -123,22 +125,6 @@ export const Pager = (pagerProps: PagerProps) => {
 
   const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
 
-  const scrollEnabledTimer = () => {
-    if (scrollTimerRef.current === null) {
-      scrollTimerRef.current = setTimeout(() => {
-        scrollRef.current.scrollTo({
-          x: positionX,
-          animated: true,
-        })
-
-        setScrollEnabled(true)
-
-        clearTimeout(scrollTimerRef.current)
-        scrollTimerRef.current = null
-      }, 250)
-    }
-  }
-
   const handleScrollEnd = useCallback(
     ({ nativeEvent }: ScrollEvent) => {
       const x = nativeEvent.contentOffset.x
@@ -152,32 +138,44 @@ export const Pager = (pagerProps: PagerProps) => {
     [childArr, page, setPage],
   )
 
-  const handleScroll = useCallback((event: ScrollEvent) => {
-    if (TypeGuards.isFunction(onScroll)) onScroll?.(event)
-
-    if (!hasScrollDirectionDisabled) return null
-    
+  const handleScroll = (event: ScrollEvent) => {
     const scrollX = event?.nativeEvent?.contentOffset?.x
 
-    const isRight = scrollX < positionX
-    const isLeft = scrollX > positionX
-
-    console.log({
-      isLeft,
-      isRight,
-      scrollX,
-      positionX,
-    })
-
-    if (isRight && !scrollRightEnabled || isLeft && !scrollLeftEnabled) {
-      setScrollEnabled(false)
-      scrollEnabledTimer()
+    if (!_scrollEnabled) {
+      setScrollPositionX(scrollX)
+      return null
     }
-  }, [])
+
+    const isRight = scrollX < scrollPositionX
+    const isLeft = scrollX > scrollPositionX
+
+    // console.log({ scrollX, isRight, isLeft })
+
+    if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { isLeft, isRight, x: scrollX })
+
+    if (hasScrollDirectionDisabled) {
+      if (isRight && !scrollRightEnabled || isLeft && !scrollLeftEnabled) {
+        setScrollEnabled(false)
+
+        setTimeout(() => {
+          scrollRef.current.scrollTo({
+            x: positionX,
+            animated: true,
+          })
+
+          setTimeout(() => {
+            setScrollEnabled(true)
+          }, scrollDirectionThrottle)
+        })
+      }
+    }
+
+    setScrollPositionX(scrollX)
+  }
 
   onUpdate(() => {
     const x = width * page
-    if (scrollRef.current && x !== positionX) {
+    if (scrollRef.current && x !== positionX && !hasScrollDirectionDisabled) {
       scrollRef.current.scrollTo({
         x,
         animated: true,
@@ -192,7 +190,7 @@ export const Pager = (pagerProps: PagerProps) => {
       horizontal
       pagingEnabled
       onMomentumScrollEnd={handleScrollEnd}
-      scrollEventThrottle={hasScrollDirectionDisabled ? 0 : 300}
+      scrollEventThrottle={hasScrollDirectionDisabled ? 2000 : 300}
       showsHorizontalScrollIndicator={false}
       style={[variantStyles.wrapper, style]}
       {...pagerProps}
