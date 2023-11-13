@@ -58,7 +58,7 @@ const defaultProps: Partial<PagerProps> = {
   windowing: false,
   keyboardShouldPersistTaps: 'handled',
   scrollEnabled: true,
-  scrollRightEnabled: false,
+  scrollRightEnabled: true,
   scrollLeftEnabled: true,
   scrollDirectionThrottle: 650
 }
@@ -90,7 +90,6 @@ export const Pager = (pagerProps: PagerProps) => {
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
   const [scrollPositionX, setScrollPositionX] = React.useState(0)
-
   const [_scrollEnabled, setScrollEnabled] = React.useState(true)
 
   const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
@@ -148,8 +147,6 @@ export const Pager = (pagerProps: PagerProps) => {
 
     const isRight = scrollX < scrollPositionX
     const isLeft = scrollX > scrollPositionX
-
-    // console.log({ scrollX, isRight, isLeft })
 
     if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { isLeft, isRight, x: scrollX })
 
