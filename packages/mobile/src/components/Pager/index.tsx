@@ -1,7 +1,6 @@
 import {
   ComponentVariants,
   onUpdate,
-  PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
   useWarning,
@@ -29,8 +28,9 @@ export type PageProps = {
   page: number
   index: number
   isPrevious: boolean
-
 }
+
+type ScrollEvent = NativeSyntheticEvent<NativeScrollEvent>
 
 export type PagerProps = React.PropsWithChildren<{
   variants?: ComponentVariants<typeof PagerPresets>['variants']
@@ -43,9 +43,11 @@ export type PagerProps = React.PropsWithChildren<{
   renderPageWrapper?: React.FC<PageProps>
   pageWrapperProps?: any
   width?: number
-  onScroll: ScrollProps['onScroll']
+  onScroll?: ScrollProps['onScroll']
   /** If TRUE render page, nextPage and prevPage only */
   windowing?: boolean
+  scrollRightEnabled?: boolean
+  scrollLeftEnabled?: boolean
 } & ScrollViewProps>
 
 const defaultProps: Partial<PagerProps> = {
@@ -54,8 +56,10 @@ const defaultProps: Partial<PagerProps> = {
   page: 0,
   returnEarly: true,
   windowing: false,
-  scrollEnabled: true,
   keyboardShouldPersistTaps: 'handled',
+  scrollEnabled: true,
+  scrollRightEnabled: false,
+  scrollLeftEnabled: true
 }
 
 export const Pager = (pagerProps: PagerProps) => {
@@ -72,6 +76,9 @@ export const Pager = (pagerProps: PagerProps) => {
     windowing = false,
     setPage,
     scrollEnabled = true,
+    scrollLeftEnabled,
+    scrollRightEnabled,
+    onScroll,
   } = {
     ...defaultProps,
     ...pagerProps,
@@ -80,6 +87,9 @@ export const Pager = (pagerProps: PagerProps) => {
   const childArr = React.Children.toArray(children)
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
+
+  const [_scrollEnabled, setScrollEnabled] = React.useState(true)
+  const scrollTimerRef = useRef(null)
 
   const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
@@ -97,7 +107,6 @@ export const Pager = (pagerProps: PagerProps) => {
 
   if (!validWidth) {
     width = windowWidth
-
   }
 
   useWarning(
@@ -112,8 +121,26 @@ export const Pager = (pagerProps: PagerProps) => {
 
   const WrapperComponent = renderPageWrapper || View
 
+  const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
+
+  const scrollEnabledTimer = () => {
+    if (scrollTimerRef.current === null) {
+      scrollTimerRef.current = setTimeout(() => {
+        scrollRef.current.scrollTo({
+          x: positionX,
+          animated: true,
+        })
+
+        setScrollEnabled(true)
+
+        clearTimeout(scrollTimerRef.current)
+        scrollTimerRef.current = null
+      }, 250)
+    }
+  }
+
   const handleScrollEnd = useCallback(
-    ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
+    ({ nativeEvent }: ScrollEvent) => {
       const x = nativeEvent.contentOffset.x
       const toPage = Math.ceil(x / width)
 
@@ -124,6 +151,29 @@ export const Pager = (pagerProps: PagerProps) => {
     },
     [childArr, page, setPage],
   )
+
+  const handleScroll = useCallback((event: ScrollEvent) => {
+    if (TypeGuards.isFunction(onScroll)) onScroll?.(event)
+
+    if (!hasScrollDirectionDisabled) return null
+    
+    const scrollX = event?.nativeEvent?.contentOffset?.x
+
+    const isRight = scrollX < positionX
+    const isLeft = scrollX > positionX
+
+    console.log({
+      isLeft,
+      isRight,
+      scrollX,
+      positionX,
+    })
+
+    if (isRight && !scrollRightEnabled || isLeft && !scrollLeftEnabled) {
+      setScrollEnabled(false)
+      scrollEnabledTimer()
+    }
+  }, [])
 
   onUpdate(() => {
     const x = width * page
@@ -142,12 +192,12 @@ export const Pager = (pagerProps: PagerProps) => {
       horizontal
       pagingEnabled
       onMomentumScrollEnd={handleScrollEnd}
-      scrollEventThrottle={300}
+      scrollEventThrottle={hasScrollDirectionDisabled ? 0 : 300}
       showsHorizontalScrollIndicator={false}
       style={[variantStyles.wrapper, style]}
       {...pagerProps}
-      scrollEnabled={childArr.length > 1 && scrollEnabled}
-
+      onScroll={handleScroll}
+      scrollEnabled={childArr.length > 1 && scrollEnabled && _scrollEnabled}
     >
       {childArr.map((child: PagerProps['children'][number], index) => {
 
