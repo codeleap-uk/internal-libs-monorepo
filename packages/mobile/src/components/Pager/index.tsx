@@ -1,4 +1,5 @@
 import {
+  AnyFunction,
   ComponentVariants,
   onUpdate,
   TypeGuards,
@@ -48,6 +49,7 @@ export type PagerProps = React.PropsWithChildren<{
   scrollRightEnabled?: boolean
   scrollLeftEnabled?: boolean
   scrollDirectionThrottle?: number
+  onSwipeLastPage?: (event: ScrollEvent) => void
 } & ScrollViewProps>
 
 const defaultProps: Partial<PagerProps> = {
@@ -81,6 +83,7 @@ export const Pager = (pagerProps: PagerProps) => {
     scrollRightEnabled,
     onScroll,
     scrollDirectionThrottle,
+    onSwipeLastPage,
   } = {
     ...defaultProps,
     ...pagerProps,
@@ -125,13 +128,15 @@ export const Pager = (pagerProps: PagerProps) => {
   const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
 
   const handleScrollEnd = useCallback(
-    ({ nativeEvent }: ScrollEvent) => {
-      const x = nativeEvent.contentOffset.x
+    (event: ScrollEvent) => {
+      const x = event?.nativeEvent.contentOffset.x
       const toPage = Math.ceil(x / width)
 
       if (toPage !== page && toPage <= childArr.length - 1) {
         setPage(toPage)
         setPositionX(toPage * width)
+      } else if (toPage >= childArr.length - 1 && TypeGuards.isFunction(onSwipeLastPage)) {
+        onSwipeLastPage?.(event)
       }
     },
     [childArr, page, setPage],
