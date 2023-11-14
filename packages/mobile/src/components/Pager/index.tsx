@@ -177,7 +177,7 @@ export const Pager = (pagerProps: PagerProps) => {
 
   onUpdate(() => {
     const x = width * page
-    if (scrollRef.current && x !== positionX && !hasScrollDirectionDisabled) {
+    if (scrollRef.current && x !== positionX) {
       scrollRef.current.scrollTo({
         x,
         animated: true,
