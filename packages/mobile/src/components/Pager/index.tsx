@@ -130,7 +130,7 @@ export const Pager = (pagerProps: PagerProps) => {
   const handleScrollEnd = useCallback(
     (event: ScrollEvent) => {
       const x = event?.nativeEvent.contentOffset.x
-      const toPage = Math.ceil(x / width)
+      const toPage = Math.floor(((Math.round(x)) / Math.round(width)))
 
       if (toPage !== page && toPage <= childArr.length - 1) {
         setPage(toPage)
