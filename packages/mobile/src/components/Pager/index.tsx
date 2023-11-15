@@ -50,6 +50,7 @@ export type PagerProps = React.PropsWithChildren<{
   scrollLeftEnabled?: boolean
   scrollDirectionThrottle?: number
   onSwipeLastPage?: (event: ScrollEvent) => void
+  waitEventDispatchTimeout?: number
 } & ScrollViewProps>
 
 const defaultProps: Partial<PagerProps> = {
@@ -62,7 +63,8 @@ const defaultProps: Partial<PagerProps> = {
   scrollEnabled: true,
   scrollRightEnabled: true,
   scrollLeftEnabled: true,
-  scrollDirectionThrottle: 650
+  scrollDirectionThrottle: 650,
+  waitEventDispatchTimeout: 250,
 }
 
 export const Pager = (pagerProps: PagerProps) => {
@@ -84,6 +86,7 @@ export const Pager = (pagerProps: PagerProps) => {
     onScroll,
     scrollDirectionThrottle,
     onSwipeLastPage,
+    waitEventDispatchTimeout,
   } = {
     ...defaultProps,
     ...pagerProps,
@@ -94,6 +97,8 @@ export const Pager = (pagerProps: PagerProps) => {
   const [positionX, setPositionX] = React.useState(0)
   const [scrollPositionX, setScrollPositionX] = React.useState(0)
   const [_scrollEnabled, setScrollEnabled] = React.useState(true)
+
+  const waitEventDispatch = useRef(false)
 
   const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
@@ -127,20 +132,27 @@ export const Pager = (pagerProps: PagerProps) => {
 
   const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
 
-  const handleScrollEnd = useCallback(
-    (event: ScrollEvent) => {
-      const x = event?.nativeEvent.contentOffset.x
-      const toPage = Math.floor(((Math.round(x)) / Math.round(width)))
+  const handleScrollEnd = useCallback((event: ScrollEvent) => {
+    if (waitEventDispatch.current === true) return null
 
-      if (toPage !== page && toPage <= childArr.length - 1) {
-        setPage(toPage)
-        setPositionX(toPage * width)
-      } else if (toPage >= childArr.length - 1 && TypeGuards.isFunction(onSwipeLastPage)) {
-        onSwipeLastPage?.(event)
-      }
-    },
-    [childArr, page, setPage],
-  )
+    waitEventDispatch.current = true
+    
+    const x = event?.nativeEvent.contentOffset.x
+    const toPage = Math.floor(((Math.round(x)) / Math.round(width)))
+
+    const length = childArr.length - 1
+
+    if (toPage >= length  && TypeGuards.isFunction(onSwipeLastPage) && page >= length) {
+      onSwipeLastPage?.(event)
+    } else if (toPage !== page && toPage <= length) {
+      setPage(toPage)
+      setPositionX(toPage * width)
+    }
+
+    setTimeout(() => {
+      waitEventDispatch.current = false
+    }, waitEventDispatchTimeout)
+  }, [childArr, page, setPage, waitEventDispatch.current])
 
   const handleScroll = (event: ScrollEvent) => {
     const scrollX = event?.nativeEvent?.contentOffset?.x
