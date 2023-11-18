@@ -117,7 +117,7 @@ export const Pager = (pagerProps: PagerProps) => {
       const x = nativeEvent.contentOffset.x
       const toPage = Math.ceil(x / width)
 
-      if (toPage !== page && toPage <= childArr.length - 1) {
+      if (toPage !== page && toPage <= childArr.length - 1 && !!scrollEnabled) {
         setPage(toPage)
         setPositionX(toPage * width)
       }
