@@ -101,15 +101,10 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ListEmptyComponent: <EmptyPlaceholder {...placeholder}/>,
       ...props,
     }
-    const keyboard = useKeyboardAwareView()
-    const listProps = keyboard.getKeyboardAwareProps(_listProps, {
-      adapt: 'paddingBottom',
-      baseStyleProp: 'contentContainerStyle',
-      ...keyboardAware,
-    })
+
     return (
       <Component
-        {...listProps}
+        {..._listProps}
       />
     )
   },

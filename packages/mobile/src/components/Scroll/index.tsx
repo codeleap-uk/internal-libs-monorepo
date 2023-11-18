@@ -97,17 +97,6 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
       ),
       ...props,
     }
-    const keyboard = useKeyboardAwareView({
-      debugName,
-    })
-
-    const rootProps = keyboard.getKeyboardAwareProps(_scrollProps, {
-      adapt: 'marginBottom',
-      baseStyleProp: 'style',
-      animated,
-      ...keyboardAware,
-
-    })
 
     const Component = animated ? MotiScrollView : ScrollView
     const keyboardStyle = useKeyboardPaddingStyle(
@@ -117,7 +106,7 @@ export const Scroll = forwardRef<ScrollView, ScrollProps>(
 
     return (
       <Component
-        {...rootProps}
+        {..._scrollProps}
         contentContainerStyle={keyboardStyle}
       >
         {children}
