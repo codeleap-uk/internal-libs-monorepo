@@ -79,6 +79,18 @@ export function usePagination<
       }
 
     },
+    getPreviousPageParam: (page, pages) => {
+      const currentTotal = pages.reduce((acc, p) => p.results.length + acc, 0)
+
+      if (currentTotal >= (page?.count || Infinity)) {
+        return undefined
+      }
+      return {
+        limit: params.limit,
+        offset: currentTotal,
+      }
+
+    },
     queryFn: listFn,
 
     queryKey: QUERY_KEYS.list,
@@ -95,7 +107,6 @@ export function usePagination<
   const [retriveItemCounter, setRetrieveCount] = useCounter()
   const addItemsToMap = useRef({})
 
-
   const {
     flatItems,
     derivedData,
@@ -108,7 +119,7 @@ export function usePagination<
       filter: params?.filter,
       derive: params?.deriveData,
     })
-    
+
     return flatData
   }, [list.dataUpdatedAt])
 
