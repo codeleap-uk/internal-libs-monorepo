@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.16.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.2...v3.16.0) (2023-11-22)
+
+
+### Features
+
+* **common:** reverse pagination in querymanager ([d3176cb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d3176cb471db80b1de27830ac22e3f40e9c50207))
+* **mobile:** adds defaultprops to scroll components, tapping through keyboard now works ([e114e8b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e114e8b5b58c27291e5040abbd9e3dbed604661d))
+* **web:** add custom alert ([3b8cfe9](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3b8cfe9220549c94a00198ed67ce8b28aa52be14))
+
+
+### Bug Fixes
+
+* **common:** Fix pageParams bug ([d29b09a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d29b09ac7360e30d135c4d6d03d79b9e1a44f434))
+* **docs:** change build command ([5769482](https://github.com/codeleap-uk/internal-libs-monorepo/commit/576948239a3794d7537fa6d11a257a8267943c0c))
+* **mobile:** attempt to fix typescript in grid ([37ee471](https://github.com/codeleap-uk/internal-libs-monorepo/commit/37ee471291b8e09a9f44f354e2edc2ea6d65bd7d))
+* prevent calling scroll end without scrollEnabled ([daa4b87](https://github.com/codeleap-uk/internal-libs-monorepo/commit/daa4b87f1c5a15d3cf1699739e273c36659bc434))
+
 ### [3.15.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.1...v3.15.2) (2023-11-13)
 
 
