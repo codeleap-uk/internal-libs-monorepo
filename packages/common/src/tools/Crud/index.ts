@@ -134,6 +134,8 @@ export class QueryManager<
     const promises = Object.values(this.queryStates).map(async ({ key, pagesById }) => {
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
+        if (!old) return old
+
         ids.forEach((id) => {
           if (!pagesById[id]) return
           const [pageIdx, itemIdx] = pagesById[id]
@@ -175,6 +177,19 @@ export class QueryManager<
       }
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
+        if (!old?.pages?.length) {
+          old = {
+            pageParams: [],
+            pages: [
+              {
+                results: [],
+                count: 0,
+                next: null,
+                previous: null,
+              },
+            ],
+          }
+        }
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
         if (args.to == 'end') {
           const idx = old.pages.length - 1
@@ -265,7 +280,7 @@ export class QueryManager<
 
     let pageIdx = 0
 
-    for (const page of data.pages) {
+    for (const page of data?.pages ?? []) {
 
       page.results.forEach((i, itemIdx) => {
         const flatIdx = flatItems.length
@@ -363,13 +378,24 @@ export class QueryManager<
           offset: currentTotal,
         }
       },
+      getPreviousPageParam: (lastPage, pages) => {
+        const currentTotal = pages.reduce((acc, p) => p.results.length + acc, 0)
+
+        if (currentTotal >= (lastPage?.count || Infinity)) {
+          return undefined
+        }
+        return {
+          limit: this.standardLimit,
+          offset: currentTotal,
+        }
+      },
       select: (data: InfinitePaginationData<T>) => {
 
         const { itemList } = this.transformData(data, queryKey)
 
         return {
           pageParams: data.pageParams,
-          pages: data.pages,
+          pages: data?.pages ?? [],
           flatItems: itemList,
         }
 
