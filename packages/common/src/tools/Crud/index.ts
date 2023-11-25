@@ -732,7 +732,9 @@ export class QueryManager<
       forceRefetch: true,
     })
 
-    this.queryClient.setQueryData(this.queryKeyFor(itemId), newItem)
+    this.queryClient.setQueryData(this.queryKeyFor(itemId), old => {
+      return newItem
+    })
 
     this.updateItems(newItem)
 
