@@ -135,7 +135,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     largestWidth,
   ]
 
-  const onSelectTab = (option: SegmentedControlOptionProps) => {
+  const onSelectTab = (option: SegmentedControlOptionProps, e?: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!!e && e?.keyCode !== 13 || e?.key !== 'Enter') return null
+
     if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
       onValueChange(option.value)
       return
@@ -171,6 +173,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             label={o.label}
             value={o.value}
             onPress={() => onSelectTab(o)}
+            onKeyDown={(e) => onSelectTab(o, e)}
             key={idx}
             icon={o.icon}
             selected={value === o.value}
@@ -179,6 +182,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             disabled={disabled}
             textProps={textProps}
             iconProps={iconProps}
+            tabIndex={0}
             {...props?.touchableProps}
           />
         ))}
