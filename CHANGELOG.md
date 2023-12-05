@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.17.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.16.2...v3.17.0) (2023-12-05)
+
+
+### Features
+
+* **web:** crop picker loading ([ea6a33e](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ea6a33e5756cce9f8c58e13de701e04f484d81b2))
+
+
+### Bug Fixes
+
+* **common:** fix refreshItem update ([c6be79b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6be79b3d25c3197ab0c6319f57b661b606fdcc0))
+
 ### [3.16.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.16.1...v3.16.2) (2023-11-25)
 
 ### [3.16.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.16.0...v3.16.1) (2023-11-25)
