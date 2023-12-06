@@ -106,7 +106,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     }
 
     const _onPress = () => {
-      if (!!event && event?.keyCode !== 13 || event?.key !== 'Enter') return null
+      if (event && (event?.type !== 'click' && event?.keyCode !== 13 && event?.key !== 'Enter')) return null
 
       logger.log(
         `<${debugComponent || 'Touchable'}/> pressed`,
