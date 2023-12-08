@@ -5172,6 +5172,15 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-slot" "1.0.2"
 
+"@radix-ui/react-progress@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-progress/-/react-progress-1.0.3.tgz#8380272fdc64f15cbf263a294dea70a7d5d9b4fa"
+  integrity sha512-5G6Om/tYSxjSeEdrb1VfKkfZfn/1IlPWd731h2RfPuSbIfNUgfqAwbKfJCg/PP6nuUCTrYzalwHSpSinoWoCag==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-primitive" "1.0.3"
+
 "@radix-ui/react-slider@1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-slider/-/react-slider-1.1.1.tgz#5685f23b6244804a5b1f55cee2d321a2acd1878e"
@@ -21431,6 +21440,11 @@ react-datepicker@^4.20.0:
     prop-types "^15.7.2"
     react-onclickoutside "^6.13.0"
     react-popper "^2.3.0"
+
+react-circular-progressbar@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-circular-progressbar/-/react-circular-progressbar-2.1.0.tgz#99e5ae499c21de82223b498289e96f66adb8fa3a"
+  integrity sha512-xp4THTrod4aLpGy68FX/k1Q3nzrfHUjUe5v6FsdwXBl3YVMwgeXYQKDrku7n/D6qsJA9CuunarAboC2xCiKs1g==
 
 react-dev-utils@^12.0.1:
   version "12.0.1"

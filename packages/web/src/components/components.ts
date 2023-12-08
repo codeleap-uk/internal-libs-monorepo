@@ -34,4 +34,7 @@ export * from './CropPicker'
 export * from './DatePicker'
 export * from './defaultStyles'
 export * from './Dropzone'
+export * from './Progress'
 export * from './Tag'
+
+export * from './defaultStyles'

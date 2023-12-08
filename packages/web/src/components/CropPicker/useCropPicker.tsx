@@ -23,6 +23,7 @@ export function useCropPicker({
   const [image, setImage] = useState<ImageReading>(null)
   const [crop, setCrop] = useState<Crop>()
   const [relativeCrop, setRelativeCrop] = useState<Crop>()
+  const [isLoading, setIsLoading] = useState(false)
   const croppedPromise = usePromise<WebInputFile[]>({})
 
   const onCancel = () => croppedPromise.resolve([])
@@ -40,6 +41,7 @@ export function useCropPicker({
   }
 
   const onConfirmCrop = async () => {
+    setIsLoading(true)
     const [preview, croppedFile] = await cropImage(image, relativeCrop)
     onResolved([
       {
@@ -47,6 +49,7 @@ export function useCropPicker({
         preview,
       },
     ])
+    setIsLoading(false)
     setTimeout(() => cleanup())
   }
 
@@ -127,6 +130,7 @@ export function useCropPicker({
     setCrop,
     relativeCrop,
     setRelativeCrop,
+    isLoading,
     croppedPromise,
     handleCropChange,
   }
