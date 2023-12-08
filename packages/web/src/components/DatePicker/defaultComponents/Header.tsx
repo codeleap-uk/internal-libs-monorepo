@@ -1,8 +1,11 @@
-import { IconPlaceholder, getNestedStylesByKey } from '@codeleap/common'
+import {
+  IconPlaceholder,
+  TypeGuards,
+  getNestedStylesByKey,
+} from '@codeleap/common'
 import { ActionIcon, Text, View } from '../../components'
-import { DatePickerArrowProps, DatePickerProps } from '../types'
+import { DatePickerArrowProps, DatePickerHeaderComponent } from '../types'
 import { format, getYear } from 'date-fns'
-import { get } from 'js-cookie'
 
 export const ArrowLabel: React.FC<DatePickerArrowProps> = ({
   name,
@@ -11,14 +14,14 @@ export const ArrowLabel: React.FC<DatePickerArrowProps> = ({
 }) => {
   return (
     <ActionIcon
-      name={name ?? `chevron-${direction}` as IconPlaceholder}
+      name={name ?? (`chevron-${direction}` as IconPlaceholder)}
       debugName={'Calendar arrowLabel'}
       {...props}
     />
   )
 }
 
-export const Header: DatePickerProps['headerComponent'] = (props) => {
+export const Header = (props: DatePickerHeaderComponent) => {
   const {
     date,
     decreaseMonth,
@@ -31,10 +34,15 @@ export const Header: DatePickerProps['headerComponent'] = (props) => {
     nextMonthButtonDisabled,
     setYearShow,
     styles,
+    formatHeaderTitle,
   } = props
 
   const month = format(date, 'MMMM')
   const year = getYear(date)
+
+  const title = TypeGuards.isFunction(formatHeaderTitle)
+    ? formatHeaderTitle(date)
+    : `${month} ${year}`
 
   const prevArrow = getNestedStylesByKey('prevButton', styles)
   const nextArrow = getNestedStylesByKey('nextButton', styles)
@@ -51,7 +59,7 @@ export const Header: DatePickerProps['headerComponent'] = (props) => {
         <Text
           onPress={() => setYearShow((curr) => !curr)}
           style={styles.title}
-          text={`${month} ${year}`}
+          text={title}
         />
         <ArrowLabel
           direction='right'

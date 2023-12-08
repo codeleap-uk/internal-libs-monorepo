@@ -5,18 +5,14 @@ import {
 } from '@codeleap/common'
 import { ActionIconComposition } from '../ActionIcon'
 
-export type DatePickerStates = 'selected' | 'disabled'
+export type DatePickerStates = ':selected' | ':disabled' | ''
 
 export type DatePickerParts =
   | 'wrapper'
-  | 'dayWrapper'
-  | 'day'
-  | `dayWrapper:${DatePickerStates}`
-  | `day:${DatePickerStates}`
-  | 'yearWrapper'
-  | 'year'
-  | `yearWrapper:${DatePickerStates}`
-  | `year:${DatePickerStates}`
+  | `dayWrapper${DatePickerStates}`
+  | `day${DatePickerStates}`
+  | `yearWrapper${DatePickerStates}`
+  | `year${DatePickerStates}`
 
 export type DatePickerHeaderComposition =
   | 'wrapper'
