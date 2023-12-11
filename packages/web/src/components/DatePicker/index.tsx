@@ -19,7 +19,9 @@ export * from './defaultComponents'
 const defaultProps = {
   variants: [],
   styles: {},
-  minDate: new Date(1950, 0, 1),
+  minDate: new Date(1910, 0, 1),
+  maxDate: new Date(),
+  startDate: new Date(1923, 0, 1),
   outerInputComponent: OuterInput,
   headerComponent: Header,
 }
@@ -54,6 +56,7 @@ export function DatePicker(props: DatePickerProps) {
     toggle: _toggle,
     yearShow: _yearShow,
     setYearShow: _setYearShow,
+    disabled = false,
     ...otherProps
   } = allProps
 
@@ -170,12 +173,14 @@ export function DatePicker(props: DatePickerProps) {
         onChange={onValueChange}
         open={visible}
         selected={value}
+        todayButton={null}
         shouldCloseOnSelect={false}
         openToDate={defaultValue ?? value}
         dateFormat='dd/MM/yyyy'
         formatWeekDay={(t) => t[0]}
         calendarStartDay={1}
         placeholderText={otherProps?.placeholder}
+        disabled={disabled}
         renderDayContents={(day, date) => (
           <DayContentComponent day={day} date={date} />
         )}
@@ -205,10 +210,19 @@ export function DatePicker(props: DatePickerProps) {
         }}
         minDate={minDate}
         maxDate={maxDate}
+        endDate={maxDate}
         startDate={startDate}
         onYearChange={() => setYearShow(false)}
+        yearItemNumber={maxDate.getFullYear() - minDate.getFullYear()}
         showYearPicker={yearShow}
-        renderYearContent={(year) => <YearContentComponent year={year} />}
+        renderYearContent={(year) => {
+          if (year < startDate.getFullYear() || year > maxDate.getFullYear()) return null
+          return <YearContentComponent year={year} />
+        }}
+        filterDate={(date) => {
+          if (date.getFullYear() < startDate.getFullYear() || date.getFullYear() > maxDate.getFullYear()) return false
+          return true
+        }}
         {...datePickerProps}
       />
     </View>
