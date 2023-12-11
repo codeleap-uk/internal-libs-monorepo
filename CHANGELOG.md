@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.18.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.0...v3.18.2) (2023-12-11)
+
+
+### Bug Fixes
+
+* **web:** allow access to inner input ref ([c686942](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6869426538230493207b2d7410e1ccdc66ce263))
+
 ## [3.18.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.2...v3.18.0) (2023-12-05)
 
 
