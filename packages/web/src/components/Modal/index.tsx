@@ -185,7 +185,7 @@ export const ModalContent = (
   } = modalProps
 
   const id = useId()
-
+  const modalRef = useRef(null)
   const variantStyles = useDefaultComponentStyle<'u:Modal', typeof ModalPresets>('u:Modal', {
     responsiveVariants,
     variants,
@@ -210,6 +210,39 @@ export const ModalContent = (
     }
   }
 
+  const handleTabKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, { firstElement, lastElement }: Record<'firstElement' |'lastElement', HTMLDivElement>) => {
+    if (e.key === 'Tab' || e?.keyCode === 9) {
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault()
+        lastElement.focus()
+      } else if (
+        !e.shiftKey &&
+        document.activeElement === lastElement
+      ) {
+        e.preventDefault()
+        firstElement.focus()
+      }
+    }
+  }
+
+  onUpdate(() => {
+    if (visible) {
+      const modalElement = modalRef.current
+
+      const focusableElements = modalElement.querySelectorAll('[tabindex]:not([tabindex="-1"])') as NodeListOf<HTMLDivElement>
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      modalElement.addEventListener('keydown', (e) => handleTabKeyPress(e, { firstElement, lastElement }))
+      modalElement.addEventListener('keydown', closeOnEscPress)
+
+      return () => {
+        modalElement.removeEventListener('keydown', (e) => handleTabKeyPress(e, { firstElement, lastElement }))
+        modalElement.removeEventListener('keydown', closeOnEscPress)
+      }
+    }
+  }, [visible])
+
   useIsomorphicEffect(() => {
     const modal = document.getElementById(id)
     if (modal) modal.focus()
@@ -227,6 +260,7 @@ export const ModalContent = (
 
   return (
     <View
+      ref={modalRef}
       aria-hidden={!visible}
       css={[
         variantStyles.wrapper,
@@ -266,7 +300,6 @@ export const ModalContent = (
             style,
           ]}
           className='content'
-          onKeyDown={closeOnEscPress}
           tabIndex={0}
           id={id}
           aria-modal={true}
