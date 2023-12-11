@@ -52,9 +52,13 @@ export type TextInputProps =
     hiddenIcon?: IconPlaceholder
   } & ComponentVariants<typeof TextInputPresets>
 
-type InputRef = HTMLInputElement & { isTextInput?: boolean }
+type InputRef = {
+  isTextInput?: boolean,
+  focus: () => void,
+  getInputRef: () => HTMLInputElement
+}
 
-const defaultProps:Partial<TextInputProps> = {
+const defaultProps: Partial<TextInputProps> = {
   hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
   visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
 }
@@ -111,11 +115,13 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
 
   useImperativeHandle(inputRef, () => {
     return {
-      ...innerInputRef.current,
       focus: () => {
         innerInputRef.current?.focus?.()
       },
       isTextInput: true,
+      getInputRef: () => {
+        return innerInputRef.current
+      },
     }
   }, [!!innerInputRef?.current?.focus])
 
