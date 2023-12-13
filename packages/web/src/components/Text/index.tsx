@@ -13,6 +13,7 @@ const defaultProps: Partial<TextProps<'p'>> = {
   debounce: null,
   pressDisabled: false,
   animated: false,
+  animatedProps: {},
 }
 
 export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
@@ -37,6 +38,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     pressDisabled,
     onClick,
     animated,
+    animatedProps,
     ...props
   } = allProps
 
@@ -94,6 +96,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
       css={_styles}
       {...props}
       {...pressProps}
+      {...animatedProps}
     >
       {text || children}
     </Component>

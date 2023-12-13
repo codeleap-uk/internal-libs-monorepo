@@ -1,11 +1,12 @@
 import { BaseViewProps, BreakpointPlaceholder, ComponentVariants } from '@codeleap/common'
 import { HTMLProps, NativeHTMLElement } from '../../types'
-import { MotionProps } from 'framer-motion'
+import { AnimationProps, MotionProps } from 'framer-motion'
 import { ViewPresets } from './styles'
 
-export type DefaultProps<T extends NativeHTMLElement> =
+export type ViewProps<T extends NativeHTMLElement> =
   HTMLProps<T> &
   ComponentVariants<typeof ViewPresets> &
+  Omit<AnimationProps, 'variants'> &
   {
     component?: T
     scroll?: boolean
@@ -17,6 +18,5 @@ export type DefaultProps<T extends NativeHTMLElement> =
     down?: BreakpointPlaceholder
     onHover?: (isMouseOverElement: boolean) => void
     animated?: boolean
+    animatedProps?: Partial<MotionProps>
   } & BaseViewProps
-
-export type ViewProps<T extends NativeHTMLElement> = DefaultProps<T> & (DefaultProps<T>['animated'] extends boolean ? Partial<MotionProps> : {})

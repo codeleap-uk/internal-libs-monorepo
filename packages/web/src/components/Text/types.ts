@@ -3,7 +3,7 @@ import { MotionProps } from 'framer-motion'
 import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { TextComposition, TextPresets } from './styles'
 
-type DefaultProps<T extends ElementType> = ComponentPropsWithoutRef<T> &
+export type TextProps<T extends ElementType> = ComponentPropsWithoutRef<T> &
   ComponentVariants<typeof TextPresets> & {
     component?: T
     text: string
@@ -14,6 +14,5 @@ type DefaultProps<T extends ElementType> = ComponentPropsWithoutRef<T> &
     pressDisabled?: boolean
     onPress?: (event: React.MouseEventHandler<T>) => void
     animated?: boolean
+    animatedProps?: Partial<MotionProps>
   }
-
-export type TextProps<T extends ElementType> = DefaultProps<T> & (DefaultProps<T>['animated'] extends boolean ? Partial<MotionProps> : {})

@@ -30,6 +30,7 @@ export const ViewCP = (
     debug = false,
     style,
     animated = false,
+    animatedProps = {},
     css = [],
     ...props
   } = viewProps
@@ -85,6 +86,7 @@ export const ViewCP = (
       ref={ref}
       {...onHoverProps}
       {...props}
+      {...animatedProps}
     >
       {children}
     </Component>
