@@ -272,11 +272,11 @@ export const ModalContent = (
       aria-hidden={!visible}
       css={[
         variantStyles.wrapper,
-        _zIndex,
         visible
           ? variantStyles['wrapper:visible']
           : variantStyles['wrapper:hidden'],
         autoIndex ? { zIndex: index } : {},
+        _zIndex,
       ]}
     >
       <Overlay
@@ -360,15 +360,15 @@ export const Modal = (props) => {
 
   const modalId = useRef(_modalId ?? v4())
   const setIndex = ModalStore(store => store.setIndex)
-  const visible = TypeGuards.isBoolean(_visible) ? _visible : ModalStore(store => store.modals?.[_modalId] ?? false)
+
+  const visible = TypeGuards.isBoolean(_visible) ? _visible : ModalStore(store => (store.modals?.[_modalId] ?? false))
   const toggle = TypeGuards.isFunction(_toggle) ? _toggle : ModalStore(store => () => store.toggle(_modalId))
 
   onMount(() => {
     if (accessible) {
-      const currentId = modalId
       const appRoot = document.body
-      appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
-      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
+      appRoot.addEventListener('focusin', (e) => focusModal(e, modalId.current))
+      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, modalId.current))
     }
   })
 
@@ -380,7 +380,12 @@ export const Modal = (props) => {
     }
 
     if (scrollLock) modalScrollLock(visible, modalId.current)
-    if (autoIndex) setIndex(visible, modalId.current)
+    
+    if (autoIndex) {
+      setTimeout(() => {
+        setIndex(visible, modalId.current)
+      }, visible ? 0 : 500)
+    }
   }, [visible])
 
   const content = <ModalContent {...props} visible={visible} toggle={toggle} id={modalId.current} />
@@ -397,4 +402,3 @@ export const Modal = (props) => {
 }
 
 Modal.defaultProps = defaultProps
-
