@@ -37,7 +37,6 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     pressDisabled,
     onClick,
     animated,
-    animatedProps = {},
     ...props
   } = allProps
 
@@ -95,7 +94,6 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
       css={_styles}
       {...props}
       {...pressProps}
-      {...animatedProps}
     >
       {text || children}
     </Component>

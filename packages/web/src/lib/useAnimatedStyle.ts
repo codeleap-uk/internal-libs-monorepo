@@ -6,7 +6,7 @@ type UpdaterReturn = Omit<AnimationProps['animate'], 'transition'> & {
   transition: AnimationProps['transition']
 }
 
-type UseAnimatedStyleReturn = Partial<AnimationProps>
+type UseAnimatedStyleReturn = Pick<AnimationProps, 'animate' | 'initial' | 'transition'>
 
 export const useAnimatedStyle = (updater: () => UpdaterReturn, deps: Array<any>): UseAnimatedStyleReturn => {
   const initialStyle = updater()

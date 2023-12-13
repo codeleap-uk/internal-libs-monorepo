@@ -1,47 +1,20 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/react'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-  useCodeleapContext,
-  useMemo,
-  BreakpointPlaceholder,
-  BaseViewProps,
-
-  TypeGuards,
-} from '@codeleap/common'
-import {
-  forwardRef,
-  Ref,
-} from 'react'
+import { useDefaultComponentStyle, useCodeleapContext, useMemo, TypeGuards } from '@codeleap/common'
+import { forwardRef, Ref } from 'react'
 import { ViewPresets } from './styles'
 import { useMediaQuery } from '../../lib/hooks'
-import { HTMLProps, NativeHTMLElement } from '../../types'
-import { motion, MotionProps } from 'framer-motion'
-export * from './styles'
+import { NativeHTMLElement } from '../../types'
+import { motion } from 'framer-motion'
+import { ViewProps } from './types'
 
-export type ViewProps<T extends NativeHTMLElement> =
-  HTMLProps<T> &
-  ComponentVariants<typeof ViewPresets> &
-   {
-    component?: T
-    scroll?: boolean
-    debugName?: string
-    debug?: boolean
-    is?: BreakpointPlaceholder
-    not?: BreakpointPlaceholder
-    up?: BreakpointPlaceholder
-    down?: BreakpointPlaceholder
-    onHover?: (isMouseOverElement: boolean) => void
-    animated?: boolean
-    animatedProps?: Partial<MotionProps>
-  } & BaseViewProps
+export * from './styles'
+export * from './types'
 
 export const ViewCP = (
   viewProps: ViewProps<'div'>,
   ref: Ref<any>,
 ) => {
-
   const {
     responsiveVariants = {},
     variants = [],
@@ -58,7 +31,6 @@ export const ViewCP = (
     style,
     animated = false,
     css = [],
-    animatedProps = { },
     ...props
   } = viewProps
 
@@ -113,7 +85,6 @@ export const ViewCP = (
       ref={ref}
       {...onHoverProps}
       {...props}
-      {...animatedProps}
     >
       {children}
     </Component>
