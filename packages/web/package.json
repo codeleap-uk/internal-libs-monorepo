@@ -28,6 +28,7 @@
     "masonic": "^3.7.0",
     "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",
+    "react-datepicker": "^4.20.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dropzone": "^14.2.3",
     "react-image-crop": "^10.1.8",
