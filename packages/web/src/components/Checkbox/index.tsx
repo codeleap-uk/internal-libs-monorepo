@@ -113,9 +113,9 @@ export const Checkbox = (props: CheckboxProps) => {
 
   const _checkboxOnLeft = checkboxOnLeft ?? variantStyles.__props?.checkboxOnLeft
 
-  const handleChange = () => {
+  const handleChange = (e) => {
     if (disabled) return
-    if (onValueChange) onValueChange?.(!value)
+    if (onValueChange && (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter')) onValueChange?.(!value)
   }
 
   return <InputBase
@@ -142,6 +142,8 @@ export const Checkbox = (props: CheckboxProps) => {
       animate={boxAnimation}
       transition={variantStyles['box:transition']}
       onClick={handleChange}
+      onKeyDown={handleChange}
+      tabIndex={0}
     >
       <motion.div
         css={[
@@ -151,6 +153,7 @@ export const Checkbox = (props: CheckboxProps) => {
         initial={false}
         animate={checkmarkWrapperAnimation}
         transition={variantStyles['checkmarkWrapper:transition']}
+
       >
         <Icon
           debugName={debugName}
