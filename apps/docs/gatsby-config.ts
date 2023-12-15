@@ -3,6 +3,9 @@ import type { GatsbyConfig } from 'gatsby'
 process.env.SITE_URL = process.env.SITE_URL || 'http://localhost:8000/'
 
 const config: GatsbyConfig = {
+  flags: {
+    DEV_SSR: true,
+  },
   siteMetadata: {
     title: `Codeleap Docs`,
     titleTemplate: 'CodeLeap | %s',

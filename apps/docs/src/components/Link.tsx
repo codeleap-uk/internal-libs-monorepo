@@ -3,7 +3,6 @@ import { ComponentVariants, PropsOf, useDefaultComponentStyle } from '@codeleap/
 
 import { scrollToElem, stopPropagation } from '@codeleap/web'
 import { Link as GatsbyLink } from 'gatsby'
-import { Link as GatsbyI18nLink } from 'gatsby-plugin-react-i18next'
 
 type GatsbyLinkProps = PropsOf<typeof GatsbyLink>
 
@@ -59,10 +58,8 @@ export const Link = (linkProps: LinkProps) => {
     </a>
   }
 
-  const _Link = type === 'default' ? GatsbyLink : GatsbyI18nLink
-
   return (
-    <_Link
+    <GatsbyLink
       // @ts-ignore
       ref={linkProps.ref}
       to={to}
@@ -71,6 +68,6 @@ export const Link = (linkProps: LinkProps) => {
       {...props}
     >
       {content}
-    </_Link>
+    </GatsbyLink>
   )
 }
