@@ -70,6 +70,14 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-source-filesystem',
       options: {
+        name: 'updates',
+        path: `${__dirname}/src/updates`,
+        ignore: ['**/*.{tsx, png, jsx, js, jpg, webp, json}'],
+      },
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
         name: 'articles',
         path: `${__dirname}/src/articles`,
         ignore: ['**/*.{tsx, png, jsx, js, jpg, webp, json}'],
