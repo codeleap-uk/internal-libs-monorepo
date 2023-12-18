@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "3.15.2",
+  "version": "3.18.4",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -28,6 +28,7 @@
     "masonic": "^3.7.0",
     "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",
+    "react-datepicker": "^4.20.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dropzone": "^14.2.3",
     "react-image-crop": "^10.1.8",
@@ -40,7 +41,8 @@
     "react-window": "1.8.5",
     "slick-carousel": "^1.8.1",
     "url-parse": "^1.5.10",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "zustand": "^4.4.1"
   },
   "peerDependencies": {
     "@codeleap/common": "*",

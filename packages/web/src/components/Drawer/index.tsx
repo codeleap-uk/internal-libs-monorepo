@@ -36,7 +36,6 @@ export type DrawerProps = {
   style?: React.CSSProperties
   animationDuration?: string
   closeButtonProps?: Partial<ActionIconProps>
-  scrollLocked?: boolean
   closeIcon?: IconPlaceholder
   children?: React.ReactNode
 } & ComponentVariants<typeof DrawerPresets> & ComponentCommonProps
@@ -68,7 +67,6 @@ const defaultProps: Partial<DrawerProps> = {
   darkenBackground: true,
   size: '75vw',
   title: null,
-  scrollLocked: false,
   closeIcon: 'x' as IconPlaceholder,
 }
 
@@ -95,11 +93,10 @@ export const Drawer = (props: DrawerProps) => {
     style,
     animationDuration,
     debugName,
-    scrollLocked,
     closeIcon,
   } = allProps as DrawerProps
 
-  usePopState(open, toggle, scrollLocked)
+  usePopState(open, toggle)
 
   const [hiddenStyle, axis, positioning] = resolveHiddenDrawerPosition(position)
 
@@ -134,7 +131,6 @@ export const Drawer = (props: DrawerProps) => {
           visible={open}
           css={variantStyles.overlay}
           onPress={toggle}
-          scrollLocked={scrollLocked}
         />
       )}
 
