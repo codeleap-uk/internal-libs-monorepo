@@ -119,6 +119,12 @@
         "licenseUrl": "https://github.com/FormidableLabs/prism-react-renderer/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "react-dom@18.1.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/facebook/react",
+        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "react-helmet@6.1.0": {
         "licenses": "MIT",
         "repository": "https://github.com/nfl/react-helmet",
