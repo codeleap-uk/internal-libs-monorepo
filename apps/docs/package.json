@@ -13,8 +13,8 @@
     "license-crawler": "npm-license-crawler --json ./src/app/license.json --onlyDirectDependencies",
     "postinstall": "yarn patch-package && node ./postInstall.js && yarn run license-crawler",
     "deploy": "gatsby-plugin-s3 deploy",
-    "build-web": "gatsby build",
-    "dev": "gatsby develop",
+    "build-web": "node ./scripts/updates.js && gatsby build",
+    "dev": "node ./scripts/updates.js && gatsby develop",
     "start": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean"
@@ -85,7 +85,8 @@
     "tsparticles": "^2.2.3",
     "tsparticles-engine": "^2.2.3",
     "url-parse": "^1.5.10",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "react-reveal": "1.2.2"
   },
   "devDependencies": {
     "@babel/core": "7.20.12",

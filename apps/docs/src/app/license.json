@@ -161,6 +161,12 @@
         "licenseUrl": "github:reduxjs/react-redux",
         "parents": "codeleap-docs"
     },
+    "react-reveal@1.2.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/rnosov/react-reveal",
+        "licenseUrl": "https://github.com/rnosov/react-reveal/raw/master/LICENSE.txt",
+        "parents": "codeleap-docs"
+    },
     "react-toastify@8.2.0": {
         "licenses": "MIT",
         "repository": "https://github.com/fkhadra/react-toastify",

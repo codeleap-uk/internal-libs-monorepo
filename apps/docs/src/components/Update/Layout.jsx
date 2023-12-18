@@ -5,7 +5,7 @@ import { SectionMap } from '../Article/SectionMap'
 import { mdxTransforms } from '../Article/mdxTransforms'
 import { Theme, variantProvider } from '@/app'
 import { useMediaQuery } from '@codeleap/web'
-import { Text, View } from '..'
+import { Text, View, Link, Icon, ActionIcon } from '..'
 
 function UpdatePage(props) {
   const { pageContext, children } = props
@@ -25,9 +25,13 @@ function UpdatePage(props) {
       {isMobile && <SectionMap content={pageContext?.tableOfContents?.items} />}
 
       <View variants={['flex', 'padding:4', 'column', 'alignStart', 'justifyStart', 'gap:2']}>
+        <Link to={'/updates/'} variants={['noUnderline']}>
+          <Icon name='chevron-left' size={24} />
+        </Link>
+        
         <View variants={['row', 'gap:2', 'center', 'marginBottom:2']}>
-          <View variants={['border-radius:rounded', 'backgroundColor:primary2', 'paddingHorizontal:2', 'paddingVertical:1']}>
-            <Text text={version} />
+          <View variants={['border-radius:rounded', 'backgroundColor:primary1', 'paddingHorizontal:2', 'paddingVertical:1']}>
+            <Text variants={['p1', 'color:primary3']} text={version} />
           </View>
 
           <Text variants={['h2']} text={pageContext?.title} />
