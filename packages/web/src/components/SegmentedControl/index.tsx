@@ -136,20 +136,22 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   ]
 
   const onSelectTab = (option: SegmentedControlOptionProps, e?: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!!e && e?.keyCode !== 13 || e?.key !== 'Enter') return null
+    if (!e || e?.keyCode === 13 || e?.key === 'Enter') {
+      if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
+        onValueChange(option.value)
+        return
+      }
 
-    if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
+      if (sectionPressedRef.current !== null) return
+
       onValueChange(option.value)
-      return
+      sectionPressedRef.current = setTimeout(() => {
+        clearTimeout(sectionPressedRef.current)
+        sectionPressedRef.current = null
+      }, debounce)
+    } else {
+      return null
     }
-
-    if (sectionPressedRef.current !== null) return
-
-    onValueChange(option.value)
-    sectionPressedRef.current = setTimeout(() => {
-      clearTimeout(sectionPressedRef.current)
-      sectionPressedRef.current = null
-    }, debounce)
   }
 
   return (
