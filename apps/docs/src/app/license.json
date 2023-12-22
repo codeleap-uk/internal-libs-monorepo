@@ -119,6 +119,12 @@
         "licenseUrl": "https://github.com/FormidableLabs/prism-react-renderer/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
+    "react-dom@18.2.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/facebook/react",
+        "licenseUrl": "https://github.com/facebook/react/raw/master/LICENSE",
+        "parents": "codeleap-docs"
+    },
     "react-helmet@6.1.0": {
         "licenses": "MIT",
         "repository": "https://github.com/nfl/react-helmet",
@@ -153,6 +159,12 @@
         "licenses": "MIT",
         "repository": "github:reduxjs/react-redux",
         "licenseUrl": "github:reduxjs/react-redux",
+        "parents": "codeleap-docs"
+    },
+    "react-reveal@1.2.2": {
+        "licenses": "MIT",
+        "repository": "https://github.com/rnosov/react-reveal",
+        "licenseUrl": "https://github.com/rnosov/react-reveal/raw/master/LICENSE.txt",
         "parents": "codeleap-docs"
     },
     "react-toastify@8.2.0": {
