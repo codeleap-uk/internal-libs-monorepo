@@ -244,7 +244,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       close?.()
     }
 
-  }, [isValueArray, ...(isValueArray ? value : [value]), limit, multiple])
+  }, [isValueArray, (isValueArray ? value : [value]), limit, multiple])
 
   const Item = renderItem || Button
 
