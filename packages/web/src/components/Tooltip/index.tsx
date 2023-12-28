@@ -32,7 +32,7 @@ export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
   toggle?: AnyFunction
   visible?: boolean
   content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
-  triggerWrapper?: React.ReactNode
+  triggerWrapper?: React.ElementType
   triggerWrapperProps?: Partial<ViewProps<'div'>>
   styles?: StylesOf<TooltipComposition>
   side?: 'left' | 'right' | 'bottom' | 'top'
@@ -56,7 +56,7 @@ const defaultProps: Partial<TooltipProps> = {
   delayDuration: 0,
   closeOnClickOutside: false,
   side: 'bottom',
-  triggerWrapper: View,
+  triggerWrapper: View as unknown as React.ElementType,
 }
 
 export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipProps) => {
