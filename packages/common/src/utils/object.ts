@@ -139,3 +139,15 @@ export function extractKey(obj:any) {
     return obj.id
   }
 }
+
+export function objectPickBy<K extends string = string, P = any>(obj: Record<K, P>, predicate: (valueKey: P, key: K) => boolean) {
+  const result = {} as Record<K, P>
+
+  for (const key in obj) {
+    if (obj?.hasOwnProperty?.(key) && predicate?.(obj?.[key], key)) {
+      result[key] = obj?.[key]
+    }
+  }
+
+  return result
+}

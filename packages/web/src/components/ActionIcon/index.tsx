@@ -20,6 +20,7 @@ export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & Comp
 
 const defaultProps: Partial<ActionIconProps> = {
   disabled: false,
+  tabIndex: 0,
 }
 
 export const ActionIcon = (props: ActionIconProps) => {
@@ -28,7 +29,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     ...props,
   }
 
-  const { 
+  const {
     icon,
     name,
     iconProps,
@@ -39,30 +40,31 @@ export const ActionIcon = (props: ActionIconProps) => {
     children,
     disabled,
     debugName,
-    ...touchableProps 
+    ...touchableProps
   } = allProps
-  
+
   const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
     responsiveVariants,
-    variants, 
+    variants,
     styles,
-    rootElement: 'touchableWrapper'
+    rootElement: 'touchableWrapper',
   })
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
   const WrapperComponent: any = isPressable ? Touchable : View
 
-  const handlePress = () => {
+  const handlePress = (e) => {
     if (!isPressable) return
-
-    if (onPress) onPress?.()
+    if (onPress && (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter')) {
+      onPress?.()
+    }
   }
 
   const getStyles = (key: ActionIconParts) => ({
     ...variantStyles[key],
     ...(disabled ? variantStyles[`${key}:disabled`] : {}),
-    ...(isPressable ? variantStyles[`${key}:pressable`] : {})
+    ...(isPressable ? variantStyles[`${key}:pressable`] : {}),
   })
 
   return (
@@ -72,7 +74,8 @@ export const ActionIcon = (props: ActionIconProps) => {
       debugName={debugName}
       {
         ...(isPressable && {
-          onPress: handlePress,
+          onPress: () => handlePress({ type: 'click' }),
+          onKeyDown: handlePress,
         })
       }
       {...touchableProps}

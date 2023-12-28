@@ -14,6 +14,7 @@ import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
+import { Keyboard } from 'react-native'
 
 import { PressableRipple } from '../../modules/PressableRipple'
 export type TouchableProps =
@@ -39,6 +40,7 @@ export type TouchableProps =
     analyticsEnabled?: boolean
     analyticsName?: string
     analyticsData?: Record<string, any>
+    dismissKeyboard?: boolean
   }
 
 export * from './styles'
@@ -50,6 +52,7 @@ const defaultProps: Partial<TouchableProps> = {
   analyticsEnabled: false,
   analyticsName: null,
   analyticsData: {},
+  dismissKeyboard: true,
 }
 const _Touchable = forwardRef<
   RNView,
@@ -71,6 +74,7 @@ const _Touchable = forwardRef<
     analyticsEnabled,
     analyticsName,
     analyticsData = {},
+    dismissKeyboard,
     ...props
   } = {
     ...defaultProps,
@@ -109,12 +113,16 @@ const _Touchable = forwardRef<
         debugName || variants,
         'User interaction',
       )
+      if (dismissKeyboard) {
+        Keyboard.dismiss()
+      }
       if (analyticsEnabled) {
         const name = analyticsName || debugName
         if (!!name?.trim?.()) {
           logger.analytics?.interaction(name, analyticsData)
         }
       }
+
       onPress && onPress()
     }
     if (TypeGuards.isNumber(debounce)) {

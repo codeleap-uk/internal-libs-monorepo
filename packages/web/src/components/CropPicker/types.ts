@@ -19,6 +19,7 @@ export type CropPickerProps = Partial<FileInputProps> &
     debugName: string
     handle?: ReturnType<typeof useCropPicker>
     ref: AnyRef<HTMLElement>
+    withLoading?: boolean
   }
 
 export type ImageReading = HTMLImageElement

@@ -1,4 +1,5 @@
 import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { motion } from 'framer-motion'
 import React, { ElementType } from 'react'
 import { TextPresets } from './styles'
 import { TextProps } from './types'
@@ -11,6 +12,8 @@ const defaultProps: Partial<TextProps<'p'>> = {
   component: 'p',
   debounce: null,
   pressDisabled: false,
+  animated: false,
+  animatedProps: {},
 }
 
 export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
@@ -27,15 +30,19 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     css,
     text = null,
     children,
-    component: Component,
+    component,
     debugName,
     msg = null,
     onPress,
     debounce,
     pressDisabled,
     onClick,
+    animated,
+    animatedProps,
     ...props
   } = allProps
+
+  const Component = animated ? (motion?.[component] || motion.p) : (component || 'p')
 
   const pressedRef = React.useRef(false)
 
@@ -89,6 +96,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
       css={_styles}
       {...props}
       {...pressProps}
+      {...animatedProps}
     >
       {text || children}
     </Component>

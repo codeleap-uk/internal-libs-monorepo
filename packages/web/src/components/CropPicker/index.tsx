@@ -6,10 +6,11 @@ import {
 import { CropPickerPresets } from './styles'
 import { CropPickerProps } from './types'
 import { useCropPicker } from './useCropPicker'
-import { Modal, Button, FileInput, FileInputRef } from '../components'
+import { Modal, Button, FileInput, FileInputRef, LoadingOverlay } from '../components'
 
 const ReactCrop: React.Component = require('react-image-crop').Component
 import 'react-image-crop/dist/ReactCrop.css'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 export * from './types'
@@ -18,6 +19,11 @@ export * from './useCropPicker'
 
 export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
   (props: CropPickerProps, ref) => {
+    const allProps = {
+      ...CropPicker.defaultProps,
+      ...props,
+    }
+
     const {
       onFileSelect,
       targetCrop,
@@ -29,8 +35,9 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       confirmButton = 'Confirm Crop',
       debugName,
       handle,
+      withLoading = false,
       ...fileInputProps
-    } = props
+    } = allProps
 
     const {
       onConfirmCrop,
@@ -41,6 +48,7 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       image,
       crop,
       setRelativeCrop,
+      isLoading,
       handleCropChange,
     } = handle || useCropPicker({ onFileSelect, ref, ...targetCrop })
 
@@ -92,10 +100,18 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
               />
             </ReactCrop>
           )}
+          {
+            withLoading ? (
+              <LoadingOverlay
+                debugName='CropPicker'
+                visible={isLoading}
+              />
+            ) : null
+          }
         </Modal>
       </>
     )
   },
 )
 
-export const CropPicker = React.memo(_CropPicker) as (props: CropPickerProps) => JSX.Element
+export const CropPicker = React.memo(_CropPicker) as ComponentWithDefaultProps<CropPickerProps>

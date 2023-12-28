@@ -80,7 +80,7 @@ export const Gap = ({ children, value, defaultProps = {}, crossValue = null, ...
         [spacingProperty]: space,
       }
 
-      if (!TypeGuards.isNil(crossValue) && !isLast) {
+      if (!TypeGuards.isNil(crossValue)) {
         style[crossSpacingProperty] = crossSpace
       }
 

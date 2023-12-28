@@ -1,7 +1,7 @@
 import {
+  AnyFunction,
   ComponentVariants,
   onUpdate,
-  PropsOf,
   TypeGuards,
   useDefaultComponentStyle,
   useWarning,
@@ -16,7 +16,6 @@ import {
   StyleSheet,
 } from 'react-native'
 import { StylesOf } from '../../types/utility'
-import { ScrollProps } from '../Scroll'
 import { View } from '../View'
 import { PagerPresets, PagerComposition } from './styles'
 export * from './styles'
@@ -29,8 +28,9 @@ export type PageProps = {
   page: number
   index: number
   isPrevious: boolean
-
 }
+
+type ScrollEvent = NativeSyntheticEvent<NativeScrollEvent>
 
 export type PagerProps = React.PropsWithChildren<{
   variants?: ComponentVariants<typeof PagerPresets>['variants']
@@ -43,12 +43,31 @@ export type PagerProps = React.PropsWithChildren<{
   renderPageWrapper?: React.FC<PageProps>
   pageWrapperProps?: any
   width?: number
-  onScroll: ScrollProps['onScroll']
-   /** If TRUE render page, nextPage and prevPage only */
-   windowing?:boolean
+  onScroll?: (event: ScrollEvent, args: { isLeft: boolean; isRight: boolean; x: number }) => void
+  /** If TRUE render page, nextPage and prevPage only */
+  windowing?: boolean
+  scrollRightEnabled?: boolean
+  scrollLeftEnabled?: boolean
+  scrollDirectionThrottle?: number
+  onSwipeLastPage?: (event: ScrollEvent) => void
+  waitEventDispatchTimeout?: number
 } & ScrollViewProps>
 
-export const Pager = (pagerProps:PagerProps) => {
+const defaultProps: Partial<PagerProps> = {
+  variants: [],
+  styles: {},
+  page: 0,
+  returnEarly: true,
+  windowing: false,
+  keyboardShouldPersistTaps: 'handled',
+  scrollEnabled: true,
+  scrollRightEnabled: true,
+  scrollLeftEnabled: true,
+  scrollDirectionThrottle: 650,
+  waitEventDispatchTimeout: 250,
+}
+
+export const Pager = (pagerProps: PagerProps) => {
   const {
     styles,
     variants,
@@ -62,11 +81,24 @@ export const Pager = (pagerProps:PagerProps) => {
     windowing = false,
     setPage,
     scrollEnabled = true,
-  } = pagerProps
+    scrollLeftEnabled,
+    scrollRightEnabled,
+    onScroll,
+    scrollDirectionThrottle,
+    onSwipeLastPage,
+    waitEventDispatchTimeout,
+  } = {
+    ...defaultProps,
+    ...pagerProps,
+  }
 
   const childArr = React.Children.toArray(children)
   const scrollRef = useRef<ScrollView>(null)
   const [positionX, setPositionX] = React.useState(0)
+  const [scrollPositionX, setScrollPositionX] = React.useState(0)
+  const [_scrollEnabled, setScrollEnabled] = React.useState(true)
+
+  const waitEventDispatch = useRef(false)
 
   const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
     'u:Pager',
@@ -84,7 +116,6 @@ export const Pager = (pagerProps:PagerProps) => {
 
   if (!validWidth) {
     width = windowWidth
-
   }
 
   useWarning(
@@ -99,18 +130,62 @@ export const Pager = (pagerProps:PagerProps) => {
 
   const WrapperComponent = renderPageWrapper || View
 
-  const handleScrollEnd = useCallback(
-    ({ nativeEvent }: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const x = nativeEvent.contentOffset.x
-      const toPage = Math.ceil(x / width)
+  const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
 
-      if (toPage !== page && toPage <= childArr.length - 1) {
-        setPage(toPage)
-        setPositionX(toPage * width)
+  const handleScrollEnd = useCallback((event: ScrollEvent) => {
+    if (waitEventDispatch.current === true) return null
+
+    waitEventDispatch.current = true
+
+    const x = event?.nativeEvent.contentOffset.x
+    const toPage = Math.floor(((Math.round(x)) / Math.round(width)))
+
+    const length = childArr.length - 1
+
+    if (toPage >= length && TypeGuards.isFunction(onSwipeLastPage) && page >= length) {
+      onSwipeLastPage?.(event)
+    } else if (toPage !== page && toPage <= length) {
+      setPage(toPage)
+      setPositionX(toPage * width)
+    }
+
+    setTimeout(() => {
+      waitEventDispatch.current = false
+    }, waitEventDispatchTimeout)
+  }, [childArr, page, setPage, waitEventDispatch.current])
+
+  const handleScroll = (event: ScrollEvent) => {
+    const scrollX = event?.nativeEvent?.contentOffset?.x
+
+    if (!_scrollEnabled) {
+      setScrollPositionX(scrollX)
+      return null
+    }
+
+    const isRight = scrollX < scrollPositionX
+    const isLeft = scrollX > scrollPositionX
+
+    if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { isLeft, isRight, x: scrollX })
+
+    if (hasScrollDirectionDisabled) {
+      if (isRight && !scrollRightEnabled || isLeft && !scrollLeftEnabled) {
+        setScrollEnabled(false)
+
+        setTimeout(() => {
+          scrollRef.current.scrollTo({
+            x: positionX,
+            animated: true,
+          })
+
+          setTimeout(() => {
+            setScrollEnabled(true)
+          }, scrollDirectionThrottle)
+        })
       }
-    },
-    [childArr, page, setPage],
-  )
+    }
+
+    setScrollPositionX(scrollX)
+  }
 
   onUpdate(() => {
     const x = width * page
@@ -129,11 +204,12 @@ export const Pager = (pagerProps:PagerProps) => {
       horizontal
       pagingEnabled
       onMomentumScrollEnd={handleScrollEnd}
-      scrollEventThrottle={300}
+      scrollEventThrottle={hasScrollDirectionDisabled ? 2000 : 300}
       showsHorizontalScrollIndicator={false}
       style={[variantStyles.wrapper, style]}
       {...pagerProps}
-      scrollEnabled={childArr.length > 1 && scrollEnabled}
+      onScroll={handleScroll}
+      scrollEnabled={childArr.length > 1 && scrollEnabled && _scrollEnabled}
     >
       {childArr.map((child: PagerProps['children'][number], index) => {
 
@@ -149,7 +225,7 @@ export const Pager = (pagerProps:PagerProps) => {
           return <View style={{ height: '100%', width }} />
         }
 
-        const pageProps:PageProps = {
+        const pageProps: PageProps = {
           isLast,
           isActive,
           isFirst,
@@ -172,3 +248,5 @@ export const Pager = (pagerProps:PagerProps) => {
     </ScrollView>
   )
 }
+
+Pager.defaultProps = defaultProps
