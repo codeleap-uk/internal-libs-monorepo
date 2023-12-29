@@ -10,11 +10,5 @@
         "repository": "https://github.com/gatsbyjs/gatsby",
         "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
         "parents": "codeleap-docs"
-    },
-    "md5-file@5.0.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/roryrjb/md5-file",
-        "licenseUrl": "https://github.com/roryrjb/md5-file/raw/master/LICENSE.md",
-        "parents": "codeleap-docs"
     }
 }
