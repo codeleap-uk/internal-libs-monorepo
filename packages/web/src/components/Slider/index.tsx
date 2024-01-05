@@ -77,7 +77,7 @@ export const Slider = (props: SliderProps) => {
     variants,
     trackMarks,
     trackMarkComponent = DefaultSliderTrackMark,
-    defaultValue: _defaultValue = [],
+    defaultValue: defaultSliderValue = [],
     max = 100,
     min = 0,
     indicatorLabel = null,
@@ -89,8 +89,10 @@ export const Slider = (props: SliderProps) => {
     ...sliderProps
   } = others
 
-  const isMultiThumbs = TypeGuards.isArray(_value)
-  const value = isMultiThumbs ? _value : [_value]
+  const isUniqueValue = !TypeGuards.isArray(_value)
+  const value = isUniqueValue ? [_value] : _value
+  const _defaultValue = TypeGuards.isArray(defaultSliderValue) ? defaultSliderValue : [defaultSliderValue]
+
   const defaultValueRef = useRef<PrimitiveSliderProps['defaultValue']>(_defaultValue)
   const defaultValue = defaultValueRef.current
 
@@ -104,13 +106,9 @@ export const Slider = (props: SliderProps) => {
 
   const currentThumbRef = useRef(null)
 
-  const handleChange: SliderProps['onValueChange'] = (newValue) => {
-    if (TypeGuards.isArray(newValue) && newValue.length <= 1) {
-      if (isMultiThumbs) {
-        onValueChange(newValue)
-      } else {
-        onValueChange(newValue?.[0])
-      }
+  const handleChange: SliderProps['onValueChange'] = (newValue: Array<number>) => {
+    if (isUniqueValue) {
+      onValueChange(newValue?.[0])
       return
     }
 
@@ -120,7 +118,7 @@ export const Slider = (props: SliderProps) => {
     const _newValue = newValue[currentThumbRef.current]
 
     const hasLeftThumb = i !== 0
-    const hasRightThumb = TypeGuards.isArray(newValue) && i + 1 < newValue.length
+    const hasRightThumb = i + 1 < newValue.length
 
     const previousThumbValue = hasLeftThumb ? (copyValue[i - 1] + minStepsBetweenThumbs) : null
     const nextThumbValue = hasRightThumb ? (copyValue[i + 1] - minStepsBetweenThumbs) : null
@@ -250,7 +248,7 @@ export const Slider = (props: SliderProps) => {
           <SliderRange style={selectedTrackStyle} />
         </SliderTrack>
 
-        {defaultValue.map((_thumbValue, i) => {
+        {defaultValue.map((_, i) => {
           return (
             <SliderThumb
               key={i}
@@ -258,14 +256,9 @@ export const Slider = (props: SliderProps) => {
               index={i}
               style={thumbStyle}
               onClick={() => {
-                if (onPressThumbSetValue) {
-                  if (isMultiThumbs) {
-                    onValueChange?.([Number(_thumbValue)])
-                  } else {
-                    onValueChange?.(Number(_thumbValue))
-                  }
-                }
-                if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(_thumbValue, i)
+                if (onPressThumbSetValue) onValueChange?.(value)
+                if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(value, i)
+
                 currentThumbRef.current = i
               }}
               onMouseEnter={() => currentThumbRef.current = i}
