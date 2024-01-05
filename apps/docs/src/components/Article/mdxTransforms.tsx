@@ -82,15 +82,20 @@ export const mdxTransforms = {
           }
         }
 
-        const removeIdx = qt.indexOf(typeEntry[1]) + typeEntry[1].length + 1
+        const isStringContent = TypeGuards.isString(elChildren?.[1]?.props?.children)
+
+        const formattedChildren = [
+          (isStringContent 
+            ? elChildren?.[1]?.props?.children
+            : elChildren?.[1]?.props?.children[0]
+          ).replace(new RegExp('\\b' + typeEntry[1] + '\\b', 'g'), ''),
+          ...(isStringContent ? [] : elChildren?.[1]?.props?.children?.slice(1)),
+        ]
 
         return {
           key: typeEntry[0],
           value: typeEntry[1],
-          formattedChildren: [
-            qt.slice(removeIdx),
-            ...elChildren?.slice(1),
-          ],
+          formattedChildren,
         }
       }
       return {

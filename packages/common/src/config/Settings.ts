@@ -82,6 +82,8 @@ export type AppSettings<
       icon: string
       token: string
       baseURL?: string
+      enabled?: boolean
+      options?: Record<string, any>
     }
   }
 }>

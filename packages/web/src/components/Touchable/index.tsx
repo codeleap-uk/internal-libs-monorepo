@@ -38,6 +38,7 @@ const defaultProps: TouchableProps<'button'> = {
   analyticsEnabled: false,
   analyticsName: null,
   analyticsData: {},
+  tabIndex: 0,
 }
 export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>,
@@ -105,6 +106,8 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     }
 
     const _onPress = () => {
+      if (event && (event?.type !== 'click' && event?.keyCode !== 13 && event?.key !== 'Enter')) return null
+
       logger.log(
         `<${debugComponent || 'Touchable'}/> pressed`,
         { debugName, debugComponent },
@@ -142,7 +145,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     disabled && variantStyles['wrapper:disabled'],
     css,
     style,
-  ]), [variantStyles, disabled])
+  ]), [variantStyles, disabled, style])
 
   return (
     <View
@@ -150,6 +153,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
       {...props}
       debugName={debugName}
       onClick={handleClick}
+      onKeyDown={handleClick}
       ref={ref}
       css={_styles}
     />

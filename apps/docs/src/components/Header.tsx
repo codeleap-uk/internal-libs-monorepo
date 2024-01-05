@@ -18,8 +18,17 @@ const navItems = [
     url: '/mobile',
   },
   {
+    name: 'CLI',
+    url: '/cli',
+  },
+  {
     name: 'Concepts',
     url: '/concepts',
+  },
+  {
+    name: 'Updates',
+    url: '/updates',
+    page: true,
   },
 ]
 
@@ -37,7 +46,7 @@ const NavContent = () => {
             <Link
               key={i.url}
               text={i.name}
-              to={i.url + '/index'}
+              to={i.url + (i?.page ? '/' : '/index')}
               variants={['noUnderline']}
               css={[styles.navItem, isSelected && styles['navItem:selected']]}
             />

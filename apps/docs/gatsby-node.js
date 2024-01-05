@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const template = path.resolve(`./src/components/Article/Layout.jsx`)
+const templateUpdates = path.resolve(`./src/components/Update/Layout.jsx`)
 
 function inferProperties(absolutePath) {
   let parts = absolutePath.split('/')
@@ -55,6 +56,30 @@ exports.createPages = async ({ actions, graphql }) => {
 
   result.data.allMdx.edges.forEach(({ node }) => {
     const filepath = node.internal.contentFilePath
+
+    
+
+    if (filepath?.includes('updates')) {
+      const filename = filepath?.split('/')?.[filepath?.split('/')?.length - 1]
+
+      createPage({
+        path: 'updates/' + filename?.split('.')[0],
+        component: `${templateUpdates}?__contentFilePath=${node.internal.contentFilePath}`,
+        context: {
+          frontmatter: node.frontmatter,
+          id: node.id,
+          title: node.frontmatter.title,
+          version: filename?.split('.')[0]?.replace('_', '.'),
+          filename: filename,
+          mdx: node.body,
+          body: node.body,
+          tableOfContents: node.tableOfContents,
+          mdxFilePath: filepath,
+        },
+      })
+
+      return 
+    }
 
     const pageInfo = inferProperties(filepath)
 

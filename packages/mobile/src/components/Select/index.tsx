@@ -118,6 +118,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     visible: _visible,
     toggle: _toggle,
     ListHeaderComponent,
+    ListComponent = List,
     onLoadOptionsError,
     loadOptionsOnMount = defaultOptions.length === 0,
     loadOptionsOnOpen = false,
@@ -195,7 +196,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const close = () => toggle?.()
 
-  const select = (selectedValue) => {
+  const select = useCallback((selectedValue) => {
 
     let newValue = null
 
@@ -243,11 +244,11 @@ export const Select = <T extends string | number = string, Multi extends boolean
       close?.()
     }
 
-  }
+  }, [isValueArray, (isValueArray ? value : [value]), limit, multiple])
 
   const Item = renderItem || Button
 
-  const renderListItem = useCallback(({ item }) => {
+  const renderListItem = useCallback(({ item, index }) => {
 
     let selected = false
 
@@ -268,6 +269,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       // @ts-ignore
       rightIcon={selectedIcon}
       styles={itemStyles}
+      index={index}
       {...itemProps}
     />
   }, [value, select, multiple])
@@ -347,7 +349,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       toggle={toggle}
 
     >
-      <List<SelectProps<any>['options']>
+      <ListComponent<SelectProps<any>['options']>
         data={searchable ? filteredOptions : options}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
