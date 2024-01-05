@@ -248,23 +248,20 @@ export const Slider = (props: SliderProps) => {
           <SliderRange style={selectedTrackStyle} />
         </SliderTrack>
 
-        {defaultValue.map((_, i) => {
-          return (
-            <SliderThumb
-              key={i}
-              // @ts-ignore
-              index={i}
-              style={thumbStyle}
-              onClick={() => {
-                if (onPressThumbSetValue) onValueChange?.(value)
-                if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(value, i)
+        {defaultValue.map((_, i) => (
+          <SliderThumb
+            key={i}
+            index={i}
+            style={thumbStyle}
+            onClick={() => {
+              if (onPressThumbSetValue) onValueChange?.(value)
+              if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(value, i)
 
-                currentThumbRef.current = i
-              }}
-              onMouseEnter={() => currentThumbRef.current = i}
-            />
-          )
-        })}
+              currentThumbRef.current = i
+            }}
+            onMouseEnter={() => currentThumbRef.current = i}
+          />
+        ))}
       </SliderContainer>
 
       {trackMarksProp ?
