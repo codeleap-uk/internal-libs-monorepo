@@ -27,14 +27,14 @@ export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueC
     separator?: string
     transformer?: (value: number[], defaultValue: PrimitiveSliderProps['defaultValue']) => string
   }
-  value: number[]
-  onValueChange: (val: number[]) => void
+  value: number | number[]
+  onValueChange: (val: number | number[]) => void
   styles?: StylesOf<SliderComposition>
   style?: PropsOf<typeof View>['style']
   trackMarks?: Record<number, string>
   trackMarkComponent?: React.ComponentType<TrackMarkProps>
   onPressThumbSetValue?: boolean
-  onPressThumb?: (value: number, thumbIndex: number) => void
+  onPressThumb?: (value: number | number[], thumbIndex: number) => void
 } & ComponentVariants<typeof SliderPresets>
 
 export type TrackMarkProps = {
@@ -67,7 +67,7 @@ export const Slider = (props: SliderProps) => {
   const {
     debounce = null,
     onValueChange,
-    value,
+    value: _value,
     label,
     debugName,
     styles = {},
@@ -77,7 +77,7 @@ export const Slider = (props: SliderProps) => {
     variants,
     trackMarks,
     trackMarkComponent = DefaultSliderTrackMark,
-    defaultValue: _defaultValue = [],
+    defaultValue: defaultSliderValue = [],
     max = 100,
     min = 0,
     indicatorLabel = null,
@@ -88,6 +88,10 @@ export const Slider = (props: SliderProps) => {
     onPressThumb = null,
     ...sliderProps
   } = others
+
+  const isUniqueValue = !TypeGuards.isArray(_value)
+  const value = isUniqueValue ? [_value] : _value
+  const _defaultValue = TypeGuards.isArray(defaultSliderValue) ? defaultSliderValue : [defaultSliderValue]
 
   const defaultValueRef = useRef<PrimitiveSliderProps['defaultValue']>(_defaultValue)
   const defaultValue = defaultValueRef.current
@@ -102,9 +106,9 @@ export const Slider = (props: SliderProps) => {
 
   const currentThumbRef = useRef(null)
 
-  const handleChange: SliderProps['onValueChange'] = (newValue) => {
-    if (newValue.length <= 1) {
-      onValueChange(newValue)
+  const handleChange: SliderProps['onValueChange'] = (newValue: Array<number>) => {
+    if (isUniqueValue) {
+      onValueChange(newValue?.[0])
       return
     }
 
@@ -244,15 +248,15 @@ export const Slider = (props: SliderProps) => {
           <SliderRange style={selectedTrackStyle} />
         </SliderTrack>
 
-        {defaultValue.map((_thumbValue, i) => (
+        {defaultValue.map((_, i) => (
           <SliderThumb
             key={i}
-            // @ts-ignore
             index={i}
             style={thumbStyle}
             onClick={() => {
-              if (onPressThumbSetValue) onValueChange?.([Number(_thumbValue)])
-              if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(_thumbValue, i)
+              if (onPressThumbSetValue) onValueChange?.(value)
+              if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(value, i)
+
               currentThumbRef.current = i
             }}
             onMouseEnter={() => currentThumbRef.current = i}
