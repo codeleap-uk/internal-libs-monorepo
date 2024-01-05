@@ -34,7 +34,7 @@ export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueC
   trackMarks?: Record<number, string>
   trackMarkComponent?: React.ComponentType<TrackMarkProps>
   onPressThumbSetValue?: boolean
-  onPressThumb?: (value: number, thumbIndex: number) => void
+  onPressThumb?: (value: number | number[], thumbIndex: number) => void
 } & ComponentVariants<typeof SliderPresets>
 
 export type TrackMarkProps = {
