@@ -13,8 +13,8 @@ export default () => {
 
         <View variants={['separator']} />
 
-        <View variants={['marginTop:4']}>
-          {updates?.list?.map(({ version, path }) => (
+        <View variants={['marginTop:4', 'column', 'gap:2']}>
+          {updates?.list?.reverse()?.map(({ version, path }) => (
             <Link key={String(version)} to={path} variants={['noUnderline']}>
               <Text variants={['h2']} style={styles.version} text={String(version)} />
             </Link>

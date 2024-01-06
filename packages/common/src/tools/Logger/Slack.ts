@@ -1,6 +1,7 @@
 import { AppSettings } from '../../config/Settings'
 import { RequestClient } from '../Fetch'
-import {inspect} from 'util'
+import { inspect } from 'util'
+import { TypeGuards } from '../../utils'
 
 type EchoSlackConfig = AppSettings['Slack']['echo']
 
@@ -46,16 +47,20 @@ export class SlackService {
   ) {
     const options = this.parseOptions(messageOptions)
     const slack = this.parseData(label, slackData, options.info, moduleName)
+
+    const enabled = TypeGuards.isBoolean(this.echoConfig.enabled) ? this.echoConfig.enabled : true
   
-    if (!options.send || !this.api || !this.echoConfig) return
+    if (!options.send || !this.api || !this.echoConfig || !enabled) return
+
+    const settingsData = this?.echoConfig?.options ?? {}
   
     try {
       const data = {
         'channel': this?.echoConfig?.channel ?? DEFAULT_CHANNEL,
         text: slack,
-        'as_user': false,
         'username': `${this.appName} Log`,
         'icon_url': this?.echoConfig?.icon,
+        ...settingsData,
       }
   
       await this.api.post('', data, {
