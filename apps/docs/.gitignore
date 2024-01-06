@@ -6,3 +6,6 @@ node_modules/
 public
 src/gatsby-types.d.ts
 .turbo
+
+/src/app/timestamp.json
+/src/app/license.json
