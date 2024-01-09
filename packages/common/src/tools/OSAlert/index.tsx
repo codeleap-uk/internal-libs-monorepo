@@ -1,13 +1,14 @@
-import { AnyFunction, TypeGuards } from '@codeleap/common'
+import { AnyFunction } from '../../types'
 import { create } from 'zustand'
+import { TypeGuards } from '../../utils'
 
-type AlertButton = {
+export type AlertButton = {
   text: string
   onPress: AnyFunction
   variants?: any[]
 }
 
-type OSAlertArgs = {
+export type OSAlertArgs = {
   title: string
   body?: string
   options?: AlertButton[]
@@ -16,9 +17,9 @@ type OSAlertArgs = {
   type?: Exclude<GlobalAlertType, 'custom'> | string
 }
 
-type AlertEvent = AlertButton['onPress']
+export type AlertEvent = AlertButton['onPress']
 
-type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
+export type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
 export type GlobalAlertType = 'info' | 'error' | 'warn' | 'ask' | 'custom'
 
@@ -29,10 +30,15 @@ export type GlobalAlertComponentProps = {
   id: string
 }
 
-type TOSAlertStore = {
+export type OSAlertGlobalProps = Partial<OSAlertArgs & { type: GlobalAlertType }>
+
+export type TOSAlertStore = {
   visible: boolean
-  toggle: (props: Partial<OSAlertArgs & { type: GlobalAlertType }>) => void
-  props: Partial<OSAlertArgs & { type: GlobalAlertType }>
+  toggle: (to?: boolean) => void
+  props: OSAlertGlobalProps
+  setProps: (props: OSAlertGlobalProps) => void
+  open: () => void
+  close: () => void
 }
 
 export const OSAlertStore = create<TOSAlertStore>(set => ({
@@ -40,18 +46,23 @@ export const OSAlertStore = create<TOSAlertStore>(set => ({
   toggle: (to = null) => set(state => ({
     visible: TypeGuards.isBoolean(to) ? to : !state.visible,
   })),
-  props: {}
+  props: {},
+  setProps: (props) => set(() => ({
+    props
+  })),
+  open: () => set({ visible: true }),
+  close: () => set({ visible: false }),
 }))
 
-export function CreateOSAlert(GlobalAlert, Component) {
-  GlobalAlert.Component = Component
+export function CreateOSAlert() {
+  const alert = OSAlertStore.getState()
 
   function ask({ title, body, options }: OSAlertArgs) {
     if (!title) {
-      title = 'Quick quetion'
+      title = 'Quick question'
     }
   
-    OSAlertStore.getState().toggle({
+    alert.setProps({
       title,
       body,
       options,
@@ -59,6 +70,8 @@ export function CreateOSAlert(GlobalAlert, Component) {
       onAction: null,
       onDismiss: null,
     })
+
+    alert.open()
   }
   
   function OSError(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
@@ -74,13 +87,15 @@ export function CreateOSAlert(GlobalAlert, Component) {
       body = 'Something went wrong'
     }
     
-    OSAlertStore.getState().toggle({
+    alert.setProps({
       title,
       body,
       type: 'error',
       onAction: args.onDismiss,
       onDismiss: args.onDismiss,
     })
+
+    alert.open()
   }
   
   function warn(args: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
@@ -91,13 +106,15 @@ export function CreateOSAlert(GlobalAlert, Component) {
       onReject = () => null,
     } = args
   
-    OSAlertStore.getState().toggle({
+    alert.setProps({
       title,
       body,
       type: 'warn',
       onAction: onAccept,
       onDismiss: onReject,
     })
+
+    alert.open()
   }
   
   function info(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
@@ -107,12 +124,14 @@ export function CreateOSAlert(GlobalAlert, Component) {
       onDismiss = () => null,
     } = args
   
-    OSAlertStore.getState().toggle({
+    alert.setProps({
       title,
       body,
       type: 'info',
       onDismiss,
     })
+
+    alert.open()
   }
   
   function custom(args: OSAlertArgs & {type: string}) {
@@ -123,12 +142,14 @@ export function CreateOSAlert(GlobalAlert, Component) {
       ...rest
     } = args
   
-    OSAlertStore.getState().toggle({
+    alert.setProps({
       title,
       body,
       type: type as GlobalAlertType,
       ...rest,
     })
+
+    alert.open()
   }
 
   return {

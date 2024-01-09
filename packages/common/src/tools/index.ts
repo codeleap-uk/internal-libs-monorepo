@@ -9,4 +9,4 @@ export * from './usePagination'
 export * from './Crud'
 export * from './i18n'
 export * from './useSearch'
-
+export * from './OSAlert'
