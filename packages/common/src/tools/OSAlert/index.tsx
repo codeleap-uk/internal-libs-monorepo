@@ -47,22 +47,42 @@ export const OSAlertStore = create<TOSAlertStore>(set => ({
     visible: TypeGuards.isBoolean(to) ? to : !state.visible,
   })),
   props: {},
-  setProps: (props) => set(() => ({
-    props
-  })),
+  setProps: (props) => set(() => ({ props })),
   open: () => set({ visible: true }),
   close: () => set({ visible: false }),
 }))
 
-export function CreateOSAlert() {
-  const alert = OSAlertStore.getState()
+type CreateOSAlertOptions = {
+  delay?: number
+}
+
+export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptions) {
+  const {
+    delay = 450,
+  } = options
+
+  const trigger = (props) => {
+    const alert = OSAlertStore.getState()
+
+    if (alert.visible) {
+      alert.close()
+
+      setTimeout(() => {
+        alert.setProps(props)
+        alert.open()
+      }, delay)
+    } else {
+      alert.setProps(props)
+      alert.open()
+    }
+  }
 
   function ask({ title, body, options }: OSAlertArgs) {
     if (!title) {
       title = 'Quick question'
     }
   
-    alert.setProps({
+    trigger({
       title,
       body,
       options,
@@ -70,8 +90,6 @@ export function CreateOSAlert() {
       onAction: null,
       onDismiss: null,
     })
-
-    alert.open()
   }
   
   function OSError(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
@@ -87,15 +105,13 @@ export function CreateOSAlert() {
       body = 'Something went wrong'
     }
     
-    alert.setProps({
+    trigger({
       title,
       body,
       type: 'error',
       onAction: args.onDismiss,
       onDismiss: args.onDismiss,
     })
-
-    alert.open()
   }
   
   function warn(args: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
@@ -106,15 +122,13 @@ export function CreateOSAlert() {
       onReject = () => null,
     } = args
   
-    alert.setProps({
+    trigger({
       title,
       body,
       type: 'warn',
       onAction: onAccept,
       onDismiss: onReject,
     })
-
-    alert.open()
   }
   
   function info(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
@@ -124,17 +138,15 @@ export function CreateOSAlert() {
       onDismiss = () => null,
     } = args
   
-    alert.setProps({
+    trigger({
       title,
       body,
       type: 'info',
       onDismiss,
     })
-
-    alert.open()
   }
   
-  function custom(args: OSAlertArgs & {type: string}) {
+  function custom(args: OSAlertArgs & Partial<T>) {
     const {
       title = 'Hang on',
       body = 'Are you sure?',
@@ -142,14 +154,12 @@ export function CreateOSAlert() {
       ...rest
     } = args
   
-    alert.setProps({
+    trigger({
       title,
       body,
       type: type as GlobalAlertType,
       ...rest,
     })
-
-    alert.open()
   }
 
   return {
