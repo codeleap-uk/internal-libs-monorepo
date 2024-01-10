@@ -1,5 +1,5 @@
 import React from 'react'
-import { ComponentVariants, StylesOf, FormTypes } from '@codeleap/common'
+import { ComponentVariants, StylesOf, FormTypes, AnyFunction } from '@codeleap/common'
 import { DatePickerModalComposition, DatePickerModalPresets } from './styles'
 import { DatePickerProps } from 'react-native-date-picker'
 import { TextInputComposition } from '../TextInput'
@@ -55,4 +55,8 @@ export type DatePickerModalProps = Omit<ModalProps, 'styles' | 'variants' | 'ref
   minimumDate?: DatePickerProps['minimumDate']
 
   maximumDate?: DatePickerProps['maximumDate']
+
+  toggleOnConfirm?: boolean
+
+  onConfirm?: (value: Date) => void
 } & ComponentVariants<typeof DatePickerModalPresets>

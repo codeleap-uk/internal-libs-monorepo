@@ -1,150 +1,125 @@
-import { Button, Text, LocalStorageKeys, React } from '@/app'
-import { AppStatusOverlay, Page, Link } from '@/components'
-import { AppStatus, Session, useAppSelector } from '@/redux'
-import { onMount, onUpdate, useComponentStyle } from '@codeleap/common'
-import {
-  View,
-  variantProvider,
-  Theme,
+import React from 'react'
+import { Text, View, Page, Link, Button, Icon } from '@/components'
+import { Settings, variantProvider } from '@/app'
+import { Particles } from '../components/Particles'
+import { navigate } from 'gatsby'
+import Fade from 'react-reveal/Fade'
 
-} from '@/app'
-import { MultiSelect } from '@/MultiSelect'
-
-export const Overlays = () => {
-  return <>
-
-    <AppStatusOverlay />
-    {/* <DebugModal/> */}
-  </>
-}
-
-const links = [
+const packages = [
   {
-    url: '/concepts/index',
-    name: 'Fundamentals',
+    url: '/common',
+    name: '@codeleap/common',
     description:
-      'Fundamental design principles and motivation for creating this framework, along with platform agnostic environment setup',
+      'The library that provides APIs for building portable and modular code on both platforms',
   },
   {
-    name: 'Modules',
-    links: [
-      {
-        url: '/common',
-        name: '@codeleap/common',
-        description:
-          'The library that provides APIs for building portable and modular code on both platforms',
-      },
-      {
-        url: '/web',
-        name: '@codeleap/web',
-        description: 'Components and hooks for building awesome websites',
-      },
-      {
-        url: '/mobile',
-        name: '@codeleap/mobile',
-        description: 'Components and utilities for creating bleeding edge iOS and Android apps',
-      },
-    ],
+    url: '/web',
+    name: '@codeleap/web',
+    description: 'Components and hooks for building awesome websites',
+  },
+  {
+    url: '/mobile',
+    name: '@codeleap/mobile',
+    description: 'Components and utilities for creating bleeding edge iOS and Android apps',
   },
 ]
 
-const ListItem = ({ item, depth = 2, styles }) => {
-  const mounted = useAppSelector(store => store.Session.appMounted)
-  if (item.links) {
-    return (
-      <View
-        variants={[
-          'column',
-          'justifyCenter',
-          `marginLeft:${depth}` as any,
-          'flex',
-        ]}
-        responsiveVariants={{
-          mid: [`marginLeft:0`],
-        }}
+export default () => {
+  const renderItem = React.useCallback((item, i) => (
+    <Fade bottom delay={800 + (i * 250)}>
+      <Link key={i + 'link'} to={item?.url + '/index'} variants={['noUnderline']}>
+        <View style={styles.link}>
+          <View variants={['backgroundColor:primary3', 'padding:1', 'border-radius:small']}>
+            <Icon debugName='' name='layers' size={24} />
+          </View>
+          <Text text={item?.name} variants={['h5']} />
+          <Text text={item?.description} variants={['p4']} />
+        </View>
+      </Link>
+    </Fade>
+  ), [])
 
-      >
-        <Text text={item.name} variants={['h1']} responsiveVariants={{ mid: ['marginVertical:2'] }}/>
-        <View variants={['gap:1', 'column', 'marginTop:3']}>
+  return <>
+    <Page title='Home' headerCenter={false}>
+      <View style={styles.wrapper}>
+        <View variants={['column', 'gap:2']}>
+          <Fade left>
+            <Text 
+              text={'A full featured library of React for mobile and web platforms'} 
+              variants={['h1']}
+              responsiveVariants={{ mid: ['h1'] }}
+              style={styles.title}
+            />
+          </Fade>
 
-          {item.links.map((i) => (
-            <ListItem item={i} depth={depth + 2} key={i.url} styles={styles}/>
-          ))}
+          <Fade left>
+            <Text 
+              text='Create complete web and mobile applications with a single code with various hooks and features to create your project 2x faster' 
+              variants={['h3', 'thin']}
+              responsiveVariants={{ mid: ['p1'] }}
+            />
+          </Fade>
+        </View>
+
+        <View variants={['row', 'gap:4']} responsiveVariants={{ mid: ['column'] }}>
+          {packages?.map(renderItem)}
+        </View>
+
+        <View variants={['row', 'gap:2']} responsiveVariants={{ mid: ['column'] }}>
+          <Fade delay={1000}>
+            <Button 
+              variants={['padding:2', 'w:200px']}
+              text='Get started' 
+              onPress={() => navigate('/concepts/index/')} 
+              styles={{
+                'text': { fontWeight: 700 }
+              }}
+            />
+          </Fade>
+          
+          <Fade delay={1200}>
+            <Link variants={['noUnderline']} to='https://github.com/codeleap-uk/internal-libs-monorepo' target='_blank'>
+              <Button 
+                variants={['padding:2', 'w:200px']}
+                text='GitHub'
+                styles={{
+                  'text': { fontWeight: 700 }
+                }}
+              />
+            </Link>
+          </Fade>
         </View>
       </View>
-    )
-  }
-  return (
-    <Link
-      to={item.url}
-      variants={['alignCenter', 'padding:2', 'flex']}
-      css={styles.link}
-    >
-      <View variants={['column', 'marginVertical:2']}>
-        <Text text={item.name} variants={[depth === 2 ? 'h1' : 'h2', 'marginBottom:2']} />
-        <Text text={item.description} />
-      </View>
-      <Button
-        variants={['circle', 'marginLeft:3']}
-        icon='arrowForward'
-        onPress={() => {}}
-      />
-    </Link>
-  )
+    </Page>
+
+    <Particles id='particles-home' opacity={0.2} />
+  </>
 }
 
-const componentStyle = variantProvider.createComponentStyle((theme) => ({
-  link: {
-    display: 'flex',
-    ...theme.border.primary(2),
-    borderRadius: Theme.borderRadius.small,
+const styles = variantProvider.createComponentStyle((theme) => ({
+  title: {
+    fontSize: 64, // yes, it is quite
+    fontWeight: '900'
   },
   wrapper: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    minHeight: '80vh',
-    ...theme.spacing.paddingVertical(5),
-    ...theme.spacing.marginBottom(9),
     width: '100vw',
-    flexDirection: 'column',
-    [theme.media.down('mid')]: {
-      gridTemplateColumns: 'repeat(1, 1fr)',
-    },
+    minHeight: '80vh',
+    ...theme.presets.column,
+    ...theme.spacing.gap(7),
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    ...theme.spacing.paddingVertical(7),
   },
-}), false)
+  link: {
+    maxWidth: 250,
+    ...theme.presets.column,
+    ...theme.spacing.gap(1.5),
+    textDecoration: 'none',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
 
-const IndexPage: React.FC = () => {
-  const { isLoggedIn } = useAppSelector((store) => store.Session)
-
-  onMount(() => {
-    Session.setMounted()
-    Session.autoLogin()
-
-    const data = localStorage.getItem(LocalStorageKeys.SESSION_IS_DEV)
-    if (data) {
-      Session.setMode(data === 'true')
+    [theme.media.down('mid')]: {
+      maxWidth: '100%'
     }
-
-  })
-
-  onUpdate(() => {
-    AppStatus.setReady(isLoggedIn)
-  }, [isLoggedIn])
-
-  const styles = useComponentStyle(componentStyle)
-
-  return (
-    <Page title='Home'>
-
-      <View styles={{ wrapper: styles.wrapper }} title='Template'>
-
-        {links.map((l) => (
-          <ListItem item={l} key={l.name} styles={styles}/>
-        ))}
-
-      </View>
-    </Page>
-  )
-}
-
-export default IndexPage
+  },
+}), true)

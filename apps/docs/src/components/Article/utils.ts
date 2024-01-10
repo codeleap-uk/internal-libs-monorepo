@@ -1,23 +1,6 @@
 import { capitalize, TypeGuards, usePrevious, useRef } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 
-const characterReplaceMap = new Map([
-  [/\s/g, '-'],
-  [/\./g, '-'],
-  [/[\?,’'"…]/g, ''],
-  // [/\,/g, ''],
-])
-
-export function getHeadingId(content:string) {
-  let sectionId = content
-
-  characterReplaceMap.forEach((replaceWith, replace) => {
-    sectionId = sectionId.replace(replace, replaceWith)
-  })
-
-  return `section-${sectionId}`
-}
-
 const { inferProperties } = require('./inferProperties')
 
 export {
@@ -34,7 +17,7 @@ export function useMdx(allMdx, pageContext) {
     let pages = {}
     const flatData = []
     allMdx.edges.forEach(edge => {
-      const properties = inferProperties(edge.node.fileAbsolutePath)
+      const properties = inferProperties(edge.node.internal.contentFilePath)
       const frontMatter = edge.node.frontmatter
 
       const itemData:MdxMetadata = {

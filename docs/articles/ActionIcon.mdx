@@ -1,0 +1,29 @@
+---
+title: 'ActionIcon'
+description: '
+The IconButton component displays an icon that the user can interact with. It is imported from the "@codeleap/web" package.'
+tag: 'component'
+source: 'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/web/src/components/ActionIcon/index.tsx'
+---
+
+## Props
+- `icon` (optional): This prop specifies the name of the icon to be displayed. It should be a string that corresponds to one of the available icons.
+- `name` (optional): This prop also specifies the name of the icon to be displayed. It should be a string that corresponds to one of the available icons.
+
+## Example Usage
+```jsx
+import React from 'react';
+import { IconButton } from '@codeleap/web';
+
+const App = () => {
+  return (
+    <div>
+      <IconButton icon="home" />
+      <IconButton name="settings" />
+    </div>
+  );
+}
+
+export default App;
+```
+In the example above, the IconButton component is imported from the "@codeleap/web" package. Two instances of the IconButton component are rendered in the App component, each displaying a different icon ("home" and "settings").

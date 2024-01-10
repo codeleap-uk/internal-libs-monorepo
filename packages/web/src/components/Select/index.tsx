@@ -377,7 +377,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const MenuComponent = React.useCallback((props) => {
       return <CustomMenu {...props} Footer={FooterComponent} />
-    }, [])
+    }, [FooterComponent])
 
     const MenuListComponent = React.useCallback((props) => {
       return <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />
@@ -409,6 +409,9 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           hideSelectedOptions={false}
           tabSelectsValue={false}
           tabIndex={0}
+          backspaceRemovesValue={true}
+          escapeRemoves={true}
+          deleteRemoves={true}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}

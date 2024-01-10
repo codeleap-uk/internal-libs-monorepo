@@ -1,0 +1,32 @@
+---
+title: 'ActivityIndicator'
+description: '
+Is a React component that displays a loading animation on the screen. It can be used to indicate that the content is being loaded or processed in the background. The user does not interact directly with the *ActivityIndicator* component, it is usually displayed as an overlay or within a container.
+'
+tag: 'component'
+source: 'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/web/src/components/ActivityIndicator/index.tsx'
+---
+
+## Props
+
+- **component** (optional, React.ComponentType): A custom component to be rendered as the loading indicator. If not provided, a default loading animation is displayed.
+- **size** (optional, number): The size of the loading indicator. It defines the width and height of the component in pixels.
+
+## Example Usage
+
+```javascript
+import { ActivityIndicator } from "@codeleap/web";
+
+function App() {
+  return (
+    <div>
+      <h1>Loading Example</h1>
+      <ActivityIndicator size={30} />
+      {/* or */}
+      <ActivityIndicator component={CustomLoader} size={40} />
+    </div>
+  );
+}
+```
+
+In the example above, the *ActivityIndicator* component is rendered inside the *App* component. It is displayed with a size of 30 pixels. Optionally, a custom loader component *CustomLoader* can be provided to render the loading animation instead of the default one, with a size of 40 pixels.

@@ -25,17 +25,18 @@ import { ActionIcon, ActionIconProps } from '../ActionIcon'
 import { Scroll } from '../Scroll'
 import { ComponentCommonProps } from '../../types'
 import { Touchable, TouchableProps } from '../Touchable'
+import { modalScrollLock, ModalStore } from '../../lib/modal'
 
 export * from './styles'
 
 export type ModalProps =
   {
-    visible: boolean
+    visible?: boolean
     children?: React.ReactNode
     title?: React.ReactNode | string
     description?: React.ReactNode | string
     renderModalBody?: (props: ModalBodyProps) => React.ReactElement
-    toggle: AnyFunction
+    toggle?: AnyFunction
     styles?: StylesOf<ModalComposition>
     style?: React.CSSProperties
     accessible?: boolean
@@ -56,9 +57,11 @@ export type ModalProps =
     overlayProps?: Partial<OverlayProps>
     zIndex?: number
     withScrollContainer?: boolean
-    scrollLocked?: boolean
+    scrollLock?: boolean
     backdropProps?: Partial<TouchableProps>
     alterHistory?: boolean
+    modalId?: string
+    autoIndex?: boolean
   } & ComponentVariants<typeof ModalPresets> & ComponentCommonProps
 
 function focusModal(event: FocusEvent, id: string) {
@@ -148,7 +151,9 @@ const defaultProps: Partial<ModalProps> = {
   zIndex: null,
   description: null,
   withScrollContainer: false,
-  scrollLocked: true,
+  scrollLock: false,
+  autoIndex: false,
+  alterHistory: false,
 }
 
 export const ModalContent = (
@@ -178,14 +183,17 @@ export const ModalContent = (
     zIndex,
     withScrollContainer,
     debugName,
-    scrollLocked,
     backdropProps = {},
-    alterHistory = false,
+    alterHistory,
+    id: modalId,
+    autoIndex,
     ...props
   } = modalProps
 
-  const id = useId()
+  const index = ModalStore(store => (store.indexes?.[modalId] ?? 0))
 
+  const id = useId()
+  const modalRef = useRef(null)
   const variantStyles = useDefaultComponentStyle<'u:Modal', typeof ModalPresets>('u:Modal', {
     responsiveVariants,
     variants,
@@ -210,6 +218,39 @@ export const ModalContent = (
     }
   }
 
+  const handleTabKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, { firstElement, lastElement }: Record<'firstElement' |'lastElement', HTMLDivElement>) => {
+    if (e.key === 'Tab' || e?.keyCode === 9) {
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault()
+        lastElement.focus()
+      } else if (
+        !e.shiftKey &&
+        document.activeElement === lastElement
+      ) {
+        e.preventDefault()
+        firstElement.focus()
+      }
+    }
+  }
+
+  onUpdate(() => {
+    if (visible) {
+      const modalElement = modalRef.current
+
+      const focusableElements = modalElement.querySelectorAll('[tabindex]:not([tabindex="-1"])') as NodeListOf<HTMLDivElement>
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      modalElement.addEventListener('keydown', (e) => handleTabKeyPress(e, { firstElement, lastElement }))
+      modalElement.addEventListener('keydown', closeOnEscPress)
+
+      return () => {
+        modalElement.removeEventListener('keydown', (e) => handleTabKeyPress(e, { firstElement, lastElement }))
+        modalElement.removeEventListener('keydown', closeOnEscPress)
+      }
+    }
+  }, [visible])
+
   useIsomorphicEffect(() => {
     const modal = document.getElementById(id)
     if (modal) modal.focus()
@@ -227,13 +268,15 @@ export const ModalContent = (
 
   return (
     <View
+      ref={modalRef}
       aria-hidden={!visible}
       css={[
         variantStyles.wrapper,
-        _zIndex,
         visible
           ? variantStyles['wrapper:visible']
           : variantStyles['wrapper:hidden'],
+        autoIndex ? { zIndex: index } : {},
+        _zIndex,
       ]}
     >
       <Overlay
@@ -245,7 +288,6 @@ export const ModalContent = (
             ? variantStyles['backdrop:visible']
             : variantStyles['backdrop:hidden'],
         ]}
-        scrollLocked={scrollLocked}
         {...overlayProps}
       />
 
@@ -266,7 +308,6 @@ export const ModalContent = (
             style,
           ]}
           className='content'
-          onKeyDown={closeOnEscPress}
           tabIndex={0}
           id={id}
           aria-modal={true}
@@ -310,18 +351,24 @@ export const Modal = (props) => {
 
   const {
     accessible,
-    keepMounted,
-    visible,
+    visible: _visible,
+    scrollLock,
+    modalId: _modalId,
+    autoIndex,
+    toggle: _toggle,
   } = allProps
 
-  const modalId = useRef(v4())
+  const modalId = useRef(_modalId ?? v4())
+  const setIndex = ModalStore(store => store.setIndex)
+
+  const visible = TypeGuards.isBoolean(_visible) ? _visible : ModalStore(store => (store.modals?.[_modalId] ?? false))
+  const toggle = TypeGuards.isFunction(_toggle) ? _toggle : ModalStore(store => () => store.toggle(_modalId))
 
   onMount(() => {
     if (accessible) {
-      const currentId = modalId
       const appRoot = document.body
-      appRoot.addEventListener('focusin', (e) => focusModal(e, currentId))
-      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, currentId))
+      appRoot.addEventListener('focusin', (e) => focusModal(e, modalId.current))
+      return () => appRoot.removeEventListener('focusin', (e) => focusModal(e, modalId.current))
     }
   })
 
@@ -332,18 +379,16 @@ export const Modal = (props) => {
       appRoot.setAttribute('tabindex', `${-1}`)
     }
 
-    if (visible) {
-      document.body.style.overflowY = 'hidden'
-      document.body.style.overflowX = 'hidden'
-      document.body.style.maxHeight = '100svh'
-    } else {
-      document.body.style.overflowY = 'visible'
-      document.body.style.overflowX = 'hidden'
-      document.body.style.maxHeight = 'unset'
+    if (scrollLock) modalScrollLock(visible, modalId.current)
+    
+    if (autoIndex) {
+      setTimeout(() => {
+        setIndex(visible, modalId.current)
+      }, visible ? 0 : 500)
     }
   }, [visible])
 
-  const content = <ModalContent {...props} id={modalId.current} />
+  const content = <ModalContent {...props} visible={visible} toggle={toggle} id={modalId.current} />
 
   // if (renderStatus === 'unmounted') return null
 
@@ -357,4 +402,3 @@ export const Modal = (props) => {
 }
 
 Modal.defaultProps = defaultProps
-

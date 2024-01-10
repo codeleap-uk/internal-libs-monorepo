@@ -10,6 +10,7 @@ import {
   TypeGuards,
   useDefaultComponentStyle,
   useRef,
+  useCodeleapContext,
 } from '@codeleap/common'
 import {
   ModalComposition,
@@ -24,6 +25,7 @@ import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
 import { Text, TextProps } from '../Text'
 import { Touchable } from '../Touchable'
 import { ActionIcon } from '../ActionIcon'
+import { useState } from 'react'
 
 export * from './styles'
 
@@ -101,7 +103,7 @@ const DefaultHeader = (props: ModalHeaderProps) => {
     )}</>
 }
 
-export const Modal = (modalProps:ModalProps) => {
+export const Modal = (modalProps: ModalProps) => {
   const {
     variants = [],
     styles = {},
@@ -125,6 +127,9 @@ export const Modal = (modalProps:ModalProps) => {
     ...Modal.defaultProps,
     ...modalProps,
   }
+  const [modalHeight, setModalHeight] = useState(0)
+  const { Theme } = useCodeleapContext()
+
   const variantStyles = useDefaultComponentStyle('u:Modal', {
     variants: variants as any,
     transform: StyleSheet.flatten,
@@ -157,7 +162,10 @@ export const Modal = (modalProps:ModalProps) => {
   const ScrollComponent = scroll ? Scroll : View
   const scrollStyle = scroll ? getStyles('scroll') : getStyles('innerWrapper')
 
-  const headerProps:ModalHeaderProps = {
+  const heightThreshold = Theme.values.height * 0.75
+  const topSpacing = modalHeight > heightThreshold ? variantStyles.topSpacing : Theme.spacing.paddingTop(0)
+
+  const headerProps: ModalHeaderProps = {
 
     ...modalProps,
     closable,
@@ -178,9 +186,17 @@ export const Modal = (modalProps:ModalProps) => {
     }
   }, [visible, toggle, closeOnHardwareBackPress])
 
+  const onModalLayout = (event) => {
+    const { height } = event.nativeEvent.layout
+    setModalHeight(height)
+    props?.onLayout?.(event)
+  }
+
   return (
     <View
-      style={[wrapperStyle, { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex }]}
+      style={[wrapperStyle, {
+        zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex, ...topSpacing,
+      }]}
       pointerEvents={visible ? 'auto' : 'none'}
     >
 
@@ -189,9 +205,9 @@ export const Modal = (modalProps:ModalProps) => {
         'wrapper:visible': variantStyles['backdrop:visible'],
         wrapper: variantStyles.backdrop,
       }}
-      wrapperProps={{
-        transition: { ...variantStyles['backdrop:transition'] },
-      }}
+        wrapperProps={{
+          transition: { ...variantStyles['backdrop:transition'] },
+        }}
       />
       <ScrollComponent
         style={scrollStyle}
@@ -200,11 +216,11 @@ export const Modal = (modalProps:ModalProps) => {
         keyboardAware
         animated
 
-        { ...scrollProps}
+        {...scrollProps}
       >
         {dismissOnBackdrop &&
           <Touchable
-            onPress={closable && visible ? toggle : (() => {})}
+            onPress={closable && visible ? toggle : (() => { })}
             debounce={400}
             debugName={'Modal backdrop touchable'}
             style={variantStyles.backdropTouchable}
@@ -215,11 +231,11 @@ export const Modal = (modalProps:ModalProps) => {
         <View
           animated
           style={[getStyles('box'), boxAnimationStyles]}
-
           {...props}
+          onLayout={onModalLayout}
         >
 
-          {header ? header : <Header {...headerProps}/>}
+          {header ? header : <Header {...headerProps} />}
 
           <View style={getStyles('body')}>{children}</View>
           {footer && (
@@ -230,7 +246,7 @@ export const Modal = (modalProps:ModalProps) => {
         </View>
 
       </ScrollComponent>
-    </View>
+    </View >
 
   )
 }

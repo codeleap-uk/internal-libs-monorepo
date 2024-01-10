@@ -1,38 +1,42 @@
-import { CenterWrapperComposition } from '@codeleap/common'
-import { variantProvider } from '../theme'
+import { includePresets } from "@codeleap/common"
+import { variantProvider } from ".."
+
+export type CenterWrapperComposition = 'wrapper' | 'innerWrapper'
 
 const createCenterWrapperStyle =
   variantProvider.createVariantFactory<CenterWrapperComposition>()
-const defaultStyles = variantProvider.getDefaultVariants('CenterWrapper')
 
-export const AppCenterWrapperStyles = {
-  ...defaultStyles,
+const presets = includePresets((styles) => createCenterWrapperStyle(() => ({ innerWrapper: styles })))
+
+const MAX_WIDTH = 1280
+
+export const CenterWrapperStyles = {
+  ...presets,
   default: createCenterWrapperStyle((theme) => ({
     wrapper: {
       justifyContent: 'center',
       alignItems: 'center',
       display: 'flex',
-      flex: 1,
       width: '100%',
     },
     innerWrapper: {
       flex: 1,
       display: 'flex',
-      width: '80%',
-      maxWidth: 1280,
+      width: '100%',
+      maxWidth: MAX_WIDTH,
 
       [theme.media.down('xxlarge')]: {
+        paddingLeft: theme.spacing.value(16),
+        paddingRight: theme.spacing.value(16),
+      },
+      [theme.media.down('large')]: {
+        paddingLeft: theme.spacing.value(12),
+        paddingRight: theme.spacing.value(12),
+      },
+      [theme.media.down('largeish')]: {
         paddingLeft: theme.spacing.value(8),
         paddingRight: theme.spacing.value(8),
       },
-      // [theme.media.down('large')]: {
-      //   paddingLeft: theme.spacing.value(12),
-      //   paddingRight: theme.spacing.value(12),
-      // },
-      // [theme.media.down('largeish')]: {
-      //   paddingLeft: theme.spacing.value(8),
-      //   paddingRight: theme.spacing.value(8),
-      // },
       [theme.media.down('mid')]: {
         paddingLeft: theme.spacing.value(4),
         paddingRight: theme.spacing.value(4),
@@ -41,11 +45,6 @@ export const AppCenterWrapperStyles = {
         paddingLeft: theme.spacing.value(2),
         paddingRight: theme.spacing.value(2),
       },
-    },
-  })),
-  mainContent: createCenterWrapperStyle((theme) => ({
-    innerWrapper: {
-      minHeight: theme.values.height - theme.values.headerHeight,
     },
   })),
 }

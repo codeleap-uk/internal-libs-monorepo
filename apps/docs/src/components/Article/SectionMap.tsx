@@ -1,76 +1,62 @@
-import { React, Text, variantProvider, View } from '@/app'
-import { useComponentStyle } from '@codeleap/common'
+import { React, variantProvider } from '@/app'
+import { View, Text, Icon } from '@/components'
+import { useLocation, WindowLocation } from '@reach/router'
 import { Link } from '../Link'
-import { getHeadingId } from './utils'
-const headings = ['h1', 'h2'] as const
 
 type Node = {
-  level: number
-  text: string
-  children?: Node[]
+  title: string
+  url: string
+  items: Node[]
 }
 
-function mapSections(content) {
-  const nodes:Node[] = []
-  if (!Array.isArray(content)) {
-    content = [content]
-  }
-  content.forEach(({ props }) => {
-    const lastNode = nodes[nodes.length - 1]
-    if (headings.includes(props?.mdxType)) {
-      const level = Number(props.mdxType.replace('h', ''))
-
-      if (lastNode && level > lastNode?.level) {
-        nodes[nodes.length - 1].children.push({
-          level,
-          text: props.children,
-          children: [],
-        })
-      } else {
-        nodes.push({
-          level,
-          text: props.children,
-          children: [],
-        })
-      }
-    }
-  })
-
-  return nodes
-
+type SectionTextProps = { 
+  node: Node
+  subContent?: boolean 
+  pathOrigin: string 
+  location: WindowLocation<any> 
 }
 
-const SectionText = (props:{node:Node}) => {
-  const { node } = props
+const SectionText = (props: SectionTextProps) => {
+  const { node, subContent = false, pathOrigin, location } = props
 
-  const nodeId = getHeadingId(node.text)
+  const isSelected = location?.href?.includes(node?.url)
 
-  if (node.level === 1) {
-    return <View variants={['column', 'gap:2']}>
-      <Link variants={['h4']} text={node.text} to={`#${nodeId}`} />
-      {
-        node.children?.map((node,idx) => <SectionText node={node} key={idx} />)
-      }
+  return (
+    <View variants={['column', 'gap:2']}>
+      <Link 
+        variants={['p3', 'noUnderline', subContent && 'marginLeft:1', isSelected && 'primary3']} 
+        text={node?.title} 
+        to={pathOrigin + node?.url} 
+      />
+      {node.items?.map((node, idx) => (
+        <SectionText location={location} subContent node={node} key={idx} pathOrigin={pathOrigin} />
+      ))}
     </View>
-
-  } else {
-
-    return <Link variants={['h5', 'marginLeft:3']} text={node.text} to={`#${nodeId}`} />
-  }
+  )
 }
 
-export const SectionMap:React.FC = ({ content }) => {
-  const contentSections = mapSections(content)
-  const styles = useComponentStyle(componentStyles)
-  return <View css={styles.wrapper}>
-    <Text variants={['h4', 'primary']} text={'Table of contents'}/>
-    {
-      contentSections.map((node,idx)=> <SectionText node={node} key={idx}/>)
-    }
-  </View>
+export const SectionMap = ({ content = [] }) => {
+  const location = useLocation()
+
+  const pathOrigin = location?.origin + location?.pathname
+
+  return (
+    <View css={styles.wrapper}>
+      <View variants={['alignCenter', 'gap:2']}>
+        <Icon debugName='table content' name='layers' size={20} />
+        <Text variants={['h4', 'primary']} text={'Table of contents'} />
+      </View>
+
+      {content?.map((node, idx) => (
+        <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />
+      ))}
+    </View>
+  )
 }
 
-const componentStyles = variantProvider.createComponentStyle((theme) => ({
+const SECTION_WIDTH = 280
+
+const styles = variantProvider.createComponentStyle((theme) => ({
   wrapper: {
     backgroundColor: theme.colors.background,
     position: 'sticky',
@@ -78,23 +64,22 @@ const componentStyles = variantProvider.createComponentStyle((theme) => ({
     bottom: 0,
     top: theme.values.headerHeight,
     maxHeight: theme.values.height - theme.values.headerHeight,
-    ...theme.spacing.padding(2),
+    ...theme.spacing.paddingLeft(3),
+    ...theme.spacing.paddingRight(3),
+    ...theme.spacing.paddingBottom(3),
     ...theme.presets.alignSelfStretch,
     ...theme.presets.column,
-    ...theme.border.grayFade({
-      width: 1,
-      directions: ['left'],
-    }),
     ...theme.spacing.gap(2),
     flexBasis: '25%',
-    [theme.media.down('mid')]: {
-      position: 'static',
-      order: -1,
-      ...theme.border.grayFade({
-        width: 1,
-        directions: ['bottom'],
-      }),
+    paddingTop: theme.spacing.value(3),
+    minWidth: SECTION_WIDTH,
+    maxWidth: SECTION_WIDTH,
+    borderLeft: `1px solid ${theme.colors.neutral3}`,
 
+    [theme.media.down('mid')]: {
+      minWidth: '100vw',
+      maxWidth: '100vw',
+      minHeight: 'unset',
     },
   },
-}))
+}), true)

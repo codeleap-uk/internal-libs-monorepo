@@ -14,6 +14,7 @@ import { TouchableComposition, TouchablePresets } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
 import { usePressableFeedback } from '../../utils'
+import { Keyboard } from 'react-native'
 
 import { PressableRipple } from '../../modules/PressableRipple'
 export type TouchableProps =
@@ -36,10 +37,23 @@ export type TouchableProps =
     rippleDisabled?: boolean
     children?: React.ReactNode
     style?: StyleProp<ViewStyle>
+    analyticsEnabled?: boolean
+    analyticsName?: string
+    analyticsData?: Record<string, any>
+    dismissKeyboard?: boolean
   }
 
 export * from './styles'
-
+const defaultProps: Partial<TouchableProps> = {
+  variants: [],
+  debounce: 500,
+  noFeedback: false,
+  rippleDisabled: false,
+  analyticsEnabled: false,
+  analyticsName: null,
+  analyticsData: {},
+  dismissKeyboard: true,
+}
 const _Touchable = forwardRef<
   RNView,
   TouchableProps
@@ -51,14 +65,21 @@ const _Touchable = forwardRef<
     style,
     debugName,
     debugComponent,
-    debounce = 500,
+    debounce,
     leadingDebounce,
-    noFeedback = false,
+    noFeedback,
     styles,
     setPressed,
-    rippleDisabled = false,
+    rippleDisabled,
+    analyticsEnabled,
+    analyticsName,
+    analyticsData = {},
+    dismissKeyboard,
     ...props
-  } = touchableProps
+  } = {
+    ...defaultProps,
+    ...touchableProps,
+  }
 
   const pressed = React.useRef(!!leadingDebounce)
 
@@ -92,6 +113,16 @@ const _Touchable = forwardRef<
         debugName || variants,
         'User interaction',
       )
+      if (dismissKeyboard) {
+        Keyboard.dismiss()
+      }
+      if (analyticsEnabled) {
+        const name = analyticsName || debugName
+        if (!!name?.trim?.()) {
+          logger.analytics?.interaction(name, analyticsData)
+        }
+      }
+
       onPress && onPress()
     }
     if (TypeGuards.isNumber(debounce)) {
@@ -240,4 +271,8 @@ const _Touchable = forwardRef<
   )
 })
 
-export const Touchable = _Touchable as ((props: TouchableProps) => JSX.Element)
+export const Touchable = _Touchable as ((props: TouchableProps) => JSX.Element) & {
+  defaultProps: Partial<TouchableProps>
+}
+
+Touchable.defaultProps = defaultProps

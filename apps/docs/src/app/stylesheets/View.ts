@@ -1,35 +1,24 @@
-import { ViewComposition } from '@codeleap/common'
+import { ViewComposition, ViewPresets } from '@codeleap/web'
 import { variantProvider } from '../theme'
 
 const createViewStyle = variantProvider.createVariantFactory<ViewComposition>()
-const defaultStyles = variantProvider.getDefaultVariants('View')
 
 export const AppViewStyles = {
-  ...defaultStyles,
-  default: createViewStyle((theme) => ({
-    ...defaultStyles.default,
+  ...ViewPresets,
+  default: createViewStyle((t) => ({
     wrapper: {
-      ...defaultStyles.default(theme).wrapper,
       display: 'flex',
-      flexDirection: 'row',
-    },
-  })),
-  codeWrapper: createViewStyle(() => ({
-    wrapper: {
-      maxWidth: '100%',
-      maxHeight: 460,
-      overflowX: 'auto',
     },
   })),
   separator: createViewStyle((theme) => ({
-    ...defaultStyles.default(theme),
     wrapper: {
-      ...defaultStyles.default(theme).wrapper,
-      ...theme.border.border({
-        width: 2,
-        directions: ['top'],
-      }),
+      width: '100%',
+      height: 1,
+      backgroundColor: theme.colors.neutral3,
+
+      [theme.media.down('mid')]: {
+        height: 1,
+      },
     },
   })),
-
 }

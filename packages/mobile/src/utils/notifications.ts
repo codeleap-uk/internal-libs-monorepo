@@ -167,7 +167,7 @@ export class NotificationManager {
       const newLen = this.messageListeners.push(handler)
 
       return () => {
-        this.messageListeners.splice(newLen - 1)
+        this.messageListeners.splice(newLen - 1, 1)
       }
     }
 
@@ -181,7 +181,7 @@ export class NotificationManager {
       const newLen = this.stateChangeListeners.push(handler)
 
       return () => {
-        this.stateChangeListeners.splice(newLen - 1)
+        this.stateChangeListeners.splice(newLen - 1, 1)
       }
 
     }

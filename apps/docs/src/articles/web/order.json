@@ -2,13 +2,28 @@
     {
         "name": "root",
         "items": [
-            "ïndex"
+            "ïndex",
+            "navigation"
         ]
     },
     {
-        "name": "components",
+        "name": "button",
         "items": [
-            "button"
+            "Button",
+            "ActionIcon"
+        ]
+    },
+    {
+        "name": "layout",
+        "items": [
+            "ActivityIndicator",
+            "Badge"
+        ]
+    },
+    {
+        "name": "input",
+        "items": [
+            "Checkbox"
         ]
     }
 ]

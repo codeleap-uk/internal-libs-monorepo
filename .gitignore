@@ -25,6 +25,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+/patches
 # local env files
 .env.local
 .env.development.local
@@ -36,3 +37,7 @@ yarn-error.log*
 dist
 public
 test_area
+
+# generator
+docs/.env.json
+docs/processor/__pycache__

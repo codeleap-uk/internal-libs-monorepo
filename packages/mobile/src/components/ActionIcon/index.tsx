@@ -7,9 +7,12 @@ import { Icon, IconProps } from '../Icon'
 import { Touchable, TouchableProps } from '../Touchable'
 import { ActionIconComposition, ActionIconPresets } from './styles'
 
+/** * IconButton */
 export type ActionIconProps= {
     iconProps?: Partial<IconProps>
+    /** prop */
     icon?: IconProps['name']
+    /** prop */
     name?: IconProps['name']
     styles?: StylesOf<ActionIconComposition> | StylesOf<ActionIconComposition>[]
 } & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets> & BadgeComponentProps

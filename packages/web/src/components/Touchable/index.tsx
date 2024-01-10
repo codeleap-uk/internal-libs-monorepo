@@ -21,30 +21,54 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   debounce?: number
   leadingDebounce?: boolean
   setPressed?: (pressed: boolean) => void
+  analyticsEnabled?: boolean
+  analyticsName?: string
+  analyticsData?: Record<string, any>
 } & ComponentVariants<typeof TouchablePresets>
 
+const defaultProps: TouchableProps<'button'> = {
+  propagate: true,
+  debounce: null,
+  component: View,
+  style: {},
+  styles: {},
+  responsiveVariants: {},
+  variants: [],
+  css: [],
+  analyticsEnabled: false,
+  analyticsName: null,
+  analyticsData: {},
+  tabIndex: 0,
+}
 export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>,
   ref,
 ) => {
+  const mergedProps: TouchableProps = {
+    ...(defaultProps),
+    ...(touchableProps),
+  }
   const {
-    propagate = true,
-    debounce = null,
+    propagate,
+    debounce,
     leadingDebounce,
     setPressed,
-    component: Component = View,
+    component: Component,
     disabled,
     onPress,
     onClick,
     debugName,
     debugComponent,
-    style = {},
-    styles = {},
-    responsiveVariants = {},
-    variants = [],
-    css = [],
+    style,
+    styles,
+    responsiveVariants,
+    variants,
+    css,
+    analyticsEnabled,
+    analyticsName,
+    analyticsData,
     ...props
-  } = touchableProps as TouchableProps
+  } = mergedProps
 
   const pressed = React.useRef(!!leadingDebounce)
 
@@ -60,7 +84,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     responsiveVariants,
     variants,
     styles,
-    rootElement: 'wrapper'
+    rootElement: 'wrapper',
   })
 
   const { logger } = useCodeleapContext()
@@ -76,17 +100,25 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
       logger.warn(
         'No onPress passed to touchable',
         touchableProps,
-        'User interaction'
+        'User interaction',
       )
       return
     }
 
     const _onPress = () => {
+      if (event && (event?.type !== 'click' && event?.keyCode !== 13 && event?.key !== 'Enter')) return null
+
       logger.log(
         `<${debugComponent || 'Touchable'}/> pressed`,
         { debugName, debugComponent },
-        'User interaction'
+        'User interaction',
       )
+      if (analyticsEnabled) {
+        const name = analyticsName || debugName
+        if (!!name?.trim?.()) {
+          logger.analytics?.interaction(name, analyticsData)
+        }
+      }
 
       if (TypeGuards.isFunction(onClick)) onClick?.(event)
       onPress?.()
@@ -113,7 +145,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     disabled && variantStyles['wrapper:disabled'],
     css,
     style,
-  ]), [variantStyles, disabled])
+  ]), [variantStyles, disabled, style])
 
   return (
     <View
@@ -121,12 +153,17 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
       {...props}
       debugName={debugName}
       onClick={handleClick}
+      onKeyDown={handleClick}
       ref={ref}
       css={_styles}
     />
   )
 }
 
-export const Touchable = forwardRef(TouchableCP) as <T extends NativeHTMLElement = 'button'>(
+export const Touchable = forwardRef(TouchableCP) as (<T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>
-) => JSX.Element
+) => JSX.Element) & {
+  defaultProps: Partial<TouchableProps<'button'>>
+}
+
+Touchable.defaultProps = defaultProps

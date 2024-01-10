@@ -2,6 +2,204 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.18.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.6...v3.18.8) (2024-01-10)
+
+
+### Bug Fixes
+
+* **mobile:** select callback and gap cross value ([19c35ca](https://github.com/codeleap-uk/internal-libs-monorepo/commit/19c35ca8323084f7ce460637eee9c82a3d207a56))
+* **web:** slider thumb press ([14fe2b2](https://github.com/codeleap-uk/internal-libs-monorepo/commit/14fe2b25cb9bfbc61ce8bce43cc5f7a3ae9e310c))
+
+### [3.18.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.4...v3.18.6) (2023-12-18)
+
+### [3.18.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.4...v3.18.5) (2023-12-18)
+
+### [3.18.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.3...v3.18.4) (2023-12-18)
+
+### [3.18.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.0...v3.18.3) (2023-12-13)
+
+
+### Bug Fixes
+
+* **web:** allow access to inner input ref ([c686942](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6869426538230493207b2d7410e1ccdc66ce263))
+
+### [3.18.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.0...v3.18.2) (2023-12-11)
+
+
+### Bug Fixes
+
+* **web:** allow access to inner input ref ([c686942](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6869426538230493207b2d7410e1ccdc66ce263))
+
+## [3.18.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.2...v3.18.0) (2023-12-05)
+
+
+### Features
+
+* **common:** reverse pagination in querymanager ([d3176cb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d3176cb471db80b1de27830ac22e3f40e9c50207))
+* **mobile:** adds defaultprops to scroll components, tapping through keyboard now works ([e114e8b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e114e8b5b58c27291e5040abbd9e3dbed604661d))
+* **web:** add custom alert ([3b8cfe9](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3b8cfe9220549c94a00198ed67ce8b28aa52be14))
+* **web:** crop picker loading ([ea6a33e](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ea6a33e5756cce9f8c58e13de701e04f484d81b2))
+
+
+### Bug Fixes
+
+* **common:** Fix pageParams bug ([d29b09a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d29b09ac7360e30d135c4d6d03d79b9e1a44f434))
+* **common:** fix refreshItem update ([c6be79b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6be79b3d25c3197ab0c6319f57b661b606fdcc0))
+* **docs:** change build command ([5769482](https://github.com/codeleap-uk/internal-libs-monorepo/commit/576948239a3794d7537fa6d11a257a8267943c0c))
+* **mobile:** attempt to fix typescript in grid ([37ee471](https://github.com/codeleap-uk/internal-libs-monorepo/commit/37ee471291b8e09a9f44f354e2edc2ea6d65bd7d))
+* prevent calling scroll end without scrollEnabled ([daa4b87](https://github.com/codeleap-uk/internal-libs-monorepo/commit/daa4b87f1c5a15d3cf1699739e273c36659bc434))
+
+## [3.17.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.16.2...v3.17.0) (2023-12-05)
+
+
+### Features
+
+* **web:** crop picker loading ([ea6a33e](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ea6a33e5756cce9f8c58e13de701e04f484d81b2))
+
+
+### Bug Fixes
+
+* **common:** fix refreshItem update ([c6be79b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6be79b3d25c3197ab0c6319f57b661b606fdcc0))
+
+### [3.16.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.16.1...v3.16.2) (2023-11-25)
+
+### [3.16.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.16.0...v3.16.1) (2023-11-25)
+
+## [3.16.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.2...v3.16.0) (2023-11-22)
+
+
+### Features
+
+* **common:** reverse pagination in querymanager ([d3176cb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d3176cb471db80b1de27830ac22e3f40e9c50207))
+* **mobile:** adds defaultprops to scroll components, tapping through keyboard now works ([e114e8b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e114e8b5b58c27291e5040abbd9e3dbed604661d))
+* **web:** add custom alert ([3b8cfe9](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3b8cfe9220549c94a00198ed67ce8b28aa52be14))
+
+
+### Bug Fixes
+
+* **common:** Fix pageParams bug ([d29b09a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d29b09ac7360e30d135c4d6d03d79b9e1a44f434))
+* **docs:** change build command ([5769482](https://github.com/codeleap-uk/internal-libs-monorepo/commit/576948239a3794d7537fa6d11a257a8267943c0c))
+* **mobile:** attempt to fix typescript in grid ([37ee471](https://github.com/codeleap-uk/internal-libs-monorepo/commit/37ee471291b8e09a9f44f354e2edc2ea6d65bd7d))
+* prevent calling scroll end without scrollEnabled ([daa4b87](https://github.com/codeleap-uk/internal-libs-monorepo/commit/daa4b87f1c5a15d3cf1699739e273c36659bc434))
+
+
+### [3.15.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.7...v3.15.8) (2023-11-16)
+
+### [3.15.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.6...v3.15.7) (2023-11-15)
+
+### [3.15.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.5...v3.15.6) (2023-11-15)
+
+### [3.15.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.4...v3.15.5) (2023-11-14)
+
+### [3.15.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.3...v3.15.4) (2023-11-14)
+
+### [3.15.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.1...v3.15.3) (2023-11-13)
+
+### [3.15.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.1...v3.15.2) (2023-11-13)
+
+
+### [3.15.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.1...v3.15.2) (2023-11-13)
+
+
+### Bug Fixes
+
+* prevent calling scroll end without scrollEnabled ([daa4b87](https://github.com/codeleap-uk/internal-libs-monorepo/commit/daa4b87f1c5a15d3cf1699739e273c36659bc434))
+
+### [3.15.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.15.0...v3.15.1) (2023-10-25)
+
+## [3.15.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.3...v3.15.0) (2023-10-20)
+
+
+### Features
+
+* **mobile:** adds defaultprops to scroll components, tapping through keyboard now works ([e114e8b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e114e8b5b58c27291e5040abbd9e3dbed604661d))
+* **web:** add custom alert ([3b8cfe9](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3b8cfe9220549c94a00198ed67ce8b28aa52be14))
+
+
+### Bug Fixes
+
+* **docs:** change build command ([5769482](https://github.com/codeleap-uk/internal-libs-monorepo/commit/576948239a3794d7537fa6d11a257a8267943c0c))
+* **mobile:** attempt to fix typescript in grid ([37ee471](https://github.com/codeleap-uk/internal-libs-monorepo/commit/37ee471291b8e09a9f44f354e2edc2ea6d65bd7d))
+
+### [3.14.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.2...v3.14.3) (2023-10-13)
+
+### [3.14.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.0...v3.14.2) (2023-10-11)
+
+### [3.14.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.14.0...v3.14.1) (2023-09-27)
+
+## [3.14.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.0...v3.14.0) (2023-09-21)
+
+
+### Features
+
+* **mobile:** add analytics integration to touchable ([931c7b6](https://github.com/codeleap-uk/internal-libs-monorepo/commit/931c7b68903ad064e1ed58509ffe72943a090095))
+* **web:** add analytics integration to touchable ([f367efb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f367efb76ceefbaf9fff86d125ad8d95e98c9f74))
+
+
+### Bug Fixes
+
+* **mobile:** add top space to modal ([faff542](https://github.com/codeleap-uk/internal-libs-monorepo/commit/faff542bc5024d3b8e49994f26248cd72eca3f38))
+* **tooling:** fix script ([9d4a899](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9d4a899a544db0b63a21846148a9537650b85d9f))
+* **web:** assign touchable default props ([b277979](https://github.com/codeleap-uk/internal-libs-monorepo/commit/b277979dd9a3647f457b0a53b1cda93d130692cd))
+
+### [3.13.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.4...v3.13.5) (2023-09-12)
+
+### [3.13.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.3...v3.13.4) (2023-09-12)
+
+### [3.13.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.2...v3.13.3) (2023-09-12)
+
+### [3.13.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.1...v3.13.2) (2023-09-12)
+
+
+### Bug Fixes
+
+* **tooling:** fix script ([9d4a899](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9d4a899a544db0b63a21846148a9537650b85d9f))
+
+### [3.13.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.1-0...v3.13.1) (2023-09-12)
+
+### [3.13.1-0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0...v3.13.1-0) (2023-09-12)
+
+## [3.13.0-touchable-analytics.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.2...v3.13.0-touchable-analytics.3) (2023-09-12)
+
+
+### Bug Fixes
+
+* **web:** assign touchable default props ([b277979](https://github.com/codeleap-uk/internal-libs-monorepo/commit/b277979dd9a3647f457b0a53b1cda93d130692cd))
+
+## [3.13.0-touchable-analytics.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.1...v3.13.0-touchable-analytics.2) (2023-09-12)
+
+## [3.13.0-touchable-analytics.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.13.0-touchable-analytics.0...v3.13.0-touchable-analytics.1) (2023-09-12)
+
+## [3.13.0-touchable-analytics.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.19...v3.13.0-touchable-analytics.0) (2023-09-12)
+## [3.13.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.7.1...v3.13.0) (2023-09-07)
+
+
+### Features
+
+* **mobile:** add analytics integration to touchable ([931c7b6](https://github.com/codeleap-uk/internal-libs-monorepo/commit/931c7b68903ad064e1ed58509ffe72943a090095))
+* **web:** add analytics integration to touchable ([f367efb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f367efb76ceefbaf9fff86d125ad8d95e98c9f74))
+* **common:** Filters for adding item ([ee5995f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ee5995fc0eb1b86950d43a62bbf73c7064735014))
+* **mobile:** spotlight customFooter ([972fb7d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/972fb7d6c407f34e0657a08fc10fe9c18f453c95))
+* **mobile:** spotlight customHeader ([72dee01](https://github.com/codeleap-uk/internal-libs-monorepo/commit/72dee012d6abf221e92de86d1720ecc57c63d177))
+* **web:** click outside hook - Tooltip prop close outside - Select state prop ([e711075](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e711075622034cad96d45ec2d0fbd0dfe733d6ae))
+* **web:** Global alert ([7bd430a](https://github.com/codeleap-uk/internal-libs-monorepo/commit/7bd430a3c4bd66c87023abc6244f7f532ee74405))
+
+
+### Bug Fixes
+
+* **mobile:** adjs ([9161f8e](https://github.com/codeleap-uk/internal-libs-monorepo/commit/9161f8e9f7038aabac5493349c100da44722155e))
+* **mobile:** async file input ([390bb72](https://github.com/codeleap-uk/internal-libs-monorepo/commit/390bb72bd508e028837b69f68dd0638970d78065))
+* **mobile:** crash if HeaderComponent was not defined ([0fd650f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0fd650f88fa68444c9a5525667f2b18266f6edf7))
+* **web:** types, cript ([d249e29](https://github.com/codeleap-uk/internal-libs-monorepo/commit/d249e29bfb4357ca1221b653ad1deb925ea84381))
+
+### [3.12.23](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.22...v3.12.23) (2023-09-07)
+
+### [3.12.22](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.21...v3.12.22) (2023-09-06)
+
+### [3.12.21](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.20...v3.12.21) (2023-09-05)
+
+### [3.12.20](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.17...v3.12.20) (2023-09-05)
+
 ### [3.12.19](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.18...v3.12.19) (2023-09-05)
 
 ### [3.12.18](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.12.15...v3.12.18) (2023-09-04)

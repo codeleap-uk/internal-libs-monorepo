@@ -1,0 +1,18 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+@keyframes scaleIn {
+  from {
+    scale: 0.8;
+  }
+  to {
+    sacle: 1;
+  }
+}

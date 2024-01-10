@@ -14,20 +14,29 @@ import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
 import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
 import { ComponentCommonProps } from '../../types'
 
+/** * Button */
 export type ButtonProps = 
   ComponentVariants<typeof ButtonPresets> &
   Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> &
   ComponentCommonProps & {
+    /** prop */
     text?: string
+    /** prop */
     rightIcon?: IconPlaceholder
+    /** prop */
     icon?: IconPlaceholder
+    /** prop */
     onPress?: AnyFunction
     styles?: StylesOf<ButtonComposition>
     style?: React.CSSProperties
+    /** prop */
     loading?: boolean
     loadingShowText?: boolean
+    /** prop */
     debugName: string
+    /** prop */
     debounce?: number
+    /** prop */
     selected?: boolean
     children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
     loaderProps?: Partial<ActivityIndicatorProps>
@@ -59,6 +68,7 @@ export const Button = (buttonProps: ButtonProps) => {
     selected,
     loaderProps = {},
     debugName,
+    style = {},
     ...props
   } = allProps
 
@@ -105,7 +115,7 @@ export const Button = (buttonProps: ButtonProps) => {
 
   return (
     <Touchable
-      css={_styles.wrapper}
+      css={[_styles.wrapper, style]}
       component='button'
       debugComponent='Button'
       disabled={disabled}
