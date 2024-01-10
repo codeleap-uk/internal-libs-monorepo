@@ -56,7 +56,7 @@ type CreateOSAlertOptions = {
   delay?: number
 }
 
-export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptions) {
+export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptions = {}) {
   const {
     delay = 450,
   } = options
