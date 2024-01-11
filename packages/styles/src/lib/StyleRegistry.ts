@@ -1,6 +1,7 @@
-import { AnyFunction, AnyStyledComponent, GenericStyledComponent, ICSS, StyleProp, VariantStyleSheet } from '../types'
+import { AnyStyledComponent, ICSS, StyleProp, VariantStyleSheet } from '../types'
 import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
+import trieMemoize from "trie-memoize"
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -62,6 +63,33 @@ export class CodeleapStyleRegistry {
     })
   }
 
+  isResponsiveStyle(component: AnyStyledComponent, style: any) {
+    // TO-DO
+  }
+
+  getDefaultVariantStyle(componentName: string, defaultVariantStyleName: string = 'default') {
+    const stylesheet = this.stylesheets[componentName]
+
+    if (!stylesheet) {
+      throw new Error(`No variants registered for ${componentName}`)
+    }
+
+    const defaultStyle = stylesheet?.[defaultVariantStyleName]
+
+    if (!!defaultStyle) {
+      return defaultStyle
+    }
+  }
+
+  mergeStylesWithCache<T = unknown>(styles: ICSS[], key: string): T {
+    const cacheStyles: (styles: ICSS[], key: string) => T = trieMemoize(
+      [WeakMap, Map],
+      (styles: ICSS[], key: string) => this.mergeStyles(styles, key)
+    )
+
+    return cacheStyles?.(styles, key)
+  }
+
   styleFor<T = unknown>(componentName:string, style: StyleProp<T>): T {
     const isStyleArray = Array.isArray(style)
     const registeredComponent = this.components[componentName]
@@ -70,12 +98,21 @@ export class CodeleapStyleRegistry {
       throw new Error(`Component ${componentName} not registered`)
     }
 
+    const rootElement = registeredComponent?.rootElement ?? 'wrapper'
+
+    const defaultStyle = this.getDefaultVariantStyle(componentName)
+
+    if (!style) {
+      return this.mergeStylesWithCache([defaultStyle], this.hashStyle(defaultStyle, ['default']))
+    }
+
     const isStyleObject = typeof style === 'object' && !isStyleArray
 
     if (typeof style === 'string') {
       const [computedStyle, key] = this.computeVariantStyle(componentName, [style])
 
-      return this.mergeStyles([
+      return this.mergeStylesWithCache([
+        defaultStyle,
         computedStyle,
       ], key)
     }
@@ -83,15 +120,15 @@ export class CodeleapStyleRegistry {
     if (isStyleObject) {
       const isCompositionStyle = this.isCompositionStyle(registeredComponent, style)
 
-      return this.mergeStyles(
-        [isCompositionStyle ? style : { [registeredComponent.rootElement]: style }],
+      return this.mergeStylesWithCache(
+        [defaultStyle, isCompositionStyle ? style : { [rootElement]: style }],
         this.hashStyle(style, []),
       )
     }
 
     if (isStyleArray) {
       let variants:string[] = []
-      const styles:ICSS[] = []
+      const styles:ICSS[] = [defaultStyle]
       let idx = 0
       const variantKeys:string[] = []
 
@@ -109,7 +146,7 @@ export class CodeleapStyleRegistry {
             variants = []
           }
           const isCompositionStyle = this.isCompositionStyle(registeredComponent, s)
-          styles.push(isCompositionStyle ? s : { [registeredComponent.rootElement]: s })
+          styles.push(isCompositionStyle ? s : { [rootElement]: s })
         }
 
         if (idx === style.length - 1 && variants.length > 0) {
@@ -122,7 +159,7 @@ export class CodeleapStyleRegistry {
         idx++
       }
 
-      return this.mergeStyles(styles, this.hashStyle(style, variantKeys))
+      return this.mergeStylesWithCache(styles, this.hashStyle(style, variantKeys))
     }
 
     console.warn('Invalid style prop for ', componentName, style)
