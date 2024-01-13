@@ -4,7 +4,7 @@ import { useMediaQuery } from './hooks'
 
 export type BreakpointsMatch<T extends string = string> = Record<T, any>
 
-export function useBreakpointMatch<T extends string = string>(values: BreakpointsMatch<T>) {
+export function useBreakpointMatch<T extends string = string>(values: Partial<BreakpointsMatch<T>>) {
   const { Theme } = useCodeleapContext()
 
   const themeBreakpoints: Record<string, number> = Theme?.breakpoints

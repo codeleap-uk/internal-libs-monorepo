@@ -14,7 +14,6 @@ export type OverlayProps<T extends NativeHTMLElement = 'div'> = {
   visible?: boolean
   styles?: StylesOf<OverlayComposition>
   onPress?: TouchableProps<'div'>['onClick']
-  scrollLocked?: boolean
 } & ComponentVariants<typeof OverlayPresets> & Omit<ViewProps<T>, 'variants' | 'responsiveVariants'>
 
 export * from './styles'
@@ -25,7 +24,6 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
     responsiveVariants, 
     variants, 
     styles, 
-    scrollLocked = false, 
     ...props 
   } = overlayProps
 
@@ -35,7 +33,7 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
     styles,
   })
 
-  usePopState(visible, props.onPress, scrollLocked)
+  usePopState(visible, props.onPress)
 
   const Component = props.onClick || props.onPress ? Touchable : View
 

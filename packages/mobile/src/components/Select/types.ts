@@ -23,6 +23,8 @@ export type SelectRenderFNProps<T> = {
   touchableProps?: Partial<PropsOf<typeof Touchable>>
   textProps?: Partial<PropsOf<typeof Text>>
   iconProps?: Partial<PropsOf<typeof Icon>>
+  index: number
+  debugName: string
 }
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
@@ -88,6 +90,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = {
     searchable?: boolean
     limit?: number
     ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
+    ListComponent?: React.ComponentType<any>
     searchInputProps?: Partial<SearchInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean

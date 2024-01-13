@@ -3,6 +3,9 @@ import type { GatsbyConfig } from 'gatsby'
 process.env.SITE_URL = process.env.SITE_URL || 'http://localhost:8000/'
 
 const config: GatsbyConfig = {
+  flags: {
+    DEV_SSR: true,
+  },
   siteMetadata: {
     title: `Codeleap Docs`,
     titleTemplate: 'CodeLeap | %s',
@@ -66,6 +69,14 @@ const config: GatsbyConfig = {
         'path': './src/pages/',
       },
       __key: 'pages',
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'updates',
+        path: `${__dirname}/src/updates`,
+        ignore: ['**/*.{tsx, png, jsx, js, jpg, webp, json}'],
+      },
     },
     {
       resolve: 'gatsby-source-filesystem',

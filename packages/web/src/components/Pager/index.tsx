@@ -116,7 +116,8 @@ const PagerComponent = (
 
   useImperativeHandle(ref, () => ({
     goTo,
-  }))
+    ...sliderRef.current,
+  }), [!!sliderRef?.current])
 
   onUpdate(() => {
     goTo(page)

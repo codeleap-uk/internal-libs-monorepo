@@ -378,6 +378,17 @@ export class QueryManager<
           offset: currentTotal,
         }
       },
+      getPreviousPageParam: (lastPage, pages) => {
+        const currentTotal = pages.reduce((acc, p) => p.results.length + acc, 0)
+
+        if (currentTotal >= (lastPage?.count || Infinity)) {
+          return undefined
+        }
+        return {
+          limit: this.standardLimit,
+          offset: currentTotal,
+        }
+      },
       select: (data: InfinitePaginationData<T>) => {
 
         const { itemList } = this.transformData(data, queryKey)
@@ -721,7 +732,9 @@ export class QueryManager<
       forceRefetch: true,
     })
 
-    this.queryClient.setQueryData(this.queryKeyFor(itemId), newItem)
+    this.queryClient.setQueryData(this.queryKeyFor(itemId), old => {
+      return newItem
+    })
 
     this.updateItems(newItem)
 

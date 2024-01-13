@@ -47,6 +47,7 @@ export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
   onHover?: (hoverType: 'enter' | 'leave', value: boolean) => void
   onPress?: (value: boolean) => void
   children?: React.ReactNode
+  style?: React.CSSProperties
 } & ComponentVariants<typeof TooltipPresets> & ComponentCommonProps
 
 const defaultProps: Partial<TooltipProps> = {
@@ -91,6 +92,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     responsiveVariants = {},
     styles = {},
     closeOnClickOutside,
+    style,
     ...rest
   } = allProps
 
@@ -105,7 +107,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
   const [visible, toggle] = hasStateProps ? [_visible, _toggle] : useState(false)
 
   const tooltipDirectionStyle = React.useMemo(() => {
-    return side ? variantsStyles[`wrapper:${side}`] : variantsStyles.wrapper
+    return side ? variantsStyles[`content:${side}`] : variantsStyles.content
   }, [side, variantsStyles])
 
   function handleToggle(_value: boolean, isToggle = true) {
@@ -161,6 +163,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
         open={visible}
         onOpenChange={onOpenChange}
         {...rest}
+        css={[variantsStyles.wrapper, style]}
       >
         <TooltipTrigger
           onClick={_onPress}
@@ -169,13 +172,18 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
           asChild
           ref={triggerRef}
           {...triggerProps}
+          style={variantsStyles.triggerWrapper}
         >
-          <TriggerWrapper {...allProps as any} {...triggerWrapperProps}>
+          <TriggerWrapper 
+            {...allProps as any} 
+            {...triggerWrapperProps}
+            style={variantsStyles.triggerInnerWrapper}
+          >
             {children}
           </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
-          <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, variantsStyles.wrapper]} sideOffset={2} side={side} {...contentProps}>
+          <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, variantsStyles.content]} sideOffset={2} side={side} {...contentProps}>
             {
               TypeGuards.isFunction(Content)
                 ? <Content
@@ -186,7 +194,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
                 />
                 : Content
             }
-            <TooltipArrow {...arrowProps} />
+            <TooltipArrow {...arrowProps} style={variantsStyles.arrow} />
           </TooltipContent>
         </TooltipPortal>
       </TooltipWrapper>

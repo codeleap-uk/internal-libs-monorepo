@@ -135,19 +135,23 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     largestWidth,
   ]
 
-  const onSelectTab = (option: SegmentedControlOptionProps) => {
-    if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
+  const onSelectTab = (option: SegmentedControlOptionProps, e?: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!e || e?.keyCode === 13 || e?.key === 'Enter') {
+      if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
+        onValueChange(option.value)
+        return
+      }
+
+      if (sectionPressedRef.current !== null) return
+
       onValueChange(option.value)
-      return
+      sectionPressedRef.current = setTimeout(() => {
+        clearTimeout(sectionPressedRef.current)
+        sectionPressedRef.current = null
+      }, debounce)
+    } else {
+      return null
     }
-
-    if (sectionPressedRef.current !== null) return
-
-    onValueChange(option.value)
-    sectionPressedRef.current = setTimeout(() => {
-      clearTimeout(sectionPressedRef.current)
-      sectionPressedRef.current = null
-    }, debounce)
   }
 
   return (
@@ -171,6 +175,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             label={o.label}
             value={o.value}
             onPress={() => onSelectTab(o)}
+            onKeyDown={(e) => onSelectTab(o, e)}
             key={idx}
             icon={o.icon}
             selected={value === o.value}
@@ -179,6 +184,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             disabled={disabled}
             textProps={textProps}
             iconProps={iconProps}
+            tabIndex={0}
             {...props?.touchableProps}
           />
         ))}

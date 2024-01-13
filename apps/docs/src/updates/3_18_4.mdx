@@ -1,0 +1,48 @@
+---
+title: 'Modal scroll lock, auto index and global access'
+---
+
+### Scroll lock (web)
+
+Added the behavior that when opening a Modal, the scroll of the entire browser is blocked. You can disable/enable this behavior using 
+the **scrollLock** prop; its default value is always false. Therefore, to enable it for all Modals in your app, add this line in:
+**src/components/index.tsx**:
+
+```tsx
+LibComponents.Modal.defaultProps.scrollLock = true
+```
+
+### Auto index (web)
+
+Added the behavior of automatically setting the zIndex of Modals. Previously, it was possible that when opening a Modal on top of another 
+Modal, the second one would end up behind instead of on top. You can disable/enable this behavior using the **autoIndex** prop; its default value 
+is always false. Therefore, to enable it for all Modals in your app, add this line in **src/components/index.tsx**:
+
+```tsx
+LibComponents.Modal.defaultProps.autoIndex = true
+```
+
+### Global access (web)
+
+It is no longer necessary to pass props such as 'visible' and 'toggle'; you can now open or close a Modal from anywhere in the code with just one 
+function called **toggleModal**
+
+First, you must define an ID for your Modal
+
+```tsx
+function ModalExample() {
+  return (
+    <Modal modalId='modal-example' />
+  )
+}
+```
+
+Now you can call this Modal as follows
+
+```ts
+import { toggleModal } from '@codeleap/web'
+
+function triggerModal() {
+  toggleModal('modal-example')
+}
+```

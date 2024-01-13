@@ -89,10 +89,12 @@ export const Switch = (props: SwitchProps) => {
 
   const _switchOnLeft = switchOnLeft ?? variantStyles.__props?.switchOnLeft
 
-  const handleChange = () => {
+  const handleChange = (e?: React.KeyboardEvent<HTMLDivElement>) => {
     if (disabled) return
-    if (onValueChange) onValueChange?.(!value)
-    if (onChange) onChange?.(!value)
+    if (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter') {
+      if (onValueChange) onValueChange?.(!value)
+      if (onChange) onChange?.(!value)
+    }
   }
 
   return <InputBase
@@ -118,6 +120,8 @@ export const Switch = (props: SwitchProps) => {
       animate={trackAnimation}
       transition={variantStyles['track:transition']}
       onClick={handleChange}
+      onKeyDown={handleChange}
+      tabIndex={0}
     >
       <motion.div
         css={[
