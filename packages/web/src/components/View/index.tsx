@@ -7,6 +7,7 @@ import { useMediaQuery } from '../../lib/hooks'
 import { NativeHTMLElement } from '../../types'
 import { motion } from 'framer-motion'
 import { ViewProps } from './types'
+import { getTestId } from '../../lib'
 
 export * from './styles'
 export * from './types'
@@ -80,6 +81,8 @@ export const ViewCP = (
     logger.log(debugName, { componentStyles, platformMediaQuery, matches })
   }
 
+  const testId = getTestId(viewProps)
+
   return (
     <Component
       css={componentStyles}
@@ -87,6 +90,7 @@ export const ViewCP = (
       {...onHoverProps}
       {...props}
       {...animatedProps}
+      data-testid={testId}
     >
       {children}
     </Component>

@@ -25,6 +25,7 @@ import { StylesOf, HTMLProps, ComponentWithDefaultProps } from '../../types/util
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
+import { getTestId } from '../../lib'
 
 export * from './styles'
 export * from './mask'
@@ -201,6 +202,8 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
 
   const inputBaseAction = isPressable ? 'onPress' : 'onClick'
 
+  const testId = getTestId(others)
+
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -262,6 +265,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
         ]}
         {...maskProps}
         ref={innerInputRef}
+        data-testid={testId}
       />
     </InputBase>
   )
