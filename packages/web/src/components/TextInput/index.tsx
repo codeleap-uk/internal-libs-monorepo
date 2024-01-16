@@ -25,7 +25,7 @@ import { StylesOf, HTMLProps, ComponentWithDefaultProps } from '../../types/util
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
-import { getTestId } from '../../lib'
+import { getTestId } from '../../lib/test'
 
 export * from './styles'
 export * from './mask'
@@ -54,8 +54,8 @@ export type TextInputProps =
   } & ComponentVariants<typeof TextInputPresets>
 
 type InputRef = {
-  isTextInput?: boolean,
-  focus: () => void,
+  isTextInput?: boolean
+  focus: () => void
   getInputRef: () => HTMLInputElement
 }
 

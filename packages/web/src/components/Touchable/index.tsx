@@ -1,11 +1,11 @@
 import { AnyFunction, ComponentVariants, onMount, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
 import React, { ComponentPropsWithRef, ElementType, forwardRef } from 'react'
-import { getTestId, stopPropagation } from '../../lib'
+import { stopPropagation } from '../../lib'
 import { View } from '../View'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { CSSInterpolation } from '@emotion/css'
 import { StylesOf, NativeHTMLElement } from '../../types'
-
+import { getTestId } from '../../lib/test'
 export * from './styles'
 
 export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWithRef<T> & {
