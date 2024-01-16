@@ -1,5 +1,6 @@
 import { TypeGuards } from '@codeleap/common'
 import { AppTheme, ColorScheme, Theme } from '../types'
+import { defaultPresets } from './presets'
 import { spacingFactory } from './spacing'
 import { themeStore } from './themeStore'
 
@@ -46,6 +47,11 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
       ...spacingFactory(theme.baseSpacing, 'padding'),
       ...spacingFactory(theme.baseSpacing, 'margin'),
       ...spacingFactory(theme.baseSpacing, 'gap'),
+    },
+
+    presets: {
+      ...defaultPresets,
+      ...theme.presets,
     },
   }
 

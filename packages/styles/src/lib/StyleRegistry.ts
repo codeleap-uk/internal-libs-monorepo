@@ -1,13 +1,17 @@
-import { AnyStyledComponent, ICSS, StyleProp, VariantStyleSheet } from '../types'
+import { AnyStyledComponent, AppTheme, ICSS, SpacingMap, StyleProp, Theme, VariantStyleSheet } from '../types'
 import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
 import { objectPickBy } from '@codeleap/common'
-
+import { SpacingFunction } from './spacing'
+import { createStyles } from './createStyles'
+import { defaultPresets } from './presets'
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
 
   variantStyles: Record<string, ICSS> = {}
+
+  commonVariantsStyles: Record<string, ICSS | SpacingFunction> = {}
 
   styles: Record<string, ICSS> = {}
 
@@ -27,6 +31,7 @@ export class CodeleapStyleRegistry {
 
   computeVariantStyle(componentName: string, variants: string[]): [ICSS, string] {
     const key = this.keyForVariants(componentName, variants)
+    const { rootElement } = this.getRegisteredComponent(componentName)
 
     if (this.variantStyles[key]) {
       return [this.variantStyles[key], key]
@@ -39,8 +44,26 @@ export class CodeleapStyleRegistry {
     }
 
     const variantStyles = variants.map((variant) => {
-      return stylesheet[variant]
+      if (!!stylesheet[variant]) {
+        return stylesheet[variant]
+      } else {
+        if (variant?.includes('padding') || variant?.includes('margin') || variant?.includes('gap')) {
+          const [variantName, value] = variant?.split(':')
+
+          const spacingFn = this.commonVariantsStyles[variantName] as SpacingFunction
+
+          return createStyles({
+            [rootElement]: spacingFn(Number(value))
+          })
+        } else {
+          return createStyles({
+            [rootElement]: this.commonVariantsStyles[variant]
+          })
+        }
+      }
     })
+
+    console.log(variantStyles)
 
     // @ts-ignore
     const mergedComposition = deepmerge({ all: true })(...variantStyles)
@@ -91,8 +114,7 @@ export class CodeleapStyleRegistry {
     return cacheStyles?.(styles, key)
   }
 
-  styleFor<T = unknown>(componentName:string, style: StyleProp<T>): T {
-    const isStyleArray = Array.isArray(style)
+  getRegisteredComponent(componentName: string) {
     const registeredComponent = this.components[componentName]
 
     if (!registeredComponent) {
@@ -101,6 +123,16 @@ export class CodeleapStyleRegistry {
 
     const rootElement = registeredComponent?.rootElement ?? 'wrapper'
 
+    return {
+      rootElement,
+      registeredComponent,
+    }
+  }
+
+  styleFor<T = unknown>(componentName:string, style: StyleProp<T>): T {
+    const isStyleArray = Array.isArray(style)
+  
+    const { rootElement, registeredComponent } = this.getRegisteredComponent(componentName)
     const defaultStyle = this.getDefaultVariantStyle(componentName)
 
     if (!style) {
@@ -169,7 +201,14 @@ export class CodeleapStyleRegistry {
   }
 
   registerCommonVariants() {
-    // const spacing = themeStore.getState().current.spacing as SpacingMap
+    const spacing: SpacingMap = themeStore.getState().current?.['spacing']
+
+    const spacingVariants = objectPickBy(spacing, (_, key) => key?.includes('padding') || key?.includes('margin') || key?.includes('gap'))
+
+    this.commonVariantsStyles = {
+      ...defaultPresets,
+      ...spacingVariants,
+    }
   }
 
   registerVariants(componentName:string, variants: VariantStyleSheet) {
@@ -177,7 +216,7 @@ export class CodeleapStyleRegistry {
       throw new Error(`Variants for ${componentName} already registered`)
     }
 
-    // this.registerCommonVariants()
+    this.registerCommonVariants()
 
     this.stylesheets[componentName] = variants
   }

@@ -15,7 +15,9 @@ export function spacingFactory<T extends string>(
   base: number,
   property: T,
 ): Spacings<T> {
-  const functions = spacingVariants.map((v) => [
+  const positions = property == 'gap' ? [''] : spacingVariants
+
+  const functions = positions.map((v) => [
     `${property}${v}`,
     (n: number | string) => {
       const value = typeof n === 'string' ? n : base * n

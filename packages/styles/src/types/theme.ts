@@ -1,3 +1,4 @@
+import type { DefaultPresets } from '../lib/presets'
 import { SpacingFunction, Spacings } from '../lib/spacing'
 
 type ColorMap = {
@@ -8,7 +9,11 @@ type BreakpointMap = {
   [key: string]: number
 }
 
-type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
+type PresetsMap = {
+  [key: string]: any
+}
+
+export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
   base: number
   gap: SpacingFunction
 }
@@ -20,6 +25,7 @@ export type Theme = {
   }
   breakpoints?: BreakpointMap
   baseSpacing?: number
+  presets?: PresetsMap
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -32,4 +38,5 @@ export type AppTheme<T extends Theme> = {
   setColorScheme: (colorScheme: ColorScheme<T>) => void
   currentColorScheme: ColorScheme<T>
   spacing: SpacingMap
+  presets: DefaultPresets & T['presets']
 }
