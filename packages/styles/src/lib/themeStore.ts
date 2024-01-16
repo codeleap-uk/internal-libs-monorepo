@@ -9,13 +9,12 @@ type ThemeStore = {
 }
 
 export const themeStore = create<ThemeStore>((set) => ({
-  colorScheme: 'default',
+  colorScheme: null,
   setColorScheme(scheme) {
     set({ colorScheme: scheme })
   },
   setTheme(theme) {
     set({ current: theme })
   },
-
   current: null,
 }))
