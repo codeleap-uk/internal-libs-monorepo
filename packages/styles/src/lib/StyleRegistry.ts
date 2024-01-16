@@ -2,6 +2,7 @@ import { AnyStyledComponent, ICSS, StyleProp, VariantStyleSheet } from '../types
 import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
+import { objectPickBy } from '@codeleap/common'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -167,10 +168,16 @@ export class CodeleapStyleRegistry {
     return {} as T
   }
 
+  registerCommonVariants() {
+    // const spacing = themeStore.getState().current.spacing as SpacingMap
+  }
+
   registerVariants(componentName:string, variants: VariantStyleSheet) {
     if (this.stylesheets[componentName]) {
       throw new Error(`Variants for ${componentName} already registered`)
     }
+
+    // this.registerCommonVariants()
 
     this.stylesheets[componentName] = variants
   }

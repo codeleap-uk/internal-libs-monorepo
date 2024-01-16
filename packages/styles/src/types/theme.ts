@@ -1,3 +1,5 @@
+import { SpacingFunction, Spacings } from '../lib/spacing'
+
 type ColorMap = {
   [key: string]: string
 }
@@ -6,12 +8,18 @@ type BreakpointMap = {
   [key: string]: number
 }
 
+type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
+  base: number
+  gap: SpacingFunction
+}
+
 export type Theme = {
   colors: ColorMap
   alternateColors?: {
     [key: string]: ColorMap
   }
   breakpoints?: BreakpointMap
+  baseSpacing?: number
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -23,4 +31,5 @@ export type AppTheme<T extends Theme> = {
   breakpoints: T['breakpoints']
   setColorScheme: (colorScheme: ColorScheme<T>) => void
   currentColorScheme: ColorScheme<T>
+  spacing: SpacingMap
 }

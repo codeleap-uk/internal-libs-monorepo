@@ -1,5 +1,6 @@
 import { TypeGuards } from '@codeleap/common'
 import { AppTheme, ColorScheme, Theme } from '../types'
+import { spacingFactory } from './spacing'
 import { themeStore } from './themeStore'
 
 type AppColorSchema = {
@@ -19,7 +20,9 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
 
       return colorScheme ?? 'default'
     },
+
     breakpoints: theme.breakpoints,
+
     get colors() {
       const colorSchemaTheme = appColorSchema?.get?.()
       let colorScheme = themeStore.getState().colorScheme
@@ -32,9 +35,17 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
       
       return theme.alternateColors?.[colorScheme]
     },
+
     setColorScheme(colorScheme: ColorScheme<Theme>) {
       themeStore.getState().setColorScheme(colorScheme as string)
       appColorSchema?.set?.(colorScheme)
+    },
+
+    spacing: {
+      base: theme.baseSpacing,
+      ...spacingFactory(theme.baseSpacing, 'padding'),
+      ...spacingFactory(theme.baseSpacing, 'margin'),
+      ...spacingFactory(theme.baseSpacing, 'gap'),
     },
   }
 
