@@ -36,7 +36,7 @@ export class CodeleapStyleRegistry {
     if (variant?.includes(':')) {
       const [variantName, value] = variant?.split(':')
 
-      const variantStyle = this.commonVariantsStyles[variantName]
+      const variantStyle = this.commonVariantsStyles[variantName] ?? this.commonVariantsStyles[variant]
 
       return createStyles({
         [rootElement]: TypeGuards.isFunction(variantStyle) ? variantStyle(value) : variantStyle
