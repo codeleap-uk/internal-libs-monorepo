@@ -2,6 +2,8 @@ import { capitalize } from '@codeleap/common'
 import { IBorderRadius, IColors } from '../types'
 import { themeStore } from './themeStore'
 
+export type VariantFunction = (value: any) => any
+
 export const colorVariants = ['backgroundColor', 'color'] as const
 
 export const borderXDirection = ['left', 'right'] as const
@@ -23,11 +25,10 @@ export type DynamicPresets =
   `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
   `borderRadius:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}` |
-  `cursor:${typeof cursorTypes[number]}`
+  `cursor:${typeof cursorTypes[number]}` |
+  `bg:${keyof IColors}`
 
-export const icss: React.CSSProperties = {
-  cursor: 'help'
-}
+export const icss: React.CSSProperties = {}
 
 export const createDynamicPresets = () => {
   const colors: IColors = themeStore.getState().current['colors']
@@ -69,6 +70,10 @@ export const createDynamicPresets = () => {
 
   dynamicVariants['cursor'] = (cursorType: typeof cursorTypes[number]) => ({
     cursor: cursorType
+  })
+
+  dynamicVariants['bg'] = (color: keyof IColors) => ({
+    backgroundColor: colors[color]
   })
 
   console.log({
