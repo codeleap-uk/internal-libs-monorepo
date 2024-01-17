@@ -13,6 +13,10 @@ type PresetsMap = {
   [key: string]: any
 }
 
+type BorderRadiusMap = {
+  [key: string]: any
+}
+
 export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
   base: number
   gap: SpacingFunction
@@ -26,6 +30,7 @@ export type Theme = {
   breakpoints?: BreakpointMap
   baseSpacing?: number
   presets?: PresetsMap
+  borderRadius?: BorderRadiusMap
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -39,4 +44,5 @@ export type AppTheme<T extends Theme> = {
   currentColorScheme: ColorScheme<T>
   spacing: SpacingMap
   presets: DefaultPresets & T['presets']
+  borderRadius: T['borderRadius']
 }

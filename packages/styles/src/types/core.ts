@@ -20,6 +20,10 @@ export interface IColors {
   
 }
 
+export interface IBorderRadius {
+  
+}
+
 export type AnyRecord = Record<string, any>
 
 export type Breakpoint = keyof IBreakpoints

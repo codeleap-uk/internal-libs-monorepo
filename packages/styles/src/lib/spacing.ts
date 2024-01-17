@@ -1,4 +1,4 @@
-import React from 'react'
+import { ICSS } from '../types'
 import { spacingVariants, SpacingVariants } from '../types/spacing'
 
 export type SpacingFunction = (multiplier: number | string) => any
@@ -6,7 +6,7 @@ export type SpacingFunction = (multiplier: number | string) => any
 export type Spacings<T extends string> = {
   [Property in SpacingVariants as `${T}${string & Property}`]: SpacingFunction;
 } & {
-  [Property in T]: (multiplier: number) => React.CSSProperties;
+  [Property in T]: (multiplier: number) => ICSS;
 } & {
   value: (multiplier?: number) => number
 }

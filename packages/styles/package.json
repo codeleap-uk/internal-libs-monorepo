@@ -22,7 +22,6 @@
     "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
-    "react": "18.1.0",
     "typescript": "5.0.4"
   },
   "dependencies": {

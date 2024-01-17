@@ -22,15 +22,15 @@
     "outDir": "./dist",
     "declaration": true,
     "downlevelIteration": true,
-    "baseUrl": "./",
-    "paths": {
-      "react-dom": [
-        "../../apps/web/node_modules/@types/react-dom/index.d.ts"
-      ],
-      "react": [
-        "../../apps/web/node_modules/@types/react/index.d.ts"
-      ]
-    }
+    // "baseUrl": "./",
+    // "paths": {
+    //   "react-dom": [
+    //     "../../apps/web/node_modules/@types/react-dom/index.d.ts"
+    //   ],
+    //   "react": [
+    //     "../../apps/web/node_modules/@types/react/index.d.ts"
+    //   ]
+    // }
   },
   "include": [
     "./src/**/*.ts",

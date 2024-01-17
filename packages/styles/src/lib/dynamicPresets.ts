@@ -1,33 +1,66 @@
-import { IColors } from '../types'
+import { capitalize } from '@codeleap/common'
+import { IBorderRadius, IColors } from '../types'
 import { themeStore } from './themeStore'
 
-export const dynamicVariants = [
-  'backgroundColor', 
-  'color',
-  'borderColor'
-] as const
+export const colorVariants = ['backgroundColor', 'color'] as const
 
-export type DynamicVariants = typeof dynamicVariants[number]
+export const borderXDirection = ['left', 'right'] as const
+export const borderYDirection = ['bottom', 'top'] as const
+export const borderDirection = [...borderYDirection, ...borderXDirection, ''] as const
+export const borderProperties = ['color', 'radius', 'width'] as const
 
-export type DynamicPresets = `${DynamicVariants}:${keyof IColors}`
+export type DynamicPresets = 
+  `${typeof colorVariants[number]}:${keyof IColors}` |
+  `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
+  `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
+  `borderRadius:${keyof IBorderRadius}` |
+  `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}`
 
 export const icss: React.CSSProperties = {
-}
 
-export const getDynamicPreset = () => {
-  
 }
 
 export const createDynamicPresets = () => {
-  const colors: Record<string, string> = themeStore.getState().current['colors']
+  const colors: IColors = themeStore.getState().current['colors']
+  const borderValues: IBorderRadius = themeStore.getState().current['borderRadius']
 
-  const dynamicPresets = {}
+  const dynamicVariants = {}
 
-  dynamicVariants.map(variant => {
-    dynamicPresets[`${variant}`] = (color: keyof IColors) => ({
+  colorVariants.forEach(variant => {
+    dynamicVariants[variant] = (color: keyof IColors) => ({
       [variant]: colors[color]
     })
   })
 
-  return dynamicPresets
+  borderDirection.forEach(direction => {
+    if (borderYDirection.includes(direction as any)) {
+      borderXDirection.forEach(y => {
+        const variant = `border${capitalize(direction)}${capitalize(y)}Radius`
+
+        dynamicVariants[variant] = (value: keyof IBorderRadius) => ({
+          [variant]: borderValues[value]
+        })
+      })
+    }
+
+    borderProperties.forEach(property => {
+      const variant = `border${capitalize(direction)}${capitalize(property)}`
+
+      if (property == 'color') {
+        dynamicVariants[variant] = (color: keyof IColors) => ({
+          [variant]: colors[color]
+        })
+      } else {
+        dynamicVariants[variant] = (value: keyof IBorderRadius) => ({
+          [variant]: borderValues[value]
+        })
+      }
+    })
+  })
+
+  console.log({
+    ...dynamicVariants,
+  })
+
+  return dynamicVariants
 }
