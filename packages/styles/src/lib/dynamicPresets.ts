@@ -9,15 +9,24 @@ export const borderYDirection = ['bottom', 'top'] as const
 export const borderDirection = [...borderYDirection, ...borderXDirection, ''] as const
 export const borderProperties = ['color', 'radius', 'width'] as const
 
+export const cursorTypes = [
+  'not-allowed', 
+  'help', 
+  'pointer', 
+  'wait', 
+  ''
+] as const
+
 export type DynamicPresets = 
   `${typeof colorVariants[number]}:${keyof IColors}` |
   `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
   `borderRadius:${keyof IBorderRadius}` |
-  `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}`
+  `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}` |
+  `cursor:${typeof cursorTypes[number]}`
 
 export const icss: React.CSSProperties = {
-
+  cursor: 'help'
 }
 
 export const createDynamicPresets = () => {
@@ -56,6 +65,10 @@ export const createDynamicPresets = () => {
         })
       }
     })
+  })
+
+  dynamicVariants['cursor'] = (cursorType: typeof cursorTypes[number]) => ({
+    cursor: cursorType
   })
 
   console.log({
