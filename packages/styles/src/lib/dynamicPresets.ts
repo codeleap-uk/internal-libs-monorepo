@@ -28,18 +28,20 @@ export type DynamicPresets =
   `cursor:${typeof cursorTypes[number]}` |
   `bg:${keyof IColors}`
 
-export const icss: React.CSSProperties = {}
-
 export const createDynamicPresets = () => {
   const colors: IColors = themeStore.getState().current['colors']
   const borderValues: IBorderRadius = themeStore.getState().current['borderRadius']
 
   const dynamicVariants = {}
 
+  function createVariant(variantName: string, variantReturn: any) {
+    dynamicVariants[variantName] = variantReturn
+  }
+
   colorVariants.forEach(variant => {
-    dynamicVariants[variant] = (color: keyof IColors) => ({
+    createVariant(variant, (color: keyof IColors) => ({
       [variant]: colors[color]
-    })
+    }))
   })
 
   borderDirection.forEach(direction => {
@@ -47,34 +49,28 @@ export const createDynamicPresets = () => {
       borderXDirection.forEach(y => {
         const variant = `border${capitalize(direction)}${capitalize(y)}Radius`
 
-        dynamicVariants[variant] = (value: keyof IBorderRadius) => ({
+        createVariant(variant, (value: keyof IBorderRadius) => ({
           [variant]: borderValues[value]
-        })
+        }))
       })
     }
 
     borderProperties.forEach(property => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
-      if (property == 'color') {
-        dynamicVariants[variant] = (color: keyof IColors) => ({
-          [variant]: colors[color]
-        })
-      } else {
-        dynamicVariants[variant] = (value: keyof IBorderRadius) => ({
-          [variant]: borderValues[value]
-        })
-      }
+      createVariant(variant, (value) => ({
+        [variant]: property == 'color' ? colors[value] : borderValues[value]
+      }))
     })
   })
 
-  dynamicVariants['cursor'] = (cursorType: typeof cursorTypes[number]) => ({
+  createVariant('cursor', (cursorType: typeof cursorTypes[number]) => ({
     cursor: cursorType
-  })
+  }))
 
-  dynamicVariants['bg'] = (color: keyof IColors) => ({
-    backgroundColor: colors[color]
-  })
+  createVariant('bg', (color: keyof IColors) => ({ 
+    backgroundColor: colors[color] 
+  }))
 
   console.log({
     ...dynamicVariants,
