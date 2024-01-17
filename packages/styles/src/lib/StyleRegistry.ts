@@ -6,6 +6,7 @@ import { objectPickBy } from '@codeleap/common'
 import { SpacingFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
+import { createDynamicPresets, dynamicVariants } from './dynamicPresets'
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
 
@@ -29,9 +30,34 @@ export class CodeleapStyleRegistry {
     ].join('-')
   }
 
+  computeCommonVariantStyle(componentName: string, variant: string) {
+    const { rootElement } = this.getRegisteredComponent(componentName)
+
+    if (variant?.includes('padding') || variant?.includes('margin') || variant?.includes('gap')) {
+      const [variantName, value] = variant?.split(':')
+
+      const spacingFn = this.commonVariantsStyles[variantName] as SpacingFunction
+
+      return createStyles({
+        [rootElement]: spacingFn(Number(value))
+      })
+    } else if (variant?.includes('backgroundColor') || variant?.includes('color') || variant?.includes('borderColor')) {
+      const [variantName, value] = variant?.split(':')
+
+      const colorFn = this.commonVariantsStyles[variantName] as any
+
+      return createStyles({
+        [rootElement]: colorFn(value)
+      })
+    } else {
+      return createStyles({
+        [rootElement]: this.commonVariantsStyles[variant]
+      })
+    }
+  }
+
   computeVariantStyle(componentName: string, variants: string[]): [ICSS, string] {
     const key = this.keyForVariants(componentName, variants)
-    const { rootElement } = this.getRegisteredComponent(componentName)
 
     if (this.variantStyles[key]) {
       return [this.variantStyles[key], key]
@@ -47,19 +73,7 @@ export class CodeleapStyleRegistry {
       if (!!stylesheet[variant]) {
         return stylesheet[variant]
       } else {
-        if (variant?.includes('padding') || variant?.includes('margin') || variant?.includes('gap')) {
-          const [variantName, value] = variant?.split(':')
-
-          const spacingFn = this.commonVariantsStyles[variantName] as SpacingFunction
-
-          return createStyles({
-            [rootElement]: spacingFn(Number(value))
-          })
-        } else {
-          return createStyles({
-            [rootElement]: this.commonVariantsStyles[variant]
-          })
-        }
+        return this.computeCommonVariantStyle(componentName, variant)
       }
     })
 
@@ -205,8 +219,11 @@ export class CodeleapStyleRegistry {
 
     const spacingVariants = objectPickBy(spacing, (_, key) => key?.includes('padding') || key?.includes('margin') || key?.includes('gap'))
 
+    const dynamicVariants = createDynamicPresets()
+
     this.commonVariantsStyles = {
       ...defaultPresets,
+      ...dynamicVariants,
       ...spacingVariants,
     }
   }

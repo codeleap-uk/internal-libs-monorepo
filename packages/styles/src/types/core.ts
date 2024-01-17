@@ -16,6 +16,10 @@ export interface IBreakpoints {
 
 }
 
+export interface IColors {
+  
+}
+
 export type AnyRecord = Record<string, any>
 
 export type Breakpoint = keyof IBreakpoints
