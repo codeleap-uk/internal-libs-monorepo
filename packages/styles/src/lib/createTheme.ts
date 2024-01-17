@@ -55,6 +55,8 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
     },
 
     borderRadius: theme.borderRadius,
+
+    variants: theme.variants,
   }
 
   themeStore.getState().setTheme(themeObj)

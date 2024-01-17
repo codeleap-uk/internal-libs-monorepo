@@ -20,7 +20,7 @@ export function spacingFactory<T extends string>(
   const functions = positions.map((v) => [
     `${property}${v}`,
     (n: number | string) => {
-      const value = typeof n === 'string' ? n : base * n
+      const value = base * Number(n)
 
       if (property === 'gap') {
         return {
@@ -55,10 +55,10 @@ export function spacingFactory<T extends string>(
   ])
 
   return {
-    [`${property}`]: (n: number | string) => ({
-      [`${property}`]: typeof n === 'string' ? n : base * n,
-    }),
     value: (n = 1) => base * n,
     ...Object.fromEntries(functions),
+    [`${property}`]: (n: number | string) => ({
+      [`${property}`]: base * Number(n),
+    }),
   }
 }

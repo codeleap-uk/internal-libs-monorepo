@@ -1,6 +1,6 @@
 import { DynamicPresets } from '../lib/dynamicPresets'
 import { DefaultPresets } from '../lib/presets'
-import { AnyRecord, IBreakpoints, ICSS } from './core'
+import { AnyRecord, AppVariants, IBreakpoints, ICSS } from './core'
 import { Spacing } from './spacing'
 
 type StyleAtom<Composition = AnyRecord, Variants = string> = 
@@ -10,6 +10,7 @@ type StyleAtom<Composition = AnyRecord, Variants = string> =
   Spacing |
   DynamicPresets |
   keyof DefaultPresets | 
+  keyof AppVariants | 
   `${keyof IBreakpoints}:${string & Variants}`
   | boolean 
   | null 

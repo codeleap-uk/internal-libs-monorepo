@@ -1,5 +1,6 @@
 import type { DefaultPresets } from '../lib/presets'
 import { SpacingFunction, Spacings } from '../lib/spacing'
+import { ICSS } from './core'
 
 type ColorMap = {
   [key: string]: string
@@ -17,6 +18,10 @@ type BorderRadiusMap = {
   [key: string]: any
 }
 
+type AppVariantsMap = {
+  [key: string]: ICSS | ((value?: string | null) => ICSS)
+}
+
 export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
   base: number
   gap: SpacingFunction
@@ -31,6 +36,7 @@ export type Theme = {
   baseSpacing?: number
   presets?: PresetsMap
   borderRadius?: BorderRadiusMap
+  variants?: AppVariantsMap
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -45,4 +51,5 @@ export type AppTheme<T extends Theme> = {
   spacing: SpacingMap
   presets: DefaultPresets & T['presets']
   borderRadius: T['borderRadius']
+  variants: T['variants']
 }
