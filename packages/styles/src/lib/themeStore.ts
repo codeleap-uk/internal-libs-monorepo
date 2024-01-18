@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { ITheme } from '../types'
 
 type ThemeStore = {
-  colorScheme: string
+  colorScheme: string | null
   setColorScheme: (theme: string) => void
   current: ITheme | null
   setTheme: (theme: ITheme) => void

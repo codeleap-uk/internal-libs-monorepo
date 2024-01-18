@@ -32,6 +32,10 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
         colorScheme = colorSchemaTheme
       }
 
+      if (!colorScheme) {
+        colorScheme = 'default'
+      }
+
       if (colorScheme === 'default') return theme.colors
       
       return theme.alternateColors?.[colorScheme]

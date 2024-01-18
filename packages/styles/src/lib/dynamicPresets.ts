@@ -29,7 +29,7 @@ export type DynamicPresets =
   `bg:${keyof IColors}`
 
 export const createDynamicPresets = () => {
-  const colors: IColors = themeStore.getState().current['colors']
+  const colors: () => IColors = () => themeStore.getState().current['colors']
   const borderValues: IBorderRadius = themeStore.getState().current['borderRadius']
 
   const dynamicVariants = {}
@@ -40,7 +40,7 @@ export const createDynamicPresets = () => {
 
   colorVariants.forEach(variant => {
     createVariant(variant, (color: keyof IColors) => ({
-      [variant]: colors[color]
+      [variant]: colors()[color]
     }))
   })
 
@@ -59,7 +59,7 @@ export const createDynamicPresets = () => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
       createVariant(variant, (value) => ({
-        [variant]: property == 'color' ? colors[value] : borderValues[value]
+        [variant]: property == 'color' ? colors()[value] : borderValues[value]
       }))
     })
   })
@@ -69,7 +69,7 @@ export const createDynamicPresets = () => {
   }))
 
   createVariant('bg', (color: keyof IColors) => ({ 
-    backgroundColor: colors[color] 
+    backgroundColor: colors()[color] 
   }))
 
   console.log({

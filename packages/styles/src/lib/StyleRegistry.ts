@@ -21,7 +21,7 @@ export class CodeleapStyleRegistry {
   constructor() {}
 
   keyForVariants(componentName: string, variants:string[]) {
-    const currentColorScheme = themeStore.getState().colorScheme
+    const currentColorScheme = themeStore.getState().current['currentColorScheme'] ?? themeStore.getState().colorScheme ?? 'default'
 
     return [
       componentName,
