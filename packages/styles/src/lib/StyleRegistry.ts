@@ -115,13 +115,15 @@ export class CodeleapStyleRegistry {
     const stylesheet = this.stylesheets[componentName]
 
     if (!stylesheet) {
-      throw new Error(`No variants registered for ${componentName}`)
+      throw new Error(`DefaultVariant: No variants registered for ${componentName}`)
     }
 
     const defaultStyle = stylesheet?.[defaultVariantStyleName]
 
     if (!!defaultStyle) {
       return defaultStyle
+    } else {
+      return {}
     }
   }
 
