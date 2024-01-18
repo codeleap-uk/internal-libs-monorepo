@@ -1,4 +1,4 @@
-import { AnyStyledComponent, AppTheme, ICSS, SpacingMap, StyleProp, Theme, VariantStyleSheet } from '../types'
+import { AnyFunction, AnyStyledComponent, AppTheme, ICSS, SpacingMap, StyleProp, Theme, VariantStyleSheet } from '../types'
 import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
@@ -32,6 +32,7 @@ export class CodeleapStyleRegistry {
 
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
     const { rootElement } = this.getRegisteredComponent(componentName)
+    const theme = themeStore.getState().current // TODO pass to variantStyle function and access for AppVariants and DynamicVariants
 
     if (variant?.includes(':')) {
       const [variantName, value] = variant?.split(':')
@@ -43,7 +44,7 @@ export class CodeleapStyleRegistry {
       })
     }
 
-    const variantStyle = this.commonVariantsStyles[variant]
+    const variantStyle = this.commonVariantsStyles[variant] as AnyFunction
 
     return createStyles({
       [component ?? rootElement]: typeof variantStyle == 'function' ? variantStyle(null) : variantStyle
