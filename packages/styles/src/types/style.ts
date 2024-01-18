@@ -3,14 +3,17 @@ import { DefaultPresets } from '../lib/presets'
 import { AnyRecord, AppVariants, IBreakpoints, ICSS } from './core'
 import { Spacing } from './spacing'
 
+export type CommonVariants = 
+  Spacing |
+  DynamicPresets |
+  keyof DefaultPresets | 
+  keyof AppVariants
+
 type StyleAtom<Composition = AnyRecord, Variants = string> = 
   ICSS | 
   Variants | 
   Composition | 
-  Spacing |
-  DynamicPresets |
-  keyof DefaultPresets | 
-  keyof AppVariants | 
+  CommonVariants |
   `${keyof IBreakpoints}:${string & Variants}`
   | boolean 
   | null 
