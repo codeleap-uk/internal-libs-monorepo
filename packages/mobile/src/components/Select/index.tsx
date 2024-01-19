@@ -10,6 +10,7 @@ import {
   usePrevious,
   useSearch,
   useBooleanToggle,
+  arePropsEqual,
 } from '@codeleap/common'
 import React, { useCallback, useMemo } from 'react'
 import { StyleSheet } from 'react-native'
@@ -63,6 +64,26 @@ const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (
     {...inputProps}
   />
 }
+
+const ItemComponent = React.memo((props: any) => {
+  const { Component, debugName, item, selected, select, selectedIcon, index, ...rest } = props
+
+  return (
+    <Component
+      debugName={`${debugName} item ${item.value}`}
+      selected={selected}
+      text={item.label}
+      item={item}
+      onPress={() => select(item.value)}
+      // @ts-ignore
+      icon={selectedIcon}
+      // @ts-ignore
+      rightIcon={selectedIcon}
+      index={index}
+      {...rest}
+    />
+  )
+}, (previous, next) => arePropsEqual(previous, next, { check: ['selected'] }))
 
 const defaultProps: Partial<SelectProps<any, boolean>> = {
   getLabel(option) {
@@ -248,32 +269,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const Item = renderItem || Button
 
-  const renderListItem = useCallback(({ item, index }) => {
-
-    let selected = false
-
-    if (multiple && isValueArray) {
-      selected = value?.includes(item.value)
-    } else {
-      selected = value === item.value
-    }
-
-    return <Item
-      debugName={`${debugName} item ${item.value}`}
-      selected={selected}
-      text={item.label}
-      item={item}
-      onPress={() => select(item.value)}
-      // @ts-ignore
-      icon={selectedIcon}
-      // @ts-ignore
-      rightIcon={selectedIcon}
-      styles={itemStyles}
-      index={index}
-      {...itemProps}
-    />
-  }, [value, select, multiple])
-
   const isEmpty = TypeGuards.isNil(value)
   const showClearIcon = !isEmpty && clearable
 
@@ -347,7 +342,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
       id={null}
       visible={visible}
       toggle={toggle}
-
     >
       <ListComponent<SelectProps<any>['options']>
         data={searchable ? filteredOptions : options}
@@ -355,7 +349,21 @@ export const Select = <T extends string | number = string, Multi extends boolean
         showsHorizontalScrollIndicator={false}
         styles={listStyles}
         keyExtractor={(i) => i.value}
-        renderItem={renderListItem}
+        renderItem={({ item, index }) => {
+          return (
+            <ItemComponent 
+              Component={Item} 
+              selected={multiple && isValueArray ? value?.includes(item.value) : value === item.value}
+              item={item}
+              index={index}
+              debugName={debugName}
+              selectedIcon={selectedIcon}
+              select={select}
+              styles={itemStyles}
+              {...itemProps} 
+            />
+          )
+        }}
         fakeEmpty={loading}
         separators
         keyboardAware={false}
