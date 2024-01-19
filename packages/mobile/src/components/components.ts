@@ -40,5 +40,6 @@ export * from './Avatar'
 export * from './AvatarGroup'
 export * from './NumberIncrement'
 export * from './Badge'
+export * from './V2TestComponent'
 
 export * from './defaultStyles'

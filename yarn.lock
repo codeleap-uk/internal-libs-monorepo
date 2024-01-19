@@ -3106,6 +3106,11 @@
   dependencies:
     text-decoding "^1.0.0"
 
+"@fastify/deepmerge@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@fastify/deepmerge/-/deepmerge-1.3.0.tgz#8116858108f0c7d9fd460d05a7d637a13fe3239a"
+  integrity sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==
+
 "@favware/colorette-spinner@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@favware/colorette-spinner/-/colorette-spinner-1.0.1.tgz#acc9e4645b280c0d5e1d49bc3d9efe9cc90d3dfc"
@@ -25140,7 +25145,7 @@ ts-loader@^9.2.2:
     micromatch "^4.0.0"
     semver "^7.3.4"
 
-ts-node-dev@^1.1.8:
+ts-node-dev@1.1.8, ts-node-dev@^1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ts-node-dev/-/ts-node-dev-1.1.8.tgz#95520d8ab9d45fffa854d6668e2f8f9286241066"
   integrity sha512-Q/m3vEwzYwLZKmV6/0VlFxcZzVV/xcgOt+Tx/VjaaRHyiBcFlV0541yrT09QjzzCxlDZ34OzKjrFAynlmtflEg==
