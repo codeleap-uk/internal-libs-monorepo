@@ -137,12 +137,6 @@
         "licenseUrl": "https://github.com/i18next/react-i18next/raw/master/LICENSE",
         "parents": "codeleap-docs"
     },
-    "react-icons@4.8.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com:react-icons/react-icons",
-        "licenseUrl": "https://github.com:react-icons/react-icons/raw/master/LICENSE",
-        "parents": "codeleap-docs"
-    },
     "react-particles@2.12.2": {
         "licenses": "MIT",
         "repository": "https://github.com/tsparticles/react",
