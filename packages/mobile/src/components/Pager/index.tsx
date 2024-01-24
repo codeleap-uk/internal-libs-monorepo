@@ -133,6 +133,8 @@ export const Pager = (pagerProps: PagerProps) => {
   const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
 
   const handleScrollEnd = useCallback((event: ScrollEvent) => {
+    if (!scrollEnabled) return null
+    
     if (waitEventDispatch.current === true) return null
 
     waitEventDispatch.current = true
@@ -155,6 +157,8 @@ export const Pager = (pagerProps: PagerProps) => {
   }, [childArr, page, setPage, waitEventDispatch.current])
 
   const handleScroll = (event: ScrollEvent) => {
+    if (!scrollEnabled) return null
+
     const scrollX = event?.nativeEvent?.contentOffset?.x
 
     if (!_scrollEnabled) {

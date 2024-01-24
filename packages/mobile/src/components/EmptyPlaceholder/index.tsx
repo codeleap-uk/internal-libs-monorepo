@@ -93,17 +93,16 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
   if (icon) {
     _image = <Icon name={icon} style={componentStyles.icon}/>
   } else if (image) {
-    _image = <Image source={image} style={[
-      componentStyles.image,
-
-    ]}/>
+    _image = <Image source={image} style={[componentStyles.image]}/>
   }
 
   return (
     <View style={componentStyles.wrapper}>
-      <View style={componentStyles.imageWrapper}>
-        {_image}
-      </View>
+      {React.isValidElement(_image) ? (
+        <View style={componentStyles.imageWrapper}>
+          {_image}
+        </View>
+      ) : null}
 
       {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} style={componentStyles.title}/> }
       {React.isValidElement(description) ? description : <Text text={description} style={componentStyles.description}/> }
