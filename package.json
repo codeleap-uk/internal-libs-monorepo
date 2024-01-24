@@ -10,6 +10,7 @@
     ]
   },
   "scripts": {
+    "postinstall": "node ./scripts/postInstall.js && patch -p1 -i patches/react-native-fast-image+8.6.3.patch && npx patch-package react-native-fast-image && yarn patch-package",
     "build": "turbo run build --filter='./packages/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -47,7 +48,8 @@
     "typedoc": "0.25.1",
     "typescript": "5.0.4",
     "openai": "^4.6.0",
-    "typedoc-json-parser": "^8.2.0"
+    "typedoc-json-parser": "^8.2.0",
+    "patch-package": "8.0.0"
   },
   "engines": {
     "npm": ">=7.0.0",
