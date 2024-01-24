@@ -21933,6 +21933,11 @@ react-circular-progressbar@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-circular-progressbar/-/react-circular-progressbar-2.1.0.tgz#99e5ae499c21de82223b498289e96f66adb8fa3a"
   integrity sha512-xp4THTrod4aLpGy68FX/k1Q3nzrfHUjUe5v6FsdwXBl3YVMwgeXYQKDrku7n/D6qsJA9CuunarAboC2xCiKs1g==
 
+react-colorful@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.6.1.tgz#7dc2aed2d7c72fac89694e834d179e32f3da563b"
+  integrity sha512-1exovf0uGTGyq5mXQT0zgQ80uvj2PCwvF8zY1RN9/vbJVSjSo3fsB/4L3ObbF7u70NduSiK4xu4Y6q1MHoUGEw==
+
 react-datepicker@^4.20.0:
   version "4.20.0"
   resolved "https://registry.yarnpkg.com/react-datepicker/-/react-datepicker-4.20.0.tgz#611943721ab0847bfacadc38c8760018e9859294"
