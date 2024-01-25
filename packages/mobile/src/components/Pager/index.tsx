@@ -157,9 +157,12 @@ export const Pager = (pagerProps: PagerProps) => {
   }, [childArr, page, setPage, waitEventDispatch.current])
 
   const handleScroll = (event: ScrollEvent) => {
-    if (!scrollEnabled) return null
-
     const scrollX = event?.nativeEvent?.contentOffset?.x
+
+    if (!scrollEnabled) {
+      if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { x: scrollX })
+      return null
+    }
 
     if (!_scrollEnabled) {
       setScrollPositionX(scrollX)
