@@ -196,6 +196,7 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
       value={value}
       selectionColor={selectionColor}
       secureTextEntry={password && secureTextEntry}
+      textAlignVertical={isMultiline ? 'top' : undefined}
       {...textInputProps}
       onBlur={handleBlur}
       onFocus={handleFocus}
@@ -209,7 +210,6 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
       ]}
       ref={innerInputRef}
       pointerEvents={isPressable ? 'none' : undefined}
-      textAlignVertical={isMultiline ? 'top' : undefined}
       {...maskingExtraProps}
     />
   </InputBase>
