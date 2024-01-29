@@ -121,6 +121,8 @@ export class QueryManager<
   async updateItems(items: T | T[]) {
     const itemArr = Array.isArray(items) ? items : [items]
 
+    console.log('UPDATE itemArr', itemArr)
+
     const ids = itemArr.map((i) => {
       const id = this.extractKey(i)
       this.itemMap[id] = i
@@ -143,6 +145,8 @@ export class QueryManager<
           old.pages[pageIdx].results[itemIdx] = this.itemMap[id]
 
         })
+
+        console.log('update items', old)
 
         return old
       })
@@ -177,7 +181,13 @@ export class QueryManager<
       }
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
-        if (!old?.pages?.length) {
+        console.log('OLD INITIAL', old)
+
+        old.pages.forEach((p) => {
+          console.log('P1', p)
+        })
+
+        if (!old?.pages?.length || (old?.pages?.length > 1 && old?.pages?.every(page => page.results.length <= 0))) {
           old = {
             pageParams: [],
             pages: [
@@ -189,18 +199,27 @@ export class QueryManager<
               },
             ],
           }
+          console.log('POS OVERRIDE OLD', old)
         }
+        
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
-        if (args.to == 'end') {
+
+        console.log('addItem itemsToAppend', {
+          to: args.to,
+          itemsToAppend
+        })
+
+        if (args.to === 'end') {
           const idx = old.pages.length - 1
           old.pages[idx].results.push(...itemsToAppend)
+          old.pages[idx].count += itemsToAppend.length
 
           if (old.pageParams[idx]) {
             // @ts-ignore
             old.pageParams[idx].limit += itemsToAppend.length
           } else {
             old.pageParams[idx] = {
-              limit: itemsToAppend.length,
+              limit: this.options.limit ?? itemsToAppend.length,
               offset: 0,
             }
           }
@@ -240,6 +259,12 @@ export class QueryManager<
           }
 
         }
+
+        console.log('OLD RETURN', old)
+
+        old.pages.forEach((p) => {
+          console.log('P2', p)
+        })
         return old
       })
     })
@@ -488,7 +513,7 @@ export class QueryManager<
       mutationKey: this.queryKeys.create,
       onMutate: async (data) => {
         options?.mutationOptions?.onMutate?.(data)
-        if (tmpOptions?.current?.optimistic) {
+        if (!!tmpOptions?.current?.optimistic) {
           await this.queryClient.cancelQueries({ queryKey: this.queryKeys.list })
           const addedItem = {
             id: this.generateId(),
@@ -524,7 +549,6 @@ export class QueryManager<
             to: tmpOptions?.current?.appendTo || managerOptions.creation?.appendTo || 'start',
             onListsWithFilters: tmpOptions?.current?.onListsWithFilters,
           })
-
         } else {
           this.updateItems(data)
         }
