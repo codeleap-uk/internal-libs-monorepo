@@ -121,8 +121,6 @@ export class QueryManager<
   async updateItems(items: T | T[]) {
     const itemArr = Array.isArray(items) ? items : [items]
 
-    console.log('UPDATE itemArr', itemArr)
-
     const ids = itemArr.map((i) => {
       const id = this.extractKey(i)
       this.itemMap[id] = i
@@ -145,8 +143,6 @@ export class QueryManager<
           old.pages[pageIdx].results[itemIdx] = this.itemMap[id]
 
         })
-
-        console.log('update items', old)
 
         return old
       })
@@ -181,12 +177,6 @@ export class QueryManager<
       }
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
-        console.log('OLD INITIAL', old)
-
-        old.pages.forEach((p) => {
-          console.log('P1', p)
-        })
-
         if (!old?.pages?.length || (old?.pages?.length > 1 && old?.pages?.every(page => page.results.length <= 0))) {
           old = {
             pageParams: [],
@@ -199,15 +189,9 @@ export class QueryManager<
               },
             ],
           }
-          console.log('POS OVERRIDE OLD', old)
         }
         
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
-
-        console.log('addItem itemsToAppend', {
-          to: args.to,
-          itemsToAppend
-        })
 
         if (args.to === 'end') {
           const idx = old.pages.length - 1
@@ -257,20 +241,13 @@ export class QueryManager<
               offset: -itemsToAppend.length,
             }
           }
-
         }
 
-        console.log('OLD RETURN', old)
-
-        old.pages.forEach((p) => {
-          console.log('P2', p)
-        })
         return old
       })
     })
 
     await Promise.all(promises)
-
   }
 
   async removeItem(itemId: T['id']) {
@@ -557,10 +534,11 @@ export class QueryManager<
 
     const createItem = async (data: Partial<T>, options?: CreateOptions<T>) => {
       const prevOptions = { ...(tmpOptions.current ?? {}) }
-      if (!!options) {
 
+      if (!!options) {
         tmpOptions.current = options
       }
+
       let res: T = null
 
       if (tmpOptions.current?.optimistic) {
