@@ -418,7 +418,7 @@ export class QueryManager<
     if (TypeGuards.isFunction(this.options.useListEffect)) {
       this.options.useListEffect({
         query, 
-        refreshQuery: (silent = false) => silent ? query.refetch() : refresh(),
+        refreshQuery: (silent = true) => silent ? query.refetch() : refresh(),
         cancelQuery: () => this.queryClient.cancelQueries({ queryKey: queryKey, exact: true })
       })
     }
