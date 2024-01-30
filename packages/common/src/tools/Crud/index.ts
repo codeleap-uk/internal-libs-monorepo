@@ -203,7 +203,7 @@ export class QueryManager<
             old.pageParams[idx].limit += itemsToAppend.length
           } else {
             old.pageParams[idx] = {
-              limit: this.options.limit ?? itemsToAppend.length,
+              limit: this.options?.limit ?? itemsToAppend.length,
               offset: 0,
             }
           }
@@ -413,6 +413,14 @@ export class QueryManager<
       setRefreshing(true)
       await this.refresh(filter)
       setRefreshing(false)
+    }
+
+    if (TypeGuards.isFunction(this.options.useListEffect)) {
+      this.options.useListEffect({
+        query, 
+        refreshQuery: (silent = false) => silent ? query.refetch() : refresh(),
+        cancelQuery: () => this.queryClient.cancelQueries({ queryKey: queryKey, exact: true })
+      })
     }
 
     // @ts-ignore

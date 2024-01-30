@@ -1,4 +1,4 @@
-import { InfiniteData, QueryKey, UseInfiniteQueryOptions, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
+import { InfiniteData, QueryKey, UseInfiniteQueryOptions, UseInfiniteQueryResult, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
 import { QueryManager } from './index'
 
 export type PaginationResponse<T> = {
@@ -62,6 +62,14 @@ export type QueryManagerActions<
   string, QueryManagerAction<T, ExtraArgs, Meta>
 >
 
+export type UseListEffect<T = any> = (
+  listQuery: {
+    query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>,
+    refreshQuery: (silent?: boolean) => void,
+    cancelQuery: () => void
+  }
+) => void
+
 export type QueryManagerOptions<
   T extends QueryManagerItem,
   ExtraArgs = any,
@@ -77,6 +85,8 @@ export type QueryManagerOptions<
   updateItem?: (data: Partial<T>, args?: ExtraArgs) => Promise<T>
   deleteItem?: (data: T, args?: ExtraArgs) => Promise<T>
   retrieveItem?: (id: T['id']) => Promise<T>
+
+  useListEffect?: UseListEffect<T>
 
   limit?: number
   creation?: CreateOptions<T>
