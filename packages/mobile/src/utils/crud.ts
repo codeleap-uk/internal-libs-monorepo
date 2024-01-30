@@ -2,7 +2,7 @@ import React from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { AnyFunction, TypeGuards, UseListEffect } from '@codeleap/common'
 
-type useQueryListEffect = (
+type useQueryListRefresh = (
   listQuery: Parameters<UseListEffect>[0],
   options?: {
     staleTime?: number
@@ -14,7 +14,7 @@ type useQueryListEffect = (
   }
 ) => void
 
-export const useQueryListEffect: useQueryListEffect = (listQuery, options = {}) => {
+export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}) => {
   const {
     staleTime = 10000,
     initialStale = listQuery?.query?.isStale,

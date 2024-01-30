@@ -418,8 +418,14 @@ export class QueryManager<
     if (TypeGuards.isFunction(this.options.useListEffect)) {
       this.options.useListEffect({
         query, 
-        refreshQuery: (silent = true) => silent ? query.refetch() : refresh(),
-        cancelQuery: () => this.queryClient.cancelQueries({ queryKey: queryKey, exact: true })
+        refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
+        cancelQuery: () => this.queryClient.cancelQueries({ queryKey: queryKey, exact: true }),
+        appendItem: async (args) => {
+          await this.addItem({
+            onListsWithFilters: filter,
+            ...args,
+          })
+        },
       })
     }
 

@@ -62,11 +62,12 @@ export type QueryManagerActions<
   string, QueryManagerAction<T, ExtraArgs, Meta>
 >
 
-export type UseListEffect<T = any> = (
+export type UseListEffect<T extends QueryManagerItem = any> = (
   listQuery: {
     query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>,
     refreshQuery: (silent?: boolean) => void,
     cancelQuery: () => void
+    appendItem: AppendToPagination<T>
   }
 ) => void
 
