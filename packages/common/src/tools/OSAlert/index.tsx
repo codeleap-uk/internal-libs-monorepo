@@ -4,8 +4,9 @@ import { TypeGuards } from '../../utils'
 
 export type AlertButton = {
   text: string
-  onPress: AnyFunction
-  variants?: any[]
+  onPress?: AnyFunction
+  variants?: string[]
+  style?: 'destructive' | 'outline' | 'cancel' | 'default' | 'minimal'
 }
 
 export type OSAlertArgs = {
@@ -61,7 +62,7 @@ export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptio
     delay = 450,
   } = options
 
-  const trigger = (props) => {
+  const trigger = (props: OSAlertGlobalProps) => {
     const alert = OSAlertStore.getState()
 
     if (alert.visible) {
