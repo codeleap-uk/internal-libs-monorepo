@@ -365,6 +365,10 @@ export class QueryManager<
         return this.options.listItems(this.standardLimit, query.pageParam?.offset ?? 0, filter)
       },
       refetchOnMount: (query) => {
+
+        if (TypeGuards.isBoolean(queryOptions?.refetchOnMount) || TypeGuards.isString(queryOptions?.refetchOnMount)) {
+          return queryOptions?.refetchOnMount
+        }
         return query.state.dataUpdateCount === 0 || query.isStaleByTime()
       },
       getNextPageParam: (lastPage, pages) => {
@@ -496,7 +500,7 @@ export class QueryManager<
 
           this.addItem({
             item: addedItem,
-            to: managerOptions.creation?.appendTo || 'start',
+            to: tmpOptions?.current?.appendTo || managerOptions.creation?.appendTo || 'start',
             onListsWithFilters: tmpOptions.current?.onListsWithFilters,
           })
 
@@ -517,7 +521,7 @@ export class QueryManager<
         if (!tmpOptions.current?.optimistic) {
           this.addItem({
             item: data,
-            to: managerOptions.creation?.appendTo || 'start',
+            to: tmpOptions?.current?.appendTo || managerOptions.creation?.appendTo || 'start',
             onListsWithFilters: tmpOptions?.current?.onListsWithFilters,
           })
 

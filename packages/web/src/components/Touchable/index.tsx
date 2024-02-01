@@ -5,7 +5,7 @@ import { View } from '../View'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { CSSInterpolation } from '@emotion/css'
 import { StylesOf, NativeHTMLElement } from '../../types'
-
+import { getTestId } from '../../lib/test'
 export * from './styles'
 
 export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWithRef<T> & {
@@ -147,6 +147,8 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     style,
   ]), [variantStyles, disabled, style])
 
+  const testId = getTestId(mergedProps)
+
   return (
     <View
       component={Component || 'button'}
@@ -156,6 +158,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
       onKeyDown={handleClick}
       ref={ref}
       css={_styles}
+      data-testid={testId}
     />
   )
 }

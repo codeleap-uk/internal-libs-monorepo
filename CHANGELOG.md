@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.21.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.0...v3.21.0) (2024-01-27)
+
+
+### Features
+
+* **web:** add test ids ([387e105](https://github.com/codeleap-uk/internal-libs-monorepo/commit/387e105ce28848c38808d0d3079b7969a063a702))
+
+
+### Bug Fixes
+
+* **mobile:** select callback and gap cross value ([19c35ca](https://github.com/codeleap-uk/internal-libs-monorepo/commit/19c35ca8323084f7ce460637eee9c82a3d207a56))
+* **web:** allow access to inner input ref ([c686942](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6869426538230493207b2d7410e1ccdc66ce263))
+* **web:** slider thumb press ([14fe2b2](https://github.com/codeleap-uk/internal-libs-monorepo/commit/14fe2b25cb9bfbc61ce8bce43cc5f7a3ae9e310c))
+
+### [3.20.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.20.2...v3.20.3) (2024-01-26)
+
+### [3.20.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.20.1...v3.20.2) (2024-01-25)
+
+### [3.20.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.20.0...v3.20.1) (2024-01-25)
+
+## [3.20.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.8...v3.20.0) (2024-01-18)
+
+
+### Features
+
+* **web:** add test ids ([387e105](https://github.com/codeleap-uk/internal-libs-monorepo/commit/387e105ce28848c38808d0d3079b7969a063a702))
+
+## [3.19.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.9...v3.19.0) (2024-01-16)
+
+
+### Features
+
+* **web:** add test ids ([387e105](https://github.com/codeleap-uk/internal-libs-monorepo/commit/387e105ce28848c38808d0d3079b7969a063a702))
+
+### [3.18.9](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.2...v3.18.9) (2024-01-16)
+
+
+### Bug Fixes
+
+* **mobile:** select callback and gap cross value ([19c35ca](https://github.com/codeleap-uk/internal-libs-monorepo/commit/19c35ca8323084f7ce460637eee9c82a3d207a56))
+* **web:** slider thumb press ([14fe2b2](https://github.com/codeleap-uk/internal-libs-monorepo/commit/14fe2b25cb9bfbc61ce8bce43cc5f7a3ae9e310c))
+
+### [3.18.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.6...v3.18.8) (2024-01-10)
+
+
+### Bug Fixes
+
+* **mobile:** select callback and gap cross value ([19c35ca](https://github.com/codeleap-uk/internal-libs-monorepo/commit/19c35ca8323084f7ce460637eee9c82a3d207a56))
+* **web:** slider thumb press ([14fe2b2](https://github.com/codeleap-uk/internal-libs-monorepo/commit/14fe2b25cb9bfbc61ce8bce43cc5f7a3ae9e310c))
+
 ### [3.18.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.4...v3.18.6) (2023-12-18)
 
 ### [3.18.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.4...v3.18.5) (2023-12-18)
