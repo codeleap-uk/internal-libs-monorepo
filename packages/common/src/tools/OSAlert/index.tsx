@@ -24,13 +24,6 @@ export type NamedEvents<E extends string> = Partial<Record<E, AlertEvent>>
 
 export type GlobalAlertType = 'info' | 'error' | 'warn' | 'ask' | 'custom'
 
-export type GlobalAlertComponentProps = {
-  args: Partial<OSAlertArgs>
-  removeSelf: AnyFunction
-  type: GlobalAlertType
-  id: string
-}
-
 export type OSAlertGlobalProps = Partial<OSAlertArgs & { type: GlobalAlertType }>
 
 export type TOSAlertStore = {
@@ -41,6 +34,8 @@ export type TOSAlertStore = {
   open: () => void
   close: () => void
 }
+
+export type DefaultOSAlertArgs = Pick<OSAlertArgs, 'title' | 'body' | 'options'>
 
 export const OSAlertStore = create<TOSAlertStore>(set => ({
   visible: false,
@@ -78,7 +73,7 @@ export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptio
     }
   }
 
-  function ask({ title, body, options }: OSAlertArgs) {
+  function ask({ title, body, options }: DefaultOSAlertArgs) {
     if (!title) {
       title = 'Quick question'
     }
@@ -93,10 +88,11 @@ export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptio
     })
   }
   
-  function OSError(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
+  function OSError(args: DefaultOSAlertArgs & NamedEvents<'onDismiss'>) {
     let {
       title,
       body,
+      options,
     } = args
   
     if (!title) {
@@ -112,13 +108,15 @@ export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptio
       type: 'error',
       onAction: args.onDismiss,
       onDismiss: args.onDismiss,
+      options,
     })
   }
   
-  function warn(args: OSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
+  function warn(args: DefaultOSAlertArgs & NamedEvents<'onReject' | 'onAccept'>) {
     const {
       title = 'Hang on',
       body = 'Are you sure?',
+      options,
       onAccept,
       onReject = () => null,
     } = args
@@ -126,27 +124,30 @@ export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptio
     trigger({
       title,
       body,
+      options,
       type: 'warn',
       onAction: onAccept,
       onDismiss: onReject,
     })
   }
   
-  function info(args: OSAlertArgs & NamedEvents<'onDismiss'>) {
+  function info(args: DefaultOSAlertArgs & NamedEvents<'onDismiss'>) {
     const {
       title = 'FYI',
       body,
+      options,
       onDismiss = () => null,
     } = args
   
     trigger({
       title,
       body,
+      options,
       type: 'info',
       onDismiss,
     })
   }
-  
+
   function custom(args: OSAlertArgs & Partial<T>) {
     const {
       title = 'Hang on',
