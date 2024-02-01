@@ -92,3 +92,7 @@ export function getRenderedComponent<P = any>(
 
   return <DefaultComponent {...props} {..._props}/>
 }
+
+export function memoize<P extends object>(ComponentToMemoize: React.FunctionComponent<P>): React.NamedExoticComponent<P> {
+  return React.memo(ComponentToMemoize, () => true)
+}
