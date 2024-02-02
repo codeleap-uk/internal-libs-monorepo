@@ -17,7 +17,7 @@ class AuthError extends Error {
   }
 }
 
-type ErrorHandler<E> = (err: E | null, module: string, args: any) => void
+type ErrorHandler<E> = (err: E | null, module?: string, args?: any) => void
 
 export class AppAuthErrors<T extends Record<string, string | object | AnyFunction>, F extends ErrorHandler<AuthError>> {
   public errors: Omit<Record<keyof T | keyof typeof DEFAULT_AUTH_ERRORS, AuthError>, 'social'>
