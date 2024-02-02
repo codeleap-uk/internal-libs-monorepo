@@ -3,7 +3,8 @@
         "name": "root",
         "items": [
             "index",
-            "os-alert"
+            "os-alert",
+            "app-auth-errors"
         ]
     },
     {
