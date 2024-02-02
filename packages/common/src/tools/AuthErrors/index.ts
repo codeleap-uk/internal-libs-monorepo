@@ -100,7 +100,7 @@ export class AppAuthErrors<T extends Record<string, string | object>, F extends 
       const errorMsg = unregisteredErrors[errorKey] as string
 
       if (typeof errorMsg === 'string' || errorMsg == null) {
-        state[errorKey] = new AuthError(errorMsg, errorKey)
+        state[errorKey] = new AuthError(() => errorMsg, errorKey)
       }
     }
 

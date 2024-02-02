@@ -2,7 +2,7 @@ import { DEFAULT_AUTH_ERRORS } from './data'
 
 export type TAuthError = {
   code: string
-  msg: string | null
+  msg: () => string | null
 }
 
 export type Err = TAuthError | null | string
