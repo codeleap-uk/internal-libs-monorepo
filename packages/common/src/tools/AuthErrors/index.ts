@@ -17,14 +17,14 @@ class AuthError extends Error {
   }
 }
 
-type ErrorHandler = (err: AuthError | null, module: string) => void
+type ErrorHandler<E> = (err: E | null, module: string, args: any) => void
 
-export class AppAuthErrors<T extends Record<string, string | object | AnyFunction>, F extends ErrorHandler> {
+export class AppAuthErrors<T extends Record<string, string | object | AnyFunction>, F extends ErrorHandler<AuthError>> {
   public errors: Omit<Record<keyof T | keyof typeof DEFAULT_AUTH_ERRORS, AuthError>, 'social'>
 
   public social: Omit<Record<keyof T['social'] | keyof typeof DEFAULT_AUTH_ERRORS['social'], AuthError>, 'social'>
 
-  public onError: (err: Err, module?: string) => void
+  public onError: ErrorHandler<Err>
 
   public defaultErrors = DEFAULT_AUTH_ERRORS
 
@@ -115,9 +115,9 @@ export class AppAuthErrors<T extends Record<string, string | object | AnyFunctio
   }
 
   private registryErrorFunction(pureErrorFunction: Function) {
-    this.onError = (err, module = null) => {
+    this.onError = (err, module = null, args = {}) => {
       const authError = this.getError(err)
-      pureErrorFunction?.(authError, module)
+      pureErrorFunction?.(authError, module, args)
     }
   }
 }
