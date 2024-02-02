@@ -1,3 +1,4 @@
+import { AnyFunction } from '../../types'
 import { DEFAULT_AUTH_ERRORS } from './data'
 import { DefaultAuthError, Err, TAuthError } from './types'
 
@@ -18,7 +19,7 @@ class AuthError extends Error {
 
 type ErrorHandler = (err: AuthError | null, module: string) => void
 
-export class AppAuthErrors<T extends Record<string, string | object>, F extends ErrorHandler> {
+export class AppAuthErrors<T extends Record<string, string | object | AnyFunction>, F extends ErrorHandler> {
   public errors: Omit<Record<keyof T | keyof typeof DEFAULT_AUTH_ERRORS, AuthError>, 'social'>
 
   public social: Omit<Record<keyof T['social'] | keyof typeof DEFAULT_AUTH_ERRORS['social'], AuthError>, 'social'>
@@ -93,6 +94,10 @@ export class AppAuthErrors<T extends Record<string, string | object>, F extends 
     }
   }
 
+  public createAuthError(message: TAuthError['msg'], code: TAuthError['code']) {
+    return new AuthError(message, code)
+  }
+
   private registryErrors(unregisteredErrors: T): any {
     const state = {}
 
@@ -101,6 +106,8 @@ export class AppAuthErrors<T extends Record<string, string | object>, F extends 
 
       if (typeof errorMsg === 'string' || errorMsg == null) {
         state[errorKey] = new AuthError(() => errorMsg, errorKey)
+      } else if (typeof errorMsg === 'function') {
+        state[errorKey] = new AuthError(errorMsg, errorKey)
       }
     }
 
