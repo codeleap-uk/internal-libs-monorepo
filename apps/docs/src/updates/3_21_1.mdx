@@ -1,0 +1,51 @@
+---
+title: 'Global Alert'
+---
+
+### OSAlert
+
+A feature that allows you to easily show stylized Alerts to the user instead of system Alerts, making it easy and simple to use in the code.
+
+Now the OSAlert module has been added' to the common package and both mobile applications and web applications can use this functionality.
+
+Example of how it can be used:
+
+```tsx
+import { CreateOSALert } from '@codeleap/common'
+
+const OSAlert = CreateOSALert()
+```
+
+It is necessary to create a **GlobalAlert** that uses the **Alert** Component together with the **OSAlertStore** that comes from codeleap/common. 
+
+##### Mobile
+
+This is a new functionality for mobile applications.
+
+To implement this in your app, you can follow the [CHANGELOG of this PR](https://github.com/codeleap-uk/mobile-template/pull/87).
+
+##### Web
+
+To implement this in your app, you can follow the [CHANGELOG of this PR](https://github.com/codeleap-uk/web-template/pull/67).
+
+Previously, this functionality was already available in the web package, but the code would be very similar for the 
+mobile package, which is why the decision was made to refactor the OSAlert module to be used on both platforms and 
+consequently move it to the common package.
+
+However, some projects already use this specific OSAlert for the web, and for those projects that do not want to make the 
+transition, it is possible to continue using it, but it is necessary to change the import path to the deprecated module:
+
+```tsx
+import { 
+  CreateOSAlert, 
+  GlobalAlertComponentProps, 
+  GlobalAlertType, 
+  useGlobalAlertComponent 
+} from '@codeleap/web/dist/lib/deprecated'
+
+// ...
+```
+
+##### Documentation
+
+Visit the tool documentation for more information: [click here](http://docs.codeleap.co.uk/common/os-alert/).

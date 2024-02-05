@@ -75,7 +75,6 @@ const _Touchable = forwardRef<
     analyticsName,
     analyticsData = {},
     dismissKeyboard,
-    disabled,
     ...props
   } = {
     ...defaultProps,
@@ -143,7 +142,7 @@ const _Touchable = forwardRef<
 
   }
 
-  const _styles = StyleSheet.flatten([variantStyles.wrapper, disabled && variantStyles['wrapper:disabled'], style])
+  const _styles = StyleSheet.flatten([variantStyles.wrapper, props?.disabled && variantStyles['wrapper:disabled'], style])
 
   const disableFeedback = !onPress || noFeedback
 

@@ -1,4 +1,4 @@
-import { AnyFunction, onMount, onUpdate, range, useUncontrolled } from '@codeleap/common'
+import { AnyFunction, onMount, onUpdate, range, TypeGuards, useUncontrolled } from '@codeleap/common'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { easeInOut, EasingFunction, AnimationProps, useAnimate, useAnimation, animate } from 'framer-motion'
@@ -351,4 +351,35 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
   }, dependencies)
 
   return animated
+}
+
+type UseWindowFocusOptions = {
+  onFocus?: AnyFunction
+  onBlur?: AnyFunction
+}
+
+export const useWindowFocus = (options: UseWindowFocusOptions = {}, deps: Array<any> = []): boolean => {
+  const [focused, setFocused] = useState(true)
+
+  const onFocus = () => {
+    setFocused(true)
+    if (TypeGuards.isFunction(options?.onFocus)) options?.onFocus() 
+  }
+  
+  const onBlur = () => {
+    setFocused(false)
+    if (TypeGuards.isFunction(options?.onBlur)) options?.onBlur() 
+  }
+
+  useEffect(() => {
+    window.addEventListener('focus', onFocus)
+    window.addEventListener('blur', onBlur)
+    
+    return () => {
+      window.removeEventListener('focus', onFocus)
+      window.removeEventListener('blur', onBlur)
+    }
+  }, deps)
+
+  return focused
 }
