@@ -43,7 +43,7 @@ export type PagerProps = React.PropsWithChildren<{
   renderPageWrapper?: React.FC<PageProps>
   pageWrapperProps?: any
   width?: number
-  onScroll?: (event: ScrollEvent, args: { isLeft: boolean; isRight: boolean; x: number }) => void
+  onScroll?: (event: ScrollEvent, args: { isLeft?: boolean; isRight?: boolean; x?: number }) => void
   /** If TRUE render page, nextPage and prevPage only */
   windowing?: boolean
   scrollRightEnabled?: boolean
@@ -157,9 +157,12 @@ export const Pager = (pagerProps: PagerProps) => {
   }, [childArr, page, setPage, waitEventDispatch.current])
 
   const handleScroll = (event: ScrollEvent) => {
-    if (!scrollEnabled) return null
-
     const scrollX = event?.nativeEvent?.contentOffset?.x
+
+    if (!scrollEnabled) {
+      if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { x: scrollX })
+      return null
+    }
 
     if (!_scrollEnabled) {
       setScrollPositionX(scrollX)

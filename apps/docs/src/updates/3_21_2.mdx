@@ -1,0 +1,27 @@
+---
+title: 'AppAuthErrors'
+---
+
+### AppAuthErrors
+
+Functionality to handle authentication errors: login, signup, profile editing and social login.
+
+It offers several errors by default with personalized messages, in addition to being able to customize these standard errors and add new errors.
+
+You can access this in the common package, so it can be used for mobile and web apps, sharing the same integration and implementation code.
+
+Example of how it can be used:
+
+```tsx
+import { AppAuthErrors } from '@codeleap/common'
+
+export const AuthErrors = new AppAuthErrors({}, (err, module, args) => {
+  const msg = err?.msg?.(args)
+
+  OSAlert.error({ title: I18N.t('error'), body: msg })
+})
+```
+
+##### Documentation
+
+Visit the tool documentation for more information: [click here](http://docs.codeleap.co.uk/common/app-auth-errors/).

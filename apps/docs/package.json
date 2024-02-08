@@ -1,6 +1,6 @@
 {
   "name": "codeleap-docs",
-  "version": "2.0.8",
+  "version": "2.0.11",
   "private": true,
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -17,7 +17,8 @@
     "dev": "node ./scripts/updates.js && gatsby develop",
     "start": "gatsby develop",
     "serve": "gatsby serve",
-    "clean": "gatsby clean"
+    "clean": "gatsby clean",
+    "updates": "node ./scripts/updates.js"
   },
   "dependencies": {
     "@codeleap/common": "*",
