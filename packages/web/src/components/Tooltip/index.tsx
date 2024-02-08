@@ -163,6 +163,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
         open={visible}
         onOpenChange={onOpenChange}
         {...rest}
+        // @ts-ignore expected error
         css={[variantsStyles.wrapper, style]}
       >
         <TooltipTrigger
