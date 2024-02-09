@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.21.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.0...v3.21.3) (2024-02-09)
+
+
+### Bug Fixes
+
+* **web:** list indentation and styles ([c2b4c26](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c2b4c263f6bcdb78f9cf2bd784ce4ea90cc24812))
+
 ### [3.21.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.1...v3.21.2) (2024-02-08)
 
 ### [3.21.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.0...v3.21.1) (2024-02-01)
