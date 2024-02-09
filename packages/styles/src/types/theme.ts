@@ -1,3 +1,4 @@
+import { MediaQueries } from '../lib/mediaQuery'
 import type { DefaultPresets } from '../lib/presets'
 import { SpacingFunction, Spacings } from '../lib/spacing'
 
@@ -45,4 +46,5 @@ export type AppTheme<T extends Theme> = {
   spacing: SpacingMap
   presets: DefaultPresets & T['presets']
   borderRadius: T['borderRadius']
+  media: MediaQueries
 }

@@ -1,4 +1,5 @@
 import { AppTheme, ColorScheme, Theme } from '../types'
+import { buildMediaQueries } from './mediaQuery'
 import { defaultPresets } from './presets'
 import { spacingFactory } from './spacing'
 import { themeStore } from './themeStore'
@@ -58,6 +59,8 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
     },
 
     borderRadius: theme.borderRadius,
+
+    media: buildMediaQueries(theme.breakpoints)
   }
 
   themeStore.setState({ current: themeObj })
