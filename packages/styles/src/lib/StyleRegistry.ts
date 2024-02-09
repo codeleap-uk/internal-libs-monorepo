@@ -35,20 +35,12 @@ export class CodeleapStyleRegistry {
     const { rootElement } = this.getRegisteredComponent(componentName)
     const theme = themeStore.getState().current // TODO pass to variantStyle function and access for AppVariants and DynamicVariants
 
-    if (variant?.includes(':')) {
-      const [variantName, value] = variant?.split(':')
+    const [variantName, value] = variant?.includes(':') ? variant?.split(':') : [variant, null]
 
-      const variantStyle = this.commonVariantsStyles[variantName] ?? this.commonVariantsStyles[variant]
-
-      return createStyles({
-        [component ?? rootElement]: typeof variantStyle == 'function' ? variantStyle(value) : variantStyle
-      })
-    }
-
-    const variantStyle = this.commonVariantsStyles[variant] as AnyFunction
+    const variantStyle = this.commonVariantsStyles[variantName] ?? this.commonVariantsStyles[variant]
 
     return createStyles({
-      [component ?? rootElement]: typeof variantStyle == 'function' ? variantStyle(null) : variantStyle
+      [component ?? rootElement]: typeof variantStyle == 'function' ? variantStyle(value) : variantStyle
     })
   }
 
@@ -71,9 +63,9 @@ export class CodeleapStyleRegistry {
       } else {
         return this.computeCommonVariantStyle(componentName, variant, component)
       }
-    })
+    })?.filter(variantStyle => !!variantStyle)
 
-    console.log(variantStyles)
+    console.log('computeVariantStyle -> variantStyles', variantStyles)
 
     // @ts-ignore
     const mergedComposition = deepmerge({ all: true })(...variantStyles)
