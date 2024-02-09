@@ -1,4 +1,3 @@
-import { AnyFunction, FunctionType } from '@codeleap/common'
 import { ICSS } from '../types'
 
 export const defaultPresets = {

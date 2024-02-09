@@ -2,11 +2,12 @@ import { AnyFunction, AnyStyledComponent, AppTheme, ICSS, SpacingMap, StyleProp,
 import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
-import { objectPickBy } from '@codeleap/common'
 import { SpacingFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
 import { createDynamicPresets, VariantFunction } from './dynamicPresets'
+import { objectPickBy } from './utils'
+
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
 

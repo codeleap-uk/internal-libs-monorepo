@@ -1,4 +1,3 @@
-import { TypeGuards } from '@codeleap/common'
 import { AppTheme, ColorScheme, Theme } from '../types'
 import { defaultPresets } from './presets'
 import { spacingFactory } from './spacing'
@@ -15,7 +14,7 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
       const colorSchemaTheme = appColorSchema?.get?.()
       const colorScheme = themeStore.getState().colorScheme
 
-      if (colorScheme == null && TypeGuards.isString(colorSchemaTheme)) {
+      if (colorScheme == null && typeof colorSchemaTheme === 'string') {
         return colorSchemaTheme
       }
 
@@ -28,7 +27,7 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
       const colorSchemaTheme = appColorSchema?.get?.()
       let colorScheme = themeStore.getState().colorScheme
 
-      if (colorScheme == null && TypeGuards.isString(colorSchemaTheme)) {
+      if (colorScheme == null && typeof colorSchemaTheme === 'string') {
         colorScheme = colorSchemaTheme
       }
 

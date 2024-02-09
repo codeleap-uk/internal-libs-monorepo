@@ -1,6 +1,6 @@
-import { capitalize } from '@codeleap/common'
 import { IBorderRadius, IColors } from '../types'
 import { themeStore } from './themeStore'
+import { capitalize } from './utils'
 
 export type VariantFunction = (value: any) => any
 
