@@ -1,5 +1,4 @@
 import { IBorderRadius, IColors } from '../types'
-import { themeStore } from './themeStore'
 import { capitalize } from './utils'
 
 export type VariantFunction = (value: any) => any
@@ -29,9 +28,6 @@ export type DynamicPresets =
   `bg:${keyof IColors}`
 
 export const createDynamicPresets = () => {
-  const colors: () => IColors = () => themeStore.getState().current['colors']
-  const borderValues: IBorderRadius = themeStore.getState().current['borderRadius']
-
   const dynamicVariants = {}
 
   function createVariant(variantName: string, variantReturn: any) {
@@ -39,8 +35,8 @@ export const createDynamicPresets = () => {
   }
 
   colorVariants.forEach(variant => {
-    createVariant(variant, (color: keyof IColors) => ({
-      [variant]: colors()[color]
+    createVariant(variant, (theme, color: keyof IColors) => ({
+      [variant]: theme['colors'][color]
     }))
   })
 
@@ -49,8 +45,8 @@ export const createDynamicPresets = () => {
       borderXDirection.forEach(y => {
         const variant = `border${capitalize(direction)}${capitalize(y)}Radius`
 
-        createVariant(variant, (value: keyof IBorderRadius) => ({
-          [variant]: borderValues[value]
+        createVariant(variant, (theme, value: keyof IBorderRadius) => ({
+          [variant]: theme['borderRadius'][value]
         }))
       })
     }
@@ -58,8 +54,8 @@ export const createDynamicPresets = () => {
     borderProperties.forEach(property => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
-      createVariant(variant, (value) => ({
-        [variant]: property == 'color' ? colors()[value] : borderValues[value]
+      createVariant(variant, (theme, value: string) => ({
+        [variant]: property == 'color' ? theme['colors'][value] : theme['borderRadius'][value]
       }))
     })
   })
@@ -68,8 +64,8 @@ export const createDynamicPresets = () => {
     cursor: cursorType
   }))
 
-  createVariant('bg', (color: keyof IColors) => ({ 
-    backgroundColor: colors()[color] 
+  createVariant('bg', (theme, color: keyof IColors) => ({ 
+    backgroundColor: theme['colors'][color] 
   }))
 
   console.log({

@@ -16,3 +16,8 @@ export function objectPickBy<K extends string = string, P = any>(obj: Record<K, 
 
   return result
 }
+
+export function isSpacingKey(key: string) {
+  if (!key) return false
+  return key?.includes('padding') || key?.includes('margin') || key?.includes('gap')
+}

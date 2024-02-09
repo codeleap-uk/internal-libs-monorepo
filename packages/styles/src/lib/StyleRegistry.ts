@@ -6,7 +6,7 @@ import { SpacingFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
 import { createDynamicPresets, VariantFunction } from './dynamicPresets'
-import { objectPickBy } from './utils'
+import { isSpacingKey, objectPickBy } from './utils'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -39,8 +39,16 @@ export class CodeleapStyleRegistry {
 
     const variantStyle = this.commonVariantsStyles[variantName] ?? this.commonVariantsStyles[variant]
 
+    let style = null
+
+    if (typeof variantStyle == 'function') {
+      style = isSpacingKey(variantName) ? variantStyle(value) : variantStyle(theme, value)
+    } else {
+      style = variantStyle
+    }
+
     return createStyles({
-      [component ?? rootElement]: typeof variantStyle == 'function' ? variantStyle(value) : variantStyle
+      [component ?? rootElement]: style
     })
   }
 
@@ -285,11 +293,13 @@ export class CodeleapStyleRegistry {
   }
 
   registerCommonVariants() {
-    const spacing: SpacingMap = themeStore.getState().current?.['spacing']
+    const theme = themeStore.getState().current
 
-    const appVariants = themeStore.getState().current?.['variants']
+    const spacing: SpacingMap = theme?.['spacing']
 
-    const spacingVariants = objectPickBy(spacing, (_, key) => key?.includes('padding') || key?.includes('margin') || key?.includes('gap'))
+    const appVariants = theme?.['variants']
+
+    const spacingVariants = objectPickBy(spacing, (_, key) => isSpacingKey(key))
 
     const dynamicVariants = createDynamicPresets()
 

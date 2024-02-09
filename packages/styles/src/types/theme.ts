@@ -19,7 +19,7 @@ type BorderRadiusMap = {
 }
 
 type AppVariantsMap = {
-  [key: string]: ICSS | ((value?: string | null) => ICSS)
+  [key: string]: ICSS | ((theme: any, value?: string | null) => ICSS)
 }
 
 export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
