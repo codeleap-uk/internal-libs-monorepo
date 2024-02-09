@@ -1,20 +1,14 @@
 import { create } from 'zustand'
-import { ITheme } from '../types'
+import { IAppVariants, ITheme } from '../types'
 
 type ThemeStore = {
   colorScheme: string | null
-  setColorScheme: (theme: string) => void
   current: ITheme | null
-  setTheme: (theme: ITheme) => void
+  variants: IAppVariants
 }
 
-export const themeStore = create<ThemeStore>((set) => ({
+export const themeStore = create<ThemeStore>(() => ({
   colorScheme: null,
-  setColorScheme(scheme) {
-    set({ colorScheme: scheme })
-  },
-  setTheme(theme) {
-    set({ current: theme })
-  },
   current: null,
+  variants: {},
 }))

@@ -23,7 +23,7 @@ export interface IBorderRadius {
   
 }
 
-export interface AppVariants {
+export interface IAppVariants {
   
 }
 

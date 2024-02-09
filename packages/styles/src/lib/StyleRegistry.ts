@@ -297,7 +297,7 @@ export class CodeleapStyleRegistry {
 
     const spacing: SpacingMap = theme?.['spacing']
 
-    const appVariants = theme?.['variants']
+    const appVariants = themeStore.getState().variants
 
     const spacingVariants = objectPickBy(spacing, (_, key) => isSpacingKey(key))
 
