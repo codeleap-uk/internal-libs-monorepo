@@ -33,18 +33,38 @@ export class CodeleapStyleRegistry {
 
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
     const { rootElement } = this.getRegisteredComponent(componentName)
-    const theme = themeStore.getState().current // TODO pass to variantStyle function and access for AppVariants and DynamicVariants
+    const theme = themeStore.getState().current
 
-    const [variantName, value] = variant?.includes(':') ? variant?.split(':') : [variant, null]
+    let mediaQuery = null
 
-    const variantStyle = this.commonVariantsStyles[variantName] ?? this.commonVariantsStyles[variant]
+    let [variantName, value] = variant?.includes(':') ? variant?.split(':') : [variant, null]
 
+    // @ts-ignore
+    if (!!theme?.breakpoints[variantName]) {
+      const [breakpoint, _variantName, _value] = variant?.split(':')?.length == 2 ? [...variant?.split(':'), null] : variant?.split(':')
+
+      // @ts-ignore
+      mediaQuery = theme.media.down(breakpoint)
+      value = _value
+      variantName = _variantName
+    }
+
+    let variantStyle = this.commonVariantsStyles[variantName] ?? this.commonVariantsStyles[variant]
+    
     let style = null
 
     if (typeof variantStyle == 'function') {
       style = isSpacingKey(variantName) ? variantStyle(value) : variantStyle(theme, value)
     } else {
       style = variantStyle
+    }
+
+    if (!!mediaQuery) {
+      return createStyles({
+        [component ?? rootElement]: {
+          [mediaQuery]: style
+        }
+      })
     }
 
     return createStyles({
@@ -54,6 +74,7 @@ export class CodeleapStyleRegistry {
 
   computeVariantStyle(componentName: string, variants: string[], component = null): [ICSS, string] {
     const key = this.keyForVariants(componentName, variants)
+    const { rootElement } = this.getRegisteredComponent(componentName)
 
     if (this.variantStyles[key]) {
       return [this.variantStyles[key], key]
@@ -65,9 +86,24 @@ export class CodeleapStyleRegistry {
       throw new Error(`No variants registered for ${componentName}`)
     }
 
+    const theme = themeStore.getState().current
+
     const variantStyles = variants.map((variant) => {
+      const [breakpoint, variantName] = variant?.includes(':') ? variant?.split(':') : []
+
       if (!!stylesheet[variant]) {
         return stylesheet[variant]
+
+        // @ts-ignore
+      } else if (!!theme?.breakpoints[breakpoint] && !!stylesheet[variantName]) {
+        // @ts-ignore
+        const mediaQuery = theme.media.down(breakpoint)
+
+        return createStyles({
+          [component ?? rootElement]: {
+            [mediaQuery]: stylesheet[variantName][component ?? rootElement]
+          }
+        })
       } else {
         return this.computeCommonVariantStyle(componentName, variant, component)
       }
@@ -221,6 +257,7 @@ export class CodeleapStyleRegistry {
     if (isStyleObject) {
       const { isComposition, composition } = this.isCompositionStyle(registeredComponent, style)
       
+      // const 
 
       if (isComposition) {
         const { compositionStyles, variantKeys } = this.getCompositionStyle(componentName, composition, style)

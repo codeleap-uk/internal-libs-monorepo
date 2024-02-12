@@ -8,7 +8,7 @@ function getBreakpointValue(breakpoint: keyof IBreakpoints, breakpoints: IBreakp
   return Infinity
 }
 
-type Queries = {
+export type Queries = {
   up: (breakpoint: keyof IBreakpoints) => string
   down: (breakpoint: keyof IBreakpoints) => string
   is: (breakpoint: keyof IBreakpoints) => string
