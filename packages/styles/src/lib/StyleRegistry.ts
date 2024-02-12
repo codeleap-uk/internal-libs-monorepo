@@ -146,7 +146,13 @@ export class CodeleapStyleRegistry {
   }
 
   isResponsiveStyle(component: AnyStyledComponent, style: any) {
-    // TO-DO
+    const responsiveStyleKey = 'breakpoints'
+    const responsiveStyles = style[responsiveStyleKey]
+
+    return {
+      responsiveStyleKey,
+      isResponsive: !!responsiveStyles,
+    }
   }
 
   getDefaultVariantStyle(componentName: string, defaultVariantStyleName: string = 'default') {
@@ -186,6 +192,41 @@ export class CodeleapStyleRegistry {
     return {
       rootElement,
       registeredComponent,
+    }
+  }
+
+  getResponsiveStyle(componentName: string, responsiveStyleKey: string, style: object) {
+    const styles = {}
+
+    const responsiveStyles = style[responsiveStyleKey]
+
+    const theme = themeStore.getState().current
+
+    if (!responsiveStyles) {
+      return {
+        responsiveStyles: {}
+      }
+    }
+
+    for (const responsiveStyle in responsiveStyles) {
+      const [breakpoint, query] = responsiveStyle?.includes(':') ? responsiveStyle?.split(':') : [responsiveStyle, 'down']
+
+      // @ts-ignore
+      const mediaQuery = theme.media?.[query]?.(breakpoint)
+
+      const breakpointStyle = responsiveStyles[responsiveStyle]
+
+      const componentStyles = this.styleFor(componentName, breakpointStyle, false)
+
+      for (const composition in componentStyles) {
+        styles[composition] = {
+          [mediaQuery]: componentStyles[composition]
+        }
+      }
+    }
+
+    return {
+      responsiveStyles: styles
     }
   }
 
@@ -233,11 +274,11 @@ export class CodeleapStyleRegistry {
     }
   }
 
-  styleFor<T = unknown>(componentName:string, style: StyleProp<T>): T {
+  styleFor<T = unknown>(componentName:string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
     const isStyleArray = Array.isArray(style)
   
     const { rootElement, registeredComponent } = this.getRegisteredComponent(componentName)
-    const defaultStyle = this.getDefaultVariantStyle(componentName)
+    const defaultStyle = mergeWithDefaultStyle ? this.getDefaultVariantStyle(componentName) : {}
 
     if (!style) {
       return this.mergeStylesWithCache([defaultStyle], this.hashStyle(defaultStyle, ['default']))
@@ -257,12 +298,18 @@ export class CodeleapStyleRegistry {
     if (isStyleObject) {
       const { isComposition, composition } = this.isCompositionStyle(registeredComponent, style)
       
-      // const 
+      const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(registeredComponent, style)
+
+      const { responsiveStyles } = this.getResponsiveStyle(componentName, responsiveStyleKey, style)
+
+      if (isResponsive) {
+        delete style[responsiveStyleKey]
+      }
 
       if (isComposition) {
         const { compositionStyles, variantKeys } = this.getCompositionStyle(componentName, composition, style)
 
-        const styles = [defaultStyle, ...compositionStyles]
+        const styles = [defaultStyle, responsiveStyles, ...compositionStyles]
 
         styles.push({ [rootElement]: style })
 
@@ -271,7 +318,7 @@ export class CodeleapStyleRegistry {
         return this.mergeStylesWithCache(styles, this.hashStyle(style, variantKeys))
       } else {
         return this.mergeStylesWithCache(
-          [defaultStyle, { [rootElement]: style }],
+          [defaultStyle, responsiveStyles, { [rootElement]: style }],
           this.hashStyle(style, []),
         )
       }
@@ -296,6 +343,7 @@ export class CodeleapStyleRegistry {
 
             variants = []
           }
+
           const { isComposition, composition } = this.isCompositionStyle(registeredComponent, s)
 
           if (isComposition) {
@@ -306,6 +354,16 @@ export class CodeleapStyleRegistry {
             
             styles.push(...compositionStyles)
             variantKeys.push(...compositionVariantKeys)
+          }
+
+          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(registeredComponent, s)
+
+          if (isResponsive) {
+            const { responsiveStyles } = this.getResponsiveStyle(componentName, responsiveStyleKey, s)
+
+            styles.push(responsiveStyles)
+
+            delete s[responsiveStyleKey]
           }
 
           styles.push({ [rootElement]: s })
