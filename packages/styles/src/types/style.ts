@@ -10,7 +10,7 @@ export type CommonVariants =
   keyof DefaultPresets | 
   keyof IAppVariants
 
-type StyleAtom<Composition = AnyRecord, Variants = string> = 
+type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = string> = 
   ICSS | 
   Variants | 
   Composition | 
@@ -18,9 +18,10 @@ type StyleAtom<Composition = AnyRecord, Variants = string> =
   boolean | 
   null | 
   '' | 
-  `${keyof IBreakpoints}:${string & Variants | CommonVariants}` | {
-    'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants> | StyleAtom<Composition, Variants>[]>>
-  }
+  (HasBreakpoints extends string ? `${keyof IBreakpoints}:${string & Variants | CommonVariants}` : null) | 
+  (HasBreakpoints extends string ? {
+    'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants, boolean> | StyleAtom<Composition, Variants, boolean>[]>>
+  } : null)
 
 export type StyleProp<
   Composition = AnyRecord,

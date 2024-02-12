@@ -218,6 +218,7 @@ export class CodeleapStyleRegistry {
 
       const componentStyles = this.styleFor(componentName, breakpointStyle, false)
 
+      // @ts-ignore
       for (const composition in componentStyles) {
         styles[composition] = {
           [mediaQuery]: componentStyles[composition]
