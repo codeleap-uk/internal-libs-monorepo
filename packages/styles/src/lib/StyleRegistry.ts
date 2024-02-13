@@ -19,7 +19,9 @@ export class CodeleapStyleRegistry {
 
   components: Record<string, AnyStyledComponent> = {}
 
-  constructor() {}
+  constructor() {
+    this.registerCommonVariants()
+  }
 
   keyForVariants(componentName: string, variants:string[]) {
     const currentColorScheme = themeStore.getState().current['currentColorScheme'] ?? themeStore.getState().colorScheme ?? 'default'
@@ -389,13 +391,13 @@ export class CodeleapStyleRegistry {
   }
 
   registerCommonVariants() {
-    const theme = themeStore.getState().current
+    const theme = themeStore.getState()
 
-    const spacing: SpacingMap = theme?.['spacing']
+    const spacing: SpacingMap = theme.current?.['spacing']
 
-    const inset: InsetMap = theme?.['inset']
+    const inset: InsetMap = theme.current?.['inset']
 
-    const appVariants = themeStore.getState().variants
+    const appVariants = theme.variants
 
     const spacingVariants = objectPickBy(spacing, (_, key) => isSpacingKey(key))
 
@@ -403,21 +405,21 @@ export class CodeleapStyleRegistry {
 
     const dynamicVariants = createDynamicPresets()
 
-    this.commonVariantsStyles = {
-      ...appVariants,
-      ...defaultPresets,
-      ...dynamicVariants,
-      ...spacingVariants,
-      ...insetVariants,
-    }
+    const variantsStyles = deepmerge({ all: true })(
+      defaultPresets, 
+      appVariants, 
+      dynamicVariants, 
+      spacingVariants, 
+      insetVariants
+    )
+
+    this.commonVariantsStyles = variantsStyles
   }
 
   registerVariants(componentName:string, variants: VariantStyleSheet) {
     if (this.stylesheets[componentName]) {
       throw new Error(`Variants for ${componentName} already registered`)
     }
-
-    this.registerCommonVariants()
 
     this.stylesheets[componentName] = variants
   }
