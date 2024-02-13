@@ -18,6 +18,10 @@ export const cursorTypes = [
   ''
 ] as const
 
+export type Value =
+  | number
+  | ''
+
 export type DynamicPresets = 
   `${typeof colorVariants[number]}:${keyof IColors}` |
   `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
@@ -25,7 +29,8 @@ export type DynamicPresets =
   `borderRadius:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}` |
   `cursor:${typeof cursorTypes[number]}` |
-  `bg:${keyof IColors}`
+  `bg:${keyof IColors}` |
+  `scale:${Value}`
 
 export const createDynamicPresets = () => {
   const dynamicVariants = {}
@@ -69,6 +74,10 @@ export const createDynamicPresets = () => {
   }))
 
   createVariant('effect', (theme, effect: keyof IEffects) => theme['effects'][effect])
+
+  createVariant('scale', (theme, value: any) => ({
+    transform: !!window?.navigator ? `scale(${value})` : [{ 'scale': Number(value) }]
+  }))
 
   console.log({
     ...dynamicVariants,
