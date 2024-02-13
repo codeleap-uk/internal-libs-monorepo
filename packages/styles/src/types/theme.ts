@@ -24,6 +24,10 @@ type EffectsMap = {
   [key: string]: IEffect
 }
 
+type Typography = {
+  [key: string]: any
+}
+
 export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
   base: number
   gap: SpacingFunction
@@ -39,6 +43,7 @@ export type Theme = {
   presets?: PresetsMap
   borderRadius?: BorderRadiusMap
   effects?: EffectsMap
+  typography: Typography
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -56,4 +61,5 @@ export type AppTheme<T extends Theme> = {
   media: MediaQueries
   effects: T['effects']
   border: BorderBuilder
+  typography: T['typography']
 }
