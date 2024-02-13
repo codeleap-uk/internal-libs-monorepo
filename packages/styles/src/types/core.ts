@@ -27,6 +27,14 @@ export interface IAppVariants {
   
 }
 
+export interface IEffect {
+  
+}
+
+export interface IEffects {
+  
+}
+
 export type AnyRecord = Record<string, any>
 
 export type Breakpoint = keyof IBreakpoints

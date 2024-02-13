@@ -1,4 +1,4 @@
-import { IBorderRadius, IColors } from '../types'
+import { IBorderRadius, IColors, IEffects } from '../types'
 import { capitalize } from './utils'
 
 export type VariantFunction = (value: any) => any
@@ -67,6 +67,8 @@ export const createDynamicPresets = () => {
   createVariant('bg', (theme, color: keyof IColors) => ({ 
     backgroundColor: theme['colors'][color] 
   }))
+
+  createVariant('effect', (theme, effect: keyof IEffects) => theme['effects'][effect])
 
   console.log({
     ...dynamicVariants,

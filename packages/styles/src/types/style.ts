@@ -1,14 +1,15 @@
 import { DynamicPresets } from '../lib/dynamicPresets'
 import { Queries } from '../lib/mediaQuery'
 import { DefaultPresets } from '../lib/presets'
-import { AnyRecord, IAppVariants, IBreakpoints, ICSS } from './core'
+import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects } from './core'
 import { Spacing } from './spacing'
 
 export type CommonVariants = 
   Spacing |
   DynamicPresets |
   keyof DefaultPresets | 
-  keyof IAppVariants
+  keyof IAppVariants |
+  `effect:${keyof IEffects}`
 
 type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = string> = 
   ICSS | 

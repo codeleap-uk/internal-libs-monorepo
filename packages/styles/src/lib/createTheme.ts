@@ -22,7 +22,7 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
       return colorScheme ?? 'default'
     },
 
-    breakpoints: theme.breakpoints,
+    breakpoints: theme.breakpoints ?? {},
 
     get colors() {
       const colorSchemaTheme = appColorSchema?.get?.()
@@ -58,7 +58,9 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
       ...theme.presets,
     },
 
-    borderRadius: theme.borderRadius,
+    borderRadius: theme.borderRadius ?? {},
+
+    effects: theme.effects ?? {},
 
     media: buildMediaQueries(theme.breakpoints)
   }
