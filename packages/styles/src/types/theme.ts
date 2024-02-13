@@ -28,6 +28,10 @@ type Typography = {
   [key: string]: any
 }
 
+type IconsMap = {
+  [key: string]: any
+}
+
 export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
   base: number
   gap: SpacingFunction
@@ -44,6 +48,7 @@ export type Theme = {
   borderRadius?: BorderRadiusMap
   effects?: EffectsMap
   typography: Typography
+  icons: IconsMap
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -62,4 +67,5 @@ export type AppTheme<T extends Theme> = {
   effects: T['effects']
   border: BorderBuilder
   typography: T['typography']
+  icons: T['icons']
 }
