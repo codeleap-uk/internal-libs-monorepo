@@ -1,7 +1,7 @@
 import { BorderBuilder } from '../lib/borderBuilder'
 import { MediaQueries } from '../lib/mediaQuery'
 import type { DefaultPresets } from '../lib/presets'
-import { SpacingFunction, Spacings } from '../lib/spacing'
+import { MultiplierFunction, Spacings } from '../lib/spacing'
 import { IEffect } from './core'
 
 type ColorMap = {
@@ -36,10 +36,25 @@ type ValuesMap = {
   [key: string]: any
 }
 
-export type SpacingMap = Spacings<'margin'> & Spacings<'padding'> & {
-  base: number
-  gap: SpacingFunction
-}
+export type SpacingMap = 
+  Spacings<'margin'> & 
+  Spacings<'padding'> &
+  Spacings<'m', string> &
+  Spacings<'p', string> &
+  {
+    base: number
+    gap: MultiplierFunction
+  }
+
+export type InsetMap = 
+  {
+    base: number
+    value: (multiplier: number) => number
+    bottom: MultiplierFunction
+    top: MultiplierFunction
+    left: MultiplierFunction
+    right: MultiplierFunction
+  }
 
 export type Theme = {
   colors: ColorMap
@@ -74,4 +89,5 @@ export type AppTheme<T extends Theme> = {
   typography: T['typography']
   icons: T['icons']
   values: T['values']
+  inset: InsetMap
 }

@@ -1,8 +1,8 @@
-import { AnyFunction, AnyStyledComponent, AppTheme, ICSS, SpacingMap, StyleProp, Theme, VariantStyleSheet } from '../types'
+import { AnyFunction, AnyStyledComponent, AppTheme, ICSS, InsetMap, SpacingMap, StyleProp, Theme, VariantStyleSheet } from '../types'
 import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
-import { SpacingFunction } from './spacing'
+import { MultiplierFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
 import { createDynamicPresets, VariantFunction } from './dynamicPresets'
@@ -13,7 +13,7 @@ export class CodeleapStyleRegistry {
 
   variantStyles: Record<string, ICSS> = {}
 
-  commonVariantsStyles: Record<string, ICSS | SpacingFunction> = {}
+  commonVariantsStyles: Record<string, ICSS | MultiplierFunction> = {}
 
   styles: Record<string, ICSS> = {}
 
@@ -393,9 +393,13 @@ export class CodeleapStyleRegistry {
 
     const spacing: SpacingMap = theme?.['spacing']
 
+    const inset: InsetMap = theme?.['inset']
+
     const appVariants = themeStore.getState().variants
 
     const spacingVariants = objectPickBy(spacing, (_, key) => isSpacingKey(key))
+
+    const insetVariants = objectPickBy(inset, (_, key) => ['top', 'left', 'right', 'bottom'].includes(key))
 
     const dynamicVariants = createDynamicPresets()
 
@@ -404,6 +408,7 @@ export class CodeleapStyleRegistry {
       ...defaultPresets,
       ...dynamicVariants,
       ...spacingVariants,
+      ...insetVariants,
     }
   }
 

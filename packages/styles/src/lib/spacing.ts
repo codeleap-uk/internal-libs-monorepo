@@ -1,63 +1,75 @@
 import { ICSS } from '../types'
-import { spacingVariants, SpacingVariants } from '../types/spacing'
+import { spacingVariants, spacingShortVariants, SpacingVariants, SpacingShortVariants } from '../types/spacing'
 
-export type SpacingFunction = (multiplier: number | string) => any
+export type MultiplierFunction = (multiplier: number | string) => ICSS
 
-export type Spacings<T extends string> = {
-  [Property in SpacingVariants as `${T}${string & Property}`]: SpacingFunction;
+export type Spacings<T extends string, S = boolean> = {
+  [Property in (S extends boolean ? SpacingVariants : SpacingShortVariants) as `${T}${string & Property}`]: MultiplierFunction;
 } & {
   [Property in T]: (multiplier: number) => ICSS;
 } & {
   value: (multiplier?: number) => number
 }
 
+const mapValues = {
+  'x': 'Horizontal',
+  'y': 'Vertical',
+  'l': 'Left',
+  'r': 'Right',
+  't': 'Top',
+  'b': 'Bottom',
+  'm': 'margin',
+  'p': 'padding'
+}
+
 export function spacingFactory<T extends string>(
   base: number,
-  property: T,
-): Spacings<T> {
-  const positions = property == 'gap' ? [''] : spacingVariants
+  spacingProperty: T,
+  hasMapValue: boolean = false
+) {
+  // @ts-ignore
+  const property =  hasMapValue ? mapValues[spacingProperty] : spacingProperty
+  const positions = hasMapValue ? spacingShortVariants : spacingVariants
 
-  const functions = positions.map((v) => [
-    `${property}${v}`,
-    (n: number | string) => {
-      const value = base * Number(n)
+  const functions = positions.map((position: string) => {
+    const v: string = hasMapValue ? mapValues[position] : position
 
-      if (property === 'gap') {
-        return {
-          gap: value,
+    return [
+      `${spacingProperty}${position}`,
+      (n: number | string) => {
+        const value = base * Number(n)
+  
+        switch (v) {
+          case 'Horizontal':
+            return {
+              [`${property}Left`]: value,
+              [`${property}Right`]: value,
+            }
+          case 'Vertical':
+            return {
+              [`${property}Top`]: value,
+              [`${property}Bottom`]: value,
+            }
+          case '':
+            return {
+              [`${property}Top`]: value,
+              [`${property}Left`]: value,
+              [`${property}Right`]: value,
+              [`${property}Bottom`]: value,
+            }
+          default:
+            return {
+              [`${property}${v}`]: value,
+            }
         }
-      }
-
-      switch (v) {
-        case 'Horizontal':
-          return {
-            [`${property}Left`]: value,
-            [`${property}Right`]: value,
-          }
-        case 'Vertical':
-          return {
-            [`${property}Top`]: value,
-            [`${property}Bottom`]: value,
-          }
-        case '':
-          return {
-            [`${property}Top`]: value,
-            [`${property}Left`]: value,
-            [`${property}Right`]: value,
-            [`${property}Bottom`]: value,
-          }
-        default:
-          return {
-            [`${property}${v}`]: value,
-          }
-      }
-    },
-  ])
+      },
+    ]
+  })
 
   return {
     value: (n = 1) => base * n,
     ...Object.fromEntries(functions),
-    [`${property}`]: (n: number | string) => ({
+    [`${spacingProperty}`]: (n: number | string) => ({
       [`${property}`]: base * Number(n),
     }),
   }

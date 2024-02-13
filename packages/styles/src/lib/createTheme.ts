@@ -1,6 +1,7 @@
 import { AppTheme, ColorScheme, Theme } from '../types'
 import { borderBuilder } from './borderBuilder'
 import { buildMediaQueries } from './mediaQuery'
+import { multiplierProperty } from './multiplierProperty'
 import { defaultPresets } from './presets'
 import { spacingFactory } from './spacing'
 import { themeStore } from './themeStore'
@@ -49,9 +50,20 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
 
     spacing: {
       base: theme.baseSpacing,
+      gap: multiplierProperty(theme.baseSpacing, 'gap'),
       ...spacingFactory(theme.baseSpacing, 'padding'),
       ...spacingFactory(theme.baseSpacing, 'margin'),
-      ...spacingFactory(theme.baseSpacing, 'gap'),
+      ...spacingFactory(theme.baseSpacing, 'p', true),
+      ...spacingFactory(theme.baseSpacing, 'm', true),
+    },
+
+    inset: {
+      base: theme.baseSpacing,
+      value: (multiplier: number) => (theme.baseSpacing * multiplier),
+      top: multiplierProperty(theme.baseSpacing, 'top'),
+      bottom: multiplierProperty(theme.baseSpacing, 'bottom'),
+      left: multiplierProperty(theme.baseSpacing, 'left'),
+      right: multiplierProperty(theme.baseSpacing, 'right')
     },
 
     presets: {

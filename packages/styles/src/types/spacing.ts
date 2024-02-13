@@ -8,15 +8,28 @@ export const spacingVariants = [
   '',
 ] as const
 
+export const spacingShortVariants = [
+  'y',
+  'x',
+  'b',
+  't',
+  'l',
+  'r',
+  '',
+] as const
+
 export type SpacingVariants = typeof spacingVariants[number]
 
-export type SpacingMultiplier =
+export type SpacingShortVariants = typeof spacingShortVariants[number]
+
+export type Multiplier =
   | 'auto'
   | number
   | ''
 
 export type Spacing =
-  | `padding${SpacingVariants}:${SpacingMultiplier}`
-  | `margin${SpacingVariants}:${SpacingMultiplier}`
-  | `gap:${SpacingMultiplier}`
-  
+  | `padding${SpacingVariants}:${Multiplier}`
+  | `margin${SpacingVariants}:${Multiplier}`
+  | `p${SpacingShortVariants}:${Multiplier}`
+  | `m${SpacingShortVariants}:${Multiplier}`
+  | `gap:${Multiplier}`

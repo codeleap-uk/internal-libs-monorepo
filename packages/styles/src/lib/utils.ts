@@ -1,3 +1,4 @@
+import { spacingShortVariants, spacingVariants } from '../types/spacing'
 
 export function capitalize(str: string, reverse = false) {
   if (!str.length) return str
@@ -17,7 +18,28 @@ export function objectPickBy<K extends string = string, P = any>(obj: Record<K, 
   return result
 }
 
+export const spacingKeys = [
+  'gap',
+  'top',
+  'left',
+  'right',
+  'bottom',
+]
+
+for (const longProperty of ['padding', 'margin']) {
+  for (const variant of spacingVariants) {
+    spacingKeys.push(`${longProperty}${capitalize(variant)}`)
+  }
+}
+
+for (const shortProperty of ['p', 'm']) {
+  for (const shortVariant of spacingShortVariants) {
+    spacingKeys.push(shortProperty + shortVariant)
+  }
+}
+
 export function isSpacingKey(key: string) {
   if (!key) return false
-  return key?.includes('padding') || key?.includes('margin') || key?.includes('gap')
+
+  return spacingKeys?.includes(key)
 }

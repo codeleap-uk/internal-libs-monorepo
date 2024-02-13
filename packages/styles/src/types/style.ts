@@ -2,10 +2,17 @@ import { DynamicPresets } from '../lib/dynamicPresets'
 import { Queries } from '../lib/mediaQuery'
 import { DefaultPresets } from '../lib/presets'
 import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects } from './core'
-import { Spacing } from './spacing'
+import { Multiplier, Spacing } from './spacing'
+
+type Inset = 
+  | `top:${Multiplier}`
+  | `bottom:${Multiplier}`
+  | `left:${Multiplier}`
+  | `right:${Multiplier}`
 
 export type CommonVariants = 
   Spacing |
+  Inset |
   DynamicPresets |
   keyof DefaultPresets | 
   keyof IAppVariants |

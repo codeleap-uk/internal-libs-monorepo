@@ -40,18 +40,6 @@ export const defaultPresets = {
     top: 0,
     bottom: 0,
   },
-  top: {
-    top: 0,
-  },
-  right: {
-    right: 0,
-  },
-  bottom: {
-    bottom: 0,
-  },
-  left: {
-    left: 0,
-  },
   hidden: {
     display: 'none',
   },
