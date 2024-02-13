@@ -1,3 +1,4 @@
+import { BorderBuilder } from '../lib/borderBuilder'
 import { MediaQueries } from '../lib/mediaQuery'
 import type { DefaultPresets } from '../lib/presets'
 import { SpacingFunction, Spacings } from '../lib/spacing'
@@ -54,4 +55,5 @@ export type AppTheme<T extends Theme> = {
   borderRadius: T['borderRadius']
   media: MediaQueries
   effects: T['effects']
+  border: BorderBuilder
 }
