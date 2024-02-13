@@ -70,6 +70,8 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
     typography: theme.typography ?? {},
 
     icons: theme.icons,
+
+    values: theme.values ?? {},
   }
 
   themeStore.setState({ current: themeObj })
