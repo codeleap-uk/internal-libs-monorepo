@@ -84,6 +84,15 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
     icons: theme.icons,
 
     values: theme.values ?? {},
+
+    sized: (size) => {
+      const value = typeof size == 'number' ? size * theme.baseSpacing : size
+      
+      return {
+        width: value,
+        height: value,
+      }
+    },
   }
 
   themeStore.setState({ current: themeObj })

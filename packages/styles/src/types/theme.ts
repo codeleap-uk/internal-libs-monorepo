@@ -90,4 +90,8 @@ export type AppTheme<T extends Theme> = {
   icons: T['icons']
   values: T['values']
   inset: InsetMap
+  sized: (size: number | string) => ({
+    width: number | string,
+    height: number | string
+  })
 }
