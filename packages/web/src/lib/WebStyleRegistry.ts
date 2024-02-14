@@ -1,5 +1,4 @@
-import { AnyStyledComponent, CodeleapStyleRegistry, ICSS, deepmerge } from '@codeleap/styles'
-import { ReactQuery } from '@codeleap/common'
+import { AnyStyledComponent, CodeleapStyleRegistry, ICSS } from '@codeleap/styles'
 
 let instance: WebStyleRegistry
 
@@ -21,22 +20,8 @@ export class WebStyleRegistry extends CodeleapStyleRegistry {
     return instance
   }
 
-  hashStyle(style: any, keys: string[]): string {
-    return ReactQuery.hashQueryKey([...keys, style])
-  }
-
   createStyle(css: ICSS): ICSS {
     return css
-  }
-
-  mergeStyles<T = ICSS>(styles: ICSS[], key: string): T {
-    if (!this.styles[key]) {
-      const mergedStyles = deepmerge({ all: true })(...styles)
-
-      this.styles[key] = mergedStyles
-    }
-
-    return this.styles[key] as T
   }
 
   static get current() {

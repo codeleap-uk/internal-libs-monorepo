@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { IAppVariants, ITheme } from '../types'
 
-type ThemeStore = {
+export type ThemeStore = {
   colorScheme: string | null
   current: ITheme | null
   variants: IAppVariants

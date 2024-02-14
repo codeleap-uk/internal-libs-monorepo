@@ -1,13 +1,13 @@
-import { AnyFunction, AnyStyledComponent, AppTheme, ICSS, InsetMap, SpacingMap, StyleProp, Theme, VariantStyleSheet } from '../types'
-import { themeStore } from './themeStore'
+import { AnyStyledComponent, ICSS, InsetMap, SpacingMap, StyleProp, VariantStyleSheet } from '../types'
+import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
 import { MultiplierFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
-import { createDynamicPresets, VariantFunction } from './dynamicPresets'
-import { isSpacingKey, objectPickBy } from './utils'
-import { commonVariantsStore, hashKey } from './cache'
+import { createDynamicPresets } from './dynamicPresets'
+import { isEmptyObject, isSpacingKey, objectPickBy } from './utils'
+import { hashKey, StylesStore, stylesStore } from './cache'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -17,26 +17,84 @@ export class CodeleapStyleRegistry {
   commonVariantsStyles: Record<string, ICSS | MultiplierFunction> = {}
 
   styles: Record<string, ICSS> = {}
-
+  
   components: Record<string, AnyStyledComponent> = {}
 
+  theme: ThemeStore
+
+  store: StylesStore
+
+  baseKey: string
+
   constructor() {
+    this.theme = themeStore.getState()
+    this.store = stylesStore.getState()
+
     this.registerCommonVariants()
+
+    this.registerBaseKey()
+
+    const cachedVariantStyles = this.store.variantStyles
+
+    console.log('CV cachedVariantStyles', cachedVariantStyles)
+ 
+    if (!!cachedVariantStyles && isEmptyObject(this.variantStyles)) {
+      this.variantStyles = cachedVariantStyles
+    }
+
+    const cachedStyles = this.store.styles
+
+    console.log('CV cachedStyles', cachedStyles)
+
+    if (!!cachedStyles && isEmptyObject(this.styles)) {
+      this.styles = cachedStyles
+    }
   }
 
-  keyForVariants(componentName: string, variants:string[]) {
-    const currentColorScheme = themeStore.getState().current['currentColorScheme'] ?? themeStore.getState().colorScheme ?? 'default'
+  registerBaseKey() {
+    const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
-    return [
-      componentName,
+    const key = [
       currentColorScheme,
-      ...variants.filter(Boolean),
-    ].join('-')
+      this.theme.current,
+      this.commonVariantsStyles,
+    ]
+
+    this.baseKey = hashKey(key)
+  }
+
+  keyForStyles(componentName: string, styles: any) {
+    const stylesheet = this.stylesheets[componentName]
+
+    const key = [
+      componentName,
+      stylesheet,
+      styles,
+      this.baseKey,
+    ]
+
+    console.log('KEY STYLE ' + componentName, key)
+
+    return hashKey(key)
+  }
+
+  keyForVariants(componentName: string, variants: string[]) {
+    const stylesheet = this.stylesheets[componentName]
+
+    const key = [
+      componentName,
+      stylesheet,
+      this.baseKey,
+    ].concat(variants)
+
+    console.log('KEY VARIANT ' + componentName, key)
+
+    return hashKey(key)
   }
 
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
     const { rootElement } = this.getRegisteredComponent(componentName)
-    const theme = themeStore.getState().current
+    const theme = this.theme.current
 
     let mediaQuery = null
 
@@ -80,6 +138,7 @@ export class CodeleapStyleRegistry {
     const { rootElement } = this.getRegisteredComponent(componentName)
 
     if (this.variantStyles[key]) {
+      console.log('USING HASH KEY', componentName)
       return [this.variantStyles[key], key]
     }
 
@@ -89,7 +148,7 @@ export class CodeleapStyleRegistry {
       throw new Error(`No variants registered for ${componentName}`)
     }
 
-    const theme = themeStore.getState().current
+    const theme = this.theme.current
 
     const variantStyles = variants.map((variant) => {
       const [breakpoint, variantName] = variant?.includes(':') ? variant?.split(':') : []
@@ -125,6 +184,8 @@ export class CodeleapStyleRegistry {
         ]
       }),
     )
+    
+    this.store.cacheVariantStyle(key, this.variantStyles[key])
 
     return [this.variantStyles[key], key]
   }
@@ -162,7 +223,7 @@ export class CodeleapStyleRegistry {
     const stylesheet = this.stylesheets[componentName]
 
     if (!stylesheet) {
-      throw new Error(`DefaultVariant: No variants registered for ${componentName}`)
+      throw new Error(`getDefaultVariantStyle: No variants registered for ${componentName}`)
     }
 
     const defaultStyle = stylesheet?.[defaultVariantStyleName]
@@ -177,7 +238,15 @@ export class CodeleapStyleRegistry {
   mergeStylesWithCache<T = unknown>(styles: ICSS[], key: string): T {
     const cacheStyles: (styles: ICSS[], key: string) => T = trieMemoize(
       [WeakMap, Map],
-      (styles: ICSS[], key: string) => this.mergeStyles(styles, key)
+      (styles: ICSS[], key: string) => {
+        const mergedStyles = deepmerge({ all: true })(...styles)
+
+        this.styles[key] = mergedStyles
+
+        this.store.cacheStyles(key, mergedStyles as ICSS[])
+
+        return mergedStyles as T
+      }
     )
 
     return cacheStyles?.(styles, key)
@@ -203,7 +272,7 @@ export class CodeleapStyleRegistry {
 
     const responsiveStyles = style[responsiveStyleKey]
 
-    const theme = themeStore.getState().current
+    const theme = this.theme.current
 
     if (!responsiveStyles) {
       return {
@@ -278,14 +347,24 @@ export class CodeleapStyleRegistry {
     }
   }
 
-  styleFor<T = unknown>(componentName:string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
+  styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
+    const styleHashKey = this.keyForStyles(componentName, style)
+
+    if (!!this.styles[styleHashKey]) {
+      console.log('CACHED STYLE', this.styles[styleHashKey])
+      return this.styles[styleHashKey] as T
+    }
+
     const isStyleArray = Array.isArray(style)
   
     const { rootElement, registeredComponent } = this.getRegisteredComponent(componentName)
     const defaultStyle = mergeWithDefaultStyle ? this.getDefaultVariantStyle(componentName) : {}
 
     if (!style) {
-      return this.mergeStylesWithCache([defaultStyle], this.hashStyle(defaultStyle, ['default']))
+      return this.mergeStylesWithCache(
+        [defaultStyle], 
+        styleHashKey
+      )
     }
 
     const isStyleObject = typeof style === 'object' && !isStyleArray
@@ -293,10 +372,10 @@ export class CodeleapStyleRegistry {
     if (typeof style === 'string') {
       const [computedStyle, key] = this.computeVariantStyle(componentName, [style])
 
-      return this.mergeStylesWithCache([
-        defaultStyle,
-        computedStyle,
-      ], key)
+      return this.mergeStylesWithCache(
+        [defaultStyle, computedStyle], 
+        styleHashKey
+      )
     }
 
     if (isStyleObject) {
@@ -319,11 +398,14 @@ export class CodeleapStyleRegistry {
 
         console.log('styles', styles)
 
-        return this.mergeStylesWithCache(styles, this.hashStyle(style, variantKeys))
+        return this.mergeStylesWithCache(
+          styles, 
+          styleHashKey
+        )
       } else {
         return this.mergeStylesWithCache(
           [defaultStyle, responsiveStyles, { [rootElement]: style }],
-          this.hashStyle(style, []),
+          styleHashKey
         )
       }
     }
@@ -383,7 +465,10 @@ export class CodeleapStyleRegistry {
         idx++
       }
 
-      return this.mergeStylesWithCache(styles, this.hashStyle(style, variantKeys))
+      return this.mergeStylesWithCache(
+        styles, 
+        styleHashKey
+      )
     }
 
     console.warn('Invalid style prop for ', componentName, style)
@@ -392,17 +477,11 @@ export class CodeleapStyleRegistry {
   }
 
   registerCommonVariants() {
-    const cachedVariants = commonVariantsStore.getState().variants
-
-    console.log('CACHED V ' + commonVariantsStore.getState().key, cachedVariants)
+    const spacing: SpacingMap = this.theme.current?.['spacing']
     
-    const theme = themeStore.getState()
+    const inset: InsetMap = this.theme.current?.['inset']
 
-    const spacing: SpacingMap = theme.current?.['spacing']
-
-    const inset: InsetMap = theme.current?.['inset']
-
-    const appVariants = theme.variants
+    const appVariants = this.theme.variants
 
     const spacingVariants = objectPickBy(spacing, (_, key) => isSpacingKey(key))
 
@@ -419,10 +498,6 @@ export class CodeleapStyleRegistry {
     )
 
     this.commonVariantsStyles = variantsStyles
-
-    console.log('KEY', hashKey(variantsStyles))
-
-    commonVariantsStore.setState({ variants: variantsStyles, key: hashKey(variantsStyles) })
   }
 
   registerVariants(componentName:string, variants: VariantStyleSheet) {
@@ -441,20 +516,13 @@ export class CodeleapStyleRegistry {
     * These should be overriden by the end-user to support
     * custom style merging logic, such as StyleSheet.flatten
     */
-  mergeStyles<T>(styles: ICSS[], key: string) : T {
-    throw new Error('mergeStyles: Not implemented')
-  }
-
   createStyle(css: ICSS): ICSS {
     throw new Error('createStyle: Not implemented')
-  }
-
-  hashStyle(style: StyleProp, keys: string[]):string {
-    throw new Error('HashStyle: Not implemented')
   }
 
   wipeCache() {
     this.variantStyles = {}
     this.styles = {}
+    this.store.wipeCache()
   }
 }
