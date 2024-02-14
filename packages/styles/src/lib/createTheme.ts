@@ -4,39 +4,20 @@ import { buildMediaQueries } from './mediaQuery'
 import { multiplierProperty } from './multiplierProperty'
 import { defaultPresets } from './presets'
 import { spacingFactory } from './spacing'
-import { themeStore } from './themeStore'
+import { colorSchemaStore, themeStore } from './themeStore'
 
-type AppColorSchema = {
-  get: () => string
-  set: (colorSchema: ColorScheme<Theme>) => string
-}
+export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
+  console.log('COLOR SCHEMA', colorSchemaStore.getState().value)
 
-export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorSchema): AppTheme<T> => {
   const themeObj:AppTheme<T> = {
-    get currentColorScheme() {
-      const colorSchemaTheme = appColorSchema?.get?.()
-      const colorScheme = themeStore.getState().colorScheme
-
-      if (colorScheme == null && typeof colorSchemaTheme === 'string') {
-        return colorSchemaTheme
-      }
-
-      return colorScheme ?? 'default'
+    get currentColorScheme(): string {
+      return colorSchemaStore.getState().value
     },
 
     breakpoints: theme.breakpoints ?? {},
 
     get colors() {
-      const colorSchemaTheme = appColorSchema?.get?.()
-      let colorScheme = themeStore.getState().colorScheme
-
-      if (colorScheme == null && typeof colorSchemaTheme === 'string') {
-        colorScheme = colorSchemaTheme
-      }
-
-      if (!colorScheme) {
-        colorScheme = 'default'
-      }
+      const colorScheme = colorSchemaStore.getState().value
 
       if (colorScheme === 'default') return theme.colors
       
@@ -45,7 +26,7 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
 
     setColorScheme(colorScheme: ColorScheme<Theme>) {
       themeStore.setState({ colorScheme: colorScheme as string })
-      appColorSchema?.set?.(colorScheme)
+      colorSchemaStore.setState({ value: colorScheme as string  })
     },
 
     spacing: {
@@ -95,7 +76,10 @@ export const createTheme = <T extends Theme>(theme: T, appColorSchema: AppColorS
     },
   }
 
-  themeStore.setState({ current: themeObj })
+  themeStore.setState({ 
+    current: themeObj, 
+    colorScheme: themeObj.currentColorScheme as string 
+  })
 
   return themeObj
 }

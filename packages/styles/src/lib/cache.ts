@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import valueHash from 'object-hash'
 import { ICSS } from '../types'
 
-export const STORES_PERSIST_VERSION = 6
+export const STORES_PERSIST_VERSION = 7
 
 const styleKey = '@styles-version'
 const version = require('../../package.json')?.version
