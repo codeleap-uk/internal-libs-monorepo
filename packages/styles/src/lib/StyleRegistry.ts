@@ -7,6 +7,7 @@ import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
 import { createDynamicPresets, VariantFunction } from './dynamicPresets'
 import { isSpacingKey, objectPickBy } from './utils'
+import { commonVariantsStore, hashKey } from './cache'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -391,6 +392,10 @@ export class CodeleapStyleRegistry {
   }
 
   registerCommonVariants() {
+    const cachedVariants = commonVariantsStore.getState().variants
+
+    console.log('CACHED V ' + commonVariantsStore.getState().key, cachedVariants)
+    
     const theme = themeStore.getState()
 
     const spacing: SpacingMap = theme.current?.['spacing']
@@ -414,6 +419,10 @@ export class CodeleapStyleRegistry {
     )
 
     this.commonVariantsStyles = variantsStyles
+
+    console.log('KEY', hashKey(variantsStyles))
+
+    commonVariantsStore.setState({ variants: variantsStyles, key: hashKey(variantsStyles) })
   }
 
   registerVariants(componentName:string, variants: VariantStyleSheet) {
