@@ -36,7 +36,12 @@ export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
     fileRightIcon?: IconPlaceholder
     fileLeftIcon?: IconPlaceholder
     withImagePreview?: boolean
-    FilePreviewComponent?: (props: DropzoneFilePreviewProps) => JSX.Element
+    FilePreviewComponent?: (props: DropzoneFilePreviewProps & {
+      hasErrors: boolean
+      revokeImageUrl: () => void
+      imageUrl: string
+      isPreview: boolean
+    }) => JSX.Element
   }
 
 export type DropzoneFilePreviewProps = Pick<
@@ -48,6 +53,7 @@ export type DropzoneFilePreviewProps = Pick<
   variantStyles: StylesOf<DropzoneComposition>
   onRemove?: () => void
   fileRightIconStyles?: StylesOf<ActionIconComposition>
+  FilePreviewComponent?: DropzoneProps['FilePreviewComponent']
 }
 
 export type DropzoneRef = ReactDropzoneRef & {
