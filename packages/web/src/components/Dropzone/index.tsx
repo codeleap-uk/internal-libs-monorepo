@@ -1,6 +1,6 @@
 import { DropzoneFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
 import { DropzonePresets } from './styles'
-import { IconPlaceholder, PropsOf, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
+import { IconPlaceholder, PropsOf, TypeGuards, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
@@ -101,6 +101,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
     onDrop,
     onRemove,
     children,
+    FilePreviewComponent,
     ...rest } = allProps
 
   const [rejectedFilesState,
@@ -157,6 +158,8 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
     fileRightIconStyles,
   }
 
+  const _FilePreview = !TypeGuards.isNil(FilePreviewComponent) ? FilePreviewComponent : FilePreview
+
   return (
     <View css={variantStyles.wrapper}>
       <View {...getRootProps() as PropsOf<ViewProps<'div'>>} css={variantStyles.dropzone}>
@@ -170,7 +173,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
         {hasFiles && (
           <View css={variantStyles.filesWrapper}>
             {acceptedFiles.map(file => (
-              <FilePreview
+              <_FilePreview
                 {...fileProps}
                 file={file}
                 key={file.name}
@@ -178,7 +181,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
               />))}
 
             {rejectedFiles.map(({ file, errors }) => (
-              <FilePreview
+              <_FilePreview
                 {...fileProps}
                 key={file.name}
                 file={file}

@@ -13,6 +13,7 @@ import {
 } from 'react-dropzone'
 import { ReactDispatch } from 'react'
 import { ActionIconComposition } from '../ActionIcon'
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace'
 
 export type DropzoneFile = File
 
@@ -35,6 +36,7 @@ export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
     fileRightIcon?: IconPlaceholder
     fileLeftIcon?: IconPlaceholder
     withImagePreview?: boolean
+    FilePreviewComponent?: (props: DropzoneFilePreviewProps) => JSX.Element
   }
 
 export type DropzoneFilePreviewProps = Pick<
