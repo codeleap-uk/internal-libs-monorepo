@@ -1,4 +1,4 @@
-import { DropzoneFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
+import { DropzoneFilePreviewProps, DropzoneInnerFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
 import { DropzonePresets } from './styles'
 import { IconPlaceholder, PropsOf, TypeGuards, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
 import { FileRejection, useDropzone } from 'react-dropzone'
@@ -23,12 +23,7 @@ function isImage(file) {
   return file?.type?.startsWith('image/')
 }
 
-const DefaultFilePreview = (props: DropzoneFilePreviewProps & {
-  hasErrors: boolean
-  revokeImageUrl: () => void
-  imageUrl: string
-  isPreview: boolean
-}) => {
+const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
   const {
     file,
     variantStyles,
