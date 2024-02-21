@@ -102,6 +102,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
       isPreview={isPreview}
       imageUrl={imageUrl}
       revokeImageUrl={revokeImageUrl}
+      errors={errors}
       {...rest}
     />
   )
