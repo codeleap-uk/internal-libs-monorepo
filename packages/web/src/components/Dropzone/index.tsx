@@ -203,18 +203,20 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
 
         {hasFiles && (
           <View css={variantStyles.filesWrapper}>
-            {acceptedFiles.map(file => (
+            {acceptedFiles.map((file, index) => (
               <FilePreview
                 {...fileProps}
+                index={index}
                 file={file}
                 key={file.name}
                 onRemove={() => handleRemoveFile(file)}
                 FilePreviewComponent={FilePreviewComponent}
               />))}
 
-            {rejectedFiles.map(({ file, errors }) => (
+            {rejectedFiles.map(({ file, errors }, index) => (
               <FilePreview
                 {...fileProps}
+                index={index}
                 key={file.name}
                 file={file}
                 errors={errors}

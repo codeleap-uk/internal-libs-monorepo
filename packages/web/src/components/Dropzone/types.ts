@@ -54,6 +54,7 @@ export type DropzoneFilePreviewProps = Pick<
   onRemove?: () => void
   fileRightIconStyles?: StylesOf<ActionIconComposition>
   FilePreviewComponent?: DropzoneProps['FilePreviewComponent']
+  index?: number
 }
 
 export type DropzoneRef = ReactDropzoneRef & {
