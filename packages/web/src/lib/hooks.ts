@@ -8,7 +8,7 @@ export function useWindowSize() {
   const [size, setSize] = useState([])
 
   onMount(() => {
-    setSize([window.innerWidth, window.innerWidth])
+    setSize([window.innerWidth, window.innerHeight])
   })
 
   function handleResize() {
