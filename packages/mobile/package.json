@@ -37,14 +37,14 @@
     "react-native-image-viewing": "0.2.2",
     "react-native-keyboard-aware-scroll-view": "0.9.5",
     "typescript": "5.0.4",
-    "react-native-avoid-softinput": "3.1.5",
-    "@fastify/deepmerge": "1.3.0"
+    "react-native-avoid-softinput": "3.1.5"
   },
   "dependencies": {
     "@gorhom/portal": "1.0.14",
     "@miblanchard/react-native-slider": "2.3.1",
     "date-fns": "^2.29.3",
     "react-native-masked-text": "1.13.0",
-    "react-native-uuid": "2.0.1"
+    "react-native-uuid": "2.0.1",
+    "@fastify/deepmerge": "1.3.0"
   }
 }

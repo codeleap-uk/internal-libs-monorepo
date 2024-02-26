@@ -1,8 +1,5 @@
-import { AnyFunction, silentLogger } from '@codeleap/common'
-// @ts-ignore
+import { AnyFunction, silentLogger } from '@codeleap/common' // @ts-ignore
 import messaging from '@react-native-firebase/messaging'
-// @ts-ignore
-import deepmerge from '@fastify/deepmerge'
 import { Subscriber, Subscription } from '../Subscription'
 import { Message, NotificationInitializeCallback, NotificationManagerOptions, NotificationType, TNotification } from './types'
 
@@ -35,10 +32,10 @@ export class NotificationManager<N extends object = Message, E extends string = 
       this.parser = options?.parser
     }
 
-    this.currentOptions = deepmerge({ all: true })(
-      this.currentOptions,
-      options
-    ) 
+    this.currentOptions = {
+      ...this.currentOptions,
+      ...options
+    }
   }
 
   private invoke(args: {
