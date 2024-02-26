@@ -22335,6 +22335,11 @@ react-native-monorepo-tools@1.2.1:
     find-root "^1.1.0"
     glob "^7.1.7"
 
+react-native-notification-badge@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-notification-badge/-/react-native-notification-badge-1.0.5.tgz#c996e9ef428f3cfe72405b8961479f64f88d4093"
+  integrity sha512-FHmbEIcOFDREtdfC5/fphHmsgKHWne/yi2r4PSudPL6BKLKRkpID3/8DrkDec44AsmTH8KtQFcMNrPgD4lswsA==
+
 react-native-parsed-text@0.0.22:
   version "0.0.22"
   resolved "https://registry.yarnpkg.com/react-native-parsed-text/-/react-native-parsed-text-0.0.22.tgz#a23c756eaa5d6724296814755085127f9072e5f5"
