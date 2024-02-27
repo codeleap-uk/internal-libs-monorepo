@@ -17,8 +17,6 @@ export const useMaxContentWidth = () => {
   const isUpDesktopHuge = width >= Theme.breakpoints[desktopHugeEntryName]
   const hasScreenReachedMaxWidth = width >= Theme.values.maxContentWidth
 
-  const isHorizontalPaddingApplied = currentBreakpoint !== desktopHugeEntryName
-
   entries.forEach(breakpoint => {
     if (Theme.hooks.down(breakpoint)) {
       currentBreakpoint = breakpoint
@@ -28,7 +26,7 @@ export const useMaxContentWidth = () => {
   if (isUpDesktopHuge) {
     maxContentWidth = Theme.values.maxContentWidth - (safeHorizontalPaddings.desktopHuge * 2)
   } else {
-    if (!isHorizontalPaddingApplied) {
+    if (currentBreakpoint === desktopHugeEntryName) {
       maxContentWidth = Theme.values.maxContentWidth
     } else {
       maxContentWidth = (hasScreenReachedMaxWidth ? Theme.values.maxContentWidth : width) - (safeHorizontalPaddings[currentBreakpoint] * 2)
