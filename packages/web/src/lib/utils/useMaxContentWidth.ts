@@ -10,31 +10,27 @@ export const useMaxContentWidth = () => {
   const entries = Object.keys(safeHorizontalPaddings)
 
   let currentBreakpoint = null
-  let maxContentWidth = null
+  let maxContentWidth = Theme.values.maxContentWidth
+
+  const isUpDesktopHuge = width >= Theme.breakpoints.desktopHuge
 
   entries.forEach(breakpoint => {
-
-    if (width >= Theme.breakpoints.desktopHuge) {
-      currentBreakpoint = 'desktopHuge'
-      return
-    }
-
     if (Theme.hooks.down(breakpoint)) {
       currentBreakpoint = breakpoint
     }
   })
 
-  if (currentBreakpoint === 'desktopHuge') {
-    maxContentWidth = Theme.values.maxContentWidth
+  if (isUpDesktopHuge) {
+    maxContentWidth = Theme.values.maxContentWidth - (safeHorizontalPaddings.desktopHuge * 2)
   } else {
-    maxContentWidth = (width >= Theme.values.maxContentWidth ? Theme.values.maxContentWidth : width) - (safeHorizontalPaddings[currentBreakpoint] * 2)
+    if (!(currentBreakpoint === 'desktopHuge')) {
+      maxContentWidth = (width >= Theme.values.maxContentWidth ? Theme.values.maxContentWidth : width) - (safeHorizontalPaddings[currentBreakpoint] * 2)
+    }
   }
 
   const padding = (width - Theme.values.maxContentWidth) / 2
 
   console.table({
-    width,
-    rigthMath: (safeHorizontalPaddings[currentBreakpoint] * 2),
     maxContentWidth,
     padding,
   })
