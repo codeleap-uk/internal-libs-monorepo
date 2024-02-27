@@ -3,11 +3,6 @@ import { useWindowSize } from '../hooks'
 
 export const useMaxContentWidth = () => {
 
-  // all of these values are being based upon the center wrapper component
-
-  // returns the max width a component can take up in the screen
-  // also returns the amount of padding that is being applied
-
   const { Theme } = useCodeleapContext()
   const [width, height] = useWindowSize()
 
