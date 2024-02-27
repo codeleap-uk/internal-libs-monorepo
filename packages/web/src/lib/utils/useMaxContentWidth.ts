@@ -28,7 +28,7 @@ export const useMaxContentWidth = () => {
     }
   }
 
-  const padding = (width - Theme.values.maxContentWidth) / 2
+  const padding = (width - maxContentWidth) / 2
 
   console.table({
     maxContentWidth,
