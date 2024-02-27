@@ -3,6 +3,11 @@ import { useWindowSize } from '../hooks'
 
 export const useMaxContentWidth = () => {
 
+  // all of these values are being based upon the center wrapper component
+
+  // returns the max width a component can take up in the screen
+  // also returns the amount of padding that is being applied
+
   const { Theme } = useCodeleapContext()
   const [width, height] = useWindowSize()
 
@@ -12,7 +17,12 @@ export const useMaxContentWidth = () => {
   let currentBreakpoint = null
   let maxContentWidth = Theme.values.maxContentWidth
 
-  const isUpDesktopHuge = width >= Theme.breakpoints.desktopHuge
+  const desktopHugeEntryName = 'desktopHuge'
+
+  const isUpDesktopHuge = width >= Theme.breakpoints[desktopHugeEntryName]
+  const hasScreenReachedMaxWidth = width >= Theme.values.maxContentWidth
+
+  const isHorizontalPaddingApplied = currentBreakpoint !== desktopHugeEntryName
 
   entries.forEach(breakpoint => {
     if (Theme.hooks.down(breakpoint)) {
@@ -23,8 +33,10 @@ export const useMaxContentWidth = () => {
   if (isUpDesktopHuge) {
     maxContentWidth = Theme.values.maxContentWidth - (safeHorizontalPaddings.desktopHuge * 2)
   } else {
-    if (!(currentBreakpoint === 'desktopHuge')) {
-      maxContentWidth = (width >= Theme.values.maxContentWidth ? Theme.values.maxContentWidth : width) - (safeHorizontalPaddings[currentBreakpoint] * 2)
+    if (!isHorizontalPaddingApplied) {
+      maxContentWidth = Theme.values.maxContentWidth
+    } else {
+      maxContentWidth = (hasScreenReachedMaxWidth ? Theme.values.maxContentWidth : width) - (safeHorizontalPaddings[currentBreakpoint] * 2)
     }
   }
 
