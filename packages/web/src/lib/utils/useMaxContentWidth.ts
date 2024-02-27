@@ -13,6 +13,11 @@ export const useMaxContentWidth = () => {
   let maxContentWidth = 0
 
   entries.forEach(breakpoint => {
+
+    if (Theme.hooks.up('desktopHuge')) {
+      currentBreakpoint = 'desktopHuge'
+      return
+    }
     if (Theme.hooks.down(breakpoint)) {
       currentBreakpoint = breakpoint
     }
