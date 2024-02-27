@@ -35,11 +35,6 @@ export const useMaxContentWidth = () => {
 
   const padding = (width - maxContentWidth) / 2
 
-  console.table({
-    maxContentWidth,
-    padding,
-  })
-
   return {
     width: `${maxContentWidth}px`,
     padding,
