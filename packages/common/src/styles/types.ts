@@ -165,6 +165,18 @@ export type FontAttrs = {
   letterSpacing: number
 }
 
+export type ThemeBreakpoints = {
+  zero: number
+  mobileSmall: number
+  mobile: number
+  tabletSmall: number
+  tablet: number
+  laptop: number
+  desktop: number
+  desktopLarge: number
+  desktopHuge: number
+}
+
 export type AppTheme = {
   readonly breakpoints?: Record<string, number>
   readonly spacing: number
@@ -190,6 +202,7 @@ export type AppTheme = {
   readonly icons: Record<string, any>
   readonly initialTheme: string
   readonly typography : Record<FontTokens, Typography>
+  readonly safeHorizontalPaddings: () => Partial<Record<keyof ThemeBreakpoints, number>>
 }
 
 export type EnhancedTheme<T extends AppTheme = AppTheme> = Omit<
