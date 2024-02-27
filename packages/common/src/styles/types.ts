@@ -169,7 +169,6 @@ export type AppTheme = {
   readonly breakpoints?: Record<string, number>
   readonly spacing: number
   readonly colors: FreeThemeColors
-
    values?: {
     width: number
     height: number
@@ -180,6 +179,7 @@ export type AppTheme = {
     itemHeight: Record<ItemHeight, number>
     iconSize: Record<IconSizes, number>
     borderWidth: Record<BorderWidth, number>
+    maxContentWidth: number
   } & AnyProps<any>
 
   readonly borderRadius: Record<BorderRadius, number>
