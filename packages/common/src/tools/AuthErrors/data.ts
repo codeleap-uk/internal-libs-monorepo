@@ -9,8 +9,9 @@ export const DEFAULT_AUTH_ERRORS = {
   'auth/email-not-found': 'Could not find an account matching the specified email address',
   'auth/email-already-in-use': 'This email address is already taken',
   'auth/invalid-email': 'Email or password is incorrect', 
-  'auth/user-disabled': 'Could not find an account with the specified email address and password', 
+  'auth/user-disabled': 'Could not find an account with the specified email address and password',
   'auth/user-not-found': 'Email or password is incorrect', 
+  'auth/missing-email': 'Could not find an account with the specified email address and password',
   
   'social': {
     '12501': null,
