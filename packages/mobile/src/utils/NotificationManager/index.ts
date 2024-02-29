@@ -70,6 +70,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
 
   /**
    * Checks if you are authorized for notifications and returns the result
+   * 
    * @return hasAuthorization (boolean)
   */
   public async getHasAuthorization() {
@@ -84,6 +85,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
 
   /**
    * Gets and returns the device token
+   * 
    * @return token (string) or null if an error occurs
   */
   public async getToken() {

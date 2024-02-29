@@ -20,6 +20,7 @@ export type NotificationStateChangeListener = FunctionType<[isInitialized: boole
 
 /**
   * Class responsible for the notification system
+  * 
   * @deprecated Use the most updated version
   * @note check the documentation to make the migration 
 */
