@@ -7,6 +7,9 @@ export * from './types'
 
 const MODULE = 'NotificationManager'
 
+/**
+  * Class responsible for the notification system
+*/
 export class NotificationManager<N extends object = Message, E extends string = string> {
   public parser: NotificationManagerOptions<N>['parser'] = (message: Message) => message as N
 
@@ -65,6 +68,10 @@ export class NotificationManager<N extends object = Message, E extends string = 
     }
   }
 
+  /**
+   * Checks if you are authorized for notifications and returns the result
+   * @return hasAuthorization (boolean)
+  */
   public async getHasAuthorization() {
     const authStatus = await messaging().hasPermission()
 
@@ -75,6 +82,10 @@ export class NotificationManager<N extends object = Message, E extends string = 
     return hasAuthorization
   }
 
+  /**
+   * Gets and returns the device token
+   * @return token (string) or null if an error occurs
+  */
   public async getToken() {
     try {
       const token = await messaging().getToken()
@@ -130,14 +141,19 @@ export class NotificationManager<N extends object = Message, E extends string = 
     return () => messaging().setBackgroundMessageHandler(() => null)
   }
 
-  public async initialize(cb: NotificationInitializeCallback) {
+  /**
+   * Responsible for initializing all notification services: token refresh, background, foreground, press and initial notification
+   *
+   * @param {function} callback Callback that is executed when the services are initialized, returning the device token
+  */
+  public async initialize(callback: NotificationInitializeCallback) {
     this.log('Initialize', this.currentOptions)
 
     this.unsubscribe()
 
     const token = await this.getToken()
 
-    cb(token)
+    callback(token)
 
     this.invokeForInitialNotification()
 
@@ -167,7 +183,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
 
     this.registeredUnsubscribers['foreground'] = unsubscribeOnMessage
 
-    const unsubscribeOnTokenRefresh = this.onTokenRefresh(cb)
+    const unsubscribeOnTokenRefresh = this.onTokenRefresh(callback)
 
     this.registeredUnsubscribers['refreshToken'] = unsubscribeOnTokenRefresh
 
@@ -183,18 +199,30 @@ export class NotificationManager<N extends object = Message, E extends string = 
     }
   }
 
-  public async deinitialize(cb: AnyFunction = null) {
+  /**
+   * Unsubscribe all services that have been started
+   *
+   * @param {function} callback Callback that is executed when the services are deinitialized
+  */
+  public async deinitialize(callback: AnyFunction = null) {
     if (!this.initialized) return
 
     this.log('Deinitialize')
 
     this.unsubscribe()
 
-    if (typeof cb == 'function') {
-      cb()
+    if (typeof callback == 'function') {
+      callback()
     }
   }
 
+  /**
+   * Registers an event that will be called by all notification services that have been started
+   *
+   * @param {string} eventName Event name
+   * @param {string} handler Function that will be performed
+   * @return unsubscribe event (function)
+  */
   public registerEvent(eventName: E, handler: Subscriber<TNotification<N>>) {
     return this.events.subscribe(eventName, handler)
   }

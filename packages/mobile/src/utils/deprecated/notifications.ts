@@ -17,6 +17,12 @@ export type HandleNotificationParam = {
 }
 
 export type NotificationStateChangeListener = FunctionType<[isInitialized: boolean, token?: string], any>
+
+/**
+  * Class responsible for the notification system
+  * @deprecated Use the most updated version
+  * @note check the documentation to make the migration 
+*/
 export class NotificationManager {
 
     stateChangeListeners:NotificationStateChangeListener[] = []

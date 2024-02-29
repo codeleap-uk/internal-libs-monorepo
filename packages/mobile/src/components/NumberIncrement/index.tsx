@@ -264,18 +264,18 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
         ],
       }}
       rightIcon={{
-        ...inputBaseProps.rightIcon,
         name: 'plus' as IconPlaceholder,
         disabled: disabled || incrementDisabled || !editable,
         onPress: () => handleChange('increment'),
         debounce: actionDebounce,
+        ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
-        ...inputBaseProps.leftIcon,
         name: 'minus' as IconPlaceholder,
         disabled: disabled || decrementDisabled || !editable,
         onPress: () => handleChange('decrement'),
         debounce: actionDebounce,
+        ...inputBaseProps.leftIcon,
       }}
       style={style}
       disabled={disabled}
