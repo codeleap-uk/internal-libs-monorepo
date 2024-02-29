@@ -91,12 +91,14 @@ export function applyVariants({
     } else if (variantName.startsWith('backgroundColor') || variantName.startsWith('bg') || variantName.startsWith('color')) {
       let [property, themeColor] = variantName.split(':')
 
+      const _rootElement = variantName.startsWith('color') ? (rootElement === 'text' ? rootElement : 'text') : rootElement
+
       if (property === 'bg') property = 'backgroundColor'
 
       const value = theme.colors[themeColor]
       const browserOnly = theme.IsBrowser && { fill: value, stroke: value }
       return deepMerge(computedStyles, {
-        [rootElement]: wrapStyle({
+        [_rootElement]: wrapStyle({
           [property]: value,
           ...browserOnly,
         }),
