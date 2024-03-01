@@ -1,0 +1,135 @@
+---
+title: 'OSAlert'
+description: 'Custom dialogs'
+tag: 'tools'
+source: 'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/common/src/tools/OSAlert/index.tsx'
+---
+
+## What is it
+
+Frequently, we need to provide some feedback to the user or simply ask a quick question. For these cases, we use 
+an alert on web platforms or a Alert on React Native, the problem is that the usage of alerts on the web is highly 
+variable among different browsers, besides not offering a visually pleasant experience. On mobile, the variability 
+exists between platforms as well.
+
+For these reasons, the OSAlert was created—a way to open custom and stylized dialogs that harmonize with the rest 
+of the application, sharing common code for both web and mobile.
+
+## How to use
+
+> NOTE This code can be used for mobile and web.
+
+> TIP It is important to check if your application's *Alert* component is up to date, to check this you can consult any template.
+
+#### Implementation
+
+```tsx
+import { OSAlertStore } from '@codeleap/common'
+
+export function GlobalAlertComponent() {
+  const { toggle, visible, props } = OSAlertStore(store => store)
+
+  const { title, body, onDismiss, onAction, options, type: customType, ...alertProps } = (props ?? {})
+
+  const typeCast: Record<Exclude<GlobalAlertType, 'custom'>, AlertType> = {
+    ask: 'destructive',
+    info: 'info',
+    warn: 'warn',
+    error: 'error',
+  }
+
+  const type = typeCast[props.type]
+
+  const alertOptions = options?.map(o => ({ debugName: o?.text, ...o }))
+
+  return <Alert
+    debugName='Global alert'
+    title={title}
+    toggle={toggle}
+    visible={visible}
+    body={body}
+    onAction={onAction}
+    onDismiss={onDismiss}
+    options={alertOptions as any}
+    optionsOnly={!onAction && !onDismiss && !!options?.length}
+    type={type || customType}
+    {...alertProps}
+  />
+}
+
+export const GlobalAlert = React.memo(GlobalAlertComponent, () => true)
+```
+
+This GlobalAlert component needs to be inserted somewhere so that it can be accessed from any screen.
+
+```tsx
+import { CreateOSALert } from '@codeleap/common'
+
+export const OSAlert = CreateOSALert()
+```
+
+#### Example of use
+
+```tsx
+function triggerOSAlert() {
+  OSAlert.ask({
+    title: 'Alert',
+    body: 'Example',
+    options: [
+      { text: 'Dismiss' },
+      { text: 'Remove', onPress: () => null, style: 'destructive' }
+    ]
+  })
+}
+```
+
+#### Methods
+
+OSAlert returns some methods that you can use, they are as follows:
+
+```tsx
+OSAlert.ask({
+  title: 'Alert',
+  body: 'ask',
+  options: [
+    { text: 'Dismiss' },
+    { text: 'Remove', onPress: () => null, style: 'destructive' }
+  ]
+})
+
+OSAlert.error({
+  title: 'Alert',
+  body: 'Something went wrong',
+  onDismiss: () => null,
+})
+
+OSAlert.warn({
+  title: 'Alert',
+  body: 'Are you sure?',
+  onAccept: () => null,
+  onReject: () => null,
+})
+
+OSAlert.info({
+  title: 'Alert',
+  body: 'Info',
+  onDismiss: () => null,
+})
+
+OSAlert.custom({
+  title: 'Alert',
+  body: 'Custom',
+  type: 'destructive'
+})
+```
+
+##### Options
+
+```tsx
+type Option = {
+  text: string
+  onPress?: AnyFunction
+  variants?: string[] // You can pass any variant of the Button component to an option
+  style?: 'destructive' | 'outline' | 'cancel' | 'default' | 'minimal' // You can choose a button variant
+}
+```

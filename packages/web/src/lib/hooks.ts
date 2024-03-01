@@ -1,13 +1,14 @@
-import { AnyFunction, onMount, onUpdate, range, useUncontrolled } from '@codeleap/common'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { AnyFunction, onMount, onUpdate, range, TypeGuards, useUncontrolled } from '@codeleap/common'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { easeInOut, EasingFunction, AnimationProps, useAnimate, useAnimation, animate } from 'framer-motion'
+import { globalHistory } from '@reach/router'
 
 export function useWindowSize() {
   const [size, setSize] = useState([])
 
   onMount(() => {
-    setSize([window.innerWidth, window.innerWidth])
+    setSize([window.innerWidth, window.innerHeight])
   })
 
   function handleResize() {
@@ -351,4 +352,77 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
   }, dependencies)
 
   return animated
+}
+
+type UseWindowFocusOptions = {
+  onFocus?: AnyFunction
+  onBlur?: AnyFunction
+}
+
+export const useWindowFocus = (options: UseWindowFocusOptions = {}, deps: Array<any> = []): boolean => {
+  const [focused, setFocused] = useState(true)
+
+  const onFocus = () => {
+    setFocused(true)
+    if (TypeGuards.isFunction(options?.onFocus)) options?.onFocus() 
+  }
+  
+  const onBlur = () => {
+    setFocused(false)
+    if (TypeGuards.isFunction(options?.onBlur)) options?.onBlur() 
+  }
+
+  useEffect(() => {
+    window.addEventListener('focus', onFocus)
+    window.addEventListener('blur', onBlur)
+    
+    return () => {
+      window.removeEventListener('focus', onFocus)
+      window.removeEventListener('blur', onBlur)
+    }
+  }, deps)
+
+  return focused
+}
+
+export const usePageExitBlocker = (
+  handler: (willLeavePage: boolean) => void,
+  deps: Array<any> = [],
+  message: string = 'Are you sure you want to leave?'
+) => {
+  const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    if (!event) return null
+
+    event?.preventDefault()
+    event.returnValue = ''
+    return
+  }
+
+  React.useEffect(() => {
+    if (!window) return null
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, deps)
+
+  React.useEffect(() => {
+    return globalHistory.listen((args) => {
+      if (!window) return null
+
+      const historyPathname = args?.location?.pathname
+      const windowPathname = window?.location?.pathname
+
+      const isPopAction = args?.action === 'POP'
+      const isLeaveAction = args?.action === 'PUSH' && !historyPathname?.includes(windowPathname)
+
+      if (isLeaveAction || isPopAction) {
+        const willLeavePage = window.confirm(message)
+
+        handler?.(willLeavePage)
+      }
+    })
+  }, deps)
 }

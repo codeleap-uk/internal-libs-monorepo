@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.21.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.5...v3.21.6) (2024-02-29)
+
+
+### Bug Fixes
+
+* **mobile:** number increment icon disabled ([0a98078](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0a98078b37758cd58977a1d3d3ea42224fe5ef12))
+
+### [3.21.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.4...v3.21.5) (2024-02-23)
+
+### [3.21.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.3...v3.21.4) (2024-02-21)
+
+### [3.21.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.0...v3.21.3) (2024-02-09)
+
+
+### Bug Fixes
+
+* **web:** list indentation and styles ([c2b4c26](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c2b4c263f6bcdb78f9cf2bd784ce4ea90cc24812))
+
+### [3.21.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.1...v3.21.2) (2024-02-08)
+
+### [3.21.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.0...v3.21.1) (2024-02-01)
+
+## [3.21.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.0...v3.21.0) (2024-01-27)
+
+
+### Features
+
+* **web:** add test ids ([387e105](https://github.com/codeleap-uk/internal-libs-monorepo/commit/387e105ce28848c38808d0d3079b7969a063a702))
+
+
+### Bug Fixes
+
+* **mobile:** select callback and gap cross value ([19c35ca](https://github.com/codeleap-uk/internal-libs-monorepo/commit/19c35ca8323084f7ce460637eee9c82a3d207a56))
+* **web:** allow access to inner input ref ([c686942](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c6869426538230493207b2d7410e1ccdc66ce263))
+* **web:** slider thumb press ([14fe2b2](https://github.com/codeleap-uk/internal-libs-monorepo/commit/14fe2b25cb9bfbc61ce8bce43cc5f7a3ae9e310c))
+
+### [3.20.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.20.2...v3.20.3) (2024-01-26)
+
+### [3.20.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.20.1...v3.20.2) (2024-01-25)
+
+### [3.20.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.20.0...v3.20.1) (2024-01-25)
+
 ## [3.20.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.18.8...v3.20.0) (2024-01-18)
 
 
