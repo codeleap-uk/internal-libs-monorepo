@@ -104,8 +104,8 @@ export function breakpointHooksFactory<T extends ThemeBreakpoints>(
     down: (test) => {
       // Downwards of... (excluding)
       const max = getBreakpoint(test)
-      const { innerWidth: width } = window
-      return width <= max
+      const currentSize = getCurrentSize()
+      return currentSize[0] < max
     },
     is: (test) => {
       // Is media... (exact)

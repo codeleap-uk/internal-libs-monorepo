@@ -18,7 +18,7 @@ export const useMaxContentWidth = () => {
   const hasScreenReachedMaxWidth = width >= Theme.values.maxContentWidth
 
   entries.forEach(breakpoint => {
-    if (Theme.hooks.down(breakpoint)) {
+    if (window?.innerWidth <= Theme.breakpoints[breakpoint]) {
       currentBreakpoint = breakpoint
     }
   })
@@ -36,7 +36,7 @@ export const useMaxContentWidth = () => {
   const padding = (width - maxContentWidth) / 2
 
   return {
-    width: `${maxContentWidth}px`,
+    width: maxContentWidth,
     padding,
   }
 
