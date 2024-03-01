@@ -7,12 +7,14 @@ export const useMaxContentWidth = () => {
   const [width, height] = useWindowSize()
 
   const safeHorizontalPaddings = Theme.safeHorizontalPaddings()
+
   const entries = Object.keys(safeHorizontalPaddings)
+  const ThemeBreakpointsKeys = Object.keys(Theme.breakpoints)
 
   let currentBreakpoint = null
   let maxContentWidth = Theme.values.maxContentWidth
 
-  const desktopHugeEntryName = 'desktopHuge'
+  const desktopHugeEntryName = ThemeBreakpointsKeys[ThemeBreakpointsKeys.length - 1]
 
   const isUpDesktopHuge = width >= Theme.breakpoints[desktopHugeEntryName]
   const hasScreenReachedMaxWidth = width >= Theme.values.maxContentWidth
