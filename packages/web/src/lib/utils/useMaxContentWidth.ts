@@ -6,11 +6,13 @@ export const useMaxContentWidth = () => {
   const { Theme } = useCodeleapContext()
   const [width, height] = useWindowSize()
 
+  const breakpoints: Record<string, number> = Theme.breakpoints
+
   const safeHorizontalPaddings = Theme.safeHorizontalPaddings()
 
   const entries = Object.keys(safeHorizontalPaddings)
 
-  const sortedBreakpointsValues = Object.entries(Theme.breakpoints).sort((a, b) => b?.[1] - a?.[1])
+  const sortedBreakpointsValues = Object.entries(breakpoints).sort((a, b) => b?.[1] - a?.[1])
   const highestBreakpoint = sortedBreakpointsValues[0]
 
   let currentBreakpoint = null
@@ -18,11 +20,11 @@ export const useMaxContentWidth = () => {
 
   const maxBreakpointEntryName = highestBreakpoint[0]
 
-  const maxPaddingApplied = width >= Theme.breakpoints[maxBreakpointEntryName]
+  const maxPaddingApplied = width >= breakpoints[maxBreakpointEntryName]
   const hasScreenReachedMaxWidth = width >= Theme.values.maxContentWidth
 
   entries.forEach(breakpoint => {
-    if (window?.innerWidth <= Theme.breakpoints[breakpoint]) {
+    if (window?.innerWidth <= breakpoints[breakpoint]) {
       currentBreakpoint = breakpoint
     }
   })
