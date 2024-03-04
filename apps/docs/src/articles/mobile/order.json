@@ -12,5 +12,11 @@
             "problem",
             "our_solution"
         ]
+    },
+    {
+        "name": "notifications",
+        "items": [
+            "notification_manager"
+        ]
     }
 ]

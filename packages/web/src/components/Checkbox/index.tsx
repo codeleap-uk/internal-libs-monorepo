@@ -129,9 +129,6 @@ export const Checkbox = (props: CheckboxProps) => {
     }}
     order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
     style={style}
-    wrapperProps={{
-      onClick: handleChange,
-    }}
   >
     <motion.div
       css={[

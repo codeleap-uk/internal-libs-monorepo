@@ -1,6 +1,6 @@
-import { DropzoneFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
+import { DropzoneFilePreviewProps, DropzoneInnerFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
 import { DropzonePresets } from './styles'
-import { IconPlaceholder, PropsOf, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
+import { IconPlaceholder, PropsOf, TypeGuards, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
@@ -21,29 +21,20 @@ function isImage(file) {
   return file?.type?.startsWith('image/')
 }
 
-const FilePreview = ({
-  file,
-  variantStyles,
-  withImagePreview,
-  errors = [],
-  onRemove,
-  fileLeftIcon,
-  fileRightIcon,
-  fileRightIconStyles,
-}: DropzoneFilePreviewProps) => {
-  const hasErrors = errors?.length > 0
-  const _isImage = isImage(file)
-  const isPreview = withImagePreview && _isImage
-
-  const [imageUrl, setImageUrl] = useState<string>()
-
-  const revokeImageUrl = () => {
-    URL.revokeObjectURL(imageUrl)
-  }
-
-  onUpdate(() => {
-    if (_isImage) setImageUrl(URL.createObjectURL(file))
-  }, [file, _isImage])
+const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
+  const {
+    file,
+    variantStyles,
+    errors = [],
+    onRemove,
+    fileLeftIcon,
+    fileRightIcon,
+    fileRightIconStyles,
+    hasErrors,
+    revokeImageUrl,
+    imageUrl,
+    isPreview,
+  } = props
 
   return (
     <View css={[variantStyles.fileWrapper, hasErrors && variantStyles['fileWrapper:error']]}>
@@ -74,7 +65,45 @@ const FilePreview = ({
         name={fileRightIcon}
         styles={fileRightIconStyles}
       />
-    </View>)
+    </View>
+  )
+}
+
+const FilePreview = (props: DropzoneFilePreviewProps) => {
+  const {
+    file,
+    withImagePreview,
+    errors = [],
+    FilePreviewComponent,
+    ...rest
+  } = props
+  const hasErrors = errors?.length > 0
+  const _isImage = isImage(file)
+  const isPreview = withImagePreview && _isImage
+
+  const [imageUrl, setImageUrl] = useState<string>()
+
+  const revokeImageUrl = () => {
+    URL.revokeObjectURL(imageUrl)
+  }
+
+  onUpdate(() => {
+    if (_isImage) setImageUrl(URL.createObjectURL(file))
+  }, [file, _isImage])
+
+  const _FilePreview = !TypeGuards.isNil(FilePreviewComponent) ? FilePreviewComponent : DefaultFilePreview
+
+  return (
+    <_FilePreview
+      file={file}
+      hasErrors={hasErrors}
+      isPreview={isPreview}
+      imageUrl={imageUrl}
+      revokeImageUrl={revokeImageUrl}
+      errors={errors}
+      {...rest}
+    />
+  )
 }
 
 const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<DropzoneRef>) => {
@@ -99,6 +128,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
     onDrop,
     onRemove,
     children,
+    FilePreviewComponent,
     ...rest } = allProps
 
   const [rejectedFilesState, setRejectedFilesState] = useState<DropzoneProps['rejectedFiles']>([])
@@ -165,21 +195,25 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
 
         {hasFiles && (
           <View css={variantStyles.filesWrapper}>
-            {acceptedFiles.map(file => (
+            {acceptedFiles.map((file, index) => (
               <FilePreview
                 {...fileProps}
+                index={index}
                 file={file}
                 key={file.name}
                 onRemove={() => handleRemoveFile(file)}
+                FilePreviewComponent={FilePreviewComponent}
               />))}
 
-            {rejectedFiles.map(({ file, errors }) => (
+            {rejectedFiles.map(({ file, errors }, index) => (
               <FilePreview
                 {...fileProps}
+                index={index}
                 key={file.name}
                 file={file}
                 errors={errors}
                 onRemove={() => handleRemoveFile(file, true)}
+                FilePreviewComponent={FilePreviewComponent}
               />))}
           </View>
         )}
