@@ -10,7 +10,6 @@ import {
   TypeGuards,
 } from '@codeleap/common'
 import { View as NativeView, ViewProps as RNViewProps } from 'react-native'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { TransitionConfig } from '../../types'
 import Animated from 'react-native-reanimated'
 export * from './styles'
@@ -19,7 +18,7 @@ type NativeViewProps = RNViewProps
 
 export type ViewRefType = NativeView
 
-export type ViewProps ={
+export type ViewProps = {
   ref?: AnyRef<ViewRefType>
   component?: any
   animated?: boolean

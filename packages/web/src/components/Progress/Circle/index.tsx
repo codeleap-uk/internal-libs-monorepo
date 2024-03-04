@@ -92,7 +92,7 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
         {TypeGuards.isString(text) || showProgress ? (
           <Text
             style={variantStyles.text}
-            text={showProgress ? formatProgress(progress) : text}
+            text={showProgress ? formatProgress(progress) : String(text)}
             {...textProps}
           />
         ) : text}

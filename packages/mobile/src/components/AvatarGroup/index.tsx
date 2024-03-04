@@ -4,7 +4,7 @@ import {
   useNestedStylesByKey,
 } from '@codeleap/common'
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, StyleProp, ViewStyle } from 'react-native'
 import { StylesOf } from '../../types'
 import { AvatarGroupComposition, AvatarGroupPresets } from './styles'
 import { View, ViewProps } from '../View'
@@ -18,11 +18,11 @@ export type AvatarGroupProps = ComponentVariants<typeof AvatarGroupPresets> & {
   avatarVariants?: AvatarProps['variants']
 }
 
-const defaultProps:Partial<AvatarGroupProps> = {
+const defaultProps: Partial<AvatarGroupProps> = {
   displacement: 20.5,
 }
 
-export const AvatarGroup = (props:AvatarGroupProps) => {
+export const AvatarGroup = (props: AvatarGroupProps) => {
   const {
     variants = [],
     avatars = [],
@@ -66,7 +66,7 @@ export const AvatarGroup = (props:AvatarGroupProps) => {
 
 AvatarGroup.defaultProps = defaultProps
 
-const getAvatarStyle = (index: number, displacementPixels: number) => {
+const getAvatarStyle = (index: number, displacementPixels: number): StyleProp<ViewStyle> => {
   const displacement = index * 20.5
   return { right: `${displacement}%` }
 }

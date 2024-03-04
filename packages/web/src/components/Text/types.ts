@@ -6,7 +6,7 @@ import { TextComposition, TextPresets } from './styles'
 export type TextProps<T extends ElementType> = ComponentPropsWithoutRef<T> &
   ComponentVariants<typeof TextPresets> & {
     component?: T
-    text: string
+    text?: string
     styles?: StylesOf<TextComposition>
     msg?: string
     debugName?: string

@@ -135,7 +135,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     largestWidth,
   ]
 
-  const onSelectTab = (option: SegmentedControlOptionProps, e?: React.KeyboardEvent<HTMLDivElement>) => {
+  const onSelectTab = (option: SegmentedControlOptionProps, e?: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!e || e?.keyCode === 13 || e?.key === 'Enter') {
       if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
         onValueChange(option.value)

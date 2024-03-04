@@ -43,30 +43,31 @@ export const useKeyboardAwareView = (params?: UseKeyboardAwareViewParams) => {
     },
   }
 
-  if (!_options.enabled ||  (Platform.OS === 'android' && !_options.enableOnAndroid)) return {
-    keyboard,
-    style: params?.styles,
+  if (!_options.enabled || (Platform.OS === 'android' && !_options.enableOnAndroid)) {
+    return {
+      keyboard,
+      style: params?.styles,
+    }
   }
-
 
   const baseStyle = StyleSheet.flatten(params.styles || {})
 
   let baseValue = baseStyle[_options.adapt] as number
 
-  if(TypeGuards.isNil(baseValue)){
+  if (TypeGuards.isNil(baseValue)) {
     baseValue = 0
   }
-  
+
   let valid = true
   const warnOnNotNumber = () => {
     if (!TypeGuards.isNil(baseValue) && !TypeGuards.isNumber(baseValue)) {
       valid = false
       const debugStr = params?.debugName ? 'at ' + params?.debugName + ' ' : ''
-     console.log(debugStr)
+      console.log(debugStr)
     }
   }
 
-  let newStyleProp =  {
+  let newStyleProp = {
     ...baseStyle,
   }
 
@@ -98,14 +99,13 @@ export const useKeyboardAwareView = (params?: UseKeyboardAwareViewParams) => {
       break
   }
 
-  if (!valid){
+  if (!valid) {
     newStyleProp = params.styles
   }
-
 
   return {
     keyboard,
     style: newStyleProp,
-    
+
   }
 }

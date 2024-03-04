@@ -51,7 +51,7 @@ const SegmentedControlOptionCP = (props: SegmentedControlOptionProps, ref: Optio
         variantStyles.button,
         selected && variantStyles['button:selected'],
         disabled && variantStyles['button:disabled'],
-        style,
+        style as any,
       ]}
       onPress={onPress}
       disabled={disabled}

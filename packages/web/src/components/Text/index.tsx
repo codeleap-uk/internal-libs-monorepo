@@ -57,7 +57,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 
   const disabled = isPressable === false
 
-  const _onPress = (e: React.MouseEventHandler<T>) => {
+  const _onPress = (e) => {
     if (disabled) return
 
     const handlePress = () => {
@@ -91,12 +91,16 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     onClick: disabled ? null : _onPress,
   } : {}
 
+  const componentProps: any = {
+    ...props,
+    ...pressProps,
+    ...animatedProps
+  }
+
   return (
     <Component
       css={_styles}
-      {...props}
-      {...pressProps}
-      {...animatedProps}
+      {...componentProps}
     >
       {text || children}
     </Component>

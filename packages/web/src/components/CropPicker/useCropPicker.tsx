@@ -70,7 +70,7 @@ export function useCropPicker({
           width: 100,
           height: (naturalWidth / aspect / naturalHeight) * 100,
         }
-    const initialCrop = {
+    const initialCrop: Crop = {
       ...v,
       x: (100 - v.width) / 2,
       y: (100 - v.height) / 2,

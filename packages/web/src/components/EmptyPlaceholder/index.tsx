@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon } from '../Icon'
-import { View, ViewProps } from '../View'
+import { View } from '../View'
 import { Text } from '../Text'
 import { ActivityIndicator, ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition, EmptyPlaceholderPresets } from './styles'
@@ -32,7 +32,7 @@ export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPre
   loading?: boolean
   styles?: StylesOf<EmptyPlaceholderComposition>
   style?: React.CSSProperties
-  renderEmpty?: (props: RenderEmptyProps) => React.ReactElement
+  renderEmpty?: (props: RenderEmptyProps) => JSX.Element
   wrapperProps?: Partial<typeof View>
   imageWrapperProps?: Partial<typeof View>
   indicatorProps?: Partial<ActivityIndicatorProps>
@@ -81,9 +81,6 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     if (TypeGuards.isString(IconEmpty)) {
       return <Icon debugName={debugName} name={IconEmpty as IconPlaceholder} forceStyle={variantStyles.icon} />
     } else if (React.isValidElement(IconEmpty)) {
-      // @ts-ignore
-      return <IconEmpty {...props} />
-    } else {
       return <IconEmpty {...props} />
     }
   }, [IconEmpty])
@@ -119,14 +116,14 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
         {_Image}
       </View>
 
-      {React.isValidElement(emptyText) 
-        ? emptyText 
-        : <Text debugName={debugName} text={emptyText} css={variantStyles.title}/>
+      {TypeGuards.isString(emptyText) 
+        ? <Text debugName={debugName} text={emptyText} css={variantStyles.title}/>
+        : React.isValidElement(emptyText) ? emptyText : null
       }
       
-      {React.isValidElement(description) 
-        ? description 
-        : TypeGuards.isString(description) && <Text debugName={debugName} text={description} css={variantStyles.description}/>
+      {TypeGuards.isString(description) 
+        ? <Text debugName={debugName} text={description} css={variantStyles.description}/>
+        : React.isValidElement(description) ? description : null
       }
     </View>
   )

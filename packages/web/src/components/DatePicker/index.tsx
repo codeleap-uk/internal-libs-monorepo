@@ -119,7 +119,7 @@ export function DatePicker(props: DatePickerProps) {
 
       return (
         <View css={getStyles('dayWrapper')}>
-          <Text style={getStyles('day')} disabled={isDisabled} text={day} />
+          <Text style={getStyles('day')} disabled={isDisabled} text={String(day)} />
         </View>
       )
     },

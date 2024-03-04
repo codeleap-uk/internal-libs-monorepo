@@ -21,5 +21,5 @@ export type ColorPickerProps = React.PropsWithChildren<{
   onClear?: () => void
   openPickerComponent?: (props: { color: ColorTypes; visible: boolean; toggle: (v?: boolean) => void }) => JSX.Element
   pickerComponent?: (props: any) => JSX.Element
-  footerComponent?: (props: {color: string | RgbColor | RgbColor; handleConfirmation: () => void; handleClear: () => void}) => JSX.Element
+  footerComponent?: (props: {color: ColorTypes; handleConfirmation: () => void; handleClear: () => void}) => JSX.Element
 } & ComponentVariants<typeof ColorPickerPresets>>
