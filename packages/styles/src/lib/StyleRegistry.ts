@@ -17,6 +17,8 @@ export class CodeleapStyleRegistry {
   commonVariantsStyles: Record<string, ICSS | MultiplierFunction> = {}
 
   styles: Record<string, ICSS> = {}
+
+  commonStyles: Record<string, ICSS> = {}
   
   components: Record<string, AnyStyledComponent> = {}
 
@@ -92,7 +94,24 @@ export class CodeleapStyleRegistry {
     return hashKey(key)
   }
 
+  keyForCommonStyles(variant: string) {
+    const key = [
+      variant,
+      this.baseKey,
+    ]
+
+    console.log('KEY COMMON STYLE ' + variant, key)
+
+    return hashKey(key)
+  }
+
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
+    const key = this.keyForCommonStyles(variant)
+
+    if (!!this.commonStyles[key]) {
+      return this.commonStyles[key]
+    }
+
     const { rootElement } = this.getRegisteredComponent(componentName)
     const theme = this.theme.current
 
@@ -121,16 +140,24 @@ export class CodeleapStyleRegistry {
     }
 
     if (!!mediaQuery) {
-      return createStyles({
+      const commonStyles = createStyles({
         [component ?? rootElement]: {
           [mediaQuery]: style
         }
       })
+
+      this.commonStyles[key] = commonStyles
+
+      return commonStyles
     }
 
-    return createStyles({
+    const commonStyles = createStyles({
       [component ?? rootElement]: style
     })
+
+    this.commonStyles[key] = commonStyles
+
+    return commonStyles
   }
 
   computeVariantStyle(componentName: string, variants: string[], component = null): [ICSS, string] {
@@ -151,13 +178,14 @@ export class CodeleapStyleRegistry {
     const theme = this.theme.current
 
     const variantStyles = variants.map((variant) => {
-      const [breakpoint, variantName] = variant?.includes(':') ? variant?.split(':') : []
-
       if (!!stylesheet[variant]) {
         return stylesheet[variant]
+      }
 
-        // @ts-ignore
-      } else if (!!theme?.breakpoints[breakpoint] && !!stylesheet[variantName]) {
+      const [breakpoint, variantName] = variant?.includes(':') ? variant?.split(':') : []
+
+      // @ts-ignore
+      if (!!theme?.breakpoints[breakpoint] && !!stylesheet[variantName]) {
         // @ts-ignore
         const mediaQuery = theme.media.down(breakpoint)
 

@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import valueHash from 'object-hash'
 import { ICSS } from '../types'
 
-export const STORES_PERSIST_VERSION = 7
+export const STORES_PERSIST_VERSION = 8
 
 const styleKey = '@styles-version'
 const version = require('../../package.json')?.version
@@ -48,6 +48,9 @@ export const stylesStore = create(persist<StylesStore>(
   {
     name: '@styles.stores.stylesRegistry',
     version: STORES_PERSIST_VERSION,
+    migrate: (previousStore) => {
+      return previousStore as StylesStore
+    },
   },
 ))
 
