@@ -19,6 +19,10 @@ export class CodeleapStyleRegistry {
   styles: Record<string, ICSS> = {}
 
   commonStyles: Record<string, ICSS> = {}
+
+  responsiveStyles: Record<string, ICSS> = {}
+
+  compositionStyles: Record<string, { compositionStyles: any[]; variantKeys: string[]}> = {}
   
   components: Record<string, AnyStyledComponent> = {}
 
@@ -101,6 +105,19 @@ export class CodeleapStyleRegistry {
     ]
 
     console.log('KEY COMMON STYLE ' + variant, key)
+
+    return hashKey(key)
+  }
+
+  keyForCompositionStyles(componentName: string, composition: Record<string, any>, style: any) {
+    const key = [
+      componentName,
+      composition,
+      ...(Array.isArray(style) ? style : [style]),
+      this.baseKey,
+    ]
+
+    console.log('KEY COMPOSITION STYLE ' + composition, key)
 
     return hashKey(key)
   }
@@ -308,6 +325,14 @@ export class CodeleapStyleRegistry {
       }
     }
 
+    const key = this.keyForStyles(componentName, responsiveStyles)
+
+    if (!!this.responsiveStyles[key]) {
+      return {
+        responsiveStyles: this.responsiveStyles[key]
+      }
+    }
+
     for (const responsiveStyle in responsiveStyles) {
       const [breakpoint, query] = responsiveStyle?.includes(':') ? responsiveStyle?.split(':') : [responsiveStyle, 'down']
 
@@ -326,12 +351,20 @@ export class CodeleapStyleRegistry {
       }
     }
 
+    this.responsiveStyles[key] = styles
+
     return {
       responsiveStyles: styles
     }
   }
 
   getCompositionStyle(componentName: string, composition: Record<string, any>, style: any) {
+    const key = this.keyForCompositionStyles(componentName, composition, style)
+
+    if (this.compositionStyles[key]) {
+      return this.compositionStyles[key]
+    }
+
     const styles = []
     const variantKeys: string[] = []
 
@@ -369,10 +402,14 @@ export class CodeleapStyleRegistry {
       delete style[component]
     }
 
-    return {
+    const compositionStyle = {
       compositionStyles: styles,
       variantKeys,
     }
+
+    this.compositionStyles[key] = compositionStyle
+
+    return compositionStyle
   }
 
   styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
@@ -551,6 +588,9 @@ export class CodeleapStyleRegistry {
   wipeCache() {
     this.variantStyles = {}
     this.styles = {}
+    this.responsiveStyles = {}
+    this.commonStyles = {}
+    this.compositionStyles = {}
     this.store.wipeCache()
   }
 }
