@@ -7,7 +7,7 @@ import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
 import { createDynamicPresets } from './dynamicPresets'
 import { isEmptyObject, isSpacingKey, objectPickBy } from './utils'
-import { hashKey, StylesStore, stylesStore } from './cache'
+import { hashKey, STORES_PERSIST_VERSION, StylesStore, stylesStore } from './cache'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -30,7 +30,11 @@ export class CodeleapStyleRegistry {
 
   store: StylesStore
 
-  baseKey: string
+  private _baseKey: string
+
+  get baseKey () {
+    return this.getBaseKey()
+  }
 
   constructor() {
     this.theme = themeStore.getState()
@@ -57,16 +61,25 @@ export class CodeleapStyleRegistry {
     }
   }
 
-  registerBaseKey() {
+  getBaseKey() {
     const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
     const key = [
       currentColorScheme,
       this.theme.current,
       this.commonVariantsStyles,
+      STORES_PERSIST_VERSION,
     ]
 
-    this.baseKey = hashKey(key)
+    console.log('BASE KEY', key)
+
+    return hashKey(key)
+  }
+
+  registerBaseKey() {
+    this._baseKey = this.getBaseKey()
+
+    return this._baseKey
   }
 
   keyForStyles(componentName: string, styles: any) {
