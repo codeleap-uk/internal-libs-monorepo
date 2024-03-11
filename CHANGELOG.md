@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.21.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.7...v3.21.8) (2024-03-07)
+
+
+### Bug Fixes
+
+* **web:** textInput mask focus ([e46181d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e46181d26f4a3f37d4db3d272d1d62fa0c02adee))
+
 ### [3.21.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.6...v3.21.7) (2024-03-04)
 
 ### [3.21.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.5...v3.21.6) (2024-02-29)
