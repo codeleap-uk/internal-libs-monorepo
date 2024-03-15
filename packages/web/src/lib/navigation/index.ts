@@ -72,12 +72,12 @@ export class Navigation<O extends object, R extends object = {}> {
     // @ts-expect-error
     routeParams: Record<Routes<R>[T], string|number> = {} as any
   ) {
-    if (!IS_SSR) return false
+    if (IS_SSR) return false
   
     const path = window?.location?.pathname
     // @ts-ignore
     const routePath = this.getPathWithParams(route, routeParams)
-  
+
     if (path?.includes(routePath)) {
       return true
     }
