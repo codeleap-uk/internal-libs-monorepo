@@ -1,5 +1,7 @@
 import { AnyValue, Config, History, Navigator, RouteParams, RoutePath, Routes } from './types'
 
+const IS_SSR = typeof window === 'undefined' || typeof history === 'undefined'
+
 const defaultConfig: Partial<Config> = {
   historyEnabled: false,
   getMetadata: () => {}
@@ -58,6 +60,24 @@ export class Navigation<O extends object, R extends object = {}> {
     this.config = this.merge(this.config, config)
   }
 
+  public isOnRoute<T extends keyof Routes<R>>(
+    route: T, 
+    // @ts-expect-error
+    routeParams: Record<Routes<R>[T], string|number> = {} as any
+  ) {
+    if (!IS_SSR) return false
+  
+    const path = window?.location?.pathname
+    // @ts-ignore
+    const routePath = this.getPathWithParams(route, routeParams)
+  
+    if (path?.includes(routePath)) {
+      return true
+    }
+  
+    return false
+  }
+
   public getPath(route: keyof Routes<R>): string {
     let path = this.routes
 
@@ -77,15 +97,15 @@ export class Navigation<O extends object, R extends object = {}> {
     return String(path)
   }
 
-  public replaceRouteParams<T extends keyof Routes<R>>(
+  public getPathWithParams<T extends keyof Routes<R>>(
     route: T, 
     // @ts-expect-error
-    routeParams: Record<Routes<R>[T], string> = {} as any
+    routeParams: Record<Routes<R>[T], string|number> = {} as any
   ) {
     let path = this.getPath(route)
 
     for (const key in routeParams) {
-      const value = routeParams?.[key]
+      const value = String(routeParams?.[key])
 
       const searchPartial = `{{${key}}}`
 
@@ -106,7 +126,9 @@ export class Navigation<O extends object, R extends object = {}> {
   }
 
   public goBack() {
-    if (!this.config.historyEnabled && typeof history !== 'undefined') {
+    if (IS_SSR) return
+
+    if (!this.config.historyEnabled) {
       history?.back?.()
       return
     }
@@ -129,7 +151,7 @@ export class Navigation<O extends object, R extends object = {}> {
   public navigate<T extends keyof Routes<R>>(
     route: T, 
     // @ts-expect-error
-    options: Record<Routes<R>[T], string> & O & { params?: RouteParams } = {} as any
+    options: Record<Routes<R>[T], string|number> & O & { params?: RouteParams } = {} as any
   ) {
     // @ts-ignore
     let path = this.getPath(route)
@@ -146,11 +168,11 @@ export class Navigation<O extends object, R extends object = {}> {
       const searchPartial = `{{${key}}}`
 
       if (path?.includes(searchPartial)) {
-        path = path?.replace(searchPartial, encodeURIComponent(value))
+        path = path?.replace(searchPartial, encodeURIComponent(String(value)))
 
         routeParams = {
           ...routeParams,
-          [key]: value,
+          [key]: String(value),
         }
       } else if (key == queryParamsKey) {
         params = value
@@ -178,6 +200,10 @@ export class Navigation<O extends object, R extends object = {}> {
       }
   
       if (typeof searchParams === 'string') {
+        if (path?.endsWith('/')) {
+          path = path.slice(0, -1)
+        }
+
         path = `${path}?${searchParams}`
       }
     }
