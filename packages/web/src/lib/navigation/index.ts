@@ -1,4 +1,5 @@
 import { AnyValue, Config, History, Navigator, RouteParams, RoutePath, Routes } from './types'
+import deepmerge from '@fastify/deepmerge'
 
 const IS_SSR = typeof window === 'undefined' || typeof history === 'undefined'
 
@@ -40,10 +41,10 @@ export class Navigation<O extends object, R extends object = {}> {
   }
 
   private merge(obj: object, addObj: AnyValue) {
-    return {
-      ...obj,
-      ...addObj
-    }
+    return deepmerge({ all: true })(
+      obj ?? {},
+      addObj ?? {},
+    )
   }
 
   private navigator: Navigator<O> = null
@@ -60,6 +61,12 @@ export class Navigation<O extends object, R extends object = {}> {
     this.config = this.merge(this.config, config)
   }
 
+  /**
+   * Checks if the user is on a certain route based on the parameters passed
+   * @param route Route that will be used to direct
+   * @param routeParams Parameters that will be applied to the route
+   * @returns Is on the route - boolean
+   */
   public isOnRoute<T extends keyof Routes<R>>(
     route: T, 
     // @ts-expect-error
@@ -78,6 +85,11 @@ export class Navigation<O extends object, R extends object = {}> {
     return false
   }
 
+  /**
+   * Get the path from the route
+   * @param route Route that will be used to direct
+   * @returns Path - string
+   */
   public getPath(route: keyof Routes<R>): string {
     let path = this.routes
 
@@ -97,6 +109,12 @@ export class Navigation<O extends object, R extends object = {}> {
     return String(path)
   }
 
+  /**
+   * Get the path from the route and route params
+   * @param route Route that will be used to direct
+   * @param routeParams Parameters that will be applied to the route
+   * @returns Path - string
+   */
   public getPathWithParams<T extends keyof Routes<R>>(
     route: T, 
     // @ts-expect-error
@@ -125,6 +143,10 @@ export class Navigation<O extends object, R extends object = {}> {
     return path?.trim()
   }
 
+  /**
+   * Function to navigate to the previous page, if history is enabled, the penultimate record will be used, 
+   * otherwise the browser's own api with "history.back()"
+   */
   public goBack() {
     if (IS_SSR) return
 
@@ -148,6 +170,11 @@ export class Navigation<O extends object, R extends object = {}> {
     this.to(historyData?.path, historyData?.info?.options ?? {}, info)
   }
 
+  /**
+   * Main function to navigate between the app using the route system with dynamic parameters
+   * @param route Route that will be used to direct
+   * @param options Route parameters (marked by {{}}), which will be automatically shown if they exist, and navigator options and route queryParams can also be passed through the "params" property
+   */
   public navigate<T extends keyof Routes<R>>(
     route: T, 
     // @ts-expect-error
@@ -220,14 +247,23 @@ export class Navigation<O extends object, R extends object = {}> {
     })
   }
 
+  /**
+   * Calls the navigator to direct the user to a page
+   * @param path Path to which the user will be taken
+   * @param options Options that will be passed to the navigator
+   * @param info Information that will be added to the history
+   */
   public to(path: RoutePath, options: O = null as O, info = {}) {
     if (this.config.historyEnabled) {
       this.putHistory(path, this.merge(options, info))
     }
 
-    // this.navigator(path, options)
+    this.navigator(path, options)
   }
 
+  /**
+   * Clear history data
+   */
   public wipeHistory() {
     this._history = {}
   }
