@@ -2,12 +2,10 @@
 title: 'Navigation'
 description: 'Web navigation system'
 tag: 'tools'
-source: 'https://github.com/codeleap-uk/web-template/blob/master/src/utils/navigation.ts'
+source: 'https://github.com/codeleap-uk/internal-libs-monorepo/blob/master/packages/web/src/lib/navigation/index.ts'
 ---
 
-## What is it
-
-> INFO The base logic of this tool is complete, but we are still improving it and the documentation will be updated with the improvements.
+## About the tool
 
 It is common to repeat this code in several places:
 
@@ -26,66 +24,175 @@ Other important details are:
 
 ![](navigation_ts_example.png)
 
-## ROUTES variable
-
-It is located in: **src/app/constants.ts**
-
-```ts
-export const ROUTES = {
-  Home: '/',
-  Profile: {
-    Edit: '/profile/edit',
-  },
-  Auth: {
-    Login: '/auth/login',
-    Signup: '/auth/signup',
-    ForgotPassword: '/auth/forgot',
-  },
-  About: '/about',
-  CrudExample: '/crud',
-  Playground: '/playground'
-}
-```
-
-For you to add a new route or change one, you must follow the same pattern as the others.
-
 ## How to use
 
-You can call any function, just like the default **navigate**.
+Create a file that will contain the application routes and the declaration of the **navigation**. 
 
-```tsx
-import { Navigation } from '@/utils'
+Example:
 
-Navigation.navigate('Route.Example')
+```ts
+import { Navigation, Navigator } from '@codeleap/web'
+import { navigate } from 'gatsby'
+
+// App routes
+// For you to add a new route or change one, you must follow the same pattern as the others.
+const routes = {
+  Home: '/',
+  Profile: {
+    Edit: 'profile/edit',
+  },
+  Auth: {
+    Login: 'auth/login',
+    Signup: 'auth/signup',
+    ForgotPassword: 'auth/forgot',
+  },
+  About: 'about',
+  Playground: 'playground',
+  Crud: {
+    Example: 'crud',
+    View: 'crud/{{id}}'
+  }
+} as const
+
+// Function that will be used for navigation.
+const navigator: Navigator = (path, options) => navigate(path, options)
+
+export const navigation = new Navigation(routes, navigator)
 ```
 
-Routes with dynamic parameters or search params can be written as:
+#### Dynamic parameter inference
 
-```tsx
-import { Navigation } from '@/utils'
+You may notice that the Crud.View example route has an id surrounded by double curly braces `{{}}`, these are the route parameters.
 
-Navigation.navigate('Route.Example', { 
-  route: '12', 
-  params:  {
-    name: 'Test',
-    email: 'test@email.com'
+You can define any parameter for the route, for example:
+
+```ts
+
+const routes = {
+  Page: {
+    Example: 'page/{{pageId}}/{{otherId}}/view'
   }
+}
+
+```
+
+In this situation, you are declaring that the Page.Example route requires the pageId and otherId parameters. From this, TypeScript will dynamically infer that the route needs these parameters. 
+
+It's important that the parameter is surrounded by curly braces `{{}}` for inference to work correctly and later be able to replace the values to form the route path.
+
+When you call the navigation function, using navigation.navigate, TypeScript will assist you in this way:
+
+![](navigation_ts_params_example.png)
+
+## Navigation
+
+### Parameters
+
+The Navigation class receives three parameters:
+
+#### Routes
+
+The first parameter is an object with all the routes of the application.
+
+#### The navigator
+
+The second parameter is a function of type Navigator that will be used to navigate, it receives the path and an object with options, if any.
+
+#### Configurations
+
+The third parameter is the configurations.
+
+```ts
+const navigation = new Navigation(routes, navigator, {
+  historyEnabled: true,
+  getMetadata: () => ({})
 })
 ```
-The **route** property will be concatenated to the route path, and everything in **params** will be concatenated as search params to the route, the result of the route will be:
 
+* historyEnabled: Enable or disable history, the default value is false.
+* getMetadata: Function that should return an object that will be inserted along with the history.
+
+### History
+
+The Navigation class keeps track of the navigation history. It stores information about each navigation action, including the 
+path, origin, date, metadata, and additional information.
+
+You can access the navigation history as follows:
+
+```ts
+const appHistory = navigation.history
 ```
-route/example/12?name=Test&email=test@email.com
+
+### Methods
+
+#### isCurrentRoute
+
+Checks if the user is on a certain route based on the parameters passed:
+
+* route: Route that will be used to direct.
+* routeParams: Parameters that will be applied to the route.
+* exact: Accurate path checking - default false.
+
+Example:
+
+```ts
+const isHome = navigation.isCurrentRoute('Home')
 ```
 
-This writing system and typescript support is also available in the **Link** and **Redirect** components
+#### getPath
 
-```tsx
-return <>
-  <Link route='Route.Example'>
-    Link
-  </Link>
+Get the path from the route.
 
-  <Redirect to='Route.Example' />
-</>
+Example:
+
+```ts
+const homePath = navigation.getPath('Home')
+```
+
+#### getPathWithParams
+
+Get the path from the route and route params.
+
+Example:
+
+```ts
+const homePath = navigation.getPathWithParams('Home', { id: 'abc' })
+```
+
+#### goBack
+
+Navigate to the previous page. If history is enabled, the penultimate record will be used, otherwise the browser's own api with **history.back()**.
+
+Example:
+
+```ts
+navigation.goBack()
+```
+
+#### wipeHistory
+
+Clear history data.
+
+Example:
+
+```ts
+navigation.wipeHistory()
+```
+
+#### navigate
+
+Navigate between the app using the route system with dynamic parameters and query parameters. The arguments that can be passed are:
+
+* route: Route that will be used to direct.
+* options: Route parameters (marked by `{{}}` in route), which will be automatically shown if they exist, and route queryParams can also be passed through the "params" property.
+
+Example:
+
+```ts
+navigation.navigate('Home', {
+  id: 'abc',
+  params: {
+    title: 'Page example'
+  }
+})
 ```
