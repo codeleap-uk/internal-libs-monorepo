@@ -24,7 +24,7 @@ type UnionToIntersection<U> =
 
 export type Routes<T> = UnionToIntersection<ExtractRoutes<T, Params<T>>>
 
-// ######
+// Navigation types
 
 export type RoutePath = string
 
