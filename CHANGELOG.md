@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.22.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.9...v3.22.0) (2024-03-19)
+
+
+### Features
+
+* **web:** Navigation ([e9ea572](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e9ea57254b8c193b482c55e9b99b43e11def9af4))
+
 ### [3.21.9](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.8...v3.21.9) (2024-03-18)
 
 ### [3.21.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.7...v3.21.8) (2024-03-07)
