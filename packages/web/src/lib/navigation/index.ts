@@ -25,7 +25,7 @@ export class Navigation<O extends object, R extends object = {}> {
   private putHistory(path: RoutePath, info: any = {}) {
     const idx = Object.keys(this._history).length + 1
 
-    const origin = typeof window === 'undefined' ? null : window?.location?.origin
+    const origin = IS_SSR ? null : window?.location?.origin
 
     const value: History = {
       [idx]: {
@@ -65,18 +65,36 @@ export class Navigation<O extends object, R extends object = {}> {
    * Checks if the user is on a certain route based on the parameters passed
    * @param route Route that will be used to direct
    * @param routeParams Parameters that will be applied to the route
+   * @param exact Accurate path checking - default false
    * @returns Is on the route - boolean
    */
-  public isOnRoute<T extends keyof Routes<R>>(
+  public isCurrentRoute<T extends keyof Routes<R>>(
     route: T, 
     // @ts-expect-error
-    routeParams: Record<Routes<R>[T], string|number> = {} as any
+    routeParams: Record<Routes<R>[T], string|number> = {} as any,
+    exact: boolean = false,
   ) {
     if (IS_SSR) return false
   
-    const path = window?.location?.pathname
+    let path = window?.location?.pathname
+    
     // @ts-ignore
     const routePath = this.getPathWithParams(route, routeParams)
+
+    const isRootPath = routePath === '/'
+
+    if (isRootPath) {
+      const { pathname, origin, href } = window.location || {}
+
+      path = href?.replace(path, '')
+      path = path?.replace(origin, '')
+
+      return !path || pathname == routePath
+    }
+
+    if (exact) {
+      return path?.endsWith(routePath)
+    }
 
     if (path?.includes(routePath)) {
       return true
@@ -106,7 +124,7 @@ export class Navigation<O extends object, R extends object = {}> {
       path = path?.[route]
     }
 
-    return String(path)
+    return String(path)?.trim?.()
   }
 
   /**
@@ -197,17 +215,11 @@ export class Navigation<O extends object, R extends object = {}> {
       if (path?.includes(searchPartial)) {
         path = path?.replace(searchPartial, encodeURIComponent(String(value)))
 
-        routeParams = {
-          ...routeParams,
-          [key]: String(value),
-        }
+        routeParams = this.merge(routeParams, { [key]: String(value) })
       } else if (key == queryParamsKey) {
         params = value
       } else {
-        _options = {
-          ..._options,
-          [key]: value,
-        }
+        _options = this.merge(_options, { [key]: value })
       }
     }
 
@@ -239,9 +251,7 @@ export class Navigation<O extends object, R extends object = {}> {
       path = path + '/'
     }
 
-    path = path?.trim()
-
-    this.to(path, _options as O, {
+    this.to(path?.trim(), _options as O, {
       params,
       routeParams,
     })
