@@ -18,18 +18,18 @@ export type CommonVariants =
   keyof IAppVariants |
   `effect:${keyof IEffects}`
 
-type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = string> = 
+type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = string, HasComposition = string> = 
   ICSS | 
   Variants | 
-  Composition | 
   CommonVariants | 
   boolean | 
   null | 
   '' | 
   (HasBreakpoints extends string ? `${keyof IBreakpoints}:${string & Variants | CommonVariants}` : null) | 
   (HasBreakpoints extends string ? {
-    'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants, boolean> | StyleAtom<Composition, Variants, boolean>[]>>
-  } : null)
+    'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants, boolean, string> | StyleAtom<Composition, Variants, boolean, string>[]>>
+  } : null) |
+  (HasComposition extends string ? Partial<Record<keyof Composition, StyleAtom<AnyRecord, Variants, HasBreakpoints, boolean> | StyleAtom<AnyRecord, Variants, HasBreakpoints, boolean>[]>> : null)
 
 export type StyleProp<
   Composition = AnyRecord,
