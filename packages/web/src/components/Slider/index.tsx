@@ -78,7 +78,7 @@ export const Slider = (props: SliderProps) => {
     trackMarkComponent = DefaultSliderTrackMark,
     defaultValue: defaultSliderValue = [],
     max = 100,
-    min = 0,
+    min = 8,
     indicatorLabel = null,
     description = null,
     minStepsBetweenThumbs = 0,
@@ -239,8 +239,6 @@ export const Slider = (props: SliderProps) => {
           />
         ))}
       </SliderContainer>
-
-      <div />
 
       {trackMarksProp ?
         <View css={trackMarkWrapperStyle}>
