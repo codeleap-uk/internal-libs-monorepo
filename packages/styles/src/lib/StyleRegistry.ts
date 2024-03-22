@@ -8,6 +8,7 @@ import { defaultPresets } from './presets'
 import { createDynamicPresets } from './dynamicPresets'
 import { isEmptyObject, isSpacingKey, objectPickBy } from './utils'
 import { hashKey, STORES_PERSIST_VERSION, StylesStore, stylesStore } from './cache'
+import { CacheWiper } from './CacheWiper'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -29,6 +30,8 @@ export class CodeleapStyleRegistry {
   theme: ThemeStore
 
   store: StylesStore
+
+  private cacheWiper = new CacheWiper()
 
   private _baseKey: string
 
@@ -59,6 +62,8 @@ export class CodeleapStyleRegistry {
     if (!!cachedStyles && isEmptyObject(this.styles)) {
       this.styles = cachedStyles
     }
+
+    this.cacheWiper.setCacheWiper()
   }
 
   getBaseKey() {
