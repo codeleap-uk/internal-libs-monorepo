@@ -21,7 +21,6 @@ import {
 export * from './styles'
 
 export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueChange'>> & Pick<InputBaseProps, 'disabled' | 'debugName' | 'description' | 'label'> & {
-  debounce?: number | null
   indicatorLabel?: {
     order?: number[]
     separator?: string
@@ -44,7 +43,7 @@ export type TrackMarkProps = {
 }
 
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
-  const { index, content, style } = props
+  const { style } = props
 
   if (!TypeGuards.isString(props.content)) {
     return <React.Fragment>
@@ -65,8 +64,8 @@ export const Slider = (props: SliderProps) => {
   } = selectInputBaseProps(props)
 
   const {
-    debounce = null,
     onValueChange,
+    onValueCommit,
     value: _value,
     label,
     debugName,
@@ -82,7 +81,7 @@ export const Slider = (props: SliderProps) => {
     min = 0,
     indicatorLabel = null,
     description = null,
-    minStepsBetweenThumbs = 8,
+    minStepsBetweenThumbs = 0,
     step = 1,
     onPressThumbSetValue = false,
     onPressThumb = null,
@@ -91,6 +90,7 @@ export const Slider = (props: SliderProps) => {
 
   const isUniqueValue = !TypeGuards.isArray(_value)
   const value = isUniqueValue ? [_value] : _value
+
   const _defaultValue = TypeGuards.isArray(defaultSliderValue) ? defaultSliderValue : [defaultSliderValue]
 
   const defaultValueRef = useRef<PrimitiveSliderProps['defaultValue']>(_defaultValue)
@@ -104,34 +104,12 @@ export const Slider = (props: SliderProps) => {
 
   const SliderTrackMark = trackMarkComponent
 
-  const currentThumbRef = useRef(null)
-
   const handleChange: SliderProps['onValueChange'] = (newValue: Array<number>) => {
-    if (isUniqueValue) {
-      onValueChange(newValue?.[0])
-      return
-    }
+    onValueChange(isUniqueValue ? newValue?.[0] : newValue)
+  }
 
-    const copyValue = [...value]
-
-    const i = currentThumbRef.current
-    const _newValue = newValue[currentThumbRef.current]
-
-    const hasLeftThumb = i !== 0
-    const hasRightThumb = i + 1 < newValue.length
-
-    const previousThumbValue = hasLeftThumb ? (copyValue[i - 1] + minStepsBetweenThumbs) : null
-    const nextThumbValue = hasRightThumb ? (copyValue[i + 1] - minStepsBetweenThumbs) : null
-
-    if (previousThumbValue && _newValue <= previousThumbValue) {
-      copyValue[i] = previousThumbValue
-    } else if (nextThumbValue && _newValue >= nextThumbValue) {
-      copyValue[i] = nextThumbValue
-    } else {
-      copyValue[i] = _newValue
-    }
-
-    onValueChange(copyValue)
+  const handleValueCommit = (newValue: Array<number>) => {
+    onValueCommit?.(newValue)
   }
 
   const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
@@ -234,15 +212,15 @@ export const Slider = (props: SliderProps) => {
       <SliderContainer
         {...sliderProps}
         step={step}
-        minStepsBetweenThumbs={minStepsBetweenThumbs}
-        style={containerStyle}
-        defaultValue={defaultValue}
-        value={value}
-        onValueCommit={() => null}
-        onValueChange={handleChange}
         min={min}
         max={max}
         disabled={disabled}
+        defaultValue={defaultValue}
+        onValueCommit={handleValueCommit}
+        onValueChange={handleChange}
+        style={containerStyle}
+        value={value}
+        minStepsBetweenThumbs={minStepsBetweenThumbs}
       >
         <SliderTrack style={trackStyle}>
           <SliderRange style={selectedTrackStyle} />
@@ -256,10 +234,7 @@ export const Slider = (props: SliderProps) => {
             onClick={() => {
               if (onPressThumbSetValue) onValueChange?.(value)
               if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(value, i)
-
-              currentThumbRef.current = i
             }}
-            onMouseEnter={() => currentThumbRef.current = i}
           />
         ))}
       </SliderContainer>
