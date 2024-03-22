@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/react'
 import React from 'react'
 
-import { ComponentVariants, onMount, PropsOf, TypeGuards, useDefaultComponentStyle, useRef, useState } from '@codeleap/common'
+import { ComponentVariants, onMount, PropsOf, TypeGuards, useDefaultComponentStyle, useRef } from '@codeleap/common'
 import { SliderComposition } from './styles'
 import { StylesOf } from '../../types'
 import { View } from '../View'
@@ -78,7 +78,7 @@ export const Slider = (props: SliderProps) => {
     trackMarkComponent = DefaultSliderTrackMark,
     defaultValue: defaultSliderValue = [],
     max = 100,
-    min = 8,
+    min = 0,
     indicatorLabel = null,
     description = null,
     minStepsBetweenThumbs = 0,
@@ -108,7 +108,7 @@ export const Slider = (props: SliderProps) => {
     onValueChange(isUniqueValue ? newValue?.[0] : newValue)
   }
 
-  const handleValueCommit = (newValue) => {
+  const handleValueCommit = (newValue: Array<number>) => {
     onValueCommit?.(newValue)
   }
 
@@ -221,7 +221,6 @@ export const Slider = (props: SliderProps) => {
         style={containerStyle}
         value={value}
         minStepsBetweenThumbs={minStepsBetweenThumbs}
-
       >
         <SliderTrack style={trackStyle}>
           <SliderRange style={selectedTrackStyle} />
