@@ -8,7 +8,7 @@ import { defaultPresets } from './presets'
 import { createDynamicPresets } from './dynamicPresets'
 import { isEmptyObject, isSpacingKey, objectPickBy } from './utils'
 import { hashKey, STORES_PERSIST_VERSION, StylesStore, stylesStore } from './cache'
-import { CacheWiper } from './CacheWiper'
+import { StyleCache } from './StyleCache'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -31,13 +31,9 @@ export class CodeleapStyleRegistry {
 
   store: StylesStore
 
-  private cacheWiper = new CacheWiper()
+  private cache = new StyleCache()
 
-  private _baseKey: string
-
-  get baseKey() {
-    return this.getBaseKey()
-  }
+  private baseKey: string
 
   constructor() {
     this.theme = themeStore.getState()
@@ -49,7 +45,7 @@ export class CodeleapStyleRegistry {
 
     const cachedVariantStyles = this.store.variantStyles
 
-    console.log('CV cachedVariantStyles', cachedVariantStyles)
+    // console.log('CV cachedVariantStyles', cachedVariantStyles)
 
     if (!!cachedVariantStyles && isEmptyObject(this.variantStyles)) {
       this.variantStyles = cachedVariantStyles
@@ -57,16 +53,16 @@ export class CodeleapStyleRegistry {
 
     const cachedStyles = this.store.styles
 
-    console.log('CV cachedStyles', cachedStyles)
+    // console.log('CV cachedStyles', cachedStyles)
 
     if (!!cachedStyles && isEmptyObject(this.styles)) {
       this.styles = cachedStyles
     }
 
-    this.cacheWiper.setCacheWiper()
+    // this.cache.registerCacheWiper()
   }
 
-  getBaseKey() {
+  private getBaseKey() {
     const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
     const key = [
@@ -76,15 +72,15 @@ export class CodeleapStyleRegistry {
       STORES_PERSIST_VERSION,
     ]
 
-    console.log('BASE KEY', key)
+    // console.log('BASE KEY', key)
 
     return hashKey(key)
   }
 
-  registerBaseKey() {
-    this._baseKey = this.getBaseKey()
+  private registerBaseKey() {
+    this.baseKey = this.getBaseKey()
 
-    return this._baseKey
+    return this.baseKey
   }
 
   keyForStyles(componentName: string, styles: any) {
@@ -97,7 +93,7 @@ export class CodeleapStyleRegistry {
       this.baseKey,
     ]
 
-    console.log('KEY STYLE ' + componentName, key)
+    // console.log('KEY STYLE ' + componentName, key)
 
     return hashKey(key)
   }
@@ -112,7 +108,7 @@ export class CodeleapStyleRegistry {
       this.baseKey,
     ].concat(variants)
 
-    console.log('KEY VARIANT ' + componentName, key)
+    // console.log('KEY VARIANT ' + componentName, key)
 
     return hashKey(key)
   }
@@ -123,7 +119,7 @@ export class CodeleapStyleRegistry {
       this.baseKey,
     ]
 
-    console.log('KEY COMMON STYLE ' + variant, key)
+    // console.log('KEY COMMON STYLE ' + variant, key)
 
     return hashKey(key)
   }
@@ -136,7 +132,7 @@ export class CodeleapStyleRegistry {
       this.baseKey,
     ]
 
-    console.log('KEY COMPOSITION STYLE ' + composition, key)
+    // console.log('KEY COMPOSITION STYLE ' + composition, key)
 
     return hashKey(key)
   }
@@ -201,7 +197,7 @@ export class CodeleapStyleRegistry {
     const key = this.keyForVariants(componentName, variants, component ?? rootElement)
 
     if (this.variantStyles[key]) {
-      console.log('USING HASH KEY', componentName)
+      // console.log('USING HASH KEY', componentName)
       return [this.variantStyles[key], key]
     }
 
@@ -235,7 +231,7 @@ export class CodeleapStyleRegistry {
       }
     })?.filter(variantStyle => !!variantStyle)
 
-    console.log('computeVariantStyle -> variantStyles', variantStyles)
+    // console.log('computeVariantStyle -> variantStyles', variantStyles)
 
     // @ts-ignore
     const mergedComposition = deepmerge({ all: true })(...variantStyles)
@@ -285,10 +281,6 @@ export class CodeleapStyleRegistry {
 
   getDefaultVariantStyle(componentName: string, defaultVariantStyleName: string = 'default') {
     const stylesheet = this.stylesheets[componentName]
-
-    if (!stylesheet) {
-      throw new Error(`getDefaultVariantStyle: No variants registered for ${componentName}`)
-    }
 
     const defaultStyle = stylesheet?.[defaultVariantStyleName]
 
@@ -473,7 +465,7 @@ export class CodeleapStyleRegistry {
     const styleHashKey = this.keyForStyles(componentName, style)
 
     if (!!this.styles[styleHashKey]) {
-      console.log('CACHED STYLE', this.styles[styleHashKey])
+      // console.log('CACHED STYLE', this.styles[styleHashKey])
       return this.styles[styleHashKey] as T
     }
 
@@ -512,13 +504,13 @@ export class CodeleapStyleRegistry {
       }
 
       if (isComposition) {
-        const { compositionStyles, variantKeys } = this.getCompositionStyle(componentName, composition, style)
+        const { compositionStyles } = this.getCompositionStyle(componentName, composition, style)
 
         const styles = [defaultStyle, responsiveStyles, ...compositionStyles]
 
         styles.push({ [rootElement]: style })
 
-        console.log('styles', styles)
+        // console.log('styles', styles)
 
         return this.mergeStylesWithCache(
           styles,

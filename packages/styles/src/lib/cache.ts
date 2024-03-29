@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import valueHash from 'object-hash'
 import { ICSS } from '../types'
 
 export const CACHE_WIPE_INTERVAL = 1000 // 15 * 60 * 1000 // 15 minutes
@@ -73,5 +72,5 @@ export const hashKey = (value: Array<any> | object) => {
     value.push({ [styleKey]: version })
   }
 
-  return valueHash(value)
+  return JSON.stringify(value)
 }
