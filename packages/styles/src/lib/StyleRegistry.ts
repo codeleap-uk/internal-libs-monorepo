@@ -1,4 +1,4 @@
-import { AnyStyledComponent, ICSS, InsetMap, SpacingMap, StyleProp, VariantStyleSheet } from '../types'
+import { AnyRecord, AnyStyledComponent, ICSS, InsetMap, ITheme, SpacingMap, StyleProp, VariantStyleSheet } from '../types'
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import trieMemoize from "trie-memoize"
@@ -133,6 +133,15 @@ export class CodeleapStyleRegistry {
     ]
 
     // console.log('KEY COMPOSITION STYLE ' + composition, key)
+
+    return hashKey(key)
+  }
+
+  keyForCreatedStyles(styles: Record<string, any>) {
+    const key = [
+      styles,
+      this.baseKey,
+    ]
 
     return hashKey(key)
   }
@@ -641,5 +650,36 @@ export class CodeleapStyleRegistry {
     this.commonStyles = {}
     this.compositionStyles = {}
     this.store.wipeCache()
+  }
+
+  update() {
+    this.theme = themeStore.getState()
+    this.store = stylesStore.getState()
+    this.registerBaseKey()
+  }
+
+  private cacheCreatedStyles = {}
+
+  createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
+    const stylesObj = typeof styles === 'function' ? styles(this.theme.current) : styles
+
+    const key = this.keyForCreatedStyles(stylesObj)
+
+    if (!!this.cacheCreatedStyles[key]) {
+      return this.cacheCreatedStyles[key]
+    }
+
+    const createdStyles = {} as Record<K, any>
+
+    for (const key in stylesObj) {
+      const style = stylesObj[key]
+      const styled = this.styleFor('MyComponent', style, false)
+
+      createdStyles[key] = styled?.wrapper ?? style
+    }
+
+    this.cacheCreatedStyles[key] = createdStyles
+
+    return createdStyles
   }
 }
