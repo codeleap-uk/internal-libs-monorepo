@@ -17,10 +17,10 @@ export class StylesCache {
   store: CacheStore
 
   constructor() {
-    this.registryStoredCache()
+    this.registerStoredCache()
   }
 
-  async registryStoredCache() {
+  async registerStoredCache() {
     const hasHydrated = cacheStore.persist.hasHydrated()
 
     if (hasHydrated) {
@@ -41,7 +41,7 @@ export class StylesCache {
     }
   }
 
-  registryBaseKey(values: Array<any>) {
+  registerBaseKey(values: Array<any>) {
     const key = values.concat([STORES_PERSIST_VERSION])
 
     const baseKey = hashKey(key)
@@ -65,7 +65,15 @@ export class StylesCache {
   keyFor(type: CacheType, keyData: Array<any> | any) {
     const cache = this[type]
 
-    return cache.keyFor(this.baseKey, keyData)
+    const values = [this.baseKey, keyData]
+
+    const cacheKey = hashKey(values)
+    const cachedValue = cache.cache[cacheKey] ?? null
+
+    return {
+      key: cacheKey,
+      value: cachedValue,
+    }
   }
 
   cacheFor(type: CacheType, key: string, value: any) {

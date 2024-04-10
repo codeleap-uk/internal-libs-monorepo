@@ -3,16 +3,8 @@ import { hashKey } from './hashKey'
 export class Cache<T extends any = any> {
   cache: Record<string, T> = {}
 
-  constructor(public name: string = 'StyleCache') {}
-
   keyFor(cacheBaseKey: string, data: Array<any> | any) {
-    let values = []
-
-    if (Array.isArray(data)) {
-      values = data.concat([cacheBaseKey])
-    } else {
-      values.push(data)
-    }
+    const values = [cacheBaseKey, data]
 
     const cacheKey = hashKey(values)
     const cachedValue = this.cache[cacheKey] ?? null

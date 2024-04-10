@@ -26,7 +26,7 @@ export class CodeleapStyleRegistry {
 
     const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
-    this.stylesCache.registryBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
+    this.stylesCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
   }
 
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
@@ -350,7 +350,7 @@ export class CodeleapStyleRegistry {
     const cache = this.stylesCache.keyFor('components', [componentName, style, stylesheet])
 
     if (!!cache.value) {
-      console.log('CACHED STYLE', cache.value)
+      // console.log('CACHED STYLE', cache)
       return cache.value as T
     }
 
@@ -524,7 +524,7 @@ export class CodeleapStyleRegistry {
     
     const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
-    this.stylesCache.registryBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
+    this.stylesCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
   }
 
   createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
