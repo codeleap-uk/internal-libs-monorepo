@@ -3,9 +3,9 @@ export class StaleControl {
   private wiperId: NodeJS.Timer = null
 
   constructor(
-    private staleTime: number = 30,
+    private staleTime: number = 60, // minutes
     private staleTimeIdentifier: string = '//:',
-    private wiperInterval: number = 1000 // 15 * 60 * 1000
+    private wiperInterval: number = 30 * 60 * 1000, // 30 minutes
   ) {}
 
   isStaled(value: string) {
@@ -21,7 +21,7 @@ export class StaleControl {
   insertStaleTime(value: string) {
     let currentTime = new Date()
 
-    currentTime.setSeconds(currentTime.getSeconds() + this.staleTime)
+    currentTime.setMinutes(currentTime.getMinutes() + this.staleTime)
 
     const staleTime = currentTime.toISOString()
 
@@ -49,9 +49,11 @@ export class StaleControl {
     }
   }
 
+  /**
+   * wipe staled cache; verify isStaled values and remove
+   */
   cacheWiper() {
-    // wipe staled caches
-    // verify isStaled and remove
+    throw new Error('Cache Wiper not implement')
   }
 
   registerCacheWiper() {

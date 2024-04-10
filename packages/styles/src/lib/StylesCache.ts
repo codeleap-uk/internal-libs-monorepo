@@ -51,10 +51,10 @@ export class StylesCache {
     }
   }
 
-  registerBaseKey(values: Array<any>) {
-    const key = values.concat([STORES_PERSIST_VERSION])
+  registerBaseKey(keys: Array<any>) {
+    keys.push(STORES_PERSIST_VERSION)
 
-    const baseKey = hashKey(key)
+    const baseKey = hashKey(keys)
 
     this.baseKey = baseKey
 
