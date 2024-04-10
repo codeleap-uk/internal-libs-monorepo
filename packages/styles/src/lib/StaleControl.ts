@@ -5,7 +5,7 @@
 // [] precisa de um método pra pegar a key sem o stale, talvez um método só pra checar se existe
 // [] storage com stale time
 
-import { CACHE_WIPE_INTERVAL } from './cache'
+export const CACHE_WIPE_INTERVAL = 1000 // 15 * 60 * 1000 // 15 minutes
 
 export class StaleControl {
   wiperId: NodeJS.Timer = null

@@ -1,84 +1,38 @@
-import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
-import { ICSS } from '../types'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { hashKey } from './hashKey'
 
-export const CACHE_WIPE_INTERVAL = 1000 // 15 * 60 * 1000 // 15 minutes
+export class Cache<T extends any = any> {
+  cache: Record<string, T> = {}
 
-export const STORES_PERSIST_VERSION = 12
+  constructor(public name: string = 'StyleCache') {}
 
-const styleKey = '@styles-version'
-const version = require('../../package.json')?.version
+  keyFor(cacheBaseKey: string, data: Array<any> | any) {
+    let values = []
 
-export type StylesStore = {
-  variantStyles: {
-    [key: string]: any
-  }
-  styles: {
-    [key: string]: any
-  }
-  cacheVariantStyle: (key: string, variantStyle: any) => void
-  cacheStyles: (key: string, styles: ICSS[]) => void
-  wipeCache: () => void
-}
-
-export const stylesStore = create(persist<StylesStore>(
-  (set, get) => ({
-    variantStyles: {},
-    styles: {},
-    cacheVariantStyle: (key: string, variantStyle: any) => {
-      const newVariantStyles = get()?.variantStyles ?? {}
-
-      newVariantStyles[key] = variantStyle
-
-      set({ variantStyles: newVariantStyles })
-    },
-    cacheStyles: (key: string, styles: ICSS[]) => {
-      const newStyles = get()?.styles ?? {}
-
-      newStyles[key] = styles
-
-      set({ styles: newStyles })
-    },
-    wipeCache: () => {
-      set({ 
-        styles: {}, 
-        variantStyles: {} 
-      })
+    if (Array.isArray(data)) {
+      values = data.concat([cacheBaseKey])
+    } else {
+      values.push(data)
     }
-  }),
-  {
-    name: '@styles.stores.stylesRegistry',
-    version: STORES_PERSIST_VERSION,
-    migrate: (persistedState: StylesStore, version) => {
-      console.log('DSD', { version, STORES_PERSIST_VERSION })
-      if (version != STORES_PERSIST_VERSION) {
-        persistedState.styles = {}
-        persistedState.variantStyles = {}
-        
-        return persistedState
-      }
 
-      return persistedState as StylesStore
-    },
-    storage: createJSONStorage(() => {
-      if (typeof localStorage === 'undefined') {
-        return AsyncStorage
-      }
+    const cacheKey = hashKey(values)
+    const cachedValue = this.cache[cacheKey] ?? null
 
-      return localStorage
-    })
-  },
-))
-
-export const hashKey = (value: Array<any> | object) => {
-  if (typeof value == 'object') {
-    value[styleKey] = version
+    return {
+      key: cacheKey,
+      value: cachedValue,
+    }
   }
 
-  if (Array.isArray(value)) { 
-    value.push({ [styleKey]: version })
+  cacheFor(key: string, cache: T) {
+    this.cache[key] = cache
+    return cache
   }
 
-  return JSON.stringify(value)
+  setCache(cache: Record<string, T>) {
+    this.cache = cache
+  }
+
+  clear() {
+    this.cache = {}
+  }
 }
