@@ -1,8 +1,12 @@
-import { BorderBuilder } from '../lib/borderBuilder'
+import { BorderCreator } from '../lib/borderCreator'
 import { MediaQueries } from '../lib/mediaQuery'
 import type { DefaultVariants } from '../lib/defaultVariants'
 import { MultiplierFunction, Spacings } from '../lib/spacing'
 import { IEffect } from './core'
+
+type AnyMap = {
+  [key: string]: any
+}
 
 type ColorMap = {
   [key: string]: string
@@ -12,28 +16,8 @@ type BreakpointMap = {
   [key: string]: number
 }
 
-type PresetsMap = {
-  [key: string]: any
-}
-
-type BorderRadiusMap = {
-  [key: string]: any
-}
-
 type EffectsMap = {
   [key: string]: IEffect
-}
-
-type Typography = {
-  [key: string]: any
-}
-
-type IconsMap = {
-  [key: string]: any
-}
-
-type ValuesMap = {
-  [key: string]: any
 }
 
 export type SpacingMap = 
@@ -63,12 +47,12 @@ export type Theme = {
   }
   breakpoints?: BreakpointMap
   baseSpacing?: number
-  presets?: PresetsMap
-  borderRadius?: BorderRadiusMap
+  presets?: AnyMap
+  borderRadius?: AnyMap
   effects?: EffectsMap
-  typography: Typography
-  icons: IconsMap
-  values?: ValuesMap
+  typography: AnyMap
+  icons: AnyMap
+  values?: AnyMap
 }
 
 export type DefaultColorSchemeName = 'default'
@@ -85,7 +69,7 @@ export type AppTheme<T extends Theme> = {
   borderRadius: T['borderRadius']
   media: MediaQueries
   effects: T['effects']
-  border: BorderBuilder
+  border: BorderCreator
   typography: T['typography']
   icons: T['icons']
   values: T['values']

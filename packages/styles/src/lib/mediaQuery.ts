@@ -1,13 +1,5 @@
 import { IBreakpoints } from '../types'
 
-function getBreakpointValue(breakpoint: keyof IBreakpoints, breakpoints: IBreakpoints) {
-  if (breakpoints[breakpoint]) {
-    return breakpoints[breakpoint]
-  }
-
-  return Infinity
-}
-
 export type Queries = {
   up: (breakpoint: keyof IBreakpoints) => string
   down: (breakpoint: keyof IBreakpoints) => string
@@ -17,6 +9,14 @@ export type Queries = {
 
 export type MediaQueries = Queries & {
   renderToPlatformQuery: (props: Record<keyof Queries, keyof IBreakpoints>) => string
+}
+
+function getBreakpointValue(breakpoint: keyof IBreakpoints, breakpoints: IBreakpoints) {
+  if (breakpoints[breakpoint]) {
+    return breakpoints[breakpoint]
+  }
+
+  return Infinity
 }
 
 export function buildMediaQueries<T extends IBreakpoints>(breakpoints: T): MediaQueries {

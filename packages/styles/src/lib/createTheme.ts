@@ -1,5 +1,5 @@
 import { AppTheme, ColorScheme, Theme } from '../types'
-import { borderBuilder } from './borderBuilder'
+import { borderCreator } from './borderCreator'
 import { buildMediaQueries } from './mediaQuery'
 import { multiplierProperty } from './multiplierProperty'
 import { defaultVariants } from './defaultVariants'
@@ -60,7 +60,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
 
     media: buildMediaQueries(theme.breakpoints),
 
-    border: borderBuilder,
+    border: borderCreator,
 
     typography: theme.typography ?? {},
 

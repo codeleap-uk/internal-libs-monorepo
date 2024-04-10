@@ -21,6 +21,7 @@ export function createStyles<Composition extends Record<any, any> = DefaultStyle
 
     return styleObj
   }
+  
   // We use a proxy here so that the color scheme is recomputed every time the
   // theme changes. This is necessary because the theme is a singleton which does not cause
   // a re-render when it changes. The end-user will only have to worry about remounting the root component

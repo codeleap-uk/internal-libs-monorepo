@@ -3,25 +3,27 @@ import { borderDirection } from './dynamicVariants'
 import { themeStore } from './themeStore'
 import { capitalize } from './utils'
 
-type Args = {
+type BorderCreatorArgs = {
   color: keyof IColors
   width?: number | string
-  // @ts-ignore
-  style?: ICSS['borderStyle']
   directions?: typeof borderDirection[number][]
+  // @ts-expect-error borderStyle not exists
+  style?: ICSS['borderStyle']
 }
 
-export type BorderBuilder = (args: Args) => ICSS
+export type BorderCreator = (args: BorderCreatorArgs) => ICSS
 
-export const borderBuilder: BorderBuilder = (args) => {
-  const { 
-    color: colorKey, 
-    width = 1, 
-    style = 'solid', 
-    directions = ['left', 'top', 'bottom', 'right'] 
+export const borderCreator: BorderCreator = (args) => {
+  const {
+    color: colorKey,
+    width = 1,
+    style = 'solid',
+    directions = ['left', 'top', 'bottom', 'right']
   } = args
 
-  const color = themeStore.getState().current['colors']?.[colorKey]
+  const theme = themeStore.getState().current
+
+  const color = theme?.['colors']?.[colorKey]
 
   if (!color) {
     throw new Error(`Border cannot be create for "color ${colorKey}" not exists in theme.`)
@@ -31,11 +33,11 @@ export const borderBuilder: BorderBuilder = (args) => {
 
   for (const direction of directions) {
     const property = `border${capitalize(direction)}`
-    
+
     borderStyles[`${property}Color`] = color
     borderStyles[`${property}Width`] = width
-    
-    if (!!window.navigator) {
+
+    if (typeof localStorage !== 'undefined') {
       borderStyles[`${property}Style`] = style
     }
   }
