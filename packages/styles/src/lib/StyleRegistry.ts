@@ -521,32 +521,42 @@ export class CodeleapStyleRegistry {
 
   update() {
     this.theme = themeStore.getState()
-    
+
     const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
     this.stylesCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
   }
 
   createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
-    const stylesObj = typeof styles === 'function' ? styles(this.theme.current) : styles
+    const compute = () => {
+      const current = themeStore.getState().current
 
-    const cache = this.stylesCache.keyFor('styles', stylesObj)
+      const stylesObj = typeof styles === 'function' ? styles(current) : styles
 
-    if (!!cache.value) {
-      return cache.value
+      const cache = this.stylesCache.keyFor('styles', stylesObj)
+
+      if (!!cache.value) {
+        return cache.value
+      }
+
+      const createdStyles = {} as Record<K, any>
+
+      for (const key in stylesObj) {
+        const style = stylesObj[key]
+        const styled = this.styleFor('MyComponent', style, false)
+
+        createdStyles[key] = styled?.wrapper ?? style
+      }
+
+      this.stylesCache.cacheFor('styles', cache.key, createdStyles)
+
+      return createdStyles
     }
 
-    const createdStyles = {} as Record<K, any>
-
-    for (const key in stylesObj) {
-      const style = stylesObj[key]
-      const styled = this.styleFor('MyComponent', style, false)
-
-      createdStyles[key] = styled?.wrapper ?? style
-    }
-
-    this.stylesCache.cacheFor('styles', cache.key, createdStyles)
-
-    return createdStyles
+    return new Proxy(compute(), {
+      get(target, prop) {
+        return compute()[prop as string]
+      },
+    })
   }
 }
