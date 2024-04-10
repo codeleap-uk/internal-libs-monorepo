@@ -1,2 +1,2 @@
 
-export const STORES_PERSIST_VERSION = 21
+export const STORES_PERSIST_VERSION = 24

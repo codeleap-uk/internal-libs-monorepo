@@ -30,6 +30,16 @@ export class StylesCache {
       this.store = cacheStore.getState()
     }
 
+    const currentTime = new Date()
+    const staleTime = new Date(this.store.staleTime)
+
+    const isStaled = currentTime > staleTime
+
+    if (isStaled) {
+      this.store.rehydrate()
+      return
+    }
+
     for (const cachedType in this.store.cached) {
       const cachedValue = this.store.cached[cachedType]
 

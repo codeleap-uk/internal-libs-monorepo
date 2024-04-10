@@ -1,22 +1,12 @@
 
-// [] inserir um stale na key, entre {{}}
-// [] no wipe passar pelas keys e remover aquelas que passou o tempo
-// [] sempre que acessar uma key, tem que renovar o stale dela
-// [] precisa de um método pra pegar a key sem o stale, talvez um método só pra checar se existe
-// [] storage com stale time
-
-export const CACHE_WIPE_INTERVAL = 1000 // 15 * 60 * 1000 // 15 minutes
-
 export class StaleControl {
-  wiperId: NodeJS.Timer = null
+  private wiperId: NodeJS.Timer = null
 
-  staleTime: number = 30 // seconds
-
-  staleTimeIdentifier: string = '//:'
-
-  constructor() {
-
-  }
+  constructor(
+    private staleTime: number = 30,
+    private staleTimeIdentifier: string = '//:',
+    private wiperInterval: number = 1000 // 15 * 60 * 1000
+  ) {}
 
   isStaled(value: string) {
     const { staleTime } = this.extractStaleTime(value)
@@ -60,8 +50,8 @@ export class StaleControl {
   }
 
   cacheWiper() {
-    console.log('Cache Wiper')
     // wipe staled caches
+    // verify isStaled and remove
   }
 
   registerCacheWiper() {
@@ -71,7 +61,7 @@ export class StaleControl {
 
     this.wiperId = setInterval(() => {
       this.cacheWiper()
-    }, CACHE_WIPE_INTERVAL)
+    }, this.wiperInterval)
   }
 
   unregisterCacheWiper() {
