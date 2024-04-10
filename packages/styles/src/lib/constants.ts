@@ -1,0 +1,2 @@
+
+export const STORES_PERSIST_VERSION = 12

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { IAppVariants, ITheme } from '../types'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { STORES_PERSIST_VERSION } from './store'
+import { STORES_PERSIST_VERSION } from './constants'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export type ThemeStore = {

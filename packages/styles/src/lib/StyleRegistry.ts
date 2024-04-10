@@ -1,4 +1,3 @@
-import { Cache } from './Cache'
 import { AnyRecord, AnyStyledComponent, ICSS, InsetMap, ITheme, SpacingMap, StyleProp, VariantStyleSheet } from '../types'
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
@@ -6,9 +5,8 @@ import { MultiplierFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultPresets } from './presets'
 import { createDynamicPresets } from './dynamicPresets'
-import { isEmptyObject, isSpacingKey, objectPickBy } from './utils'
-import { STORES_PERSIST_VERSION, StylesStore, stylesStore } from './store'
-import { hashKey } from './hashKey'
+import { isSpacingKey, objectPickBy } from './utils'
+import { StylesCache } from './StylesCache'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -19,74 +17,20 @@ export class CodeleapStyleRegistry {
 
   theme: ThemeStore
 
-  store: StylesStore
-
-  private cacheBaseKey: string
-  private variantStylesCache = new Cache()
-  private commonStylesCache = new Cache()
-  private stylesCache = new Cache()
-  private compositionStylesCache = new Cache()
-  private responsiveStylesCache = new Cache()
-  private componentStylesCache = new Cache()
+  private stylesCache = new StylesCache()
 
   constructor() {
-    this.registryStoredCache()
-
     this.theme = themeStore.getState()
 
     this.registerCommonVariants()
 
-    this.registryCacheBaseKey()
-
-    // this.cache.registerCacheWiper()
-  }
-
-  private async registryStoredCache() {
-    const hasHydrated = stylesStore.persist.hasHydrated()
-
-    if (hasHydrated) {
-      this.store = stylesStore.getState()
-    } else {
-      await stylesStore.persist.rehydrate()
-      this.store = stylesStore.getState()
-    }
-
-    const cachedVariantStyles = this.store.variantStyles
-
-    console.log('CV cachedVariantStyles', cachedVariantStyles)
-
-    if (!!cachedVariantStyles && isEmptyObject(this.variantStylesCache.cache)) {
-      this.variantStylesCache.setCache(cachedVariantStyles)
-    }
-
-    const cachedStyles = this.store.styles
-
-    console.log('CV cachedStyles', cachedStyles)
-
-    if (!!cachedStyles && isEmptyObject(this.componentStylesCache.cache)) {
-      this.componentStylesCache.setCache(cachedStyles)
-    }
-  }
-
-  private registryCacheBaseKey() {
     const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
 
-    const key = [
-      currentColorScheme,
-      this.theme.current,
-      this.commonVariantsStyles,
-      STORES_PERSIST_VERSION,
-    ]
-
-    const baseKey = hashKey(key)
-
-    this.cacheBaseKey = baseKey
-
-    return this.cacheBaseKey
+    this.stylesCache.registryBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
   }
 
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
-    const cache = this.commonStylesCache.keyFor(this.cacheBaseKey, variant)
+    const cache = this.stylesCache.keyFor('common', variant)
 
     if (!!cache.value) {
       return cache.value
@@ -126,7 +70,7 @@ export class CodeleapStyleRegistry {
         }
       })
 
-      this.commonStylesCache.cacheFor(cache.key, commonStyles)
+      this.stylesCache.cacheFor('common', cache.key, commonStyles)
 
       return commonStyles
     }
@@ -135,7 +79,7 @@ export class CodeleapStyleRegistry {
       [component ?? rootElement]: style
     })
 
-    this.commonStylesCache.cacheFor(cache.key, commonStyles)
+    this.stylesCache.cacheFor('common', cache.key, commonStyles)
 
     return commonStyles
   }
@@ -145,7 +89,7 @@ export class CodeleapStyleRegistry {
 
     const stylesheet = this.stylesheets[componentName]
 
-    const cache = this.variantStylesCache.keyFor(this.cacheBaseKey, [componentName, (component ?? rootElement), stylesheet, ...variants])
+    const cache = this.stylesCache.keyFor('variants', [componentName, (component ?? rootElement), stylesheet, ...variants])
 
     if (!!cache.value) {
       return [cache.value, cache.key]
@@ -179,8 +123,6 @@ export class CodeleapStyleRegistry {
       }
     })?.filter(variantStyle => !!variantStyle)
 
-    // console.log('computeVariantStyle -> variantStyles', variantStyles)
-
     // @ts-ignore
     const mergedComposition = deepmerge({ all: true })(...variantStyles)
 
@@ -193,9 +135,7 @@ export class CodeleapStyleRegistry {
       }),
     )
 
-    this.variantStylesCache.cacheFor(cache.key, variantStyle)
-
-    this.store.cacheVariantStyle(cache.key, variantStyle)
+    this.stylesCache.cacheFor('variants', cache.key, variantStyle)
 
     return [variantStyle, cache.key]
   }
@@ -244,9 +184,7 @@ export class CodeleapStyleRegistry {
   mergeStylesWithCache<T = unknown>(styles: ICSS[], key: string): T {
     const mergedStyles = deepmerge({ all: true })(...styles)
 
-    this.componentStylesCache.cacheFor(key, mergedStyles)
-
-    this.store.cacheStyles(key, mergedStyles as ICSS[])
+    this.stylesCache.cacheFor('components', key, mergedStyles)
 
     return mergedStyles as T
   }
@@ -279,7 +217,7 @@ export class CodeleapStyleRegistry {
 
     const stylesheet = this.stylesheets[componentName]
 
-    const cache = this.responsiveStylesCache.keyFor(this.cacheBaseKey, [componentName, responsiveStyles, stylesheet])
+    const cache = this.stylesCache.keyFor('responsive', [componentName, responsiveStyles, stylesheet])
 
     if (!!cache.value) {
       return {
@@ -302,7 +240,7 @@ export class CodeleapStyleRegistry {
       }
     }
 
-    this.responsiveStylesCache.cacheFor(cache.key, styles)
+    this.stylesCache.cacheFor('responsive', cache.key, styles)
 
     return {
       responsiveStyles: styles
@@ -373,7 +311,7 @@ export class CodeleapStyleRegistry {
   }
 
   getCompositionStyle(componentName: string, composition: Record<string, any>, style: any) {
-    const cache = this.compositionStylesCache.keyFor(this.cacheBaseKey, { componentName, composition, style })
+    const cache = this.stylesCache.keyFor('compositions', { componentName, composition, style })
 
     if (!!cache.value) {
       return cache.value
@@ -401,7 +339,7 @@ export class CodeleapStyleRegistry {
       variantKeys: [],
     }
 
-    this.compositionStylesCache.cacheFor(cache.key, compositionStyle)
+    this.stylesCache.cacheFor('compositions', cache.key, compositionStyle)
 
     return compositionStyle
   }
@@ -409,7 +347,7 @@ export class CodeleapStyleRegistry {
   styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
     const stylesheet = this.stylesheets[componentName]
 
-    const cache = this.componentStylesCache.keyFor(this.cacheBaseKey, [componentName, style, stylesheet])
+    const cache = this.stylesCache.keyFor('components', [componentName, style, stylesheet])
 
     if (!!cache.value) {
       console.log('CACHED STYLE', cache.value)
@@ -581,26 +519,18 @@ export class CodeleapStyleRegistry {
     throw new Error('createStyle: Not implemented')
   }
 
-  wipeCache() {
-    this.componentStylesCache.clear()
-    this.responsiveStylesCache.clear()
-    this.compositionStylesCache.clear()
-    this.variantStylesCache.clear()
-    this.commonStylesCache.clear()
-    this.stylesCache.clear()
-    this.store.wipeCache()
-  }
-
   update() {
     this.theme = themeStore.getState()
-    this.store = stylesStore.getState()
-    this.registryCacheBaseKey()
+    
+    const currentColorScheme = this.theme.current['currentColorScheme'] ?? this.theme.colorScheme ?? 'default'
+
+    this.stylesCache.registryBaseKey([currentColorScheme, this.theme.current, this.commonVariantsStyles])
   }
 
   createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
     const stylesObj = typeof styles === 'function' ? styles(this.theme.current) : styles
 
-    const cache = this.stylesCache.keyFor(this.cacheBaseKey, stylesObj)
+    const cache = this.stylesCache.keyFor('styles', stylesObj)
 
     if (!!cache.value) {
       return cache.value
@@ -615,7 +545,7 @@ export class CodeleapStyleRegistry {
       createdStyles[key] = styled?.wrapper ?? style
     }
 
-    this.stylesCache.cacheFor(cache.key, createdStyles)
+    this.stylesCache.cacheFor('styles', cache.key, createdStyles)
 
     return createdStyles
   }

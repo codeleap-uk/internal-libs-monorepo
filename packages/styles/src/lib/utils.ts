@@ -43,7 +43,3 @@ export function isSpacingKey(key: string) {
 
   return spacingKeys?.includes(key)
 }
-
-export function isEmptyObject(obj: object): boolean {
-  return Object.keys(obj ?? {}).length <= 0
-}
