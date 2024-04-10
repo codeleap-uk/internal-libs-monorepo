@@ -26,14 +26,11 @@ export type SpacingMap =
   Spacings<'m', string> &
   Spacings<'p', string> &
   {
-    base: number
     gap: MultiplierFunction
   }
 
 export type InsetMap = 
   {
-    base: number
-    value: (multiplier: number) => number
     bottom: MultiplierFunction
     top: MultiplierFunction
     left: MultiplierFunction
@@ -74,6 +71,8 @@ export type AppTheme<T extends Theme> = {
   icons: T['icons']
   values: T['values']
   inset: InsetMap
+  baseSpacing: number
+  value: (multiplier: number) => number
   sized: (size: number | string) => ({
     width: number | string,
     height: number | string

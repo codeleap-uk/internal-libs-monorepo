@@ -31,9 +31,10 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
       colorSchemaStore.setState({ value: colorScheme as string  })
     },
 
+    baseSpacing: theme.baseSpacing,
+    value: (n = 1) => theme.baseSpacing * n,
+
     spacing: {
-      base: theme.baseSpacing,
-      value: (n = 1) => theme.baseSpacing * n,
       gap: multiplierProperty(theme.baseSpacing, 'gap'),
       ...spacingFactory(theme.baseSpacing, 'padding'),
       ...spacingFactory(theme.baseSpacing, 'margin'),
@@ -42,8 +43,6 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
     },
 
     inset: {
-      base: theme.baseSpacing,
-      value: (n = 1) => theme.baseSpacing * n,
       top: multiplierProperty(theme.baseSpacing, 'top'),
       bottom: multiplierProperty(theme.baseSpacing, 'bottom'),
       left: multiplierProperty(theme.baseSpacing, 'left'),
