@@ -1,10 +1,11 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { createJSONStorage, persist } from 'zustand/middleware'
 import { ICSS } from '../types'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const CACHE_WIPE_INTERVAL = 1000 // 15 * 60 * 1000 // 15 minutes
 
-export const STORES_PERSIST_VERSION = 10
+export const STORES_PERSIST_VERSION = 12
 
 const styleKey = '@styles-version'
 const version = require('../../package.json')?.version
@@ -60,6 +61,13 @@ export const stylesStore = create(persist<StylesStore>(
 
       return persistedState as StylesStore
     },
+    storage: createJSONStorage(() => {
+      if (typeof localStorage === 'undefined') {
+        return AsyncStorage
+      }
+
+      return localStorage
+    })
   },
 ))
 

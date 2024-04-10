@@ -36,16 +36,30 @@ export class CodeleapStyleRegistry {
   private baseKey: string
 
   constructor() {
+    this.registryStoredCache()
+
     this.theme = themeStore.getState()
-    this.store = stylesStore.getState()
 
     this.registerCommonVariants()
 
     this.registerBaseKey()
 
+    // this.cache.registerCacheWiper()
+  }
+
+  private async registryStoredCache() {
+    const hasHydrated = stylesStore.persist.hasHydrated()
+
+    if (hasHydrated) {
+      this.store = stylesStore.getState()
+    } else {
+      await stylesStore.persist.rehydrate()
+      this.store = stylesStore.getState()
+    }
+
     const cachedVariantStyles = this.store.variantStyles
 
-    // console.log('CV cachedVariantStyles', cachedVariantStyles)
+    console.log('CV cachedVariantStyles', cachedVariantStyles)
 
     if (!!cachedVariantStyles && isEmptyObject(this.variantStyles)) {
       this.variantStyles = cachedVariantStyles
@@ -53,13 +67,11 @@ export class CodeleapStyleRegistry {
 
     const cachedStyles = this.store.styles
 
-    // console.log('CV cachedStyles', cachedStyles)
+    console.log('CV cachedStyles', cachedStyles)
 
     if (!!cachedStyles && isEmptyObject(this.styles)) {
       this.styles = cachedStyles
     }
-
-    // this.cache.registerCacheWiper()
   }
 
   private getBaseKey() {
@@ -301,20 +313,13 @@ export class CodeleapStyleRegistry {
   }
 
   mergeStylesWithCache<T = unknown>(styles: ICSS[], key: string): T {
-    const cacheStyles: (styles: ICSS[], key: string) => T = trieMemoize(
-      [WeakMap, Map],
-      (styles: ICSS[], key: string) => {
-        const mergedStyles = deepmerge({ all: true })(...styles)
+    const mergedStyles = deepmerge({ all: true })(...styles)
 
-        this.styles[key] = mergedStyles
+    this.styles[key] = mergedStyles
 
-        this.store.cacheStyles(key, mergedStyles as ICSS[])
+    this.store.cacheStyles(key, mergedStyles as ICSS[])
 
-        return mergedStyles as T
-      }
-    )
-
-    return cacheStyles?.(styles, key)
+    return mergedStyles as T
   }
 
   getRegisteredComponent(componentName: string) {
