@@ -65,9 +65,7 @@ export const createDynamicPresets = () => {
     })
   })
 
-  createVariant('cursor', (cursorType: typeof cursorTypes[number]) => ({
-    cursor: cursorType
-  }))
+  createVariant('cursor', (theme, cursor: typeof cursorTypes[number]) => ({ cursor }))
 
   createVariant('bg', (theme, color: keyof IColors) => ({ 
     backgroundColor: theme['colors'][color] 
@@ -76,12 +74,10 @@ export const createDynamicPresets = () => {
   createVariant('effect', (theme, effect: keyof IEffects) => theme['effects'][effect])
 
   createVariant('scale', (theme, value: any) => ({
-    transform: !!window?.navigator ? `scale(${value})` : [{ 'scale': Number(value) }]
+    transform: typeof localStorage !== 'undefined' ? `scale(${value})` : [{ 'scale': Number(value) }]
   }))
-
-  console.log({
-    ...dynamicVariants,
-  })
 
   return dynamicVariants
 }
+
+export const dynamicPresets = createDynamicPresets()

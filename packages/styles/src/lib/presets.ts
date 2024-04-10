@@ -43,9 +43,6 @@ export const defaultPresets = {
   hidden: {
     display: 'none',
   },
-  //
-  // *** Layout ***
-  //
   full: {
     width: '100%',
     height: '100%',
@@ -61,7 +58,6 @@ export const defaultPresets = {
   },
   fullView: {
     width: '100vw',
-    // height: '100vh',
     height: 'calc(100vh - calc(100vh - 100%))',
   },
   fullViewWidth: {
@@ -69,7 +65,6 @@ export const defaultPresets = {
   },
   fullViewHeight: {
     height: 'calc(100vh - calc(100vh - 100%))',
-    // height: '100vh',
   },
   whole: {
     top: 0,
@@ -144,9 +139,6 @@ export const defaultPresets = {
   textCenter: {
     textAlign: 'center',
   },
-  //
-  // *** Styles ***
-  //
   blur: {
     backdropFilter: 'blur(4px)',
     '-webkit-backdrop-filter': 'blur(4px)',
