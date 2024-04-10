@@ -19,7 +19,7 @@ function getBreakpointValue(breakpoint: keyof IBreakpoints, breakpoints: IBreakp
   return Infinity
 }
 
-export function buildMediaQueries<T extends IBreakpoints>(breakpoints: T): MediaQueries {
+export function createMediaQueries<T extends IBreakpoints>(breakpoints: T): MediaQueries {
   function getBreakpoint(breakpoint: keyof IBreakpoints) {
     return getBreakpointValue(breakpoint, breakpoints)
   }
@@ -48,19 +48,19 @@ export function buildMediaQueries<T extends IBreakpoints>(breakpoints: T): Media
   }
 
   const renderToPlatformQuery = (props: Record<keyof Queries, keyof IBreakpoints>) => {
-    let mediaString = ''
+    let query = ''
 
     if (props?.is) {
-      mediaString = queries.not(props.is)
+      query = queries.not(props.is)
     } else if (props?.not) {
-      mediaString = queries.is(props.not)
+      query = queries.is(props.not)
     } else if (props?.up) {
-      mediaString = queries.down(props.up)
+      query = queries.down(props.up)
     } else if (props?.down) {
-      mediaString = queries.up(props.down)
+      query = queries.up(props.down)
     }
 
-    return mediaString
+    return query
   }
 
   return {

@@ -1,6 +1,6 @@
 import { AppTheme, ColorScheme, Theme } from '../types'
 import { borderCreator } from './borderCreator'
-import { buildMediaQueries } from './mediaQuery'
+import { createMediaQueries } from './mediaQuery'
 import { multiplierProperty } from './multiplierProperty'
 import { defaultVariants } from './defaultVariants'
 import { spacingFactory } from './spacing'
@@ -43,7 +43,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
 
     inset: {
       base: theme.baseSpacing,
-      value: (multiplier: number) => (theme.baseSpacing * multiplier),
+      value: (n = 1) => theme.baseSpacing * n,
       top: multiplierProperty(theme.baseSpacing, 'top'),
       bottom: multiplierProperty(theme.baseSpacing, 'bottom'),
       left: multiplierProperty(theme.baseSpacing, 'left'),
@@ -59,7 +59,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
 
     effects: theme.effects ?? {},
 
-    media: buildMediaQueries(theme.breakpoints),
+    media: createMediaQueries(theme.breakpoints),
 
     border: borderCreator,
 
