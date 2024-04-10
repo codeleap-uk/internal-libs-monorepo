@@ -1,7 +1,7 @@
 import { Cache } from './Cache'
 import { hashKey } from './hashKey'
 import { CacheStore, cacheStore } from './cacheStore'
-import { STORES_PERSIST_VERSION } from './constants'
+import { CACHE_ENABLED, STORES_PERSIST_VERSION } from './constants'
 import { CacheType } from '../types/cache'
 
 export class StylesCache {
@@ -29,6 +29,8 @@ export class StylesCache {
       await cacheStore.persist.rehydrate()
       this.store = cacheStore.getState()
     }
+
+    if (!CACHE_ENABLED) return
 
     const currentTime = new Date()
     const staleTime = new Date(this.store.staleTime)

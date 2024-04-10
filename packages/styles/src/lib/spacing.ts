@@ -6,12 +6,12 @@ export type MultiplierFunction = (multiplier: number | string) => ICSS
 export type Spacings<T extends string, S = boolean> = {
   [Property in (S extends boolean ? SpacingVariants : SpacingShortVariants) as `${T}${string & Property}`]: MultiplierFunction;
 } & {
-  [Property in T]: (multiplier: number) => ICSS;
-} & {
-  value: (multiplier?: number) => number
-}
+    [Property in T]: (multiplier: number) => ICSS;
+  } & {
+    value: (multiplier?: number) => number
+  }
 
-const mapValues = {
+const shortMapValues = {
   'x': 'Horizontal',
   'y': 'Vertical',
   'l': 'Left',
@@ -25,52 +25,53 @@ const mapValues = {
 export function spacingFactory<T extends string>(
   base: number,
   spacingProperty: T,
-  hasMapValue: boolean = false
-) {
-  // @ts-ignore
-  const property =  hasMapValue ? mapValues[spacingProperty] : spacingProperty
-  const positions = hasMapValue ? spacingShortVariants : spacingVariants
+  isShort: boolean = false
+): any {
+  const property = isShort ? shortMapValues[spacingProperty as string] : spacingProperty
+  const positions = isShort ? spacingShortVariants : spacingVariants
 
-  const functions = positions.map((position: string) => {
-    const v: string = hasMapValue ? mapValues[position] : position
-
-    return [
-      `${spacingProperty}${position}`,
-      (n: number | string) => {
-        const value = base * Number(n)
-  
-        switch (v) {
-          case 'Horizontal':
-            return {
-              [`${property}Left`]: value,
-              [`${property}Right`]: value,
-            }
-          case 'Vertical':
-            return {
-              [`${property}Top`]: value,
-              [`${property}Bottom`]: value,
-            }
-          case '':
-            return {
-              [`${property}Top`]: value,
-              [`${property}Left`]: value,
-              [`${property}Right`]: value,
-              [`${property}Bottom`]: value,
-            }
-          default:
-            return {
-              [`${property}${v}`]: value,
-            }
-        }
-      },
-    ]
-  })
-
-  return {
-    value: (n = 1) => base * n,
-    ...Object.fromEntries(functions),
+  const spacings = {
     [`${spacingProperty}`]: (n: number | string) => ({
       [`${property}`]: base * Number(n),
     }),
   }
+
+  for (const _position of positions) {
+    const position = isShort ? shortMapValues[_position] : _position
+    const key = `${spacingProperty}${_position}`
+
+    let getter = null
+
+    switch (position) {
+      case 'Horizontal':
+        getter = (value: number) => ({
+          [`${property}Left`]: value,
+          [`${property}Right`]: value,
+        })
+      case 'Vertical':
+        getter = (value: number) => ({
+          [`${property}Top`]: value,
+          [`${property}Bottom`]: value,
+        })
+      case '':
+        getter = (value: number) => ({
+          [`${property}Top`]: value,
+          [`${property}Left`]: value,
+          [`${property}Right`]: value,
+          [`${property}Bottom`]: value,
+        })
+      default:
+        getter = (value: number) => ({
+          [`${property}${position}`]: value,
+        })
+    }
+
+    spacings[key] = (n: number | string) => {
+      const value = base * Number(n)
+
+      return getter(value)
+    }
+  }
+
+  return spacings
 }
