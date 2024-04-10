@@ -1,6 +1,6 @@
 import { BorderBuilder } from '../lib/borderBuilder'
 import { MediaQueries } from '../lib/mediaQuery'
-import type { DefaultPresets } from '../lib/presets'
+import type { DefaultVariants } from '../lib/defaultVariants'
 import { MultiplierFunction, Spacings } from '../lib/spacing'
 import { IEffect } from './core'
 
@@ -81,7 +81,7 @@ export type AppTheme<T extends Theme> = {
   setColorScheme: (colorScheme: ColorScheme<T>) => void
   currentColorScheme: ColorScheme<T>
   spacing: SpacingMap
-  presets: DefaultPresets & T['presets']
+  presets: DefaultVariants & T['presets']
   borderRadius: T['borderRadius']
   media: MediaQueries
   effects: T['effects']

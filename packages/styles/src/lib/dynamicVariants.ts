@@ -22,7 +22,7 @@ export type Value =
   | number
   | ''
 
-export type DynamicPresets = 
+export type DynamicVariants = 
   `${typeof colorVariants[number]}:${keyof IColors}` |
   `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
@@ -32,7 +32,7 @@ export type DynamicPresets =
   `bg:${keyof IColors}` |
   `scale:${Value}`
 
-export const createDynamicPresets = () => {
+export const createDynamicVariants = () => {
   const dynamicVariants = {}
 
   function createVariant(variantName: string, variantReturn: any) {
@@ -80,4 +80,4 @@ export const createDynamicPresets = () => {
   return dynamicVariants
 }
 
-export const dynamicPresets = createDynamicPresets()
+export const dynamicVariants = createDynamicVariants()

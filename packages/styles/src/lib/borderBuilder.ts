@@ -1,5 +1,5 @@
 import { IColors, ICSS } from '../types'
-import { borderDirection } from './dynamicPresets'
+import { borderDirection } from './dynamicVariants'
 import { themeStore } from './themeStore'
 import { capitalize } from './utils'
 

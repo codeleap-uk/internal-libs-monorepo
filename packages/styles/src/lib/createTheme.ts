@@ -2,7 +2,7 @@ import { AppTheme, ColorScheme, Theme } from '../types'
 import { borderBuilder } from './borderBuilder'
 import { buildMediaQueries } from './mediaQuery'
 import { multiplierProperty } from './multiplierProperty'
-import { defaultPresets } from './presets'
+import { defaultVariants } from './defaultVariants'
 import { spacingFactory } from './spacing'
 import { colorSchemaStore, themeStore } from './themeStore'
 
@@ -50,7 +50,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
     },
 
     presets: {
-      ...defaultPresets,
+      ...defaultVariants,
       ...theme.presets,
     },
 

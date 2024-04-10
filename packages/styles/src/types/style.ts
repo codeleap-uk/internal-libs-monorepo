@@ -1,6 +1,6 @@
-import { DynamicPresets } from '../lib/dynamicPresets'
+import { DynamicVariants } from '../lib/dynamicVariants'
 import { Queries } from '../lib/mediaQuery'
-import { DefaultPresets } from '../lib/presets'
+import { DefaultVariants } from '../lib/defaultVariants'
 import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects } from './core'
 import { Multiplier, Spacing } from './spacing'
 
@@ -13,8 +13,8 @@ type Inset =
 export type CommonVariants = 
   Spacing |
   Inset |
-  DynamicPresets |
-  keyof DefaultPresets | 
+  DynamicVariants |
+  keyof DefaultVariants | 
   keyof IAppVariants |
   `effect:${keyof IEffects}`
 

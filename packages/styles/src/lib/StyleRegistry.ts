@@ -3,8 +3,8 @@ import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
 import { createStyles } from './createStyles'
-import { defaultPresets } from './presets'
-import { dynamicPresets } from './dynamicPresets'
+import { defaultVariants } from './defaultVariants'
+import { dynamicVariants } from './dynamicVariants'
 import { isSpacingKey, objectPickBy } from './utils'
 import { StylesCache } from './StylesCache'
 
@@ -487,9 +487,9 @@ export class CodeleapStyleRegistry {
     const insetVariants = objectPickBy(inset, (_, key) => ['top', 'left', 'right', 'bottom'].includes(key))
 
     const variantsStyles = deepmerge({ all: true })(
-      defaultPresets,
+      defaultVariants,
       appVariants,
-      dynamicPresets,
+      dynamicVariants,
       spacingVariants,
       insetVariants
     )

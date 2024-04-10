@@ -1,6 +1,6 @@
 import { ICSS } from '../types'
 
-export const defaultPresets = {
+export const defaultVariants = {
   inline: {
     display: 'inline-block',
   },
@@ -177,7 +177,4 @@ export const defaultPresets = {
   },
 } as const
 
-export type DefaultPresets = Record<
-  keyof typeof defaultPresets,
-  ICSS
->
+export type DefaultVariants = Record<keyof typeof defaultVariants, ICSS>
