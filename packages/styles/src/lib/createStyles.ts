@@ -1,16 +1,14 @@
 import { ICSS, ITheme } from '../types'
 import { themeStore } from './themeStore'
 
-type DefaultStyleShape = {
-  [key:string] : ICSS
-}
+type StylesShape<K extends string = string> = Partial<Record<K, ICSS>>
 
-export function createStyles<Composition extends Record<any, any> = DefaultStyleShape>(
-  styles: Composition | ((theme: ITheme) => Composition),
+export function createStyles<K extends string = string>(
+  styles: StylesShape | ((theme: ITheme) => StylesShape<K>),
 ) {
 
   const compute = () => {
-    let styleObj = {} as Composition
+    let styleObj = {} as StylesShape
     const current = themeStore.getState().current
 
     if (typeof styles === 'function') {
@@ -26,7 +24,7 @@ export function createStyles<Composition extends Record<any, any> = DefaultStyle
   // theme changes. This is necessary because the theme is a singleton which does not cause
   // a re-render when it changes. The end-user will only have to worry about remounting the root component
   // when the theme changes in order to get the new color scheme due to this proxy.
-  return new Proxy(compute() as Composition, {
+  return new Proxy(compute() as StylesShape, {
     get(target, prop) {
       return compute()[prop as string]
     },

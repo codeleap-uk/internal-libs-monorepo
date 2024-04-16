@@ -43,11 +43,11 @@ export class CodeleapStyleRegistry {
 
     let [variantName, value] = variant?.includes(':') ? variant?.split(':') : [variant, null]
 
-    // @ts-ignore
+    // @ts-expect-error
     if (!!theme?.breakpoints[variantName]) {
       const [breakpoint, _variantName, _value] = variant?.split(':')?.length == 2 ? [...variant?.split(':'), null] : variant?.split(':')
 
-      // @ts-ignore
+      // @ts-expect-error
       mediaQuery = theme.media.down(breakpoint)
       value = _value
       variantName = _variantName
@@ -114,10 +114,10 @@ export class CodeleapStyleRegistry {
             [mediaQuery]: stylesheet[variantName][component ?? rootElement]
           }
         })
-      } else {
-        return this.computeCommonVariantStyle(componentName, variant, component)
       }
-    })?.filter(variantStyle => !!variantStyle)
+
+      return this.computeCommonVariantStyle(componentName, variant, component)
+    }).filter(variantStyle => !!variantStyle)
 
     const variantStyle = deepmerge({ all: true })(...variantStyles)
 
@@ -130,7 +130,7 @@ export class CodeleapStyleRegistry {
     const composition = {}
     let isComposition = false
 
-    component.elements.forEach((element) => {
+    component?.elements?.forEach((element) => {
       const hasElement = typeof style[element] === 'object' || Array.isArray(style[element])
 
       if (hasElement) {
@@ -145,7 +145,7 @@ export class CodeleapStyleRegistry {
     }
   }
 
-  isResponsiveStyle(component: AnyStyledComponent, style: any) {
+  isResponsiveStyle(style: any) {
     const responsiveStyleKey = 'breakpoints'
     const responsiveStyles = style[responsiveStyleKey]
 
@@ -193,20 +193,14 @@ export class CodeleapStyleRegistry {
   getResponsiveStyle(componentName: string, responsiveStyleKey: string, style: object) {
     const responsiveStyles = style[responsiveStyleKey]
 
-    if (!responsiveStyles) {
-      return {
-        responsiveStyles: {}
-      }
-    }
+    if (!responsiveStyles) return {}
 
     const stylesheet = this.stylesheets[componentName]
 
     const cache = this.stylesCache.keyFor('responsive', [componentName, responsiveStyles, stylesheet])
 
     if (!!cache.value) {
-      return {
-        responsiveStyles: cache.value
-      }
+      return cache.value
     }
 
     const styles = {}
@@ -228,9 +222,7 @@ export class CodeleapStyleRegistry {
 
     this.stylesCache.cacheFor('responsive', cache.key, styles)
 
-    return {
-      responsiveStyles: styles
-    }
+    return styles
   }
 
   getStyles(componentName: string, style: any, component?: any, predicateObj?: (style: any) => any) {
@@ -273,7 +265,7 @@ export class CodeleapStyleRegistry {
   }
 
   getStyleWithResponsive(componentName: string, style: any, component?: any) {
-    const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(null, style)
+    const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(style)
 
     if (isResponsive) {
       let responsiveStyles = {}
@@ -340,10 +332,7 @@ export class CodeleapStyleRegistry {
     const defaultStyle = mergeWithDefaultStyle ? this.getDefaultVariantStyle(componentName) : {}
 
     if (!style) {
-      return this.mergeStylesWithCache(
-        [defaultStyle],
-        cache.key
-      )
+      return this.mergeStylesWithCache([defaultStyle], cache.key)
     }
 
     const isStyleObject = typeof style === 'object' && !isStyleArray
@@ -360,9 +349,9 @@ export class CodeleapStyleRegistry {
     if (isStyleObject) {
       const { isComposition, composition } = this.isCompositionStyle(registeredComponent, style)
 
-      const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(registeredComponent, style)
+      const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(style)
 
-      const { responsiveStyles } = this.getResponsiveStyle(componentName, responsiveStyleKey, style)
+      const responsiveStyles = this.getResponsiveStyle(componentName, responsiveStyleKey, style)
 
       if (isResponsive) {
         delete style[responsiveStyleKey]
@@ -403,10 +392,10 @@ export class CodeleapStyleRegistry {
             styles.push(...compositionStyles)
           }
 
-          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(registeredComponent, s)
+          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(s)
 
           if (isResponsive) {
-            const { responsiveStyles } = this.getResponsiveStyle(componentName, responsiveStyleKey, s)
+            const responsiveStyles = this.getResponsiveStyle(componentName, responsiveStyleKey, s)
 
             styles.push(responsiveStyles)
 
