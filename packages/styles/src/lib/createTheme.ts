@@ -35,6 +35,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
     value: (n = 1) => theme.baseSpacing * n,
 
     spacing: {
+      value: (n = 1) => theme.baseSpacing * n,
       gap: multiplierProperty(theme.baseSpacing, 'gap'),
       ...spacingFactory(theme.baseSpacing, 'padding'),
       ...spacingFactory(theme.baseSpacing, 'margin'),

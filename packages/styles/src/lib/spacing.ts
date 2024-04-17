@@ -7,7 +7,9 @@ export type Spacings<T extends string, S = boolean> = {
   [Property in (S extends boolean ? SpacingVariants : SpacingShortVariants) as `${T}${string & Property}`]: MultiplierFunction;
 } & {
     [Property in T]: (multiplier: number) => ICSS;
-  }
+} & {
+  value: (multiplier: number) => number
+}
 
 const shortMapValues = {
   'x': 'Horizontal',
