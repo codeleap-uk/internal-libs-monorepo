@@ -25,6 +25,7 @@ import { StylesOf, HTMLProps, ComponentWithDefaultProps } from '../../types/util
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
+import { getTestId } from '../../lib/test'
 
 export * from './styles'
 export * from './mask'
@@ -53,8 +54,8 @@ export type TextInputProps =
   } & ComponentVariants<typeof TextInputPresets>
 
 type InputRef = {
-  isTextInput?: boolean,
-  focus: () => void,
+  isTextInput?: boolean
+  focus: () => void
   getInputRef: () => HTMLInputElement
 }
 
@@ -116,6 +117,10 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
   useImperativeHandle(inputRef, () => {
     return {
       focus: () => {
+        if (isMasked) {
+          innerInputRef.current?.getInputDOMNode()?.focus()
+        }
+        
         innerInputRef.current?.focus?.()
       },
       isTextInput: true,
@@ -201,6 +206,8 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
 
   const inputBaseAction = isPressable ? 'onPress' : 'onClick'
 
+  const testId = getTestId(others)
+
   return (
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
@@ -218,7 +225,9 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
-          // if (isMasked) innerInputRef.current?.onFocus?.()
+          if (isMasked) {
+            innerInputRef.current?.getInputDOMNode()?.focus()
+          }
           innerInputRef.current?.focus?.()
           if (isPressable) onPress?.()
         },
@@ -262,6 +271,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
         ]}
         {...maskProps}
         ref={innerInputRef}
+        data-testid={testId}
       />
     </InputBase>
   )

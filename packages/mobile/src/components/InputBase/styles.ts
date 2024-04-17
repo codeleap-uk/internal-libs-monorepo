@@ -37,14 +37,19 @@ const getIconStyles = (obj, state) => {
       state.hasError && obj['icon:error'], 
       state.disabled && obj['icon:disabled']
     ],
+    'icon:disabled': [
+      state.disabled && obj['icon:disabled']
+    ],
     touchableWrapper: [
       obj.touchableWrapper, 
       state.focused && obj['touchableWrapper:focus'],
       state.hasError && obj['touchableWrapper:error'], 
       state.disabled && obj['touchableWrapper:disabled']
     ],
+    'touchableWrapper:disabled': [
+      state.disabled && obj['touchableWrapper:disabled']
+    ]
   }
-
 }
 
 export const useInputBaseStyles = (props: InputBaseProps) => {
@@ -71,12 +76,14 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const leftIconStyles = [
     generalIconStyles, 
-   getIconStyles(_leftIconStyles, { hasError, disabled, focused })
+    // @ts-ignore
+    getIconStyles(_leftIconStyles, { hasError, disabled: disabled || props?.leftIcon?.disabled, focused })
   ]
 
   const rightIconStyles = [
     generalIconStyles,
-    getIconStyles(_rightIconStyles, { hasError, disabled, focused })
+    // @ts-ignore
+    getIconStyles(_rightIconStyles, { hasError, disabled: disabled || props?.right?.disabled, focused })
   ]
 
   const labelStyle = [
