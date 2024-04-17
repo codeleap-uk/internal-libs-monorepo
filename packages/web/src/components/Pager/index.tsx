@@ -126,6 +126,7 @@ const PagerComponent = (
   return (
     <View css={[variantStyles.wrapper, style]}>
       <Slider
+        adaptiveHeight={true}
         {...rest}
         arrows={false}
         ref={sliderRef}

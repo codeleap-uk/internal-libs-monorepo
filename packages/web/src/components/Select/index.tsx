@@ -225,17 +225,19 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       selectedOption: _selectedOption,
       setSelectedOption: _setSelectedOption,
       loadingMessage,
+      selectRef = null,
       ...otherProps
     } = selectProps
 
-    const innerInputRef = useRef<any>(null)
+    const _innerInputRef = useRef<any>(null)
+    const innerInputRef = selectRef || _innerInputRef
     const innerWrapperRef = useRef(null)
 
     const hasSelectedOptionState = !TypeGuards.isNil(_selectedOption) && TypeGuards.isFunction(_setSelectedOption)
 
-    const initialValue = (loadInitialValue && !TypeGuards.isNil(options)) 
-      ? options?.find((option) => option?.value === value) 
-      : value 
+    const initialValue = (loadInitialValue && !TypeGuards.isNil(options))
+      ? options?.find((option) => option?.value === value)
+      : value
 
     const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(initialValue ?? value)
 

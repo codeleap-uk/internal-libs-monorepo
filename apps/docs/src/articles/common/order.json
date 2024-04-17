@@ -2,7 +2,9 @@
     {
         "name": "root",
         "items": [
-            "index"
+            "index",
+            "os-alert",
+            "app-auth-errors"
         ]
     },
     {
