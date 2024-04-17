@@ -1,8 +1,6 @@
 import { codeleapCommand } from '../lib/Command'
 import fs from 'fs'
 import path from 'path'
-import sharp from 'sharp'
-import { inquirer } from '../lib'
 import '../lib/firebase'
 import { CodeleapCLISettings } from '../types'
 import { CODELEAP_CLI_SETTINGS_PATH } from '../constants'
@@ -310,6 +308,83 @@ async function convertComponents(openai: OpenAI) {
   }
 }
 
+async function convertPages(openai: OpenAI) {
+  const pages = []
+
+  let pagesFiles: string[] = listFiles('./src/scenes/')
+
+  const ignoredFiles = ['Playground/_utils.ts', 'Playground/index.tsx', 'Playground/new.tsx', 'Playground/old.tsx', 'Scenes.tsx']
+
+  for (const page of pagesFiles) {
+    if (!ignoredFiles.includes(page)) {
+      const pageContent = fs.readFileSync(`./src/scenes/${page}`).toString()
+
+      pages.push(pageContent)
+    }
+  }
+
+  for (const page of pages) {
+    const prompt = `
+      Pay attention to what I'm saying, because you will refactor a certain code made in React Native that I will pass on based on the information in this message
+      
+      -------------------
+
+      For example this code
+
+      import { variantProvider } from '@/app'
+
+      function Page() {
+        return (
+          <Example
+            variants={['floating', 'size:1']}
+            style={{ backgroundColor: '#fff' }}
+            styles={{
+              icon: styles.example,
+            }}
+          />
+        )
+      }
+
+      const styles = variantProvider.createComponentStyle((theme) => ({}), true)
+
+      -------------------
+
+      This code should change
+
+      import { createStyles } from '@codeleap/styles'
+
+      function Page() {
+        return (
+          <Example
+            style={['floating', 'size:1', { icon: styles.example, backgroundColor: '#fff' }]}
+          />
+        )
+      }
+
+      const styles = createStyles((theme) => ({}))
+
+      -------------------
+
+      The "variants" and "styles" props become just ONE WITH THE "style" prop and "variantProvider.createComponentStyle" function should be replaced by createStyles function WHICH MUST BE IMPORTED FROM @codeleap/styles
+      However, keep the imports that come from @/app, don't remove them! Just remove the mention of variantProvider
+
+      Now you must refactor the code I'm giving you and take everything I said into account when refactoring
+      Just give me the refactored code:
+      ${page}
+    `
+
+    const propsOpenai = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{
+        role: "user",
+        content: prompt
+      }],
+    })
+
+    console.log('message\n', propsOpenai?.choices?.[0]?.message?.content)
+  }
+}
+
 export const stylesConvertorCommand = codeleapCommand(
   {
     name: commandName,
@@ -331,11 +406,13 @@ export const stylesConvertorCommand = codeleapCommand(
     console.log('Starting conversion', settings)
 
     const openai = new OpenAI({
-      apiKey: '',
+      apiKey: null,
     })
 
     // await convertStylesheets(openai)
 
-    await convertComponents(openai)
+    // await convertComponents(openai)
+
+    await convertPages(openai)
   },
 )
