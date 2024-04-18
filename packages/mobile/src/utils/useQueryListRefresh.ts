@@ -6,6 +6,7 @@ type useQueryListRefresh = (
   listQuery: Parameters<UseListEffect>[0],
   options?: {
     staleTime?: number
+    silentRefresh?: boolean
     initialStale?: boolean
     cancelQueryEnabled?: boolean
     refreshQueryEnabled?: boolean
@@ -20,6 +21,7 @@ export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}
     initialStale = listQuery?.query?.isStale,
     cancelQueryEnabled = true,
     refreshQueryEnabled = true,
+    silentRefresh = false,
     onFocus,
     onBlur,
   } = options
@@ -30,7 +32,7 @@ export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}
   useFocusEffect(
     React.useCallback(() => {
       if (staleRefetch.current && refreshQueryEnabled) {
-        listQuery?.refreshQuery()
+        listQuery?.refreshQuery(silentRefresh)
       }
 
       if (TypeGuards.isFunction(onFocus)) {
@@ -53,6 +55,6 @@ export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}
           onBlur?.()
         }
       }
-    }, [staleRefetch.current])
+    }, [])
   )
 }
