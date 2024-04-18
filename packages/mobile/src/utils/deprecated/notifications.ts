@@ -105,11 +105,6 @@ export class NotificationManager {
       }
     }
 
-    public async getToken() {
-      const _token = await messaging().getToken()
-      return _token
-    }
-
     get currentToken() {
       return this._currentToken
     }

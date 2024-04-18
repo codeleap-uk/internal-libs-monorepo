@@ -16,7 +16,7 @@ type useQueryListRefresh = (
 
 export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}) => {
   const {
-    staleTime = 10000,
+    staleTime = 5000,
     initialStale = listQuery?.query?.isStale,
     cancelQueryEnabled = true,
     refreshQueryEnabled = true,
