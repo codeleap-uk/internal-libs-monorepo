@@ -177,7 +177,7 @@ export class QueryManager<
       }
 
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
-        if (!old?.pages?.length) {
+        if (!old?.pages?.length || (old?.pages?.length > 1 && old?.pages?.every(page => page.results.length <= 0))) {
           old = {
             pageParams: [],
             pages: [
@@ -190,17 +190,20 @@ export class QueryManager<
             ],
           }
         }
+        
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
-        if (args.to == 'end') {
+
+        if (args.to === 'end') {
           const idx = old.pages.length - 1
           old.pages[idx].results.push(...itemsToAppend)
+          old.pages[idx].count += itemsToAppend.length
 
           if (old.pageParams[idx]) {
             // @ts-ignore
             old.pageParams[idx].limit += itemsToAppend.length
           } else {
             old.pageParams[idx] = {
-              limit: itemsToAppend.length,
+              limit: this.options?.limit ?? itemsToAppend.length,
               offset: 0,
             }
           }
@@ -238,14 +241,13 @@ export class QueryManager<
               offset: -itemsToAppend.length,
             }
           }
-
         }
+
         return old
       })
     })
 
     await Promise.all(promises)
-
   }
 
   async removeItem(itemId: T['id']) {
@@ -356,6 +358,8 @@ export class QueryManager<
 
     const hashedKey = hashQueryKey(queryKey)
 
+    const useListEffect = this.options?.useListEffect ?? (() => null)
+
     const query = useInfiniteQuery({
       ...queryOptions,
       queryKey,
@@ -412,6 +416,12 @@ export class QueryManager<
       await this.refresh(filter)
       setRefreshing(false)
     }
+
+    const listEffect = useListEffect({
+      query, 
+      refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
+      cancelQuery: () => this.queryClient.cancelQueries({ queryKey, exact: true }),
+    })
 
     // @ts-ignore
     const items = query.data?.flatItems
@@ -488,7 +498,7 @@ export class QueryManager<
       mutationKey: this.queryKeys.create,
       onMutate: async (data) => {
         options?.mutationOptions?.onMutate?.(data)
-        if (tmpOptions?.current?.optimistic) {
+        if (!!tmpOptions?.current?.optimistic) {
           await this.queryClient.cancelQueries({ queryKey: this.queryKeys.list })
           const addedItem = {
             id: this.generateId(),
@@ -524,7 +534,6 @@ export class QueryManager<
             to: tmpOptions?.current?.appendTo || managerOptions.creation?.appendTo || 'start',
             onListsWithFilters: tmpOptions?.current?.onListsWithFilters,
           })
-
         } else {
           this.updateItems(data)
         }
@@ -533,10 +542,11 @@ export class QueryManager<
 
     const createItem = async (data: Partial<T>, options?: CreateOptions<T>) => {
       const prevOptions = { ...(tmpOptions.current ?? {}) }
-      if (!!options) {
 
+      if (!!options) {
         tmpOptions.current = options
       }
+
       let res: T = null
 
       if (tmpOptions.current?.optimistic) {
