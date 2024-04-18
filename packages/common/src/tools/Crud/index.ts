@@ -358,6 +358,8 @@ export class QueryManager<
 
     const hashedKey = hashQueryKey(queryKey)
 
+    const useListEffect = this.options?.useListEffect ?? (() => null)
+
     const query = useInfiniteQuery({
       ...queryOptions,
       queryKey,
@@ -415,13 +417,11 @@ export class QueryManager<
       setRefreshing(false)
     }
 
-    if (TypeGuards.isFunction(this.options.useListEffect)) {
-      this.options.useListEffect({
-        query, 
-        refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
-        cancelQuery: () => this.queryClient.cancelQueries({ queryKey: queryKey, exact: true }),
-      })
-    }
+    const listEffect = useListEffect({
+      query, 
+      refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
+      cancelQuery: () => this.queryClient.cancelQueries({ queryKey, exact: true }),
+    })
 
     // @ts-ignore
     const items = query.data?.flatItems
