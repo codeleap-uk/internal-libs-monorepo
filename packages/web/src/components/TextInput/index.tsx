@@ -118,6 +118,10 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
   useImperativeHandle(inputRef, () => {
     return {
       focus: () => {
+        if (isMasked) {
+          innerInputRef.current?.getInputDOMNode()?.focus()
+        }
+        
         innerInputRef.current?.focus?.()
       },
       isTextInput: true,
@@ -222,7 +226,9 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
-          // if (isMasked) innerInputRef.current?.onFocus?.()
+          if (isMasked) {
+            innerInputRef.current?.getInputDOMNode()?.focus()
+          }
           innerInputRef.current?.focus?.()
           if (isPressable) onPress?.()
         },
