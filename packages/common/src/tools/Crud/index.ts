@@ -420,12 +420,6 @@ export class QueryManager<
         query, 
         refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
         cancelQuery: () => this.queryClient.cancelQueries({ queryKey: queryKey, exact: true }),
-        appendItem: async (args) => {
-          await this.addItem({
-            onListsWithFilters: filter,
-            ...args,
-          })
-        },
       })
     }
 
