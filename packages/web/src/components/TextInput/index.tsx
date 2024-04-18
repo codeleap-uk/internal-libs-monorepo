@@ -119,6 +119,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
     return {
       focus: () => {
         if (isMasked) {
+          // @ts-expect-error
           innerInputRef.current?.getInputDOMNode()?.focus()
         }
         
@@ -227,6 +228,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
           if (isMasked) {
+            // @ts-expect-error
             innerInputRef.current?.getInputDOMNode()?.focus()
           }
           innerInputRef.current?.focus?.()

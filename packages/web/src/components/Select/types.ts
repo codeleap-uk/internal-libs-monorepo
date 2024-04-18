@@ -96,6 +96,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     loadInitialValue?: boolean
     loadingMessage?: string
     selectedOption?: any
+    selectRef?: any
     setSelectedOption?: any
   } & Omit<
     ReactSelectProps<T, Multi>,
