@@ -1,79 +1,31 @@
-import * as React from 'react'
-import {
-  ComponentVariants,
-
-  useDefaultComponentStyle,
-  useCodeleapContext,
-  arePropsEqual,
-  IconPlaceholder,
-  onUpdate,
-  PropsOf,
-  StylesOf,
-  TypeGuards,
-  getNestedStylesByKey,
-} from '@codeleap/common'
-import { StyleSheet } from 'react-native'
-export * from './styles'
-
-import {
-  IconComposition,
-  IconPresets,
-} from './styles'
-import { Badge, BadgeComponentProps } from '../Badge'
+import React from 'react'
+import { arePropsEqual, TypeGuards } from '@codeleap/common'
+import { Badge } from '../Badge'
 import { View } from '../View'
+import { IconProps } from './types'
+import { themeStore, getNestedStylesByKey } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
-export type IconProps = {
-  name: IconPlaceholder
-  style?: any
-  color?: string
-  variants?: ComponentVariants<typeof IconPresets>['variants']
-  wrapperProps?: Partial<PropsOf<typeof View>>
-  size?: number
-  styles?: StylesOf<IconComposition>
-  source?: string
-} & BadgeComponentProps
+export * from './styles'
+export * from './types'
 
 export const IconComponent = (props: IconProps) => {
   const {
     name,
     style,
-    variants,
     badge = false,
     badgeProps = {},
     wrapperProps = {},
-    styles = {},
     source,
     ...otherProps
   } = props
 
-  const { Theme, logger } = useCodeleapContext()
+  // @ts-expect-error
+  const icons = themeStore(store => (store.current?.icons ?? {}))
 
-  const variantStyles = useDefaultComponentStyle<'u:Icon', typeof IconPresets>('u:Icon', {
-    variants,
-    transform: StyleSheet.flatten,
-    styles: {
-      icon: style,
-      ...styles,
-    },
-    rootElement: 'icon',
-  })
-  const Component = Theme?.icons?.[name] || (source && Theme.icons.RenderSource)
+  const variantStyles = MobileStyleRegistry.current.styleFor(IconComponent.styleRegistryName, style)
 
-  onUpdate(() => {
-    if (!Component && !!name) {
-      logger.warn(
-        `Icon: No icon found in theme for name "${name}".`,
-        { props: { style, name, variants, variantStyles } },
-        'Component',
-      )
-    } else if (!Component && !!source) {
-      logger.warn('Icon: Cannot render source, no RenderSource component in Theme.icons', {
-        source,
-        props: { style, name, variants, variantStyles },
-        Component,
-      }, 'Component')
-    }
-  }, [name])
+  const Component = icons?.[name]
 
   if (!name && !source) {
     return null
@@ -87,7 +39,9 @@ export const IconComponent = (props: IconProps) => {
     const badgeStyles = getNestedStylesByKey('badge', variantStyles)
 
     const sized = {
+      // @ts-expect-error
       height: variantStyles.icon?.size || variantStyles.icon?.height || props?.size,
+      // @ts-expect-error
       width: variantStyles.icon?.size || variantStyles.icon?.width || props?.size,
     }
 
@@ -98,12 +52,18 @@ export const IconComponent = (props: IconProps) => {
 
     return <View {...wrapperProps} style={wrapperStyle}>
       <Component {...otherProps} style={variantStyles.icon} source={source} />
-      <Badge styles={badgeStyles} badge={badge} {...badgeProps} />
+      <Badge style={badgeStyles} badge={badge} {...badgeProps} />
     </View>
   }
 
   return <Component {...otherProps} style={variantStyles.icon} source={source} />
 }
+
+IconComponent.styleRegistryName = 'Icon'
+IconComponent.elements = ['icon', 'iconBadgeWrapper', 'badge']
+IconComponent.rootElement = 'icon'
+
+MobileStyleRegistry.registerComponent(IconComponent)
 
 function areEqual(prevProps, nextProps) {
   const check = ['name', 'style', 'variants', 'renderEmptySpace', 'badgeProps', 'badge']
@@ -111,5 +71,4 @@ function areEqual(prevProps, nextProps) {
   return res
 }
 
-export const Icon = React.memo(IconComponent, areEqual) as typeof IconComponent
-
+export const Icon = React.memo(IconComponent, areEqual) as unknown as typeof IconComponent

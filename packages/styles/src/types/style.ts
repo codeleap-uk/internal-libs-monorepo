@@ -37,3 +37,5 @@ export type StyleProp<
 > = StyleAtom<Composition, Variants> | StyleAtom<Composition, Variants>[]
 
 export type VariantStyleSheet = Record<string, any>
+
+export type StyledProp<T extends string> = StyleProp<Record<T, ICSS>>

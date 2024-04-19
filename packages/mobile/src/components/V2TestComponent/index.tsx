@@ -1,6 +1,6 @@
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { View } from 'react-native'
-import { AnyRecord, GenericStyledComponent, IJSX, StyleProp, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyleProp, StyledComponentProps } from '@codeleap/styles'
 import { ViewV2Composition } from './styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { PropsOf } from '@codeleap/common'
@@ -8,7 +8,6 @@ import { PropsOf } from '@codeleap/common'
 type ViewV2Props<T extends React.ComponentType = typeof View> = {
   component?: T
   style?: StyleProp<ViewV2Composition>
-
 } & PropsOf<T>
 
 export * from './styles'
@@ -37,4 +36,3 @@ ViewV2.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 MobileStyleRegistry.registerComponent(ViewV2)
-

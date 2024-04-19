@@ -1,3 +1,4 @@
+import { ICSS } from '../types'
 import { spacingShortVariants, spacingVariants } from '../types/spacing'
 
 export function capitalize(str: string, reverse = false) {
@@ -30,4 +31,17 @@ export function isSpacingKey(key: string) {
   if (!key) return false
 
   return spacingKeys?.includes(key)
+}
+
+export function getNestedStylesByKey<T extends string>(match: string, styles: Record<T, ICSS>) {
+  const stylesByKey = {}
+
+  for (const [key, value] of Object.entries(styles)) {
+    if (key.startsWith(match)) {
+      const partName = capitalize(key.replace(match, ''), true)
+      stylesByKey[partName] = value
+    }
+  }
+
+  return stylesByKey
 }

@@ -1,70 +1,46 @@
-import * as React from 'react'
-import { forwardRef } from 'react'
-import { ActivityIndicator as Indicator, ActivityIndicatorProps as IndicatorProps, StyleSheet } from 'react-native'
-import {
-
-  useDefaultComponentStyle,
-  ComponentVariants,
-  useCodeleapContext,
-} from '@codeleap/common'
-import { ComponentWithDefaultProps, StylesOf } from '../../types'
-import {
-  ActivityIndicatorComposition,
-  ActivityIndicatorPresets,
-} from './styles'
+import React from 'react'
+import { ActivityIndicator as RNActivityIndicator } from 'react-native'
+import { ActivityIndicatorProps } from './types'
+import { MobileStyleRegistry } from '../../Registry'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
-export type ActivityIndicatorProps =
-  IndicatorProps
- & {
-  variants?: ComponentVariants<typeof ActivityIndicatorPresets>['variants']
-  styles?: StylesOf<ActivityIndicatorComposition>
-  component?: (props: Omit<ActivityIndicatorProps & {ref?: React.Ref<Indicator>}, 'component'>) => JSX.Element
+export * from './types'
+
+export const ActivityIndicator = <T extends React.ComponentType = typeof RNActivityIndicator>(props: ActivityIndicatorProps<T>) => {
+  const {
+    style = {},
+    component: Component = RNActivityIndicator,
+    ...rest
+  } = {
+    ...ActivityIndicator.defaultProps,
+    ...props,
+  }
+
+  const styles = MobileStyleRegistry.current.styleFor(ActivityIndicator.styleRegistryName, style)
+
+  // @ts-expect-error
+  const color = styles?.wrapper?.color || '#000'
+  // @ts-expect-error
+  const size = styles?.wrapper?.height || styles?.wrapper?.width || 'large'
+
+  return (
+    <Component
+      size={size}
+      color={color}
+      style={styles?.wrapper}
+      {...rest}
+    />
+  )
 }
 
-type TActivityIndicator = ComponentWithDefaultProps<ActivityIndicatorProps>
+ActivityIndicator.styleRegistryName = 'ActivityIndicator'
+ActivityIndicator.elements = ['wrapper', 'backCircle', 'frontCircle', 'circle']
+ActivityIndicator.rootElement = 'wrapper'
+ActivityIndicator.defaultProps = {}
 
-export const ActivityIndicator = forwardRef<Indicator, ActivityIndicatorProps>(
-  (activityIndicatorProps, ref) => {
-    const {
-      variants = [],
-      style = {},
-      styles: propStyles = {},
-      component = Indicator,
-      ...props
-    } = {
-      ...ActivityIndicator.defaultProps,
-      ...activityIndicatorProps,
-
-    }
-
-    const variantStyles = useDefaultComponentStyle('ActivityIndicator', {
-      variants,
-      transform: StyleSheet.flatten,
-      styles: propStyles,
-    })
-
-    const { Theme } = useCodeleapContext()
-
-    const styles = StyleSheet.flatten([variantStyles.wrapper, style])
-    const color = styles?.color || Theme.colors.gray
-    const size = styles?.height || styles?.width || 'large'
-
-    const Component = component
-
-    return (
-      <Component
-        size={size}
-        ref={ref}
-        color={color}
-        style={styles}
-        styles={styles}
-        {...props}
-      />
-    )
-  },
-) as TActivityIndicator
-
-ActivityIndicator.defaultProps = {
-  component: forwardRef(({ size, color, style }, ref) => <Indicator size={size} color={color} style={style} ref={ref}/>),
+ActivityIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ActivityIndicator as (<T extends React.ComponentType = typeof RNActivityIndicator>(props: StyledComponentProps<ActivityIndicatorProps<T>, typeof styles>) => IJSX)
 }
+
+MobileStyleRegistry.registerComponent(ActivityIndicator)

@@ -1,45 +1,55 @@
-import { ComponentVariants, getNestedStylesByKey, useDefaultComponentStyle } from '@codeleap/common'
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types'
-import { Badge, BadgeComponentProps } from '../Badge'
-import { Icon, IconProps } from '../Icon'
-import { Touchable, TouchableProps } from '../Touchable'
-import { ActionIconComposition, ActionIconPresets } from './styles'
+import { getNestedStylesByKey } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { Badge } from '../Badge'
+import { Icon } from '../Icon'
+import { Touchable } from '../Touchable'
+import { ActionIconProps } from './types'
 
-/** * IconButton */
-export type ActionIconProps= {
-    iconProps?: Partial<IconProps>
-    /** prop */
-    icon?: IconProps['name']
-    /** prop */
-    name?: IconProps['name']
-    styles?: StylesOf<ActionIconComposition> | StylesOf<ActionIconComposition>[]
-} & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets> & BadgeComponentProps
+export * from './styles'
+export * from './types'
 
 export const ActionIcon = (props: ActionIconProps) => {
-  const { name, icon, iconProps, variants, styles, children, badge = false, badgeProps = {}, ...touchableProps } = props
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    variants, styles, transform: StyleSheet.flatten,
-  })
-  const touchableStyles = getNestedStylesByKey('touchable', variantStyles)
+  const {
+    name,
+    icon,
+    iconProps,
+    children,
+    badge = false,
+    badgeProps = {},
+    style,
+    ...touchableProps
+  } = props
 
-  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+  const styles = MobileStyleRegistry.current.styleFor(ActionIcon.styleRegistryName, style)
 
-  return <Touchable styles={touchableStyles} {...touchableProps}>
-    <Icon name={icon ?? name} style={
-      [
-        variantStyles.icon,
-        touchableProps?.disabled && variantStyles['icon:disabled'],
-      ]} {...iconProps}/>
-    {children}
+  const touchableStyles = getNestedStylesByKey('touchable', styles)
+  const badgeStyles = getNestedStylesByKey('badge', styles)
 
-    <Badge badge={badge} style={badgeStyles} {...badgeProps} />
-  </Touchable>
+  return (
+    <Touchable style={touchableStyles} {...touchableProps}>
+      <Icon
+        name={icon ?? name}
+        style={[
+          styles.icon,
+          touchableProps?.disabled && styles['icon:disabled'],
+        ]}
+        {...iconProps}
+      />
+
+      {children}
+
+      <Badge badge={badge} style={badgeStyles} {...badgeProps} />
+    </Touchable>
+  )
 }
+
+ActionIcon.styleRegistryName = 'ActionIcon'
+ActionIcon.elements = ['icon', 'touchable', 'badge']
+ActionIcon.rootElement = 'icon'
 
 ActionIcon.defaultProps = {
   hitSlop: 10,
 }
 
-export * from './styles'
+MobileStyleRegistry.registerComponent(ActionIcon)

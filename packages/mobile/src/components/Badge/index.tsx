@@ -1,33 +1,12 @@
 import React from 'react'
-import { ComponentVariants, PropsOf, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { Text } from '../Text'
 import { View, ViewProps } from '../View'
-import { BadgeComposition, BadgePresets } from './styles'
-import { StyleSheet } from 'react-native'
+import { BadgeContent, BadgeProps } from './types'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
-
-export type BadgeProps = ComponentVariants<typeof BadgePresets>
-  & ViewProps
-  & {
-    styles?: StylesOf<BadgeComposition>
-    maxCount?: number
-    minCount?: number
-    debugName?: string
-    innerWrapperProps?: Partial<PropsOf<typeof View>>
-    textProps?: Partial<PropsOf<typeof Text>>
-    getBadgeContent?: (props: BadgeContent) => string
-    renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
-    disabled?: boolean
-    badge?: number | boolean
-  }
-
-type BadgeContent = BadgeProps & { count: number }
-
-export type BadgeComponentProps = {
-  badge?: BadgeProps['badge']
-  badgeProps?: Partial<BadgeProps>
-}
+export * from './types'
 
 const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   if (Number(count) > maxCount) {
@@ -60,8 +39,6 @@ export const Badge = (props: BadgeProps) => {
     minCount,
     getBadgeContent,
     renderBadgeContent,
-    styles = {},
-    variants,
     disabled,
     style = {},
     badge,
@@ -72,17 +49,11 @@ export const Badge = (props: BadgeProps) => {
 
   if (!visible) return null
 
-  const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {
-    variants,
-    styles,
-    rootElement: 'wrapper',
-    transform: StyleSheet.flatten,
-  })
+  const variantStyles = MobileStyleRegistry.current.styleFor(Badge.styleRegistryName, style)
 
   const wrapperStyles: ViewProps['style'] = [
     variantStyles?.wrapper,
     (disabled && variantStyles?.['wrapper:disabled']),
-    style,
   ]
 
   const innerWrapperStyles: ViewProps['style'] = [
@@ -110,10 +81,7 @@ export const Badge = (props: BadgeProps) => {
   }
 
   return (
-    <View
-      {...rest}
-      style={wrapperStyles}
-    >
+    <View {...rest} style={wrapperStyles}>
       <View {...innerWrapperProps} style={innerWrapperStyles}>
         {showContent
           ? <BadgeContent
@@ -131,4 +99,7 @@ export const Badge = (props: BadgeProps) => {
   )
 }
 
+Badge.styleRegistryName = 'Badge'
+Badge.elements = ['wrapper', 'innerWrapper', 'count']
+Badge.rootElement = 'wrapper'
 Badge.defaultProps = defaultProps
