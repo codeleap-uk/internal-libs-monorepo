@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards, onUpdate, IconPlaceholder } from '@codeleap/common'
+import { FormTypes, useValidate, useState, TypeGuards, onUpdate, IconPlaceholder, useEffect } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -240,6 +240,12 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       : value
 
     const [selectedOption, setSelectedOption] = hasSelectedOptionState ? [_selectedOption, _setSelectedOption] : useState(initialValue ?? value)
+
+    useEffect(() => {
+      if (loadInitialValue && !selectedOption && !!initialValue) {
+        setSelectedOption(initialValue)
+      }
+    }, [!!initialValue])
 
     const [_isFocused, setIsFocused] = useState(false)
     const [loadedOptions, setLoadedOptions] = useState(false)

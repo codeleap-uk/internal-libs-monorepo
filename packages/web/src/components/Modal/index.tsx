@@ -386,6 +386,10 @@ export const Modal = (props) => {
         setIndex(visible, modalId.current)
       }, visible ? 0 : 500)
     }
+
+    return () => {
+      if (scrollLock) modalScrollLock(false, modalId.current)
+    }
   }, [visible])
 
   const content = <ModalContent {...props} visible={visible} toggle={toggle} id={modalId.current} />
