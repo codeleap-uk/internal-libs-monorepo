@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.22.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.22.1...v3.22.2) (2024-04-23)
+
+
+### Bug Fixes
+
+* **web:** modal scroll lock unmount, select load value ([0071663](https://github.com/codeleap-uk/internal-libs-monorepo/commit/007166361e14e473ef39de9c611eb22c92ddda43))
+
 ### [3.22.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.22.0...v3.22.1) (2024-03-22)
 
 ## [3.22.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.9...v3.22.0) (2024-03-19)
