@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.23.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.3...v3.23.0) (2024-04-24)
+
+
+### Features
+
+* **web:** Navigation ([e9ea572](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e9ea57254b8c193b482c55e9b99b43e11def9af4))
+
+
+### Bug Fixes
+
+* **mobile:** number increment icon disabled ([0a98078](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0a98078b37758cd58977a1d3d3ea42224fe5ef12))
+* **web:** modal scroll lock unmount, select load value ([0071663](https://github.com/codeleap-uk/internal-libs-monorepo/commit/007166361e14e473ef39de9c611eb22c92ddda43))
+* **web:** textInput mask focus ([e46181d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e46181d26f4a3f37d4db3d272d1d62fa0c02adee))
+
 ### [3.22.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.22.1...v3.22.2) (2024-04-23)
 
 
