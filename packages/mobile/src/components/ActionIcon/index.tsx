@@ -1,5 +1,5 @@
 import React from 'react'
-import { getNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { Badge } from '../Badge'
 import { Icon } from '../Icon'
@@ -19,7 +19,10 @@ export const ActionIcon = (props: ActionIconProps) => {
     badgeProps = {},
     style,
     ...touchableProps
-  } = props
+  } = {
+    ...ActionIcon.defaultProps,
+    ...props,
+  }
 
   const styles = MobileStyleRegistry.current.styleFor(ActionIcon.styleRegistryName, style)
 
@@ -47,6 +50,10 @@ export const ActionIcon = (props: ActionIconProps) => {
 ActionIcon.styleRegistryName = 'ActionIcon'
 ActionIcon.elements = ['icon', 'touchable', 'badge']
 ActionIcon.rootElement = 'icon'
+
+ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ActionIcon as (props: StyledComponentProps<ActionIconProps, typeof styles>) => IJSX
+}
 
 ActionIcon.defaultProps = {
   hitSlop: 10,

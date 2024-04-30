@@ -1,47 +1,24 @@
-import {
-  ComponentVariants,
-  IconPlaceholder,
-  TypeGuards,
-  matchInitialToColor,
-  useDefaultComponentStyle,
-  useMemo,
-  getNestedStylesByKey,
-} from '@codeleap/common'
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types'
-import { AvatarComposition, AvatarPresets } from './styles'
-import { Image, ImageProps } from '../Image'
+import { TypeGuards, matchInitialToColor, useMemo, getNestedStylesByKey } from '@codeleap/common'
+import { Image } from '../Image'
 import { Touchable } from '../Touchable'
 import { Text } from '../Text'
-import { View, ViewProps } from '../View'
+import { View } from '../View'
 import { Icon } from '../Icon'
-import { Badge, BadgeComponentProps } from '../Badge'
+import { Badge } from '../Badge'
+import { AvatarProps } from './types'
+import { MobileStyleRegistry } from '../../Registry'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export type AvatarProps = ComponentVariants<typeof AvatarPresets> & {
-  styles?: StylesOf<AvatarComposition>
-  image?: ImageProps['source']
-  name?: string | string[]
-  debugName: string
-  firstNameOnly?: boolean
-  text?: string
-  description?: string
-  icon?: IconPlaceholder
-  badgeIcon?: IconPlaceholder
-  style?: ViewProps['style']
-  onPress?: () => void
-  noFeedback?: boolean
-} & BadgeComponentProps
+export * from './styles'
+export * from './types'
 
-export const Avatar = (props:AvatarProps) => {
+export const Avatar = (props: AvatarProps) => {
   const {
     debugName,
     name = '',
     firstNameOnly = true,
     image,
-    variants = [],
-    styles,
-    style,
     icon,
     badgeIcon,
     text,
@@ -50,48 +27,47 @@ export const Avatar = (props:AvatarProps) => {
     noFeedback,
     badge = false,
     badgeProps = {},
+    style,
     ...viewProps
-  } = props
+  } = {
+    ...Avatar.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle('u:Avatar', {
-    variants,
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(Avatar.styleRegistryName, style)
 
   const hasImage = !!image
 
   const { initials, randomColor } = useMemo(() => {
-    const [first = '', last = ''] = TypeGuards.isString(name)
-      ? name.split(' ')
-      : name
+    const [first = '', last = ''] = TypeGuards.isString(name) ? name.split(' ') : name
     const initials = [first[0]]
-    if (!firstNameOnly) {
-      initials.push(last[0])
-    }
+    
+    if (!firstNameOnly) initials.push(last[0])
+
     return {
-      initials: initials.join(' '),
+      initials: initials?.join(' '),
       randomColor: matchInitialToColor(first[0]),
     }
   }, [name, firstNameOnly])
 
   const renderContent = () => {
-    if (hasImage) return <Image source={image} style={variantStyles.image} />
-    if (icon) return <Icon name={icon} style={variantStyles.icon} />
-    return <Text text={text || initials} style={variantStyles.initials} />
+    if (hasImage) return <Image source={image} style={styles.image} />
+    if (icon) return <Icon name={icon} style={styles.icon} />
+    return <Text text={text || initials} style={styles.initials} />
   }
 
-  const hasBackgroundColor = !!variantStyles?.touchable?.backgroundColor
+  // @ts-expect-error
+  const hasBackgroundColor = !!styles?.touchable?.backgroundColor
 
-  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+  const badgeStyles = getNestedStylesByKey('badge', styles)
 
   return (
-    <View style={[variantStyles.wrapper, style]} {...viewProps}>
+    <View style={styles.wrapper} {...viewProps as any}>
       <Touchable
-        debugName={'Avatar ' + debugName}
+        debugName={'Avatar:' + debugName}
         onPress={() => onPress?.()}
         style={[
-          variantStyles.touchable,
+          styles.touchable,
           !hasBackgroundColor && {
             backgroundColor: randomColor,
           },
@@ -100,27 +76,37 @@ export const Avatar = (props:AvatarProps) => {
       >
         {renderContent()}
 
-        {!!description && (
-          <View style={variantStyles.descriptionOverlay}>
-            <Text text={description} style={variantStyles.description} />
+        {!!description ? (
+          <View style={styles.descriptionOverlay}>
+            <Text text={description} style={styles.description} />
           </View>
-        )}
+        ) : null}
 
         <Badge badge={badge} style={badgeStyles} {...badgeProps} />
       </Touchable>
 
-      {badgeIcon && (
+      {badgeIcon ? (
         <Touchable
-          debugName={`${debugName} badge`}
-          style={variantStyles.badgeIconWrapper}
+          debugName={`AvatarBadge:${debugName}`}
+          style={styles.badgeIconWrapper}
           onPress={() => onPress?.()}
           noFeedback
         >
-          <Icon name={badgeIcon} style={variantStyles.badgeIcon} />
+          <Icon name={badgeIcon} style={styles.badgeIcon} />
         </Touchable>
-      )}
+      ) : null}
     </View>
   )
 }
 
-export * from './styles'
+Avatar.styleRegistryName = 'Avatar'
+Avatar.elements = ['wrapper', 'touchable', 'initials', 'image', 'icon', 'description', 'badge']
+Avatar.rootElement = 'wrapper'
+
+Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Avatar as (props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX
+}
+
+Avatar.defaultProps = {}
+
+MobileStyleRegistry.registerComponent(Avatar)
