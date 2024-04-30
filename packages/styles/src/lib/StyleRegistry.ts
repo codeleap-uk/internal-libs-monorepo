@@ -1,4 +1,4 @@
-import { AnyRecord, AnyStyledComponent, ICSS, InsetMap, ITheme, SpacingMap, StyleProp, VariantStyleSheet } from '../types'
+import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleProp, VariantStyleSheet } from '../types'
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
@@ -33,10 +33,11 @@ export class CodeleapStyleRegistry {
     const cache = this.stylesCache.keyFor('common', variant)
 
     if (!!cache.value) {
-      return cache.value
+      return createStyles({
+        [component]: cache.value
+      })
     }
 
-    const { rootElement } = this.getRegisteredComponent(componentName)
     const theme = this.theme.current
 
     let mediaQuery = null
@@ -64,32 +65,28 @@ export class CodeleapStyleRegistry {
     }
 
     if (!!mediaQuery) {
-      const commonStyles = createStyles({
-        [component ?? rootElement]: {
-          [mediaQuery]: style
-        }
-      })
-
-      this.stylesCache.cacheFor('common', cache.key, commonStyles)
-
-      return commonStyles
+      style = {
+        [mediaQuery]: style
+      }
     }
 
     const commonStyles = createStyles({
-      [component ?? rootElement]: style
+      [component]: style
     })
 
-    this.stylesCache.cacheFor('common', cache.key, commonStyles)
+    this.stylesCache.cacheFor('common', cache.key, style)
 
     return commonStyles
   }
 
-  computeVariantStyle(componentName: string, variants: string[], component = null): ICSS {
+  computeVariantStyle(componentName: string, variants: string[], _component = null): ICSS {
     const { rootElement } = this.getRegisteredComponent(componentName)
+
+    const component = _component ?? rootElement
 
     const stylesheet = this.stylesheets[componentName]
 
-    const cache = this.stylesCache.keyFor('variants', [componentName, (component ?? rootElement), stylesheet, variants])
+    const cache = this.stylesCache.keyFor('variants', { componentName, component, stylesheet, variants })
 
     if (!!cache.value) {
       return cache.value
@@ -110,8 +107,8 @@ export class CodeleapStyleRegistry {
         const mediaQuery = theme.media.down(breakpoint)
 
         return createStyles({
-          [component ?? rootElement]: {
-            [mediaQuery]: stylesheet[variantName][component ?? rootElement]
+          [component]: {
+            [mediaQuery]: stylesheet[variantName][component]
           }
         })
       }
@@ -128,19 +125,25 @@ export class CodeleapStyleRegistry {
 
   isCompositionStyle(component: AnyStyledComponent, style: any) {
     const composition = {}
-    let isComposition = false
 
-    component?.elements?.forEach((element) => {
-      const hasElement = typeof style[element] === 'object' || Array.isArray(style[element])
+    const styleKeys = Object.keys(style)
 
-      if (hasElement) {
-        isComposition = true
-        composition[element] = style[element]
+    let elements = []
+
+    for (const element of component?.elements) {
+      const componentElements = styleKeys?.filter(k => k?.startsWith(element))
+
+      if (componentElements?.length >= 1) {
+        elements = [...elements, ...componentElements]
       }
-    })
+    }
+
+    for (const element of elements) {
+      composition[element] = style[element]
+    }
 
     return {
-      isComposition,
+      isComposition: elements?.length >= 1,
       composition,
     }
   }
@@ -197,7 +200,7 @@ export class CodeleapStyleRegistry {
 
     const stylesheet = this.stylesheets[componentName]
 
-    const cache = this.stylesCache.keyFor('responsive', [componentName, responsiveStyles, stylesheet])
+    const cache = this.stylesCache.keyFor('responsive', { componentName, responsiveStyles, stylesheet })
 
     if (!!cache.value) {
       return cache.value
@@ -320,7 +323,7 @@ export class CodeleapStyleRegistry {
   styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
     const stylesheet = this.stylesheets[componentName]
 
-    const cache = this.stylesCache.keyFor('components', [componentName, style, stylesheet])
+    const cache = this.stylesCache.keyFor('components', { componentName, style, stylesheet })
 
     if (!!cache.value) {
       return cache.value as T
