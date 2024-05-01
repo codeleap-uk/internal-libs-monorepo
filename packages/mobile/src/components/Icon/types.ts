@@ -4,7 +4,8 @@ import { ViewProps } from '../View'
 import { IconComposition } from './styles'
 
 export type IconProps =
-  BadgeComponentProps & {
+  BadgeComponentProps & 
+  {
     name: AppIcon
     style?: StyledProp<IconComposition>
     color?: string

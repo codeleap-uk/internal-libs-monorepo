@@ -23,7 +23,7 @@ export const IconComponent = (props: IconProps) => {
   // @ts-expect-error
   const icons = themeStore(store => (store.current?.icons ?? {}))
 
-  const variantStyles = MobileStyleRegistry.current.styleFor(IconComponent.styleRegistryName, style)
+  const styles = MobileStyleRegistry.current.styleFor(IconComponent.styleRegistryName, style)
 
   const Component = icons?.[name]
 
@@ -36,27 +36,27 @@ export const IconComponent = (props: IconProps) => {
   }
 
   if (badge || TypeGuards.isNumber(badge)) {
-    const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+    const badgeStyles = getNestedStylesByKey('badge', styles)
 
     const sized = {
       // @ts-expect-error
-      height: variantStyles.icon?.size || variantStyles.icon?.height || props?.size,
+      height: styles.icon?.size || styles.icon?.height || props?.size,
       // @ts-expect-error
-      width: variantStyles.icon?.size || variantStyles.icon?.width || props?.size,
+      width: styles.icon?.size || styles.icon?.width || props?.size,
     }
 
     const wrapperStyle = [
       sized,
-      (variantStyles.iconBadgeWrapper ?? {}),
+      (styles.iconBadgeWrapper ?? {}),
     ]
 
     return <View {...wrapperProps} style={wrapperStyle}>
-      <Component {...otherProps} style={variantStyles.icon} source={source} />
+      <Component {...otherProps} style={styles.icon} source={source} />
       <Badge style={badgeStyles} badge={badge} {...badgeProps} />
     </View>
   }
 
-  return <Component {...otherProps} style={variantStyles.icon} source={source} />
+  return <Component {...otherProps} style={styles.icon} source={source} />
 }
 
 IconComponent.styleRegistryName = 'Icon'

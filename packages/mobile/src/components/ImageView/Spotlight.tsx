@@ -166,9 +166,7 @@ export type SpotlightProps = {
 } & ImageViewProps
 
 const DefaultFooterComponent: SpootlightFooterComponent = ({ imageIndex, imagesLength }) => (
-  <View variants={['marginBottom:5', 'alignCenter']}>
-    <Text text={imageIndex + 1 + '/' + imagesLength} />
-  </View>
+  <View><Text text={imageIndex + 1 + '/' + imagesLength} /></View>
 )
 
 export const Spotlight = (props: SpotlightProps) => {
