@@ -6,6 +6,7 @@ import { useKeyboardPaddingStyle } from '../../utils'
 import { ScrollProps, ScrollRef } from './types'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { ReactElement } from 'react'
 
 export * from './styles'
 export * from './types'
@@ -85,7 +86,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
       </Component>
     )
   },
-) as unknown as ((props: ScrollProps) => IJSX) & GenericStyledComponentAttributes<AnyRecord> & { defaultProps?: Partial<ScrollProps> }
+) as unknown as ((props: ScrollProps) => ReactElement) & GenericStyledComponentAttributes<AnyRecord> & { defaultProps?: Partial<ScrollProps> }
 
 Scroll.styleRegistryName = 'Scroll'
 Scroll.elements = ['wrapper', 'content']

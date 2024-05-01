@@ -1,65 +1,22 @@
-import * as React from 'react'
-import { forwardRef } from 'react'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-
-  useCodeleapContext,
-  AnyFunction,
-  TypeGuards,
-  onMount,
-} from '@codeleap/common'
-import { Pressable, StyleSheet, View as RNView, Insets, Platform, PressableProps, ViewStyle, StyleProp } from 'react-native'
-import { TouchableComposition, TouchablePresets } from './styles'
-import { StylesOf } from '../../types'
+import React, { forwardRef } from 'react'
+import { useCodeleapContext, TypeGuards, onMount } from '@codeleap/common'
+import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
-import { usePressableFeedback } from '../../utils'
+import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Keyboard } from 'react-native'
-
 import { PressableRipple } from '../../modules/PressableRipple'
-export type TouchableProps =
-  Omit<
-    PressableProps,
-    'onPress' | 'children' | 'style'
-  > & {
-    variants?: ComponentVariants<typeof TouchablePresets>['variants']
-    component?: any
-    ref?: React.Ref<RNView>
-    debugName: string
-    activeOpacity?: number
-    debugComponent?: string
-    onPress?: AnyFunction
-    noFeedback?: boolean
-    debounce?: number
-    leadingDebounce?: boolean
-    styles?: StylesOf<TouchableComposition>
-    setPressed?: (param: boolean) => void
-    rippleDisabled?: boolean
-    children?: React.ReactNode
-    style?: StyleProp<ViewStyle>
-    analyticsEnabled?: boolean
-    analyticsName?: string
-    analyticsData?: Record<string, any>
-    dismissKeyboard?: boolean
-  }
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { TouchableProps } from './types'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
-const defaultProps: Partial<TouchableProps> = {
-  variants: [],
-  debounce: 500,
-  noFeedback: false,
-  rippleDisabled: false,
-  analyticsEnabled: false,
-  analyticsName: null,
-  analyticsData: {},
-  dismissKeyboard: true,
-}
-const _Touchable = forwardRef<
+export * from './types'
+
+export const Touchable = forwardRef<
   RNView,
   TouchableProps
 >((touchableProps, ref) => {
   const {
-    variants = [],
     children,
     onPress,
     style,
@@ -68,7 +25,6 @@ const _Touchable = forwardRef<
     debounce,
     leadingDebounce,
     noFeedback,
-    styles,
     setPressed,
     rippleDisabled,
     analyticsEnabled,
@@ -77,7 +33,7 @@ const _Touchable = forwardRef<
     dismissKeyboard,
     ...props
   } = {
-    ...defaultProps,
+    ...Touchable.defaultProps,
     ...touchableProps,
   }
 
@@ -91,12 +47,7 @@ const _Touchable = forwardRef<
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchablePresets>('u:Touchable', {
-    variants,
-    transform: StyleSheet.flatten,
-    rootElement: 'wrapper',
-    styles,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(Touchable.styleRegistryName, style)
 
   const { logger } = useCodeleapContext()
 
@@ -110,7 +61,7 @@ const _Touchable = forwardRef<
     const _onPress = () => {
       logger.log(
         `<${debugComponent || 'Touchable'}/>  pressed`,
-        debugName || variants,
+        debugName,
         'User interaction',
       )
       if (dismissKeyboard) {
@@ -142,7 +93,7 @@ const _Touchable = forwardRef<
 
   }
 
-  const _styles = StyleSheet.flatten([variantStyles.wrapper, props?.disabled && variantStyles['wrapper:disabled'], style])
+  const _styles = StyleSheet.flatten([styles?.wrapper, props?.disabled && styles?.['wrapper:disabled']])
 
   const disableFeedback = !onPress || noFeedback
 
@@ -150,7 +101,7 @@ const _Touchable = forwardRef<
     hightlightPropertyIn: 'backgroundColor',
     hightlightPropertyOut: 'backgroundColor',
     disabled: disableFeedback,
-    feedbackConfig: variantStyles?.feedback,
+    feedbackConfig: styles?.feedback as TouchableFeedbackConfig,
   })
 
   const Wrapper = View
@@ -165,7 +116,6 @@ const _Touchable = forwardRef<
       'bottom!',
       'position!',
       'transform!',
-      // 'flex!',
     ]
 
     const radiusKey = [
@@ -193,6 +143,7 @@ const _Touchable = forwardRef<
         return key.startsWith(k)
       }
     }
+
     Object.entries(_styles).forEach(([key, value]) => {
       if (radiusKey.some(k => match(k, key))) {
         wrapperStyle[key] = value
@@ -211,10 +162,12 @@ const _Touchable = forwardRef<
         pressableStyle[key] = value
       }
     })
+
     if (wrapperStyle.position === 'absolute') {
       pressableStyle.width = '100%'
       pressableStyle.height = '100%'
     }
+    
     wrapperStyle.overflow = 'visible'
 
     return {
@@ -240,7 +193,7 @@ const _Touchable = forwardRef<
           onPress={press}
           style={[
             pressableStyle,
-            variantStyles.pressable,
+            styles?.pressable,
           ]}
           {...props}
           rippleFades={false}
@@ -259,7 +212,7 @@ const _Touchable = forwardRef<
           style={({ pressed }) => ([
             pressableStyle,
             getFeedbackStyle(pressed),
-            variantStyles.pressable,
+            styles?.pressable,
           ])}
           {...props}
           ref={ref}
@@ -269,10 +222,25 @@ const _Touchable = forwardRef<
       )}
     </Wrapper>
   )
-})
-
-export const Touchable = _Touchable as ((props: TouchableProps) => JSX.Element) & {
+}) as unknown as ((props: TouchableProps) => JSX.Element) & {
   defaultProps: Partial<TouchableProps>
+} & GenericStyledComponentAttributes<AnyRecord>
+
+Touchable.styleRegistryName = 'Touchable'
+Touchable.elements = ['wrapper', 'feedback', 'pressable']
+Touchable.rootElement = 'wrapper'
+
+Touchable.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Touchable as (props: StyledComponentProps<TouchableProps, typeof styles>) => IJSX
 }
 
-Touchable.defaultProps = defaultProps
+Touchable.defaultProps = {
+  debounce: 500,
+  noFeedback: false,
+  rippleDisabled: false,
+  analyticsEnabled: false,
+  analyticsName: null,
+  dismissKeyboard: true,
+}
+
+MobileStyleRegistry.registerComponent(Touchable)

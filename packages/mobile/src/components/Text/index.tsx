@@ -1,34 +1,23 @@
-import * as React from 'react'
-import { forwardRef } from 'react'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-  BaseViewProps,
-  TypeGuards,
-  useState,
-} from '@codeleap/common'
-import { Animated, Platform, StyleSheet, Text as NativeText, TextProps as RNTextProps } from 'react-native'
-import { usePressableFeedback } from '../../utils'
-import { TextPresets } from './styles'
-import { ComponentWithDefaultProps } from '../../types'
+import React, { forwardRef, useState, ReactElement } from 'react'
+import { TypeGuards } from '@codeleap/common'
+import { Animated, Platform, Text as NativeText } from 'react-native'
+import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
+import { TextProps } from './types'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 
-export type TextProps = RNTextProps & {
-  text?: React.ReactNode
-  variants?: ComponentVariants<typeof TextPresets>['variants']
-  animated?: boolean
-  colorChangeConfig?: Partial<Animated.TimingAnimationConfig>
-  debugName?: string
-  debounce?: number
-  pressDisabled?: boolean
-}
-
-const _Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
-  const { variants = [], text, children, onPress, style, debounce = 1000, pressDisabled, ...props } = {
-    ...Text.defaultProps,
-    ...textProps,
-  }
+export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
+  const {
+    text,
+    children,
+    onPress,
+    style,
+    debounce = 1000,
+    pressDisabled,
+    ...props
+  } = textProps
 
   const pressPolyfillEnabled = Platform.select({
     ios: props.suppressHighlighting,
@@ -38,7 +27,7 @@ const _Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const [pressed, setPressed] = useState(false)
   const pressedRef = React.useRef(false)
 
-  const _onPress:TextProps['onPress'] = (e) => {
+  const _onPress: TextProps['onPress'] = (e) => {
     if (!onPress) return
 
     if (TypeGuards.isNumber(debounce)) {
@@ -65,13 +54,8 @@ const _Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
       }
     }
   }
-  const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
-    variants,
-    transform: StyleSheet.flatten,
-    rootElement: 'text',
-  })
 
-  const styles = StyleSheet.flatten([variantStyles.text, style])
+  const styles = MobileStyleRegistry.current.styleFor(Text.styleRegistryName, style)
 
   if (!!text && !TypeGuards.isString(text)) return <>{text}</>
 
@@ -79,34 +63,41 @@ const _Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
 
   const { getFeedbackStyle } = usePressableFeedback(styles, {
     disabled: !pressPolyfillEnabled,
-    feedbackConfig: variantStyles.pressFeedback,
+    feedbackConfig: styles?.pressFeedback as TouchableFeedbackConfig,
     hightlightPropertyIn: 'color',
     hightlightPropertyOut: 'backgroundColor',
   })
+
   const feedbackStyle = pressPolyfillEnabled ? getFeedbackStyle(pressed) : undefined
 
   const pressProps = !!onPress ? {
     onPress: pressDisabled ? null : _onPress,
   } : {}
 
-  return <Component {...props}
-    onPressIn={handlePress(true)} onPressOut={handlePress(false)}
-    style={[styles, feedbackStyle, !!onPress && pressDisabled ? variantStyles['text:disabled'] : null]}
-    allowFontScaling={false}
-    {...pressProps}
-    // @ts-ignore
-    ref={ref}
-  >
-    {text}
-    {children}
-  </Component>
+  return (
+    <Component
+      {...props}
+      onPressIn={handlePress(true)} onPressOut={handlePress(false)}
+      style={[styles?.text, feedbackStyle, !!onPress && pressDisabled ? styles['text:disabled'] : null]}
+      allowFontScaling={false}
+      {...pressProps}
+      // @ts-ignore
+      ref={ref}
+    >
+      {text}
+      {children}
+    </Component>
+  )
+}) as unknown as ((props: TextProps & { ref?: React.MutableRefObject<NativeText> }) => ReactElement) & GenericStyledComponentAttributes<AnyRecord>
 
-})
+Text.styleRegistryName = 'Text'
+Text.elements = ['text', 'pressFeedback']
+Text.rootElement = 'text'
 
-export const Text = _Text as ComponentWithDefaultProps<TextProps & {ref?: React.MutableRefObject<NativeText> }>
-
-Text.defaultProps = {
+Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Text as (props: StyledComponentProps<TextProps & { ref?: React.MutableRefObject<NativeText> }, typeof styles>) => IJSX
 }
 
-export const AnimatedText = Animated.createAnimatedComponent(Text)
+MobileStyleRegistry.registerComponent(Text)
 
+export const AnimatedText = Animated.createAnimatedComponent(Text)

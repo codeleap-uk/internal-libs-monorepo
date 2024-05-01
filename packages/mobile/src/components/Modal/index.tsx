@@ -149,6 +149,7 @@ export const Modal = (modalProps: ModalProps) => {
         }}
       />
 
+      {/* @ts-expect-error */}
       <ScrollComponent
         style={scrollStyle}
         contentContainerStyle={styles?.scrollContent}

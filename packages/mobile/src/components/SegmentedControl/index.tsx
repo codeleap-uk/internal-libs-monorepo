@@ -1,51 +1,20 @@
-import React, { ReactElement, useImperativeHandle, useMemo, useRef } from 'react'
-import { Scroll, ScrollProps, ScrollRef } from '../Scroll'
-
-import { Easing, StyleSheet } from 'react-native'
-import { FormTypes, getNestedStylesByKey, PropsOf, useCodeleapContext, useDefaultComponentStyle, useState } from '@codeleap/common'
-import { SegmentedControlComposition, SegmentedControlPresets } from './styles'
-import { Touchable } from '../Touchable'
-import { StylesOf } from '../../types/utility'
+import React, { ReactElement, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { Scroll } from '../Scroll'
+import { Easing, ViewStyle } from 'react-native'
 import { Text } from '../Text'
 import { View } from '../View'
-import { InputLabel } from '../InputLabel'
-import { useAnimatedVariantStyles, TransitionConfig } from '../../utils'
+import { useAnimatedVariantStyles } from '../../utils'
 import { SegmentedControlOption } from './Option'
-import { SegmentedControlOptionProps } from './Option'
+import { SegmentedControlProps, SegmentedControlRef } from './types'
+import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
+export * from './types'
 
-export type SegmentedControlRef = ScrollRef & {
-  scrollTo: (index: number) => void
-  scrollToCurrent: () => void
-}
-
-const DefaultBubble = (props: Partial<SegmentedControlProps>) => {
-  const {
-    style,
-
-  } = props
-  return <View
-    animated
-    style={style}
-  />
-}
-
-export type SegmentedControlProps<T = string> = ScrollProps & {
-  options: SegmentedControlOptionProps[]
-  onValueChange: (value: T) => any
-  value: T
-  debugName: string
-  animation?: TransitionConfig
-  textProps?: Partial<PropsOf<typeof Text>>
-  touchableProps?: Partial<PropsOf<typeof Touchable>>
-  styles?: StylesOf<SegmentedControlComposition>
-  scrollProps?: any
-  label?: FormTypes.Label
-  renderOption?: (props: SegmentedControlOptionProps) => JSX.Element
-  renderBubble?: (props: Partial<SegmentedControlProps>) => JSX.Element
-  getItemWidth?: (item: { label: string; value: T }, idx: number, arr: { label: string; value: T }[]) => number
-  scrollToCurrentOptionOnMount?: boolean
+const DefaultBubble = (props: { style: ViewStyle }) => {
+  const { style } = props
+  return <View animated style={style} />
 }
 
 const defaultAnimation = {
@@ -54,9 +23,8 @@ const defaultAnimation = {
   easing: Easing.linear,
 }
 
-const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
-
-  const { Theme } = useCodeleapContext()
+export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
+  const theme = themeStore(store => store.current) as any
 
   const {
     options = [],
@@ -64,32 +32,28 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
     debugName,
     label,
     value,
-    styles = {},
     animation = {},
-    variants = [],
     scrollProps = {},
-    getItemWidth = (i) => (Theme.values.width - Theme.spacing.value(4)) / options.length,
+    getItemWidth = () => (theme?.values?.width - theme?.spacing?.value?.(4)) / options.length,
     renderBubble,
-    scrollToCurrentOptionOnMount = true,
+    scrollToCurrentOptionOnMount,
     renderOption,
     touchableProps,
+    style,
+    ...viewProps
   } = {
-    ...(_SegmentedControl.defaultProps || {}),
+    ...SegmentedControl.defaultProps,
     ...props,
   }
 
   const [bubbleWidth, setBubbleWidth] = useState(0)
 
   const _animation = {
-    ...defaultAnimation, ...animation,
+    ...defaultAnimation,
+    ...animation,
   }
 
-  let variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>('u:SegmentedControl', {
-    styles,
-    transform: StyleSheet.flatten,
-    variants,
-    rootElement: 'scroll',
-  })
+  const styles = MobileStyleRegistry.current.styleFor(SegmentedControl.styleRegistryName, style)
 
   const scrollRef = useRef<SegmentedControlRef>(null)
 
@@ -148,12 +112,8 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
   const BubbleView = renderBubble
   const Option = renderOption
 
-  variantStyles = JSON.parse(JSON.stringify(variantStyles))
-
-  const labelStyles = getNestedStylesByKey('label', variantStyles)
-
   const bubbleAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: [],
     updater: () => {
       'worklet'
@@ -167,69 +127,80 @@ const _SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControl
 
   const largestWidth = useRef(0)
 
-  return (<View style={variantStyles.wrapper}>
-    <InputLabel label={label} styles={labelStyles} required={false} />
-    <Scroll
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={variantStyles.scroll}
-      contentContainerStyle={variantStyles.scrollContent}
-      {...scrollProps}
-      keyboardAware={{
-        enabled: false,
-      }}
-      ref={scrollRef}
-    >
-      <View style={variantStyles.innerWrapper}>
-        <BubbleView
-          options={options}
-          styles={variantStyles}
-          animated
-          style={[
-            variantStyles.selectedBubble,
-            props?.touchableProps?.disabled && variantStyles['selectedBubble:disabled'],
-            widthStyle,
-            bubbleAnimation,
-          ]}
-        />
-        {options.map((o, idx) => (
-          <Option
-            debugName={debugName}
-            label={o.label}
-            value={o.value}
-            icon={o.icon}
-            onPress={onPress(o.value, idx)}
-            key={idx}
-            style={widthStyle}
-            selected={value === o.value}
-            variantStyles={variantStyles}
-            onLayout={e => {
-              const { width } = e.nativeEvent.layout
-              if (width > largestWidth.current) {
-                largestWidth.current = width
-              }
-
-              if (idx === options.length - 1) {
-                setBubbleWidth(largestWidth.current)
-                largestWidth.current = 0
-              }
-            }}
-            {...touchableProps}
-          />
-        ))}
+  return (
+    <View style={styles?.wrapper}>
+      <View {...viewProps} style={styles?.labelWrapper}>
+        <Text style={styles?.labelText} text={label} />
       </View>
-    </Scroll>
-  </View>
+
+      <Scroll
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles?.scroll}
+        contentContainerStyle={styles?.scrollContent}
+        {...scrollProps}
+        // @ts-expect-error
+        keyboardAware={{
+          enabled: false,
+        }}
+        ref={scrollRef}
+      >
+        <View style={styles?.innerWrapper}>
+          <BubbleView
+            options={options}
+            animated
+            style={[
+              styles?.selectedBubble,
+              props?.touchableProps?.disabled && styles?.['selectedBubble:disabled'],
+              widthStyle,
+              bubbleAnimation,
+            ]}
+          />
+          {options.map((o, idx) => (
+            <Option
+              debugName={debugName}
+              label={o.label}
+              value={o.value}
+              icon={o.icon}
+              onPress={onPress(o.value, idx)}
+              key={idx}
+              style={widthStyle}
+              selected={value === o.value}
+              variantStyles={styles}
+              onLayout={e => {
+                const { width } = e.nativeEvent.layout
+                if (width > largestWidth.current) {
+                  largestWidth.current = width
+                }
+
+                if (idx === options.length - 1) {
+                  setBubbleWidth(largestWidth.current)
+                  largestWidth.current = 0
+                }
+              }}
+              {...touchableProps}
+            />
+          ))}
+        </View>
+      </Scroll>
+    </View>
   )
+}) as unknown as (<T = string>(props: SegmentedControlProps<T> & { ref?: React.Ref<SegmentedControlRef> }) => ReactElement) & {
+  defaultProps: Partial<SegmentedControlProps>
+} & GenericStyledComponentAttributes<AnyRecord>
 
-})
+SegmentedControl.styleRegistryName = 'SegmentedControl'
+SegmentedControl.elements = ['wrapper', 'selectedBubble', 'innerWrapper', 'scroll', 'text', 'icon', 'button', 'label', 'badge']
+SegmentedControl.rootElement = 'scroll'
 
-_SegmentedControl.defaultProps = {
-  renderBubble: DefaultBubble,
-  renderOption: SegmentedControlOption,
-  touchableProps: {},
+SegmentedControl.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return SegmentedControl as (<T = string>(props: StyledComponentProps<SegmentedControlProps<T> & { ref?: React.Ref<SegmentedControlRef> }, typeof styles>) => IJSX)
 }
 
-type SegControlComponent = <T = string>(props: SegmentedControlProps<T> & { ref?: React.Ref<SegmentedControlRef> }) => ReactElement
+SegmentedControl.defaultProps = {
+  renderBubble: DefaultBubble,
+  renderOption: SegmentedControlOption,
+  scrollToCurrentOptionOnMount: true
+}
 
-export const SegmentedControl = _SegmentedControl as SegControlComponent
+MobileStyleRegistry.registerComponent(SegmentedControl)

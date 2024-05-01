@@ -13,7 +13,6 @@ import {
 } from '@codeleap/common'
 import { View } from '../View'
 import { RadioInputComposition, RadioInputPresets } from './styles'
-import { InputLabel } from '../InputLabel'
 import { StyleSheet } from 'react-native'
 import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
 export * from './styles'
