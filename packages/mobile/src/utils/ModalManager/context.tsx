@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { AnyFunction, onUpdate, TypeGuards, useCodeleapContext, useState } from '@codeleap/common'
 import { PortalProvider } from '@gorhom/portal'
 import { KeyboardProvider } from '../KeyboardAware'

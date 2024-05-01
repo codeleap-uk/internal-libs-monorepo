@@ -7,6 +7,7 @@ import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
+export * from './types'
 
 export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
   const {
