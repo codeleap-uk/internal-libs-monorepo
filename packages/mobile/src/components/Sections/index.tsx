@@ -1,74 +1,19 @@
-import * as React from 'react'
-import { forwardRef } from 'react'
-import {
-  useDefaultComponentStyle,
-  ComponentVariants,
-  useCallback,
-} from '@codeleap/common'
-
-import {
-  RefreshControl,
-  StyleSheet,
-  RefreshControlProps,
-  SectionListRenderItemInfo,
-  SectionListProps as RNSectionListProps,
-  SectionList,
-} from 'react-native'
-import { View, ViewProps } from '../View'
-import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { StylesOf } from '../../types'
+import React, { forwardRef } from 'react'
+import { useCallback } from '@codeleap/common'
+import { RefreshControl, SectionList } from 'react-native'
+import { View } from '../View'
 import { useKeyboardPaddingStyle } from '../../utils'
-import { SectionsComposition, SectionsPresets } from './styles'
-export * from './styles'
-
-export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
-
-export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & {
-  isFirst: boolean
-  isLast: boolean
-  isOnly: boolean
-}
-
-export type ReplaceSectionListProps<P, T> = Omit<P, DataboundSectionListPropsTypes> & {
-  sections: T[]
-  keyExtractor?: (item: T, index: number) => string
-  renderItem: (data: AugmentedSectionRenderItemInfo<T>) => React.ReactElement
-  onRefresh?: () => void
-  getItemLayout?: ((
-    data: T,
-    index: number,
-  ) => { length: number; offset: number; index: number })
-  fakeEmpty?: boolean
-}
+import { SectionListProps } from './types'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
-
-export type SectionListProps<
-  T = any[],
-  Data = T extends Array<infer D> ? D : never
-> = ReplaceSectionListProps<RNSectionListProps<Data>, Data> &
-  Omit<ViewProps, 'variants'> & {
-    separators?: boolean
-    placeholder?: EmptyPlaceholderProps
-    styles?: StylesOf<SectionsComposition>
-    refreshControlProps?: Partial<RefreshControlProps>
-    fakeEmpty?: boolean
-    keyboardAware?: boolean
-  } & ComponentVariants<typeof SectionsPresets>
-
-const defaultProps: Partial<SectionListProps> = {
-  keyboardShouldPersistTaps: 'handled',
-  refreshControlProps: {},
-  keyboardAware: true,
-
-}
+export * from './types'
 
 export const Sections = forwardRef<SectionList, SectionListProps>(
   (sectionsProps, ref) => {
     const {
-      variants = [],
       style,
-      styles = {},
       onRefresh,
       component,
       refreshing,
@@ -76,27 +21,19 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       keyboardAware,
       refreshControlProps,
       contentContainerStyle,
-
       fakeEmpty,
       refreshControl,
       ...props
     } = {
-      ...defaultProps,
+      ...Sections.defaultProps,
       ...sectionsProps,
     }
 
-    const variantStyles = useDefaultComponentStyle<'u:Sections', typeof SectionsPresets>('u:Sections', {
-      variants,
-      styles,
-      transform: StyleSheet.flatten,
-
-    })
+    const styles = MobileStyleRegistry.current.styleFor(Sections.styleRegistryName, style)
 
     const renderSeparator = useCallback(() => {
-      return (
-        <View style={variantStyles.separator}></View>
-      )
-    }, [variantStyles.separator])
+      return <View style={styles?.separator} />
+    }, [styles?.separator])
 
     const getItemPosition = (section, itemIdx) => {
       const listLength = section?.length || 0
@@ -141,11 +78,11 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
     const isEmpty = !props.sections || !props.sections.length
     const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    const keyboardStyle = useKeyboardPaddingStyle([variantStyles.content, contentContainerStyle], keyboardAware)
+    const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
 
     return (
       <SectionList
-        style={[variantStyles.wrapper, style]}
+        style={styles?.wrapper}
         contentContainerStyle={keyboardStyle}
         showsVerticalScrollIndicator={false}
         // @ts-ignore
@@ -163,6 +100,21 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       />
     )
   },
-) as unknown as (<T = any>(props: SectionListProps<T>) => JSX.Element) & {
+) as unknown as (<T = any>(props: SectionListProps<T>) => JSX.Element) & GenericStyledComponentAttributes<AnyRecord> & {
   defaultProps: Partial<SectionListProps>
 }
+
+Sections.styleRegistryName = 'Sections'
+Sections.elements = ['wrapper', 'content', 'separator']
+Sections.rootElement = 'wrapper'
+
+Sections.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Sections as (props: StyledComponentProps<SectionListProps, typeof styles>) => IJSX
+}
+
+Sections.defaultProps = {
+  keyboardShouldPersistTaps: 'handled',
+  keyboardAware: true,
+}
+
+MobileStyleRegistry.registerComponent(Sections)

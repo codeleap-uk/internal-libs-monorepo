@@ -1,28 +1,35 @@
-import { ComponentVariants, StylesOf, useDefaultComponentStyle } from '@codeleap/common'
-import { RefreshControl as RNRefreshControl, RefreshControlProps as RNRefreshControlProps } from 'react-native'
-import { RefreshControlComposition, RefreshControlPresets } from './styles'
+import React from 'react'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { RefreshControl as RNRefreshControl } from 'react-native'
+import { MobileStyleRegistry } from '../../Registry'
+import { RefreshControlProps } from './types'
 
-export type RefreshControlProps = {
-  styles?: StylesOf<RefreshControlComposition>
-} & RNRefreshControlProps & ComponentVariants<typeof RefreshControlPresets>
+export * from './styles'
+export * from './types'
 
-export const RefreshControl = (props:RefreshControlProps) => {
-  const { variants = [], styles } = props
+export const RefreshControl = (props: RefreshControlProps) => {
+  const { style, ...rest } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:RefreshControl', typeof RefreshControlPresets>('u:RefreshControl', {
-    variants,
-    styles,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(RefreshControl.styleRegistryName, style)
+
   return (
     <RNRefreshControl
-      colors={[variantStyles.loadingAnimation?.color]}
-      tintColor={variantStyles.loadingAnimation?.color}
-      progressBackgroundColor={variantStyles.progressBackgroundColor?.color}
-      titleColor={variantStyles.titleColor?.color}
-      {...props}
+      // @ts-expect-error
+      colors={[styles?.loadingAnimation?.color]} // @ts-expect-error
+      tintColor={styles?.loadingAnimation?.color} // @ts-expect-error
+      progressBackgroundColor={styles?.progressBackgroundColor?.color} // @ts-expect-error
+      titleColor={styles?.titleColor?.color}
+      {...rest}
     />
-
   )
 }
 
-export * from './styles'
+RefreshControl.styleRegistryName = 'RefreshControl'
+RefreshControl.elements = ['loadingAnimation', 'progressBackgroundColor', 'titleColor']
+RefreshControl.rootElement = 'wrapper'
+
+RefreshControl.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return RefreshControl as (props: StyledComponentProps<RefreshControlProps, typeof styles>) => IJSX
+}
+
+MobileStyleRegistry.registerComponent(RefreshControl)
