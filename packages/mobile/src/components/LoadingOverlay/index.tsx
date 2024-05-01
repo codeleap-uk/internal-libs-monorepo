@@ -1,55 +1,61 @@
 import React, { useRef } from 'react'
-import { ComponentVariants, getNestedStylesByKey, onUpdate, useDefaultComponentStyle, useMemo } from '@codeleap/common'
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { View } from '../View'
-import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
 import { useAnimatedVariantStyles } from '../../utils'
+import { LoadingOverlayProps } from './types'
+import { MobileStyleRegistry } from '../../Registry'
+import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
-
-export type LoadingOverlayProps = React.PropsWithChildren<{
-    variants?: ComponentVariants<typeof LoadingOverlayPresets>['variants']
-    styles?: StylesOf<LoadingOverlayComposition>
-    visible?: boolean
-} >
+export * from './types'
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
   const {
     children,
-    styles,
-    variants,
     visible,
+    style,
   } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
-    variants,
-    rootElement: 'wrapper',
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const transition = useRef(null)
 
-  const loaderStyles = useMemo(() => getNestedStylesByKey('loader', variantStyles), [variantStyles])
+  const styles = MobileStyleRegistry.current.styleFor(LoadingOverlay.styleRegistryName, style)
+
+  const loaderStyles = getNestedStylesByKey('loader', styles)
 
   const wrapperAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: ['wrapper:visible', 'wrapper:hidden'],
     updater: (s) => {
       'worklet'
       return visible ? s['wrapper:visible'] : s['wrapper:hidden']
     },
-    transition: variantStyles.transition,
+    transition: styles.transition,
     dependencies: [visible],
   })
- 
 
-  const transition = useRef(null)
   if (!transition.current) {
-    transition.current = JSON.parse(JSON.stringify(variantStyles['wrapper:transition']))
+    transition.current = JSON.parse(JSON.stringify(styles['wrapper:transition']))
   }
-  return <View style={[variantStyles.wrapper, wrapperAnimation]} animated  transition={transition.current}>
-    <ActivityIndicator styles={loaderStyles}/>
-    {children}
-  </View>
+
+  return (
+    <View
+      animated
+      style={[styles.wrapper, wrapperAnimation]}
+      // @ts-expect-error
+      transition={transition.current}
+    >
+      <ActivityIndicator style={loaderStyles} />
+      {children}
+    </View>
+  )
 }
+
+LoadingOverlay.styleRegistryName = 'LoadingOverlay'
+LoadingOverlay.elements = ['wrapper', 'loader', 'transition']
+LoadingOverlay.rootElement = 'wrapper'
+
+LoadingOverlay.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return LoadingOverlay as (props: StyledComponentProps<LoadingOverlayProps, typeof styles>) => IJSX
+}
+
+MobileStyleRegistry.registerComponent(LoadingOverlay)

@@ -1,54 +1,60 @@
 import React from 'react'
-import {
-  ComponentVariants,
-  createDefaultVariantFactory,
-  getNestedStylesByKey,
-  includePresets,
-  TypeGuards,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import { StyleSheet, ViewStyle } from 'react-native'
-import { StylesOf } from '../../types'
+import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
 import { Text } from '../Text'
+import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps, StyledProp } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}`
 
-const createPaginationIndicatorStyle = createDefaultVariantFactory<PaginationIndicatorComposition>()
-
-export const PaginationIndicatorPresets = includePresets((style) => createPaginationIndicatorStyle(() => ({ loaderWrapper: style, text: style })))
-
 export type PaginationIndicatorProps = {
   isFetching?: boolean
-  noMoreItemsText: React.ReactChild
+  noMoreItemsText: JSX.Element
   hasMore?: boolean
   activityIndicator?: JSX.Element
-  styles?: StylesOf<PaginationIndicatorComposition>
-  style?: ViewStyle
-} & ComponentVariants<typeof PaginationIndicatorPresets>
+  style?: StyledProp<PaginationIndicatorComposition>
+}
 
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
-  const { hasMore, isFetching, noMoreItemsText, style, activityIndicator, styles = {}, variants = [] } = props
+  const {
+    hasMore,
+    isFetching,
+    noMoreItemsText,
+    style,
+    activityIndicator
+  } = {
+    ...PaginationIndicator.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<
-    'u:PaginationIndicator',
-    typeof PaginationIndicatorPresets
-    >('u:PaginationIndicator', {
-      variants,
-      styles,
-      transform: StyleSheet.flatten,
-    })
+  const styles = MobileStyleRegistry.current.styleFor(PaginationIndicator.styleRegistryName, style)
 
-  const loaderStyles = getNestedStylesByKey('loader', variantStyles)
+  const loaderStyles = getNestedStylesByKey('loader', styles)
 
   if (isFetching) {
-    return activityIndicator || <ActivityIndicator style={style} styles={loaderStyles}/>
+    return activityIndicator || <ActivityIndicator style={loaderStyles} />
   }
+
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
-      return <Text style={[variantStyles.text, style]} text={noMoreItemsText.toString()}/>
+      return <Text style={styles.text} text={noMoreItemsText.toString()} />
     }
+
     return noMoreItemsText
   }
+
   return null
 }
+
+
+PaginationIndicator.styleRegistryName = 'PaginationIndicator'
+PaginationIndicator.elements = ['text', 'loader']
+PaginationIndicator.rootElement = 'text'
+
+PaginationIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return PaginationIndicator as (props: StyledComponentProps<PaginationIndicatorProps, typeof styles>) => IJSX
+}
+
+PaginationIndicator.defaultProps = {}
+
+MobileStyleRegistry.registerComponent(PaginationIndicator)
