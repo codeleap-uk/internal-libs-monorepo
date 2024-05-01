@@ -4,6 +4,7 @@ import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { BadgeContent, BadgeProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -103,3 +104,7 @@ Badge.styleRegistryName = 'Badge'
 Badge.elements = ['wrapper', 'innerWrapper', 'count']
 Badge.rootElement = 'wrapper'
 Badge.defaultProps = defaultProps
+
+Badge.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Badge as (props: StyledComponentProps<BadgeProps, typeof styles>) => IJSX
+}

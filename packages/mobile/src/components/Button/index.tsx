@@ -1,55 +1,26 @@
-import * as React from 'react'
-import {
-  useDefaultComponentStyle,
-  ComponentVariants,
-  IconPlaceholder,
-  GetRefType,
-  TypeGuards,
-  getNestedStylesByKey,
-} from '@codeleap/common'
-
-import {
-  ButtonPresets,
-  ButtonComposition,
-  ButtonParts,
-} from './styles'
-import { forwardRef } from 'react'
-import { StylesOf } from '../../types/utility'
+import React, { forwardRef, useState } from 'react'
+import { GetRefType } from '@codeleap/common'
+import { ButtonParts } from './styles'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'
 import { Icon } from '../Icon'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { StyleSheet } from 'react-native'
-import { usePressableFeedback } from '../../utils'
-import { Badge, BadgeComponentProps } from '../Badge'
+import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
+import { Badge } from '../Badge'
+import { ButtonProps } from './types'
+import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+
 export * from './styles'
-
-type ChildProps = {
-  styles: StylesOf<ButtonParts>
-  props: Omit<ButtonProps, 'children'>
-}
-
-export type ButtonProps = Omit<TouchableProps, 'variants'> &
-  ComponentVariants<typeof ButtonPresets> & {
-    text?: string
-    rightIcon?: IconPlaceholder
-    icon?: IconPlaceholder
-    styles?: StylesOf<ButtonComposition>
-    loading?: boolean
-    debounce?: number
-    debugName: string
-    selected?: boolean
-    children?: React.ReactNode | ((props: ChildProps) => React.ReactNode)
-  } & BadgeComponentProps
+export * from './types'
 
 export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>((buttonProps, ref) => {
   const {
-    variants = [],
     children,
     icon,
     text,
     loading,
-    styles = {},
     onPress,
     disabled,
     selected,
@@ -58,21 +29,19 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     badge = false,
     badgeProps = {},
     ...props
-  } = buttonProps
-  const [pressed, setPressed] = React.useState(false)
-  const variantStyles = useDefaultComponentStyle('u:Button', {
-    variants,
-    transform: StyleSheet.flatten,
-    styles,
-  })
+  } = {
+    ...Button.defaultProps,
+    ...buttonProps,
+  }
+
+  const [pressed, setPressed] = useState(false)
+
+  const styles = MobileStyleRegistry.current.styleFor(Button.styleRegistryName, style)
 
   function getStyles(key: ButtonParts) {
     return [
-      variantStyles[key],
-      key === 'wrapper' && style,
-      disabled && variantStyles[key + ':disabled'],
       styles[key],
-      selected && variantStyles[key + ':selected'],
+      selected && styles[key + ':selected'],
       disabled && styles[key + ':disabled'],
     ]
   }
@@ -89,58 +58,63 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     rightIcon: rightIconStyle,
     text: getStyles('text'),
     icon: getStyles('icon'),
-
   }
 
   const disableFeedback = !onPress || props?.noFeedback
 
-  const { getFeedbackStyle } = usePressableFeedback(variantStyles.text, {
+  const { getFeedbackStyle } = usePressableFeedback(styles.text, {
     hightlightPropertyIn: 'color',
     hightlightPropertyOut: 'color',
-    feedbackConfig: variantStyles?.textFeedback,
+    feedbackConfig: styles?.textFeedback as TouchableFeedbackConfig,
     disabled: disableFeedback,
   })
 
-  const { getFeedbackStyle: getFeedbackWrapperStyle } = usePressableFeedback(variantStyles.wrapper, {
+  const { getFeedbackStyle: getFeedbackWrapperStyle } = usePressableFeedback(styles.wrapper, {
     hightlightPropertyIn: 'borderColor',
     hightlightPropertyOut: 'borderColor',
     disabled: disableFeedback,
-    feedbackConfig: variantStyles?.wrapperFeedback,
+    feedbackConfig: styles?.wrapperFeedback as TouchableFeedbackConfig,
   })
-
-  const childrenContent = TypeGuards.isFunction(children) ?
-    // @ts-ignore
-    children({ styles: _styles, props: buttonProps })
-    : children
 
   const rightFeedback = getFeedbackStyle(pressed)
 
-  // TODO - This is a hack to hide the icon when there is no text
+  // @note This is a hack to hide the icon when there is no text
   const isLeftIconHidden = _styles?.leftIcon?.display != 'none'
 
-  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+  const badgeStyles = getNestedStylesByKey('badge', styles)
 
   return (
     <Touchable
-      style={[_styles.wrapper, getFeedbackWrapperStyle(pressed)]}
+      // @ts-expect-error
+      style={[_styles.wrapper, { feedback: styles.feedback }, getFeedbackWrapperStyle(pressed)]}
       ref={ref}
       disabled={disabled}
-      styles={{
-        feedback: variantStyles.feedback,
-      }}
       onPress={onPress}
       debugComponent={'Button'}
       noFeedback={!onPress}
       setPressed={setPressed}
       {...props}
     >
-      {loading && <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} />}
-      {(!loading && isLeftIconHidden) && <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} />}
+      {loading ? <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} /> : null}
+      {(!loading && isLeftIconHidden) ? <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} /> : null}
       {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
-      {childrenContent}
+      {children}
       <Icon name={rightIcon} style={[_styles.rightIcon, rightFeedback]} />
       <Badge badge={badge} style={badgeStyles} {...badgeProps} />
     </Touchable>
   )
-}) as ((props: ButtonProps) => JSX.Element)
+}) as ((props: ButtonProps) => IJSX) & GenericStyledComponentAttributes<AnyRecord> & { defaultProps: Partial<ButtonProps> }
 
+Button.styleRegistryName = 'Button'
+Button.elements = ['wrapper', 'inner', 'text', 'icon', 'leftIcon', 'rightIcon', 'loader', 'badge']
+Button.rootElement = 'wrapper'
+
+Button.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Button as (props: StyledComponentProps<ButtonProps, typeof styles>) => IJSX
+}
+
+Button.defaultProps = {
+  hitSlop: 10,
+}
+
+MobileStyleRegistry.registerComponent(Button)
