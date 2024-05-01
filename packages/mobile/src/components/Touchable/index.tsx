@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { useCodeleapContext, TypeGuards, onMount } from '@codeleap/common'
+import { TypeGuards, onMount } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
@@ -50,28 +50,28 @@ export const Touchable = forwardRef<
 
   const styles = MobileStyleRegistry.current.styleFor(Touchable.styleRegistryName, style)
 
-  const { logger } = useCodeleapContext()
+  // const { logger } = useCodeleapContext()
 
   const press = () => {
     if (!onPress) {
-      logger.warn('No onPress passed to touchable', {
-        touchableProps,
-      }, 'User Interaction')
+      // logger.warn('No onPress passed to touchable', {
+      //   touchableProps,
+      // }, 'User Interaction')
       return
     }
     const _onPress = () => {
-      logger.log(
-        `<${debugComponent || 'Touchable'}/>  pressed`,
-        debugName,
-        'User interaction',
-      )
+      // logger.log(
+      //   `<${debugComponent || 'Touchable'}/>  pressed`,
+      //   debugName,
+      //   'User interaction',
+      // )
       if (dismissKeyboard) {
         Keyboard.dismiss()
       }
       if (analyticsEnabled) {
         const name = analyticsName || debugName
         if (!!name?.trim?.()) {
-          logger.analytics?.interaction(name, analyticsData)
+          // logger.analytics?.interaction(name, analyticsData)
         }
       }
 

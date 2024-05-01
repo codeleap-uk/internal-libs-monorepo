@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import {
   parseFilePathData,
-  useCodeleapContext,
   MobileFile,
   AnyRef,
   FormTypes,
@@ -79,7 +78,7 @@ const _FileInput = forwardRef<
     onError,
   } = fileInputProps
   const resolveWithFile = useRef<(file: FileResult[]) => any>()
-  const { logger } = useCodeleapContext()
+  // const { logger } = useCodeleapContext()
 
   const handleResolve = (files: Array<FileResult>) => {
     if (resolveWithFile.current) {
@@ -106,7 +105,7 @@ const _FileInput = forwardRef<
 
   function handleError(err) {
 
-    logger.warn('File Input Error', err, 'FILE INPUT')
+    // logger.warn('File Input Error', err, 'FILE INPUT')
     onError?.(err)
 
   }

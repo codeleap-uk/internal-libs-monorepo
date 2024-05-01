@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnyFunction, onUpdate, TypeGuards, useCodeleapContext, useState } from '@codeleap/common'
+import { AnyFunction, onUpdate, TypeGuards, useState } from '@codeleap/common'
 import { PortalProvider } from '@gorhom/portal'
 import { KeyboardProvider } from '../KeyboardAware'
 
@@ -69,8 +69,8 @@ export function Provider({ children }) {
 
   }
 
-  const codeleapCtx = useCodeleapContext()
-  const defaultDuration = codeleapCtx?.Theme?.values?.transitions?.modal?.duration || 300
+  // const codeleapCtx = useCodeleapContext()
+  const defaultDuration = 300
   const transition:TModalContext['transition'] = (from, to, options) => {
     return new Promise((resolve) => {
       setTimeout(() => {

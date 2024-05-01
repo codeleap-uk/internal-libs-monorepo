@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCodeleapContext, useEffect, useState, useContext } from '@codeleap/common'
+import { useEffect, useState, useContext } from '@codeleap/common'
 import {
   Keyboard,
   Platform,
