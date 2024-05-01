@@ -86,7 +86,7 @@ export const Checkbox = (props: CheckboxProps) => {
     {...inputBaseProps}
     debugName={debugName}
     wrapper={Touchable}
-    styles={styles}
+    style={styles}
     wrapperProps={{
       onPress: () => {
         onValueChange(!value)
@@ -123,10 +123,7 @@ export const Checkbox = (props: CheckboxProps) => {
 
 Checkbox.styleRegistryName = 'Checkbox'
 Checkbox.rootElement = 'wrapper'
-Checkbox.elements = [
-  'wrapper', 'innerWrapper', 'label', 'checkmark', 'box', '__props',
-  'errorMessage', 'description', 'icon', 'rightIcon', 'leftIcon'
-]
+Checkbox.elements = [...InputBase.elements, 'checkmark', 'box', '__props']
 
 Checkbox.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Checkbox as (props: StyledComponentProps<CheckboxProps, typeof styles>) => IJSX

@@ -5,6 +5,8 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from 'src/Registry'
 
 export * from './styles'
 export * from './utils'
@@ -16,11 +18,12 @@ export const InputBaseDefaultOrder: InputBaseProps['order'] = [
   'innerWrapper',
   'error',
 ]
+
 const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <>{props.children}</>
 }
 
-export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
+export const InputBase = (props: InputBaseProps) => {
   const {
     children,
     error = null,
@@ -28,7 +31,6 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     description = null,
     leftIcon = null,
     rightIcon = null,
-    styles,
     wrapper,
     debugName,
     innerWrapper,
@@ -56,7 +58,6 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
-
     // @ts-ignore
     styles: _styles.rightIconStyles,
     debugName: `${debugName} right icon`,
@@ -98,6 +99,15 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
       </KeyPassthrough>)
 
     }
-
   </WrapperComponent>
-})
+}
+
+InputBase.styleRegistryName = 'InputBase'
+InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
+InputBase.rootElement = 'wrapper'
+
+InputBase.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return InputBase as (props: StyledComponentProps<InputBaseProps, typeof styles>) => IJSX
+}
+
+MobileStyleRegistry.registerComponent(InputBase)

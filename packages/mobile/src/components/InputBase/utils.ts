@@ -19,7 +19,6 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
     'innerWrapper',
     'leftIcon',
     'rightIcon',
-    // 'styles',
     'description',
     'wrapper',
     'children',

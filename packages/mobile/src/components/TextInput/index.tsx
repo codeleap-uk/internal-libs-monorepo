@@ -1,50 +1,19 @@
-import * as React from 'react'
-import {
-  ComponentVariants,
-  FormTypes,
-  PropsOf,
-  TypeGuards,
-  useDefaultComponentStyle,
-  useValidate,
-  yup,
-  useState,
-  useBooleanToggle,
-  IconPlaceholder,
-} from '@codeleap/common'
+import React, { useState } from 'react'
+import { TypeGuards, useValidate, useBooleanToggle } from '@codeleap/common'
 import { forwardRef, useImperativeHandle } from 'react'
-import { ComponentWithDefaultProps, StylesOf } from '../../types'
-import { StyleSheet, TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
-import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
-import { TextInputComposition, TextInputPresets } from './styles'
+import { ComponentWithDefaultProps } from '../../types'
+import { TextInput as NativeTextInput, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
+import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Touchable } from '../Touchable'
-import { MaskedTextInput, TextInputMaskProps } from '../../modules/textInputMask'
+import { MaskedTextInput } from '../../modules/textInputMask'
+import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { TextInputProps } from './types'
+import { MobileStyleRegistry } from 'src/Registry'
 
 export * from './styles'
+export * from './types'
 
-export type TextInputProps =
-  Omit<InputBaseProps, 'styles' | 'variants'> &
-  NativeTextInputProps &
-  {
-    styles?: StylesOf<TextInputComposition>
-    password?: boolean
-    validate?: FormTypes.ValidatorFunctionWithoutForm | yup.SchemaOf<string>
-    debugName: string
-    visibilityToggle?: boolean
-    masking?: FormTypes.TextField['masking']
-    variants?: ComponentVariants<typeof TextInputPresets>['variants']
-    onChangeMask?: TextInputMaskProps['onChangeText']
-    visibleIcon?: IconPlaceholder
-    hiddenIcon?: IconPlaceholder
-    _error?: string
-  } & Pick<PropsOf<typeof Touchable>, 'onPress'>
-
-const defaultProps: Partial<TextInputProps> = {
-  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
-  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
-}
-
-const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
-
+export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
   const innerInputRef = React.useRef<NativeTextInput>(null)
 
   const [isFocused, setIsFocused] = useState(false)
@@ -58,8 +27,6 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
   })
 
   const {
-    variants,
-    styles,
     value,
     validate,
     debugName,
@@ -70,6 +37,7 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
     onPress,
     visibleIcon,
     hiddenIcon,
+    style,
     _error = null,
     ...textInputProps
   } = others
@@ -80,11 +48,7 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
-  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
-    variants,
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(TextInput.styleRegistryName, style)
 
   // @ts-expect-error - React's ref type system is weird
   useImperativeHandle(inputRef, () => {
@@ -114,7 +78,6 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
   }, [validation.onInputFocused, props.onFocus])
 
   const handleMaskChange = (masked, unmasked) => {
-
     if (textInputProps.onChangeText) textInputProps.onChangeText(masking?.saveFormatted ? masked : masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
   }
@@ -123,22 +86,24 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
   const isDisabled = !!inputBaseProps.disabled
 
   const placeholderTextColor = [
-    [isDisabled, variantStyles['placeholder:disabled']],
-    [!validation.isValid, variantStyles['placeholder:error']],
-    [isFocused, variantStyles['placeholder:focus']],
-    [true, variantStyles.placeholder],
+    [isDisabled, styles['placeholder:disabled']],
+    [!validation.isValid, styles['placeholder:error']],
+    [isFocused, styles['placeholder:focus']],
+    [true, styles?.placeholder],
+    // @ts-expect-error
   ].find(([x]) => x)?.[1]?.color
 
   const selectionColor = [
-    [isDisabled, variantStyles['selection:disabled']],
-    [!validation.isValid, variantStyles['selection:error']],
-    [isFocused, variantStyles['selection:focus']],
-    [true, variantStyles.selection],
+    [isDisabled, styles['selection:disabled']],
+    [!validation.isValid, styles['selection:error']],
+    [isFocused, styles['selection:focus']],
+    [true, styles?.selection],
+    // @ts-expect-error
   ].find(([x]) => x)?.[1]?.color
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as IconPlaceholder,
+    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as AppIcon,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -147,35 +112,32 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
   const maskingExtraProps = isMasked ? {
     onChangeText: handleMaskChange,
     ref: null,
-
     refInput: (inputRef) => {
-      // console.log(inputRef)
       if (!!inputRef) {
         innerInputRef.current = inputRef
-
       }
     },
     ...masking,
   } : {}
 
   const buttonModeProps = isPressable ? {
-    // pointerEvents: 'none',
     editable: false,
     caretHidden: true,
   } : {}
 
   const hasMultipleLines = isMultiline && value?.includes('\n')
+
   return <InputBase
     {...inputBaseProps}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
     error={(validation.isValid && !_error) ? null : _error || validation.message}
-    styles={{
-      ...variantStyles,
+    style={{
+      ...styles,
       innerWrapper: [
-        variantStyles.innerWrapper,
-        isMultiline && variantStyles['innerWrapper:multiline'],
-        hasMultipleLines && variantStyles['innerWrapper:hasMultipleLines'],
+        styles?.innerWrapper,
+        isMultiline && styles['innerWrapper:multiline'],
+        hasMultipleLines && styles['innerWrapper:hasMultipleLines'],
       ],
     }}
     innerWrapperProps={{
@@ -188,7 +150,6 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
     focused={isFocused}
   >
     <InputElement
-
       allowFontScaling={false}
       editable={!isPressable && !isDisabled}
       {...buttonModeProps}
@@ -201,106 +162,31 @@ const TextInputComponent = forwardRef<NativeTextInput, TextInputProps>((props, i
       onBlur={handleBlur}
       onFocus={handleFocus}
       style={[
-        variantStyles.input,
-        isMultiline && variantStyles['input:multiline'],
-        isFocused && variantStyles['input:focused'],
-        !validation.isValid && variantStyles['input:error'],
-        isDisabled && variantStyles['input:disabled'],
-        hasMultipleLines && variantStyles['input:hasMultipleLines'],
+        styles?.input,
+        isMultiline && styles['input:multiline'],
+        isFocused && styles['input:focused'],
+        !validation.isValid && styles['input:error'],
+        isDisabled && styles['input:disabled'],
+        hasMultipleLines && styles['input:hasMultipleLines'],
       ]}
       ref={innerInputRef}
       pointerEvents={isPressable ? 'none' : undefined}
       {...maskingExtraProps}
     />
   </InputBase>
-})
+}) as ComponentWithDefaultProps<TextInputProps> & GenericStyledComponentAttributes<AnyRecord>
 
-export type SearchInputProps = {
-  onTypingChange: (isTyping: boolean) => void
-  onSearchChange: (search: string) => void
-  onValueChange?: (search: string) => void
-  onClear?: () => void
-  debugName: string
-  debounce?: number
-  clearIcon?: IconPlaceholder
-  searchIcon?: IconPlaceholder
-  placeholder: string
-} & Partial<TextInputProps>
+TextInput.styleRegistryName = 'TextInput'
+TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']
+TextInput.rootElement = 'wrapper'
 
-export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
-  const {
-    debugName,
-    onClear,
-    onSearchChange,
-    onTypingChange,
-    clearIcon,
-    searchIcon,
-    debounce,
-    placeholder,
-    value,
-    onValueChange,
-    ...others
-  } = {
-    ...SearchInput.defaultProps,
-    ...props,
-  }
-
-  const [search, setSearch] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
-
-  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
-
-  const handleChangeSearch = (value: string) => {
-    setSearch(value)
-
-    if (TypeGuards.isNil(debounce)) {
-      onSearchChange?.(value)
-    } else {
-      if (setSearchTimeout.current) {
-        clearTimeout(setSearchTimeout.current)
-      }
-
-      setSearchTimeout.current = setTimeout(() => {
-
-        onSearchChange(value)
-        onTypingChange?.(false)
-      }, debounce ?? 0)
-    }
-
-  }
-
-  const handleClear = () => {
-    setSearch('')
-    onSearchChange?.('')
-    onClear?.()
-  }
-
-  return (
-    <TextInput
-      value={search}
-      onChangeText={(value) => {
-        onTypingChange?.(true)
-        handleChangeSearch(value)
-      }}
-      placeholder={placeholder}
-      debugName={`Search ${debugName}`}
-      rightIcon={!!search.trim() && {
-        name: clearIcon,
-        onPress: handleClear,
-      }}
-      leftIcon={{
-        name: searchIcon,
-      }}
-      {...others}
-    />
-  )
+TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return TextInput as (props: StyledComponentProps<TextInputProps, typeof styles>) => IJSX
 }
 
-export const TextInput = TextInputComponent as ComponentWithDefaultProps<TextInputProps>
-
-TextInput.defaultProps = defaultProps
-
-SearchInput.defaultProps = {
-  debounce: null,
-  clearIcon: 'x' as IconPlaceholder,
-  searchIcon: 'search' as IconPlaceholder,
+TextInput.defaultProps = {
+  hiddenIcon: 'input-visiblity:hidden' as AppIcon,
+  visibleIcon: 'input-visiblity:visible' as AppIcon,
 }
+
+MobileStyleRegistry.registerComponent(TextInput)
