@@ -174,7 +174,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       rightIcon={selectedIcon}
       // @ts-ignore
       icon={selectedIcon}
-      styles={itemStyles}
+      style={itemStyles}
       {...itemProps}
     />
   }, [value, select, multiple, selectable, isValueArray])

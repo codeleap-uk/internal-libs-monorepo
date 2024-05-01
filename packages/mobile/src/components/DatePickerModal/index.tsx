@@ -1,17 +1,18 @@
 import React, { useRef } from 'react'
-import { useState, useCodeleapContext, useDefaultComponentStyle, TypeGuards, useBooleanToggle, useNestedStylesByKey, useI18N } from '@codeleap/common'
-import { DatePickerModalPresets } from './styles'
+import { TypeGuards, useBooleanToggle, useI18N } from '@codeleap/common'
 import DatePicker from 'react-native-date-picker'
+import Modal from '../Modal'
 import { TextInput } from '../TextInput'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
-import { StyleSheet } from 'react-native'
 import { DatePickerModalProps } from './types'
+import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 export * from './types'
 
-const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) => {
+const OuterInputComponent: DatePickerModalProps['outerInputComponent'] = (props) => {
   const {
     debugName,
     toggle,
@@ -29,43 +30,42 @@ const OuterInputComponent:DatePickerModalProps['outerInputComponent'] = (props) 
   />
 }
 
-const defaultFormatDate:DatePickerModalProps['formatDate'] = (date) => {
+const defaultFormatDate: DatePickerModalProps['formatDate'] = (date) => {
   if (!date) return null
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 }
 
-const DefaultFooter:DatePickerModalProps['footerComponent'] = (props) => {
+const DefaultFooter: DatePickerModalProps['footerComponent'] = (props) => {
   const {
     debugName,
     commitDate,
     showDoneButton,
-    styles,
     confirm,
     confirmButtonProps = {},
     cancelButtonProps = {},
     toggle,
+    cancelStyles,
+    confirmStyles,
+    doneStyles,
   } = props
 
   if (commitDate == 'onConfirm') {
     return <>
       <Button
         debugName={`${debugName} cancel button`}
-        styles={styles.cancel}
-        variants={['flex']}
+        style={cancelStyles}
         text={`Cancel`}
         onPress={toggle}
         {...cancelButtonProps}
       />
       <Button
         debugName={`${debugName} confirm button`}
-        variants={['flex']}
-        styles={styles.confirm}
+        style={confirmStyles}
         text={`Confirm`}
         onPress={confirm}
         {...confirmButtonProps}
       />
     </>
-
   }
 
   if (!showDoneButton) return null
@@ -74,12 +74,11 @@ const DefaultFooter:DatePickerModalProps['footerComponent'] = (props) => {
     debugName={`${debugName} done button`}
     onPress={confirm}
     text={'Done'}
-    styles={styles.done}
-
+    style={doneStyles}
   />
 }
 
-const defaultProps:Partial<DatePickerModalProps> = {
+const defaultProps: Partial<DatePickerModalProps> = {
   outerInputComponent: OuterInputComponent,
   formatDate: defaultFormatDate,
   footerComponent: DefaultFooter,
@@ -91,11 +90,8 @@ const defaultProps:Partial<DatePickerModalProps> = {
 }
 
 export const DatePickerModal = (props: DatePickerModalProps) => {
-
-  const { currentTheme } = useCodeleapContext()
-
   const allProps = {
-    ...defaultProps,
+    ...DatePickerModal.defaultProps,
     ...props,
   }
 
@@ -112,8 +108,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     confirmButtonProps = {},
     outerInputComponent,
     footer,
-    variants = [],
-    styles = {},
     datePickerProps,
     mode,
     label,
@@ -129,31 +123,25 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     ...modalProps
   } = allProps
 
-  const variantStyles = useDefaultComponentStyle<'u:DatePickerModal', typeof DatePickerModalPresets>('u:DatePickerModal', {
-    variants,
-    styles,
-    rootElement: 'inputWrapper',
-    transform: StyleSheet.flatten,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(DatePickerModal.styleRegistryName, style)
 
   const [visible, toggle] = !TypeGuards.isNil(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
   const [value, setValue] = [_value, onValueChange]
-  //const [value, setValue] = _value && onValueChange ? [_value, onValueChange] : useState(_value ?? new Date())
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
 
   const OuterInput = outerInputComponent
   const Footer = footerComponent
 
-  const inputStyle = useNestedStylesByKey('input', variantStyles)
-  const doneStyle = useNestedStylesByKey('doneButton', variantStyles)
-  const cancelStyle = useNestedStylesByKey('cancelButton', variantStyles)
-  const confirmStyle = useNestedStylesByKey('confirmButton', variantStyles)
+  const inputStyle = getNestedStylesByKey('input', styles)
+  const doneStyle = getNestedStylesByKey('doneButton', styles)
+  const cancelStyle = getNestedStylesByKey('cancelButton', styles)
+  const confirmStyle = getNestedStylesByKey('confirmButton', styles)
 
   const formattedDate = value ? formatDate(value) : ''
   const { locale } = useI18N()
 
-  const tempDate = useRef<Date|null>(null)
+  const tempDate = useRef<Date | null>(null)
 
   const onConfirm = () => {
     if (commitDate == 'onConfirm' && !!tempDate.current) {
@@ -172,11 +160,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const modalFooter = footer || <Footer
     {...allProps}
     confirm={onConfirm}
-    styles={{
-      done: doneStyle,
-      cancel: cancelStyle,
-      confirm: confirmStyle,
-    }}
+    doneStyles={doneStyle}
+    cancelStyles={cancelStyle}
+    confirmStyles={confirmStyle}
     confirmButtonProps={confirmButtonProps}
     cancelButtonProps={cancelButtonProps}
     showDoneButton={showDoneButton}
@@ -194,7 +180,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     debugName: `${debugName} Modal`,
     visible: visible,
     toggle: toggle,
-    styles: variantStyles,
+    style: styles,
     footer: modalFooter,
     ...modalProps,
     id: null,
@@ -202,18 +188,17 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   return (
     <>
-      {!hideInput && <OuterInput
+      {!hideInput ? <OuterInput
         {...allProps}
-        styles={inputStyle}
+        style={inputStyle}
         value={value}
         debugName={debugName}
         visible={visible}
         toggle={toggle}
         onValueChange={setValue}
         valueLabel={formattedDate}
-        style={style}
+      /> : null}
 
-      />}
       {/* @ts-expect-error */}
       <Wrapper {...wrapperProps} >
         <DatePicker
@@ -230,21 +215,28 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
             tempDate.current = date
           }}
           locale={locale}
-          theme={currentTheme === 'dark' ? 'dark' : 'light' }
-          textColor={variantStyles?.picker?.color}
+          // @ts-expect-error
+          textColor={styles?.picker?.color}
           androidVariant='iosClone'
           onConfirm={setValue}
           minimumDate={minimumDate}
           maximumDate={maximumDate}
           {...datePickerProps}
           mode={mode}
-
         />
       </Wrapper>
-
     </>
   )
+}
 
+DatePickerModal.styleRegistryName = 'DatePickerModal'
+DatePickerModal.elements = [...Modal.elements, 'input', 'picker', 'doneButton', 'confirmButton', 'cancelButton']
+DatePickerModal.rootElement = 'inputWrapper'
+
+DatePickerModal.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return DatePickerModal as (props: StyledComponentProps<DatePickerModalProps, typeof styles>) => IJSX
 }
 
 DatePickerModal.defaultProps = defaultProps
+
+MobileStyleRegistry.registerComponent(DatePickerModal)

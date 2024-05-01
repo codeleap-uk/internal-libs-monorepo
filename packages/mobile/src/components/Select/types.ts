@@ -1,9 +1,5 @@
-import {
-  ComponentVariants,
-  FormTypes,
-  IconPlaceholder,
-  PropsOf,
-} from '@codeleap/common'
+import { FormTypes, PropsOf } from '@codeleap/common'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { ActionIconProps } from '../ActionIcon'
@@ -11,12 +7,12 @@ import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { ModalProps } from '../Modal'
 import { Text } from '../Text'
-import { SearchInputProps, TextInputComposition, TextInputProps } from '../TextInput'
+import { SearchInputProps, TextInputComposition } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { SelectComposition, SelectPresets } from './styles'
+import { SelectComposition } from './styles'
 
 export type SelectRenderFNProps<T> = {
-  styles: StylesOf<SelectComposition>
+  style: StylesOf<SelectComposition>
   onPress: () => void
   isSelected?: boolean
   item: FormTypes.Options<T>[number]
@@ -29,7 +25,7 @@ export type SelectRenderFNProps<T> = {
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
 
-type SelectModalProps = Omit<ModalProps, 'variants' | 'styles'>
+type SelectModalProps = Omit<ModalProps, 'style'>
 
 export type SelectValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
@@ -37,7 +33,7 @@ type SelectHeaderProps = {
   searchComponent?: React.ReactNode
 }
 
-export type SelectOuterInputProps<T = any, Multi extends boolean = false> = Omit<SelectProps<T, Multi>, 'variants'| 'styles'> & {
+export type SelectOuterInputProps<T = any, Multi extends boolean = false> = SelectProps<T, Multi> & {
   currentValueLabel: FormTypes.Label
   styles?: StylesOf<TextInputComposition>
   clearIcon?: Partial<ActionIconProps>
@@ -69,24 +65,22 @@ export type ReplaceSelectProps<Props, T, Multi extends boolean = false> = Omit<
   keyof ValueBoundSelectProps<T, Multi>
 > & ValueBoundSelectProps<T, Multi>
 
-export type SelectProps<T = any, Multi extends boolean = false> = {
+export type SelectProps<T = any, Multi extends boolean = false> =
+  SelectModalProps &
+  ValueBoundSelectProps<T, Multi> &
+  {
     placeholder?: FormTypes.Label
     label?: FormTypes.Label
-    styles?: StylesOf<SelectComposition>
-    style?: TextInputProps['style']
     hideInput?: boolean
-    selectedIcon?: IconPlaceholder
-    arrowIconName?: IconPlaceholder
+    selectedIcon?: AppIcon
+    arrowIconName?: AppIcon
     closeOnSelect?: boolean
-
     listProps?: Partial<FlatListProps>
     clearable?: boolean
-    clearIconName?: IconPlaceholder
+    clearIconName?: AppIcon
     keyboardAware?: GetKeyboardAwarePropsOptions
     multiple?: Multi
-    itemProps?: Partial<
-      Pick<SelectRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'
-    >>
+    itemProps?: Partial<Pick<SelectRenderFNProps<any>, 'iconProps' | 'textProps' | 'touchableProps'>>
     searchable?: boolean
     limit?: number
     ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
@@ -94,6 +88,5 @@ export type SelectProps<T = any, Multi extends boolean = false> = {
     searchInputProps?: Partial<SearchInputProps>
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
-
-  } & ComponentVariants<typeof SelectPresets> & SelectModalProps & ValueBoundSelectProps<T, Multi>
-
+    style?: StyledProp<SelectComposition>
+  }

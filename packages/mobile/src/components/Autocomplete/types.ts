@@ -11,7 +11,7 @@ import { AppIcon, StyledProp } from '@codeleap/styles'
 import { AutocompleteComposition } from './styles'
 
 export type AutocompleteRenderFNProps<T> = {
-  styles?: StylesOf<AutocompleteComposition>
+  style?: StylesOf<AutocompleteComposition>
   onPress: () => void
   isSelected?: boolean
   item: FormTypes.Options<T>[number]
