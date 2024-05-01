@@ -3,7 +3,7 @@ import { arePropsEqual, TypeGuards } from '@codeleap/common'
 import { Badge } from '../Badge'
 import { View } from '../View'
 import { IconProps } from './types'
-import { themeStore, getNestedStylesByKey } from '@codeleap/styles'
+import { themeStore, getNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -62,6 +62,10 @@ export const IconComponent = (props: IconProps) => {
 IconComponent.styleRegistryName = 'Icon'
 IconComponent.elements = ['icon', 'iconBadgeWrapper', 'badge']
 IconComponent.rootElement = 'icon'
+
+IconComponent.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return IconComponent as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
+}
 
 MobileStyleRegistry.registerComponent(IconComponent)
 
