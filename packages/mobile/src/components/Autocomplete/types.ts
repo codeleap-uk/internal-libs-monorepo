@@ -1,22 +1,17 @@
-import {
-  ComponentVariants,
-  FormTypes,
-  IconPlaceholder,
-  PropsOf,
-} from '@codeleap/common'
-import { AutocompletePresets } from '.'
+import { FormTypes, PropsOf } from '@codeleap/common'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { Icon } from '../Icon'
 import { FlatListProps } from '../List'
 import { Text } from '../Text'
-import { SearchInputProps, TextInputProps } from '../TextInput'
+import { SearchInputProps } from '../TextInput'
 import { Touchable } from '../Touchable'
-import { AutocompleteComposition } from './styles'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
+import { AppIcon, StyledProp } from '@codeleap/styles'
+import { AutocompleteComposition } from './styles'
 
 export type AutocompleteRenderFNProps<T> = {
-  styles: StylesOf<AutocompleteComposition>
+  styles?: StylesOf<AutocompleteComposition>
   onPress: () => void
   isSelected?: boolean
   item: FormTypes.Options<T>[number]
@@ -51,18 +46,14 @@ export type ReplaceAutocompleteProps<Props, T, Multi extends boolean = false> = 
 export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     placeholder?: string
     label?: FormTypes.Label
-    styles?: StylesOf<AutocompleteComposition>
-    style?: TextInputProps['style']
     closeOnSelect?: boolean
-
+    style?: StyledProp<AutocompleteComposition>
     keyboardAware?: GetKeyboardAwarePropsOptions
     multiple?: Multi
-    itemProps?: Partial<
-      Pick<AutocompleteRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'
-    >>
+    itemProps?: Partial<Pick<AutocompleteRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'>>
     searchable?: boolean
     limit?: number
-    selectedIcon?: IconPlaceholder
+    selectedIcon?: AppIcon
     loadOptionsOnMount?: boolean
     loadOptionsOnOpen?: boolean
     selectable?: boolean
@@ -70,10 +61,8 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     debugName: string
     searchComponent?: React.ComponentType<SearchInputProps>
     listPlaceholder?: Partial<EmptyPlaceholderProps>
-    listProps?: Partial<Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>>
+    listProps?: Partial<Omit<FlatListProps<T>, 'renderItem'|'style'>>
     loading: boolean | ((isLoading: boolean) => boolean)
   }
-    & Omit<FlatListProps<T>, 'renderItem'|'styles'|'style'>
-    & ComponentVariants<typeof AutocompletePresets>
+    & Omit<FlatListProps<T>, 'renderItem'|'style'>
     & ValueBoundAutocompleteProps<T, Multi>
-

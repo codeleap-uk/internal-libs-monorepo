@@ -1,42 +1,39 @@
 import React from 'react'
-import { ComponentVariants, PropsOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import { StyleSheet } from 'react-native'
-import { format, formatISO } from 'date-fns'
+import { TypeGuards } from '@codeleap/common'
+import { format } from 'date-fns'
 // @ts-ignore
 import { Calendar as RNCalendar, CalendarProps as RNCalendarProps, DateData } from 'react-native-calendars'
+import { View, ViewProps } from '../View'
+import { CalendarComposition } from './types'
+import { AnyRecord, IJSX, StyledComponentProps, StyledProp } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
-import { View } from '../View'
-import { TCalendarStyles } from './types'
-import { CalendarPresets } from './style'
-export type CalendarProps = PropsOf<typeof View> & {
-  styles?: TCalendarStyles
-  onValueChange?: (date: Date|string) => any
-  value?: Date|string
-  calendarProps?: RNCalendarProps
-} & ComponentVariants<typeof CalendarPresets>
-export * from './style'
+export type CalendarProps =
+  Omit<ViewProps, 'style'> &
+  {
+    onValueChange?: (date: Date | string) => any
+    value?: Date | string
+    calendarProps?: RNCalendarProps
+    style?: StyledProp<CalendarComposition>
+  }
+
 export * from './types'
 
-export const Calendar = (props:CalendarProps) => {
+export const Calendar = (props: CalendarProps) => {
   const {
-    variants = [],
     style,
-    styles = {},
     calendarProps,
     value,
     onValueChange,
     ...viewProps
   } = props
-  const variantStyles = useDefaultComponentStyle<'u:Calendar', typeof CalendarPresets>('u:Calendar', {
-    variants,
-    styles,
-    transform: StyleSheet.flatten,
-    rootElement: 'wrapper',
-  })
-  const isDateObject = TypeGuards.isInstance(value, Date)
-  const stringValue:string = isDateObject ? format(value, 'yyyy/MM/dd') : value
 
-  function handleChange(date:DateData) {
+  const styles = MobileStyleRegistry.current.styleFor(Calendar.styleRegistryName, style)
+
+  const isDateObject = TypeGuards.isInstance(value, Date)
+  const stringValue: string = isDateObject ? format(value, 'yyyy/MM/dd') : value
+
+  function handleChange(date: DateData) {
     if (!onValueChange) return
     if (isDateObject) {
       onValueChange(new Date(date.timestamp))
@@ -45,7 +42,7 @@ export const Calendar = (props:CalendarProps) => {
     }
   }
 
-  return <View style={[variantStyles.wrapper, style]} {...viewProps}>
+  return <View style={styles?.wrapper} {...viewProps}>
     <RNCalendar
       onDayPress={handleChange}
       current={new Date(value).toISOString()}
@@ -54,12 +51,20 @@ export const Calendar = (props:CalendarProps) => {
         [stringValue]: { selected: true },
       }}
       theme={{
-        ...variantStyles.theme,
-        stylesheet: {
-          ...variantStyles,
-        },
+        ...styles?.theme,
+        stylesheet: styles,
       }}
       {...calendarProps}
     />
   </View>
 }
+
+Calendar.styleRegistryName = 'Calendar'
+Calendar.elements = ['wrapper', 'theme', 'calendar', 'day', 'agenda', 'expandable', 'event', 'timeLabel', 'textDayStyle', 'dotStyle', 'arrowStyle', 'contentStyle', 'timelineContainer', 'line', 'verticalLine', 'nowIndicator']
+Calendar.rootElement = 'wrapper'
+
+Calendar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Calendar as (props: StyledComponentProps<CalendarProps, typeof styles>) => IJSX
+}
+
+MobileStyleRegistry.registerComponent(Calendar)

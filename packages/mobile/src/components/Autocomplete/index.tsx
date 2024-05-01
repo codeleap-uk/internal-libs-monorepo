@@ -1,20 +1,15 @@
-import {
-  useDefaultComponentStyle,
-  TypeGuards,
-  useNestedStylesByKey,
-  FormTypes,
-  onMount,
-  useSearch,
-} from '@codeleap/common'
 import React, { useCallback } from 'react'
-import { StyleSheet } from 'react-native'
+import { TypeGuards, FormTypes, onMount, useSearch } from '@codeleap/common'
 import { List } from '../List'
 import { SearchInput } from '../TextInput'
-import { AutocompletePresets } from './styles'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
 import { View } from '../View'
+import { AnyRecord, AppIcon, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+
 export * from './styles'
+export * from './types'
 
 const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
   return options.filter((option) => {
@@ -28,37 +23,31 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
 
 const defaultProps: Partial<AutocompleteProps<any, boolean>> = {
   getLabel(option) {
-
     if (TypeGuards.isArray(option)) {
-
       if (option.length === 0) return null
 
       return option.map(o => o.label).join(', ')
-
     } else {
       if (!option) return null
       return option?.label
     }
   },
   searchInputProps: {},
-  selectedIcon: 'check' as any,
+  selectedIcon: 'check' as AppIcon,
   searchComponent: SearchInput,
 }
 
 export const Autocomplete = <T extends string | number = string, Multi extends boolean = false>(autocomplete: AutocompleteProps<T, Multi>) => {
   const allProps = {
-    ...defaultProps,
+    ...Autocomplete.defaultProps,
     ...autocomplete,
   }
 
   const {
     value,
     onValueChange,
-    styles = {},
     options = [],
-    variants,
     renderItem,
-
     debugName,
     placeholder = 'Select',
     itemProps = {},
@@ -108,21 +97,15 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Autocomplete', typeof AutocompletePresets>('u:Autocomplete', {
-    transform: StyleSheet.flatten,
-    rootElement: 'inputWrapper',
-    styles,
-    variants,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(Autocomplete.styleRegistryName, style)
 
-  const itemStyles = useNestedStylesByKey('item', variantStyles)
-
-  const listStyles = useNestedStylesByKey('list', variantStyles)
+  const itemStyles = getNestedStylesByKey('item', styles)
+  const listStyles = getNestedStylesByKey('list', styles)
+  const searchInputStyles = getNestedStylesByKey('searchInput', styles)
 
   const currentOptions = searchable ? filteredOptions : defaultOptions
 
   const select = (selectedValue) => {
-
     let newValue = null
 
     let newOption = null
@@ -163,13 +146,11 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
     } else {
       setLabelOptions([newOption])
     }
-
   }
 
   const Item = renderItem || Button
 
   const renderListItem = useCallback(({ item }) => {
-
     let selected = false
 
     if (multiple && isValueArray) {
@@ -202,7 +183,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
 
   const showLoading = TypeGuards.isFunction(loadingProp) ? loadingProp(loading) : (loadingProp || loading)
 
-  return <View style={[variantStyles.wrapper, style]}>
+  return <View style={styles?.wrapper}>
     <Search
       placeholder={placeholder}
       debugName={debugName}
@@ -215,13 +196,14 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       onSearchChange={onChangeSearch}
       hideErrorMessage
       {...searchProps}
+      style={searchInputStyles}
     />
 
     <List<any>
       data={searchable ? filteredOptions : options}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}
-      styles={listStyles}
+      style={listStyles}
       // @ts-ignore
       keyExtractor={(i) => i.value}
       renderItem={renderListItem}
@@ -233,7 +215,14 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
   </View>
 }
 
-export * from './styles'
-export * from './types'
+Autocomplete.styleRegistryName = 'Autocomplete'
+Autocomplete.elements = ['wrapper', 'list', 'item', 'searchInput']
+Autocomplete.rootElement = 'wrapper'
+
+Autocomplete.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Autocomplete as (<T extends string | number = string, Multi extends boolean = false>(props: StyledComponentProps<AutocompleteProps<T, Multi>, typeof styles>) => IJSX)
+}
 
 Autocomplete.defaultProps = defaultProps
+
+MobileStyleRegistry.registerComponent(Autocomplete)

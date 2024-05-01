@@ -1,4 +1,4 @@
-import { IconPlaceholder } from '@codeleap/common'
+import { AppIcon } from '@codeleap/styles'
 import { Navigators } from './constants'
 
 export type TNavigators = typeof Navigators
@@ -13,7 +13,7 @@ export type PropTypes = {
 }
 export type SceneComponent<K extends NavigatorType> = PropTypes[K]['Screen']
 export type SceneOptions<K extends NavigatorType> =
-    { icon?: IconPlaceholder; default?:SceneComponent<K> } & PropTypes[K]['Screen']
+    { icon?: AppIcon; default?:SceneComponent<K> } & PropTypes[K]['Screen']
 export type Scene<K extends NavigatorType> = SceneComponent<K> | SceneOptions<K>
 
 export type Scenes<K extends NavigatorType> = {
@@ -26,10 +26,3 @@ export type NavigationProps<T extends NavigatorType> = {
     type: T
     scenes: Scenes<T>
 } & PropTypes[T]['Navigator']
-
-// export type NavigationStructure  = {
-//     [module:string] : {
-//         scenes: Scenes,
-
-//     }
-// }
