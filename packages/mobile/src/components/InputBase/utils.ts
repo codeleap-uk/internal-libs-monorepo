@@ -26,6 +26,7 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
     'wrapperProps',
     'disabled',
     'hideErrorMessage',
+    'style',
   ]
 
   const copy = { ...props }

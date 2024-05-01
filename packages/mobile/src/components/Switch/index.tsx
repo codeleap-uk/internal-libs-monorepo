@@ -1,35 +1,14 @@
-import * as React from 'react'
-import {
-
-  ComponentVariants,
-  useDefaultComponentStyle,
-  StylesOf,
-  PropsOf,
-} from '@codeleap/common'
-import { StyleSheet } from 'react-native'
+import React from 'react'
 import { View } from '../View'
-
-import {
-  SwitchPresets,
-  SwitchComposition,
-} from './styles'
-import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
 import { Touchable } from '../Touchable'
+import { SwitchProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
-
-export type SwitchProps = Pick<
-  InputBaseProps,
-  'debugName' | 'disabled' | 'label'
-> & {
-  variants?: ComponentVariants<typeof SwitchPresets>['variants']
-  styles?: StylesOf<SwitchComposition>
-  value: boolean
-  onValueChange: (value: boolean) => void
-  style?: PropsOf<typeof View>['style']
-  switchOnLeft?: boolean
-}
+export * from './types'
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
@@ -38,10 +17,9 @@ export const Switch = (props: SwitchProps) => {
     inputBaseProps,
     others,
   } = selectInputBaseProps(props)
+
   const {
-    variants = [],
-    style = {},
-    styles = {},
+    style,
     value,
     disabled,
     debugName,
@@ -49,45 +27,39 @@ export const Switch = (props: SwitchProps) => {
     switchOnLeft,
   } = others
 
-  const variantStyles = useDefaultComponentStyle<'u:Switch', typeof SwitchPresets>('u:Switch', {
-    variants,
-    styles,
-    rootElement: 'wrapper',
-    transform: StyleSheet.flatten,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(Switch.styleRegistryName, style)
 
   const trackAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: ['track:off', 'track:disabled', 'track:on', 'track:disabled-on', 'track:disabled-off'],
-    transition: variantStyles['track:transition'],
+    transition: styles['track:transition'],
     updater: () => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? variantStyles['track:disabled-on'] : variantStyles['track:disabled-off']
+        disabledStyle = value ? styles['track:disabled-on'] : styles['track:disabled-off']
       }
-      const style = value ? variantStyles['track:on'] : variantStyles['track:off']
+      const style = value ? styles['track:on'] : styles['track:off']
 
       return {
         ...style,
         ...disabledStyle,
       }
-
     },
     dependencies: [value, disabled],
   })
 
   const thumbAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: ['thumb:off', 'thumb:disabled', 'thumb:on', 'thumb:disabled-off', 'thumb:disabled-on'],
-    transition: variantStyles['thumb:transition'],
+    transition: styles['thumb:transition'],
     updater: () => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? variantStyles['thumb:disabled-on'] : variantStyles['thumb:disabled-off']
+        disabledStyle = value ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
       }
-      const style = value ? variantStyles['thumb:on'] : variantStyles['thumb:off']
+      const style = value ? styles['thumb:on'] : styles['thumb:off']
       return {
         ...style,
         ...disabledStyle,
@@ -97,13 +69,14 @@ export const Switch = (props: SwitchProps) => {
     dependencies: [value, disabled],
   })
 
-  const _switchOnLeft = switchOnLeft ?? variantStyles.__props?.switchOnLeft
+  // @ts-expect-error
+  const _switchOnLeft = switchOnLeft ?? styles?.__props?.switchOnLeft
 
   return <InputBase
     {...inputBaseProps}
     debugName={debugName}
     wrapper={Touchable}
-    styles={variantStyles}
+    style={styles}
     wrapperProps={{
       onPress: () => {
         onValueChange(!value)
@@ -112,26 +85,36 @@ export const Switch = (props: SwitchProps) => {
       rippleDisabled: true,
     }}
     order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
-    style={style}
     disabled={disabled}
-
   >
     <View
       animated
       style={[
-        variantStyles.track,
-        disabled && variantStyles['track:disabled'],
+        styles?.track,
+        disabled && styles['track:disabled'],
         trackAnimation,
       ]}
     >
       <View
         animated
         style={[
-          variantStyles.thumb,
-          disabled && variantStyles['thumb:disabled'],
+          styles?.thumb,
+          disabled && styles['thumb:disabled'],
           thumbAnimation,
         ]}
       />
     </View>
   </InputBase>
 }
+
+Switch.styleRegistryName = 'Switch'
+Switch.elements = [...InputBase.elements, 'track', 'thumb']
+Switch.rootElement = 'wrapper'
+
+Switch.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Switch as (props: StyledComponentProps<SwitchProps, typeof styles>) => IJSX
+}
+
+Switch.defaultProps = {}
+
+MobileStyleRegistry.registerComponent(Switch)

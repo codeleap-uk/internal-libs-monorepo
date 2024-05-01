@@ -1,23 +1,19 @@
-import * as React from 'react'
+import React from 'react'
 import { Slider as RNSlider } from '@miblanchard/react-native-slider'
 import { StyleSheet } from 'react-native'
-import {
-  TypeGuards,
-  useDefaultComponentStyle,
-  onUpdate,
-} from '@codeleap/common'
-
+import { TypeGuards, onUpdate } from '@codeleap/common'
 import { SliderProps, TrackMarkProps } from './types'
 import { InputBase, selectInputBaseProps } from '../InputBase'
-import { SliderPresets } from './styles'
 import { Text } from '../Text'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
-  const { index, content, style, onPress } = props
+  const { style, onPress } = props
 
   if (!TypeGuards.isString(props.content)) {
     return <>
@@ -35,7 +31,7 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
 const minimumValue = 0
 const maximumValue = 100
 
-export const Slider = (props:SliderProps) => {
+export const Slider = (props: SliderProps) => {
   const {
     inputBaseProps: { label: _label, description: _description, ..._inputBaseProps },
     others,
@@ -48,16 +44,15 @@ export const Slider = (props:SliderProps) => {
     label,
     description,
     debugName,
-    styles = {},
     style,
     disabled,
-    variants,
     trackMarks,
     trackMarksClickable = false,
     labelClickable = false,
     trackMarkComponent = DefaultSliderTrackMark,
     ...sliderProps
   } = others
+
   const SliderTrackMark = trackMarkComponent
   const [_value, _setValue] = React.useState(value)
 
@@ -67,44 +62,40 @@ export const Slider = (props:SliderProps) => {
     }
   }, [value])
 
-  const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
-    variants,
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const styles = MobileStyleRegistry.current.styleFor(Slider.styleRegistryName, style)
 
   const thumbStyle = React.useMemo(() => {
     return StyleSheet.flatten([
-      variantStyles.thumb,
-      disabled && variantStyles['thumb:disabled'],
+      styles?.thumb,
+      disabled && styles['thumb:disabled'],
     ])
   }, [])
 
   const trackStyle = React.useMemo(() => {
     return StyleSheet.flatten([
-      variantStyles.track,
-      disabled && variantStyles['track:disabled'],
+      styles?.track,
+      disabled && styles['track:disabled'],
     ])
   }, [disabled])
 
   const selectedTrackStyle = React.useMemo(() => {
     return StyleSheet.flatten([
-      variantStyles.selectedTrack,
-      disabled && variantStyles['selectedTrack:disabled'],
+      styles?.selectedTrack,
+      disabled && styles['selectedTrack:disabled'],
     ])
   }, [disabled])
 
   const unselectedTrackStyle = React.useMemo(() => {
     return StyleSheet.flatten([
-      variantStyles.unselectedTrack,
-      disabled && variantStyles['unselectedTrack:disabled'],
+      styles?.unselectedTrack,
+      disabled && styles['unselectedTrack:disabled'],
     ])
   }, [disabled])
 
   const containerStyle = React.useMemo(() => {
     return StyleSheet.flatten([
-      variantStyles.sliderContainer,
-      disabled && variantStyles['sliderContainer:disabled'],
+      styles?.sliderContainer,
+      disabled && styles['sliderContainer:disabled'],
     ])
   }, [disabled])
 
@@ -119,8 +110,8 @@ export const Slider = (props:SliderProps) => {
 
   const trackMarkStyle = React.useMemo(() => {
     return StyleSheet.flatten([
-      variantStyles.trackMark,
-      disabled && variantStyles['trackMark:disabled'],
+      styles?.trackMark,
+      disabled && styles['trackMark:disabled'],
     ])
   }, [disabled])
 
@@ -128,31 +119,32 @@ export const Slider = (props:SliderProps) => {
     <InputBase
       {..._inputBaseProps}
       disabled={disabled}
-      styles={variantStyles}
+      style={styles}
       labelAsRow
     >
       {label || description ? (
-        <View style={variantStyles.labelRow}>
+        <View style={styles.labelRow}>
           {label ? (
             <Touchable
               onPress={() => labelClickable ? onValueChange(sliderProps?.minimumValue || minimumValue) : null}
-              styles={variantStyles.labelBtn}
+              style={styles.labelBtn}
               debugName='slider title'
             >
-              <Text style={variantStyles.label} text={label}/>
+              <Text style={styles?.label} text={label} />
             </Touchable>
           ) : null}
           {description ? (
             <Touchable
               onPress={() => labelClickable ? onValueChange(sliderProps?.maximumValue || maximumValue) : null}
-              styles={variantStyles.descriptionBtn}
+              style={styles?.descriptionBtn}
               debugName='slider description'
             >
-              <Text style={variantStyles.description} text={description}/>
+              <Text style={styles?.description} text={description} />
             </Touchable>
           ) : null}
         </View>
       ) : null}
+
       <RNSlider
         value={_value}
         onValueChange={_setValue}
@@ -174,16 +166,17 @@ export const Slider = (props:SliderProps) => {
       />
       {
         trackMarksProp ? (
-          <View style={variantStyles.trackMarkWrapper}>
+          <View style={styles?.trackMarkWrapper}>
             {
               trackMarksProp.map((_, idx) => {
                 let idxStyle = {}
 
                 if (idx === 0) {
-                  idxStyle = variantStyles.firstTrackMark
+                  idxStyle = styles?.firstTrackMark
                 } else if (idx === trackMarksProp.length - 1) {
-                  idxStyle = variantStyles.lastTrackMark
+                  idxStyle = styles?.lastTrackMark
                 }
+
                 const style = [
                   trackMarkStyle,
                   idxStyle,
@@ -217,3 +210,15 @@ export const Slider = (props:SliderProps) => {
   )
 }
 
+Slider.styleRegistryName = 'Slider'
+Slider.rootElement = 'wrapper'
+Slider.elements = [
+  ...InputBase.elements,
+  'thumb', 'track', 'selectedTrack', 'unselectedTrack', 'firstTrackMark', 'lastTrackMark', 'sliderContainer', 'labelBtn', 'descriptionBtn'
+]
+
+Slider.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Slider as (props: StyledComponentProps<SliderProps, typeof styles>) => IJSX
+}
+
+MobileStyleRegistry.registerComponent(Slider)
