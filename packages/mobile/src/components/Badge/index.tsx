@@ -50,22 +50,22 @@ export const Badge = (props: BadgeProps) => {
 
   if (!visible) return null
 
-  const variantStyles = MobileStyleRegistry.current.styleFor(Badge.styleRegistryName, style)
+  const styles = MobileStyleRegistry.current.styleFor(Badge.styleRegistryName, style)
 
   const wrapperStyles: ViewProps['style'] = [
-    variantStyles?.wrapper,
-    (disabled && variantStyles?.['wrapper:disabled']),
+    styles?.wrapper,
+    (disabled && styles?.['wrapper:disabled']),
   ]
 
   const innerWrapperStyles: ViewProps['style'] = [
-    variantStyles?.innerWrapper,
-    (disabled && variantStyles?.['innerWrapper:disabled']),
+    styles?.innerWrapper,
+    (disabled && styles?.['innerWrapper:disabled']),
     innerWrapperProps?.style,
   ]
 
   const countStyles = [
-    variantStyles?.count,
-    (disabled && variantStyles?.['count:disabled']),
+    styles?.count,
+    (disabled && styles?.['count:disabled']),
     textProps?.style,
   ]
 

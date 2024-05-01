@@ -1,8 +1,6 @@
 /* eslint-disable max-lines */
 import {
-  useDefaultComponentStyle,
   TypeGuards,
-  useNestedStylesByKey,
   FormTypes,
   onMount,
   onUpdate,
@@ -11,15 +9,15 @@ import {
   useBooleanToggle,
 } from '@codeleap/common'
 import React, { useCallback, useMemo } from 'react'
-import { StyleSheet } from 'react-native'
 import { List } from '../List'
-import { SearchInput, TextInput } from '../TextInput'
+import { TextInput } from '../TextInput'
 import { SelectProps, ValueBoundSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 import { AnyRecord, AppIcon, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
+import { SearchInput } from '../SearchInput'
 
 export * from './styles'
 export * from './types'
@@ -287,7 +285,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     }}
     debounce={!!loadOptions ? 800 : null}
     onSearchChange={onChangeSearch}
-    styles={searchInputStyles}
+    style={searchInputStyles}
     {...searchInputProps}
   /> : null
 

@@ -8,6 +8,7 @@ import { PressableRipple } from '../../modules/PressableRipple'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { TouchableProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 export * from './types'
@@ -222,9 +223,7 @@ export const Touchable = forwardRef<
       )}
     </Wrapper>
   )
-}) as unknown as ((props: TouchableProps) => JSX.Element) & {
-  defaultProps: Partial<TouchableProps>
-} & GenericStyledComponentAttributes<AnyRecord>
+}) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponentAttributes<AnyRecord>
 
 Touchable.styleRegistryName = 'Touchable'
 Touchable.elements = ['wrapper', 'feedback', 'pressable']

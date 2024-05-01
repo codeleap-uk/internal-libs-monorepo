@@ -9,6 +9,7 @@ import FastImage from 'react-native-fast-image'
 import { ImageProps } from './types'
 import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { ComponentWithDefaultProps } from 'src/types'
 
 export * from './styles'
 export * from './types'
@@ -94,7 +95,7 @@ export const ImageComponent = (props: ImageProps) => {
 
   const loadingElement = React.useMemo(() => {
     return showLoading ? (
-      <Loading visible={loading} styles={overlayStyle} />
+      <Loading visible={loading} style={overlayStyle} />
     ) : null
   }, [showLoading, loading])
 
@@ -136,9 +137,7 @@ function areEqual(prevProps, nextProps) {
   return res
 }
 
-type ImageComponentType = ((props: ImageProps) => IJSX) & GenericStyledComponentAttributes<AnyRecord> & { defaultProps: Partial<ImageProps> }
-
-export const Image = React.memo(ImageComponent, areEqual) as unknown as ImageComponentType
+export const Image = React.memo(ImageComponent, areEqual) as unknown as ComponentWithDefaultProps<ImageProps> & GenericStyledComponentAttributes<AnyRecord>
 
 Image.styleRegistryName = 'Image'
 Image.elements = ['wrapper', 'touchable', 'overlay']

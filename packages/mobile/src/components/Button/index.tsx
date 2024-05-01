@@ -11,7 +11,7 @@ import { Badge } from '../Badge'
 import { ButtonProps } from './types'
 import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
-import { ReactElement } from 'react'
+import { ComponentWithDefaultProps } from 'src/types'
 
 export * from './styles'
 export * from './types'
@@ -86,7 +86,6 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   return (
     <Touchable
-      // @ts-expect-error
       style={[_styles.wrapper, { feedback: styles.feedback }, getFeedbackWrapperStyle(pressed)]}
       ref={ref}
       disabled={disabled}
@@ -104,7 +103,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       <Badge badge={badge} style={badgeStyles} {...badgeProps} />
     </Touchable>
   )
-}) as ((props: ButtonProps) => ReactElement) & GenericStyledComponentAttributes<AnyRecord> & { defaultProps: Partial<ButtonProps> }
+}) as ComponentWithDefaultProps<ButtonProps> & GenericStyledComponentAttributes<AnyRecord>
 
 Button.styleRegistryName = 'Button'
 Button.elements = ['wrapper', 'inner', 'text', 'icon', 'leftIcon', 'rightIcon', 'loader', 'badge']

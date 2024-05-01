@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { TypeGuards, FormTypes, onMount, useSearch } from '@codeleap/common'
 import { List } from '../List'
-import { SearchInput } from '../TextInput'
+import { SearchInput } from '../SearchInput'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
 import { View } from '../View'
