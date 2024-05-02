@@ -52,14 +52,14 @@ export const InputBase = (props: InputBaseProps) => {
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
-    styles: _styles.leftIconStyles,
+    style: _styles.leftIconStyles,
     debugName: `${debugName} left icon`,
     dismissKeyboard: false,
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
     // @ts-ignore
-    styles: _styles.rightIconStyles,
+    style: _styles.rightIconStyles,
     debugName: `${debugName} right icon`,
     dismissKeyboard: false,
   })
@@ -89,9 +89,9 @@ export const InputBase = (props: InputBaseProps) => {
   }
 
   return <WrapperComponent
-    style={[_styles.wrapperStyle, style]}
     {...otherProps}
     {...wrapperProps}
+    style={_styles.wrapperStyle}
   >
     {
       order.map((key) => <KeyPassthrough key={key}>

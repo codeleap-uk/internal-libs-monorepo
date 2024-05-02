@@ -126,6 +126,13 @@ export class CodeleapStyleRegistry {
   isCompositionStyle(component: AnyStyledComponent, style: any) {
     const composition = {}
 
+    if (!style) {
+      return {
+        isComposition: false,
+        composition,
+      }
+    }
+
     const styleKeys = Object.keys(style)
 
     let elements = []
@@ -150,6 +157,14 @@ export class CodeleapStyleRegistry {
 
   isResponsiveStyle(style: any) {
     const responsiveStyleKey = 'breakpoints'
+
+    if (!style) {
+      return {
+        responsiveStyleKey,
+        isResponsive: false,
+      }
+    }
+
     const responsiveStyles = style[responsiveStyleKey]
 
     return {
@@ -268,6 +283,8 @@ export class CodeleapStyleRegistry {
   }
 
   getStyleWithResponsive(componentName: string, style: any, component?: any) {
+    if (!style) return style
+
     const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(style)
 
     if (isResponsive) {
@@ -377,11 +394,13 @@ export class CodeleapStyleRegistry {
     }
 
     if (isStyleArray) {
+      const filteredStyle = (style as Array<any>)?.filter(s => !!s)
+
       let variants: string[] = []
       const styles: ICSS[] = [defaultStyle]
       let idx = 0
 
-      for (const s of style) {
+      for (const s of filteredStyle) {
         if (typeof s === 'string') {
           variants.push(s)
         }
@@ -408,7 +427,7 @@ export class CodeleapStyleRegistry {
           styles.push({ [rootElement]: s })
         }
 
-        if (idx === style.length - 1 && variants.length > 0) {
+        if (idx === filteredStyle.length - 1 && variants.length > 0) {
           const computedVariantStyle = this.computeVariantStyle(componentName, variants)
           styles.push(computedVariantStyle)
         }

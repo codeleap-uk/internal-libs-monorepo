@@ -1,7 +1,6 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf, StylesOf } from '@codeleap/common'
 import { InputBaseComposition } from './styles'
 import { ActionIcon } from '../ActionIcon'
-import { StyledProp } from '@codeleap/styles'
 
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
@@ -22,7 +21,7 @@ export type InputBaseProps = React.PropsWithChildren<{
   focused?: boolean
   disabled?: boolean
   order?: OrderedParts[]
-  style?: StyledProp<InputBaseComposition>
+  style?: StylesOf<InputBaseComposition>
   labelAsRow?: boolean
   hideErrorMessage?: boolean
 }>

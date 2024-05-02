@@ -1,3 +1,4 @@
+import deepmerge from '@fastify/deepmerge'
 import { ICSS } from '../types'
 import { spacingShortVariants, spacingVariants } from '../types/spacing'
 
@@ -44,4 +45,10 @@ export function getNestedStylesByKey<T extends string>(match: string, styles: Re
   }
 
   return stylesByKey
+}
+
+export const mergeStyles = (styles: Array<any>) => {
+  const style = styles?.filter(s => !!s)
+
+  return deepmerge({ all: true })(...style)
 }

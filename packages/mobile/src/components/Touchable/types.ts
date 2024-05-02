@@ -23,4 +23,5 @@ export type TouchableProps =
     analyticsName?: string
     analyticsData?: Record<string, any>
     dismissKeyboard?: boolean
+    disabled?: boolean
   }

@@ -1,8 +1,7 @@
 import { TypeGuards } from "@codeleap/common"
 import { ActionIconParts } from "../ActionIcon"
 import { InputBaseProps } from "./types"
-import { getNestedStylesByKey } from '@codeleap/styles'
-import { MobileStyleRegistry } from '../../Registry'
+import { getNestedStylesByKey, mergeStyles } from '@codeleap/styles'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
@@ -27,24 +26,24 @@ export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | Inpu
 
 const getIconStyles = (obj, state) => {
   return {
-    icon: [
+    icon: mergeStyles([
       obj.icon, 
       state.focused && obj['icon:focus'],
       state.hasError && obj['icon:error'], 
       state.disabled && obj['icon:disabled']
-    ],
-    'icon:disabled': [
+    ]),
+    'icon:disabled': mergeStyles([
       state.disabled && obj['icon:disabled']
-    ],
-    touchableWrapper: [
+    ]),
+    touchableWrapper: mergeStyles([
       obj.touchableWrapper, 
       state.focused && obj['touchableWrapper:focus'],
       state.hasError && obj['touchableWrapper:error'], 
       state.disabled && obj['touchableWrapper:disabled']
-    ],
-    'touchableWrapper:disabled': [
+    ]),
+    'touchableWrapper:disabled': mergeStyles([
       state.disabled && obj['touchableWrapper:disabled']
-    ]
+    ])
   }
 }
 
@@ -53,37 +52,34 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused,
     disabled,
     error,
-    style
+    style: styles,
   } = props
 
   const hasError = !TypeGuards.isNil(error)
 
-  const styles = MobileStyleRegistry.current.styleFor('InputBase', style)
-
-  const _leftIconStyles = getNestedStylesByKey('leftIcon', styles)
-  const _rightIconStyles = getNestedStylesByKey('rightIcon', styles)
-  const _generalIconStyles = getNestedStylesByKey('icon', styles)
+  const _leftIconStyles = getNestedStylesByKey<any>('leftIcon', styles)
+  const _rightIconStyles = getNestedStylesByKey<any>('rightIcon', styles)
+  const _generalIconStyles = getNestedStylesByKey<any>('icon', styles)
 
   const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled })
 
-  const leftIconStyles = [
+  const leftIconStyles = mergeStyles([
     generalIconStyles, 
-    // @ts-ignore
+    // @ts-expect-error
     getIconStyles(_leftIconStyles, { hasError, disabled: disabled || props?.leftIcon?.disabled, focused })
-  ]
+  ])
 
-  const rightIconStyles = [
+  const rightIconStyles = mergeStyles([
     generalIconStyles,
-    // @ts-ignore
-    getIconStyles(_rightIconStyles, { hasError, disabled: disabled || props?.right?.disabled, focused })
-  ]
+    // @ts-expect-error
+    getIconStyles(_rightIconStyles, { hasError, disabled: disabled || props?.rightIcon?.disabled, focused })
+  ])
 
   const labelStyle = [
     styles.label,
     focused && styles['label:focus'],
     hasError && styles['label:error'],
     disabled && styles['label:disabled'],
-    
   ]
 
   const errorStyle = [
