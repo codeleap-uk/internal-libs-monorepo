@@ -199,6 +199,16 @@ type RippleConfig = {
 }
 export type TouchableFeedbackConfig = RippleConfig | FeedbackConfig
 
+export type TouchFeedbackConfig = {
+  type?: 'ripple' | 'opacity' | 'highlight' | 'styles' | 'none'
+  config?: PressableRippleProps
+  iosFallback?: FeedbackConfig
+  value?: number
+  brightness?: number
+  shiftOpacity?: number
+  styles?: StyleProp<ViewStyle>
+}
+
 export type UsePressableFeedbackConfig = {
   disabled?: boolean
   feedbackConfig?: TouchableFeedbackConfig
