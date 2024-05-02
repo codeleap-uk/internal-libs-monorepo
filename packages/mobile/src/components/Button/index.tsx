@@ -11,7 +11,7 @@ import { Badge } from '../Badge'
 import { ButtonProps } from './types'
 import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
-import { ComponentWithDefaultProps } from 'src/types'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 export * from './types'

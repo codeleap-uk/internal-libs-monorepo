@@ -91,7 +91,9 @@ export class StylesCache {
   cacheFor(type: CacheType, key: string, value: any) {
     const cache = this[type]
 
-    this.store.cacheFor(type, key, value)
+    if (!!this.store) {
+      this.store.cacheFor(type, key, value)
+    }
 
     return cache.cacheFor(key, value)
   }

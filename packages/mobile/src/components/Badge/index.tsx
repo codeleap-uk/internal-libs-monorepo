@@ -108,3 +108,5 @@ Badge.defaultProps = defaultProps
 Badge.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Badge as (props: StyledComponentProps<BadgeProps, typeof styles>) => IJSX
 }
+
+MobileStyleRegistry.registerComponent(Badge)

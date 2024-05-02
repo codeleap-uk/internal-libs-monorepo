@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image'
 import { ImageProps } from './types'
 import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
-import { ComponentWithDefaultProps } from 'src/types'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 export * from './types'
