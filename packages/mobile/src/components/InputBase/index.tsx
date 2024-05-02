@@ -6,7 +6,7 @@ import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { MobileStyleRegistry } from 'src/Registry'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 export * from './utils'

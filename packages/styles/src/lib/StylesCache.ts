@@ -1,4 +1,4 @@
-import { Cache } from './Cache'
+import { Cache } from './Cacher'
 import { hashKey } from './hashKey'
 import { CacheStore, cacheStore } from './cacheStore'
 import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION } from './constants'

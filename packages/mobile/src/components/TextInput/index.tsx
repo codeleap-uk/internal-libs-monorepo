@@ -8,7 +8,7 @@ import { Touchable } from '../Touchable'
 import { MaskedTextInput } from '../../modules/textInputMask'
 import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { TextInputProps } from './types'
-import { MobileStyleRegistry } from 'src/Registry'
+import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 export * from './types'

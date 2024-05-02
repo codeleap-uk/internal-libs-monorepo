@@ -11,7 +11,7 @@ const commandName = 'styles-convertor'
 const newStylePackage = `
   import { createStyles } from '@codeleap/styles'
   import { ComponentNameComposition } from '@codeleap/mobile'
-  import { StyleRegistry } from '../newstyle'
+  import { StyleRegistry } from '../theme'
 
   const createComponentNameVariant = createStyles<ComponentNameComposition>
 
@@ -33,7 +33,7 @@ const newStylePackage = `
 
 const newStyleApp = `
   import { ICSS, createStyles } from '@codeleap/styles'
-  import { StyleRegistry } from '../newstyle'
+  import { StyleRegistry } from '../theme'
 
   export type ComponentNameComposition = 'wrapper' | 'text'
 
@@ -85,9 +85,11 @@ async function convertStylesheets(openai: OpenAI) {
         ${newStylePackage}
         Otherwise, use this format as a base:
         ${newStyleApp}
+
+        Just give me the refactored code
       `
 
-    console.log(prompt)
+    console.log('[CONVERSION] ' + stylesheet)
 
     const propsOpenai = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -97,14 +99,18 @@ async function convertStylesheets(openai: OpenAI) {
       }],
     })
 
-    console.log('message\n', propsOpenai?.choices?.[0]?.message?.content)
+    const newContent = propsOpenai?.choices?.[0]?.message?.content
+
+    fs.writeFileSync(`./src/app/stylesheets/${stylesheet}`, newContent)
+
+    console.log('[CONVERSION] ' + stylesheet + 'SUCCESS')
   }
 }
 
 const newComponentStyle = `
   import { ComponentStyleSheets } from '@/app'
   import { StyledComponent } from '@codeleap/styles'
-  import { StyleRegistry } from '../app/newstyle'
+  import { StyleRegistry } from '../app/theme'
   import { View, Text } from '@/components'
 
   type MyComponentProps = {
@@ -409,10 +415,10 @@ export const stylesConvertorCommand = codeleapCommand(
       apiKey: null,
     })
 
-    // await convertStylesheets(openai)
+    await convertStylesheets(openai)
 
     // await convertComponents(openai)
 
-    await convertPages(openai)
+    // await convertPages(openai)
   },
 )
