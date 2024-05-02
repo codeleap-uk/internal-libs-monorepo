@@ -1,4 +1,4 @@
-import { StyledProp } from '@codeleap/styles'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 import { BadgeComponentProps } from '../Badge'
 import { IconProps } from '../Icon'
 import { TouchableProps } from '../Touchable'
@@ -9,7 +9,7 @@ export type ActionIconProps =
   BadgeComponentProps & 
   {
     iconProps?: Partial<IconProps>
-    icon?: IconProps['name']
-    name?: IconProps['name']
+    icon?: AppIcon
+    name?: AppIcon
     style?: StyledProp<ActionIconComposition>
   }

@@ -16,5 +16,5 @@ export type ButtonProps =
     debugName: string
     selected?: boolean
     children?: ReactNode
-    style: StyledProp<ButtonComposition>
+    style?: StyledProp<ButtonComposition>
   }
