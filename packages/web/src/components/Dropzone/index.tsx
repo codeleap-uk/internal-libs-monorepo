@@ -173,7 +173,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
     open,
   }))
 
-  const hasFiles = acceptedFiles.length > 0 || rejectedFiles.length > 0
+  const hasFiles = acceptedFiles?.length > 0 || rejectedFiles?.length > 0
 
   const fileProps = {
     fileLeftIcon,
@@ -195,7 +195,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
 
         {hasFiles && (
           <View css={variantStyles.filesWrapper}>
-            {acceptedFiles.map((file, index) => (
+            {acceptedFiles?.map?.((file, index) => (
               <FilePreview
                 {...fileProps}
                 index={index}
@@ -205,7 +205,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
                 FilePreviewComponent={FilePreviewComponent}
               />))}
 
-            {rejectedFiles.map(({ file, errors }, index) => (
+            {rejectedFiles?.map?.(({ file, errors }, index) => (
               <FilePreview
                 {...fileProps}
                 index={index}
