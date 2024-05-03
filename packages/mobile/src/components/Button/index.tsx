@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Badge } from '../Badge'
 import { ButtonProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
 
@@ -40,11 +40,11 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   const styles = MobileStyleRegistry.current.styleFor(Button.styleRegistryName, style)
 
   function getStyles(key: ButtonParts) {
-    return [
+    return mergeStyles([
       styles[key],
       selected && styles[key + ':selected'],
       disabled && styles[key + ':disabled'],
-    ]
+    ])
   }
 
   const iconStyle = getStyles('icon')
