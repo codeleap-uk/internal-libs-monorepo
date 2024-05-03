@@ -1,6 +1,7 @@
 import { PropsOf } from '@codeleap/common'
 import { StyledProp } from '@codeleap/styles'
-import { View as RNView } from 'react-native'
+import { ImageStyle, TextStyle, View as RNView, ViewStyle } from 'react-native'
+import { AnimatedStyleProp } from 'react-native-reanimated'
 import { ViewComposition } from './styles'
 
 export type ViewProps<T extends React.ComponentType = typeof RNView> = {
@@ -8,4 +9,5 @@ export type ViewProps<T extends React.ComponentType = typeof RNView> = {
   style?: StyledProp<ViewComposition>
   animated?: boolean
   children?: React.ReactNode
+  animatedStyle?: AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>
 } & PropsOf<T>

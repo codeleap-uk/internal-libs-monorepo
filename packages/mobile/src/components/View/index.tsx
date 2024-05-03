@@ -14,6 +14,7 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
     style, 
     component: _Component = RNView,
     animated = false,
+    animatedStyle,
     ...viewProps
   } = props
 
@@ -22,7 +23,7 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
   const Component: React.ComponentType<any> = animated ? Animated.View : _Component
 
   return (
-    <Component {...viewProps} style={styles.wrapper} />
+    <Component {...viewProps} style={[styles.wrapper, animatedStyle]} />
   )
 }
 

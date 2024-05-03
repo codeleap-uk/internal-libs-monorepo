@@ -149,11 +149,11 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
           <BubbleView
             options={options}
             animated
+            animatedStyle={bubbleAnimation}
             style={[
               styles?.selectedBubble,
               props?.touchableProps?.disabled && styles?.['selectedBubble:disabled'],
               widthStyle,
-              bubbleAnimation,
             ]}
           />
           {options.map((o, idx) => (

@@ -40,7 +40,8 @@ export const Backdrop = (props: BackdropProps) => {
     <View
       animated
       pointerEvents={visible ? 'auto' : 'none'}
-      style={[styles.wrapper, animation]}
+      style={styles.wrapper}
+      animatedStyle={animation}
       {...wrapperProps}
     >
       {

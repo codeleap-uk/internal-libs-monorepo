@@ -40,7 +40,8 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
   return (
     <View
       animated
-      style={[styles.wrapper, wrapperAnimation]}
+      animatedStyle={wrapperAnimation}
+      style={styles.wrapper}
       // @ts-expect-error
       transition={transition.current}
     >

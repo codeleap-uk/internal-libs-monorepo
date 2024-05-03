@@ -16,7 +16,10 @@ export const Switch = (props: SwitchProps) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...Switch.defaultProps,
+    ...props,
+  })
 
   const {
     style,
@@ -89,18 +92,18 @@ export const Switch = (props: SwitchProps) => {
   >
     <View
       animated
+      animatedStyle={trackAnimation}
       style={[
         styles?.track,
         disabled && styles['track:disabled'],
-        trackAnimation,
       ]}
     >
       <View
         animated
+        animatedStyle={thumbAnimation}
         style={[
           styles?.thumb,
           disabled && styles['thumb:disabled'],
-          thumbAnimation,
         ]}
       />
     </View>

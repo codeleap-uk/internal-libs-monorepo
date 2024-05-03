@@ -170,7 +170,8 @@ export const Modal = (modalProps: ModalProps) => {
 
         <View
           animated
-          style={[styles?.box, boxAnimationStyles]}
+          style={styles?.box}
+          animatedStyle={boxAnimationStyles}
           {...props}
           onLayout={onModalLayout}
         >
@@ -188,7 +189,6 @@ export const Modal = (modalProps: ModalProps) => {
     </View >
   )
 }
-
 
 Modal.styleRegistryName = 'Modal'
 Modal.elements = ['box', 'backdrop', 'innerWrapper', 'scroll', 'body', 'footer', 'header', 'title', 'description', 'closeButton', 'topSpacing']
