@@ -56,11 +56,11 @@ async function copyFilesAndDirectorySync(source, destination) {
 }
 
 async function main() {
-  await deleteFilesAndDirectory('./patches')
+  // await deleteFilesAndDirectory('./patches')
 
-  console.log('Copying PATCHES from the Mobile-Template')
+  // console.log('Copying PATCHES from the Mobile-Template')
 
-  await copyFilesAndDirectorySync('./apps/mobile/patches', './patches')
+  // await copyFilesAndDirectorySync('./apps/mobile/patches', './patches')
 }
 
 main()
