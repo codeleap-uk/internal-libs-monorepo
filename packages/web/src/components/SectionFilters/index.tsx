@@ -40,10 +40,9 @@ export type SectionFiltersProps = {
   onClearItems?: () => any
   onApplyItems?: (items?: ModalDataItemProps[]) => any
   renderFooterComponent?: (props: FooterComponentProps) => any
-  closeModalIconProps?: Omit<PropsOf<typeof ActionIcon>, 'debugName'>
   filterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
   checkIconProps?: Omit<PropsOf<typeof Icon>, 'debugName' | 'name'>
-} & Partial<ModalProps> & ComponentVariants<typeof SectionFilterPresets>
+} & ComponentVariants<typeof SectionFilterPresets>
 
 type OptionProps = {
   option: ItemOptionProps
@@ -113,17 +112,14 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const {
     data,
-    title = 'Filters',
     onSelectItem,
     renderFooterComponent,
     shouldDisplayCheckIcon = true,
     responsiveVariants,
     variants,
     styles,
-    closeModalIconProps,
     filterButtonProps,
     checkIconProps,
-    ...modalProps
   } = props
 
   const { Theme } = useCodeleapContext()
@@ -141,13 +137,12 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { fallbackValue: {}})
   const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { fallbackValue: {}})
 
-  const isMobile = Theme.hooks.down('mid')
-
-  const onPressItem = useCallback(({ item, option, index }: { option: ItemOptionProps; item: ModalDataItemProps; index: number}) => {
+  const onPressItem = useCallback(({ item, option }: { option: ItemOptionProps; item: ModalDataItemProps}) => {
 
     const hasOptions = !!item?.options
 
     _setDraft((state) => {
+
       const items = { ...state }
 
       const currentSelectedItems = Array.isArray(state?.[item.key]) ? state[item.key] : []
@@ -182,7 +177,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   }, [_draft, onSelectItem])
 
-  const renderItem = useCallback(({ item, index }: { item: ModalDataItemProps; index: number }) => {
+  const renderItem = useCallback(({ item }: { item: ModalDataItemProps}) => {
 
     const {
       showLabel = true,
@@ -203,7 +198,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
             item={item}
             items={_draft}
             styles={variantStyles}
-            onPress={() => onPressItem({ option, item, index })}
+            onPress={() => onPressItem({ option, item })}
             isLastItem={false}
             shouldApplyBiggerSpacing={false}
             shouldDisplayCheckIcon={shouldDisplayCheckIcon}
@@ -223,7 +218,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
               item={item}
               items={_draft}
               styles={variantStyles}
-              onPress={() => onPressItem({ item, option, index })}
+              onPress={() => onPressItem({ item, option })}
               isLastItem={item?.options?.length - 1 === index}
               shouldApplyBiggerSpacing={item?.options?.length > 1}
               shouldDisplayCheckIcon={shouldDisplayCheckIcon}
