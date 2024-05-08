@@ -28,6 +28,7 @@ import { GridPresets } from './Grid/styles'
 import { BadgePresets } from './Badge/styles'
 import { CropPickerPresets } from './CropPicker'
 import { TagPresets } from './Tag/styles'
+import { SectionFilterPresets } from './SectionFilters/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -63,6 +64,7 @@ export const defaultStyles = {
   Dropzone: DropzonePresets,
   CropPicker: CropPickerPresets,
   Tag: TagPresets,
+  SectionFilters: SectionFilterPresets,
 }
 
 import createCache from '@emotion/cache'
