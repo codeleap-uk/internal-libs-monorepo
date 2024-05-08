@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import React from 'react'
 import { Modal, Text, View, Touchable, Button, ActionIcon, Icon, ModalProps } from '@codeleap/web'
 import { AnyFunction, ComponentVariants, PropsOf, TypeGuards, useBooleanToggle, useCallback, useCodeleapContext, useDefaultComponentStyle, useMemo, useState } from '@codeleap/common'
 import { useConditionalState } from '@codeleap/common'
@@ -15,6 +16,7 @@ export type ModalDataItemProps = {
   label?: string
   selectMultiple?: boolean
   options?: ItemOptionProps[]
+  showLabel?: boolean
 }
 
 type onSelectItemProps = {
@@ -78,14 +80,12 @@ const ItemOption = (props: OptionProps) => {
         return String(option?.value) === String(items[item?.key])
       }
     } else {
-      return (TypeGuards.isArray(items) && items?.includes?.(option?.value))
+      return items[option?.label]
     }
   }, [item?.options, option?.value, items, item?.options, item?.key, item?.selectMultiple])
 
   const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
   const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
-
-  const displayCheckIcon = isItemSelected && shouldDisplayCheckIcon
 
   return (
     <Touchable
@@ -95,25 +95,16 @@ const ItemOption = (props: OptionProps) => {
       ]}
       debugName={`Section Filters modal - on ${option?.label} press`}
       onPress={onPress}
-      // onHover={setItemHover}
+      onHover={setItemHover}
     >
-      {option.label ? (
-        <View variants={['flex', 'center', (isItemSelected && shouldDisplayCheckIcon) && 'paddingLeft:2.5']}>
+      {TypeGuards.isString(option.label) ? (
+        <View variants={['flex', 'center']}>
           <Text
             style={itemLabelStyles}
             text={option?.label}
           />
         </View>
       ) : null}
-      {displayCheckIcon && (
-        <Icon
-          name='check'
-          size={24}
-          color={'white'}
-          debugName={'Check icon - selected item'}
-          {...checkIconProps}
-        />
-      )}
     </Touchable>
   )
 }
@@ -147,20 +138,18 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     },
   )
 
-  console.log(variantStyles, 'variant styles')
-
   const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { fallbackValue: {}})
   const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { fallbackValue: {}})
-  const [_visible, _toggle] = useConditionalState<boolean>(modalProps?.visible, modalProps?.toggle, { fallbackValue: false, hook: (init) => useBooleanToggle(init) })
 
   const isMobile = Theme.hooks.down('mid')
 
-  const onPressItem = useCallback(({ item, option }: { option: ItemOptionProps; item: ModalDataItemProps }) => {
+  const onPressItem = useCallback(({ item, option, index }: { option: ItemOptionProps; item: ModalDataItemProps; index: number}) => {
 
     const hasOptions = !!item?.options
 
     _setDraft((state) => {
-      let items = { ...state }
+      const items = { ...state }
+
       const currentSelectedItems = Array.isArray(state?.[item.key]) ? state[item.key] : []
 
       let isItemAlreadySelected = null
@@ -169,14 +158,10 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       if (item?.selectMultiple) {
         isItemAlreadySelected = currentSelectedItems?.includes(option.value)
       } else {
-        isItemAlreadySelected = hasOptions ? (items && items[item.key] === option?.value) : Object.values(items)?.includes?.(option?.value)
+        isItemAlreadySelected = hasOptions ? (!TypeGuards.isNil(items) && items[item.key] === option?.value) : Object.values(items)?.includes?.(option?.value)
       }
 
-      if (isItemAlreadySelected) {
-        newItems = currentSelectedItems.filter((val) => val !== option.value)
-      } else {
-        newItems = item.selectMultiple && hasOptions ? [...currentSelectedItems, option.value] : option?.value
-      }
+      newItems = item.selectMultiple && hasOptions ? [...currentSelectedItems, option.value] : option?.value
 
       const shouldRemoveItem = isItemAlreadySelected && (item.selectMultiple ? newItems.length === 0 : true)
 
@@ -184,20 +169,24 @@ export const SectionFilters = (props: SectionFiltersProps) => {
         if (hasOptions) {
           delete items[item.key]
         } else {
-          items = Object.values(items)?.filter?.(item => item !== option?.label)
+          delete items[option?.label]
         }
       } else {
         items[item.key] = newItems
       }
 
-      return hasOptions ? items : Object.values(items)
+      return items
     })
 
     onSelectItem?.({ key: item.key, option })
 
   }, [_draft, onSelectItem])
 
-  const renderItem = useCallback(({ item }: { item: ModalDataItemProps }) => {
+  const renderItem = useCallback(({ item, index }: { item: ModalDataItemProps; index: number }) => {
+
+    const {
+      showLabel = true,
+    } = item
 
     if (!item.options) {
 
@@ -207,23 +196,26 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       } as ItemOptionProps
 
       return (
-        <ItemOption
-          option={option}
-          item={item}
-          items={_draft}
-          styles={variantStyles}
-          onPress={() => onPressItem({ option, item })}
-          isLastItem={false}
-          shouldApplyBiggerSpacing={false}
-          shouldDisplayCheckIcon={shouldDisplayCheckIcon}
-          {...checkIconProps}
-        />
+        <>
+          {showLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
+          <ItemOption
+            option={option}
+            item={item}
+            items={_draft}
+            styles={variantStyles}
+            onPress={() => onPressItem({ option, item, index })}
+            isLastItem={false}
+            shouldApplyBiggerSpacing={false}
+            shouldDisplayCheckIcon={shouldDisplayCheckIcon}
+            {...checkIconProps}
+          />
+        </>
       )
     }
 
     return (
       <View variants={['column']}>
-        <Text style={variantStyles.label} text={item?.label} />
+        {showLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
         <View variants={['column']}>
           {item?.options?.map?.((option, index) => (
             <ItemOption
@@ -231,7 +223,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
               item={item}
               items={_draft}
               styles={variantStyles}
-              onPress={() => onPressItem({ item, option })}
+              onPress={() => onPressItem({ item, option, index })}
               isLastItem={item?.options?.length - 1 === index}
               shouldApplyBiggerSpacing={item?.options?.length > 1}
               shouldDisplayCheckIcon={shouldDisplayCheckIcon}
@@ -250,17 +242,27 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       return renderFooterComponent({ onApply: onApplyItems, onClear: onClearItems })
     }
 
-    const shouldDisable = (!Object.keys(_draft)?.length && !Object.keys(_selectedItems)?.length) || _draft?.length && _selectedItems?.length
+    const shouldDisable = false
 
     return (
-      <Button
-        style={variantStyles.footerButton}
-        text={'Filter'}
-        debugName={`Section Filters Footer - Apply items`}
-        onPress={onApplyItems}
-        disabled={shouldDisable}
-        {...filterButtonProps}
-      />
+      <View variants={['gap:1']}>
+        <Button
+          style={variantStyles.applyButton}
+          text={'Filter'}
+          debugName={`Section Filters Footer - Apply items`}
+          onPress={onApplyItems}
+          disabled={shouldDisable}
+          {...filterButtonProps}
+        />
+        <Button
+          style={variantStyles.clearButton}
+          text={'Clear'}
+          debugName={`Section Filters Footer - Apply items`}
+          onPress={onClearItems}
+          disabled={shouldDisable}
+          {...filterButtonProps}
+        />
+      </View>
     )
 
   }
@@ -273,40 +275,17 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   const onApplyItems = () => {
     _setSelectedItems(_draft)
     props?.onApplyItems?.(_selectedItems as ModalDataItemProps[])
-    _toggle()
   }
 
-  const closeIconVariants = closeModalIconProps?.hasOwnProperty('variants') ? closeModalIconProps?.variants : []
-
   return (
-    <Modal
-      debugName={`Section filters modal`}
-      variants={[isMobile ? 'fullscreen' : 'centered', 'center', 'sectionFiltersModal']}
-      showClose={false}
-      scroll={false}
-      {...modalProps}
-      visible={_visible}
-      toggle={_toggle}
-    >
-      <View style={variantStyles.wrapper}>
-        <View style={variantStyles.headerWrapper}>
-          <Text style={variantStyles.headerTitle} text={title} />
-          <ActionIcon
-            icon='x'
-            debugName='Section filters modal - close modal icon on press'
-            {...closeModalIconProps}
-            variants={['sectionFiltersCloseModalIcon', ...closeIconVariants]}
-            onPress={_toggle}
-          />
-        </View>
+    <View style={variantStyles.wrapper}>
 
-        <View style={variantStyles.scroll}>
-          {data && data.map((item) => renderItem({ item }))}
-        </View>
-
-        {renderFooter()}
+      <View style={variantStyles.scroll}>
+        {data && data.map((item) => renderItem({ item }))}
       </View>
-    </Modal>
+
+      {renderFooter()}
+    </View>
   )
 }
 

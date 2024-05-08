@@ -13,7 +13,8 @@ export type SectionFiltersComposition =
   'itemLabelWrapper' |
   'itemLabel' |
   'itemLabel:selected' |
-  'footerButton'
+  'applyButton' |
+  'clearButton'
 
 const createSectionFiltersStyle = createDefaultVariantFactory<SectionFiltersComposition>()
 
