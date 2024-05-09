@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
-import { Text, View, Touchable, Button, ActionIcon, Icon, ModalProps } from '@codeleap/web'
-import { AnyFunction, ComponentVariants, PropsOf, TypeGuards, useBooleanToggle, useCallback, useCodeleapContext, useDefaultComponentStyle, useMemo, useState } from '@codeleap/common'
+import { Text, View, Touchable, Button } from '@codeleap/web'
+import { AnyFunction, ComponentVariants, PropsOf, TypeGuards, useBooleanToggle, useCallback, useDefaultComponentStyle, useMemo } from '@codeleap/common'
 import { useConditionalState } from '@codeleap/common'
 import { SectionFiltersComposition, SectionFilterPresets } from './styles'
 
@@ -14,6 +14,8 @@ type ItemOptionProps = {
 type OnPressItemProps = {
   option: ItemOptionProps
   item: ModalDataItemProps
+  canSelectMultiple: boolean
+  hasOptions: boolean
 }
 
 export type ModalDataItemProps = {
@@ -55,6 +57,7 @@ type OptionProps = {
   onPress: () => void
   isLastItem: boolean
   shouldApplyBiggerSpacing: boolean
+  canSelectMultiple: boolean
 }
 
 const ItemOption = (props: OptionProps) => {
@@ -135,10 +138,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const onPressItem = useCallback((params: OnPressItemProps) => {
 
-    const { item, option } = params
-
-    const hasOptions = !!item?.options
-    const canSelectMultiple = item?.selectMultiple && hasOptions
+    const { item, option, canSelectMultiple, hasOptions } = params
 
     _setDraft((state) => {
 
@@ -151,7 +151,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       if (canSelectMultiple) {
         isItemAlreadySelected = multipleOptionsSelected?.includes(option.value)
       } else {
-        isItemAlreadySelected = hasOptions && !TypeGuards.isNil(items) ? items[item.id] === option?.value : Object.values(items)?.includes?.(option?.value)
+        isItemAlreadySelected = Object.values(items)?.includes?.(option?.value)
       }
 
       if (isItemAlreadySelected) {
@@ -177,40 +177,21 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       showDescriptionLabel = true,
     } = item
 
-    const Option = (option) => {
+    const hasOptions = !!item?.options
+    const canSelectMultiple = item?.selectMultiple && hasOptions
+
+    const Option = ({ option }: { option: ItemOptionProps}) => {
       return (
         <ItemOption
           option={option}
           item={item}
           items={_draft}
           styles={variantStyles}
-          onPress={() => onPressItem({ option, item })}
+          onPress={() => onPressItem({ option, item, canSelectMultiple, hasOptions })}
           isLastItem={false}
           shouldApplyBiggerSpacing={false}
+          canSelectMultiple={canSelectMultiple}
         />
-      )
-    }
-
-    if (!item.options) {
-
-      const option = {
-        label: item.id,
-        value: item.label,
-      } as ItemOptionProps
-
-      return (
-        <>
-          {showDescriptionLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
-          <ItemOption
-            option={option}
-            item={item}
-            items={_draft}
-            styles={variantStyles}
-            onPress={() => onPressItem({ option, item })}
-            isLastItem={false}
-            shouldApplyBiggerSpacing={false}
-          />
-        </>
       )
     }
 
@@ -218,17 +199,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       <View variants={['column']}>
         {showDescriptionLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
         <View variants={['column']}>
-          {item?.options?.map?.((option, index) => (
-            <ItemOption
-              option={option}
-              item={item}
-              items={_draft}
-              styles={variantStyles}
-              onPress={() => onPressItem({ item, option })}
-              isLastItem={item?.options?.length - 1 === index}
-              shouldApplyBiggerSpacing={item?.options?.length > 1}
-            />
-          ))}
+          {item?.options?.length ? item.options.map((option) => <Option option={option} />) : <Option option={{ label: item.id, value: item.label }} />}
         </View>
       </View>
     )
