@@ -2,69 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
 import { Text, View, Touchable, Button } from '@codeleap/web'
-import { AnyFunction, ComponentVariants, PropsOf, TypeGuards, useBooleanToggle, useCallback, useDefaultComponentStyle, useMemo } from '@codeleap/common'
+import { TypeGuards, useBooleanToggle, useCallback, useDefaultComponentStyle, useMemo } from '@codeleap/common'
 import { useConditionalState } from '@codeleap/common'
-import { SectionFiltersComposition, SectionFilterPresets } from './styles'
-
-type ItemOptionProps = {
-  label?: string
-  value: string | number
-}
-
-type OnPressOptionProps = {
-  item: ModalDataItemProps
-  option: ItemOptionProps
-  canSelectMultiple: boolean
-  hasMultipleOptions: boolean
-}
-
-export type ModalDataItemProps = {
-  id: string | number
-  label?: string
-  canSelectMultiple?: boolean
-  showDescriptionLabel?: boolean
-  options?: ItemOptionProps[]
-}
-
-type onSelectItemProps = {
-   id: ModalDataItemProps['id']
-   option: ItemOptionProps
-}
-
-type FooterComponentProps = {
-  onClear: SectionFiltersProps['onClearItems']
-  onApply: SectionFiltersProps['onApplyItems']
-}
-
-export type SectionFiltersProps = {
-  data?: ModalDataItemProps[]
-  selectedItems?: Object | Array<any>
-  setSelectedItems?: AnyFunction
-  draftItems?: Object | Array<any>
-  setDraftItems?: AnyFunction
-  onSelectItem?: (item: onSelectItemProps) => any
-  onClearItems?: () => any
-  onApplyItems?: (items?: ModalDataItemProps[]) => any
-  renderFooterComponent?: (props: FooterComponentProps) => any
-  applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-  clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-} & ComponentVariants<typeof SectionFilterPresets>
-
-type OptionProps = {
-  option: ItemOptionProps
-  item: ModalDataItemProps
-  styles: Record<SectionFiltersComposition, any>
-  items: object
-  onPress: () => void
-  canSelectMultiple: boolean
-}
+import { SectionFilterPresets } from './styles'
+import { ItemOptionProps, ModalDataItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps } from './types'
 
 const ItemOption = (props: OptionProps) => {
 
   const {
     option,
     item,
-    items,
+    selectedItems,
     styles,
     onPress,
     canSelectMultiple,
@@ -73,16 +21,16 @@ const ItemOption = (props: OptionProps) => {
   const [itemHover, setItemHover] = useBooleanToggle(false)
 
   const isItemSelected = useMemo(() => {
-    if (item?.options && items) {
+    if (item?.options && selectedItems) {
       if (canSelectMultiple) {
-        return TypeGuards.isArray(items[item?.id]) && items[item?.id].includes(option?.value)
+        return TypeGuards.isArray(selectedItems[item?.id]) && selectedItems[item?.id].includes(option?.value)
       } else {
-        return String(option?.value) === String(items[item?.id])
+        return String(option?.value) === String(selectedItems[item?.id])
       }
     } else {
-      return items[option?.label]
+      return selectedItems[option?.label]
     }
-  }, [item?.options, option?.value, items, item?.options, item?.id, canSelectMultiple])
+  }, [item?.options, option?.value, selectedItems, item?.options, item?.id, canSelectMultiple])
 
   const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
   const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
@@ -181,7 +129,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
         <ItemOption
           option={option}
           item={item}
-          items={_draft}
+          selectedItems={_draft}
           styles={variantStyles}
           onPress={() => onPressOption({ option, item, canSelectMultiple, hasMultipleOptions })}
           canSelectMultiple={canSelectMultiple}
