@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
-import { Modal, Text, View, Touchable, Button, ActionIcon, Icon, ModalProps } from '@codeleap/web'
+import { Text, View, Touchable, Button, ActionIcon, Icon, ModalProps } from '@codeleap/web'
 import { AnyFunction, ComponentVariants, PropsOf, TypeGuards, useBooleanToggle, useCallback, useCodeleapContext, useDefaultComponentStyle, useMemo, useState } from '@codeleap/common'
 import { useConditionalState } from '@codeleap/common'
 import { SectionFiltersComposition, SectionFilterPresets } from './styles'
@@ -11,16 +11,21 @@ type ItemOptionProps = {
   value: string | number
 }
 
+type OnPressItemProps = {
+  option: ItemOptionProps
+  item: ModalDataItemProps
+}
+
 export type ModalDataItemProps = {
-  key?: string | number
+  id?: string | number
   label?: string
   selectMultiple?: boolean
   options?: ItemOptionProps[]
-  showLabel?: boolean
+  showDescriptionLabel?: boolean
 }
 
 type onSelectItemProps = {
-   key: ModalDataItemProps['key']
+   id: ModalDataItemProps['id']
    option: ItemOptionProps
 }
 
@@ -35,13 +40,11 @@ export type SectionFiltersProps = {
   setSelectedItems?: AnyFunction
   draftItems?: Object | Array<any>
   setDraftItems?: AnyFunction
-  shouldDisplayCheckIcon?: boolean
   onSelectItem?: (item: onSelectItemProps) => any
   onClearItems?: () => any
   onApplyItems?: (items?: ModalDataItemProps[]) => any
   renderFooterComponent?: (props: FooterComponentProps) => any
   filterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-  checkIconProps?: Omit<PropsOf<typeof Icon>, 'debugName' | 'name'>
 } & ComponentVariants<typeof SectionFilterPresets>
 
 type OptionProps = {
@@ -52,7 +55,6 @@ type OptionProps = {
   onPress: () => void
   isLastItem: boolean
   shouldApplyBiggerSpacing: boolean
-  shouldDisplayCheckIcon: boolean
 }
 
 const ItemOption = (props: OptionProps) => {
@@ -65,8 +67,6 @@ const ItemOption = (props: OptionProps) => {
     onPress,
     isLastItem,
     shouldApplyBiggerSpacing,
-    shouldDisplayCheckIcon,
-    ...checkIconProps
   } = props
 
   const [itemHover, setItemHover] = useBooleanToggle(false)
@@ -74,14 +74,14 @@ const ItemOption = (props: OptionProps) => {
   const isItemSelected = useMemo(() => {
     if (item?.options && items) {
       if (item?.selectMultiple) {
-        return TypeGuards.isArray(items[item?.key]) && items[item?.key].includes(option?.value)
+        return TypeGuards.isArray(items[item?.id]) && items[item?.id].includes(option?.value)
       } else {
-        return String(option?.value) === String(items[item?.key])
+        return String(option?.value) === String(items[item?.id])
       }
     } else {
       return items[option?.label]
     }
-  }, [item?.options, option?.value, items, item?.options, item?.key, item?.selectMultiple])
+  }, [item?.options, option?.value, items, item?.options, item?.id, item?.selectMultiple])
 
   const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
   const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
@@ -114,12 +114,10 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     data,
     onSelectItem,
     renderFooterComponent,
-    shouldDisplayCheckIcon = true,
     responsiveVariants,
     variants,
     styles,
     filterButtonProps,
-    checkIconProps,
   } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SectionFilters', typeof SectionFilterPresets>(
@@ -135,62 +133,74 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { fallbackValue: {}})
   const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { fallbackValue: {}})
 
-  const onPressItem = useCallback(({ item, option }: { option: ItemOptionProps; item: ModalDataItemProps}) => {
+  const onPressItem = useCallback((params: OnPressItemProps) => {
+
+    const { item, option } = params
 
     const hasOptions = !!item?.options
+    const canSelectMultiple = item?.selectMultiple && hasOptions
 
     _setDraft((state) => {
 
       const items = { ...state }
 
-      const currentSelectedItems = Array.isArray(state?.[item.key]) ? state[item.key] : []
+      const multipleOptionsSelected = TypeGuards.isArray(state?.[item.id]) ? state[item.id] : []
 
       let isItemAlreadySelected = null
-      let newItems = null
 
-      if (item?.selectMultiple) {
-        isItemAlreadySelected = currentSelectedItems?.includes(option.value)
+      if (canSelectMultiple) {
+        isItemAlreadySelected = multipleOptionsSelected?.includes(option.value)
       } else {
-        isItemAlreadySelected = hasOptions ? (!TypeGuards.isNil(items) && items[item.key] === option?.value) : Object.values(items)?.includes?.(option?.value)
+        isItemAlreadySelected = hasOptions && !TypeGuards.isNil(items) ? items[item.id] === option?.value : Object.values(items)?.includes?.(option?.value)
       }
 
-      newItems = item.selectMultiple && hasOptions ? [...currentSelectedItems, option.value] : option?.value
-
-      const shouldRemoveItem = isItemAlreadySelected
-
-      if (shouldRemoveItem) {
+      if (isItemAlreadySelected) {
         if (hasOptions) {
-          items[item.key] = items[item.key]?.filter?.(value => value !== option?.label)
+          items[item.id] = items[item.id]?.filter?.(value => value !== option?.label)
         } else {
           delete items[option?.label]
         }
       } else {
-        items[item.key] = newItems
+        items[item.id] = canSelectMultiple ? [...multipleOptionsSelected, option.value] : option?.value
       }
 
       return items
     })
 
-    onSelectItem?.({ key: item.key, option })
+    onSelectItem?.({ id: item.id, option })
 
   }, [_draft, onSelectItem])
 
-  const renderItem = useCallback(({ item }: { item: ModalDataItemProps}) => {
+  const renderItem = useCallback((item: ModalDataItemProps) => {
 
     const {
-      showLabel = true,
+      showDescriptionLabel = true,
     } = item
+
+    const Option = (option) => {
+      return (
+        <ItemOption
+          option={option}
+          item={item}
+          items={_draft}
+          styles={variantStyles}
+          onPress={() => onPressItem({ option, item })}
+          isLastItem={false}
+          shouldApplyBiggerSpacing={false}
+        />
+      )
+    }
 
     if (!item.options) {
 
       const option = {
-        label: item.key,
+        label: item.id,
         value: item.label,
       } as ItemOptionProps
 
       return (
         <>
-          {showLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
+          {showDescriptionLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
           <ItemOption
             option={option}
             item={item}
@@ -199,8 +209,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
             onPress={() => onPressItem({ option, item })}
             isLastItem={false}
             shouldApplyBiggerSpacing={false}
-            shouldDisplayCheckIcon={shouldDisplayCheckIcon}
-            {...checkIconProps}
           />
         </>
       )
@@ -208,7 +216,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
     return (
       <View variants={['column']}>
-        {showLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
+        {showDescriptionLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
         <View variants={['column']}>
           {item?.options?.map?.((option, index) => (
             <ItemOption
@@ -219,15 +227,13 @@ export const SectionFilters = (props: SectionFiltersProps) => {
               onPress={() => onPressItem({ item, option })}
               isLastItem={item?.options?.length - 1 === index}
               shouldApplyBiggerSpacing={item?.options?.length > 1}
-              shouldDisplayCheckIcon={shouldDisplayCheckIcon}
-              {...checkIconProps}
             />
           ))}
         </View>
       </View>
     )
 
-  }, [_draft, variantStyles, shouldDisplayCheckIcon, checkIconProps])
+  }, [_draft, variantStyles])
 
   const renderFooter = () => {
 
@@ -235,7 +241,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       return renderFooterComponent({ onApply: onApplyItems, onClear: onClearItems })
     }
 
-    const shouldDisable = false
+    const shouldDisable = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
 
     return (
       <View variants={['gap:1']}>
@@ -262,6 +268,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const onClearItems = () => {
     _setDraft({})
+    _setSelectedItems({})
     props?.onClearItems?.()
   }
 
@@ -274,7 +281,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     <View style={variantStyles.wrapper}>
 
       <View style={variantStyles.scroll}>
-        {data && data.map((item) => renderItem({ item }))}
+        {data && data.map((item) => renderItem(item))}
       </View>
 
       {renderFooter()}
