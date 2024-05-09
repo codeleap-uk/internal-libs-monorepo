@@ -122,8 +122,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     checkIconProps,
   } = props
 
-  const { Theme } = useCodeleapContext()
-
   const variantStyles = useDefaultComponentStyle<'u:SectionFilters', typeof SectionFilterPresets>(
     'u:SectionFilters',
     {
@@ -158,11 +156,11 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
       newItems = item.selectMultiple && hasOptions ? [...currentSelectedItems, option.value] : option?.value
 
-      const shouldRemoveItem = isItemAlreadySelected && (item.selectMultiple ? newItems.length === 0 : true)
+      const shouldRemoveItem = isItemAlreadySelected
 
       if (shouldRemoveItem) {
         if (hasOptions) {
-          delete items[item.key]
+          items[item.key] = items[item.key]?.filter?.(value => value !== option?.label)
         } else {
           delete items[option?.label]
         }
