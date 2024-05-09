@@ -11,19 +11,19 @@ type ItemOptionProps = {
   value: string | number
 }
 
-type OnPressItemProps = {
-  option: ItemOptionProps
+type OnPressOptionProps = {
   item: ModalDataItemProps
+  option: ItemOptionProps
   canSelectMultiple: boolean
-  hasOptions: boolean
+  hasMultipleOptions: boolean
 }
 
 export type ModalDataItemProps = {
-  id?: string | number
+  id: string | number
   label?: string
-  selectMultiple?: boolean
-  options?: ItemOptionProps[]
+  canSelectMultiple?: boolean
   showDescriptionLabel?: boolean
+  options?: ItemOptionProps[]
 }
 
 type onSelectItemProps = {
@@ -32,8 +32,8 @@ type onSelectItemProps = {
 }
 
 type FooterComponentProps = {
-  onClear: AnyFunction
-  onApply: AnyFunction
+  onClear: SectionFiltersProps['onClearItems']
+  onApply: SectionFiltersProps['onApplyItems']
 }
 
 export type SectionFiltersProps = {
@@ -46,7 +46,8 @@ export type SectionFiltersProps = {
   onClearItems?: () => any
   onApplyItems?: (items?: ModalDataItemProps[]) => any
   renderFooterComponent?: (props: FooterComponentProps) => any
-  filterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 } & ComponentVariants<typeof SectionFilterPresets>
 
 type OptionProps = {
@@ -55,8 +56,6 @@ type OptionProps = {
   styles: Record<SectionFiltersComposition, any>
   items: object
   onPress: () => void
-  isLastItem: boolean
-  shouldApplyBiggerSpacing: boolean
   canSelectMultiple: boolean
 }
 
@@ -68,15 +67,14 @@ const ItemOption = (props: OptionProps) => {
     items,
     styles,
     onPress,
-    isLastItem,
-    shouldApplyBiggerSpacing,
+    canSelectMultiple,
   } = props
 
   const [itemHover, setItemHover] = useBooleanToggle(false)
 
   const isItemSelected = useMemo(() => {
     if (item?.options && items) {
-      if (item?.selectMultiple) {
+      if (canSelectMultiple) {
         return TypeGuards.isArray(items[item?.id]) && items[item?.id].includes(option?.value)
       } else {
         return String(option?.value) === String(items[item?.id])
@@ -84,17 +82,14 @@ const ItemOption = (props: OptionProps) => {
     } else {
       return items[option?.label]
     }
-  }, [item?.options, option?.value, items, item?.options, item?.id, item?.selectMultiple])
+  }, [item?.options, option?.value, items, item?.options, item?.id, canSelectMultiple])
 
   const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
   const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
 
   return (
     <Touchable
-      style={[
-        itemWrapperStyles,
-        { marginBottom: isLastItem && shouldApplyBiggerSpacing ? 16 : itemWrapperStyles?.marginBottom },
-      ]}
+      style={[itemWrapperStyles]}
       debugName={`Section Filters modal - on ${option?.label} press`}
       onPress={onPress}
       onHover={setItemHover}
@@ -120,7 +115,8 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     responsiveVariants,
     variants,
     styles,
-    filterButtonProps,
+    applyFilterButtonProps,
+    clearFilterButtonProps,
   } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SectionFilters', typeof SectionFilterPresets>(
@@ -136,9 +132,9 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { fallbackValue: {}})
   const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { fallbackValue: {}})
 
-  const onPressItem = useCallback((params: OnPressItemProps) => {
+  const onPressOption = useCallback((params: OnPressOptionProps) => {
 
-    const { item, option, canSelectMultiple, hasOptions } = params
+    const { item, option, canSelectMultiple, hasMultipleOptions } = params
 
     _setDraft((state) => {
 
@@ -155,7 +151,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       }
 
       if (isItemAlreadySelected) {
-        if (hasOptions) {
+        if (hasMultipleOptions) {
           items[item.id] = items[item.id]?.filter?.(value => value !== option?.label)
         } else {
           delete items[option?.label]
@@ -177,8 +173,8 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       showDescriptionLabel = true,
     } = item
 
-    const hasOptions = !!item?.options
-    const canSelectMultiple = item?.selectMultiple && hasOptions
+    const hasMultipleOptions = !!item?.options?.length
+    const canSelectMultiple = item?.canSelectMultiple && hasMultipleOptions
 
     const Option = ({ option }: { option: ItemOptionProps}) => {
       return (
@@ -187,9 +183,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           item={item}
           items={_draft}
           styles={variantStyles}
-          onPress={() => onPressItem({ option, item, canSelectMultiple, hasOptions })}
-          isLastItem={false}
-          shouldApplyBiggerSpacing={false}
+          onPress={() => onPressOption({ option, item, canSelectMultiple, hasMultipleOptions })}
           canSelectMultiple={canSelectMultiple}
         />
       )
@@ -222,7 +216,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           debugName={`Section Filters Footer - Apply items`}
           onPress={onApplyItems}
           disabled={shouldDisable}
-          {...filterButtonProps}
+          {...applyFilterButtonProps}
         />
         <Button
           style={variantStyles.clearButton}
@@ -230,7 +224,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           debugName={`Section Filters Footer - Apply items`}
           onPress={onClearItems}
           disabled={shouldDisable}
-          {...filterButtonProps}
+          {...clearFilterButtonProps}
         />
       </View>
     )
