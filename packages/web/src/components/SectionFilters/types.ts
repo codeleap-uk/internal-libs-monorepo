@@ -20,6 +20,7 @@ export type ModalDataItemProps = {
     canSelectMultiple?: boolean
     showDescriptionLabel?: boolean
     options?: ItemOptionProps[]
+    itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
 type onSelectItemProps = {
