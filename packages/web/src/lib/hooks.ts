@@ -3,6 +3,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { v4 } from 'uuid'
 import { easeInOut, EasingFunction, AnimationProps, useAnimate, useAnimation, animate } from 'framer-motion'
 import { globalHistory } from '@reach/router'
+import { getNestedStylesByKey } from '@codeleap/common'
 
 export function useWindowSize() {
   const [size, setSize] = useState([])
@@ -235,13 +236,12 @@ export function usePagination({
   }
 }
 
-
 export interface UseMediaQueryOptions {
   getInitialValueInEffect?: boolean
   initialValue?: boolean
 }
 
-type MediaQueryCallback = (event: { matches: boolean; media: string }) => void;
+type MediaQueryCallback = (event: { matches: boolean; media: string }) => void
 
 /**
  * Older versions of Safari (shipped withCatalina and before) do not support addEventListener on matchMedia
@@ -249,24 +249,24 @@ type MediaQueryCallback = (event: { matches: boolean; media: string }) => void;
  * */
 export function attachMediaListener(query: MediaQueryList, callback: MediaQueryCallback) {
   try {
-    query.addEventListener('change', callback);
-    return () => query.removeEventListener('change', callback);
+    query.addEventListener('change', callback)
+    return () => query.removeEventListener('change', callback)
   } catch (e) {
-    query.addListener(callback);
-    return () => query.removeListener(callback);
+    query.addListener(callback)
+    return () => query.removeListener(callback)
   }
 }
 
 function getInitialValue(query: string, initialValue?: boolean) {
   if (typeof initialValue === 'boolean') {
-    return initialValue;
+    return initialValue
   }
 
   if (typeof window !== 'undefined' && 'matchMedia' in window) {
-    return window.matchMedia(query).matches;
+    return window.matchMedia(query).matches
   }
 
-  return false;
+  return false
 }
 
 export function isMediaQuery(query: string, initialValue = false) {
@@ -281,7 +281,7 @@ export function isMediaQuery(query: string, initialValue = false) {
 
 export function useMediaQuery(
   query: string,
-  queryOptions: UseMediaQueryOptions = {}
+  queryOptions: UseMediaQueryOptions = {},
 ) {
   const {
     initialValue = false,
@@ -293,18 +293,18 @@ export function useMediaQuery(
   }, [query])
 
   const [matches, setMatches] = useState(
-    getInitialValueInEffect ? initialValue : isMediaQuery(query, initialValue)
+    getInitialValueInEffect ? initialValue : isMediaQuery(query, initialValue),
   )
 
   const queryRef = useRef<MediaQueryList>()
 
   useEffect(() => {
-    if(query.trim() === '') return
+    if (query.trim() === '') return
 
     if ('matchMedia' in window) {
-      queryRef.current = window.matchMedia(_query);
-      setMatches(queryRef.current.matches);
-      return attachMediaListener(queryRef.current, (event) => setMatches(event.matches));
+      queryRef.current = window.matchMedia(_query)
+      setMatches(queryRef.current.matches)
+      return attachMediaListener(queryRef.current, (event) => setMatches(event.matches))
     }
 
     return undefined
@@ -347,7 +347,7 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
 
   onUpdate(() => {
     const nextState = updater(staticStyles)
-    
+
     setAnimated(nextState)
   }, dependencies)
 
@@ -364,18 +364,18 @@ export const useWindowFocus = (options: UseWindowFocusOptions = {}, deps: Array<
 
   const onFocus = () => {
     setFocused(true)
-    if (TypeGuards.isFunction(options?.onFocus)) options?.onFocus() 
+    if (TypeGuards.isFunction(options?.onFocus)) options?.onFocus()
   }
-  
+
   const onBlur = () => {
     setFocused(false)
-    if (TypeGuards.isFunction(options?.onBlur)) options?.onBlur() 
+    if (TypeGuards.isFunction(options?.onBlur)) options?.onBlur()
   }
 
   useEffect(() => {
     window.addEventListener('focus', onFocus)
     window.addEventListener('blur', onBlur)
-    
+
     return () => {
       window.removeEventListener('focus', onFocus)
       window.removeEventListener('blur', onBlur)
@@ -388,7 +388,7 @@ export const useWindowFocus = (options: UseWindowFocusOptions = {}, deps: Array<
 export const usePageExitBlocker = (
   handler: (willLeavePage: boolean) => void,
   deps: Array<any> = [],
-  message: string = 'Are you sure you want to leave?'
+  message = 'Are you sure you want to leave?',
 ) => {
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
     if (!event) return null
@@ -425,4 +425,30 @@ export const usePageExitBlocker = (
       }
     })
   }, deps)
+}
+
+export function useGetStyles(...styles) {
+  const handleMultipleStyles = (key) => {
+    return styles.reduce((acc, style) => {
+      return {
+        ...acc,
+        ...style?.[key],
+        ...getNestedStylesByKey(key, style),
+      }
+    }, {})
+  }
+
+  function getStyles(key, states = []) {
+    let _styles = handleMultipleStyles(key)
+
+    states?.forEach((state) => {
+      _styles = {
+        ..._styles,
+        ...handleMultipleStyles(`${key}${state}`),
+      }
+    })
+
+    return _styles
+  }
+  return { getStyles }
 }
