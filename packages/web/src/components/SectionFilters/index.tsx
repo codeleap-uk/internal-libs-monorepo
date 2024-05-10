@@ -28,9 +28,9 @@ const ItemOption = (props: OptionProps) => {
         return String(option?.value) === String(selectedItems[item?.id])
       }
     } else {
-      return selectedItems[option?.label]
+      return selectedItems[item?.id]
     }
-  }, [item?.options, option?.value, selectedItems, item?.options, item?.id, canSelectMultiple])
+  }, [item?.options, option?.value, selectedItems, item?.id, canSelectMultiple])
 
   const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
   const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
@@ -65,6 +65,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     styles,
     applyFilterButtonProps,
     clearFilterButtonProps,
+    filterOnOptionPress = false,
   } = props
 
   const variantStyles = useDefaultComponentStyle<'u:SectionFilters', typeof SectionFilterPresets>(
@@ -100,18 +101,22 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
       if (isItemAlreadySelected) {
         if (hasMultipleOptions) {
-          items[item.id] = items[item.id]?.filter?.(value => value !== option?.label)
+          items[item.id] = items[item.id]?.filter?.(value => value !== option?.value)
         } else {
-          delete items[option?.label]
+          delete items[option?.value]
         }
       } else {
         items[item.id] = canSelectMultiple ? [...multipleOptionsSelected, option.value] : option?.value
       }
 
+      if (filterOnOptionPress) {
+        _setSelectedItems(items)
+      }
+
       return items
     })
 
-    onSelectItem?.({ id: item.id, option })
+    onSelectItem?.({ id: item?.id, option })
 
   }, [_draft, onSelectItem])
 
@@ -140,8 +145,13 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     return (
       <View variants={['column']}>
         {showDescriptionLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
+
         <View variants={['column']}>
-          {item?.options?.length ? item.options.map((option) => <Option option={option} />) : <Option option={{ label: item.id, value: item.label }} />}
+          {item?.options?.length ? (
+            item.options.map((option) => <Option option={option} />)
+          ) : (
+            <Option option={{ label: String(item.id), value: item.label }} />
+          )}
         </View>
       </View>
     )
@@ -154,7 +164,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       return renderFooterComponent({ onApply: onApplyItems, onClear: onClearItems })
     }
 
-    const shouldDisable = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
+    const shouldDisableActions = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
 
     return (
       <View variants={['gap:1']}>
@@ -163,7 +173,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           text={'Filter'}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onApplyItems}
-          disabled={shouldDisable}
+          disabled={shouldDisableActions}
           {...applyFilterButtonProps}
         />
         <Button
@@ -171,7 +181,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           text={'Clear'}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onClearItems}
-          disabled={shouldDisable}
+          disabled={shouldDisableActions}
           {...clearFilterButtonProps}
         />
       </View>

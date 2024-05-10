@@ -44,6 +44,7 @@ export type SectionFiltersProps = {
     renderFooterComponent?: (props: FooterComponentProps) => any
     applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
     clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+    filterOnOptionPress?: boolean
   } & ComponentVariants<typeof SectionFilterPresets>
 
 export type OptionProps = {
