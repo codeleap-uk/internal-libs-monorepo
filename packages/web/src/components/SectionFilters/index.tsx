@@ -101,7 +101,12 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
       if (isItemAlreadySelected) {
         if (hasMultipleOptions) {
-          items[item.id] = items[item.id]?.filter?.(value => value !== option?.value)
+          const newChosenOptions = items[item.id]?.filter?.(value => value !== option?.value)
+          if (newChosenOptions.length === 0) {
+            delete items[item?.id]
+          } else {
+            items[item.id] = newChosenOptions
+          }
         } else {
           delete items[option?.value]
         }
