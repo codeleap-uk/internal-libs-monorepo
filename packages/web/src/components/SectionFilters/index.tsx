@@ -130,6 +130,11 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     const canSelectMultiple = item?.canSelectMultiple && hasMultipleOptions
 
     const Option = ({ option }: { option: ItemOptionProps}) => {
+
+      if (TypeGuards.isNil(item?.id)) {
+        return null
+      }
+
       return (
         <ItemOption
           option={option}
@@ -150,7 +155,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           {item?.options?.length ? (
             item.options.map((option) => <Option option={option} />)
           ) : (
-            <Option option={{ label: String(item.id), value: item.label }} />
+            <Option option={{ label: String(item.id), value: TypeGuards.isNil(item.label) ? item?.id : item?.label }} />
           )}
         </View>
       </View>
