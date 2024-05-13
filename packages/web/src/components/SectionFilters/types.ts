@@ -1,10 +1,11 @@
 import { Button, ButtonComposition } from '../Button'
-import { AnyFunction, ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
+import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
 import { SectionFiltersComposition, SectionFilterPresets } from './styles'
 
 export type ItemOptionProps = {
   label?: string
   value: string | number
+  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
 export type OnPressOptionProps = {
@@ -21,7 +22,7 @@ export type ItemProps = {
   descriptionLabel?: string
   showDescriptionLabel?: boolean
   options?: ItemOptionProps[]
-  itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
 export type onSelectItemProps = {

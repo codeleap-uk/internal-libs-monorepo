@@ -34,6 +34,11 @@ const ItemOption = (props: OptionProps) => {
     }
   }, [item?.options, option, selectedItems, item?.id, canSelectMultiple])
 
+  const buttonProps = {
+    ...item?.itemProps,
+    ...option?.itemProps,
+  }
+
   return (
     <Button
       debugName='Item option'
@@ -41,6 +46,7 @@ const ItemOption = (props: OptionProps) => {
       onPress={onPress}
       selected={isItemSelected}
       styles={styles}
+      {...buttonProps}
     />
   )
 }
@@ -211,7 +217,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     props?.onApplyItems?.(_selectedItems as ItemProps[])
   }
 
-  const Footer = renderFooterComponent || DefaultFooter 
+  const Footer = renderFooterComponent || DefaultFooter
 
   return (
     <View style={variantStyles.wrapper}>
@@ -219,7 +225,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
         {isEmpty ? null : data.map((item) => renderItem(item))}
       </View>
 
-      <Footer 
+      <Footer
         onApply={onApplyItems}
         onClear={onClearItems}
         shouldDisableActions={shouldDisableActions}
