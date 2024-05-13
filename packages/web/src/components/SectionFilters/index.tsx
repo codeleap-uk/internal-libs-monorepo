@@ -134,6 +134,8 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     const hasMultipleOptions = !!item?.options?.length
     const canSelectMultiple = item?.canSelectMultiple && hasMultipleOptions
 
+    const description = TypeGuards.isString(item?.descriptionLabel) ? item?.descriptionLabel : item?.label
+
     const Option = ({ option }: { option: ItemOptionProps}) => {
 
       if (TypeGuards.isNil(item?.id)) {
@@ -154,13 +156,17 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
     return (
       <View variants={['column']}>
-        {showDescriptionLabel ? <Text style={variantStyles.label} text={item?.label} /> : null}
-
+        {showDescriptionLabel ? <Text style={variantStyles.label} text={description} /> : null}
         <View variants={['column']}>
-          {item?.options?.length ? (
+          {hasMultipleOptions ? (
             item.options.map((option) => <Option option={option} />)
           ) : (
-            <Option option={{ label: String(item.id), value: TypeGuards.isNil(item.label) ? item?.id : item?.label }} />
+            <Option
+              option={{
+                label: TypeGuards.isNil(item?.label) ? item.id : item.label,
+                value: TypeGuards.isNil(item.label) ? item?.id : item?.label,
+              }}
+            />
           )}
         </View>
       </View>

@@ -18,6 +18,7 @@ export type ModalDataItemProps = {
     id: string | number
     label?: string
     canSelectMultiple?: boolean
+    descriptionLabel?: string
     showDescriptionLabel?: boolean
     options?: ItemOptionProps[]
     itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
