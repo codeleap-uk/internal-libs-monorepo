@@ -16,14 +16,10 @@ import {
 } from 'react'
 import { deepMerge } from './object'
 import { AnyFunction, DeepPartial, StylesOf } from '../types'
-
-import { uniqueId } from 'lodash'
-import { useUnmount } from 'react-use'
 import { getNestedStylesByKey } from './misc'
 import { useCodeleapContext } from '../styles/StyleProvider'
 import { TypeGuards } from '.'
-import { Dispatch } from 'react'
-import { SetStateAction } from 'react'
+import type { SetStateAction, Dispatch } from 'react'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -467,19 +463,18 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
 export const useIsomorphicEffect = typeof document !== 'undefined' ? useLayoutEffect : useEffect
 
 type useConditionalStateType = <T>(
-  initialValue: T | undefined,
-  setter: Dispatch<SetStateAction<T>> | any,
-  options?: { fallbackValue?: T; hook?: (initialValue: T) => [T, (Dispatch<SetStateAction<T>> | any)] | any }
+  value: T | undefined,
+  setter: Dispatch<SetStateAction<T>> | ((value: T) => void),
+  options?: { initialValue?: T; hook?: (value: T) => [T, (Dispatch<SetStateAction<T>> | any)] | any }
 ) => [T, Dispatch<SetStateAction<T>> | any]
 
-export const useConditionalState: useConditionalStateType = (initialValue, setter, options) => { // it does not look like it is gonna work, but it kinda does
-  const { fallbackValue, hook } = options
-  const [vl, setVl] = useState(fallbackValue)
-  const hookReturn = hook?.(fallbackValue)
+export const useConditionalState: useConditionalStateType = (value, setter, options) => {
 
-  if (!TypeGuards.isNil(initialValue) && TypeGuards.isFunction(setter)) {
-    return [initialValue, setter]
+  const [vl, setVl] = useState(options?.initialValue)
+
+  if (!TypeGuards.isNil(value) && TypeGuards.isFunction(setter)) {
+    return [value, setter]
   }
 
-  return hook ? hookReturn : [vl, setVl]
+  return [vl, setVl]
 }

@@ -1,20 +1,21 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ButtonComposition, createDefaultVariantFactory, includePresets } from '@codeleap/common'
 
 export type SectionFiltersComposition =
   'wrapper' |
   'headerWrapper' |
   'headerTitle' |
-  'scroll' |
+  'innerWrapper' |
+  'labelWrapper' |
   'label' |
   'description' |
-  'itemWrapper' |
-  'itemWrapper:hover' |
-  'itemWrapper:selected' |
+  'optionWrapper' |
+  'optionInnerWrapper' |
+  `itemOptionButton${Capitalize<ButtonComposition>}` |
   'itemLabelWrapper' |
   'itemLabel' |
-  'itemLabel:selected' |
-  'applyButton' |
-  'clearButton'
+  'footerWrapper' |
+  `applyButton${Capitalize<ButtonComposition>}` |
+  `clearButton${Capitalize<ButtonComposition>}`
 
 const createSectionFiltersStyle = createDefaultVariantFactory<SectionFiltersComposition>()
 

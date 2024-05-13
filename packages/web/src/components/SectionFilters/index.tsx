@@ -1,11 +1,12 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
-import { Text, View, Touchable, Button } from '@codeleap/web'
-import { TypeGuards, useBooleanToggle, useCallback, useDefaultComponentStyle, useMemo } from '@codeleap/common'
-import { useConditionalState } from '@codeleap/common'
+import { TypeGuards, getNestedStylesByKey, useBooleanToggle, useCallback, useDefaultComponentStyle, useMemo, useConditionalState } from '@codeleap/common'
 import { SectionFilterPresets } from './styles'
 import { ItemOptionProps, ModalDataItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps } from './types'
+import { View } from '../View'
+import { Text } from '../Text'
+import { Button } from '../Button'
 
 const ItemOption = (props: OptionProps) => {
 
@@ -17,8 +18,6 @@ const ItemOption = (props: OptionProps) => {
     onPress,
     canSelectMultiple,
   } = props
-
-  const [itemHover, setItemHover] = useBooleanToggle(false)
 
   const isItemSelected = useMemo(() => {
     if (item?.options && selectedItems) {
@@ -32,25 +31,13 @@ const ItemOption = (props: OptionProps) => {
     }
   }, [item?.options, option, selectedItems, item?.id, canSelectMultiple])
 
-  const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
-  const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
-
   return (
-    <Touchable
-      style={[itemWrapperStyles]}
-      debugName={`Section Filters modal - on ${option?.label} press`}
+    <Button
+      text={option?.label}
       onPress={onPress}
-      onHover={setItemHover}
-    >
-      {TypeGuards.isString(option.label) ? (
-        <View variants={['flex', 'center']}>
-          <Text
-            style={itemLabelStyles}
-            text={option?.label}
-          />
-        </View>
-      ) : null}
-    </Touchable>
+      selected={isItemSelected}
+      styles={styles}
+    />
   )
 }
 
@@ -65,6 +52,8 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     styles,
     applyFilterButtonProps,
     clearFilterButtonProps,
+    applyButtonText = 'Filter',
+    clearButtonText = 'Clear',
     filterOnOptionPress = false,
   } = props
 
@@ -78,8 +67,15 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     },
   )
 
-  const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { fallbackValue: {}})
-  const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { fallbackValue: {}})
+  const applyButtonStyles = getNestedStylesByKey('applyButton', variantStyles)
+  const clearButtonStyles = getNestedStylesByKey('clearButton', variantStyles)
+  const itemOptionButtonStyles = getNestedStylesByKey('itemOptionButton', variantStyles)
+
+  const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { initialValue: {}})
+  const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { initialValue: {}})
+
+  const isEmpty = data?.length <= 0
+  const shouldDisableActions = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
 
   const onPressOption = useCallback((params: OnPressOptionProps) => {
 
@@ -147,7 +143,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           option={option}
           item={item}
           selectedItems={_draft}
-          styles={variantStyles}
+          styles={itemOptionButtonStyles}
           onPress={() => onPressOption({ option, item, canSelectMultiple, hasMultipleOptions })}
           canSelectMultiple={canSelectMultiple}
         />
@@ -155,9 +151,9 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     }
 
     return (
-      <View variants={['column']}>
+      <View style={variantStyles.optionWrapper}>
         {showDescriptionLabel ? <Text style={variantStyles.label} text={description} /> : null}
-        <View variants={['column']}>
+        <View style={variantStyles.optionInnerWrapper}>
           {hasMultipleOptions ? (
             item.options.map((option) => <Option option={option} />)
           ) : (
@@ -172,29 +168,27 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       </View>
     )
 
-  }, [_draft, variantStyles])
+  }, [_draft, variantStyles, itemOptionButtonStyles])
 
   const renderFooter = () => {
 
     if (TypeGuards.isFunction(renderFooterComponent)) {
-      return renderFooterComponent({ onApply: onApplyItems, onClear: onClearItems })
+      return renderFooterComponent({ onApply: onApplyItems, onClear: onClearItems, shouldDisableActions })
     }
 
-    const shouldDisableActions = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
-
     return (
-      <View variants={['gap:1']}>
+      <View style={variantStyles.footerWrapper}>
         <Button
-          style={variantStyles.applyButton}
-          text={'Filter'}
+          styles={applyButtonStyles}
+          text={applyButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onApplyItems}
           disabled={shouldDisableActions}
           {...applyFilterButtonProps}
         />
         <Button
-          style={variantStyles.clearButton}
-          text={'Clear'}
+          styles={clearButtonStyles}
+          text={clearButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onClearItems}
           disabled={shouldDisableActions}
@@ -219,8 +213,8 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   return (
     <View style={variantStyles.wrapper}>
 
-      <View style={variantStyles.scroll}>
-        {data && data.map((item) => renderItem(item))}
+      <View style={variantStyles.innerWrapper}>
+        {isEmpty ? null : data.map((item) => renderItem(item))}
       </View>
 
       {renderFooter()}

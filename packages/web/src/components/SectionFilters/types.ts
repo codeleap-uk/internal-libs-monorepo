@@ -32,6 +32,7 @@ type onSelectItemProps = {
 type FooterComponentProps = {
     onClear: SectionFiltersProps['onClearItems']
     onApply: SectionFiltersProps['onApplyItems']
+    shouldDisableActions: boolean
 }
 
 export type SectionFiltersProps = {
@@ -47,7 +48,9 @@ export type SectionFiltersProps = {
     applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
     clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
     filterOnOptionPress?: boolean
-  } & ComponentVariants<typeof SectionFilterPresets>
+    applyButtonText?: string
+    clearButtonText?: string
+} & ComponentVariants<typeof SectionFilterPresets>
 
 export type OptionProps = {
     option: ItemOptionProps
