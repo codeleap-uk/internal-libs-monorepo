@@ -35,8 +35,8 @@ const ItemOption = (props: OptionProps) => {
   }, [item?.options, option, selectedItems, item?.id, canSelectMultiple])
 
   const buttonProps = {
-    ...item?.itemButtonProps,
-    ...option?.itemButtonProps,
+    ...item?.itemProps,
+    ...option?.itemProps,
   }
 
   return (

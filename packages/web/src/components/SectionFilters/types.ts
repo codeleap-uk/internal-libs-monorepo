@@ -5,7 +5,7 @@ import { SectionFiltersComposition, SectionFilterPresets } from './styles'
 export type ItemOptionProps = {
   label?: string
   value: string | number
-  itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
 export type OnPressOptionProps = {
@@ -22,7 +22,7 @@ export type ItemProps = {
   descriptionLabel?: string
   showDescriptionLabel?: boolean
   options?: ItemOptionProps[]
-  itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
 export type onSelectItemProps = {
