@@ -23,14 +23,14 @@ const ItemOption = (props: OptionProps) => {
   const isItemSelected = useMemo(() => {
     if (item?.options && selectedItems) {
       if (canSelectMultiple) {
-        return TypeGuards.isArray(selectedItems[item?.id]) && selectedItems[item?.id].includes(option?.value)
+        return TypeGuards.isArray(selectedItems[item?.id]) && selectedItems[item?.id]?.find?.((item) => JSON.stringify(item) === JSON.stringify(option))
       } else {
-        return String(option?.value) === String(selectedItems[item?.id])
+        return JSON.stringify(option) === JSON.stringify(selectedItems[item?.id])
       }
     } else {
       return selectedItems[item?.id]
     }
-  }, [item?.options, option?.value, selectedItems, item?.id, canSelectMultiple])
+  }, [item?.options, option, selectedItems, item?.id, canSelectMultiple])
 
   const itemWrapperStyles = [styles.itemWrapper, isItemSelected && styles['itemWrapper:selected'], itemHover && styles['itemWrapper:hover']]
   const itemLabelStyles = [styles.itemLabel, isItemSelected && styles['itemLabel:selected'], itemHover && styles['itemLabel:selected']]
@@ -94,14 +94,14 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       let isItemAlreadySelected = null
 
       if (canSelectMultiple) {
-        isItemAlreadySelected = multipleOptionsSelected?.includes(option.value)
+        isItemAlreadySelected = multipleOptionsSelected?.find((item) => JSON.stringify(item) === JSON.stringify(option))
       } else {
-        isItemAlreadySelected = Object.values(items)?.includes?.(option?.value)
+        isItemAlreadySelected = JSON.stringify(items[item?.id]) === JSON.stringify(option)
       }
 
       if (isItemAlreadySelected) {
         if (hasMultipleOptions) {
-          const newChosenOptions = items[item.id]?.filter?.(value => value !== option?.value)
+          const newChosenOptions = items[item.id]?.filter?.(value => JSON.stringify(value) !== JSON.stringify(option))
           if (newChosenOptions?.length === 0) {
             delete items[item?.id]
           } else {
@@ -111,7 +111,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           delete items[option?.value]
         }
       } else {
-        items[item.id] = canSelectMultiple ? [...multipleOptionsSelected, option.value] : option?.value
+        items[item.id] = canSelectMultiple ? [...multipleOptionsSelected, option] : option
       }
 
       if (filterOnOptionPress) {
