@@ -35,6 +35,7 @@ import { SectionsPresets } from './Sections'
 import { DatePickerModalPresets } from './DatePickerModal'
 import { NumberIncrementPresets } from './NumberIncrement'
 import { BadgePresets } from './Badge'
+export type { ViewV2Composition } from './V2TestComponent'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -75,3 +76,4 @@ export const defaultStyles = {
   NumberIncrement: NumberIncrementPresets,
   Badge: BadgePresets,
 }
+

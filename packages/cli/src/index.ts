@@ -7,6 +7,7 @@ import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 import { syncIconsCommand } from './commands/syncIcons'
 import { convertorWebpCommand } from './commands/convertorWebp'
+import { stylesConvertorCommand } from './commands/stylesConvertor'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
@@ -20,7 +21,8 @@ cli({
     configureCommand,
     downloadKeystores,
     syncIconsCommand,
-    convertorWebpCommand
+    convertorWebpCommand,
+    stylesConvertorCommand
   ],
   version: packageJson.version,
 
