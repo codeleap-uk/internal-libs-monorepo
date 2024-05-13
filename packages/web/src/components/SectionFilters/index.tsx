@@ -104,7 +104,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
             items[item.id] = newChosenOptions
           }
         } else {
-          delete items[option?.value]
+          delete items[item?.id]
         }
       } else {
         items[item.id] = canSelectMultiple ? [...multipleOptionsSelected, option] : option
