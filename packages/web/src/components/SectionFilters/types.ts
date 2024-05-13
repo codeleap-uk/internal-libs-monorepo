@@ -1,62 +1,68 @@
-import { Button } from '@codeleap/web'
-import { AnyFunction, ComponentVariants, PropsOf } from '@codeleap/common'
+import { Button, ButtonComposition } from '../Button'
+import { AnyFunction, ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
 import { SectionFiltersComposition, SectionFilterPresets } from './styles'
 
 export type ItemOptionProps = {
-    label?: string
-    value: string | number
+  label?: string
+  value: string | number
 }
 
 export type OnPressOptionProps = {
-    item: ModalDataItemProps
-    option: ItemOptionProps
-    canSelectMultiple: boolean
-    hasMultipleOptions: boolean
+  item: ItemProps
+  option: ItemOptionProps
+  canSelectMultiple: boolean
+  hasMultipleOptions: boolean
 }
 
-export type ModalDataItemProps = {
-    id: string | number
-    label?: string
-    canSelectMultiple?: boolean
-    descriptionLabel?: string
-    showDescriptionLabel?: boolean
-    options?: ItemOptionProps[]
-    itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+export type ItemProps = {
+  id: string | number
+  label?: string
+  canSelectMultiple?: boolean
+  descriptionLabel?: string
+  showDescriptionLabel?: boolean
+  options?: ItemOptionProps[]
+  itemButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
-type onSelectItemProps = {
-    id: ModalDataItemProps['id']
-    option: ItemOptionProps
+export type onSelectItemProps = {
+  id: ItemProps['id']
+  option: ItemOptionProps
 }
 
-type FooterComponentProps = {
-    onClear: SectionFiltersProps['onClearItems']
-    onApply: SectionFiltersProps['onApplyItems']
-    shouldDisableActions: boolean
+type ApplyFunction = (items?: ItemProps[]) => void
+type ClearFunction = () => void
+
+export type SectionFilterFooterProps = {
+  onClear: ClearFunction
+  onApply: ApplyFunction
+  shouldDisableActions: boolean
 }
+
+type Item = Record<string, any> | Array<any>
 
 export type SectionFiltersProps = {
-    data?: ModalDataItemProps[]
-    selectedItems?: Object | Array<any>
-    setSelectedItems?: AnyFunction
-    draftItems?: Object | Array<any>
-    setDraftItems?: AnyFunction
-    onSelectItem?: (item: onSelectItemProps) => any
-    onClearItems?: () => any
-    onApplyItems?: (items?: ModalDataItemProps[]) => any
-    renderFooterComponent?: (props: FooterComponentProps) => any
-    applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-    clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-    filterOnOptionPress?: boolean
-    applyButtonText?: string
-    clearButtonText?: string
+  data?: ItemProps[]
+  selectedItems?: Item
+  setSelectedItems?: (value: Item) => void
+  draftItems?: Item
+  setDraftItems?: (value: Item) => void
+  onSelectItem?: (item: onSelectItemProps) => void
+  onClearItems?: ClearFunction
+  onApplyItems?: ApplyFunction
+  renderFooterComponent?: (props: SectionFilterFooterProps) => JSX.Element
+  applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  filterOnOptionPress?: boolean
+  applyButtonText?: string
+  clearButtonText?: string
+  styles?: StylesOf<SectionFiltersComposition>
 } & ComponentVariants<typeof SectionFilterPresets>
 
 export type OptionProps = {
-    option: ItemOptionProps
-    item: ModalDataItemProps
-    styles: Record<SectionFiltersComposition, any>
-    selectedItems: object
-    onPress: () => void
-    canSelectMultiple: boolean
+  option: ItemOptionProps
+  item: ItemProps
+  styles: Partial<StylesOf<ButtonComposition>>
+  selectedItems: object
+  onPress: () => void
+  canSelectMultiple: boolean
 }

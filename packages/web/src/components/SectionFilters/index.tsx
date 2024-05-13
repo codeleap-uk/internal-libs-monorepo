@@ -1,12 +1,15 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
-import { TypeGuards, getNestedStylesByKey, useBooleanToggle, useCallback, useDefaultComponentStyle, useMemo, useConditionalState } from '@codeleap/common'
+import { TypeGuards, getNestedStylesByKey, useCallback, useDefaultComponentStyle, useMemo, useConditionalState } from '@codeleap/common'
 import { SectionFilterPresets } from './styles'
-import { ItemOptionProps, ModalDataItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps } from './types'
+import { ItemOptionProps, ItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps, SectionFilterFooterProps, onSelectItemProps } from './types'
 import { View } from '../View'
 import { Text } from '../Text'
 import { Button } from '../Button'
+
+export * from './styles'
+export * from './types'
 
 const ItemOption = (props: OptionProps) => {
 
@@ -33,6 +36,7 @@ const ItemOption = (props: OptionProps) => {
 
   return (
     <Button
+      debugName='Item option'
       text={option?.label}
       onPress={onPress}
       selected={isItemSelected}
@@ -52,10 +56,13 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     styles,
     applyFilterButtonProps,
     clearFilterButtonProps,
-    applyButtonText = 'Filter',
-    clearButtonText = 'Clear',
-    filterOnOptionPress = false,
-  } = props
+    applyButtonText,
+    clearButtonText,
+    filterOnOptionPress,
+  } = {
+    ...SectionFilters.defaultProps,
+    ...props,
+  }
 
   const variantStyles = useDefaultComponentStyle<'u:SectionFilters', typeof SectionFilterPresets>(
     'u:SectionFilters',
@@ -121,7 +128,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   }, [_draft, onSelectItem])
 
-  const renderItem = useCallback((item: ModalDataItemProps) => {
+  const renderItem = useCallback((item: ItemProps) => {
 
     const {
       showDescriptionLabel = true,
@@ -155,12 +162,12 @@ export const SectionFilters = (props: SectionFiltersProps) => {
         {showDescriptionLabel ? <Text style={variantStyles.label} text={description} /> : null}
         <View style={variantStyles.optionInnerWrapper}>
           {hasMultipleOptions ? (
-            item.options.map((option) => <Option option={option} />)
+            item?.options?.map?.((option) => <Option option={option} />)
           ) : (
             <Option
               option={{
-                label: TypeGuards.isNil(item?.label) ? item.id : item.label,
-                value: TypeGuards.isNil(item.label) ? item?.id : item?.label,
+                label: TypeGuards.isNil(item?.label) ? String(item?.id) : item?.label,
+                value: TypeGuards.isNil(item?.label) ? item?.id : item?.label,
               }}
             />
           )}
@@ -170,19 +177,14 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   }, [_draft, variantStyles, itemOptionButtonStyles])
 
-  const renderFooter = () => {
-
-    if (TypeGuards.isFunction(renderFooterComponent)) {
-      return renderFooterComponent({ onApply: onApplyItems, onClear: onClearItems, shouldDisableActions })
-    }
-
+  const DefaultFooter = ({ onApply, onClear, shouldDisableActions }: SectionFilterFooterProps) => {
     return (
       <View style={variantStyles.footerWrapper}>
         <Button
           styles={applyButtonStyles}
           text={applyButtonText}
           debugName={`Section Filters Footer - Apply items`}
-          onPress={onApplyItems}
+          onPress={onApply}
           disabled={shouldDisableActions}
           {...applyFilterButtonProps}
         />
@@ -190,13 +192,12 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           styles={clearButtonStyles}
           text={clearButtonText}
           debugName={`Section Filters Footer - Apply items`}
-          onPress={onClearItems}
+          onPress={onClear}
           disabled={shouldDisableActions}
           {...clearFilterButtonProps}
         />
       </View>
     )
-
   }
 
   const onClearItems = () => {
@@ -207,19 +208,28 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const onApplyItems = () => {
     _setSelectedItems(_draft)
-    props?.onApplyItems?.(_selectedItems as ModalDataItemProps[])
+    props?.onApplyItems?.(_selectedItems as ItemProps[])
   }
+
+  const Footer = renderFooterComponent || DefaultFooter 
 
   return (
     <View style={variantStyles.wrapper}>
-
       <View style={variantStyles.innerWrapper}>
         {isEmpty ? null : data.map((item) => renderItem(item))}
       </View>
 
-      {renderFooter()}
+      <Footer 
+        onApply={onApplyItems}
+        onClear={onClearItems}
+        shouldDisableActions={shouldDisableActions}
+      />
     </View>
   )
 }
 
-export * from './styles'
+SectionFilters.defaultProps = {
+  applyButtonText: 'Filter',
+  clearButtonText: 'Clear',
+  filterOnOptionPress: false,
+}

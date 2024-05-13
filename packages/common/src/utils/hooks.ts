@@ -462,19 +462,22 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
 // useIsomorphicEffect removes it by replacing useLayoutEffect with useEffect during ssr
 export const useIsomorphicEffect = typeof document !== 'undefined' ? useLayoutEffect : useEffect
 
-type useConditionalStateType = <T>(
+type UseConditionalStateOptions<T> = {
+  initialValue?: T
+}
+
+type UseConditionalState = <T>(
   value: T | undefined,
   setter: Dispatch<SetStateAction<T>> | ((value: T) => void),
-  options?: { initialValue?: T; hook?: (value: T) => [T, (Dispatch<SetStateAction<T>> | any)] | any }
-) => [T, Dispatch<SetStateAction<T>> | any]
+  options?: UseConditionalStateOptions<T>
+) => [T, Dispatch<SetStateAction<T>> | ((value: T) => void)]
 
-export const useConditionalState: useConditionalStateType = (value, setter, options) => {
-
-  const [vl, setVl] = useState(options?.initialValue)
+export const useConditionalState: UseConditionalState = (value, setter, options) => {
+  const state = useState(options?.initialValue)
 
   if (!TypeGuards.isNil(value) && TypeGuards.isFunction(setter)) {
     return [value, setter]
   }
 
-  return [vl, setVl]
+  return state
 }
