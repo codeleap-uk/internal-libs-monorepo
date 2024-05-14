@@ -427,28 +427,3 @@ export const usePageExitBlocker = (
   }, deps)
 }
 
-export function useGetStyles(...styles) {
-  const handleMultipleStyles = (key) => {
-    return styles.reduce((acc, style) => {
-      return {
-        ...acc,
-        ...style?.[key],
-        ...getNestedStylesByKey(key, style),
-      }
-    }, {})
-  }
-
-  function getStyles(key, states = []) {
-    let _styles = handleMultipleStyles(key)
-
-    states?.forEach((state) => {
-      _styles = {
-        ..._styles,
-        ...handleMultipleStyles(`${key}${state}`),
-      }
-    })
-
-    return _styles
-  }
-  return { getStyles }
-}

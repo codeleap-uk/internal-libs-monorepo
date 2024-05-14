@@ -1,32 +1,34 @@
 import {
   AnyFunction,
   ComponentVariants,
+  PropsOf,
   StylesOf,
   TypeGuards,
-  useBooleanToggle,
+  getNestedStylesByKey,
   useCallback,
   useCodeleapContext,
   useDefaultComponentStyle,
   useMemo,
   useState,
 } from '@codeleap/common'
-import { Text } from '../Text'
-import { Icon } from '../Icon'
 import { List } from '../List'
 import { View } from '../View'
-import { Touchable } from '../Touchable'
 import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
-import { useGetStyles } from '../../lib'
+import { Button } from '../Button'
 
 export type PaginationButtonsProps = {
     pageKey?: number | string
     pages: number
     value?: number
     onValueChange?: AnyFunction
-    onFetchNextPage: AnyFunction
-    onFetchPreviousPage: AnyFunction
-    onFetchPage: AnyFunction
+    onFetchNextPage?: AnyFunction
+    onFetchPreviousPage?: AnyFunction
+    onFetchPage?: AnyFunction
+    disabled?: boolean
+    showArrows?: boolean
     styles?: StylesOf<PaginationButtonsComposition>
+    listProps?: PropsOf<typeof List>
+    itemProps?: PropsOf<typeof Button>
 } & ComponentVariants<typeof PaginationButtonPresets>
 
 export * from './styles'
@@ -36,16 +38,20 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   const { Theme } = useCodeleapContext()
 
   const {
-    pageKey = Date.now(), // not sure if it is correct but seems to work in most cases
+    pageKey = Date.now(),
     pages,
     value = null,
     onValueChange = null,
     onFetchPreviousPage,
     onFetchNextPage,
     onFetchPage,
+    disabled = false,
+    showArrows = true,
     variants,
     responsiveVariants,
     styles,
+    listProps = {},
+    itemProps = {},
   } = props
 
   const variantStyles = useDefaultComponentStyle('u:PaginationButtons', {
@@ -54,8 +60,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     styles,
   })
 
-  console.log(variantStyles, 'variantStyles')
-
   const isMobile = Theme.hooks.down('tabletSmall')
 
   const initialIndex = 0
@@ -63,8 +67,8 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const pageAbreviationIndex = isMobile ? 3 : 4
 
-  const itemsListLength = isMobile ? 7 : 9 // number of items in the list (including arrows)
-  const abreviationLimit = isMobile ? 5 : 10 // the list will be abreviated if over 10 items
+  const itemsListLength = isMobile ? 7 : 9
+  const abreviationLimit = isMobile ? 5 : 10
 
   const shouldAbreviateNumbers = pages > abreviationLimit
 
@@ -84,6 +88,9 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   const secondPageNumber = 2
   const thirdPageNumber = 3
   const abreviator = '...'
+
+  const listStyles = getNestedStylesByKey('list', variantStyles)
+  const itemStyles = getNestedStylesByKey('button', variantStyles)
 
   const initialPageNumbersOrder = useMemo(() => {
 
@@ -116,8 +123,8 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
       thirdItem,
       fourthItem,
       fifthItem,
-      pages - 1, // only shows up on desktop
-      pages, // only shows up on desktop
+      pages - 1,
+      pages,
     ].filter(Boolean)
 
   }, [currentIndex, areItemsAbreviated, itemsAmount])
@@ -179,8 +186,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const renderItem = useCallback(({ index }) => {
 
-    const [hover, setHover] = useBooleanToggle(false)
-
     let isItemSelected = null
 
     const isPrevArrow = index === 0
@@ -222,64 +227,38 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
     const arrowIcon = `chevron-${isPrevArrow ? 'left' : 'right'}`
 
-    const Wrapper = shouldAllowPress ? Touchable : View
-
-    const onHover = useCallback(() => {
-      const isAbreviator = item === abreviator
-      if (isAbreviator) return null
-      setHover()
-    }, [item])
+    if (isArrowItem && !showArrows) {
+      return null
+    }
 
     return (
-      <Wrapper
-        // @ts-ignore
-        variants={['center', 'border-radius:tiny']}
-        onPress={onPressItem}
-        style={[variantStyles.itemWrapper, isItemSelected && variantStyles['itemWrapper:selected']]}
-        debugName={`${index} page button on press`}
-        onHover={onHover}
-      >
-        {isArrowItem ? (
-          <Icon
-            name={arrowIcon}
-            size={Theme.values.iconSize[2]}
-            debugName='Arrow'
-          />
-        ) : (
-          <Text
-            variants={['p2']}
-            text={item}
-            style={[
-              variantStyles.text,
-              isItemSelected && variantStyles['text:selected'],
-              hover && variantStyles['text:hover'],
-            ]}
-          />
-        ) }
-      </Wrapper>
+      <Button
+        variant={`default`}
+        text={isArrowItem ? '' : String(item)}
+        selected={isItemSelected}
+        icon={isArrowItem ? arrowIcon : null}
+        onPress={shouldAllowPress ? onPressItem : () => null}
+        styles={itemStyles}
+        disabled={disabled}
+        {...itemProps}
+      />
     )
-  }, [currentIndex, itemsAmount])
+  }, [currentIndex, itemsAmount, itemStyles])
 
   const data = Array(itemsAmount).fill({})
 
   const listMaxWidth = (itemsAmount) * (Theme.values.itemHeight.small + Theme.spacing.value(2))
 
-  const { getStyles } = useGetStyles(variantStyles)
-
   return (
-    <View
-      style={variantStyles.wrapper}
-      responsiveVariants={{
-        mid: ['paddingLeft:2'],
-      }}
-    >
+    <View style={variantStyles.wrapper}>
       <List
         data={data}
         debugName={'Table pagination buttons'}
-        styles={getStyles('list')}
+        styles={listStyles}
         renderItem={renderItem}
         masonryProps={{ columnCount: itemsAmount, key: pageKey }}
         style={{ maxWidth: listMaxWidth, minHeight: 'auto' }}
+        {...listProps}
       />
     </View>
   )

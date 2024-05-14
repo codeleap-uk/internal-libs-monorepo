@@ -1,14 +1,7 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
+import { ButtonComposition, createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ListComposition } from '../List'
 
-export type PaginationButtonsComposition =
-  | 'wrapper'
-  | 'itemWrapper'
-  | 'itemWrapper:selected'
-  | 'text'
-  | 'text:selected'
-  | 'text:hover'
-  | `list${Capitalize<ListComposition>}`
+export type PaginationButtonsComposition = 'wrapper' | `list${Capitalize<ListComposition>}` | `button${Capitalize<ButtonComposition>}`
 
 const createPaginationButtonStyle = createDefaultVariantFactory<PaginationButtonsComposition>()
 
