@@ -31,6 +31,7 @@ import { TagPresets } from './Tag/styles'
 import createCache from '@emotion/cache'
 import { DropzonePresets } from './Dropzone/styles'
 import { PaginationButtonPresets } from './PaginationButtons/styles'
+import { SectionFilterPresets } from './SectionFilters/styles'
 
 export const defaultStyles = {
   View: ViewPresets,
@@ -67,6 +68,7 @@ export const defaultStyles = {
   CropPicker: CropPickerPresets,
   Tag: TagPresets,
   PaginationButtons: PaginationButtonPresets,
+  SectionFilters: SectionFilterPresets,
 }
 
 export const createCodeleapWebCache = () => {
