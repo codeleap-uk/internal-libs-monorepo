@@ -24,6 +24,7 @@ export type PaginationButtonsProps = {
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
     onFetchPage?: AnyFunction
+    shouldAbreviate?: boolean
     disabled?: boolean
     showArrows?: boolean
     styles?: StylesOf<PaginationButtonsComposition>
@@ -45,6 +46,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     onFetchPreviousPage,
     onFetchNextPage,
     onFetchPage,
+    shouldAbreviate = true,
     disabled = false,
     showArrows = true,
     variants,
@@ -62,7 +64,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const isMobile = Theme.hooks.down('tabletSmall')
 
-  const initialIndex = 0
   const arrowItemsAmount = 2
 
   const pageAbreviationIndex = isMobile ? 3 : 4
@@ -70,13 +71,11 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   const itemsListLength = isMobile ? 7 : 9
   const abreviationLimit = isMobile ? 5 : 10
 
-  const shouldAbreviateNumbers = pages > abreviationLimit
+  const shouldAbreviateNumbers = pages > abreviationLimit && shouldAbreviate
 
   const itemsAmount = shouldAbreviateNumbers ? itemsListLength : (pages + arrowItemsAmount)
 
-  const initialNumericIndex = initialIndex + 1
-
-  const [currentIndex, setCurrentIndex] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState(initialNumericIndex)
+  const [currentIndex, setCurrentIndex] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState(1)
 
   const displayLastPageNumbers = isMobile ? currentIndex >= pages - 2 : pages - arrowItemsAmount <= currentIndex + 2
 
@@ -100,7 +99,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
     const order = []
 
-    if (!shouldAbreviateNumbers) {
+    if (!shouldAbreviateNumbers || !shouldAbreviate) {
       for (let i = 1; i < pages + 1; i++) {
         order.push(i)
       }
@@ -247,8 +246,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const data = Array(itemsAmount).fill({})
 
-  const listMaxWidth = (itemsAmount) * (Theme.values.itemHeight.small + Theme.spacing.value(2))
-
   return (
     <View style={variantStyles.wrapper}>
       <List
@@ -257,7 +254,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
         styles={listStyles}
         renderItem={renderItem}
         masonryProps={{ columnCount: itemsAmount, key: pageKey }}
-        style={{ maxWidth: listMaxWidth, minHeight: 'auto' }}
         {...listProps}
       />
     </View>
