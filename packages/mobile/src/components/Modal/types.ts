@@ -29,6 +29,7 @@ export type ModalProps =
     scrollProps?: PropsOf<typeof Scroll, 'ref'>
     style?: StyledProp<ModalComposition>
     id?: string
+    absolute?: boolean
   }
 
 export type ModalHeaderProps =

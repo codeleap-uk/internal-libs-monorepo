@@ -34,7 +34,7 @@ export function isSpacingKey(key: string) {
   return spacingKeys?.includes(key)
 }
 
-export function getNestedStylesByKey<T extends string>(match: string, styles: Record<T, ICSS>) {
+export function getNestedStylesByKey<T extends string>(match: string, styles: Partial<Record<T, ICSS>>) {
   const stylesByKey = {}
 
   for (const [key, value] of Object.entries(styles)) {
