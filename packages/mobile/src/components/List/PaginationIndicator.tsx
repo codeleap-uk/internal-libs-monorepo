@@ -9,7 +9,7 @@ export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<Activi
 
 export type PaginationIndicatorProps = {
   isFetching?: boolean
-  noMoreItemsText: JSX.Element
+  noMoreItemsText: JSX.Element | string | number
   hasMore?: boolean
   activityIndicator?: JSX.Element
   style?: StyledProp<PaginationIndicatorComposition>
@@ -45,7 +45,6 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
 
   return null
 }
-
 
 PaginationIndicator.styleRegistryName = 'PaginationIndicator'
 PaginationIndicator.elements = ['text', 'loader']
