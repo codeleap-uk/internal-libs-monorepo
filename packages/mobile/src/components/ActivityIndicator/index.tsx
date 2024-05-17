@@ -37,7 +37,7 @@ export const ActivityIndicator = <T extends React.ComponentType = typeof RNActiv
 ActivityIndicator.styleRegistryName = 'ActivityIndicator'
 ActivityIndicator.elements = ['wrapper', 'backCircle', 'frontCircle', 'circle']
 ActivityIndicator.rootElement = 'wrapper'
-ActivityIndicator.defaultProps = {}
+ActivityIndicator.defaultProps = {} as AnyRecord
 
 ActivityIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return ActivityIndicator as (<T extends React.ComponentType = typeof RNActivityIndicator>(props: StyledComponentProps<ActivityIndicatorProps<T>, typeof styles>) => IJSX)

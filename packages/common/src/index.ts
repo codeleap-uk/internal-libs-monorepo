@@ -4,6 +4,7 @@ export * from './utils'
 export * from './types'
 export * from './config'
 export * from './components'
+export * from './contexts/GlobalContext'
 
 export { silentLogger } from './constants'
 

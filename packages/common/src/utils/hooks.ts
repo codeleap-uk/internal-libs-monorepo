@@ -20,8 +20,8 @@ import { AnyFunction, DeepPartial, StylesOf } from '../types'
 import { uniqueId } from 'lodash'
 import { useUnmount } from 'react-use'
 import { getNestedStylesByKey } from './misc'
-import { useCodeleapContext } from '../styles/StyleProvider'
 import { TypeGuards } from '.'
+import { useGlobalContext } from '../contexts/GlobalContext'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -408,7 +408,7 @@ export function useNestedStylesByKey<T extends string, O extends StylesOf<T> = S
 
 export function useWarning(condition: boolean, ...logArgs: any[]) {
   const logged = useRef(false)
-  const { logger } = useCodeleapContext()
+  const { logger } = useGlobalContext()
 
   if (!logged.current && condition) {
     logged.current = true
