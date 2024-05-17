@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import { SetStateAction } from 'react'
-import { Dispatch } from 'react'
+import { useState, SetStateAction, Dispatch } from 'react'
 import { TypeGuards } from '..'
 
 type UseConditionalStateOptions<T> = {

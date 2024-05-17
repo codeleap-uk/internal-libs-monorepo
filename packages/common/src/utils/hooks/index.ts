@@ -12,7 +12,6 @@ import {
 } from 'react'
 
 export * from './useCondicionalState'
-export * from './useButtonsPagination'
 export * from './useIsomorphicEffect'
 export * from './usePromise'
 export * from './useWarning'

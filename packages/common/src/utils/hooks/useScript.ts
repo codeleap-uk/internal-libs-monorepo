@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 export function useScript(src: string) {
   const [status, setStatus] = useState(src ? 'loading' : 'idle')
