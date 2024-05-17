@@ -106,7 +106,7 @@ export const Checkbox = (props: CheckboxProps) => {
     >
       <View
         animated
-        animatedStyle={boxAnimation}
+        animatedStyle={checkmarkWrapperAnimation}
         style={[
           styles.checkmarkWrapper,
           disabled && styles['checkmarkWrapper:disabled'],

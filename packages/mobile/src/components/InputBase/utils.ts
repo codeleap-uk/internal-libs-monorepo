@@ -8,8 +8,10 @@ type OmitDiff<T1, T2> = {
 
 type InputBaseKey = keyof InputBaseProps
 
-export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
-  inputBaseProps: InputBaseProps
+type BaseProps = Omit<InputBaseProps, 'style'>
+
+export function selectInputBaseProps<T extends BaseProps>(props: T): {
+  inputBaseProps: BaseProps
   others: OmitDiff<T, T>
 } {
   const varList:InputBaseKey[] = [
@@ -36,7 +38,7 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
     acc[key] = copy[key]
 
     return acc
-  }, {} as InputBaseProps)
+  }, {} as BaseProps)
 
   return { inputBaseProps: result, others: copy as OmitDiff<T, T> }
 }

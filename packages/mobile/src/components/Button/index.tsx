@@ -79,7 +79,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   const rightFeedback = getFeedbackStyle(pressed)
 
-  // @note This is a hack to hide the icon when there is no text
+  // @ts-expect-error This is a hack to hide the icon when there is no text
   const isLeftIconHidden = _styles?.leftIcon?.display != 'none'
 
   const badgeStyles = getNestedStylesByKey('badge', styles)
