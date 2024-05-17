@@ -1,20 +1,18 @@
-import React, { ReactElement, useImperativeHandle, useMemo, useRef, useState } from 'react'
-import { Scroll } from '../Scroll'
-import { Easing, ViewStyle } from 'react-native'
+import React, { ReactElement, useImperativeHandle, useMemo, useRef, useState, Ref } from 'react'
+import { Easing, ScrollView } from 'react-native'
 import { Text } from '../Text'
 import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { SegmentedControlOption } from './Option'
 import { SegmentedControlProps, SegmentedControlRef } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 export * from './types'
 
-const DefaultBubble = (props: { style: ViewStyle }) => {
-  const { style } = props
-  return <View animated style={style} />
+const DefaultBubble = (props) => {
+  return <View animated {...props} />
 }
 
 const defaultAnimation = {
@@ -133,17 +131,13 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
         <Text style={styles?.labelText} text={label} />
       </View>
 
-      <Scroll
+      <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles?.scroll}
         contentContainerStyle={styles?.scrollContent}
         {...scrollProps}
-        // @ts-expect-error
-        keyboardAware={{
-          enabled: false,
-        }}
-        ref={scrollRef}
+        ref={scrollRef as unknown as Ref<ScrollView>}
       >
         <View style={styles?.innerWrapper}>
           <BubbleView
@@ -182,7 +176,7 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
             />
           ))}
         </View>
-      </Scroll>
+      </ScrollView>
     </View>
   )
 }) as unknown as (<T = string>(props: SegmentedControlProps<T> & { ref?: React.Ref<SegmentedControlRef> }) => ReactElement) & {

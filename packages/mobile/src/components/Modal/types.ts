@@ -15,9 +15,9 @@ export type ModalProps =
     closable?: boolean
     footer?: React.ReactNode
     title?: React.ReactNode
-    debugName: string
+    debugName?: string
     closeIconName?: AppIcon
-    visible: boolean
+    visible?: boolean
     toggle?: () => void
     zIndex?: number
     description?: React.ReactElement
@@ -28,6 +28,7 @@ export type ModalProps =
     keyboardAware?: boolean
     scrollProps?: PropsOf<typeof Scroll, 'ref'>
     style?: StyledProp<ModalComposition>
+    id?: string
   }
 
 export type ModalHeaderProps =
