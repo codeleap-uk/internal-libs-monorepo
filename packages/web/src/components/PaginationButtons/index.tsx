@@ -34,6 +34,8 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   const {
     pages,
     shouldAbreviate = true,
+    displayLeftArrow = true,
+    displayRightArrow = true,
     disabled = false,
     variants,
     responsiveVariants,
@@ -45,6 +47,8 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     total: pages,
     boundaries: 2,
     shouldAbreviate,
+    displayLeftArrow,
+    displayRightArrow,
   }
 
   const boundaries = defaultPaginationProps?.boundaries
@@ -52,6 +56,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const {
     range,
+    first,
     next,
     previous,
     setPage,
@@ -88,10 +93,14 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   const onPressItem = ({ item, isArrowLeft, isArrowRight }) => {
 
     if (isArrowLeft) {
-      return fetchPreviousPage()
+      if (displayLeftArrow) {
+        return fetchPreviousPage()
+      } else {
+        return first()
+      }
     }
 
-    if (isArrowRight) {
+    if (displayRightArrow && isArrowRight) {
       return fetchNextPage()
     }
 
@@ -106,15 +115,15 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     const isArrowLeft = index === 0
     const isArrowRight = index === range?.length - 1
 
-    const isArrowItem = isArrowLeft || isArrowRight
+    const isArrowItem = displayLeftArrow && isArrowLeft || displayRightArrow && isArrowRight
     const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
 
     switch (status) {
       case 'initial':
-        selected = index === active
+        selected = active === index + (displayLeftArrow ? 0 : 1)
         break
       case 'abreviated':
-        selected = index === centeredElementIndex
+        selected = index === centeredElementIndex - (displayLeftArrow ? 0 : 1)
         break
       case 'end':
         selected = active - (Number(item) - index) === index
@@ -132,7 +141,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
         {...itemProps}
       />
     )
-  }, [itemStyles, active, status, centeredElementIndex])
+  }, [itemStyles, active, status, range, centeredElementIndex])
 
   return (
     <View style={variantStyles.wrapper}>

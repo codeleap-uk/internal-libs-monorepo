@@ -55,8 +55,8 @@ export function usePagination(props: PaginationParams) {
 
     const nonSelectableItems = [
       TypeGuards.isString(pageNumber) && pageNumber === DOTS,
-      isPreviousArrow,
-      isNextArrow,
+      displayLeftArrow && isPreviousArrow,
+      displayRightArrow && isNextArrow,
     ].some(x => x)
 
     if (nonSelectableItems) return activePage
@@ -93,11 +93,16 @@ export function usePagination(props: PaginationParams) {
     }
 
     if (displayLastNumbers) {
-      return [
+
+      const extraItems = [
         leftArrowDisplay,
         1,
         DOTS,
-        ...range(total - (boundaries + 3), total + 1), // boundaries + 3 seria 2 arrows mais o 1ali de cima
+      ]
+
+      return [
+        ...extraItems,
+        ...range(total - (boundaries + extraItems?.length), total + (displayRightArrow ? 1 : 0)),
       ].filter(Boolean)
     }
 
