@@ -1,12 +1,11 @@
-import { TypeGuards, range, useMemo, useUncontrolled } from '@codeleap/common'
+import { TypeGuards, onUpdate, range, useMemo, useState, useUncontrolled } from '@codeleap/common'
 
-export const DOTS = '...'
+const DOTS = '...'
 
-export interface PaginationParams {
+export type PaginationParams = {
   initialPage?: number
   page?: number
   total: number
-  siblings?: number
   boundaries?: number
   onChange?: (page: number) => void
   shouldAbreviate?: boolean
@@ -19,7 +18,6 @@ export function usePagination(props: PaginationParams) {
 
   const {
     total,
-    siblings = 1,
     boundaries = 1,
     page,
     initialPage = 1,
@@ -30,18 +28,25 @@ export function usePagination(props: PaginationParams) {
     displayRightArrow = true,
   } = props
 
-  const leftArrowDisplay = displayLeftArrow ? 'arrow' : null
-  const rightArrowDisplay = displayRightArrow ? 'arrow' : null
-
-  const arrowsAmount = !leftArrowDisplay || rightArrowDisplay ? 1 : 2
-
   const [activePage, setActivePage] = useUncontrolled({
     value: page,
     onChange,
-    defaultValue: 13,
+    defaultValue: 14,
     finalValue: initialPage,
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
+
+  const [status, setStatus] = useState('initial')
+
+  const leftArrowDisplay = displayLeftArrow ? 'arrow' : null
+  const rightArrowDisplay = displayRightArrow ? 'arrow' : null
+  const arrowsAmount = !leftArrowDisplay || rightArrowDisplay ? 1 : 2
+
+  const canAbreviateItems = shouldAbreviate && total > abreviationMinimumAmount
+  const displayLastNumbers = activePage + boundaries + arrowsAmount + 2 >= total
+  const isCenterSelected = canAbreviateItems && activePage > boundaries && !displayLastNumbers
+
+  const dotsDisplay = isCenterSelected ? DOTS : null
 
   const setPage = (pageNumber: number) => {
 
@@ -63,14 +68,23 @@ export function usePagination(props: PaginationParams) {
   const first = () => setPage(1)
   const last = () => setPage(total)
 
-  const canAbreviate = shouldAbreviate && total > abreviationMinimumAmount
+  onUpdate(() => {
 
-  const isCenterSelected = canAbreviate && activePage > boundaries && total
-  const lastNumbersDisplayed = isCenterSelected ? activePage + boundaries + arrowsAmount + 2 >= total : false
+    if (isCenterSelected) {
+      return setStatus('abreviated')
+    }
 
-  const paginationRange = useMemo((): (number | 'dots')[] => {
+    if (displayLastNumbers) {
+      return setStatus('end')
+    }
 
-    if (total <= abreviationMinimumAmount) {
+    setStatus('initial')
+
+  }, [activePage, isCenterSelected, displayLastNumbers])
+
+  const paginationRange = useMemo((): (number | string | '...')[] => {
+
+    if (!canAbreviateItems) {
       return [
         leftArrowDisplay,
         ...range(1, total),
@@ -78,7 +92,7 @@ export function usePagination(props: PaginationParams) {
       ].filter(Boolean)
     }
 
-    if (lastNumbersDisplayed) {
+    if (displayLastNumbers) {
       return [
         leftArrowDisplay,
         1,
@@ -90,20 +104,19 @@ export function usePagination(props: PaginationParams) {
     return [
       leftArrowDisplay,
       ...range(1, isCenterSelected ? boundaries - 1 : boundaries),
-      isCenterSelected ? DOTS : null,
+      dotsDisplay,
       isCenterSelected ? activePage : DOTS,
-      isCenterSelected ? DOTS : null,
+      dotsDisplay,
       ...range(total - boundaries + (isCenterSelected ? 2 : 1), total),
       rightArrowDisplay,
     ].filter(Boolean)
 
-  }, [total, siblings, activePage, lastNumbersDisplayed, isCenterSelected])
+  }, [total, activePage, displayLastNumbers, isCenterSelected, canAbreviateItems])
 
   return {
     range: paginationRange,
     active: Number(activePage),
-    lastNumbersDisplayed,
-    canAbreviate,
+    status,
     setPage,
     next,
     previous,

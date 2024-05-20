@@ -48,6 +48,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   }
 
   const boundaries = defaultPaginationProps?.boundaries
+  const centeredElementIndex = boundaries + 1
 
   const {
     range,
@@ -55,8 +56,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     previous,
     setPage,
     active,
-    canAbreviate,
-    lastNumbersDisplayed,
+    status,
   } = usePagination({
     ...defaultPaginationProps,
     ...props?.paginationProps,
@@ -109,14 +109,15 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     const isArrowItem = isArrowLeft || isArrowRight
     const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
 
-    if (active <= boundaries || !canAbreviate) {
-      selected = index === active
-    } else {
-      if (lastNumbersDisplayed) {
+    switch (status) {
+      case 'initial':
+        selected = index === active
+        break
+      case 'abreviated':
+        selected = index === centeredElementIndex
+        break
+      case 'end':
         selected = active - (Number(item) - index) === index
-      } else {
-        selected = index === boundaries + 1
-      }
     }
 
     return (
@@ -131,7 +132,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
         {...itemProps}
       />
     )
-  }, [itemStyles, active, lastNumbersDisplayed])
+  }, [itemStyles, active, status, centeredElementIndex])
 
   return (
     <View style={variantStyles.wrapper}>
