@@ -32,7 +32,7 @@ export * from './styles'
 export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const {
-    pages = 12,
+    pages,
     shouldAbreviate = true,
     disabled = false,
     variants,
@@ -43,7 +43,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const defaultPaginationProps = {
     total: pages,
-    boundaries: 3,
+    boundaries: 2,
     shouldAbreviate,
   }
 
@@ -112,7 +112,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
       selected = index === active
     } else {
       if (lastNumbersDisplayed) {
-        selected = active - (Number(range[boundaries]) - boundaries) === index
+        selected = active - (Number(item) - index) === index
       } else {
         selected = index === boundaries + 1
       }

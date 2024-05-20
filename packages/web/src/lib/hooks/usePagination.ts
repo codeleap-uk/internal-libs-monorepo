@@ -38,7 +38,7 @@ export function usePagination(props: PaginationParams) {
   const [activePage, setActivePage] = useUncontrolled({
     value: page,
     onChange,
-    defaultValue: 15,
+    defaultValue: 13,
     finalValue: initialPage,
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
