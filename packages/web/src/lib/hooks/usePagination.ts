@@ -22,7 +22,7 @@ export function usePagination(props: PaginationParams) {
     page,
     initialPage = 1,
     onChange,
-    shouldAbreviate,
+    shouldAbreviate = true,
     abreviationMinimumAmount = 10,
   } = props
 
@@ -33,6 +33,8 @@ export function usePagination(props: PaginationParams) {
     finalValue: initialPage,
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
+
+  const arrowsAmount = 2
 
   const setPage = (pageNumber: number) => {
     if (pageNumber <= 0) {
@@ -50,7 +52,7 @@ export function usePagination(props: PaginationParams) {
   const last = () => setPage(total)
 
   const shouldAbreviateNumbers = shouldAbreviate && activePage > 2
-  const lastNumbersDisplayed = shouldAbreviateNumbers ? activePage + boundaries + 2 >= total : false
+  const lastNumbersDisplayed = shouldAbreviateNumbers ? activePage + boundaries + arrowsAmount >= total : false
 
   const paginationRange = useMemo((): (number | 'dots')[] => {
 
