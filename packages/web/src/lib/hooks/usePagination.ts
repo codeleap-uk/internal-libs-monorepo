@@ -45,15 +45,17 @@ export function usePagination(props: PaginationParams) {
 
   const setPage = (pageNumber: number) => {
 
-    if (TypeGuards.isString(pageNumber) && pageNumber === DOTS) return activePage
+    const isPreviousArrow = pageNumber === 0
+    const isNextArrow = pageNumber === total + 1
 
-    if (pageNumber <= 0) {
-      setActivePage(1)
-    } else if (pageNumber > total) {
-      setActivePage(total)
-    } else {
-      setActivePage(pageNumber)
-    }
+    const nonSelectableItems = [
+      TypeGuards.isString(pageNumber) && pageNumber === DOTS,
+      isPreviousArrow,
+      isNextArrow,
+    ].some(x => x)
+
+    if (nonSelectableItems) return activePage
+    setActivePage(pageNumber)
   }
 
   const next = () => setPage(activePage + 1)
@@ -63,8 +65,6 @@ export function usePagination(props: PaginationParams) {
 
   const isCenterSelected = shouldAbreviate && activePage > boundaries
   const lastNumbersDisplayed = isCenterSelected ? activePage + boundaries + arrowsAmount + 2 >= total : false
-
-  console.log(activePage, 'active page')
 
   const paginationRange = useMemo((): (number | 'dots')[] => {
 
@@ -79,7 +79,7 @@ export function usePagination(props: PaginationParams) {
     if (lastNumbersDisplayed) {
       return [
         leftArrowDisplay,
-        '1',
+        1,
         DOTS,
         ...range(total - (boundaries + 3), total + 1), // boundaries + 3 seria 2 arrows mais o 1ali de cima
       ].filter(Boolean)

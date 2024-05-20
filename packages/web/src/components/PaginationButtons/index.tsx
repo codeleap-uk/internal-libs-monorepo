@@ -5,7 +5,6 @@ import {
   StylesOf,
   getNestedStylesByKey,
   useCallback,
-  useCodeleapContext,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
@@ -47,6 +46,8 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     boundaries: 3,
     shouldAbreviate,
   }
+
+  const boundaries = defaultPaginationProps?.boundaries
 
   const {
     range,
@@ -107,13 +108,13 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     const isArrowItem = isArrowLeft || isArrowRight
     const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
 
-    if (active <= defaultPaginationProps?.boundaries) {
+    if (active <= boundaries) {
       selected = index === active
     } else {
       if (lastNumbersDisplayed) {
-        selected = active - (range[defaultPaginationProps?.boundaries] - defaultPaginationProps?.boundaries) === index
+        selected = active - (Number(range[boundaries]) - boundaries) === index
       } else {
-        selected = index === defaultPaginationProps?.boundaries + 1
+        selected = index === boundaries + 1
       }
     }
 
