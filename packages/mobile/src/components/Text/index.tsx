@@ -17,6 +17,8 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
     style,
     debounce = 1000,
     pressDisabled,
+    animated,
+    animatedStyle,
     ...props
   } = textProps
 
@@ -60,7 +62,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
 
   if (!!text && !TypeGuards.isString(text)) return <>{text}</>
 
-  const Component = textProps.animated ? Animated.Text : NativeText
+  const Component = animated ? Animated.Text : NativeText
 
   const { getFeedbackStyle } = usePressableFeedback(styles, {
     disabled: !pressPolyfillEnabled,
@@ -75,11 +77,13 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
     onPress: pressDisabled ? null : _onPress,
   } : {}
 
+  const disabled = !!onPress && pressDisabled
+
   return (
     <Component
       {...props}
       onPressIn={handlePress(true)} onPressOut={handlePress(false)}
-      style={[styles?.text, feedbackStyle, !!onPress && pressDisabled ? styles['text:disabled'] : null]}
+      style={[styles?.text, animatedStyle, feedbackStyle, disabled ? styles['text:disabled'] : null]}
       allowFontScaling={false}
       {...pressProps}
       // @ts-ignore

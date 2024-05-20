@@ -67,6 +67,8 @@ export function spacingFactory<T extends string>(
     }
 
     spacings[key] = (n: number | string) => {
+      if (n == 'auto') return getter('auto')
+
       const value = base * Number(n)
 
       return getter(value)
