@@ -3,17 +3,16 @@ import {
   ComponentVariants,
   PropsOf,
   StylesOf,
-  TypeGuards,
   getNestedStylesByKey,
   useCallback,
   useCodeleapContext,
-  useConditionalState,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { List } from '../List'
 import { View } from '../View'
 import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
 import { Button } from '../Button'
+import { PaginationParams, usePagination } from '../../lib'
 
 export type PaginationButtonsProps = {
     pageKey?: number | string
@@ -29,6 +28,7 @@ export type PaginationButtonsProps = {
     styles?: StylesOf<PaginationButtonsComposition>
     listProps?: PropsOf<typeof List>
     itemProps?: PropsOf<typeof Button>
+    paginationProps?: PaginationParams
 } & ComponentVariants<typeof PaginationButtonPresets>
 
 export * from './styles'
@@ -38,7 +38,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   const { Theme } = useCodeleapContext()
 
   const {
-    pages,
+    pages = 12,
     shouldAbreviate = true,
     disabled = false,
     showArrows = true,
@@ -48,8 +48,10 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     itemProps = {},
   } = props
 
-  const { range, currentPage, next, previous, setPage } = usePagination({
-    total: 20,
+  const { range, next, previous, setPage, active, lastNumbersDisplayed } = usePagination({
+    total: pages,
+    boundaries: 2,
+    ...props?.paginationProps,
   })
 
   const variantStyles = useDefaultComponentStyle('u:PaginationButtons', {
@@ -58,30 +60,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     styles,
   })
 
-  const isMobile = Theme.hooks.down('tabletSmall')
-
   const itemStyles = getNestedStylesByKey('button', variantStyles)
-
-  const arrowItemsAmount = showArrows ? 2 : 0
-  const itemsListLength = isMobile ? 7 : 9
-  const maxListLength = isMobile ? 5 : 10
-  const firstAbreviatedIndex = isMobile ? 3 : 4
-
-  // const shouldAbreviateNumbers = (pages > maxListLength && shouldAbreviate) || isMobile
-  const shouldAbreviateNumbers = (pages > maxListLength && shouldAbreviate)
-
-  const itemsAmount = shouldAbreviateNumbers ? itemsListLength : (pages + arrowItemsAmount)
-
-  const [currentIndex, setCurrentIndex] = useConditionalState(props?.value, props?.onValueChange, { initialValue: 1 })
-
-  const displayLastPageNumbers = isMobile ? currentIndex >= pages - 2 : pages - arrowItemsAmount <= currentIndex + 2
-
-  const areItemsAbreviated = shouldAbreviateNumbers && (currentIndex >= firstAbreviatedIndex)
-
-  const lastInitialOrderItem = pages - (itemsListLength - 2)
-
-  const thirdPageNumber = 3
-  const abreviator = '...'
 
   const fetchPreviousPage = () => {
     props?.onFetchPreviousPage?.()
@@ -98,97 +77,57 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     setPage?.(page)
   }
 
-  const onPressItem = ({ index, isArrowItem, isPrevArrow, shouldAllowPress }) => {
+  const onPressItem = ({ item, isArrowLeft, isArrowRight }) => {
 
-    if (!shouldAllowPress) {
-      return null
+    if (isArrowLeft) {
+      return fetchPreviousPage()
     }
 
-    const firstNumericItemIndex = 1
-
-    const preventArrowItemSelection = isArrowItem && currentIndex === (isPrevArrow ? firstNumericItemIndex : pages)
-
-    const nextIndex = null
-
-    if (isArrowItem) {
-      if (preventArrowItemSelection) return setCurrentIndex(state => state)
-      setCurrentIndex((state) => state - (isPrevArrow ? 1 : -1))
-      return isPrevArrow ? fetchPreviousPage?.() : fetchNextPage?.()
+    if (isArrowRight) {
+      return fetchNextPage()
     }
 
-    const _index = TypeGuards.isNumber(nextIndex) ? nextIndex : index + 1
+    fetchPage(item)
 
-    const shouldFetchNextPage = currentIndex - _index === - 1
-    const shouldFetchPreviousPage = currentIndex - _index === 1
-
-    if (shouldFetchNextPage) {
-      fetchNextPage?.()
-    } else if (shouldFetchPreviousPage) {
-      fetchPreviousPage?.()
-    } else {
-      fetchPage?.(_index)
-    }
-
-    setCurrentIndex(_index)
   }
 
-  const renderItem = useCallback(({ index }) => {
+  const renderItem = useCallback(({ item, index }) => {
 
-    let isItemSelected = null
+    let selected = null
 
-    const isPrevArrow = index === 0
-    const isNextArrow = index === itemsAmount - 1
+    const isArrowLeft = index === 0
+    const isArrowRight = index === range?.length - 1
 
-    const fourthIndex = 4
+    const isArrowItem = isArrowLeft || isArrowRight
+    const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
 
-    const item = page
-
-    const shouldAllowPress = item !== abreviator
-
-    if (isMobile) {
-      if (!areItemsAbreviated || (areItemsAbreviated && currentIndex < firstAbreviatedIndex)) {
-        isItemSelected = index === currentIndex
-      } else {
-        if (!displayLastPageNumbers) {
-          isItemSelected = index === thirdPageNumber
-        } else {
-          isItemSelected = lastInitialOrderItem + index === currentIndex
-        }
-      }
+    if (active <= 2) { //  2== boundaries
+      selected = index === active
     } else {
-      if (!displayLastPageNumbers || !shouldAbreviateNumbers) {
-        isItemSelected = index === (areItemsAbreviated ? fourthIndex : currentIndex)
+      if (lastNumbersDisplayed) {
+        selected = active - (Number(range[1]) - 1) === index
       } else {
-        isItemSelected = item === currentIndex
+        selected = index === 2 + 1//  2== boundaries
       }
-    }
-
-    const isArrowItem = isPrevArrow || isNextArrow
-    const arrowIconName = `chevron-${isPrevArrow ? 'left' : 'right'}`
-
-    if (isArrowItem && !showArrows) {
-      return null
     }
 
     return (
       <Button
         variant={`default`}
         text={isArrowItem ? '' : String(item)}
-        selected={isItemSelected}
+        selected={selected}
         icon={isArrowItem ? arrowIconName : null}
-        onPress={() => onPressItem({ index, isArrowItem, isPrevArrow, shouldAllowPress }) }
+        onPress={() => onPressItem({ item, isArrowLeft, isArrowRight }) }
         styles={itemStyles}
         disabled={disabled}
         {...itemProps}
       />
     )
-  }, [currentIndex, itemsAmount, itemStyles])
-
-  // const data = Array(itemsAmount).fill({})
+  }, [itemStyles, active, lastNumbersDisplayed])
 
   return (
-    <View style={[variantStyles.wrapper, { minWidth: itemsAmount * (Theme.values.itemHeight.small + Theme.spacing.value(4)) }]}>
-      {range?.map?.((_, index) => renderItem({ index }))}
+    <View style={[variantStyles.wrapper]}>
+      {range?.map?.((item, index) => renderItem({ item, index }))}
     </View>
   )
 }

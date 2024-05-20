@@ -130,36 +130,32 @@ export function useScrollEffect(
   }, [breakpoint, ...extraDependencies])
 }
 
-export const DOTS = 'dots'
+export const DOTS = '...'
 
 export interface PaginationParams {
-  /** Page selected on initial render, defaults to 1 */
   initialPage?: number
-
-  /** Controlled active page number */
   page?: number
-
-  /** Total amount of pages */
   total: number
-
-  /** Siblings amount on left/right side of selected page, defaults to 1 */
   siblings?: number
-
-  /** Amount of elements visible on left/right edges, defaults to 1  */
   boundaries?: number
-
-  /** Callback fired after change of each page */
   onChange?: (page: number) => void
+  shouldAbreviate?: boolean
+  abreviationMinimumAmount?: number
 }
 
-export function usePagination({
-  total,
-  siblings = 1,
-  boundaries = 1,
-  page,
-  initialPage = 1,
-  onChange,
-}: PaginationParams) {
+export function usePagination(props: PaginationParams) {
+
+  const {
+    total,
+    siblings = 1,
+    boundaries = 1,
+    page,
+    initialPage = 1,
+    onChange,
+    shouldAbreviate,
+    abreviationMinimumAmount = 10,
+  } = props
+
   const [activePage, setActivePage] = useUncontrolled({
     value: page,
     onChange,
@@ -183,51 +179,38 @@ export function usePagination({
   const first = () => setPage(1)
   const last = () => setPage(total)
 
+  const shouldAbreviateNumbers = shouldAbreviate && activePage > 2
+  const lastNumbersDisplayed = shouldAbreviateNumbers ? activePage + boundaries + 2 >= total : false
+
   const paginationRange = useMemo((): (number | 'dots')[] => {
-    // Pages count is determined as siblings (left/right) + boundaries(left/right) + currentPage + 2*DOTS
-    const totalPageNumbers = siblings * 2 + 3 + boundaries * 2
 
-    /*
-     * If the number of pages is less than the page numbers we want to show in our
-     * paginationComponent, we return the range [1..total]
-     */
-    if (totalPageNumbers >= total) {
-      return range(1, total)
+    if (total <= abreviationMinimumAmount) {
+      return [
+        'arrow',
+        ...range(1, total),
+        'arrow',
+      ]
     }
 
-    const leftSiblingIndex = Math.max(activePage - siblings, boundaries)
-    const rightSiblingIndex = Math.min(activePage + siblings, total - boundaries)
-
-    /*
-     * We do not want to show dots if there is only one position left
-     * after/before the left/right page count as that would lead to a change if our Pagination
-     * component size which we do not want
-     */
-    const shouldShowLeftDots = leftSiblingIndex > boundaries + 2
-    const shouldShowRightDots = rightSiblingIndex < total - (boundaries + 1)
-
-    if (!shouldShowLeftDots && shouldShowRightDots) {
-      const leftItemCount = siblings * 2 + boundaries + 2
-      return [...range(1, leftItemCount), DOTS, ...range(total - (boundaries - 1), total)]
-    }
-
-    if (shouldShowLeftDots && !shouldShowRightDots) {
-      const rightItemCount = boundaries + 1 + 2 * siblings
-      return [...range(1, boundaries), DOTS, ...range(total - rightItemCount, total)]
+    if (lastNumbersDisplayed) {
+      return [
+        ...range(total - (boundaries + 3), total + 1), // boundaries + 3 seria 2 arrows mais o 1ali de cima
+      ]
     }
 
     return [
+      'arrow',
       ...range(1, boundaries),
-      DOTS,
-      ...range(leftSiblingIndex, rightSiblingIndex),
-      DOTS,
+      shouldAbreviateNumbers ? activePage : DOTS,
       ...range(total - boundaries + 1, total),
+      'arrow',
     ]
-  }, [total, siblings, activePage])
+  }, [total, siblings, activePage, lastNumbersDisplayed, shouldAbreviateNumbers])
 
   return {
     range: paginationRange,
     active: activePage,
+    lastNumbersDisplayed,
     setPage,
     next,
     previous,
