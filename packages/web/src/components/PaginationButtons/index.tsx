@@ -48,7 +48,14 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     itemProps = {},
   } = props
 
-  const { range, next, previous, setPage, active, lastNumbersDisplayed } = usePagination({
+  const {
+    range,
+    next,
+    previous,
+    setPage,
+    active,
+    lastNumbersDisplayed,
+  } = usePagination({
     total: pages,
     boundaries: 2,
     ...props?.paginationProps,
