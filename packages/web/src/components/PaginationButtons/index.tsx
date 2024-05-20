@@ -8,7 +8,6 @@ import {
   useCodeleapContext,
   useDefaultComponentStyle,
 } from '@codeleap/common'
-import { List } from '../List'
 import { View } from '../View'
 import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
 import { Button } from '../Button'
@@ -17,16 +16,14 @@ import { PaginationParams, usePagination } from '../../lib'
 export type PaginationButtonsProps = {
     pageKey?: number | string
     pages: number
-    value?: number
-    onValueChange?: AnyFunction
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
     onFetchPage?: AnyFunction
     shouldAbreviate?: boolean
     disabled?: boolean
-    showArrows?: boolean
+    displayLeftArrow: boolean
+    displayRightArrow: boolean
     styles?: StylesOf<PaginationButtonsComposition>
-    listProps?: PropsOf<typeof List>
     itemProps?: PropsOf<typeof Button>
     paginationProps?: PaginationParams
 } & ComponentVariants<typeof PaginationButtonPresets>
@@ -35,18 +32,21 @@ export * from './styles'
 
 export const PaginationButtons = (props: PaginationButtonsProps) => {
 
-  const { Theme } = useCodeleapContext()
-
   const {
     pages = 12,
     shouldAbreviate = true,
     disabled = false,
-    showArrows = true,
     variants,
     responsiveVariants,
     styles,
     itemProps = {},
   } = props
+
+  const defaultPaginationProps = {
+    total: pages,
+    boundaries: 3,
+    shouldAbreviate,
+  }
 
   const {
     range,
@@ -56,8 +56,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     active,
     lastNumbersDisplayed,
   } = usePagination({
-    total: pages,
-    boundaries: 2,
+    ...defaultPaginationProps,
     ...props?.paginationProps,
   })
 
@@ -108,13 +107,13 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     const isArrowItem = isArrowLeft || isArrowRight
     const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
 
-    if (active <= 2) { //  2== boundaries
+    if (active <= defaultPaginationProps?.boundaries) {
       selected = index === active
     } else {
       if (lastNumbersDisplayed) {
-        selected = active - (Number(range[1]) - 1) === index
+        selected = active - (range[defaultPaginationProps?.boundaries] - defaultPaginationProps?.boundaries) === index
       } else {
-        selected = index === 2 + 1//  2== boundaries
+        selected = index === defaultPaginationProps?.boundaries + 1
       }
     }
 
@@ -133,7 +132,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   }, [itemStyles, active, lastNumbersDisplayed])
 
   return (
-    <View style={[variantStyles.wrapper]}>
+    <View style={variantStyles.wrapper}>
       {range?.map?.((item, index) => renderItem({ item, index }))}
     </View>
   )

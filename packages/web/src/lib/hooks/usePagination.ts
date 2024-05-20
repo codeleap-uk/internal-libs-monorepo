@@ -1,4 +1,4 @@
-import { range, useMemo, useUncontrolled } from '@codeleap/common'
+import { TypeGuards, range, useMemo, useUncontrolled } from '@codeleap/common'
 
 export const DOTS = '...'
 
@@ -11,6 +11,8 @@ export interface PaginationParams {
   onChange?: (page: number) => void
   shouldAbreviate?: boolean
   abreviationMinimumAmount?: number
+  displayLeftArrow?: boolean
+  displayRightArrow?: boolean
 }
 
 export function usePagination(props: PaginationParams) {
@@ -24,19 +26,27 @@ export function usePagination(props: PaginationParams) {
     onChange,
     shouldAbreviate = true,
     abreviationMinimumAmount = 10,
+    displayLeftArrow = true,
+    displayRightArrow = true,
   } = props
+
+  const leftArrowDisplay = displayLeftArrow ? 'arrow' : null
+  const rightArrowDisplay = displayRightArrow ? 'arrow' : null
+
+  const arrowsAmount = !leftArrowDisplay || rightArrowDisplay ? 1 : 2
 
   const [activePage, setActivePage] = useUncontrolled({
     value: page,
     onChange,
-    defaultValue: initialPage,
+    defaultValue: 15,
     finalValue: initialPage,
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
 
-  const arrowsAmount = 2
-
   const setPage = (pageNumber: number) => {
+
+    if (TypeGuards.isString(pageNumber) && pageNumber === DOTS) return activePage
+
     if (pageNumber <= 0) {
       setActivePage(1)
     } else if (pageNumber > total) {
@@ -51,37 +61,45 @@ export function usePagination(props: PaginationParams) {
   const first = () => setPage(1)
   const last = () => setPage(total)
 
-  const shouldAbreviateNumbers = shouldAbreviate && activePage > 2
-  const lastNumbersDisplayed = shouldAbreviateNumbers ? activePage + boundaries + arrowsAmount >= total : false
+  const isCenterSelected = shouldAbreviate && activePage > boundaries
+  const lastNumbersDisplayed = isCenterSelected ? activePage + boundaries + arrowsAmount + 2 >= total : false
+
+  console.log(activePage, 'active page')
 
   const paginationRange = useMemo((): (number | 'dots')[] => {
 
     if (total <= abreviationMinimumAmount) {
       return [
-        'arrow',
+        leftArrowDisplay,
         ...range(1, total),
-        'arrow',
-      ]
+        rightArrowDisplay,
+      ].filter(Boolean)
     }
 
     if (lastNumbersDisplayed) {
       return [
+        leftArrowDisplay,
+        '1',
+        DOTS,
         ...range(total - (boundaries + 3), total + 1), // boundaries + 3 seria 2 arrows mais o 1ali de cima
-      ]
+      ].filter(Boolean)
     }
 
     return [
-      'arrow',
-      ...range(1, boundaries),
-      shouldAbreviateNumbers ? activePage : DOTS,
-      ...range(total - boundaries + 1, total),
-      'arrow',
-    ]
-  }, [total, siblings, activePage, lastNumbersDisplayed, shouldAbreviateNumbers])
+      leftArrowDisplay,
+      ...range(1, isCenterSelected ? boundaries - 1 : boundaries),
+      isCenterSelected ? DOTS : null,
+      isCenterSelected ? activePage : DOTS,
+      isCenterSelected ? DOTS : null,
+      ...range(total - boundaries + (isCenterSelected ? 2 : 1), total),
+      rightArrowDisplay,
+    ].filter(Boolean)
+
+  }, [total, siblings, activePage, lastNumbersDisplayed, isCenterSelected])
 
   return {
     range: paginationRange,
-    active: activePage,
+    active: Number(activePage),
     lastNumbersDisplayed,
     setPage,
     next,
