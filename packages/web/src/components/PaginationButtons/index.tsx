@@ -55,6 +55,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     previous,
     setPage,
     active,
+    canAbreviate,
     lastNumbersDisplayed,
   } = usePagination({
     ...defaultPaginationProps,
@@ -108,7 +109,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     const isArrowItem = isArrowLeft || isArrowRight
     const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
 
-    if (active <= boundaries) {
+    if (active <= boundaries || !canAbreviate) {
       selected = index === active
     } else {
       if (lastNumbersDisplayed) {

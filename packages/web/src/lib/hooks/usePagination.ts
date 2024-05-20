@@ -63,7 +63,9 @@ export function usePagination(props: PaginationParams) {
   const first = () => setPage(1)
   const last = () => setPage(total)
 
-  const isCenterSelected = shouldAbreviate && activePage > boundaries
+  const canAbreviate = shouldAbreviate && total > abreviationMinimumAmount
+
+  const isCenterSelected = canAbreviate && activePage > boundaries && total
   const lastNumbersDisplayed = isCenterSelected ? activePage + boundaries + arrowsAmount + 2 >= total : false
 
   const paginationRange = useMemo((): (number | 'dots')[] => {
@@ -101,6 +103,7 @@ export function usePagination(props: PaginationParams) {
     range: paginationRange,
     active: Number(activePage),
     lastNumbersDisplayed,
+    canAbreviate,
     setPage,
     next,
     previous,
