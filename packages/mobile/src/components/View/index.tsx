@@ -5,6 +5,7 @@ import { MobileStyleRegistry } from '../../Registry'
 import { TypeGuards } from '@codeleap/common'
 import Animated from 'react-native-reanimated'
 import { ViewProps } from './types'
+import { useMemo } from 'react'
 
 export * from './types'
 export * from './styles'
@@ -37,17 +38,27 @@ View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 MobileStyleRegistry.registerComponent(View)
 
-type GapProps = ViewProps & {
+type GapProps = Omit<ViewProps, 'style'> & {
   value: number
   crossValue?: number
   defaultProps?: any
+  style?: any
 }
 
 export const Gap = ({ children, value, defaultProps = {}, crossValue = null, ...props }: GapProps) => {
   const theme = themeStore(store => store.current)
   const childArr = React.Children.toArray(children)
 
-  const horizontal = false
+  const horizontal = useMemo(() => {
+    if (Array.isArray(props?.style)) {
+      return props?.style?.includes('row')
+    } else if (typeof props?.style == 'object') {
+      // @ts-ignore
+      return props?.style?.flexDirection == 'row'
+    }
+
+    return false
+  }, [])
 
   const spacings = React.useMemo(() => {
     return childArr.map((_, idx) => {

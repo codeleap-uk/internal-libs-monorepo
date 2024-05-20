@@ -29,7 +29,7 @@ const DefaultHeader = (props: ModalHeaderProps) => {
 
   return <>
     {(title || showClose || description) && (
-      <View style={styles.wrapper}>
+      <View style={styles.header}>
         <View style={styles.titleWrapper}>
           {TypeGuards.isString(title) ? (
             <Text text={title} style={styles.title} />

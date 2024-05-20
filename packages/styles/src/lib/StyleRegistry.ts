@@ -5,7 +5,7 @@ import { MultiplierFunction } from './spacing'
 import { createStyles } from './createStyles'
 import { defaultVariants } from './defaultVariants'
 import { dynamicVariants } from './dynamicVariants'
-import { isSpacingKey } from './utils'
+import { ignoredStyleKeys, isSpacingKey } from './utils'
 import { StylesCache } from './StylesCache'
 
 export class CodeleapStyleRegistry {
@@ -138,7 +138,7 @@ export class CodeleapStyleRegistry {
     let elements = []
 
     for (const element of component?.elements) {
-      const componentElements = styleKeys?.filter(k => k?.startsWith(element))
+      const componentElements = styleKeys?.filter(k => k?.startsWith(element) && !ignoredStyleKeys?.includes(k))
 
       if (componentElements?.length >= 1) {
         elements = [...elements, ...componentElements]

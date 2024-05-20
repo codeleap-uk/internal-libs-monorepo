@@ -52,3 +52,7 @@ export const mergeStyles = (styles: Array<any>) => {
 
   return deepmerge({ all: true })(...style)
 }
+
+export const ignoredStyleKeys = [
+  'textAlign'
+]
