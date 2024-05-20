@@ -9,7 +9,7 @@ export * from './types'
 
 export const ActivityIndicator = <T extends React.ComponentType = typeof RNActivityIndicator>(props: ActivityIndicatorProps<T>) => {
   const {
-    style = {},
+    style,
     component: Component = RNActivityIndicator,
     ...rest
   } = {

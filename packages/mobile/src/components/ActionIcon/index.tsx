@@ -15,7 +15,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     icon,
     iconProps,
     children,
-    badge = false,
+    badge,
     badgeProps = {},
     style,
     ...touchableProps
@@ -49,7 +49,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
 ActionIcon.styleRegistryName = 'ActionIcon'
 ActionIcon.elements = ['icon', 'touchable', 'badge']
-ActionIcon.rootElement = 'icon'
+ActionIcon.rootElement = 'touchableWrapper'
 
 ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return ActionIcon as (props: StyledComponentProps<ActionIconProps, typeof styles>) => IJSX
@@ -57,6 +57,7 @@ ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 ActionIcon.defaultProps = {
   hitSlop: 10,
+  badge: false,
 }
 
 MobileStyleRegistry.registerComponent(ActionIcon)

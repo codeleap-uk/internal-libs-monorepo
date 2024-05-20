@@ -61,7 +61,7 @@ export const IconComponent = (props: IconProps) => {
 }
 
 function areEqual(prevProps, nextProps) {
-  const check = ['name', 'style', 'variants', 'renderEmptySpace', 'badgeProps', 'badge']
+  const check = ['name', 'style', 'renderEmptySpace', 'badgeProps', 'badge']
   const res = arePropsEqual(prevProps, nextProps, { check })
   return res
 }

@@ -41,7 +41,7 @@ export const Badge = (props: BadgeProps) => {
     getBadgeContent,
     renderBadgeContent,
     disabled,
-    style = {},
+    style,
     badge,
     ...rest
   } = allProps

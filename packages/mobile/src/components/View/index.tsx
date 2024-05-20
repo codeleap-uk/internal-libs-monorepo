@@ -82,7 +82,12 @@ export const Gap = ({ children, value, defaultProps = {}, crossValue = null, ...
           if (React.isValidElement(Element)) {
             const props = { ...Element.props, ...defaultProps }
 
-            props.style = [props.style, spacings[idx]]
+            if (Array.isArray(props?.style)) {
+              props.style = [...props.style, spacings[idx]]
+            } else {
+              props.style = [props.style, spacings[idx]]
+            }
+
             return React.cloneElement(Element, props)
           }
           return Element
