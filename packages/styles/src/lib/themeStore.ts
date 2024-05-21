@@ -27,6 +27,11 @@ export const colorSchemaStore = create(persist<ColorSchemaStore>(
   {
     name: '@styles.stores.colorSchema',
     version: STORES_PERSIST_VERSION,
+    migrate: () => {
+      return {
+        value: 'default',
+      }
+    },
     storage: createJSONStorage(() => {
       if (typeof localStorage === 'undefined') {
         return AsyncStorage

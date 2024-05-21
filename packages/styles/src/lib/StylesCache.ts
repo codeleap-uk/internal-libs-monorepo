@@ -1,7 +1,7 @@
 import { Cache } from './Cacher'
 import { hashKey } from './hashKey'
 import { CacheStore, cacheStore } from './cacheStore'
-import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION, CACHE_ENABLED, CACHES } from './constants'
+import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION, CACHE_ENABLED, STORED_CACHES } from './constants'
 import { CacheType } from '../types/cache'
 import { minifier } from './minifier'
 
@@ -46,8 +46,6 @@ export class StylesCache {
     for (const cachedType in this.store.cached) {
       const cachedValue = this.store.cached[cachedType]
 
-      console.log('CACHED ' + cachedType, cachedValue)
-
       if (typeof cachedValue === 'object') {
         this[cachedType as CacheType].setCache(cachedValue)
       }
@@ -90,16 +88,18 @@ export class StylesCache {
   }
 
   cacheFor(type: CacheType, key: string, value: any) {
-    if (!CACHES.includes(type) && !CACHE_ENABLED) {
+    if (!CACHE_ENABLED) {
       return value
     }
 
     const cache = this[type]
 
-    // if (!!this.store) {
-    //   this.store.cacheFor(type, key, value)
-    // }
+    const minifiedValue = minifier.compress(value)
 
-    return cache.cacheFor(key, minifier.compress(value))
+    if (STORED_CACHES.includes(type) && STORE_CACHE_ENABLED && !!this.store) {
+      this.store.cacheFor(type, key, minifiedValue)
+    }
+
+    return cache.cacheFor(key, minifiedValue)
   }
 }

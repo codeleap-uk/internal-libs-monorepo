@@ -9,8 +9,6 @@ import { colorSchemaStore, themeStore } from './themeStore'
 export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
   colorSchemaStore.persist.rehydrate()
   
-  console.log('COLOR SCHEMA', colorSchemaStore.getState().value)
-
   const themeObj:AppTheme<T> = {
     get currentColorScheme(): string {
       return colorSchemaStore.getState().value
