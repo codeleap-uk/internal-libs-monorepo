@@ -14,25 +14,22 @@ import { PaginationParams, usePagination } from '../../lib'
 import { IconProps } from '../Icon'
 
 export type PaginationButtonsProps = {
-    pages: number
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
     onFetchPage?: AnyFunction
     shouldAbreviate?: boolean
     disabled?: boolean
-    displayLeftArrow: boolean
-    displayRightArrow: boolean
+    displayLeftArrow?: boolean
+    displayRightArrow?: boolean
     styles?: StylesOf<PaginationButtonsComposition>
     itemProps?: PropsOf<typeof Button>
-    paginationProps?: PaginationParams
-} & ComponentVariants<typeof PaginationButtonPresets>
+} & ComponentVariants<typeof PaginationButtonPresets> & PaginationParams
 
 export * from './styles'
 
 export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const {
-    pages,
     shouldAbreviate = true,
     displayLeftArrow = true,
     displayRightArrow = true,
@@ -41,17 +38,11 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     responsiveVariants,
     styles,
     itemProps = {},
+    ...paginationProps
   } = props
 
-  const defaultPaginationProps = {
-    total: pages,
-    boundaries: 2,
-    shouldAbreviate,
-    displayLeftArrow,
-    displayRightArrow,
-  }
+  const { boundaries = 2 } = paginationProps
 
-  const boundaries = defaultPaginationProps?.boundaries
   const centeredElementIndex = boundaries + 1
 
   const {
@@ -63,8 +54,10 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     page,
     status,
   } = usePagination({
-    ...defaultPaginationProps,
-    ...props?.paginationProps,
+    displayLeftArrow,
+    displayRightArrow,
+    shouldAbreviate,
+    ...paginationProps,
   })
 
   const variantStyles = useDefaultComponentStyle('u:PaginationButtons', {

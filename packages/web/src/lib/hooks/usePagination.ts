@@ -18,9 +18,9 @@ export function usePagination(props: PaginationParams) {
 
   const {
     total,
-    boundaries = 1,
-    page,
+    boundaries = 2,
     initialPage = 1,
+    page,
     onChange,
     shouldAbreviate = true,
     abreviationMinimumAmount = 10,
