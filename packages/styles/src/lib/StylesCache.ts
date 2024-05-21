@@ -3,6 +3,7 @@ import { hashKey } from './hashKey'
 import { CacheStore, cacheStore } from './cacheStore'
 import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION, CACHE_ENABLED } from './constants'
 import { CacheType } from '../types/cache'
+import { minifier } from './minifier'
 
 export class StylesCache {
   baseKey: string
@@ -80,7 +81,7 @@ export class StylesCache {
     const values = [this.baseKey, keyData]
 
     const cacheKey = hashKey(values)
-    const cachedValue = cache.cache[cacheKey] ?? null
+    const cachedValue = minifier.decompress(cache.cache[cacheKey] ?? null)
 
     return {
       key: cacheKey,
@@ -89,16 +90,16 @@ export class StylesCache {
   }
 
   cacheFor(type: CacheType, key: string, value: any) {
-    if (!CACHE_ENABLED) {
+    if (type !== 'components') {
       return value
     }
 
     const cache = this[type]
 
-    if (!!this.store) {
-      this.store.cacheFor(type, key, value)
-    }
+    // if (!!this.store) {
+    //   this.store.cacheFor(type, key, value)
+    // }
 
-    return cache.cacheFor(key, value)
+    return cache.cacheFor(key, minifier.compress(value))
   }
 }

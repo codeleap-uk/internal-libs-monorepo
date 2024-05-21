@@ -199,7 +199,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         valueLabel={formattedDate}
       /> : null}
 
-      {/* @ts-expect-error */}
       <Wrapper {...wrapperProps} >
         <DatePicker
           modal={!isCustomModal}

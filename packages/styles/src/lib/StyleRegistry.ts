@@ -7,6 +7,7 @@ import { defaultVariants } from './defaultVariants'
 import { dynamicVariants } from './dynamicVariants'
 import { ignoredStyleKeys, isSpacingKey } from './utils'
 import { StylesCache } from './StylesCache'
+import { minifier } from './minifier'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -17,7 +18,7 @@ export class CodeleapStyleRegistry {
 
   private theme: ThemeStore
 
-  private stylesCache = new StylesCache()
+  public stylesCache = new StylesCache()
 
   constructor() {
     this.theme = themeStore.getState()
@@ -84,7 +85,7 @@ export class CodeleapStyleRegistry {
 
     const component = _component ?? rootElement
 
-    const stylesheet = this.stylesheets[componentName]
+    const stylesheet = minifier.decompress(this.stylesheets[componentName])
 
     const cache = this.stylesCache.keyFor('variants', { componentName, component, stylesheet, variants })
 
@@ -174,7 +175,7 @@ export class CodeleapStyleRegistry {
   }
 
   getDefaultVariantStyle(componentName: string, defaultVariantStyleName: string = 'default') {
-    const stylesheet = this.stylesheets[componentName]
+    const stylesheet = minifier.decompress(this.stylesheets[componentName])
 
     const defaultStyle = stylesheet?.[defaultVariantStyleName]
 
@@ -213,7 +214,7 @@ export class CodeleapStyleRegistry {
 
     if (!responsiveStyles) return {}
 
-    const stylesheet = this.stylesheets[componentName]
+    const stylesheet = minifier.decompress(this.stylesheets[componentName])
 
     const cache = this.stylesCache.keyFor('responsive', { componentName, responsiveStyles, stylesheet })
 
@@ -338,9 +339,7 @@ export class CodeleapStyleRegistry {
   }
 
   styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
-    const stylesheet = this.stylesheets[componentName]
-
-    const cache = this.stylesCache.keyFor('components', { componentName, style, stylesheet })
+    const cache = this.stylesCache.keyFor('components', { componentName, style, stylesheet: this.stylesheets[componentName] })
 
     if (!!cache.value) {
       return cache.value as T
@@ -466,11 +465,17 @@ export class CodeleapStyleRegistry {
       throw new Error(`Variants for ${componentName} already registered`)
     }
 
-    this.stylesheets[componentName] = variants
+    this.stylesheets[componentName] = minifier.compress(variants)
   }
 
   registerComponent(component: AnyStyledComponent) {
-    this.components[component.styleRegistryName] = component
+    const componentData = {
+      styleRegistryName: component?.styleRegistryName,
+      elements: component?.elements,
+      rootElement: component?.rootElement,
+    }
+
+    this.components[component.styleRegistryName] = componentData as any
   }
 
   /**
