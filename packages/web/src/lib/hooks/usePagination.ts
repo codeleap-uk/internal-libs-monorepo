@@ -1,4 +1,4 @@
-import { TypeGuards, onUpdate, range, useMemo, useState, useUncontrolled } from '@codeleap/common'
+import { onUpdate, range, useMemo, useState, useUncontrolled } from '@codeleap/common'
 
 const DOTS = '...'
 
@@ -7,7 +7,7 @@ export type PaginationParams = {
   page?: number
   total: number
   boundaries?: number
-  onChange?: (page: number) => void
+  onChangePage?: (page: number) => void
   shouldAbreviate?: boolean
   abreviationMinimumAmount?: number
   displayLeftArrow?: boolean
@@ -21,7 +21,7 @@ export function usePagination(props: PaginationParams) {
     boundaries = 2,
     initialPage = 1,
     page,
-    onChange,
+    onChangePage,
     shouldAbreviate = true,
     abreviationMinimumAmount = 10,
     displayLeftArrow = true,
@@ -30,8 +30,8 @@ export function usePagination(props: PaginationParams) {
 
   const [activePage, setActivePage] = useUncontrolled({
     value: page,
-    onChange,
-    defaultValue: 1,
+    onChange: onChangePage,
+    defaultValue: initialPage,
     finalValue: initialPage,
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
@@ -54,7 +54,6 @@ export function usePagination(props: PaginationParams) {
     const isNextArrow = pageNumber === total + 1
 
     const nonSelectableItems = [
-      TypeGuards.isString(pageNumber) && pageNumber === DOTS,
       displayLeftArrow && isPreviousArrow,
       displayRightArrow && isNextArrow,
     ].some(x => x)
@@ -78,7 +77,9 @@ export function usePagination(props: PaginationParams) {
       return setStatus('end')
     }
 
-    setStatus('initial')
+    if (status !== 'initial') {
+      setStatus('initial')
+    }
 
   }, [activePage, isCenterSelected, displayLastNumbers])
 

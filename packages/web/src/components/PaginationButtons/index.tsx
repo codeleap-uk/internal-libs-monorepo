@@ -16,7 +16,6 @@ import { IconProps } from '../Icon'
 export type PaginationButtonsProps = {
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
-    onFetchPage?: AnyFunction
     renderItem?: (item, index) => JSX.Element
     shouldAbreviate?: boolean
     disabled?: boolean
@@ -80,7 +79,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   }
 
   const fetchPage = (page: number) => {
-    props?.onFetchPage?.(page)
     setPage?.(page)
   }
 
