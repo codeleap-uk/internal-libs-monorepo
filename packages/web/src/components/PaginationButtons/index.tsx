@@ -17,6 +17,7 @@ export type PaginationButtonsProps = {
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
     onFetchPage?: AnyFunction
+    renderItem?: (item, index) => JSX.Element
     shouldAbreviate?: boolean
     disabled?: boolean
     displayLeftArrow?: boolean
@@ -106,6 +107,10 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   }
 
   const renderItem = useCallback(({ item, index }: { item: string | number; index: number }) => {
+
+    if (props?.renderItem) {
+      return props?.renderItem?.(item, index)
+    }
 
     let selected = null
 
