@@ -11,7 +11,7 @@ import {
 import { View } from '../View'
 import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
 import { Button } from '../Button'
-import { PaginationParams, usePagination } from '../../lib'
+import { PaginationParams, usePagination, useMediaQuery } from '../../lib'
 import { IconProps } from '../Icon'
 
 export type PaginationButtonsProps = {
@@ -45,7 +45,8 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const { Theme } = useCodeleapContext()
 
-  const isMobile = Theme.hooks.down('tabletSmall')
+  const query = Theme.media.down('tabletSmall')
+  const isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
 
   const { boundaries = 2 } = paginationProps
   const centeredElementIndex = isMobile ? 3 : boundaries + 1
