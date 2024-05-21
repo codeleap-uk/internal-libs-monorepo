@@ -92,6 +92,10 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const onPressItem = ({ item, isArrowLeft, isArrowRight }: { item: string | number; isArrowLeft: boolean; isArrowRight: boolean }) => {
 
+    if (item === '...') {
+      return null
+    }
+
     if (isArrowLeft) {
       if (displayLeftArrow) {
         return fetchPreviousPage()
