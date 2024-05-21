@@ -111,7 +111,7 @@ export function usePagination(props: PaginationParams) {
 
       return [
         ...extraItems,
-        ...range(total - (_boundaries + extraItems?.length - 2), total + (displayRightArrow ? 1 : 0)),
+        ...range(total - (_boundaries + extraItems?.length - (isMobile ? 2 : 0)), total + (displayRightArrow ? 1 : 0)),
       ].filter(Boolean)
     }
 
