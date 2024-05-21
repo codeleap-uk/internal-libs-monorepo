@@ -2,7 +2,7 @@ import React from 'react'
 import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
 import { Text } from '../Text'
-import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps, StyledProp } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, StyledProp, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}`
@@ -27,9 +27,13 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
     ...props,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(PaginationIndicator.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
 
-  const loaderStyles = getNestedStylesByKey('loader', styles)
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(PaginationIndicator.styleRegistryName, style)
+  }, [styleObserver])
+
+  const loaderStyles = useNestedStylesByKey('loader', styles)
 
   if (isFetching) {
     return activityIndicator || <ActivityIndicator style={loaderStyles} />

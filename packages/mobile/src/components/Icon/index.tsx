@@ -3,9 +3,10 @@ import { arePropsEqual, TypeGuards } from '@codeleap/common'
 import { Badge } from '../Badge'
 import { View } from '../View'
 import { IconProps } from './types'
-import { themeStore, getNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, GenericStyledComponentAttributes } from '@codeleap/styles'
+import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, GenericStyledComponentAttributes, useStyleObserver, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
+import { useMemo } from 'react'
 
 export * from './styles'
 export * from './types'
@@ -22,9 +23,13 @@ export const IconComponent = (props: IconProps) => {
   } = props
 
   // @ts-expect-error
-  const icons = themeStore(store => (store.current?.icons ?? {}))
+  const icons = useTheme(store => store.current?.icons)
 
-  const styles = MobileStyleRegistry.current.styleFor(Icon.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Icon.styleRegistryName, style)
+  }, [styleObserver])
 
   const Component = icons?.[name]
 
@@ -37,7 +42,7 @@ export const IconComponent = (props: IconProps) => {
   }
 
   if (badge || TypeGuards.isNumber(badge)) {
-    const badgeStyles = getNestedStylesByKey('badge', styles)
+    const badgeStyles = useNestedStylesByKey('badge', styles)
 
     const sized = {
       // @ts-expect-error

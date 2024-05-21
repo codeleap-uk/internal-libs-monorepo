@@ -7,7 +7,7 @@ import { isFile, toMultipartFile } from '../../utils'
 import { LoadingOverlay } from '../LoadingOverlay'
 import FastImage from 'react-native-fast-image'
 import { ImageProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
 
@@ -31,7 +31,11 @@ export const ImageComponent = (props: ImageProps) => {
 
   const [loading, setLoading] = React.useState(false)
 
-  const styles = MobileStyleRegistry.current.styleFor(Image.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Image.styleRegistryName, style)
+  }, [styleObserver])
 
   let imSource = source
 
@@ -91,7 +95,7 @@ export const ImageComponent = (props: ImageProps) => {
   const Loading = TypeGuards.isFunction(withLoadingOverlay) ? withLoadingOverlay : LoadingOverlay
   const showLoading = !!withLoadingOverlay
 
-  const overlayStyle = getNestedStylesByKey('overlay', styles)
+  const overlayStyle = useNestedStylesByKey('overlay', styles)
 
   const loadingElement = React.useMemo(() => {
     return showLoading ? (

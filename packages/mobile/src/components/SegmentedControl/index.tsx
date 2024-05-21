@@ -5,7 +5,7 @@ import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { SegmentedControlOption } from './Option'
 import { SegmentedControlProps, SegmentedControlRef } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -22,7 +22,8 @@ const defaultAnimation = {
 }
 
 export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
-  const theme = themeStore(store => store.current) as any
+  // @ts-expect-error
+  const [themeValues, themeSpacing] = useTheme(store => [store.current?.values, store.current?.spacing])
 
   const {
     options = [],
@@ -32,7 +33,7 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
     value,
     animation = {},
     scrollProps = {},
-    getItemWidth = () => (theme?.values?.width - theme?.spacing?.value?.(4)) / options.length,
+    getItemWidth = () => (themeValues?.width - themeSpacing?.value?.(4)) / options.length,
     renderBubble,
     scrollToCurrentOptionOnMount,
     renderOption,
@@ -51,7 +52,11 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
     ...animation,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(SegmentedControl.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(SegmentedControl.styleRegistryName, style)
+  }, [styleObserver])
 
   const scrollRef = useRef<SegmentedControlRef>(null)
 

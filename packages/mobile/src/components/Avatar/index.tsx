@@ -8,7 +8,7 @@ import { Icon } from '../Icon'
 import { Badge } from '../Badge'
 import { AvatarProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -34,7 +34,11 @@ export const Avatar = (props: AvatarProps) => {
     ...props,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(Avatar.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Avatar.styleRegistryName, style)
+  }, [styleObserver])
 
   const hasImage = !!image
 
@@ -59,7 +63,7 @@ export const Avatar = (props: AvatarProps) => {
   // @ts-expect-error
   const hasBackgroundColor = !!styles?.touchable?.backgroundColor
 
-  const badgeStyles = getNestedStylesByKey('badge', styles)
+  const badgeStyles = useNestedStylesByKey('badge', styles)
 
   return (
     <View style={styles.wrapper} {...viewProps as any}>

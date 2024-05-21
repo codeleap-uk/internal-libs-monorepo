@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import { Calendar as RNCalendar, CalendarProps as RNCalendarProps, DateData } from 'react-native-calendars'
 import { View, ViewProps } from '../View'
 import { CalendarComposition } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, StyledProp } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledProp, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export type CalendarProps =
@@ -28,7 +28,11 @@ export const Calendar = (props: CalendarProps) => {
     ...viewProps
   } = props
 
-  const styles = MobileStyleRegistry.current.styleFor(Calendar.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Calendar.styleRegistryName, style)
+  }, [styleObserver])
 
   const isDateObject = TypeGuards.isInstance(value, Date)
   const stringValue: string = isDateObject ? format(value, 'yyyy/MM/dd') : value

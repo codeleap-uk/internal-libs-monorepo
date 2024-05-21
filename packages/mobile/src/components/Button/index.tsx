@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Badge } from '../Badge'
 import { ButtonProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, getNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
 
@@ -37,7 +37,11 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   const [pressed, setPressed] = useState(false)
 
-  const styles = MobileStyleRegistry.current.styleFor(Button.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Button.styleRegistryName, style)
+  }, [styleObserver])
 
   function getStyles(key: ButtonParts) {
     return mergeStyles([
@@ -82,7 +86,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   // @ts-expect-error This is a hack to hide the icon when there is no text
   const isLeftIconHidden = _styles?.leftIcon?.display != 'none'
 
-  const badgeStyles = getNestedStylesByKey('badge', styles)
+  const badgeStyles = useNestedStylesByKey('badge', styles)
 
   return (
     <Touchable

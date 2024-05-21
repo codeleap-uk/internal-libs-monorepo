@@ -1,11 +1,10 @@
 import React from 'react'
 import { View as RNView } from 'react-native'
-import { AnyRecord, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { TypeGuards } from '@codeleap/common'
 import Animated from 'react-native-reanimated'
 import { ViewProps } from './types'
-import { useMemo } from 'react'
 
 export * from './types'
 export * from './styles'
@@ -19,7 +18,11 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
     ...viewProps
   } = props
 
-  const styles = MobileStyleRegistry.current.styleFor(View.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(View.styleRegistryName, style)
+  }, [styleObserver])
 
   const Component: React.ComponentType<any> = animated ? Animated.View : _Component
 
@@ -46,10 +49,11 @@ type GapProps = Omit<ViewProps, 'style'> & {
 }
 
 export const Gap = ({ children, value, defaultProps = {}, crossValue = null, ...props }: GapProps) => {
-  const theme = themeStore(store => store.current)
+  // @ts-expect-error
+  const themeSpacing = useTheme(store => store.current?.spacing)
   const childArr = React.Children.toArray(children)
 
-  const horizontal = useMemo(() => {
+  const horizontal = React.useMemo(() => {
     if (Array.isArray(props?.style)) {
       return props?.style?.includes('row')
     } else if (typeof props?.style == 'object') {
@@ -63,10 +67,8 @@ export const Gap = ({ children, value, defaultProps = {}, crossValue = null, ...
   const spacings = React.useMemo(() => {
     return childArr.map((_, idx) => {
 
-      // @ts-expect-error
-      const space = theme?.spacing?.value?.(value)
-      // @ts-expect-error
-      const crossSpace = theme?.spacing?.value?.(crossValue)
+      const space = themeSpacing?.value?.(value)
+      const crossSpace = themeSpacing?.value?.(crossValue)
 
       const isLast = idx === childArr.length - 1
 

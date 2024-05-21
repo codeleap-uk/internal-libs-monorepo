@@ -7,7 +7,7 @@ import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -62,7 +62,11 @@ export const Slider = (props: SliderProps) => {
     }
   }, [value])
 
-  const styles = MobileStyleRegistry.current.styleFor(Slider.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Slider.styleRegistryName, style)
+  }, [styleObserver])
 
   const thumbStyle = React.useMemo(() => {
     return StyleSheet.flatten([

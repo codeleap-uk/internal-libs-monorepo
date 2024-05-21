@@ -9,7 +9,7 @@ import { Touchable } from '../Touchable'
 import { useActionValidate } from './utils'
 import { NumberIncrementProps } from './types'
 import { ComponentWithDefaultProps } from '../../types'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -104,7 +104,11 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     return false
   }, [value])
 
-  const styles = MobileStyleRegistry.current.styleFor(NumberIncrement.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(NumberIncrement.styleRegistryName, style)
+  }, [styleObserver])
 
   const inputTextStyle = React.useMemo(() => ([
     styles.input,

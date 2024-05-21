@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { BackdropProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -21,7 +21,11 @@ export const Backdrop = (props: BackdropProps) => {
     ...props,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(Backdrop.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Backdrop.styleRegistryName, style)
+  }, [styleObserver])
 
   const animation = useAnimatedVariantStyles({
     variantStyles: styles,

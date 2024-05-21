@@ -2,7 +2,7 @@ import React from 'react'
 import { View } from '../View'
 import { Avatar } from '../Avatar'
 import { AvatarGroupProps } from './types'
-import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -23,9 +23,13 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
     ...props,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(AvatarGroup.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
 
-  const avatarStyles = getNestedStylesByKey('avatar', styles)
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(AvatarGroup.styleRegistryName, style)
+  }, [styleObserver])
+
+  const avatarStyles = useNestedStylesByKey('avatar', styles)
 
   return (
     <View style={styles.wrapper} {...viewProps}>

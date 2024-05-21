@@ -1,10 +1,11 @@
 import React from 'react'
-import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { Badge } from '../Badge'
 import { Icon } from '../Icon'
 import { Touchable } from '../Touchable'
 import { ActionIconProps } from './types'
+import { useMemo } from 'react'
 
 export * from './styles'
 export * from './types'
@@ -24,10 +25,14 @@ export const ActionIcon = (props: ActionIconProps) => {
     ...props,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(ActionIcon.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
 
-  const touchableStyles = getNestedStylesByKey('touchable', styles)
-  const badgeStyles = getNestedStylesByKey('badge', styles)
+  const styles = useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(ActionIcon.styleRegistryName, style)
+  }, [styleObserver])
+
+  const touchableStyles = useNestedStylesByKey('touchable', styles)
+  const badgeStyles = useNestedStylesByKey('badge', styles)
 
   return (
     <Touchable style={touchableStyles} {...touchableProps}>

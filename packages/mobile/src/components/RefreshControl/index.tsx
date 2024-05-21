@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { RefreshControl as RNRefreshControl } from 'react-native'
 import { MobileStyleRegistry } from '../../Registry'
 import { RefreshControlProps } from './types'
@@ -10,7 +10,11 @@ export * from './types'
 export const RefreshControl = (props: RefreshControlProps) => {
   const { style, ...rest } = props
 
-  const styles = MobileStyleRegistry.current.styleFor(RefreshControl.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(RefreshControl.styleRegistryName, style)
+  }, [styleObserver])
 
   return (
     <RNRefreshControl

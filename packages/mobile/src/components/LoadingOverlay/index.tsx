@@ -4,7 +4,7 @@ import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { LoadingOverlayProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -18,9 +18,13 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
 
   const transition = useRef(null)
 
-  const styles = MobileStyleRegistry.current.styleFor(LoadingOverlay.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
 
-  const loaderStyles = getNestedStylesByKey('loader', styles)
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(LoadingOverlay.styleRegistryName, style)
+  }, [styleObserver])
+
+  const loaderStyles = useNestedStylesByKey('loader', styles)
 
   const wrapperAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

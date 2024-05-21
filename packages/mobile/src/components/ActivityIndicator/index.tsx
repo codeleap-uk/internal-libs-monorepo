@@ -2,7 +2,7 @@ import React from 'react'
 import { ActivityIndicator as RNActivityIndicator } from 'react-native'
 import { ActivityIndicatorProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -17,7 +17,11 @@ export const ActivityIndicator = <T extends React.ComponentType = typeof RNActiv
     ...props,
   }
 
-  const styles = MobileStyleRegistry.current.styleFor(ActivityIndicator.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(ActivityIndicator.styleRegistryName, style)
+  }, [styleObserver])
 
   // @ts-expect-error
   const color = styles?.wrapper?.color || '#000'

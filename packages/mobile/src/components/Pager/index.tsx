@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react'
 import { onUpdate, TypeGuards } from '@codeleap/common'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { Dimensions, ScrollView } from 'react-native'
 import { MobileStyleRegistry } from '../../Registry'
 import { View } from '../View'
@@ -51,7 +51,11 @@ export const Pager = (pagerProps: PagerProps) => {
   const [_scrollEnabled, setScrollEnabled] = React.useState(true)
   const waitEventDispatch = useRef(false)
 
-  const styles = MobileStyleRegistry.current.styleFor(Pager.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Pager.styleRegistryName, style)
+  }, [styleObserver])
 
   const windowWidth = Dimensions.get('window').width
 

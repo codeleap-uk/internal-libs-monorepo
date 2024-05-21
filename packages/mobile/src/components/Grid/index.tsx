@@ -6,7 +6,7 @@ import { RefreshControl } from '../RefreshControl'
 import { List } from '../List'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { GridProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -37,9 +37,14 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
       ...flatGridProps,
     }
 
-    const theme = themeStore(store => store.current) as unknown as any
+    // @ts-expect-error
+    const themeSpacing = useTheme(store => store.current?.spacing)
 
-    const styles = MobileStyleRegistry.current.styleFor(Grid.styleRegistryName, style)
+    const styleObserver = useStyleObserver(style)
+
+    const styles = React.useMemo(() => {
+      return MobileStyleRegistry.current.styleFor(Grid.styleRegistryName, style)
+    }, [styleObserver])
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null
@@ -54,9 +59,9 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
       const isFirstInRow = isFirst || data.index % numColumns === 0
       const isOnlyInRow = !isFirstInRow && !isLastInRow
 
-      let gap = theme?.spacing?.marginRight?.(spacing / 2)
-      if (isLastInRow) gap = theme?.spacing?.marginLeft?.(spacing / 2)
-      else if (isOnlyInRow) gap = theme?.spacing?.marginHorizontal?.(spacing / 2)
+      let gap = themeSpacing?.marginRight?.(spacing / 2)
+      if (isLastInRow) gap = themeSpacing?.marginLeft?.(spacing / 2)
+      else if (isOnlyInRow) gap = themeSpacing?.marginHorizontal?.(spacing / 2)
 
       const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
       const RenderItem = props?.renderItem
@@ -68,7 +73,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
       )
     }, [props?.renderItem, props?.data?.length])
 
-    const separatorStyles = { height: theme?.spacing?.value?.(spacing), ...styles.separator }
+    const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
     const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
     const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
 

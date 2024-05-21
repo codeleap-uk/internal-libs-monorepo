@@ -1,11 +1,11 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { TypeGuards, onMount } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Keyboard } from 'react-native'
 import { PressableRipple } from '../../modules/PressableRipple'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { TouchableProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
@@ -48,7 +48,11 @@ export const Touchable = forwardRef<
     }
   })
 
-  const styles = MobileStyleRegistry.current.styleFor(Touchable.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Touchable.styleRegistryName, style)
+  }, [styleObserver])
 
   // const { logger } = useCodeleapContext()
 

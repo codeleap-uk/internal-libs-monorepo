@@ -14,7 +14,7 @@ import { TextInput } from '../TextInput'
 import { SelectProps, ValueBoundSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
-import { AnyRecord, AppIcon, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
@@ -176,12 +176,16 @@ export const Select = <T extends string | number = string, Multi extends boolean
     }
   }, [visible, prevVisible])
 
-  const styles = MobileStyleRegistry.current.styleFor(Select.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
 
-  const itemStyles = getNestedStylesByKey('item', styles)
-  const listStyles = getNestedStylesByKey('list', styles)
-  const inputStyles = getNestedStylesByKey('input', styles)
-  const searchInputStyles = getNestedStylesByKey('searchInput', styles)
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Select.styleRegistryName, style)
+  }, [styleObserver])
+
+  const itemStyles = useNestedStylesByKey('item', styles)
+  const listStyles = useNestedStylesByKey('list', styles)
+  const inputStyles = useNestedStylesByKey('input', styles)
+  const searchInputStyles = useNestedStylesByKey('searchInput', styles)
 
   const currentOptions = searchable ? filteredOptions : defaultOptions
 

@@ -1,7 +1,7 @@
 import { Cache } from './Cacher'
 import { hashKey } from './hashKey'
 import { CacheStore, cacheStore } from './cacheStore'
-import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION, CACHE_ENABLED } from './constants'
+import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION, CACHE_ENABLED, CACHES } from './constants'
 import { CacheType } from '../types/cache'
 import { minifier } from './minifier'
 
@@ -90,7 +90,7 @@ export class StylesCache {
   }
 
   cacheFor(type: CacheType, key: string, value: any) {
-    if (type !== 'components') {
+    if (!CACHES.includes(type) && !CACHE_ENABLED) {
       return value
     }
 

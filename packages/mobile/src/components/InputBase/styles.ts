@@ -1,7 +1,7 @@
 import { TypeGuards } from "@codeleap/common"
 import { ActionIconParts } from "../ActionIcon"
 import { InputBaseProps } from "./types"
-import { getNestedStylesByKey, mergeStyles } from '@codeleap/styles'
+import { useNestedStylesByKey, mergeStyles } from '@codeleap/styles'
 import { useMemo } from 'react'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
@@ -64,9 +64,9 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const hasError = !TypeGuards.isNil(error)
 
-  const _leftIconStyles = getNestedStylesByKey<any>('leftIcon', styles)
-  const _rightIconStyles = getNestedStylesByKey<any>('rightIcon', styles)
-  const _generalIconStyles = getNestedStylesByKey<any>('icon', styles)
+  const _leftIconStyles = useNestedStylesByKey<any>('leftIcon', styles)
+  const _rightIconStyles = useNestedStylesByKey<any>('rightIcon', styles)
+  const _generalIconStyles = useNestedStylesByKey<any>('icon', styles)
 
   const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled })
 

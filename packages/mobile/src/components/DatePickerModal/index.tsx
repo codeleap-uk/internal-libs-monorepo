@@ -6,7 +6,7 @@ import { TextInput } from '../TextInput'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 import { DatePickerModalProps } from './types'
-import { AnyRecord, getNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -123,7 +123,11 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     ...modalProps
   } = allProps
 
-  const styles = MobileStyleRegistry.current.styleFor(DatePickerModal.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
+
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(DatePickerModal.styleRegistryName, style)
+  }, [styleObserver])
 
   const [visible, toggle] = !TypeGuards.isNil(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
   const [value, setValue] = [_value, onValueChange]
@@ -133,10 +137,10 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const OuterInput = outerInputComponent
   const Footer = footerComponent
 
-  const inputStyle = getNestedStylesByKey('input', styles)
-  const doneStyle = getNestedStylesByKey('doneButton', styles)
-  const cancelStyle = getNestedStylesByKey('cancelButton', styles)
-  const confirmStyle = getNestedStylesByKey('confirmButton', styles)
+  const inputStyle = useNestedStylesByKey('input', styles)
+  const doneStyle = useNestedStylesByKey('doneButton', styles)
+  const cancelStyle = useNestedStylesByKey('cancelButton', styles)
+  const confirmStyle = useNestedStylesByKey('confirmButton', styles)
 
   const formattedDate = value ? formatDate(value) : ''
   const { locale } = useI18N()

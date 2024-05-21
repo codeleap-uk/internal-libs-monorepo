@@ -9,7 +9,7 @@ import { Touchable } from '../Touchable'
 import { ActionIcon } from '../ActionIcon'
 import { useState } from 'react'
 import { ModalHeaderProps, ModalProps } from './types'
-import { AnyRecord, AppIcon, getNestedStylesByKey, IJSX, StyledComponentProps, themeStore } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
@@ -79,13 +79,18 @@ export const Modal = (modalProps: ModalProps) => {
     ...modalProps,
   }
 
-  const theme = themeStore(store => store?.current) as any
+  // @ts-expect-error
+  const themeValues = useTheme(store => store.current?.values)
 
   const [modalHeight, setModalHeight] = useState(0)
 
-  const styles = MobileStyleRegistry.current.styleFor(Modal.styleRegistryName, style)
+  const styleObserver = useStyleObserver(style)
 
-  const buttonStyles = getNestedStylesByKey('closeButton', styles)
+  const styles = React.useMemo(() => {
+    return MobileStyleRegistry.current.styleFor(Modal.styleRegistryName, style)
+  }, [styleObserver])
+
+  const buttonStyles = useNestedStylesByKey('closeButton', styles)
 
   const boxAnimationStyles = useAnimatedVariantStyles({
     updater: (states) => {
@@ -101,7 +106,7 @@ export const Modal = (modalProps: ModalProps) => {
   const ScrollComponent = scroll ? Scroll : View
   const scrollStyle = scroll ? styles?.scroll : styles?.innerWrapper
 
-  const heightThreshold = theme?.values?.height * 0.75
+  const heightThreshold = themeValues?.height * 0.75
   const topSpacing = modalHeight > heightThreshold ? styles?.topSpacing : 0
 
   const headerProps: ModalHeaderProps = {
