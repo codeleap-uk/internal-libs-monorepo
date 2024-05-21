@@ -1,4 +1,5 @@
-import { onUpdate, range, useMemo, useState, useUncontrolled } from '@codeleap/common'
+import { onUpdate, range, useCodeleapContext, useMemo, useState, useUncontrolled } from '@codeleap/common'
+import { useMediaQuery } from './useMediaQuery'
 
 const DOTS = '...'
 
@@ -16,6 +17,11 @@ export type PaginationParams = {
 
 export function usePagination(props: PaginationParams) {
 
+  const { Theme } = useCodeleapContext()
+
+  const query = Theme.media.down('tabletSmall')
+  const isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
+
   const {
     total,
     boundaries = 2,
@@ -23,7 +29,7 @@ export function usePagination(props: PaginationParams) {
     page,
     onChangePage,
     shouldAbreviate = true,
-    abreviationMinimumAmount = 10,
+    abreviationMinimumAmount = isMobile ? 5 : 10,
     displayLeftArrow = true,
     displayRightArrow = true,
   } = props
@@ -38,13 +44,15 @@ export function usePagination(props: PaginationParams) {
 
   const [status, setStatus] = useState('initial')
 
+  const _boundaries = isMobile ? 2 : boundaries
+
   const leftArrowDisplay = displayLeftArrow ? 'arrow' : null
   const rightArrowDisplay = displayRightArrow ? 'arrow' : null
-  const arrowsAmount = !leftArrowDisplay || rightArrowDisplay ? 1 : 2
+  const arrowsAmount = !leftArrowDisplay || !rightArrowDisplay ? 1 : 2
 
-  const canAbreviateItems = shouldAbreviate && total > abreviationMinimumAmount
-  const displayLastNumbers = activePage + boundaries + arrowsAmount + 2 >= total
-  const isCenterSelected = canAbreviateItems && activePage > boundaries && !displayLastNumbers
+  const canAbreviateItems = (shouldAbreviate || isMobile) && total > abreviationMinimumAmount
+  const displayLastNumbers = activePage + _boundaries + arrowsAmount + (isMobile ? 0 : 2) > total
+  const isCenterSelected = canAbreviateItems && activePage > _boundaries && !displayLastNumbers
 
   const dotsDisplay = isCenterSelected ? DOTS : null
 
@@ -103,17 +111,17 @@ export function usePagination(props: PaginationParams) {
 
       return [
         ...extraItems,
-        ...range(total - (boundaries + extraItems?.length), total + (displayRightArrow ? 1 : 0)),
+        ...range(total - (_boundaries + extraItems?.length - 2), total + (displayRightArrow ? 1 : 0)),
       ].filter(Boolean)
     }
 
     return [
       leftArrowDisplay,
-      ...range(1, isCenterSelected ? boundaries - 1 : boundaries),
+      ...range(1, isCenterSelected ? _boundaries - 1 : _boundaries),
       dotsDisplay,
       isCenterSelected ? activePage : DOTS,
       dotsDisplay,
-      ...range(total - boundaries + (isCenterSelected ? 2 : 1), total),
+      ...range(total - _boundaries + (isCenterSelected ? 2 : 1), total),
       rightArrowDisplay,
     ].filter(Boolean)
 

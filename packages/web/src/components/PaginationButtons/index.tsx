@@ -5,6 +5,7 @@ import {
   StylesOf,
   getNestedStylesByKey,
   useCallback,
+  useCodeleapContext,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
@@ -16,7 +17,8 @@ import { IconProps } from '../Icon'
 export type PaginationButtonsProps = {
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
-    renderItem?: (item, index) => JSX.Element
+    renderItem?: (item: string | number, index: number) => JSX.Element
+    onPressItem?: (item: string | number) => void
     shouldAbreviate?: boolean
     disabled?: boolean
     displayLeftArrow?: boolean
@@ -41,9 +43,12 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     ...paginationProps
   } = props
 
-  const { boundaries = 2 } = paginationProps
+  const { Theme } = useCodeleapContext()
 
-  const centeredElementIndex = boundaries + 1
+  const isMobile = Theme.hooks.down('tabletSmall')
+
+  const { boundaries = 2 } = paginationProps
+  const centeredElementIndex = isMobile ? 3 : boundaries + 1
 
   const {
     range,
@@ -100,6 +105,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
       return fetchNextPage()
     }
 
+    props?.onPressItem?.(item)
     fetchPage(Number(item))
 
   }
