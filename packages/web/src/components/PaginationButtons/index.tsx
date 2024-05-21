@@ -11,9 +11,9 @@ import { View } from '../View'
 import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
 import { Button } from '../Button'
 import { PaginationParams, usePagination } from '../../lib'
+import { IconProps } from '../Icon'
 
 export type PaginationButtonsProps = {
-    pageKey?: number | string
     pages: number
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
@@ -60,7 +60,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     next,
     previous,
     setPage,
-    active,
+    page,
     status,
   } = usePagination({
     ...defaultPaginationProps,
@@ -90,7 +90,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     setPage?.(page)
   }
 
-  const onPressItem = ({ item, isArrowLeft, isArrowRight }) => {
+  const onPressItem = ({ item, isArrowLeft, isArrowRight }: { item: string | number; isArrowLeft: boolean; isArrowRight: boolean }) => {
 
     if (isArrowLeft) {
       if (displayLeftArrow) {
@@ -104,11 +104,11 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
       return fetchNextPage()
     }
 
-    fetchPage(item)
+    fetchPage(Number(item))
 
   }
 
-  const renderItem = useCallback(({ item, index }) => {
+  const renderItem = useCallback(({ item, index }: { item: string | number; index: number }) => {
 
     let selected = null
 
@@ -120,28 +120,27 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
     switch (status) {
       case 'initial':
-        selected = active === index + (displayLeftArrow ? 0 : 1)
+        selected = page === index + (displayLeftArrow ? 0 : 1)
         break
       case 'abreviated':
         selected = index === centeredElementIndex - (displayLeftArrow ? 0 : 1)
         break
       case 'end':
-        selected = active - (Number(item) - index) === index
+        selected = page - (Number(item) - index) === index
     }
 
     return (
       <Button
-        variant={`default`}
         text={isArrowItem ? '' : String(item)}
         selected={selected}
-        icon={isArrowItem ? arrowIconName : null}
+        icon={isArrowItem ? arrowIconName as IconProps['name'] : null}
         onPress={() => onPressItem({ item, isArrowLeft, isArrowRight }) }
         styles={itemStyles}
         disabled={disabled}
         {...itemProps}
       />
     )
-  }, [itemStyles, active, status, range, centeredElementIndex])
+  }, [itemStyles, page, status, range, centeredElementIndex])
 
   return (
     <View style={variantStyles.wrapper}>
