@@ -1,8 +1,7 @@
 import { useCodeleapContext } from '@codeleap/common'
-import { useWindowSize } from '../hooks'
+import { useWindowSize } from './useWindowSize'
 
 export const useMaxContentWidth = () => {
-
   const { Theme } = useCodeleapContext()
   const [width, height] = useWindowSize()
 
@@ -45,5 +44,4 @@ export const useMaxContentWidth = () => {
     width: maxContentWidth,
     padding,
   }
-
 }

@@ -1,5 +1,5 @@
-import React from 'react'
-import { onMount, TypeGuards, useState } from '@codeleap/common'
+import { useEffect, useState } from 'react'
+import { TypeGuards } from '@codeleap/common'
 
 export type LocalStorageHandler<T> = (key: T, event: StorageEvent, value: any) => void
 export type Key<T> = keyof T
@@ -138,7 +138,7 @@ export class LocalStorage<T extends Record<string, string>> {
       return getItemValueOnMount ? (this.getItem(key, parseValueOnGet) ?? initialValue) : initialValue
     })
     
-    onMount(() => {
+    useEffect(() => {
       const handler = () => {
         let _initialValue = initialValue
         let storedValue = this.getItem(key, parseValueOnGet)

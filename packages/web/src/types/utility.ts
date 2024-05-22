@@ -1,6 +1,5 @@
-import React, { InputHTMLAttributes } from 'react'
+import React from 'react'
 import { CSSInterpolation } from '@emotion/css'
-import { PropsOf } from '@codeleap/common'
 
 export type StylesOf<C extends string> = Partial<Record<C, CSSInterpolation>>
 
@@ -33,4 +32,8 @@ export type ComponentWithDefaultProps<P> = ((props: P) => JSX.Element) & { defau
 
 export type ComponentCommonProps = {
   debugName: string
+}
+
+export type SelectProperties<T extends Record<string | number | symbol, any>, K extends keyof T> = {
+  [P in K]: T[K]
 }

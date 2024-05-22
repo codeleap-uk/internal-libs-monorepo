@@ -1,9 +1,10 @@
-import { AnyFunction, TypeGuards, useEffect, useState } from '@codeleap/common'
+import { AnyFunction, TypeGuards } from '@codeleap/common'
+import { useEffect, useState } from 'react'
 
 type UseWindowFocusOptions = {
-    onFocus?: AnyFunction
-    onBlur?: AnyFunction
-  }
+  onFocus?: AnyFunction
+  onBlur?: AnyFunction
+}
 
 export const useWindowFocus = (options: UseWindowFocusOptions = {}, deps: Array<any> = []): boolean => {
   const [focused, setFocused] = useState(true)
