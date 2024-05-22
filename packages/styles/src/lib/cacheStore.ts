@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { AnyRecord } from '../types'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { STORES_PERSIST_VERSION } from './constants'
+import { IS_MOBILE, STORES_PERSIST_VERSION } from './constants'
 import { CacheType } from '../types/cache'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 function getStaleTime() {
   const time = 7
@@ -58,7 +58,7 @@ export const cacheStore = create(persist<CacheStore>(
       return persistedState as CacheStore
     },
     storage: createJSONStorage(() => {
-      if (typeof localStorage === 'undefined') {
+      if (IS_MOBILE) {
         return AsyncStorage
       }
 
