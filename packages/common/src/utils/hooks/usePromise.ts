@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { TypeGuards } from '..'
+import * as TypeGuards from '../typeGuards'
 import { AnyFunction } from '../../types'
 
 type UsePromiseOptions<T = any> = {
