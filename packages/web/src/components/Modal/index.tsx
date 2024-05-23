@@ -25,7 +25,7 @@ import { ActionIcon, ActionIconProps } from '../ActionIcon'
 import { Scroll } from '../Scroll'
 import { ComponentCommonProps } from '../../types'
 import { Touchable, TouchableProps } from '../Touchable'
-import { modalScrollLock, ModalStore } from '../../lib/modal'
+import { modalScrollLock, ModalStore } from '../../lib/tools/modal'
 
 export * from './styles'
 

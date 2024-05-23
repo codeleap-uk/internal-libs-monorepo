@@ -7,7 +7,7 @@ import { useMediaQuery } from '../../lib/hooks'
 import { NativeHTMLElement } from '../../types'
 import { motion } from 'framer-motion'
 import { ViewProps } from './types'
-import { getTestId } from '../../lib/test'
+import { getTestId } from '../../lib/utils/test'
 
 export * from './styles'
 export * from './types'
