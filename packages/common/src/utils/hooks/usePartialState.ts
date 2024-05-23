@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { DeepPartial } from 'src/types'
+import { DeepPartial } from '../../types'
 import { deepMerge } from '../object'
 
 type SetPartialStateCallback<T> = (value: T) => DeepPartial<T>
 
 export function usePartialState<T= any>(initial: T | (() => T)) {
-
   const [state, setState] = useState(initial)
 
   function setPartial(
@@ -18,8 +17,5 @@ export function usePartialState<T= any>(initial: T | (() => T)) {
     }
   }
 
-  return [
-      state as T,
-      setPartial,
-  ] as const
+  return [state as T, setPartial] as const
 }

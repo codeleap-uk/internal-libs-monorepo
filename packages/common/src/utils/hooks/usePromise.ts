@@ -1,13 +1,13 @@
 import { useRef } from 'react'
 import { TypeGuards } from '..'
-import { AnyFunction } from 'src/types'
+import { AnyFunction } from '../../types'
 
 type UsePromiseOptions<T = any> = {
-    onResolve?: (value: T) => void
-    onReject?: (err: any) => void
-    timeout?: number
-    debugName?: string
-  }
+  onResolve?: (value: T) => void
+  onReject?: (err: any) => void
+  timeout?: number
+  debugName?: string
+}
 
 export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
   const rejectRef = useRef<AnyFunction>()

@@ -11,7 +11,7 @@ import {
   useReducer,
 } from 'react'
 
-export * from './useCondicionalState'
+export * from './useConditionalState'
 export * from './useIsomorphicEffect'
 export * from './usePromise'
 export * from './useWarning'
@@ -33,6 +33,7 @@ export * from './useModal'
 export * from './usePartialState'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
+
 export {
   useEffect,
   useRef,
@@ -45,4 +46,3 @@ export {
   useDebugValue,
   useReducer,
 }
-

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { AnyFunction } from 'src/types'
+import { AnyFunction } from '../../types'
 
 export const onMount = (func: AnyFunction) => {
   useEffect(() => {

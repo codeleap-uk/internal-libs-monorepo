@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { useCodeleapContext } from 'src/styles'
+import { useCodeleapContext } from '../../styles'
 
 export function useWarning(condition: boolean, ...logArgs: any[]) {
   const logged = useRef(false)

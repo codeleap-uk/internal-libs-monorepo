@@ -1,8 +1,9 @@
 import { useRef } from 'react'
-import { AnyFunction } from 'src/types'
+import { AnyFunction } from '../../types'
 
 export function useInterval(callback: AnyFunction, interval: number) {
   const intervalRef = useRef(null)
+
   function clear() {
     clearInterval(intervalRef.current)
     intervalRef.current = null
