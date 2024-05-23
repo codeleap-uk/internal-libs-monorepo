@@ -1,6 +1,6 @@
-import React from 'react'
+import { useMemo } from 'react'
 import { TypeGuards, useCodeleapContext } from '@codeleap/common'
-import { useMediaQuery } from './hooks'
+import { useMediaQuery } from './useMediaQuery'
 
 export type BreakpointsMatch<T extends string = string> = Record<T, any>
 
@@ -9,7 +9,7 @@ export function useBreakpointMatch<T extends string = string>(values: Partial<Br
 
   const themeBreakpoints: Record<string, number> = Theme?.breakpoints
 
-  const breakpoints: Record<string, number> = React.useMemo(() => {
+  const breakpoints: Record<string, number> = useMemo(() => {
     const breaks = Object.entries(themeBreakpoints)
 
     breaks?.sort((a, b) => a?.[1] - b?.[1])
@@ -19,7 +19,7 @@ export function useBreakpointMatch<T extends string = string>(values: Partial<Br
     return sortBreakpoints
   }, [])
 
-  const breakpointValues: Array<string> = React.useMemo(() => {
+  const breakpointValues: Array<string> = useMemo(() => {
     const _breakpoints = Object.keys(breakpoints)
 
     return _breakpoints.sort((a, b) => breakpoints?.[a] - breakpoints?.[b])
@@ -36,7 +36,7 @@ export function useBreakpointMatch<T extends string = string>(values: Partial<Br
 
   const currentBreakpoint = Object.keys(breakpointMatches)?.find((key) => breakpointMatches?.[key])
 
-  const breakpoint = React.useMemo(() => {
+  const breakpoint = useMemo(() => {
     const validBreakpointIndex = breakpointValues?.findIndex(_breakpoint => _breakpoint === currentBreakpoint)
 
     const validBreakpoints = breakpointValues?.slice(validBreakpointIndex, 100)

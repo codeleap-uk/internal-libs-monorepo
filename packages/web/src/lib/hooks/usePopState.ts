@@ -1,7 +1,6 @@
 import { AnyFunction, useIsomorphicEffect, useUnmount } from '@codeleap/common'
 
 export const usePopState = (dependence: boolean, handler: AnyFunction) => {
-
   useIsomorphicEffect(() => {
     if (dependence) {
       const pathname = location.pathname
