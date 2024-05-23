@@ -1,6 +1,5 @@
-import type { SetStateAction, Dispatch } from 'react'
-import { useState } from 'react'
-import { TypeGuards } from '../utils'
+import { useState, SetStateAction, Dispatch } from 'react'
+import * as TypeGuards from '../typeGuards'
 
 type UseConditionalStateOptions<T> = {
   initialValue?: T
