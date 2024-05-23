@@ -19,7 +19,6 @@ import { AnyFunction, DeepPartial, StylesOf } from '../types'
 import { getNestedStylesByKey } from './misc'
 import { useCodeleapContext } from '../styles/StyleProvider'
 import { TypeGuards } from '.'
-import type { SetStateAction, Dispatch } from 'react'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 export {
@@ -461,23 +460,3 @@ export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
 // useLayoutEffect will show warning if used during ssr, e.g. with Next.js
 // useIsomorphicEffect removes it by replacing useLayoutEffect with useEffect during ssr
 export const useIsomorphicEffect = typeof document !== 'undefined' ? useLayoutEffect : useEffect
-
-type UseConditionalStateOptions<T> = {
-  initialValue?: T
-}
-
-type UseConditionalState = <T>(
-  value: T | undefined,
-  setter: Dispatch<SetStateAction<T>> | ((value: T) => void),
-  options?: UseConditionalStateOptions<T>
-) => [T, Dispatch<SetStateAction<T>> | ((value: T) => void)]
-
-export const useConditionalState: UseConditionalState = (value, setter, options) => {
-  const state = useState(options?.initialValue)
-
-  if (!TypeGuards.isNil(value) && TypeGuards.isFunction(setter)) {
-    return [value, setter]
-  }
-
-  return state
-}
