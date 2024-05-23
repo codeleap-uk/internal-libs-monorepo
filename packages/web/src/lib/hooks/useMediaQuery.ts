@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { attachMediaListener, isMediaQuery } from '../hooks'
+import { attachMediaListener, isMediaQuery } from '../tools'
 
 export interface UseMediaQueryOptions {
-    getInitialValueInEffect?: boolean
-    initialValue?: boolean
-  }
+  getInitialValueInEffect?: boolean
+  initialValue?: boolean
+}
 
 export function useMediaQuery(
   query: string,

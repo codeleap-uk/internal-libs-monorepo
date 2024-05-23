@@ -1,7 +1,7 @@
 import { useRef } from 'react'
-import { SelectProperties } from '.'
+import { SelectProperties } from '../../types'
 
-export function useStaticAnimationStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(obj: T, keys: K[]) {
+export function useStaticAnimationStyles<T extends Record<string | number | symbol, any>, K extends keyof T>(obj: T, keys: K[]) {
   const styles = useRef({})
 
   if (Object.keys(styles.current).length === 0) {

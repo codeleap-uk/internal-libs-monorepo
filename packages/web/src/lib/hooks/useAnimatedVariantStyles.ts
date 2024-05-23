@@ -1,17 +1,16 @@
 import { AnimationProps } from 'framer-motion'
-import { SelectProperties } from '.'
-import { useStaticAnimationStyles } from '../hooks'
-import { useState } from 'react'
-import { onUpdate } from '@codeleap/common'
+import { SelectProperties } from '../../types'
+import { useStaticAnimationStyles } from './useStaticAnimationStyles'
+import { useState, useEffect } from 'react'
 
-type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
-    variantStyles: T
-    animatedProperties: K[]
-    updater: (states: SelectProperties<T, K>) => AnimationProps
-    dependencies?: any[]
-  }
+type UseAnimatedVariantStylesConfig<T extends Record<string | number | symbol, any>, K extends keyof T> = {
+  variantStyles: T
+  animatedProperties: K[]
+  updater: (states: SelectProperties<T, K>) => AnimationProps
+  dependencies?: any[]
+}
 
-export function useAnimatedVariantStyles<T extends Record<string|number|symbol, any>, K extends keyof T >(config: UseAnimatedVariantStylesConfig<T, K>) {
+export function useAnimatedVariantStyles<T extends Record<string | number | symbol, any>, K extends keyof T>(config: UseAnimatedVariantStylesConfig<T, K>) {
   const { animatedProperties, updater, variantStyles, dependencies = [] } = config
 
   const staticStyles = useStaticAnimationStyles(variantStyles, animatedProperties)
@@ -20,7 +19,7 @@ export function useAnimatedVariantStyles<T extends Record<string|number|symbol, 
 
   const [animated, setAnimated] = useState(initialState)
 
-  onUpdate(() => {
+  useEffect(() => {
     const nextState = updater(staticStyles)
 
     setAnimated(nextState)

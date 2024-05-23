@@ -1,4 +1,5 @@
 import { globalHistory } from '@reach/router'
+import { useEffect } from 'react'
 
 export const usePageExitBlocker = (
   handler: (willLeavePage: boolean) => void,
@@ -13,7 +14,7 @@ export const usePageExitBlocker = (
     return
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!window) return null
 
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -23,7 +24,7 @@ export const usePageExitBlocker = (
     }
   }, deps)
 
-  React.useEffect(() => {
+  useEffect(() => {
     return globalHistory.listen((args) => {
       if (!window) return null
 

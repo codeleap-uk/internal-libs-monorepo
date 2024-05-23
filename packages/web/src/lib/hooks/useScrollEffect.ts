@@ -1,4 +1,4 @@
-import { onUpdate } from '@codeleap/common'
+import { useEffect } from 'react'
 
 export function useScrollEffect(
   effect: (passed: boolean, current: number) => any,
@@ -10,7 +10,7 @@ export function useScrollEffect(
     effect(passed, window.scrollY)
   }
 
-  onUpdate(() => {
+  useEffect(() => {
     document.addEventListener('scroll', handleScroll)
     return () => {
       document.removeEventListener('scroll', handleScroll)

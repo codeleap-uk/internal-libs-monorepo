@@ -1,4 +1,5 @@
-import { onUpdate, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
+import { useEffect } from 'react'
 
 export const keydownDefaultKeyOptions = {
   ArrowLeft: 'ArrowLeft',
@@ -11,11 +12,11 @@ export const keydownDefaultKeyOptions = {
     code: 'Space',
   },
 }
- 
+
 export function useKeydown(
   expectedKey: keyof typeof useKeydown.keys | { key: string; code: string },
-  handler: (event: KeyboardEvent) => void, 
-  deps: Array<any> = [], 
+  handler: (event: KeyboardEvent) => void,
+  deps: Array<any> = [],
   options?: boolean | AddEventListenerOptions
 ) {
   const eventKey = TypeGuards.isString(expectedKey) ? (useKeydown?.keys?.[expectedKey] ?? expectedKey) : expectedKey
@@ -28,7 +29,7 @@ export function useKeydown(
     }
   }
 
-  onUpdate(() => {
+  useEffect(() => {
     document.addEventListener('keydown', handleKeyPress, options)
 
     return () => {

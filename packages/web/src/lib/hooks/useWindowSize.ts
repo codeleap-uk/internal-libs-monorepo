@@ -1,19 +1,17 @@
-import { onMount, onUpdate } from '@codeleap/common'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function useWindowSize() {
   const [size, setSize] = useState([])
-
-  onMount(() => {
-    setSize([window.innerWidth, window.innerHeight])
-  })
 
   function handleResize() {
     setSize([window.innerWidth, window.innerHeight])
   }
 
-  onUpdate(() => {
+  useEffect(() => {
+    handleResize()
+
     window.addEventListener('resize', handleResize)
+
     return () => {
       window.removeEventListener('resize', handleResize)
     }
