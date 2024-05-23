@@ -153,7 +153,7 @@ export class LocalStorage<T extends Record<string, string>> {
       handler()
 
       return disableListen ? null : this.listen(key, handler)
-    })
+    }, [])
 
     const setValue = (to: S | ((prev:S) => S)) => {
       return _setValue((prev) => {
