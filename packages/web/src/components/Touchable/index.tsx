@@ -5,7 +5,7 @@ import { View } from '../View'
 import { TouchableComposition, TouchablePresets } from './styles'
 import { CSSInterpolation } from '@emotion/css'
 import { StylesOf, NativeHTMLElement } from '../../types'
-import { getTestId } from '../../lib/test'
+import { getTestId } from '../../lib/utils/test'
 export * from './styles'
 
 export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWithRef<T> & {

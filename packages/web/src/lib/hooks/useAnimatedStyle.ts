@@ -1,5 +1,4 @@
-import React, { useRef } from 'react'
-import { onUpdate, useState } from '@codeleap/common'
+import { useRef, useEffect, useState } from 'react'
 import { AnimationProps } from 'framer-motion'
 
 type UpdaterReturn = Omit<AnimationProps['animate'], 'transition'> & {
@@ -10,11 +9,11 @@ type UseAnimatedStyleReturn = Pick<AnimationProps, 'animate' | 'initial' | 'tran
 
 export const useAnimatedStyle = (updater: () => UpdaterReturn, deps: Array<any>): UseAnimatedStyleReturn => {
   const initialStyle = updater()
-  
+
   const [animatedStyle, setAnimatedStyle] = useState(initialStyle)
   const transition = useRef(initialStyle.transition)
 
-  onUpdate(() => {
+  useEffect(() => {
     const animatedStyleUpdated = updater()
 
     setAnimatedStyle(animatedStyleUpdated)

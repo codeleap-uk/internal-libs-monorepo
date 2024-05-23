@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "3.23.0",
+  "version": "3.23.2",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -13,7 +13,6 @@
     "@codeleap/common": "*",
     "@emotion/react": "link:../../apps/web/node_modules/@emotion/react",
     "@types/react-slick": "^0.23.10",
-    "@types/react-window": "1.8.5",
     "react": "link:../../apps/web/node_modules/react"
   },
   "scripts": {
@@ -26,9 +25,7 @@
     "@radix-ui/react-tooltip": "^1.0.6",
     "@tiptap/react": "2.1.16",
     "framer-motion": "^10.10.0",
-    "js-cookie": "^3.0.1",
     "masonic": "^3.7.0",
-    "rc-slider": "^9.7.5",
     "react-autosize-textarea": "^7.1.0",
     "react-colorful": "^5.6.1",
     "react-datepicker": "^4.20.0",
@@ -39,11 +36,7 @@
     "react-number-format": "^5.2.1",
     "react-select": "^5.7.3",
     "react-slick": "^0.29.0",
-    "react-toastify": "^8.2.0",
-    "react-virtualized-auto-sizer": "^1.0.6",
-    "react-window": "1.8.5",
     "slick-carousel": "^1.8.1",
-    "url-parse": "^1.5.10",
     "uuid": "^8.3.2",
     "zustand": "^4.4.1",
     "@fastify/deepmerge": "1.3.0"

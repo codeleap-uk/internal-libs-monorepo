@@ -25,7 +25,7 @@ import { StylesOf, HTMLProps, ComponentWithDefaultProps } from '../../types/util
 import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
 import { TextInputPresets } from './styles'
 import { getMaskInputProps, TextInputMaskingProps } from './mask'
-import { getTestId } from '../../lib/test'
+import { getTestId } from '../../lib/utils/test'
 
 export * from './styles'
 export * from './mask'
