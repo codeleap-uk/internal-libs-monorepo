@@ -1,5 +1,5 @@
 import { TypeGuards } from '@codeleap/common'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 
 type HandlerClickOutside = (clickedOutside: boolean) => void
 
@@ -9,9 +9,9 @@ export function useClickOutsideElement(
   handler: HandlerClickOutside, 
   elements: Array<React.MutableRefObject<any>> = null,
 ): UseClickOutsideElementReturn {
-  const elementRef = React.useRef(null)
+  const elementRef = useRef(null)
 
-  const handleClickOutside = React.useCallback((event: MouseEvent) => {
+  const handleClickOutside = useCallback((event: MouseEvent) => {
     if (!elementRef.current) return
 
     const clickedOutsideElement = !elementRef.current.contains(event?.target)
