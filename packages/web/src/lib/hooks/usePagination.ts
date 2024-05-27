@@ -42,7 +42,7 @@ export function usePagination(props: PaginationParams) {
   const _boundaries = isMobile ? 2 : boundaries
 
   const canAbreviateItems = (shouldAbbreviate || isMobile) && total > abbreviationMinimumAmount
-  const displayLastNumbers = activePage + _boundaries + (isMobile ? 0 : 2) > total
+  const displayLastNumbers = activePage + _boundaries + (isMobile ? 0 : 2) >= total
   const isCenterSelected = canAbreviateItems && activePage > _boundaries && !displayLastNumbers
 
   const dotsDisplay = isCenterSelected ? abbreviationSymbol : null
