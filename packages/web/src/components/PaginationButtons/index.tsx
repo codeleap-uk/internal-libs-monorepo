@@ -1,55 +1,63 @@
 import {
-  AnyFunction,
-  ComponentVariants,
-  PropsOf,
-  StylesOf,
+  TypeGuards,
   getNestedStylesByKey,
-  useCallback,
   useCodeleapContext,
   useDefaultComponentStyle,
 } from '@codeleap/common'
 import { View } from '../View'
-import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
 import { Button } from '../Button'
-import { PaginationParams, usePagination, useMediaQuery } from '../../lib'
+import { useMediaQuery, usePagination } from '../../lib'
+import { PaginationButtonsProps } from './types'
 import { IconProps } from '../Icon'
-
-export type PaginationButtonsProps = {
-    onFetchNextPage?: AnyFunction
-    onFetchPreviousPage?: AnyFunction
-    renderItem?: (item: string | number, index: number) => JSX.Element
-    onPressItem?: (item: string | number) => void
-    shouldAbreviate?: boolean
-    disabled?: boolean
-    displayLeftArrow?: boolean
-    displayRightArrow?: boolean
-    styles?: StylesOf<PaginationButtonsComposition>
-    itemProps?: PropsOf<typeof Button>
-} & ComponentVariants<typeof PaginationButtonPresets> & PaginationParams
 
 export * from './styles'
 
+const defaultProps: Partial<PaginationButtonsProps> = {
+  shouldAbbreviate: true,
+  displayLeftArrow: true,
+  displayRightArrow: true,
+  disabled: false,
+  isMobile: null,
+  abbreviationSymbol: '...',
+  controlLeftIconName: 'chevron-left' as IconProps['name'],
+  controlRightIconName: 'chevron-right' as IconProps['name'],
+}
+
 export const PaginationButtons = (props: PaginationButtonsProps) => {
 
+  const allProps = {
+    ...PaginationButtons.defaultProps,
+    ...props,
+  }
+
   const {
-    shouldAbreviate = true,
-    displayLeftArrow = true,
-    displayRightArrow = true,
-    disabled = false,
-    variants,
-    responsiveVariants,
-    styles,
-    itemProps = {},
+    shouldAbbreviate,
+    displayLeftArrow,
+    displayRightArrow,
+    disabled,
+    variants = [],
+    responsiveVariants = {},
+    styles = {},
+    itemProps,
+    controlLeftIconName,
+    controlRightIconName,
+    leftArrowButtonProps,
+    rightArrowButtonProps,
+    abbreviationSymbol,
+    isMobile,
     ...paginationProps
-  } = props
+  } = allProps
 
   const { Theme } = useCodeleapContext()
 
-  const query = Theme.media.down('tabletSmall')
-  const isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
-
   const { boundaries = 2 } = paginationProps
-  const centeredElementIndex = isMobile ? 3 : boundaries + 1
+
+  const query = Theme.media.down('tabletSmall')
+
+  const _isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
+  const isMobileQuery = TypeGuards.isBoolean(isMobile) ? isMobile : _isMobile
+
+  const centeredElementIndex = isMobileQuery ? 3 : boundaries + 1
 
   const {
     range,
@@ -60,9 +68,11 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     page,
     status,
   } = usePagination({
+    abbreviationSymbol,
+    isMobile: isMobileQuery,
     displayLeftArrow,
     displayRightArrow,
-    shouldAbreviate,
+    shouldAbbreviate,
     ...paginationProps,
   })
 
@@ -73,6 +83,9 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   })
 
   const itemStyles = getNestedStylesByKey('button', variantStyles)
+
+  const arrowLeftStyles = getNestedStylesByKey('arrowLeftButton', variantStyles)
+  const arrowRightStyles = getNestedStylesByKey('arrowRightButton', variantStyles)
 
   const fetchPreviousPage = () => {
     props?.onFetchPreviousPage?.()
@@ -90,7 +103,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const onPressItem = ({ item, isArrowLeft, isArrowRight }: { item: string | number; isArrowLeft: boolean; isArrowRight: boolean }) => {
 
-    if (item === '...') {
+    if (item === abbreviationSymbol) {
       return null
     }
 
@@ -111,48 +124,61 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   }
 
-  const renderItem = useCallback(({ item, index }: { item: string | number; index: number }) => {
-
-    if (props?.renderItem) {
-      return props?.renderItem?.(item, index)
-    }
-
-    let selected = null
-
-    const isArrowLeft = index === 0
-    const isArrowRight = index === range?.length - 1
-
-    const isArrowItem = displayLeftArrow && isArrowLeft || displayRightArrow && isArrowRight
-    const arrowIconName = `chevron-${isArrowLeft ? 'left' : 'right'}`
-
-    switch (status) {
-      case 'initial':
-        selected = page === index + (displayLeftArrow ? 0 : 1)
-        break
-      case 'abreviated':
-        selected = index === centeredElementIndex - (displayLeftArrow ? 0 : 1)
-        break
-      case 'end':
-        selected = page - (Number(item) - index) === index
-    }
-
-    return (
-      <Button
-        text={isArrowItem ? '' : String(item)}
-        selected={selected}
-        icon={isArrowItem ? arrowIconName as IconProps['name'] : null}
-        onPress={() => onPressItem({ item, isArrowLeft, isArrowRight }) }
-        styles={itemStyles}
-        disabled={disabled}
-        {...itemProps}
-      />
-    )
-  }, [itemStyles, page, status, range, centeredElementIndex])
-
   return (
     <View style={variantStyles.wrapper}>
-      {range?.map?.((item, index) => renderItem({ item, index }))}
+
+      {displayLeftArrow ? (
+        <Button
+          icon={controlLeftIconName}
+          onPress={() => onPressItem({ item: null, isArrowLeft: true, isArrowRight: false })}
+          styles={arrowLeftStyles}
+          {...leftArrowButtonProps}
+        />
+      ) : null}
+
+      {range?.map?.((item, index) => {
+
+        if (props?.renderItem) {
+          return props?.renderItem?.(item, index)
+        }
+
+        let selected = null
+
+        switch (status) {
+          case 'initial':
+            selected = page === index + 1
+            break
+          case 'abreviated':
+            selected = index === centeredElementIndex - 1
+            break
+          case 'end':
+            selected = page - (Number(item) - index) === index
+        }
+
+        return (
+          <Button
+            text={String(item)}
+            selected={selected}
+            onPress={() => onPressItem({ item, isArrowLeft: false, isArrowRight: false }) }
+            styles={itemStyles}
+            disabled={disabled}
+            {...itemProps}
+          />
+        )
+
+      })}
+
+      {displayRightArrow ? (
+        <Button
+          icon={controlRightIconName}
+          onPress={() => onPressItem({ item: null, isArrowLeft: false, isArrowRight: true })}
+          styles={arrowRightStyles}
+          {...rightArrowButtonProps}
+        />
+      ) : null}
+
     </View>
   )
 }
 
+PaginationButtons.defaultProps = defaultProps

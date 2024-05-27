@@ -1,7 +1,4 @@
-import { onUpdate, range, useCodeleapContext, useMemo, useState, useUncontrolled } from '@codeleap/common'
-import { useMediaQuery } from './useMediaQuery'
-
-const DOTS = '...'
+import { range, useMemo, useUncontrolled } from '@codeleap/common'
 
 export type PaginationParams = {
   initialPage?: number
@@ -9,18 +6,17 @@ export type PaginationParams = {
   total: number
   boundaries?: number
   onChangePage?: (page: number) => void
-  shouldAbreviate?: boolean
-  abreviationMinimumAmount?: number
+  shouldAbbreviate?: boolean
+  abbreviationMinimumAmount?: number
   displayLeftArrow?: boolean
   displayRightArrow?: boolean
+  isMobile?: boolean
+  abbreviationSymbol?: any
 }
 
 export function usePagination(props: PaginationParams) {
 
-  const { Theme } = useCodeleapContext()
-
-  const query = Theme.media.down('tabletSmall')
-  const isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
+  const { isMobile } = props
 
   const {
     total,
@@ -28,10 +24,11 @@ export function usePagination(props: PaginationParams) {
     initialPage = 1,
     page,
     onChangePage,
-    shouldAbreviate = true,
-    abreviationMinimumAmount = isMobile ? 5 : 10,
+    shouldAbbreviate = true,
+    abbreviationMinimumAmount = isMobile ? 5 : 10,
     displayLeftArrow = true,
     displayRightArrow = true,
+    abbreviationSymbol,
   } = props
 
   const [activePage, setActivePage] = useUncontrolled({
@@ -42,19 +39,13 @@ export function usePagination(props: PaginationParams) {
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
 
-  const [status, setStatus] = useState('initial')
-
   const _boundaries = isMobile ? 2 : boundaries
 
-  const leftArrowDisplay = displayLeftArrow ? 'arrow' : null
-  const rightArrowDisplay = displayRightArrow ? 'arrow' : null
-  const arrowsAmount = !leftArrowDisplay || !rightArrowDisplay ? 1 : 2
-
-  const canAbreviateItems = (shouldAbreviate || isMobile) && total > abreviationMinimumAmount
-  const displayLastNumbers = activePage + _boundaries + arrowsAmount + (isMobile ? 0 : 2) > total
+  const canAbreviateItems = (shouldAbbreviate || isMobile) && total > abbreviationMinimumAmount
+  const displayLastNumbers = activePage + _boundaries + (isMobile ? 0 : 2) > total
   const isCenterSelected = canAbreviateItems && activePage > _boundaries && !displayLastNumbers
 
-  const dotsDisplay = isCenterSelected ? DOTS : null
+  const dotsDisplay = isCenterSelected ? abbreviationSymbol : null
 
   const setPage = (pageNumber: number) => {
 
@@ -67,6 +58,7 @@ export function usePagination(props: PaginationParams) {
     ].some(x => x)
 
     if (nonSelectableItems) return activePage
+
     setActivePage(pageNumber)
   }
 
@@ -75,54 +67,45 @@ export function usePagination(props: PaginationParams) {
   const first = () => setPage(1)
   const last = () => setPage(total)
 
-  onUpdate(() => {
-
+  const status = useMemo(() => {
     if (isCenterSelected) {
-      return setStatus('abreviated')
+      return 'abreviated'
     }
 
     if (displayLastNumbers) {
-      return setStatus('end')
+      return 'end'
     }
 
-    if (status !== 'initial') {
-      setStatus('initial')
-    }
-
-  }, [activePage, isCenterSelected, displayLastNumbers])
+    return 'initial'
+  }, [isCenterSelected, displayLastNumbers])
 
   const paginationRange = useMemo((): (number | string | '...')[] => {
 
     if (!canAbreviateItems) {
       return [
-        leftArrowDisplay,
         ...range(1, total),
-        rightArrowDisplay,
       ].filter(Boolean)
     }
 
     if (displayLastNumbers) {
 
       const extraItems = [
-        leftArrowDisplay,
         1,
-        DOTS,
+        abbreviationSymbol,
       ]
 
       return [
         ...extraItems,
-        ...range(total - (_boundaries + extraItems?.length - (isMobile ? 2 : 0)), total + (displayRightArrow ? 1 : 0)),
+        ...range(total - (_boundaries + extraItems?.length - (isMobile ? 2 : 0)), total),
       ].filter(Boolean)
     }
 
     return [
-      leftArrowDisplay,
       ...range(1, isCenterSelected ? _boundaries - 1 : _boundaries),
       dotsDisplay,
-      isCenterSelected ? activePage : DOTS,
+      isCenterSelected ? activePage : abbreviationSymbol,
       dotsDisplay,
       ...range(total - _boundaries + (isCenterSelected ? 2 : 1), total),
-      rightArrowDisplay,
     ].filter(Boolean)
 
   }, [total, activePage, displayLastNumbers, isCenterSelected, canAbreviateItems])
