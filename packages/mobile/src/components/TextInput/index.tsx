@@ -6,9 +6,10 @@ import { TextInput as NativeTextInput, NativeSyntheticEvent, TextInputFocusEvent
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Touchable } from '../Touchable'
 import { MaskedTextInput } from '../../modules/textInputMask'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { TextInputProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -48,11 +49,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(TextInput.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(TextInput.styleRegistryName, style)
 
   // @ts-expect-error - React's ref type system is weird
   useImperativeHandle(inputRef, () => {

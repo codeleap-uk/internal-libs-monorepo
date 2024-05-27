@@ -3,9 +3,9 @@ import { TypeGuards } from '@codeleap/common'
 import { Animated, Platform, Text as NativeText } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { TextProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
-import { useMemo } from 'react'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -59,11 +59,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
     }
   }
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Text.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Text.styleRegistryName, style)
 
   if (!!text && !TypeGuards.isString(text)) return <>{text}</>
 

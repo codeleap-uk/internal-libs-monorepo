@@ -3,10 +3,10 @@ import { arePropsEqual, TypeGuards } from '@codeleap/common'
 import { Badge } from '../Badge'
 import { View } from '../View'
 import { IconProps } from './types'
-import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, GenericStyledComponentAttributes, useStyleObserver, useTheme } from '@codeleap/styles'
+import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, GenericStyledComponentAttributes, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
-import { useMemo } from 'react'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -25,11 +25,7 @@ export const IconComponent = (props: IconProps) => {
   // @ts-expect-error
   const icons = useTheme(store => store.current?.icons)
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Icon.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Icon.styleRegistryName, style)
 
   const Component = icons?.[name]
 

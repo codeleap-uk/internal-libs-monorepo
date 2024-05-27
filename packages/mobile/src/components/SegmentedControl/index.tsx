@@ -5,8 +5,9 @@ import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { SegmentedControlOption } from './Option'
 import { SegmentedControlProps, SegmentedControlRef } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -52,11 +53,7 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
     ...animation,
   }
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(SegmentedControl.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(SegmentedControl.styleRegistryName, style)
 
   const scrollRef = useRef<SegmentedControlRef>(null)
 

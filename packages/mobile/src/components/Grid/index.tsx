@@ -6,8 +6,9 @@ import { RefreshControl } from '../RefreshControl'
 import { List } from '../List'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { GridProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -40,11 +41,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
     // @ts-expect-error
     const themeSpacing = useTheme(store => store.current?.spacing)
 
-    const styleObserver = useStyleObserver(style)
-
-    const styles = React.useMemo(() => {
-      return MobileStyleRegistry.current.styleFor(Grid.styleRegistryName, style)
-    }, [styleObserver])
+    const styles = useStylesFor(Grid.styleRegistryName, style)
 
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
       if (!props?.renderItem) return null

@@ -5,8 +5,9 @@ import { Text } from '../Text'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { Image } from '../Image'
 import { EmptyPlaceholderProps } from './types'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -28,11 +29,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
 
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(EmptyPlaceholder.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(EmptyPlaceholder.styleRegistryName, style)
 
   const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 

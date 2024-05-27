@@ -1,10 +1,11 @@
 import React from 'react'
 import { View as RNView } from 'react-native'
-import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { TypeGuards } from '@codeleap/common'
 import Animated from 'react-native-reanimated'
 import { ViewProps } from './types'
+import { useStylesFor } from '../../hooks'
 
 export * from './types'
 export * from './styles'
@@ -18,11 +19,7 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
     ...viewProps
   } = props
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(View.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(View.styleRegistryName, style)
 
   const Component: React.ComponentType<any> = animated ? Animated.View : _Component
 

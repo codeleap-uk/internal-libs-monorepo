@@ -1,12 +1,13 @@
-import React, { forwardRef, useState, useMemo } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { deepEqual, onUpdate, usePrevious } from '@codeleap/common'
 import { ScrollView } from 'react-native'
 import { RefreshControl } from '../RefreshControl'
 import { useKeyboardPaddingStyle } from '../../utils'
 import { ScrollProps, ScrollRef } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ReactElement } from 'react'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -58,11 +59,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
       }
     }, [refreshingDisplay, changeData])
 
-    const styleObserver = useStyleObserver(style)
-
-    const styles = useMemo(() => {
-      return MobileStyleRegistry.current.styleFor(Scroll.styleRegistryName, style)
-    }, [styleObserver])
+    const styles = useStylesFor(Scroll.styleRegistryName, style)
 
     const Component = ScrollView
 

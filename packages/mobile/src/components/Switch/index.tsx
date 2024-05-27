@@ -4,8 +4,9 @@ import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../Input
 import { useAnimatedVariantStyles } from '../..'
 import { Touchable } from '../Touchable'
 import { SwitchProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -30,11 +31,7 @@ export const Switch = (props: SwitchProps) => {
     switchOnLeft,
   } = others
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Switch.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Switch.styleRegistryName, style)
 
   const trackAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

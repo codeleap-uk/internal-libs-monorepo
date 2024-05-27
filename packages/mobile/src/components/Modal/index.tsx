@@ -9,8 +9,9 @@ import { Touchable } from '../Touchable'
 import { ActionIcon } from '../ActionIcon'
 import { useState } from 'react'
 import { ModalHeaderProps, ModalProps } from './types'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver, useTheme } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -84,11 +85,7 @@ export const Modal = (modalProps: ModalProps) => {
 
   const [modalHeight, setModalHeight] = useState(0)
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Modal.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Modal.styleRegistryName, style)
 
   const buttonStyles = useNestedStylesByKey('closeButton', styles)
 

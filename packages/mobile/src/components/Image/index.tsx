@@ -7,9 +7,10 @@ import { isFile, toMultipartFile } from '../../utils'
 import { LoadingOverlay } from '../LoadingOverlay'
 import FastImage from 'react-native-fast-image'
 import { ImageProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -31,11 +32,7 @@ export const ImageComponent = (props: ImageProps) => {
 
   const [loading, setLoading] = React.useState(false)
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Image.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Image.styleRegistryName, style)
 
   let imSource = source
 

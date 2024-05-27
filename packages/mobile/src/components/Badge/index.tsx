@@ -4,7 +4,8 @@ import { Text } from '../Text'
 import { View, ViewProps } from '../View'
 import { BadgeContent, BadgeProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -48,11 +49,7 @@ export const Badge = (props: BadgeProps) => {
 
   const visible = (TypeGuards.isBoolean(badge) && badge === true) || TypeGuards.isNumber(badge)
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Badge.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Badge.styleRegistryName, style)
 
   if (!visible) return null
   

@@ -5,8 +5,9 @@ import { TypeGuards } from '@codeleap/common'
 import { View } from '../View'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { RadioGroupProps, RadioOptionProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -116,11 +117,7 @@ export const RadioGroup = <T extends string | number>(
     style,
   } = others
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(RadioGroup.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(RadioGroup.styleRegistryName, style)
 
   // @ts-expect-error
   const _radioOnRight = radioOnRight ?? styles?.__props?.radioOnRight

@@ -8,7 +8,8 @@ import { Icon } from '../Icon'
 import { Badge } from '../Badge'
 import { AvatarProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -34,11 +35,7 @@ export const Avatar = (props: AvatarProps) => {
     ...props,
   }
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Avatar.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Avatar.styleRegistryName, style)
 
   const hasImage = !!image
 

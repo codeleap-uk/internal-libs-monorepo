@@ -5,8 +5,9 @@ import { SearchInput } from '../SearchInput'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
 import { View } from '../View'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -97,11 +98,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
     }
   })
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Autocomplete.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Autocomplete.styleRegistryName, style)
 
   const itemStyles = useNestedStylesByKey('item', styles)
   const listStyles = useNestedStylesByKey('list', styles)

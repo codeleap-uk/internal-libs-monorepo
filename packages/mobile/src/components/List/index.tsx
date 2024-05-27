@@ -5,10 +5,10 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { RefreshControl } from '../RefreshControl'
 import { useKeyboardPaddingStyle } from '../../utils'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { FlatListProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { useMemo } from 'react'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -37,11 +37,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       ...flatListProps,
     }
 
-    const styleObserver = useStyleObserver(style)
-
-    const styles = useMemo(() => {
-      return MobileStyleRegistry.current.styleFor(List.styleRegistryName, style)
-    }, [styleObserver])
+    const styles = useStylesFor(List.styleRegistryName, style)
 
     const separator = props?.separators && <RenderSeparator separatorStyles={styles.separator} />
 

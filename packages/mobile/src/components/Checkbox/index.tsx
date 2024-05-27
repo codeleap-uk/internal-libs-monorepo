@@ -5,8 +5,9 @@ import { useAnimatedVariantStyles } from '../..'
 import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
 import { CheckboxProps } from './types'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -36,11 +37,7 @@ export const Checkbox = (props: CheckboxProps) => {
     checkIcon,
   } = others
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Checkbox.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Checkbox.styleRegistryName, style)
 
   const boxAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

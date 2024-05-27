@@ -9,9 +9,10 @@ import { StyleSheet } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Badge } from '../Badge'
 import { ButtonProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { ComponentWithDefaultProps } from '../../types'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -37,11 +38,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   const [pressed, setPressed] = useState(false)
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Button.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Button.styleRegistryName, style)
 
   function getStyles(key: ButtonParts) {
     return mergeStyles([

@@ -6,8 +6,9 @@ import { TextInput } from '../TextInput'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 import { DatePickerModalProps } from './types'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -123,11 +124,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     ...modalProps
   } = allProps
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(DatePickerModal.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(DatePickerModal.styleRegistryName, style)
 
   const [visible, toggle] = !TypeGuards.isNil(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
   const [value, setValue] = [_value, onValueChange]

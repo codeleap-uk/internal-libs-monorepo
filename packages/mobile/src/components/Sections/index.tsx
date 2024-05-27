@@ -4,8 +4,9 @@ import { RefreshControl, SectionList } from 'react-native'
 import { View } from '../View'
 import { useKeyboardPaddingStyle } from '../../utils'
 import { SectionListProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -29,11 +30,7 @@ export const Sections = forwardRef<SectionList, SectionListProps>(
       ...sectionsProps,
     }
 
-    const styleObserver = useStyleObserver(style)
-
-    const styles = React.useMemo(() => {
-      return MobileStyleRegistry.current.styleFor(Sections.styleRegistryName, style)
-    }, [styleObserver])
+    const styles = useStylesFor(Sections.styleRegistryName, style)
 
     const renderSeparator = useCallback(() => {
       return <View style={styles?.separator} />

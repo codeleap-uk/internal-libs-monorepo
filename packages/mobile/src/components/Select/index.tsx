@@ -14,10 +14,11 @@ import { TextInput } from '../TextInput'
 import { SelectProps, ValueBoundSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useStyleObserver } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
@@ -176,11 +177,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     }
   }, [visible, prevVisible])
 
-  const styleObserver = useStyleObserver(style)
-
-  const styles = React.useMemo(() => {
-    return MobileStyleRegistry.current.styleFor(Select.styleRegistryName, style)
-  }, [styleObserver])
+  const styles = useStylesFor(Select.styleRegistryName, style)
 
   const itemStyles = useNestedStylesByKey('item', styles)
   const listStyles = useNestedStylesByKey('list', styles)
