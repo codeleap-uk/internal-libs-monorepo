@@ -1,9 +1,9 @@
 import { useRef } from 'react'
-import { useCodeleapContext } from '../../styles'
+import { useGlobalContext } from '../../contexts/GlobalContext'
 
 export function useWarning(condition: boolean, ...logArgs: any[]) {
   const logged = useRef(false)
-  const { logger } = useCodeleapContext()
+  const { logger } = useGlobalContext()
 
   if (!logged.current && condition) {
     logged.current = true
