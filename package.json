@@ -10,7 +10,7 @@
     ]
   },
   "scripts": {
-    "postinstall": "node ./scripts/postInstall.js && yarn patch-package",
+    "postinstall": "rm -rf patches && node ./scripts/postInstall.js && yarn patch-package",
     "build": "turbo run build --filter='./packages/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

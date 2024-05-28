@@ -1,38 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 'use strict'
 
 const fs = require('fs')
 const path = require('path')
-
-async function deleteFilesAndDirectory(directory) {
-  try {
-    const directoryExists = await fs.existsSync(directory)
-
-    if (!directoryExists) {
-      console.log(`Directory "${directory}" does not exist.`)
-      return
-    }
-
-    const files = await fs.readdirSync(directory)
-
-    await Promise.all(files.map(async (file) => {
-      const filePath = path.join(directory, file)
-      
-      const stat = await fs.statSync(filePath)
-
-      if (stat.isDirectory()) {
-        await deleteFilesAndDirectory(filePath)
-      } else {
-        await fs.unlinkSync(filePath)
-      }
-    }))
-
-    await fs.rmdirSync(directory)
-    console.log(`Directory "${directory}" and files deleted successfully!`)
-  } catch (e) {
-    console.log(`Error deleting directory: ${e.message}`)
-  }
-}
+const { exec } = require('child_process')
 
 async function copyFilesAndDirectorySync(source, destination) {
   if (!fs.existsSync(destination)) {
@@ -55,12 +25,24 @@ async function copyFilesAndDirectorySync(source, destination) {
   console.log('Directory copied successfully!')
 }
 
+async function applyPatches(patchesPath) {
+  const files = fs.readdirSync(patchesPath)
+
+  files.forEach(file => {
+    const [_package, _] = file.split('+')
+
+    console.log(`[INFO] Apply patch ${_package}`)
+
+    exec(`yarn patch-package ${_package}`)
+  })
+}
+
 async function main() {
-  // await deleteFilesAndDirectory('./patches')
+  console.log('[INFO] Copying PATCHES from Mobile-Template')
 
-  // console.log('Copying PATCHES from the Mobile-Template')
+  await copyFilesAndDirectorySync('./apps/mobile/patches', './patches')
 
-  // await copyFilesAndDirectorySync('./apps/mobile/patches', './patches')
+  await applyPatches('./patches')
 }
 
 main()
