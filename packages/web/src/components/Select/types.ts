@@ -96,9 +96,9 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     limit?: number
     loadInitialValue?: boolean
     loadingMessage?: string
-    selectedOption?: ReactSelectProps<T, Multi>['value']
+    selectedOption?: { label: FormTypes.Label; value: T; } | SelectValue<T, Multi>
     selectRef?: MutableRefObject<any>
-    setSelectedOption?: ReactSelectProps<T, Multi>['onValueChange']
+    setSelectedOption?: (value: { label: FormTypes.Label; value: T; } | SelectValue<T, Multi>) => void
   } & Omit<
     ReactSelectProps<T, Multi>,
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |
