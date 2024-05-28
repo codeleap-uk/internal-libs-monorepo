@@ -22,6 +22,11 @@ const ItemOption = (props: OptionProps) => {
     canSelectMultiple,
   } = props
 
+  let buttonProps = {
+    ...item?.itemProps,
+    ...option?.itemProps,
+  }
+
   const isItemSelected = useMemo(() => {
     if (item?.options && selectedItems) {
       if (canSelectMultiple) {
@@ -34,9 +39,11 @@ const ItemOption = (props: OptionProps) => {
     }
   }, [item?.options, option, selectedItems, item?.id, canSelectMultiple])
 
-  const buttonProps = {
-    ...item?.itemProps,
-    ...option?.itemProps,
+  if (isItemSelected) {
+    buttonProps = {
+      ...buttonProps,
+      ...item?.selectedItemProps,
+    }
   }
 
   return (
