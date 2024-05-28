@@ -280,6 +280,6 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
   )
 })
 
-export const TextInput = TextInputComponent
+export const TextInput = TextInputComponent as unknown as ComponentWithDefaultProps<TextInputProps>
 
-TextInput.defaultProps = defaultProps as any
+TextInput.defaultProps = defaultProps as TextInputProps

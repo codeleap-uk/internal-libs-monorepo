@@ -1,6 +1,7 @@
 import { ComponentVariants, FormTypes, StylesOf, yup } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from '@emotion/react'
+import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
 import { ComponentCommonProps } from '../../types'
@@ -95,9 +96,9 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     limit?: number
     loadInitialValue?: boolean
     loadingMessage?: string
-    selectedOption?: any
-    selectRef?: any
-    setSelectedOption?: any
+    selectedOption?: ReactSelectProps<T, Multi>['value']
+    selectRef?: MutableRefObject<any>
+    setSelectedOption?: ReactSelectProps<T, Multi>['onValueChange']
   } & Omit<
     ReactSelectProps<T, Multi>,
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |

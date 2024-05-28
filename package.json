@@ -14,7 +14,7 @@
     "build": "turbo run build --filter='./packages/*'",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules",
+    "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
     "clear:dist": "rm -rf packages/*/dist",
     "docs": "yarn workspace codeleap-docs",
     "web": "yarn workspace web-template",
@@ -33,8 +33,7 @@
     "fix-deps": "syncpack fix-mismatches",
     "doc:generate": "clear && ts-node-dev ./docs/generator/main.ts",
     "doc:process": "clear && python ./docs/processor/main.py",
-    "doc:fullcycle": "yarn doc:generate && yarn doc:process",
-    "cleanNodeModules": "node cleanNodeModules.js"
+    "doc:fullcycle": "yarn doc:generate && yarn doc:process"
   },
   "devDependencies": {
     "cz-customizable": "^7.0.0",

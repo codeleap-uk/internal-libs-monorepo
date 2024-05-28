@@ -86,7 +86,7 @@ export const ViewCP = (
   return (
     <Component
       css={componentStyles}
-      // @ts-ignore
+      // @ts-expect-error
       ref={ref}
       {...onHoverProps}
       {...props}
