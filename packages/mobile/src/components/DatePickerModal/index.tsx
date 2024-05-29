@@ -107,7 +107,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     debugName,
     cancelButtonProps = {},
     confirmButtonProps = {},
-    outerInputComponent,
+    outerInputComponent: OuterInput,
     footer,
     datePickerProps,
     mode,
@@ -118,7 +118,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     style,
     minimumDate,
     maximumDate,
-    footerComponent,
+    footerComponent: Footer,
     toggleOnConfirm,
     onConfirm: _onConfirm,
     ...modalProps
@@ -130,9 +130,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const [value, setValue] = [_value, onValueChange]
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
-
-  const OuterInput = outerInputComponent
-  const Footer = footerComponent
 
   const inputStyle = useNestedStylesByKey('input', styles)
   const doneStyle = useNestedStylesByKey('doneButton', styles)
@@ -200,7 +197,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
         valueLabel={formattedDate}
       /> : null}
 
-      <Wrapper {...wrapperProps} >
+      <Wrapper {...wrapperProps}>
         <DatePicker
           modal={!isCustomModal}
           open={visible}

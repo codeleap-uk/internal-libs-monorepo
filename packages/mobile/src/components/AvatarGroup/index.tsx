@@ -29,11 +29,12 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
   const avatarStyles = useNestedStylesByKey('avatar', styles)
 
   return (
-    <View style={styles.wrapper} {...viewProps}>
+    <View {...viewProps} style={styles.wrapper}>
       {avatars?.map?.((avatar, index) => (
         <Avatar
           firstNameOnly
           key={avatar.debugName || index}
+          debugName={`Avatar group: ${avatar?.debugName ?? index}`}
           {...avatar}
           style={[avatarStyles, avatar?.style, getAvatarStyle(index, displacement)]}
         />

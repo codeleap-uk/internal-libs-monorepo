@@ -4,6 +4,6 @@ import { AvatarGroupComposition } from './styles'
 
 export type AvatarGroupProps = {
   style?: StyledProp<AvatarGroupComposition>
-  avatars: AvatarProps[]
+  avatars: Partial<AvatarProps>[]
   displacement?: number
 }

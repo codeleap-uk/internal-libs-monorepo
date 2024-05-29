@@ -27,13 +27,13 @@ export const Pager = (pagerProps: PagerProps) => {
     width: widthProp,
     page,
     style,
-    returnEarly = true,
+    returnEarly,
     renderPageWrapper,
     pageWrapperProps = {},
     children,
-    windowing = false,
+    windowing,
     setPage,
-    scrollEnabled = true,
+    scrollEnabled,
     scrollLeftEnabled,
     scrollRightEnabled,
     onScroll,
@@ -154,9 +154,8 @@ export const Pager = (pagerProps: PagerProps) => {
       onMomentumScrollEnd={handleScrollEnd}
       scrollEventThrottle={hasScrollDirectionDisabled ? 2000 : 300}
       showsHorizontalScrollIndicator={false}
-      // @ts-expect-error
-      style={styles?.wrapper}
       {...pagerProps}
+      style={styles?.wrapper}
       onScroll={handleScroll}
       scrollEnabled={childArr.length > 1 && scrollEnabled && _scrollEnabled}
     >
@@ -187,8 +186,8 @@ export const Pager = (pagerProps: PagerProps) => {
 
         const wrapperProps = {
           key: index,
-          style: [{ height: '100%', width }, styles?.page],
           ...pageWrapperProps,
+          style: [{ height: '100%', width }, styles?.page],
         }
 
         return <WrapperComponent {...wrapperProps}>{content}</WrapperComponent>
@@ -198,7 +197,7 @@ export const Pager = (pagerProps: PagerProps) => {
 }
 
 Pager.styleRegistryName = 'Pager'
-Pager.elements = ['pager', 'wrapper']
+Pager.elements = ['page', 'wrapper']
 Pager.rootElement = 'wrapper'
 
 Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {

@@ -7,9 +7,9 @@ import { ThemeStore, themeStore } from './themeStore'
 export const useStyleObserver = (style) => {
   return useMemo(() => {
     if (Array.isArray(style)) {
-      return style?.filter(v => !!v)?.length
+      return JSON.stringify(style?.filter(v => !!v))
     } else if (typeof style === 'object'){
-      return Object.keys(style)?.length
+      return JSON.stringify(style)
     } else {
       return style
     }
