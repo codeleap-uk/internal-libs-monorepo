@@ -18,6 +18,7 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
     avatars = [],
     style,
     displacement,
+    debugName,
     ...viewProps
   } = {
     ...AvatarGroup.defaultProps,
@@ -33,10 +34,10 @@ export const AvatarGroup = (props: AvatarGroupProps) => {
       {avatars?.map?.((avatar, index) => (
         <Avatar
           firstNameOnly
-          key={avatar.debugName || index}
-          debugName={`Avatar group: ${avatar?.debugName ?? index}`}
+          key={debugName + index}
+          debugName={`${debugName}: ${avatar?.debugName ?? index}`}
           {...avatar}
-          style={[avatarStyles, avatar?.style, getAvatarStyle(index, displacement)]}
+          style={[avatarStyles, (avatar?.style ?? {}), getAvatarStyle(index, displacement)]}
         />
       ))}
     </View>

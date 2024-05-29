@@ -6,4 +6,5 @@ export type AvatarGroupProps = {
   style?: StyledProp<AvatarGroupComposition>
   avatars: Partial<AvatarProps>[]
   displacement?: number
+  debugName: string
 }

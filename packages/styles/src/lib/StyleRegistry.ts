@@ -166,11 +166,9 @@ export class CodeleapStyleRegistry {
       }
     }
 
-    const responsiveStyles = style[responsiveStyleKey]
-
     return {
       responsiveStyleKey,
-      isResponsive: !!responsiveStyles,
+      isResponsive: !!style[responsiveStyleKey],
     }
   }
 
@@ -333,7 +331,7 @@ export class CodeleapStyleRegistry {
       delete style[component]
     }
 
-    this.stylesCache.cacheFor('compositions', cache.key, { styles })
+    this.stylesCache.cacheFor('compositions', cache.key, styles)
 
     return styles
   }
