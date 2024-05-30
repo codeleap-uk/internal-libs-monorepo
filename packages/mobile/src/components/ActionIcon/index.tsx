@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { Badge } from '../Badge'
 import { Icon } from '../Icon'
@@ -27,11 +27,10 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   const styles = useStylesFor(ActionIcon.styleRegistryName, style)
 
-  const touchableStyles = useNestedStylesByKey('touchable', styles)
-  const badgeStyles = useNestedStylesByKey('badge', styles)
+  const compositionStyles = useCompositionStyles(['badge', 'touchable'], styles)
 
   return (
-    <Touchable style={touchableStyles} {...touchableProps}>
+    <Touchable style={compositionStyles?.touchable} {...touchableProps}>
       <Icon
         name={icon ?? name}
         style={[
@@ -43,7 +42,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
       {children}
 
-      <Badge badge={badge} style={badgeStyles} {...badgeProps} />
+      <Badge badge={badge} style={compositionStyles?.badge} {...badgeProps} />
     </Touchable>
   )
 }

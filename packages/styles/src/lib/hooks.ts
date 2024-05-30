@@ -30,9 +30,19 @@ export const useTheme = <T extends Record<string, any>>(selector: ThemeSelector<
   return themeStore(useShallow(selector))
 }
 
-export function useMultipleNestedStylesByKey<T extends Array<string>>(
-  matches: T,
-   _styles: Partial<Record<T[number], ICSS>>
-): Partial<Record<T[number], ICSS>> {
-  return {}
+export function useCompositionStyles<T extends string, C extends string>(
+  composition: Array<T>,
+   _styles: Partial<Record<C, ICSS>>
+): Partial<Record<T, ICSS>> {
+  const styles = {..._styles}
+
+  return useMemo(() => {
+    const compositionStyles = {}
+
+    for (const element of composition) {
+      compositionStyles[element as string] = getNestedStylesByKey(element, styles)
+    }
+
+    return compositionStyles
+  }, [styles])
 }

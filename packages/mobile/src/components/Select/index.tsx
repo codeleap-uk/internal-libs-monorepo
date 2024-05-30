@@ -14,7 +14,7 @@ import { TextInput } from '../TextInput'
 import { SelectProps, ValueBoundSelectProps } from './types'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
@@ -179,10 +179,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const styles = useStylesFor(Select.styleRegistryName, style)
 
-  const itemStyles = useNestedStylesByKey('item', styles)
-  const listStyles = useNestedStylesByKey('list', styles)
-  const inputStyles = useNestedStylesByKey('input', styles)
-  const searchInputStyles = useNestedStylesByKey('searchInput', styles)
+  const compositionStyles = useCompositionStyles(['item', 'list', 'input', 'searchInput'], styles)
 
   const currentOptions = searchable ? filteredOptions : defaultOptions
 
@@ -257,7 +254,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       icon={selectedIcon}
       // @ts-ignore
       rightIcon={selectedIcon}
-      style={itemStyles}
+      style={compositionStyles?.item}
       index={index}
       {...itemProps}
     />
@@ -286,7 +283,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     }}
     debounce={!!loadOptions ? 800 : null}
     onSearchChange={onChangeSearch}
-    style={searchInputStyles}
+    style={compositionStyles?.searchInput}
     {...searchInputProps}
   /> : null
 
@@ -314,7 +311,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
           }}
           currentValueLabel={currentValueLabel}
           debugName={`${debugName} select input`}
-          style={inputStyles}
+          style={compositionStyles?.input}
           {...allProps}
           {...inputProps}
           visible={visible}
@@ -337,7 +334,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
         data={searchable ? filteredOptions : options}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
-        style={listStyles}
+        style={compositionStyles?.list}
         keyExtractor={(i) => i.value}
         renderItem={renderListItem}
         fakeEmpty={loading}

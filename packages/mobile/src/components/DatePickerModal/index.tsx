@@ -6,7 +6,7 @@ import { TextInput } from '../TextInput'
 import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 import { DatePickerModalProps } from './types'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -131,10 +131,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
 
-  const inputStyle = useNestedStylesByKey('input', styles)
-  const doneStyle = useNestedStylesByKey('doneButton', styles)
-  const cancelStyle = useNestedStylesByKey('cancelButton', styles)
-  const confirmStyle = useNestedStylesByKey('confirmButton', styles)
+  const compositionStyles = useCompositionStyles(['input', 'doneButton', 'cancelButton', 'confirmButton'], styles)
 
   const formattedDate = value ? formatDate(value) : ''
   const { locale } = useI18N()
@@ -158,9 +155,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const modalFooter = footer || <Footer
     {...allProps}
     confirm={onConfirm}
-    doneStyles={doneStyle}
-    cancelStyles={cancelStyle}
-    confirmStyles={confirmStyle}
+    doneStyles={compositionStyles?.doneButton}
+    cancelStyles={compositionStyles?.cancelButton}
+    confirmStyles={compositionStyles?.confirmButton}
     confirmButtonProps={confirmButtonProps}
     cancelButtonProps={cancelButtonProps}
     showDoneButton={showDoneButton}
@@ -188,7 +185,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     <>
       {!hideInput ? <OuterInput
         {...allProps}
-        style={inputStyle}
+        style={compositionStyles?.input}
         value={value}
         debugName={debugName}
         visible={visible}

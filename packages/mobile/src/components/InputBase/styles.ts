@@ -1,7 +1,7 @@
 import { TypeGuards } from "@codeleap/common"
 import { ActionIconParts } from "../ActionIcon"
 import { InputBaseProps } from "./types"
-import { useNestedStylesByKey, mergeStyles } from '@codeleap/styles'
+import { mergeStyles, useCompositionStyles } from '@codeleap/styles'
 import { useMemo } from 'react'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
@@ -64,18 +64,16 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const hasError = !TypeGuards.isNil(error)
 
-  const _leftIconStyles = useNestedStylesByKey<any>('leftIcon', styles)
-  const _rightIconStyles = useNestedStylesByKey<any>('rightIcon', styles)
-  const _generalIconStyles = useNestedStylesByKey<any>('icon', styles)
+  const compositionStyles = useCompositionStyles(['leftIcon', 'rightIcon', 'icon'], styles)
 
-  const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled })
+  const generalIconStyles = getIconStyles(compositionStyles?.icon, { hasError, disabled })
 
-  const leftIconStyles = useIconStyles(generalIconStyles, _leftIconStyles, { 
+  const leftIconStyles = useIconStyles(generalIconStyles, compositionStyles?.leftIcon, { 
     // @ts-expect-error
     hasError, disabled: (disabled || props?.leftIcon?.disabled), focused 
   })
 
-  const rightIconStyles = useIconStyles(generalIconStyles, _rightIconStyles, { 
+  const rightIconStyles = useIconStyles(generalIconStyles, compositionStyles?.rightIcon, { 
     // @ts-expect-error
     hasError, disabled: (disabled || props?.rightIcon?.disabled), focused
   })

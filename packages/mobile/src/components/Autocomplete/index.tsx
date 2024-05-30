@@ -5,7 +5,7 @@ import { SearchInput } from '../SearchInput'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
 import { View } from '../View'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -104,9 +104,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
 
   const styles = useStylesFor(Autocomplete.styleRegistryName, style)
 
-  const itemStyles = useNestedStylesByKey('item', styles)
-  const listStyles = useNestedStylesByKey('list', styles)
-  const searchInputStyles = useNestedStylesByKey('searchInput', styles)
+  const compositionStyles = useCompositionStyles(['item', 'list', 'searchInput'], styles)
 
   const currentOptions = searchable ? filteredOptions : defaultOptions
 
@@ -179,7 +177,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       rightIcon={selectedIcon}
       // @ts-ignore
       icon={selectedIcon}
-      style={itemStyles}
+      style={compositionStyles?.item}
       {...itemProps}
     />
   }, [value, select, multiple, selectable, isValueArray])
@@ -201,14 +199,14 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       onSearchChange={onChangeSearch}
       hideErrorMessage
       {...searchProps}
-      style={searchInputStyles}
+      style={compositionStyles?.searchInput}
     />
 
     <List<any>
       data={searchable ? filteredOptions : options}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}
-      style={listStyles}
+      style={compositionStyles?.list}
       // @ts-ignore
       keyExtractor={(i) => i.value}
       renderItem={renderListItem}
