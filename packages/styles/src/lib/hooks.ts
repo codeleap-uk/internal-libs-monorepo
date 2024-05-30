@@ -19,15 +19,20 @@ export const useStyleObserver = (style) => {
 export function useNestedStylesByKey<T extends string>(match: string, _styles: Partial<Record<T, ICSS>>) {
   const styles = {..._styles}
 
-  const nestedStyles = useMemo(() => {
+  return useMemo(() => {
     return getNestedStylesByKey(match, styles)
-  }, [match, styles])
-
-  return nestedStyles
+  }, [styles])
 }
 
 type ThemeSelector<T extends Record<string, any>> = (store: ThemeStore) => T
 
 export const useTheme = <T extends Record<string, any>>(selector: ThemeSelector<T>): T => {
   return themeStore(useShallow(selector))
+}
+
+export function useMultipleNestedStylesByKey<T extends Array<string>>(
+  matches: T,
+   _styles: Partial<Record<T[number], ICSS>>
+): Partial<Record<T[number], ICSS>> {
+  return {}
 }
