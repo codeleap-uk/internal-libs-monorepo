@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "3.23.3",
+  "version": "3.23.6",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@codeleap/config": "*",
-    "@types/react-native": "link:../../apps/mobile/node_modules/@types/react-native"
+    "@codeleap/common": "*"
   },
   "scripts": {
     "build": "tsc --build",
@@ -27,7 +27,7 @@
     "@react-navigation/native-stack": "6.9.8",
     "@react-navigation/stack": "6.3.11",
     "react": "18.1.0",
-    "react-native": "0.70.6",
+    "react-native": "0.73.8",
     "react-native-calendars": "1.1293.0",
     "react-native-date-picker": "^4.2.13",
     "react-native-device-info": "10.3.0",
@@ -38,7 +38,7 @@
     "react-native-image-viewing": "0.2.2",
     "react-native-keyboard-aware-scroll-view": "0.9.5",
     "typescript": "5.0.4",
-    "react-native-avoid-softinput": "3.1.5"
+    "react-native-avoid-softinput": "^3.1.5"
   },
   "dependencies": {
     "@gorhom/portal": "1.0.14",

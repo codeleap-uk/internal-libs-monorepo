@@ -11,7 +11,6 @@ import {
   FileRejection,
   DropzoneRef as ReactDropzoneRef,
 } from 'react-dropzone'
-import { ReactDispatch } from 'react'
 import { ActionIconComposition } from '../ActionIcon'
 
 export type DropzoneFile = File
@@ -26,10 +25,8 @@ export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
     placeholder?: string
     acceptedFiles: File[]
     rejectedFiles?: DropzoneFileRejection[]
-    setAcceptedFiles: ReactDispatch<React.SetStateAction<DropzoneFile[]>>
-    setRejectedFiles?: ReactDispatch<
-      React.SetStateAction<DropzoneFileRejection[]>
-    >
+    setAcceptedFiles: React.Dispatch<React.SetStateAction<DropzoneFile[]>>
+    setRejectedFiles?: React.Dispatch<React.SetStateAction<DropzoneFileRejection[]>>
     onRemove?: (file: DropzoneFile) => void
     children?: React.ReactNode
     fileRightIcon?: IconPlaceholder

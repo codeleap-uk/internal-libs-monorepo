@@ -28,11 +28,11 @@ type RootStyles = ComponentVariants<typeof DatePickerPresets>
 
 export type DayComponentProps = {
   day: string | number
-  value: Date
+  value?: Date
   date: Date
-  disabled: boolean
-  selected: boolean
-  variantStyles: any
+  disabled?: boolean
+  selected?: boolean
+  variantStyles?: any
 }
 
 export type YearComponentProps = {

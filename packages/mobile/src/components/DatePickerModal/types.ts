@@ -37,6 +37,7 @@ export type DatePickerModalProps =
     commitDate?: 'onConfirm' | 'onChange'
     showDoneButton?: boolean
     footerComponent?: React.ComponentType<DatePickerModalFooterProps>
+    initialDate?: Date
     minimumDate?: DatePickerProps['minimumDate']
     maximumDate?: DatePickerProps['maximumDate']
     toggleOnConfirm?: boolean

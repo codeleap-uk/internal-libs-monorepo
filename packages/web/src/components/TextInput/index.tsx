@@ -34,7 +34,7 @@ type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps =
   Omit<InputBaseProps, 'styles' | 'variants'> &
-  Omit<NativeTextInputProps, 'value' | 'crossOrigin'> & {
+  Omit<NativeTextInputProps, 'value' | 'crossOrigin' | 'ref'> & {
     styles?: StylesOf<TextInputComposition>
     password?: boolean
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
@@ -114,10 +114,12 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
     styles,
   })
 
+  // @ts-ignore
   useImperativeHandle(inputRef, () => {
     return {
       focus: () => {
         if (isMasked) {
+          // @ts-expect-error
           innerInputRef.current?.getInputDOMNode()?.focus()
         }
         
@@ -226,6 +228,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
           if (isMasked) {
+            // @ts-expect-error
             innerInputRef.current?.getInputDOMNode()?.focus()
           }
           innerInputRef.current?.focus?.()
@@ -277,6 +280,6 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
   )
 })
 
-export const TextInput = TextInputComponent as ComponentWithDefaultProps<TextInputProps>
+export const TextInput = TextInputComponent as unknown as ComponentWithDefaultProps<TextInputProps>
 
-TextInput.defaultProps = defaultProps
+TextInput.defaultProps = defaultProps as TextInputProps

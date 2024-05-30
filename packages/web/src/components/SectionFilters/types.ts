@@ -23,6 +23,7 @@ export type ItemProps = {
   showDescriptionLabel?: boolean
   options?: ItemOptionProps[]
   itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  selectedItemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
 
 export type onSelectItemProps = {

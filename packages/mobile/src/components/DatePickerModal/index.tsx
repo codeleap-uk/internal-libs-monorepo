@@ -118,6 +118,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     style,
     minimumDate,
     maximumDate,
+    initialDate,
     footerComponent: Footer,
     toggleOnConfirm,
     onConfirm: _onConfirm,
@@ -199,7 +200,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           modal={!isCustomModal}
           open={visible}
           onCancel={toggle}
-          date={value ?? new Date()}
+          date={value ?? initialDate ?? new Date()}
           onDateChange={(date) => {
             if (commitDate === 'onChange') {
               setValue(date)

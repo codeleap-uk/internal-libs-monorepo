@@ -13,7 +13,7 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   component?: T
   disabled?: boolean
   propagate?: boolean
-  style?: React.CSSObject
+  style?: React.CSSProperties
   onPress?: AnyFunction
   debugName: string
   debugComponent?: string
@@ -26,10 +26,10 @@ export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWit
   analyticsData?: Record<string, any>
 } & ComponentVariants<typeof TouchablePresets>
 
-const defaultProps: TouchableProps<'button'> = {
+const defaultProps: Partial<TouchableProps<'button'>> = {
   propagate: true,
   debounce: null,
-  component: View,
+  component: View as unknown as 'button',
   style: {},
   styles: {},
   responsiveVariants: {},
@@ -44,7 +44,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   touchableProps: TouchableProps<T>,
   ref,
 ) => {
-  const mergedProps: TouchableProps = {
+  const mergedProps = {
     ...(defaultProps),
     ...(touchableProps),
   }
@@ -91,7 +91,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
 
   const notPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleClick = (event) => {
     if (disabled) return
 
     if (!propagate) stopPropagation(event)
@@ -150,6 +150,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   const testId = getTestId(mergedProps)
 
   return (
+    // @ts-ignore
     <View
       component={Component || 'button'}
       {...props}

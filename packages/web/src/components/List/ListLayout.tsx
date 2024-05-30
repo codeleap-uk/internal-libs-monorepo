@@ -76,6 +76,7 @@ export const ListLayout = (props: ListLayoutProps) => {
   ]), [isLoading, isEmpty])
 
   return (
+    // @ts-ignore
     <View css={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
       {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
 
