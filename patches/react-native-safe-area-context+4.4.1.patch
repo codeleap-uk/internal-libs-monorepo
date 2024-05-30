@@ -1,0 +1,140 @@
+diff --git a/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaContextModule.kt b/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaContextModule.kt
+index 8261d39..2c2aad9 100644
+--- a/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaContextModule.kt
++++ b/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaContextModule.kt
+@@ -1,5 +1,7 @@
+ package com.th3rdwave.safeareacontext
+ 
++import android.content.Context
++import android.content.SharedPreferences
+ import android.view.View
+ import android.view.ViewGroup
+ import com.facebook.react.bridge.ReactApplicationContext
+@@ -17,14 +19,107 @@ class SafeAreaContextModule(reactContext: ReactApplicationContext?) :
+     return MapBuilder.of<String, Any>("initialWindowMetrics", getInitialWindowMetrics())
+   }
+ 
+-  private fun getInitialWindowMetrics(): Map<String, Any>? {
+-    val decorView = reactApplicationContext.currentActivity?.window?.decorView as ViewGroup?
+-    val contentView = decorView?.findViewById<View>(android.R.id.content) ?: return null
+-    val insets = getSafeAreaInsets(decorView)
+-    val frame = getFrame(decorView, contentView)
+-    return if (insets == null || frame == null) {
++  private fun getPreferenceFileName(): String {
++    val packageName = reactApplicationContext.packageName
++    return "$packageName.WINDOW_METRICS"
++  }
++
++  private fun saveMetrics(insets: EdgeInsets, frame: Rect) {
++    if (reactApplicationContext.currentActivity == null) {
++      return
++    }
++
++    val activity = reactApplicationContext.currentActivity!!
++
++    val preferenceFileName = getPreferenceFileName()
++
++    val sharedPref = activity.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE)
++
++    with (sharedPref.edit()) {
++      putFloat("top", insets.top)
++      putFloat("bottom", insets.bottom)
++      putFloat("left", insets.left)
++      putFloat("right", insets.right)
++
++      putFloat("width", frame.width)
++      putFloat("height", frame.height)
++      putFloat("x", frame.x)
++      putFloat("y", frame.y)
++
++      commit()
++    }
++  }
++
++  private fun getMetrics(): Any? {
++    val preferenceFileName = getPreferenceFileName()
++
++    val sharedPref = this.reactApplicationContextIfActiveOrWarn!!.getSharedPreferences(preferenceFileName, Context.MODE_PRIVATE)
++
++    val defaultValue = 0f
++
++    val top = sharedPref.getFloat("top", defaultValue)
++    val bottom = sharedPref.getFloat("bottom", defaultValue)
++    val left = sharedPref.getFloat("left", defaultValue)
++    val right = sharedPref.getFloat("right", defaultValue)
++
++    val width = sharedPref.getFloat("width", defaultValue)
++    val height = sharedPref.getFloat("height", defaultValue)
++    val x = sharedPref.getFloat("x", defaultValue)
++    val y = sharedPref.getFloat("y", defaultValue)
++
++    val insets = EdgeInsets(
++            top = top,
++          right = right,
++          bottom = bottom,
++          left = left)
++
++    val frame = Rect(
++      x = x,
++      y = y,
++      width = width,
++      height = height)
++
++    val metrics = mapOf("insets" to edgeInsetsToJavaMap(insets), "frame" to rectToJavaMap(frame))
++
++    return if (metrics == null) {
+       null
+-    } else mapOf("insets" to edgeInsetsToJavaMap(insets), "frame" to rectToJavaMap(frame))
++    } else metrics
++  }
++
++  private fun getInitialWindowMetrics(): Any? {
++    val decorView = reactApplicationContext.currentActivity?.window?.decorView as ViewGroup? ?: null
++    val contentView = decorView?.findViewById<View>(android.R.id.content) ?: null
++
++    if (contentView == null || decorView == null) {
++      val metrics = getMetrics()
++
++      return metrics
++    }
++
++    if (contentView != null && decorView != null) {
++      val insets = getSafeAreaInsets(decorView)
++      val frame = getFrame(decorView, contentView)
++
++      if (insets != null && frame != null) {
++        saveMetrics(insets, frame)
++      }
++
++      if (insets == null || frame == null) {
++        val metrics = getMetrics()
++
++        if (metrics != null) {
++          return metrics
++        }
++      }
++
++      return if (insets == null || frame == null) {
++        null
++      } else mapOf("insets" to edgeInsetsToJavaMap(insets), "frame" to rectToJavaMap(frame))
++    }
++
++    val metrics = getMetrics()
++
++    return metrics
+   }
+ 
+   companion object {
+diff --git a/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaUtils.kt b/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaUtils.kt
+index 0203be6..23038ac 100644
+--- a/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaUtils.kt
++++ b/node_modules/react-native-safe-area-context/android/src/main/java/com/th3rdwave/safeareacontext/SafeAreaUtils.kt
+@@ -60,7 +60,7 @@ private fun getRootWindowInsetsCompat(rootView: View): EdgeInsets? {
+ 
+ fun getSafeAreaInsets(view: View): EdgeInsets? {
+   // The view has not been layout yet.
+-  if (view.height == 0) {
++  if (view.rootView == null) {
+     return null
+   }
+   val rootView = view.rootView

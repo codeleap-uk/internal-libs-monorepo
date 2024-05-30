@@ -25,24 +25,10 @@ async function copyFilesAndDirectorySync(source, destination) {
   console.log('Directory copied successfully!')
 }
 
-async function applyPatches(patchesPath) {
-  const files = fs.readdirSync(patchesPath)
-
-  files.forEach(file => {
-    const [_package, _] = file.split('+')
-
-    console.log(`[INFO] Apply patch ${_package}`)
-
-    exec(`yarn patch-package ${_package}`)
-  })
-}
-
 async function main() {
-  console.log('[INFO] Copying PATCHES from Mobile-Template')
+  // console.log('[INFO] Copying PATCHES from Mobile-Template')
 
-  await copyFilesAndDirectorySync('./apps/mobile/patches', './patches')
-
-  await applyPatches('./patches')
+  // await copyFilesAndDirectorySync('./apps/mobile/patches', './patches')
 }
 
 main()

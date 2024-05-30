@@ -1,0 +1,15 @@
+diff --git a/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC.js b/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC.js
+index 03f46af..0f9f47a 100644
+--- a/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC.js
++++ b/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC.js
+@@ -542,9 +542,7 @@ function KeyboardAwareHOC(
+           showsVerticalScrollIndicator={true}
+           scrollEventThrottle={1}
+           {...this.props}
+-          contentContainerStyle={
+-            newContentContainerStyle || contentContainerStyle
+-          }
++          contentContainerStyle={contentContainerStyle}
+           keyboardSpace={this.state.keyboardSpace}
+           getScrollResponder={this.getScrollResponder}
+           scrollToPosition={this.scrollToPosition}
