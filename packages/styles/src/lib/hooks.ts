@@ -16,10 +16,14 @@ export const useStyleObserver = (style) => {
   }, [style])
 }
 
-export function useNestedStylesByKey<T extends string>(match: string, styles: Partial<Record<T, ICSS>>) {
-  return useMemo(() => {
+export function useNestedStylesByKey<T extends string>(match: string, _styles: Partial<Record<T, ICSS>>) {
+  const styles = {..._styles}
+
+  const nestedStyles = useMemo(() => {
     return getNestedStylesByKey(match, styles)
-  }, [])
+  }, [match, styles])
+
+  return nestedStyles
 }
 
 type ThemeSelector<T extends Record<string, any>> = (store: ThemeStore) => T
