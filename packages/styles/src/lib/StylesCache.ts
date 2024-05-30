@@ -21,15 +21,8 @@ export class StylesCache {
     this.registerStoredCache()
   }
 
-  async registerStoredCache() {
-    const hasHydrated = cacheStore.persist.hasHydrated()
-
-    if (hasHydrated) {
-      this.store = cacheStore.getState()
-    } else {
-      await cacheStore.persist.rehydrate()
-      this.store = cacheStore.getState()
-    }
+  registerStoredCache() {
+    this.store = cacheStore.getState()
 
     if (!STORE_CACHE_ENABLED) return
 

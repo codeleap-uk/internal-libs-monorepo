@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 import { IAppVariants, ITheme } from '../types'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { IS_MOBILE, STORES_PERSIST_VERSION } from './constants'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { IS_NATIVE, STORES_PERSIST_VERSION } from './constants'
+import { nativeStorage } from './storage'
 
 export type ThemeStore = {
   colorScheme: string | null
@@ -33,8 +33,8 @@ export const colorSchemaStore = create(persist<ColorSchemaStore>(
       }
     },
     storage: createJSONStorage(() => {
-      if (IS_MOBILE) {
-        return AsyncStorage
+      if (IS_NATIVE) {
+        return nativeStorage
       }
 
       return localStorage

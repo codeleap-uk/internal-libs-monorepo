@@ -7,4 +7,4 @@ export const CACHE_ENABLED = true
 
 export const STORED_CACHES = ['components', 'common']
 
-export const IS_MOBILE = typeof localStorage === 'undefined'
+export const IS_NATIVE = typeof localStorage === 'undefined'

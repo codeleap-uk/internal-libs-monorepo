@@ -1,16 +1,10 @@
-
-export {}
-
-// @important Implement MMKV Storage after react native is updated
-// @note MMKV is not good with large amounts of data, it will be 
-// necessary to separate the keys and possibly minify the data value
-
-/*
 import { MMKV } from 'react-native-mmkv'
 import { StateStorage } from 'zustand/middleware'
-import { IS_MOBILE } from './constants'
+import { IS_NATIVE } from './constants'
 
-const mmkvStorage = IS_MOBILE ? new MMKV() : {} as MMKV
+const mmkvStorage = IS_NATIVE ? new MMKV() : {} as MMKV
+
+// @note implement minifier
 
 export const nativeStorage: StateStorage = {
   setItem: (name, value) => {
@@ -24,4 +18,3 @@ export const nativeStorage: StateStorage = {
     return mmkvStorage?.delete(name)
   },
 }
-*/
