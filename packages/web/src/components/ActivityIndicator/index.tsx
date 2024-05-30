@@ -70,6 +70,6 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
 }) as ComponentWithDefaultProps<ActivityIndicatorProps>
 
 ActivityIndicator.defaultProps = {
-  component: View,
+  component: View as ActivityIndicatorProps['component'],
   size: null,
 }

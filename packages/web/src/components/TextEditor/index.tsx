@@ -99,7 +99,7 @@ export const TextEditor = (props: TextEditorProps) => {
       <_BubbleMenu />
       <_FloatingMenu />
       <EditorContent editor={editor} />
-      {hasError ? <Text text={errorMessage} css={variantStyles['errorMessage:error']} /> : null}
+      {hasError ? <Text text={errorMessage as string} css={variantStyles['errorMessage:error']} /> : null}
       <FileInput
         ref={fileInputRef}
       />

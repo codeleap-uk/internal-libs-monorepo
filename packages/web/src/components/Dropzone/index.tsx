@@ -5,7 +5,6 @@ import { FileRejection, useDropzone } from 'react-dropzone'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
 import { Icon } from '../Icon'
-
 import { forwardRef, useImperativeHandle, useState, HTMLProps } from 'react'
 import { ActionIcon } from '../ActionIcon'
 
@@ -16,7 +15,6 @@ const defaultProps: Partial<DropzoneProps> = {
   fileLeftIcon: 'file' as IconPlaceholder,
   fileRightIcon: 'x' as IconPlaceholder,
   withImagePreview: true,
-
 }
 
 function isImage(file) {
@@ -83,7 +81,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
   const _isImage = isImage(file)
   const isPreview = withImagePreview && _isImage
 
-  const [imageUrl, setImageUrl] = useState()
+  const [imageUrl, setImageUrl] = useState<string>()
 
   const revokeImageUrl = () => {
     URL.revokeObjectURL(imageUrl)
@@ -110,7 +108,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
 
 const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<DropzoneRef>) => {
   const allProps = {
-    ...defaultProps,
+    ...DropzoneComponent.defaultProps,
     ...props,
   }
   const {
@@ -133,17 +131,15 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
     FilePreviewComponent,
     ...rest } = allProps
 
-  const [rejectedFilesState,
-    setRejectedFilesState] = useState<DropzoneProps['rejectedFiles']>([])
+  const [rejectedFilesState, setRejectedFilesState] = useState<DropzoneProps['rejectedFiles']>([])
   const [rejectedFiles, setRejectedFiles] = [rejectedFilesProps || rejectedFilesState, setRejectedFilesProps || setRejectedFilesState]
 
-  const variantStyles = useDefaultComponentStyle<'u:Dropzone',
-    typeof DropzonePresets>('u:Dropzone', {
-      responsiveVariants,
-      variants,
-      styles,
-      rootElement: 'wrapper',
-    })
+  const variantStyles = useDefaultComponentStyle<'u:Dropzone', typeof DropzonePresets>('u:Dropzone', {
+    responsiveVariants,
+    variants,
+    styles,
+    rootElement: 'wrapper',
+  })
 
   const fileRightIconStyles = useNestedStylesByKey('fileRightIcon', variantStyles)
 
@@ -235,4 +231,5 @@ export * from './types'
 
 DropzoneComponent.defaultProps = defaultProps
 
+// @ts-ignore
 export const Dropzone = forwardRef(DropzoneComponent)

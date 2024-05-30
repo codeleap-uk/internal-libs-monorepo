@@ -1,13 +1,13 @@
 
 module.exports = {
-   
-  "source": ["package.json", "packages/*/package.json","apps/*/package.json"],
+
+  "source": ["package.json", "packages/*/package.json", "apps/*/package.json"],
   "versionGroups": [
     {
       "label": "React",
       "dependencies": ["react", "react-dom"],
       packages: ["**"],
-      pinVersion: "18.1.0"
+      pinVersion: "18.2.0"
     },
     {
       "label": "Typescript",
@@ -19,7 +19,7 @@ module.exports = {
       "label": "React native",
       "dependencies": ["react-native"],
       packages: ["**"],
-      pinVersion: "0.70.6"
+      pinVersion: "0.73.8"
 
     },
     {
@@ -27,11 +27,7 @@ module.exports = {
       packages: ["**"],
       pinVersion: "18.0.35"
     },
-    {
-      dependencies: ["@types/react-native"],
-      packages: ["**"],
-      pinVersion: "0.70.13"
-    },
+
     {
       dependencies: ["@types/react-dom"],
       packages: ["**"],

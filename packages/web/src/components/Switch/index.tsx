@@ -89,7 +89,7 @@ export const Switch = (props: SwitchProps) => {
 
   const _switchOnLeft = switchOnLeft ?? variantStyles.__props?.switchOnLeft
 
-  const handleChange = (e?: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleChange = (e) => {
     if (disabled) return
     if (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter') {
       if (onValueChange) onValueChange?.(!value)

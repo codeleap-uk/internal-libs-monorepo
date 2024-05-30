@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx, CSSObject } from '@emotion/react'
 import { useDefaultComponentStyle, useCodeleapContext, useMemo, TypeGuards } from '@codeleap/common'
-import { forwardRef, Ref } from 'react'
+import React, { forwardRef, Ref } from 'react'
 import { ViewPresets } from './styles'
 import { useMediaQuery } from '../../lib/hooks'
 import { NativeHTMLElement } from '../../types'
@@ -14,7 +14,7 @@ export * from './types'
 
 export const ViewCP = (
   viewProps: ViewProps<'div'>,
-  ref: Ref<any>,
+  ref: React.Ref<any>,
 ) => {
   const {
     responsiveVariants = {},
@@ -86,6 +86,7 @@ export const ViewCP = (
   return (
     <Component
       css={componentStyles}
+      // @ts-expect-error
       ref={ref}
       {...onHoverProps}
       {...props}

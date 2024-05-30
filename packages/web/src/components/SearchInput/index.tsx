@@ -64,7 +64,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     if (TypeGuards.isFunction(onClear)) onClear?.()
   }
 
-  const showClearIcon = !!search?.trim() && clearable
+  const showClearIcon = !!String(search)?.trim() && clearable
 
   return (
     <TextInput
@@ -76,10 +76,12 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       }}
       debugName={`Search ${debugName}`}
       rightIcon={showClearIcon && {
+        debugName: `Search ${debugName} right icon`,
         name: clearIcon,
         onPress: handleClear,
       }}
       leftIcon={{
+        debugName: `Search ${debugName} left icon`,
         name: searchIcon,
       }}
       {...rest}

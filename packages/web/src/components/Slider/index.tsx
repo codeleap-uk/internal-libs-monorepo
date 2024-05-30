@@ -229,7 +229,6 @@ export const Slider = (props: SliderProps) => {
         {defaultValue.map((_, i) => (
           <SliderThumb
             key={i}
-            index={i}
             style={thumbStyle}
             onClick={() => {
               if (onPressThumbSetValue) onValueChange?.(value)
