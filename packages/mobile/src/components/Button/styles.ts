@@ -8,7 +8,6 @@ export type ButtonStates = 'disabled' | 'selected'
 export type ButtonParts =
   | 'text'
   | 'textFeedback'
-  | 'inner'
   | 'wrapper'
   | 'wrapperFeedback'
   | 'feedback'

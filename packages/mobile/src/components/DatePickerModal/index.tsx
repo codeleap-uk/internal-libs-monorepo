@@ -214,6 +214,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           locale={locale}
           // @ts-expect-error
           textColor={styles?.picker?.color}
+          theme='light'
           androidVariant='iosClone'
           onConfirm={setValue}
           minimumDate={minimumDate}

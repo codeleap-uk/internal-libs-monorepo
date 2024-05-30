@@ -107,7 +107,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 }) as ComponentWithDefaultProps<ButtonProps> & GenericStyledComponentAttributes<AnyRecord>
 
 Button.styleRegistryName = 'Button'
-Button.elements = ['wrapper', 'inner', 'text', 'icon', 'leftIcon', 'rightIcon', 'loader', 'badge']
+Button.elements = ['wrapper', 'text', 'icon', 'leftIcon', 'rightIcon', 'loader', 'badge']
 Button.rootElement = 'wrapper'
 
 Button.withVariantTypes = <S extends AnyRecord>(styles: S) => {
