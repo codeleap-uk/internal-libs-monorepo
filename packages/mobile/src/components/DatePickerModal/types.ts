@@ -56,6 +56,8 @@ export type DatePickerModalProps = Omit<ModalProps, 'styles' | 'variants' | 'ref
 
   maximumDate?: DatePickerProps['maximumDate']
 
+  initialDate?: Date
+
   toggleOnConfirm?: boolean
 
   onConfirm?: (value: Date) => void
