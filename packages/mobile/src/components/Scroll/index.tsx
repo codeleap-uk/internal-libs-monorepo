@@ -67,8 +67,6 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
 
     return (
       <Component
-        style={styles?.wrapper}
-        contentContainerStyle={keyboardStyle}
         showsVerticalScrollIndicator={false}
         // @ts-ignore
         ref={ref}
@@ -82,6 +80,8 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
           )
         }
         {...props}
+        style={styles?.wrapper}
+        contentContainerStyle={keyboardStyle}
       >
         {children}
       </Component>
@@ -91,7 +91,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>(
 
 Scroll.styleRegistryName = 'Scroll'
 Scroll.elements = ['wrapper', 'content']
-Scroll.rootElement = 'content'
+Scroll.rootElement = 'wrapper'
 
 Scroll.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Scroll as (props: StyledComponentProps<ScrollProps, typeof styles>) => IJSX

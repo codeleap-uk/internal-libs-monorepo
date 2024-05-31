@@ -73,14 +73,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     return (
       <FlatList
-        style={[
-          styles.wrapper,
-          isEmpty && styles['wrapper:empty'],
-        ]}
-        contentContainerStyle={keyboardStyle}
-        // @ts-expect-error This works
-        ItemSeparatorComponent={separator}
-        ListHeaderComponentStyle={styles.header}
+        ItemSeparatorComponent={separator as unknown as React.ComponentType}
         refreshControl={!!onRefresh && (
           <RefreshControl
             refreshing={refreshing}
@@ -90,6 +83,9 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         )}
         ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
         {...props}
+        ListHeaderComponentStyle={styles.header}
+        style={[styles.wrapper, isEmpty && styles['wrapper:empty']]}
+        contentContainerStyle={keyboardStyle}
         data={fakeEmpty ? [] : props.data}
         ref={ref}
         renderItem={renderItem}
