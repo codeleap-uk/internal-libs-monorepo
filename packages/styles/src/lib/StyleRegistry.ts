@@ -2,7 +2,6 @@ import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleProp, VariantStyleShe
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
-import { createStyles } from './createStyles'
 import { defaultVariants } from './defaultVariants'
 import { dynamicVariants } from './dynamicVariants'
 import { ignoredStyleKeys, isSpacingKey } from './utils'
@@ -37,9 +36,9 @@ export class CodeleapStyleRegistry {
     const cache = this.styleCache.keyFor('common', variant)
 
     if (!!cache.value) {
-      return createStyles({
-        [component]: cache.value
-      })
+      return {
+        [component]: this.createStyle(cache.value)
+      }
     }
 
     const theme = this.theme.current
@@ -74,9 +73,9 @@ export class CodeleapStyleRegistry {
       }
     }
 
-    const commonStyles = createStyles({
-      [component]: style
-    })
+    const commonStyles = {
+      [component]: this.createStyle(style)
+    }
 
     this.styleCache.cacheFor('common', cache.key, style)
 
@@ -110,11 +109,11 @@ export class CodeleapStyleRegistry {
         // @ts-ignore
         const mediaQuery = theme.media.down(breakpoint)
 
-        return createStyles({
-          [component]: {
+        return {
+          [component]: this.createStyle({
             [mediaQuery]: stylesheet[variantName][component]
-          }
-        })
+          })
+        }
       }
 
       return this.computeCommonVariantStyle(componentName, variant, component)

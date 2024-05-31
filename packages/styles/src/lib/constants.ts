@@ -1,5 +1,5 @@
 
-export const STORES_PERSIST_VERSION = 42
+export const STORES_PERSIST_VERSION = 47
 
 export const STORE_CACHE_ENABLED = true
 
