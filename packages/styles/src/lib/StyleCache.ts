@@ -5,7 +5,7 @@ import { CacheType } from '../types/cache'
 import { minifier } from './minifier'
 import { StateStorage } from 'zustand/middleware'
 
-export class StylesCache {
+export class StyleCache {
   baseKey: string
 
   styles = new Cache('styles')
