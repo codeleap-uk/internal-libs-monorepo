@@ -31,6 +31,8 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       keyboardAware,
       fakeEmpty = loading,
       contentContainerStyle,
+      renderItem: RenderItem,
+      data,
       ...props
     } = {
       ...List.defaultProps,
@@ -41,24 +43,27 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
 
     const separator = props?.separators && <RenderSeparator separatorStyles={styles.separator} />
 
+    const dataLength = data?.length || 0
+
     const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
-      if (!props?.renderItem) return null
-      const listLength = props?.data?.length || 0
+      if (!RenderItem) return null
 
       const isFirst = data.index === 0
-      const isLast = data.index === listLength - 1
+      const isLast = data.index === dataLength - 1
 
       const isOnly = isFirst && isLast
 
-      return props?.renderItem({
+      const itemProps = {
         ...data,
         isFirst,
         isLast,
         isOnly,
-      })
-    }, [props?.renderItem, props?.data?.length])
+      }
 
-    const isEmpty = !props.data || !props.data.length
+      return <RenderItem {...itemProps} />
+    }, [dataLength])
+
+    const isEmpty = data || !dataLength
 
     const _placeholder = {
       ...placeholder,
@@ -70,6 +75,8 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       contentContainerStyle,
       isEmpty && styles['content:empty'],
     ], keyboardAware && !props.horizontal)
+
+    const wrapperStyle = [styles.wrapper, isEmpty ? styles['wrapper:empty'] : {}]
 
     return (
       <FlatList
@@ -84,9 +91,9 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
         ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
         {...props}
         ListHeaderComponentStyle={styles.header}
-        style={[styles.wrapper, isEmpty && styles['wrapper:empty']]}
+        style={wrapperStyle}
         contentContainerStyle={keyboardStyle}
-        data={fakeEmpty ? [] : props.data}
+        data={fakeEmpty ? [] : data}
         ref={ref}
         renderItem={renderItem}
       />
