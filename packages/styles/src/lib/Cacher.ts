@@ -19,7 +19,7 @@ type StorePersistor = {
   cached: AnyRecord
   cacheFor: (key: string, value: any) => void
   staleTime: Date
-  rehydrate: () => void
+  reset: () => void
 }
 
 export class Cache<T extends any = any> {
@@ -30,7 +30,7 @@ export class Cache<T extends any = any> {
   store: StorePersistor = {
     cached: {},
     cacheFor: () => null,
-    rehydrate: () => null,
+    reset: () => null,
     staleTime: null
   }
 
@@ -51,7 +51,7 @@ export class Cache<T extends any = any> {
     const isStaled = currentTime > staleTime
 
     if (isStaled) {
-      this.store.rehydrate()
+      this.store.reset()
       return
     }
 
@@ -101,7 +101,7 @@ export class Cache<T extends any = any> {
             cached
           }
         }),
-        rehydrate: () => set({
+        reset: () => set({
           cached: {},
           staleTime: getStaleTime()
         })

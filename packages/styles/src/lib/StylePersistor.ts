@@ -12,9 +12,7 @@ export class StylePersistor implements StateStorage {
     private storage: StoragePersistor
   ) {}
 
-  setItem(name: string, _value: string): void {
-    const value = minifier.compress(_value)
-    
+  setItem(name: string, value: string): void {
     return this.storage.set(name, value)
   }
 
