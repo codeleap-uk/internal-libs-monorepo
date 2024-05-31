@@ -1,13 +1,27 @@
-import { AnyStyledComponent, CodeleapStyleRegistry, ICSS } from '@codeleap/styles'
+import { AnyStyledComponent, CodeleapStyleRegistry, ICSS, StylePersistor } from '@codeleap/styles'
+
+const persistor = new StylePersistor({
+  set(key, value) {
+    if (typeof window === 'undefined') return null
+    return localStorage?.setItem(key, value)
+  },
+  get(key) {
+    if (typeof window === 'undefined') return null
+    return localStorage?.getItem(key)
+  },
+  del(key) {
+    if (typeof window === 'undefined') return null
+    return localStorage?.removeItem(key)
+  },
+})
 
 let instance: WebStyleRegistry
 
 const components: CodeleapStyleRegistry['components'][string][] = []
 
 export class WebStyleRegistry extends CodeleapStyleRegistry {
-
   constructor() {
-    super()
+    super(persistor)
 
     components.forEach((component) => {
       this.registerComponent(component)
