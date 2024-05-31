@@ -63,7 +63,7 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       return <RenderItem {...itemProps} />
     }, [dataLength])
 
-    const isEmpty = data || !dataLength
+    const isEmpty = !data || !data?.length
 
     const _placeholder = {
       ...placeholder,
@@ -74,9 +74,10 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
       styles.content,
       contentContainerStyle,
       isEmpty && styles['content:empty'],
+      loading && styles['content:loading']
     ], keyboardAware && !props.horizontal)
 
-    const wrapperStyle = [styles.wrapper, isEmpty ? styles['wrapper:empty'] : {}]
+    const wrapperStyle = [styles.wrapper, isEmpty && styles['wrapper:empty'], loading && styles['wrapper:loading']]
 
     return (
       <FlatList
@@ -89,6 +90,8 @@ const ListCP = forwardRef<FlatList, FlatListProps>(
           />
         )}
         ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
         {...props}
         ListHeaderComponentStyle={styles.header}
         style={wrapperStyle}
