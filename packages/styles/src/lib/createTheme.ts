@@ -4,20 +4,23 @@ import { createMediaQueries } from './mediaQuery'
 import { multiplierProperty } from './multiplierProperty'
 import { defaultVariants } from './defaultVariants'
 import { spacingFactory } from './spacing'
-import { colorSchemaStore, themeStore } from './themeStore'
+import { themeStore } from './themeStore'
 
-export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
-  colorSchemaStore.persist.rehydrate()
-  
+type ColorSchemaPersistor = {
+  get: () => string
+  set: (colorSchema: string) => void
+}
+
+export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: ColorSchemaPersistor): AppTheme<T> => {
   const themeObj:AppTheme<T> = {
     get currentColorScheme(): string {
-      return colorSchemaStore.getState().value
+      return themeStore.getState().colorScheme
     },
 
     breakpoints: theme.breakpoints ?? {},
 
     get colors() {
-      const colorScheme = colorSchemaStore.getState().value
+      const colorScheme = themeStore.getState().colorScheme
 
       if (colorScheme === 'default') return theme.colors
       
@@ -26,7 +29,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
 
     setColorScheme(colorScheme: ColorScheme<Theme>) {
       themeStore.setState({ colorScheme: colorScheme as string })
-      colorSchemaStore.setState({ value: colorScheme as string  })
+      colorSchemaPersistor.set(colorScheme as string)
     },
 
     baseSpacing: theme.baseSpacing,
@@ -79,7 +82,7 @@ export const createTheme = <T extends Theme>(theme: T): AppTheme<T> => {
 
   themeStore.setState({ 
     current: themeObj, 
-    colorScheme: themeObj.currentColorScheme as string 
+    colorScheme: colorSchemaPersistor.get() ?? 'default'
   })
 
   return themeObj

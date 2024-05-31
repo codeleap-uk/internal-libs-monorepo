@@ -1,8 +1,5 @@
 import { create } from 'zustand'
 import { IAppVariants, ITheme } from '../types'
-import { createJSONStorage, persist } from 'zustand/middleware'
-import { IS_NATIVE, STORES_PERSIST_VERSION } from './constants'
-import { nativeStorage } from './storage'
 
 export type ThemeStore = {
   colorScheme: string | null
@@ -15,29 +12,3 @@ export const themeStore = create<ThemeStore>(() => ({
   current: null,
   variants: {},
 }))
-
-export type ColorSchemaStore = {
-  value: string
-}
-
-export const colorSchemaStore = create(persist<ColorSchemaStore>(
-  () => ({
-    value: 'default'
-  }),
-  {
-    name: '@styles.stores.colorSchema',
-    version: STORES_PERSIST_VERSION,
-    migrate: () => {
-      return {
-        value: 'default',
-      }
-    },
-    storage: createJSONStorage(() => {
-      if (IS_NATIVE) {
-        return nativeStorage
-      }
-
-      return localStorage
-    })
-  },
-))

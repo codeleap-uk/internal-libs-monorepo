@@ -5,5 +5,6 @@ export { createAppVariants } from './createAppVariants'
 export { createStyles } from './createStyles'
 export { getNestedStylesByKey, mergeStyles } from './utils'
 export { CodeleapStyleRegistry } from './StyleRegistry'
+export { StylePersistor } from './StylePersistor'
 
 export * from './hooks'

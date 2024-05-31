@@ -1,48 +1,25 @@
 import { Cache } from './Cacher'
 import { hashKey } from './hashKey'
-import { CacheStore, cacheStore } from './cacheStore'
-import { STORE_CACHE_ENABLED, STORES_PERSIST_VERSION, CACHE_ENABLED, STORED_CACHES } from './constants'
+import { STORES_PERSIST_VERSION, CACHE_ENABLED } from './constants'
 import { CacheType } from '../types/cache'
 import { minifier } from './minifier'
+import { StateStorage } from 'zustand/middleware'
 
 export class StylesCache {
   baseKey: string
 
-  variants = new Cache()
-  common = new Cache()
-  styles = new Cache()
-  compositions = new Cache()
-  responsive = new Cache()
-  components = new Cache()
+  styles = new Cache('styles')
+  compositions = new Cache('compositions')
+  responsive = new Cache('responsive')
 
-  store: CacheStore
+  variants: Cache
+  common: Cache
+  components: Cache
 
-  constructor() {
-    this.registerStoredCache()
-  }
-
-  registerStoredCache() {
-    this.store = cacheStore.getState()
-
-    if (!STORE_CACHE_ENABLED) return
-
-    const currentTime = new Date()
-    const staleTime = new Date(this.store.staleTime)
-
-    const isStaled = currentTime > staleTime
-
-    if (isStaled) {
-      this.store.rehydrate()
-      return
-    }
-
-    for (const cachedType in this.store.cached) {
-      const cachedValue = this.store.cached[cachedType]
-
-      if (typeof cachedValue === 'object') {
-        this[cachedType as CacheType].setCache(cachedValue)
-      }
-    }
+  constructor(storage: StateStorage) {
+    this.variants = new Cache('variants', storage)
+    this.common = new Cache('common', storage)
+    this.components = new Cache('components', storage)
   }
 
   registerBaseKey(keys: Array<any>) {
@@ -62,8 +39,6 @@ export class StylesCache {
     this.variants.clear()
     this.common.clear()
     this.styles.clear()
-    
-    cacheStore.persist.clearStorage()
   }
 
   keyFor(type: CacheType, keyData: Array<any> | any) {
@@ -88,10 +63,6 @@ export class StylesCache {
     const cache = this[type]
 
     const minifiedValue = minifier.compress(value)
-
-    if (STORED_CACHES.includes(type) && STORE_CACHE_ENABLED && !!this.store) {
-      this.store.cacheFor(type, key, minifiedValue)
-    }
 
     return cache.cacheFor(key, minifiedValue)
   }

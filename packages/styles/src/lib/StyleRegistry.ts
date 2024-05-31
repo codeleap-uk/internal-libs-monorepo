@@ -8,6 +8,7 @@ import { dynamicVariants } from './dynamicVariants'
 import { ignoredStyleKeys, isSpacingKey } from './utils'
 import { StylesCache } from './StylesCache'
 import { minifier } from './minifier'
+import { StateStorage } from 'zustand/middleware'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -18,9 +19,11 @@ export class CodeleapStyleRegistry {
 
   private theme: ThemeStore
 
-  public stylesCache = new StylesCache()
+  private stylesCache: StylesCache
 
-  constructor() {
+  constructor(storage: StateStorage) {
+    this.stylesCache = new StylesCache(storage)
+
     this.theme = themeStore.getState()
 
     this.registerCommonVariants()
