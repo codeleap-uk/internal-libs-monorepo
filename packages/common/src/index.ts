@@ -5,6 +5,7 @@ export * from './types'
 export * from './config'
 export * from './components'
 export * from './contexts/GlobalContext'
+export * from './types/pathMapping'
 
 export { silentLogger } from './constants'
 
