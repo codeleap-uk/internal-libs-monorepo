@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { useCodeleapContext, useMemo, TypeGuards } from '@codeleap/common'
+import { useMemo, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
 import { NativeHTMLElement } from '../../types'
@@ -8,7 +8,8 @@ import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useGlobalContext } from '../../contexts/GlobalContext'
+import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -40,14 +41,16 @@ export const ViewCP = ({ viewProps, ref }: ViewComponentProps) => {
 
   const Component = animated ? (motion?.[component] || motion.div) : (component || 'div')
 
-  const { Theme, logger } = useCodeleapContext()
+  const theme = useTheme(store => store.current)
+
+  const { logger } = useGlobalContext()
 
   function handleHover(isMouseOverElement: boolean) {
     onHover?.(isMouseOverElement)
   }
 
   const platformMediaQuery = useMemo(() => {
-    return Theme.media.renderToPlatformQuery({
+    return theme.media.renderToPlatformQuery({
       is,
       not,
       up,
@@ -106,9 +109,6 @@ ViewCP.defaultProps = {
   scroll: false,
   debug: false,
   animated: false,
-  animatedProps: {},
-  css: [],
-
 }
 
 WebStyleRegistry.registerComponent(ViewCP)
