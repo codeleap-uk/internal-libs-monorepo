@@ -70,7 +70,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
 ActionIcon.styleRegistryName = 'ActionIcon'
 
-ActionIcon.elements = [IconComposition | `touchable${Capitalize<TouchableComposition>}`]
+ActionIcon.elements = ['icon', 'touchable']
 
 ActionIcon.rootElement = 'wrapper'
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
-import { TypeGuards, useCallback, useDefaultComponentStyle, useMemo, useConditionalState, ButtonComposition } from '@codeleap/common'
+import { TypeGuards, useCallback, useMemo, useConditionalState } from '@codeleap/common'
 import { ItemOptionProps, ItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps, SectionFilterFooterProps } from './types'
 import { View } from '../View'
 import { Text } from '../Text'
@@ -232,15 +232,17 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
 SectionFilters.styleRegistryName = 'SectionFilters'
 
-SectionFilters.elements = ['wrapper',
+SectionFilters.elements = [
+  'wrapper',
   'innerWrapper',
   'label',
   'optionWrapper',
   'optionInnerWrapper',
-  `itemOptionButton${Capitalize<ButtonComposition>}`,
+  'itemOptionButton',
   'footerWrapper',
-  `applyButton${Capitalize<ButtonComposition>}`,
-  `clearButton${Capitalize<ButtonComposition>}`]
+  'applyButton',
+  'clearButton',
+]
 
 SectionFilters.rootElement = 'wrapper'
 

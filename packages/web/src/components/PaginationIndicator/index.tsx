@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicatorComposition,
-  TypeGuards,
-  capitalize,
-} from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { Text } from '../Text'
 import { View } from '../View'
@@ -45,7 +41,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
 }
 
 PaginationIndicator.styleRegistryName = 'PaginationIndicator'
-PaginationIndicator.elements = ['wrapper', 'text', `loader${capitalize<ActivityIndicatorComposition>}`]
+PaginationIndicator.elements = ['wrapper', 'text', 'loader']
 PaginationIndicator.rootElement = 'wrapper'
 
 PaginationIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {

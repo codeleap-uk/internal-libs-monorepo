@@ -1,14 +1,22 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf, StylesOf } from '@codeleap/common'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { View, ViewProps } from '../View'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
-import { UseInfiniteScrollArgs } from './useInfiniteScroll'
-import { ItemMasonryProps, ListMasonryProps } from '../../lib'
-import { ListLayoutProps } from './ListLayout'
+import { ItemMasonryProps, ListMasonryProps, UseInfiniteScrollArgs, UseInfiniteScrollReturn } from '../../lib'
 import { ListComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
+
+export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
+  variantStyles: StylesOf<ListComposition>
+  children?: React.ReactNode
+  showFooter?: boolean
+}
+
+export type ListRefreshControlComponent = Partial<ListLayoutProps> & {
+  variantStyles: StylesOf<ListComposition>
+}
 
 export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   item: T

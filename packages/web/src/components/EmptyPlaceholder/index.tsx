@@ -97,8 +97,7 @@ EmptyPlaceholder.styleRegistryName = 'EmptyPlaceholder'
 
 EmptyPlaceholder.elements = [
   'wrapper',
-  'wrapper:loading',
-  `loader${Capitalize<ActivityIndicatorComposition>}`,
+  `loader`,
   'title',
   'description',
   'image',
