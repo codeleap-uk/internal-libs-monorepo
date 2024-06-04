@@ -1,68 +1,42 @@
 import React from 'react'
-import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { ListPresets } from './styles'
 import { useInfiniteScroll } from './useInfiniteScroll'
 import { ListProps } from './types'
 import { ListLayout } from './ListLayout'
 import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
-
-export * from './styles'
-export * from './PaginationIndicator'
-export * from './useInfiniteScroll'
-export * from './types'
-export * from './ListLayout'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
     <View css={[props?.separatorStyles]}></View>
   )
 }
-
-const defaultProps: Partial<ListProps> = {
-  ListFooterComponent: null,
-  ListHeaderComponent: null,
-  ListLoadingIndicatorComponent: null,
-  ListEmptyComponent: EmptyPlaceholder,
-  ListSeparatorComponent: RenderSeparator,
-  refreshDebounce: 1500,
-  refreshSize: 40,
-  refreshThreshold: 0.1,
-  refreshPosition: 16,
-  refresh: true,
-  rowItemsSpacing: 8,
-  overscan: 2,
-  reloadTimeout: 350,
-  showFooter: true,
-}
-
 export function List<T = any>(props: ListProps<T>) {
+
   const allProps = {
     ...List.defaultProps,
     ...props,
   } as ListProps
 
   const {
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
     renderItem: RenderItem,
     rowItemsSpacing,
     ListSeparatorComponent,
     data,
     overscan,
     separators,
-    masonryProps = {},
+    masonryProps,
     reloadTimeout,
     showFooter,
-  } = allProps
+    style,
+  } = {
+    ...allProps,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const styles = useStylesFor(List.styleRegistryName, style)
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
@@ -72,7 +46,7 @@ export function List<T = any>(props: ListProps<T>) {
   })
 
   const separator = React.useMemo(() => {
-    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+    return separators ? <ListSeparatorComponent separatorStyles={styles.separator} /> : null
   }, [])
 
   const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
@@ -102,7 +76,7 @@ export function List<T = any>(props: ListProps<T>) {
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={variantStyles}
+      variantStyles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
@@ -121,4 +95,35 @@ export function List<T = any>(props: ListProps<T>) {
   )
 }
 
-List.defaultProps = defaultProps
+List.styleRegistryName = 'List'
+List.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refreshControlIndicator']
+List.rootElement = 'wrapper'
+
+List.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return List as (props: StyledComponentProps<ListProps, typeof styles>) => IJSX
+}
+
+List.defaultProps = {
+  ListFooterComponent: null,
+  ListHeaderComponent: null,
+  ListLoadingIndicatorComponent: null,
+  ListEmptyComponent: EmptyPlaceholder,
+  ListSeparatorComponent: RenderSeparator,
+  refreshDebounce: 1500,
+  refreshSize: 40,
+  refreshThreshold: 0.1,
+  refreshPosition: 16,
+  refresh: true,
+  rowItemsSpacing: 8,
+  overscan: 2,
+  reloadTimeout: 350,
+  showFooter: true,
+} as Partial<ListProps>
+
+WebStyleRegistry.registerComponent(List)
+
+export * from './styles'
+export * from './useInfiniteScroll'
+export * from './types'
+export * from './ListLayout'
+

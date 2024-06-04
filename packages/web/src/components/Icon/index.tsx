@@ -55,7 +55,7 @@ IconCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return IconCP as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
 }
 
-IconCP.defaultProps = {}
+IconCP.defaultProps = {} as Partial<IconProps>
 
 WebStyleRegistry.registerComponent(IconCP)
 

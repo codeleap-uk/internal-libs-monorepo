@@ -109,7 +109,7 @@ ViewCP.defaultProps = {
   scroll: false,
   debug: false,
   animated: false,
-}
+} as Partial<ViewComponentProps>
 
 WebStyleRegistry.registerComponent(ViewCP)
 

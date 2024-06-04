@@ -1,13 +1,14 @@
-import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/common'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { View, ViewProps } from '../View'
-import { ListComposition, ListPresets } from './styles'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
 import { UseInfiniteScrollArgs } from './useInfiniteScroll'
 import { ItemMasonryProps, ListMasonryProps } from '../../lib'
 import { ListLayoutProps } from './ListLayout'
+import { ListComposition } from './styles'
+import { StyledProp } from '@codeleap/styles'
 
 export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   item: T
@@ -19,23 +20,21 @@ export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
 export type ListProps<
 T = any[],
 Data = T extends Array<infer D> ? D : never
-> = 
-  ComponentVariants<typeof ListPresets> &
-  Omit<typeof View, 'variants' | 'styles'> & {
+> =
+  typeof View & {
     data: Data[]
     isFetching?: boolean
     hasNextPage?: boolean
     separators?: boolean
     onRefresh?: () => void
     placeholder?: EmptyPlaceholderProps
-    styles?: StylesOf<ListComposition>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
     ListFooterComponent?: (props: ListLayoutProps) => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
     ListRefreshControlComponent?: () => React.ReactElement
     ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
-    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
+    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['style'] }) => React.ReactElement)
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
@@ -47,7 +46,7 @@ Data = T extends Array<infer D> ? D : never
     refresh?: boolean
     refreshControlProps?: PropsOf<typeof motion.div>
     refreshControlIndicatorProps?: Partial<ActivityIndicatorProps>
-    style?: React.CSSProperties
+    style?: StyledProp<ListComposition>
     ref?: React.MutableRefObject<undefined>
     rowItemsSpacing?: number
     overscan?: number

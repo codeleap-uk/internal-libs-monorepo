@@ -38,5 +38,6 @@ export * from './Tag'
 export * from './TextEditor'
 export * from './ColorPicker'
 export * from './SectionFilters'
+export * from './PaginationIndicator'
 
 export * from './defaultStyles'
