@@ -1,4 +1,3 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
 
 export type EmptyPlaceholderComposition =
@@ -11,6 +10,3 @@ export type EmptyPlaceholderComposition =
   | 'imageWrapper'
   | 'icon'
 
-const createEmptyPlaceholderStyle = createDefaultVariantFactory<EmptyPlaceholderComposition>()
-
-export const EmptyPlaceholderPresets = includePresets((styles) => createEmptyPlaceholderStyle(() => ({ wrapper: styles })))

@@ -8,7 +8,6 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { useGlobalContext } from '../../contexts/GlobalContext'
 import { AnyRecord, IJSX, StyledComponentProps, useTheme, useNestedStylesByKey } from '@codeleap/styles'
 
 const ItemOption = (props: OptionProps) => {
