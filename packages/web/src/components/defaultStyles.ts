@@ -28,6 +28,9 @@ import { GridPresets } from './Grid/styles'
 import { BadgePresets } from './Badge/styles'
 import { CropPickerPresets } from './CropPicker'
 import { TagPresets } from './Tag/styles'
+import createCache from '@emotion/cache'
+import { DropzonePresets } from './Dropzone/styles'
+import { PaginationButtonPresets } from './PaginationButtons/styles'
 import { SectionFilterPresets } from './SectionFilters/styles'
 
 export const defaultStyles = {
@@ -64,11 +67,9 @@ export const defaultStyles = {
   Dropzone: DropzonePresets,
   CropPicker: CropPickerPresets,
   Tag: TagPresets,
+  PaginationButtons: PaginationButtonPresets,
   SectionFilters: SectionFilterPresets,
 }
-
-import createCache from '@emotion/cache'
-import { DropzonePresets } from './Dropzone/styles'
 
 export const createCodeleapWebCache = () => {
   return createCache({
