@@ -1,6 +1,7 @@
 import { Button, ButtonComposition } from '../Button'
-import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
-import { SectionFiltersComposition, SectionFilterPresets } from './styles'
+import { PropsOf, StylesOf } from '@codeleap/common'
+import { SectionFiltersComposition } from './styles'
+import { StyledProp } from '@codeleap/styles'
 
 export type ItemOptionProps = {
   label?: string
@@ -57,8 +58,8 @@ export type SectionFiltersProps = {
   filterOnOptionPress?: boolean
   applyButtonText?: string
   clearButtonText?: string
-  styles?: StylesOf<SectionFiltersComposition>
-} & ComponentVariants<typeof SectionFilterPresets>
+  style?: StyledProp<SectionFiltersComposition>
+}
 
 export type OptionProps = {
   option: ItemOptionProps
