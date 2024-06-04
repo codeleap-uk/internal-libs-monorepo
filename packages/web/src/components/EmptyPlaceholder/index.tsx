@@ -68,25 +68,25 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     }
 
     return (
-      <View {...wrapperProps} css={[styles.wrapper, style]}>
+      <View {...wrapperProps} style={[styles.wrapper, style]}>
         <RenderEmpty {..._emptyProps}/>
       </View>
     )
   }
 
   return (
-    <View {...wrapperProps} css={[styles.wrapper, style]}>
-      <View {...imageWrapperProps} css={styles.imageWrapper}>
+    <View {...wrapperProps} style={[styles.wrapper, style]}>
+      <View {...imageWrapperProps} style={styles.imageWrapper}>
         {_Image}
       </View>
 
       {TypeGuards.isString(emptyText)
-        ? <Text debugName={debugName} text={emptyText} css={styles.title}/>
+        ? <Text debugName={debugName} text={emptyText} style={styles.title}/>
         : React.isValidElement(emptyText) ? emptyText : null
       }
 
       {TypeGuards.isString(description)
-        ? <Text debugName={debugName} text={description} css={styles.description}/>
+        ? <Text debugName={debugName} text={description} style={styles.description}/>
         : React.isValidElement(description) ? description : null
       }
     </View>

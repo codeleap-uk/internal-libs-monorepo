@@ -46,7 +46,6 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   return (
     <WrapperComponent
-      css={getStyles('touchableWrapper')}
       disabled={disabled}
       debugName={debugName}
       {
@@ -56,12 +55,13 @@ export const ActionIcon = (props: ActionIconProps) => {
         })
       }
       {...touchableProps}
+      stlyle={getStyles('touchableWrapper')}
     >
       <Icon
         debugName={debugName}
         name={icon ?? name}
-        style={getStyles('icon')}
         {...iconProps}
+        style={getStyles('icon')}
       />
       {children}
     </WrapperComponent>

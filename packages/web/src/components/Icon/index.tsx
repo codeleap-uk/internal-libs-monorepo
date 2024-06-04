@@ -28,10 +28,14 @@ const IconCP = (props:IconProps) => {
 
   if (!name) {
     const iconStyle = styles.icon
-    return renderEmptySpace ? <View css={{
-      height: iconStyle.size ?? iconStyle.height,
-      width: iconStyle.size ?? iconStyle.width,
-    }}/> : null
+    return renderEmptySpace ? (
+      <View
+        style={{
+          height: iconStyle.size ?? iconStyle.height,
+          width: iconStyle.size ?? iconStyle.width,
+        }}
+      />
+    ) : null
   }
 
   if (!Component) {
@@ -42,7 +46,7 @@ const IconCP = (props:IconProps) => {
     )
     return null
   }
-  return <Component style={styles.icon} {...otherProps}/>
+  return <Component {...otherProps} style={styles.icon} />
 }
 
 IconCP.styleRegistryName = 'Icon'

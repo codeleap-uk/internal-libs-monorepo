@@ -83,13 +83,13 @@ export const ViewCP = ({ viewProps, ref }: ViewComponentProps) => {
 
   return (
     <Component
-      css={componentStyles}
       // @ts-expect-error
       ref={ref}
       {...onHoverProps}
       {...props}
       {...animatedProps}
       data-testid={testId}
+      css={componentStyles}
     >
       {children}
     </Component>

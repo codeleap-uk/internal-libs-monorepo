@@ -1,6 +1,6 @@
 import { DropzoneFilePreviewProps, DropzoneInnerFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
 import { DropzonePresets } from './styles'
-import { IconPlaceholder, PropsOf, TypeGuards, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
+import { IconPlaceholder, PropsOf, TypeGuards, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey } from '@codeleap/common'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
