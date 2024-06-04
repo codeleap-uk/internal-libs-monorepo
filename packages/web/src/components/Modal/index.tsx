@@ -326,12 +326,17 @@ Modal.styleRegistryName = 'Modal'
 
 Modal.elements = [
   'wrapper',
-  `loader`,
+  'box',
+  'backdrop',
+  'body',
+  'footer',
+  'header',
   'title',
+  'innerWrapper',
+  'backdropPressable',
   'description',
-  'image',
-  'imageWrapper',
-  'icon',
+  'titleWrapper',
+  `closeButton`,
 ]
 
 Modal.rootElement = 'wrapper'
