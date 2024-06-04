@@ -7,8 +7,6 @@ import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/style
 import { WebStyleRegistry } from '../../lib'
 import { IconProps } from './types'
 
-export * from './styles'
-
 const IconCP = (props:IconProps) => {
 
   const {
@@ -60,3 +58,6 @@ IconCP.defaultProps = {} as Partial<IconProps>
 WebStyleRegistry.registerComponent(IconCP)
 
 export const Icon = IconCP as ((props: IconProps) => jsx.JSX.Element)
+
+export * from './styles'
+export * from './types'

@@ -1,54 +1,31 @@
-import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import { ComponentCommonProps, StylesOf } from '../../types'
-import { Icon, IconProps } from '../Icon'
-import { Touchable, TouchableProps } from '../Touchable'
+import { TypeGuards } from '@codeleap/common'
+import { Icon } from '../Icon'
+import { Touchable } from '../Touchable'
 import { View } from '../View'
-import { ActionIconComposition, ActionIconParts, ActionIconPresets } from './styles'
-
-export * from './styles'
-
-/** IconButton */
-export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & ComponentCommonProps & {
-  iconProps?: Partial<IconProps>
-  /** prop */
-  icon?: IconProps['name']
-  /** prop */
-  name?: IconProps['name']
-
-  styles?: StylesOf<ActionIconComposition>
-} & ComponentVariants<typeof ActionIconPresets>
-
-const defaultProps: Partial<ActionIconProps> = {
-  disabled: false,
-  tabIndex: 0,
-}
+import { ActionIconParts } from './styles'
+import { ActionIconProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export const ActionIcon = (props: ActionIconProps) => {
-  const allProps = {
-    ...ActionIcon.defaultProps,
-    ...props,
-  }
 
   const {
     icon,
     name,
     iconProps,
     onPress,
-    responsiveVariants = {},
-    variants = [],
-    styles = {},
+    style = {},
     children,
     disabled,
     debugName,
     ...touchableProps
-  } = allProps
+  } = {
+    ...ActionIcon.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'touchableWrapper',
-  })
+  const styles = useStylesFor(ActionIcon.styleRegistryName, style)
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
@@ -62,9 +39,9 @@ export const ActionIcon = (props: ActionIconProps) => {
   }
 
   const getStyles = (key: ActionIconParts) => ({
-    ...variantStyles[key],
-    ...(disabled ? variantStyles[`${key}:disabled`] : {}),
-    ...(isPressable ? variantStyles[`${key}:pressable`] : {}),
+    ...styles[key],
+    ...(disabled ? styles[`${key}:disabled`] : {}),
+    ...(isPressable ? styles[`${key}:pressable`] : {}),
   })
 
   return (
@@ -91,4 +68,22 @@ export const ActionIcon = (props: ActionIconProps) => {
   )
 }
 
-ActionIcon.defaultProps = defaultProps
+ActionIcon.styleRegistryName = 'ActionIcon'
+
+ActionIcon.elements = [IconComposition | `touchable${Capitalize<TouchableComposition>}`]
+
+ActionIcon.rootElement = 'wrapper'
+
+ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ActionIcon as (props: StyledComponentProps<ActionIconProps, typeof styles>) => IJSX
+}
+
+ActionIcon.defaultProps = {
+  disabled: false,
+  tabIndex: 0,
+} as Partial<ActionIconProps>
+
+WebStyleRegistry.registerComponent(ActionIcon)
+
+export * from './styles'
+export * from './types'
