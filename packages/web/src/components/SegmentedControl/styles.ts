@@ -3,9 +3,9 @@ import { StylesOf } from '@codeleap/common'
 export type SegmentedControlStates = 'selected' | 'disabled'
 
 type SegmentedControlParts =
-'selectedBubble' |
 'wrapper' |
 'innerWrapper' |
+'selectedBubble' |
 'text' |
 'icon' |
 'button' |

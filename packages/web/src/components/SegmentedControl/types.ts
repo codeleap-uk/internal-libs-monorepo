@@ -32,7 +32,7 @@ export type OptionRef = PropsOf<typeof Touchable>['ref']
 export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   selected?: boolean
   label: string
-  variantStyles?: StylesOf<SegmentedControlComposition>
+  styles?: StylesOf<SegmentedControlComposition>
   value?: any
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
   iconProps?: Partial<IconProps>

@@ -16,8 +16,7 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
   const {
     selected,
     onPress,
-    style,
-    variantStyles = {},
+    styles,
     iconProps = {},
     label,
     icon,
@@ -27,9 +26,9 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
   } = props
 
   const iconStyles = {
-    ...variantStyles.icon as object,
-    ...(selected ? variantStyles['icon:selected'] as object : {}),
-    ...(disabled ? variantStyles['icon:disabled'] as object : {}),
+    ...styles.icon as object,
+    ...(selected ? styles['icon:selected'] as object : {}),
+    ...(disabled ? styles['icon:disabled'] as object : {}),
   }
 
   return (
@@ -37,9 +36,9 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
       key={touchableProps.key}
       ref={ref}
       css={[
-        variantStyles.button,
-        selected && variantStyles['button:selected'],
-        disabled && variantStyles['button:disabled'],
+        styles.button,
+        selected && styles['button:selected'],
+        disabled && styles['button:disabled'],
         style as any,
       ]}
       onPress={onPress}
@@ -60,9 +59,9 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
         text={label}
         debugName={touchableProps?.debugName}
         css={[
-          variantStyles.text,
-          selected && variantStyles['text:selected'],
-          disabled && variantStyles['text:disabled'],
+          styles.text,
+          selected && styles['text:selected'],
+          disabled && styles['text:disabled'],
         ]}
         {...textProps}
       />
@@ -193,9 +192,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
 SegmentedControl.styleRegistryName = 'SegmentedControl'
 
 SegmentedControl.elements = [
-  'selectedBubble',
   'wrapper',
   'innerWrapper',
+  'selectedBubble',
   'text',
   'icon',
   'button',
