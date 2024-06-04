@@ -2,10 +2,7 @@ import React from 'react'
 import { View } from '../View'
 import { ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition } from './styles'
-import {
-  IconPlaceholder,
-  StylesOf,
-} from '@codeleap/common'
+import { IconPlaceholder, StylesOf } from '@codeleap/common'
 import { ComponentCommonProps } from '../../types'
 import { StyledProp } from '@codeleap/styles'
 

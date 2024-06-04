@@ -1,26 +1,18 @@
 import {
-  ComponentVariants,
   IconPlaceholder,
-  PropsOf,
   StylesOf,
 } from '@codeleap/common'
-import { DropzoneComposition, DropzonePresets } from './styles'
-import { View } from '../View'
-import {
-  DropzoneOptions,
-  FileRejection,
-  DropzoneRef as ReactDropzoneRef,
-} from 'react-dropzone'
+import { DropzoneComposition } from './styles'
+import { DropzoneOptions, FileRejection, DropzoneRef as ReactDropzoneRef } from 'react-dropzone'
 import { ActionIconComposition } from '../ActionIcon'
+import { StyledProp } from '@codeleap/styles'
 
 export type DropzoneFile = File
 
 export type DropzoneFileRejection = FileRejection
 
-export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
-  DropzoneOptions & {
-    styles?: StylesOf<DropzoneComposition>
-    style?: PropsOf<typeof View>['style']
+export type DropzoneProps = DropzoneOptions & {
+    style?: StyledProp<DropzoneComposition>
     icon?: IconPlaceholder
     placeholder?: string
     acceptedFiles: File[]
@@ -33,15 +25,12 @@ export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
     fileLeftIcon?: IconPlaceholder
     withImagePreview?: boolean
     FilePreviewComponent?: (props: DropzoneInnerFilePreviewProps) => JSX.Element
-  }
+}
 
-export type DropzoneFilePreviewProps = Pick<
-  DropzoneProps,
-  'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview' | 'FilePreviewComponent'
-> & {
+export type DropzoneFilePreviewProps = Pick<DropzoneProps, 'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview' | 'FilePreviewComponent'> & {
   file: DropzoneFile
   errors?: DropzoneFileRejection['errors']
-  variantStyles: StylesOf<DropzoneComposition>
+  styles: StylesOf<DropzoneComposition>
   onRemove?: () => void
   fileRightIconStyles?: StylesOf<ActionIconComposition>
   index?: number
