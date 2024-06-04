@@ -1,43 +1,25 @@
 import {
   TypeGuards,
-  getNestedStylesByKey,
+  useNestedStylesByKey,
   useCallback,
-  useDefaultComponentStyle,
-  useState,
+  useConditionalState,
 } from '@codeleap/common'
 import { Text, View } from '../components'
-import { DatePickerPresets } from './styles'
 import { DatePickerProps, DayComponentProps } from './types'
-import _DatePicker from 'react-datepicker'
-import { Header, OuterInput } from './defaultComponents'
+import ReactDatePicker from 'react-datepicker'
+import { Header, OuterInput } from './components'
 import { format, isBefore, isAfter } from 'date-fns'
-
-export * from './styles'
-export * from './types'
-export * from './defaultComponents'
-
-const defaultProps = {
-  variants: [],
-  styles: {},
-  minDate: new Date(1910, 0, 1),
-  maxDate: new Date(),
-  startDate: new Date(1923, 0, 1),
-  outerInputComponent: OuterInput,
-  headerComponent: Header,
-}
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export function DatePicker(props: DatePickerProps) {
-  const allProps = {
-    ...DatePicker.defaultProps,
-    ...props,
-  }
 
   const {
     hideInput,
     value,
     onValueChange,
     variants,
-    styles,
     style,
     responsiveVariants,
     defaultValue,
@@ -58,118 +40,104 @@ export function DatePicker(props: DatePickerProps) {
     setYearShow: _setYearShow,
     disabled = false,
     ...otherProps
-  } = allProps
+  } = {
+    ...DatePicker.defaultProps,
+    ...props,
+  }
 
-  const [visible, toggle] =
-    TypeGuards.isBoolean(_visible) && TypeGuards.isFunction(_toggle)
-      ? [_visible, _toggle]
-      : useState(false)
-  const [yearShow, setYearShow] =
-    TypeGuards.isBoolean(_yearShow) && TypeGuards.isFunction(_setYearShow)
-      ? [_yearShow, _setYearShow]
-      : useState(false)
+  const styles = useStylesFor(DatePicker.styleRegistryName, style)
 
-  const variantStyles = useDefaultComponentStyle<
-    'u:DatePicker',
-    typeof DatePickerPresets
-  >('u:DatePicker', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false })
+  const [yearShow, setYearShow] = useConditionalState(_yearShow, _setYearShow, { initialValue: false })
 
-  const DayContentComponent = useCallback(
-    (_param: DayComponentProps) => {
-      const param = {
-        ..._param,
-        ...dayProps,
+  const DayContentComponent = useCallback((_param: DayComponentProps) => {
+
+    const param = {
+      ..._param,
+      ...dayProps,
+    }
+
+    const { day, date: _date } = param
+
+    const date = format(new Date(_date), 'dd MMM yyyy')
+    const dateValue = value ? format(new Date(value), 'dd MMM yyyy') : ''
+
+    const isSelected = date === dateValue
+
+    const isDisabled = [
+      isBefore(_date, minDate),
+      isAfter(_date, maxDate),
+    ].some(Boolean)
+
+    const getStyles = (key) => {
+      return {
+        ...styles[key],
+        ...(isSelected && styles[`${key}:selected`]),
+        ...(!isSelected && isDisabled && styles[`${key}:disabled`]),
       }
+    }
 
-      const { day, date: _date } = param
-
-      const date = format(new Date(_date), 'dd MMM yyyy')
-      const dateValue = value ? format(new Date(value), 'dd MMM yyyy') : ''
-
-      const isSelected = date === dateValue
-
-      const isDisabled = [
-        isBefore(_date, minDate),
-        isAfter(_date, maxDate),
-      ].some(Boolean)
-
-      const getStyles = (key) => {
-        return {
-          ...variantStyles[key],
-          ...(isSelected && variantStyles[`${key}:selected`]),
-          ...(!isSelected && isDisabled && variantStyles[`${key}:disabled`]),
-        }
-      }
-
-      if (TypeGuards.isFunction(DayComponent)) {
-        return (
-          <DayComponent
-            {...param}
-            value={value}
-            disabled={isDisabled}
-            selected={isSelected}
-            variantStyles={variantStyles}
-          />
-        )
-      }
-
+    if (TypeGuards.isFunction(DayComponent)) {
       return (
-        <View css={getStyles('dayWrapper')}>
-          <Text style={getStyles('day')} disabled={isDisabled} text={String(day)} />
-        </View>
+        <DayComponent
+          {...param}
+          value={value}
+          disabled={isDisabled}
+          selected={isSelected}
+          styles={styles}
+        />
       )
-    },
-    [value],
-  )
+    }
 
-  const YearContentComponent = useCallback(
-    (_param) => {
-      const param = {
-        ..._param,
-        ...yearProps,
+    return (
+      <View style={getStyles('dayWrapper')}>
+        <Text style={getStyles('day')} disabled={isDisabled} text={String(day)} />
+      </View>
+    )
+  }, [value])
+
+  const YearContentComponent = useCallback((_param) => {
+
+    const param = {
+      ..._param,
+      ...yearProps,
+    }
+
+    const { year } = param
+
+    const isSelected = String(value)?.includes(year)
+
+    const getStyles = (key) => {
+      return {
+        ...styles[key],
+        ...(isSelected && styles[`${key}:selected`]),
       }
+    }
 
-      const { year } = param
-
-      const isSelected = String(value)?.includes(year)
-
-      const getStyles = (key) => {
-        return {
-          ...variantStyles[key],
-          ...(isSelected && variantStyles[`${key}:selected`]),
-        }
-      }
-
-      if (TypeGuards.isFunction(YearComponent)) {
-        return (
-          <YearComponent
-            {...param}
-            value={value}
-            selected={isSelected}
-            variantStyles={variantStyles}
-          />
-        )
-      }
-
+    if (TypeGuards.isFunction(YearComponent)) {
       return (
-        <View css={getStyles('yearWrapper')}>
-          <Text style={getStyles('year')} text={year} />
-        </View>
+        <YearComponent
+          {...param}
+          value={value}
+          selected={isSelected}
+          styles={styles}
+        />
       )
-    },
-    [value],
-  )
+    }
 
-  const inputStyles = getNestedStylesByKey('outerInput', variantStyles)
-  const headerStyles = getNestedStylesByKey('header', variantStyles)
+    return (
+      <View style={getStyles('yearWrapper')}>
+        <Text style={getStyles('year')} text={year} />
+      </View>
+    )
+  }, [value])
+
+  const inputStyles = useNestedStylesByKey('outerInput', styles)
+  const headerStyles = useNestedStylesByKey('header', styles)
 
   return (
-    <View css={variantStyles.wrapper}>
-      <_DatePicker
+    <View style={styles.wrapper}>
+      <ReactDatePicker
         onChange={onValueChange}
         open={visible}
         selected={value}
@@ -229,4 +197,36 @@ export function DatePicker(props: DatePickerProps) {
   )
 }
 
-DatePicker.defaultProps = defaultProps
+DatePicker.styleRegistryName = 'DatePicker'
+
+DatePicker.elements = [
+  'wrapper',
+  'dayWrapper',
+  'yearWrapper',
+  'day',
+  'year',
+  'outerInput',
+  'header',
+]
+
+DatePicker.rootElement = 'wrapper'
+
+DatePicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return DatePicker as (props: StyledComponentProps<DatePickerProps, typeof styles>) => IJSX
+}
+
+DatePicker.defaultProps = {
+  variants: [],
+  styles: {},
+  minDate: new Date(1910, 0, 1),
+  maxDate: new Date(),
+  startDate: new Date(1923, 0, 1),
+  outerInputComponent: OuterInput,
+  headerComponent: Header,
+} as Partial<DatePickerProps>
+
+WebStyleRegistry.registerComponent(DatePicker)
+
+export * from './styles'
+export * from './types'
+export * from './components'

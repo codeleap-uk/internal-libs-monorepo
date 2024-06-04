@@ -1,5 +1,4 @@
 import React from 'react'
-import { View } from '../View'
 import { PropsOf, IconPlaceholder, StylesOf } from '@codeleap/common'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'

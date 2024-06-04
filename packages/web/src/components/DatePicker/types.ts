@@ -1,4 +1,4 @@
-import { ComponentVariants, FormTypes, StylesOf } from '@codeleap/common'
+import { FormTypes } from '@codeleap/common'
 import {
   ReactDatePickerCustomHeaderProps,
   ReactDatePickerProps,
@@ -7,8 +7,8 @@ import { ActionIconProps, TextInputProps } from '../components'
 import {
   DatePickerComposition,
   DatePickerHeaderComposition,
-  DatePickerPresets,
 } from './styles'
+import { StyledProp } from '@codeleap/styles'
 
 export type DatePickerOuterInputProps = TextInputProps & {
   valueLabel: FormTypes.Label
@@ -24,32 +24,28 @@ export type DatePickerArrowProps = Partial<ActionIconProps> & {
   direction: 'left' | 'right'
 }
 
-type RootStyles = ComponentVariants<typeof DatePickerPresets>
-
 export type DayComponentProps = {
   day: string | number
   value?: Date
   date: Date
   disabled?: boolean
   selected?: boolean
-  variantStyles?: any
+  styles?: DatePickerProps['style']
 }
 
 export type YearComponentProps = {
   year: string | number
   value: Date
   selected: boolean
-  variantStyles: any
+  styles: DatePickerProps['style']
 }
 
 type RootDatePickerProps = 'startDate' | 'minDate' | 'maxDate'
 
 export type DatePickerProps = Partial<
   Pick<Partial<ReactDatePickerProps>, RootDatePickerProps>
-> &
-  RootStyles & {
-    styles?: StylesOf<DatePickerComposition>
-    style?: React.CSSProperties
+> & {
+    style?: StyledProp<DatePickerComposition>
     hideInput?: boolean
     value: Date
     outerInputComponent?: React.ComponentType<
@@ -72,7 +68,4 @@ export type DatePickerProps = Partial<
     toggle?: () => void
     yearShow?: boolean
     setYearShow?: () => void
-  } & Omit<
-    TextInputProps,
-    'defaultValue' | 'styles' | 'variants' | 'responsiveVariants'
-  >
+  } & Omit<TextInputProps, 'defaultValue'>
