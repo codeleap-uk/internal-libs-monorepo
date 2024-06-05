@@ -1,67 +1,39 @@
-import {
-  ComponentVariants,
-  StylesOf,
-  onUpdate,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import Slider, { Settings } from 'react-slick'
-import { PagerComposition, PagerPresets } from './styles'
+import { onUpdate } from '@codeleap/common'
+import Slider from 'react-slick'
 import React, {
   forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
-  ReactNode,
-  ReactElement,
-  CSSProperties,
 } from 'react'
-
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import { View, ViewProps } from '../View'
+import { View } from '../View'
 import { Touchable } from '../Touchable'
-import { ComponentCommonProps } from '../../types'
+import { DotsProps, PagerProps, PagerRef } from './types'
+import { ComponentWithDefaultProps } from '../../types'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-export type PagerRef = {
-  goTo: (page: number) => void
-}
-
-export type PagerProps = Settings &
-  ComponentVariants<typeof PagerPresets> & {
-    styles?: StylesOf<PagerComposition>
-    page?: number
-    style?: CSSProperties
-    children: ReactNode
-    onChange?: (page: number) => void
-    renderPageWrapper?: React.FC
-    footer?: ReactElement
-    dotsProps?: DotsProps
-    pageWrapperProps?: ViewProps<'div'>
-    dotsDisabled?:boolean
-    disableSwipe?: boolean
-  } & ComponentCommonProps
-
-type DotsProps = Pick<PagerProps, 'page' | 'dotsDisabled'> & {
-  childArray: ReactNode[]
-  onPress?: (index: number) => void
-  variantStyles: StylesOf<PagerComposition>
-}
-
-const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsProps) => {
+const Dots = (params: DotsProps) => {
+  const { page, childArray, onPress, styles, dotsDisabled } = params
   return (
-    <View style={variantStyles.dots}>
+    <View style={styles.dots}>
       {childArray.map((_, index) => {
+
         const isSelected = index === page
+
         const css = [
-          variantStyles[isSelected ? 'dot:selected' : 'dot'],
-          dotsDisabled && variantStyles['dot:disabled'],
+          styles[isSelected ? 'dot:selected' : 'dot'],
+          dotsDisabled && styles['dot:disabled'],
         ]
 
         return (
           <Touchable
             key={index}
             onPress={() => onPress?.(index)}
-            css={css}
+            style={css}
             disabled={dotsDisabled}
           />
         )
@@ -70,39 +42,30 @@ const Dots = ({ page, childArray, onPress, variantStyles, dotsDisabled }: DotsPr
   )
 }
 
-const PagerComponent = (
-  props: PagerProps,
-  ref: React.ForwardedRef<PagerRef>,
-) => {
+const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) => {
+
   const sliderRef = useRef<Slider>()
+
   const {
-    styles,
     style,
-    variants,
     children,
     renderPageWrapper,
-    responsiveVariants,
     page,
-    dots = false,
-    dotsDisabled = false,
-    infinite = false,
-    disableSwipe = false,
+    dots,
+    dotsDisabled,
+    infinite,
+    disableSwipe,
     onChange,
     footer,
     dotsProps,
     pageWrapperProps,
     ...rest
-  } = props
+  } = {
+    ...Pager.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<
-    'u:Pager',
-    typeof PagerPresets
-  >('u:Pager', {
-    variants,
-    responsiveVariants,
-    styles,
-    rootElement: 'wrapper',
-  })
+  const styles = useStylesFor(Pager.styleRegistryName, style)
 
   const childArray = React.Children.toArray(children)
   const PageWrapper = renderPageWrapper || View
@@ -124,7 +87,7 @@ const PagerComponent = (
   }, [page])
 
   return (
-    <View css={[variantStyles.wrapper, style]}>
+    <View style={[styles.wrapper, style]}>
       <Slider
         adaptiveHeight={true}
         {...rest}
@@ -140,7 +103,7 @@ const PagerComponent = (
           return (
             <PageWrapper
               key={index}
-              css={variantStyles.pageWrapper}
+              css={styles.pageWrapper}
               {...pageWrapperProps}
             >
               {child}
@@ -149,7 +112,7 @@ const PagerComponent = (
         })}
       </Slider>
 
-      <View css={variantStyles.footerWrapper}>
+      <View style={styles.footerWrapper}>
         {footer}
 
         {dots && (
@@ -157,7 +120,7 @@ const PagerComponent = (
             page={page}
             onPress={onChange}
             childArray={childArray}
-            variantStyles={variantStyles}
+            styles={styles}
             dotsDisabled={dotsDisabled}
             {...dotsProps}
           />
@@ -165,8 +128,33 @@ const PagerComponent = (
       </View>
     </View>
   )
+}) as ComponentWithDefaultProps<PagerProps> & GenericStyledComponentAttributes<AnyRecord>
+
+Pager.styleRegistryName = 'Pager'
+
+Pager.elements = [
+  'wrapper',
+  'dot',
+  'dot:selected',
+  'dots',
+  'pageWrapper',
+  'footerWrapper',
+]
+
+Pager.rootElement = 'wrapper'
+
+Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Pager as (props: StyledComponentProps<PagerProps, typeof styles>) => IJSX
 }
 
-export const Pager = forwardRef(PagerComponent)
+Pager.defaultProps = {
+  dots: false,
+  dotsDisabled: false,
+  infinite: false,
+  disableSwipe: false,
+} as Partial<PagerProps>
+
+WebStyleRegistry.registerComponent(Pager)
 
 export * from './styles'
+export * from './types'
