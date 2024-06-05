@@ -6,72 +6,27 @@ import {
   Portal as TooltipPortal,
   Content as TooltipContent,
   Arrow as TooltipArrow,
-  TooltipProps as PrimitiveTooltipProps,
-  TooltipContentProps,
-  TooltipPortalProps,
-  TooltipArrowProps,
-  TooltipTriggerProps,
-  TooltipProviderProps,
 } from '@radix-ui/react-tooltip'
+import { TypeGuards } from '@codeleap/common'
+import { View } from '../View'
+import { WebStyleRegistry, useClickOutsideElement } from '../../lib'
+import { TooltipProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-import { AnyFunction, ComponentVariants, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import { TooltipComposition, TooltipPresets } from './styles'
-import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types/utility'
-import { View, ViewProps } from '../View'
-import { useClickOutsideElement } from '../../lib'
+export const Tooltip = (props: TooltipProps) => {
 
-type TooltipComponentProps = {
-  contentProps?: TooltipContentProps
-  portalProps?: TooltipPortalProps
-  arrowProps?: TooltipArrowProps
-  triggerProps?: TooltipTriggerProps
-  providerProps?: TooltipProviderProps
-}
-
-export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
-  toggle?: AnyFunction
-  visible?: boolean
-  content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
-  triggerWrapper?: React.ElementType
-  triggerWrapperProps?: Partial<ViewProps<'div'>>
-  styles?: StylesOf<TooltipComposition>
-  side?: 'left' | 'right' | 'bottom' | 'top'
-  openOnPress?: boolean
-  openOnHover?: boolean
-  disabled?: boolean
-  delayDuration?: number
-  closeOnClickOutside?: boolean
-  onOpen?: AnyFunction
-  onClose?: AnyFunction
-  onValueChange?: (value: boolean) => void
-  onHover?: (hoverType: 'enter' | 'leave', value: boolean) => void
-  onPress?: (value: boolean) => void
-  children?: React.ReactNode
-  style?: React.CSSProperties
-} & ComponentVariants<typeof TooltipPresets> & ComponentCommonProps
-
-const defaultProps: Partial<TooltipProps> = {
-  openOnPress: true,
-  openOnHover: true,
-  disabled: false,
-  delayDuration: 0,
-  closeOnClickOutside: false,
-  side: 'bottom',
-  triggerWrapper: View as unknown as React.ElementType,
-}
-
-export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipProps) => {
   const allProps = {
     ...Tooltip.defaultProps,
     ...props,
   }
 
   const {
-    toggle: _toggle = null,
-    visible: _visible = null,
+    toggle: _toggle,
+    visible: _visible,
     children,
     content: Content,
-    triggerWrapperProps = {},
+    triggerWrapperProps,
     triggerWrapper: TriggerWrapper,
     side,
     disabled,
@@ -83,32 +38,25 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
     onValueChange,
     onHover,
     onPress,
-    contentProps = {},
-    portalProps = {},
-    arrowProps = {},
-    triggerProps = {},
-    providerProps = {},
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
+    contentProps,
+    portalProps,
+    arrowProps,
+    triggerProps,
+    providerProps,
     closeOnClickOutside,
     style,
     ...rest
   } = allProps
 
-  const variantsStyles = useDefaultComponentStyle<'u:Tooltip', typeof TooltipPresets>('u:Tooltip', {
-    responsiveVariants,
-    variants,
-    styles,
-  })
+  const styles = useStylesFor(Tooltip.styleRegistryName, style)
 
   const hasStateProps = !TypeGuards.isNil(_visible) && TypeGuards.isFunction(_toggle)
 
   const [visible, toggle] = hasStateProps ? [_visible, _toggle] : useState(false)
 
   const tooltipDirectionStyle = React.useMemo(() => {
-    return side ? variantsStyles[`content:${side}`] : variantsStyles.content
-  }, [side, variantsStyles])
+    return side ? styles[`content:${side}`] : styles.content
+  }, [side, styles])
 
   function handleToggle(_value: boolean, isToggle = true) {
     if (disabled) return
@@ -164,7 +112,7 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
         onOpenChange={onOpenChange}
         {...rest}
         // @ts-ignore expected error
-        css={[variantsStyles.wrapper, style]}
+        css={[styles.wrapper, style]}
       >
         <TooltipTrigger
           onClick={_onPress}
@@ -173,29 +121,29 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
           asChild
           ref={triggerRef}
           {...triggerProps}
-          style={variantsStyles.triggerWrapper}
+          style={styles.triggerWrapper}
         >
-          <TriggerWrapper 
-            {...allProps as any} 
+          <TriggerWrapper
+            {...allProps as any}
             {...triggerWrapperProps}
-            style={variantsStyles.triggerInnerWrapper}
+            style={styles.triggerInnerWrapper}
           >
             {children}
           </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
-          <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, variantsStyles.content]} sideOffset={2} side={side} {...contentProps}>
+          <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, styles.content]} sideOffset={2} side={side} {...contentProps}>
             {
               TypeGuards.isFunction(Content)
                 ? <Content
                   {...allProps}
                   visible={visible}
                   toggle={toggle}
-                  variantsStyles={variantsStyles}
+                  variantsStyles={styles}
                 />
                 : Content
             }
-            <TooltipArrow {...arrowProps} style={variantsStyles.arrow} />
+            <TooltipArrow {...arrowProps} style={styles.arrow} />
           </TooltipContent>
         </TooltipPortal>
       </TooltipWrapper>
@@ -204,6 +152,33 @@ export const Tooltip: ComponentWithDefaultProps<TooltipProps> = (props: TooltipP
   )
 }
 
-Tooltip.defaultProps = defaultProps
+Tooltip.styleRegistryName = 'Tooltip'
+
+Tooltip.elements = [
+  'wrapper',
+  'content',
+  'arrow',
+  'triggerWrapper',
+  'triggerInnerWrapper',
+]
+
+Tooltip.rootElement = 'wrapper'
+
+Tooltip.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Tooltip as (props: StyledComponentProps<TooltipProps, typeof styles>) => IJSX
+}
+
+Tooltip.defaultProps = {
+  openOnPress: true,
+  openOnHover: true,
+  disabled: false,
+  delayDuration: 0,
+  closeOnClickOutside: false,
+  side: 'bottom',
+  triggerWrapper: View as unknown as React.ElementType,
+} as Partial<TooltipProps>
+
+WebStyleRegistry.registerComponent(Tooltip)
 
 export * from './styles'
+export * from './types'
