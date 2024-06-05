@@ -19,14 +19,14 @@ export const Badge = (props: BadgeProps) => {
 
   const {
     debugName,
-    innerWrapperProps = {},
-    textProps = {},
+    innerWrapperProps,
+    textProps,
     maxCount,
     minCount,
     getBadgeContent,
     renderBadgeContent,
     disabled,
-    style = {},
+    style,
     badge,
     ...rest
   } = {

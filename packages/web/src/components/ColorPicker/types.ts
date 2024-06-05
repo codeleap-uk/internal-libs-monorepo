@@ -1,14 +1,12 @@
 import React from 'react'
-import { ActionIconProps, IconProps } from '../components'
+import { ActionIconProps, ColorPickerComposition, IconProps } from '../components'
+import { StyledProp } from '@codeleap/styles'
 import { RgbColor, RgbaColor, HslColor, HsvColor, HslaColor, HsvaColor } from 'react-colorful'
-import { ComponentVariants } from '@codeleap/common'
-import { ColorPickerComposition, ColorPickerPresets } from './styles'
 
 export type ColorTypes = RgbColor | HslColor | HsvColor | RgbaColor | HslaColor | HsvaColor | string
 
 export type ColorPickerProps = React.PropsWithChildren<{
-  styles?: ColorPickerComposition
-  style?: React.CSSProperties
+  style?: StyledProp<ColorPickerComposition>
   isPlain?: boolean
   closeOnConfirm?: boolean
   initialColor?: ColorTypes
@@ -22,4 +20,4 @@ export type ColorPickerProps = React.PropsWithChildren<{
   openPickerComponent?: (props: { color: ColorTypes; visible: boolean; toggle: (v?: boolean) => void }) => JSX.Element
   pickerComponent?: (props: any) => JSX.Element
   footerComponent?: (props: {color: ColorTypes; handleConfirmation: () => void; handleClear: () => void}) => JSX.Element
-} & ComponentVariants<typeof ColorPickerPresets>>
+} 

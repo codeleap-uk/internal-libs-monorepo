@@ -265,6 +265,11 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
 
 export const Modal = (props) => {
 
+  const allProps = {
+    ...Modal.defaultProps,
+    ...props,
+  }
+
   const {
     accessible,
     visible: _visible,
@@ -272,10 +277,7 @@ export const Modal = (props) => {
     modalId: _modalId,
     autoIndex,
     toggle: _toggle,
-  } = {
-    ...Modal.defaultProps,
-    ...props,
-  }
+  } = allProps
 
   const modalId = useRef(_modalId ?? v4())
   const setIndex = ModalStore(store => store.setIndex)
@@ -311,7 +313,7 @@ export const Modal = (props) => {
     }
   }, [visible])
 
-  const content = <ModalContent {...props} visible={visible} toggle={toggle} id={modalId.current} />
+  const content = <ModalContent {...allProps} visible={visible} toggle={toggle} id={modalId.current} />
 
   if (typeof window === 'undefined') return content
 

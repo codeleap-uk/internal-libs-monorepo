@@ -30,9 +30,9 @@ export const Button = (buttonProps: ButtonProps) => {
     disabled,
     rightIcon,
     selected,
-    loaderProps = {},
+    loaderProps,
     debugName,
-    style = {},
+    style,
     ...props
   } = allProps
 

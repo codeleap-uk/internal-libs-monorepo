@@ -15,7 +15,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     name,
     iconProps,
     onPress,
-    style = {},
+    style,
     children,
     disabled,
     debugName,

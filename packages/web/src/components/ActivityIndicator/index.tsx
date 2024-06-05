@@ -10,7 +10,7 @@ import { ComponentWithDefaultProps } from '../../types'
 export const ActivityIndicator = forwardRef((props: ActivityIndicatorProps, ref) => {
 
   const {
-    style = {},
+    style,
     component: Component,
     size,
   } = {

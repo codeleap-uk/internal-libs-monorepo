@@ -38,7 +38,7 @@ export function DatePicker(props: DatePickerProps) {
     toggle: _toggle,
     yearShow: _yearShow,
     setYearShow: _setYearShow,
-    disabled = false,
+    disabled,
     ...otherProps
   } = {
     ...DatePicker.defaultProps,
@@ -223,6 +223,7 @@ DatePicker.defaultProps = {
   startDate: new Date(1923, 0, 1),
   outerInputComponent: OuterInput,
   headerComponent: Header,
+  disabled: false,
 } as Partial<DatePickerProps>
 
 WebStyleRegistry.registerComponent(DatePicker)

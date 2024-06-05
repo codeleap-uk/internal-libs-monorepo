@@ -1,48 +1,36 @@
 /* eslint-disable max-len */
 import React, { useCallback } from 'react'
-import { ActionIcon, Collapse, ColorPickerPresets, View } from '../components'
+import { ActionIcon, Collapse, IconProps, View } from '../components'
 import { HexColorPicker } from 'react-colorful'
-import { useBooleanToggle, useDefaultComponentStyle, useState } from '@codeleap/common'
+import { useBooleanToggle, useState } from '@codeleap/common'
 import { ColorPickerProps, ColorTypes } from './types'
-
-export * from './styles'
-export * from './types'
-
-const defaultProps = {
-  pickerComponent: (props) => <HexColorPicker {...props}/>,
-  icon: 'edit',
-  clearIcon: 'trash',
-  confirmIcon: 'check',
-  showFooter: true,
-}
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export const ColorPicker = (props: ColorPickerProps) => {
+
   const {
-    isPlain = false,
+    isPlain,
     initialColor,
     showFooter,
     icon,
+    style,
     clearIcon,
     confirmIcon,
-    variants = [],
-    styles = {},
-    responsiveVariants = {},
     onConfirm,
     onClear,
-    closeOnConfirm = true,
+    closeOnConfirm,
     pickerComponent: PickerComponent,
     openPickerComponent: OpenPickerComponent,
-    footerComponent: FooterComponent = null,
+    footerComponent: FooterComponent,
     openPickerProps,
   } = props
+
+  const styles = useStylesFor(ColorPicker.styleRegistryName, style)
+
   const [visible, toggle] = useBooleanToggle(false)
   const [color, setColor] = useState<ColorTypes>(initialColor)
-
-  const variantStyles = useDefaultComponentStyle<'u:ColorPicker', typeof ColorPickerPresets>('u:ColorPicker', {
-    variants,
-    styles,
-    responsiveVariants,
-  })
 
   const handleConfirmation = useCallback(() => {
     onConfirm?.(color)
@@ -55,31 +43,31 @@ export const ColorPicker = (props: ColorPickerProps) => {
   }, [initialColor])
 
   const Footer = useCallback(() => (
-    <View style={variantStyles.footerWrapper}>
-      <ActionIcon debugName='ColorPicker footer trash' name={clearIcon} onPress={handleClear} styles={variantStyles.footerButton} />
-      <ActionIcon debugName='ColorPicker footer check' name={confirmIcon} onPress={handleConfirmation} styles={variantStyles.footerButton} />
+    <View style={styles.footerWrapper}>
+      <ActionIcon debugName='ColorPicker footer trash' name={clearIcon} onPress={handleClear} styles={styles.footerButton} />
+      <ActionIcon debugName='ColorPicker footer check' name={confirmIcon} onPress={handleConfirmation} styles={styles.footerButton} />
     </View>
   ), [clearIcon, confirmIcon, handleClear, handleConfirmation])
 
   // Dragging to change the color in any other way does not seem to work for some reason.
-  const picker = <View style={variantStyles.picker}><PickerComponent color={color} onChange={setColor} /></View>
+  const picker = <View style={styles.picker}><PickerComponent color={color} onChange={setColor} /></View>
 
   const _footer = !!showFooter && FooterComponent ? <FooterComponent color={color} handleConfirmation={handleConfirmation} handleClear={handleClear}/> : <Footer/>
   const openColorPickerBtn = !!OpenPickerComponent ? <OpenPickerComponent color={color} visible={visible} toggle={toggle}/> : <ActionIcon onPress={toggle} icon={icon} {...openPickerProps}/>
 
   return (
-    <View style={variantStyles.wrapper}>
+    <View style={styles.wrapper}>
       {isPlain ? picker : (
         <>
           {openColorPickerBtn}
           <Collapse
             open={visible}
             styles={{ wrapper: [
-              variantStyles.dropdown,
-              visible && variantStyles['dropdown:open'],
+              styles.dropdown,
+              visible && styles['dropdown:open'],
             ] }}
           >
-            <View style={variantStyles.dropdownInnerWrapper}>
+            <View style={styles.dropdownInnerWrapper}>
               {picker}
               {_footer}
             </View>
@@ -90,4 +78,37 @@ export const ColorPicker = (props: ColorPickerProps) => {
   )
 }
 
-ColorPicker.defaultProps = defaultProps
+ColorPicker.styleRegistryName = 'CropPicker'
+
+ColorPicker.elements = [
+  'wrapper',
+  'picker',
+  'dropdown',
+  'dropdownInnerWrapper',
+  'footerWrapper',
+]
+
+ColorPicker.rootElement = 'wrapper'
+
+ColorPicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ColorPicker as (props: StyledComponentProps<ColorPickerProps, typeof styles>) => IJSX
+}
+
+ColorPicker.defaultProps = {
+  pickerComponent: (props) => <HexColorPicker {...props}/>,
+  footerComponent: null,
+  icon: 'edit' as IconProps['name'],
+  clearIcon: 'trash' as IconProps['name'],
+  confirmIcon: 'check' as IconProps['name'],
+  showFooter: true,
+  isPlain: false,
+  closeOnConfirm: true,
+} as Partial<ColorPickerProps>
+
+WebStyleRegistry.registerComponent(ColorPicker)
+
+export const CropPicker = React.memo(ColorPicker)
+
+export * from './styles'
+export * from './types'
+

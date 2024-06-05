@@ -15,12 +15,12 @@ export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
   const {
     onFileSelect,
     targetCrop,
-    modalProps = {},
-    title = 'Crop Image',
-    confirmButton = 'Confirm Crop',
+    modalProps,
+    title,
+    confirmButton,
     debugName,
     handle,
-    withLoading = false,
+    withLoading,
     ...fileInputProps
   } = {
     ...CropPickerCP.defaultProps,
@@ -110,7 +110,11 @@ CropPickerCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return CropPickerCP as (props: StyledComponentProps<CropPickerProps, typeof styles>) => IJSX
 }
 
-CropPickerCP.defaultProps = {} as Partial<CropPickerProps>
+CropPickerCP.defaultProps = {
+  title: 'Crop Image',
+  confirmButton: 'Confirm Crop',
+  withLoading: false,
+} as Partial<CropPickerProps>
 
 WebStyleRegistry.registerComponent(CropPickerCP)
 

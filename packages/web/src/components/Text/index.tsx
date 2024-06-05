@@ -9,8 +9,8 @@ import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 
   const {
-    style = {},
-    text = null,
+    style,
+    text,
     children,
     component,
     debugName,
@@ -98,6 +98,7 @@ Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 Text.defaultProps = {
   debugName: 'Text component',
   component: 'p',
+  text: null,
   debounce: null,
   pressDisabled: false,
   animated: false,

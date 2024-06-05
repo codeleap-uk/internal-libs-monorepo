@@ -2,19 +2,16 @@
 import { useMemo, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
-import { NativeHTMLElement } from '../../types'
+import { ComponentWithDefaultProps } from '../../types'
 import { motion } from 'framer-motion'
 import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { useGlobalContext } from '../../contexts/GlobalContext'
-import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 
-export * from './styles'
-export * from './types'
-
-export const ViewCP = ({ viewProps, ref }: ViewComponentProps) => {
+export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
 
   const {
     component,
@@ -33,11 +30,11 @@ export const ViewCP = ({ viewProps, ref }: ViewComponentProps) => {
     css = [],
     ...props
   } = {
-    ...ViewCP.defaultProps,
+    ...View.defaultProps,
     ...viewProps,
   }
 
-  const styles = useStylesFor(ViewCP.styleRegistryName, style)
+  const styles = useStylesFor(View.styleRegistryName, style)
 
   const Component = animated ? (motion?.[component] || motion.div) : (component || 'div')
 
@@ -94,26 +91,24 @@ export const ViewCP = ({ viewProps, ref }: ViewComponentProps) => {
       {children}
     </Component>
   )
-}
+}) as ComponentWithDefaultProps<ViewProps<any>> & GenericStyledComponentAttributes<AnyRecord>
 
-ViewCP.styleRegistryName = 'View'
-ViewCP.elements = ['wrapper']
-ViewCP.rootElement = 'wrapper'
+View.styleRegistryName = 'View'
+View.elements = ['wrapper']
+View.rootElement = 'wrapper'
 
-ViewCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return View as (<T extends React.ElementType = 'div'>(props: StyledComponentProps<ViewProps<T>, typeof styles>) => IJSX)
 }
 
-ViewCP.defaultProps = {
+View.defaultProps = {
   component: 'div',
   scroll: false,
   debug: false,
   animated: false,
 } as Partial<ViewComponentProps>
 
-WebStyleRegistry.registerComponent(ViewCP)
+WebStyleRegistry.registerComponent(View)
 
-export const View = forwardRef(ViewCP) as unknown as <T extends NativeHTMLElement = 'div'>(
-  props: ViewProps<T>
-) => JSX.Element
-
+export * from './styles'
+export * from './types'
