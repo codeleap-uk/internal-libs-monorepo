@@ -1,44 +1,24 @@
 import {
-  AnyFunction,
-  ComponentVariants,
   IconPlaceholder,
   TypeGuards,
-  useDefaultComponentStyle,
-  useNestedStylesByKey,
 } from '@codeleap/common'
 import { CSSObject } from '@emotion/react'
 import React from 'react'
 import { Overlay } from '../Overlay'
 import { View } from '../View'
 import { Text } from '../Text'
-import { ComponentCommonProps, StylesOf } from '../../types/utility'
-import { DrawerComposition, DrawerPresets } from './styles'
-import { ActionIcon, ActionIconProps } from '../ActionIcon'
-import { usePopState } from '../../lib'
+import { ActionIcon } from '../ActionIcon'
+import { WebStyleRegistry, usePopState } from '../../lib'
+import { DrawerProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-const axisMap = {
+export const axisMap = {
   top: [-1, 'Y'],
   bottom: [1, 'Y'],
   left: [-1, 'X'],
   right: [1, 'X'],
 } as const
-
-export type DrawerProps = {
-  open: boolean
-  toggle: AnyFunction
-  darkenBackground?: boolean
-  size?: string | number
-  showCloseButton?: boolean
-  title?: React.ReactNode | string
-  footer?: React.ReactNode
-  position?: keyof typeof axisMap
-  styles?: StylesOf<DrawerComposition>
-  style?: React.CSSProperties
-  animationDuration?: string
-  closeButtonProps?: Partial<ActionIconProps>
-  closeIcon?: IconPlaceholder
-  children?: React.ReactNode
-} & ComponentVariants<typeof DrawerPresets> & ComponentCommonProps
 
 const resolveHiddenDrawerPosition = (
   position: DrawerProps['position'],
@@ -58,23 +38,10 @@ const resolveHiddenDrawerPosition = (
 
   const positioning = Object.fromEntries(positioningKeys.map((k) => [k, 0]))
   return [css, translateAxis, positioning]
-}
 
-const defaultProps: Partial<DrawerProps> = {
-  animationDuration: '0.3s',
-  position: 'bottom',
-  showCloseButton: false,
-  darkenBackground: true,
-  size: '75vw',
-  title: null,
-  closeIcon: 'x' as IconPlaceholder,
 }
 
 export const Drawer = (props: DrawerProps) => {
-  const allProps = {
-    ...Drawer.defaultProps,
-    ...props,
-  }
 
   const {
     open,
@@ -87,41 +54,37 @@ export const Drawer = (props: DrawerProps) => {
     showCloseButton,
     closeButtonProps = {},
     position,
-    variants = [],
-    responsiveVariants = {},
-    styles,
     style,
     animationDuration,
     debugName,
     closeIcon,
-  } = allProps as DrawerProps
+  } = {
+    ...Drawer.defaultProps,
+    ...props,
+  }
 
   usePopState(open, toggle)
+
+  const styles = useStylesFor(Drawer.styleRegistryName, style)
 
   const [hiddenStyle, axis, positioning] = resolveHiddenDrawerPosition(position)
 
   const sizeProperty = axis === 'X' ? 'width' : 'height'
   const fullProperty = sizeProperty === 'height' ? 'width' : 'height'
 
-  const variantStyles = useDefaultComponentStyle<'u:Drawer', typeof DrawerPresets>('u:Drawer', {
-    styles,
-    variants,
-    responsiveVariants,
-  })
-
-  const closeButtonStyles = useNestedStylesByKey('closeButton', variantStyles)
+  const closeButtonStyles = useNestedStylesByKey('closeButton', styles)
 
   const showHeader = (!TypeGuards.isNil(title) || showCloseButton)
 
   const wrapperStyles = React.useMemo(() => ([
-    variantStyles.wrapper,
+    styles.wrapper,
     {
       transition: 'visibility 0.01s ease',
       transitionDelay: open ? '0' : animationDuration,
       visibility: open ? 'visible' : 'hidden',
     },
     style,
-  ]), [open, variantStyles])
+  ]), [open, styles])
 
   return (
     <View debugName={debugName} css={wrapperStyles}>
@@ -129,7 +92,7 @@ export const Drawer = (props: DrawerProps) => {
         <Overlay
           debugName={debugName}
           visible={open}
-          css={variantStyles.overlay}
+          css={styles.overlay}
           onPress={toggle}
         />
       )}
@@ -143,16 +106,16 @@ export const Drawer = (props: DrawerProps) => {
           [fullProperty]: '100%',
           ...positioning,
           [position]: 0,
-          ...variantStyles.box,
+          ...styles.box,
         }}
       >
         {
           showHeader ? (
             <View
               component='header'
-              css={[variantStyles.header]}
+              css={[styles.header]}
             >
-              {TypeGuards.isString(title) ? <Text css={variantStyles.title} text={title} /> : title}
+              {TypeGuards.isString(title) ? <Text css={styles.title} text={title} /> : title}
               {showCloseButton && (
                 <ActionIcon
                   debugName={debugName}
@@ -166,10 +129,10 @@ export const Drawer = (props: DrawerProps) => {
           ) : null
         }
 
-        <View css={variantStyles.body}>{children}</View>
+        <View css={styles.body}>{children}</View>
 
         {footer && (
-          <View component='footer' css={variantStyles.footer}>
+          <View component='footer' css={styles.footer}>
             {footer}
           </View>
         )}
@@ -178,6 +141,36 @@ export const Drawer = (props: DrawerProps) => {
   )
 }
 
-Drawer.defaultProps = defaultProps
+Drawer.styleRegistryName = 'Drawer'
+
+Drawer.elements = [
+  'wrapper',
+  'overlay',
+  'header',
+  'footer',
+  'closeButton',
+  'body',
+  'box',
+  'title',
+]
+
+Drawer.rootElement = 'wrapper'
+
+Drawer.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Drawer as (props: StyledComponentProps<DrawerProps, typeof styles>) => IJSX
+}
+
+Drawer.defaultProps = {
+  animationDuration: '0.3s',
+  position: 'bottom',
+  showCloseButton: false,
+  darkenBackground: true,
+  size: '75vw',
+  title: null,
+  closeIcon: 'x' as IconPlaceholder,
+} as Partial<DrawerProps>
+
+WebStyleRegistry.registerComponent(Drawer)
 
 export * from './styles'
+export * from './types'
