@@ -1,55 +1,23 @@
 import { View } from '../View'
-import React from 'react'
-import {
-  useDefaultComponentStyle,
-  ComponentVariants,
-  ActivityIndicatorStyles,
-  ActivityIndicatorComposition,
-  StylesOf,
-  TypeGuards,
-} from '@codeleap/common'
-import { ActivityIndicatorPresets } from './styles'
-import { CSSInterpolation } from '@emotion/css'
-import { ComponentCommonProps, ComponentWithDefaultProps } from '../../types'
+import React, { forwardRef } from 'react'
+import { TypeGuards } from '@codeleap/common'
+import { ActivityIndicatorProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export * from './styles'
-
-/** * LoadingIndicator */
-export type ActivityIndicatorProps = ComponentCommonProps & {
-  style?: React.CSSProperties
-  styles?: StylesOf<ActivityIndicatorComposition>
-  css?: CSSInterpolation | CSSInterpolation[]
-  /** prop */
-  component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<any>}, 'component'>>
-  /** prop */
-  size?: number
-} & ComponentVariants<typeof ActivityIndicatorStyles>
-
-export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicatorProps>((activityIndicatorProps, ref) => {
-  const allProps = {
-    ...ActivityIndicator.defaultProps,
-    ...activityIndicatorProps,
-  }
+export const ActivityIndicatorCP = (props: ActivityIndicatorProps, ref) => {
 
   const {
     style = {},
-    styles = {},
     component: Component,
-    variants = [],
-    responsiveVariants = {},
     size,
-    ...props
-  } = allProps
+  } = {
+    ...ActivityIndicatorCP.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:ActivityIndicator', typeof ActivityIndicatorPresets>(
-    'u:ActivityIndicator',
-    {
-      responsiveVariants,
-      variants,
-      styles,
-      rootElement: 'wrapper',
-    },
-  )
+  const styles = useStylesFor(ActivityIndicatorCP.styleRegistryName, style)
 
   const _size = React.useMemo(() => {
     return TypeGuards.isNumber(size) ? {
@@ -59,17 +27,36 @@ export const ActivityIndicator = React.forwardRef<typeof View, ActivityIndicator
   }, [size])
 
   return (
-    <View css={[variantStyles.wrapper, _size, style]}>
+    <View style={[styles.wrapper, _size, style]}>
       <Component
         ref={ref}
-        css={[variantStyles.wrapper, _size, style]}
+        css={[styles.wrapper, _size, style]}
         {...props}
       />
     </View>
   )
-}) as ComponentWithDefaultProps<ActivityIndicatorProps>
+}
 
-ActivityIndicator.defaultProps = {
+ActivityIndicatorCP.styleRegistryName = 'ActivityIndicator'
+
+ActivityIndicatorCP.elements = ['wrapper']
+
+ActivityIndicatorCP.rootElement = 'wrapper'
+
+ActivityIndicatorCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ActivityIndicatorCP as (props: StyledComponentProps<ActivityIndicatorProps, typeof styles>) => IJSX
+}
+
+ActivityIndicatorCP.defaultProps = {
   component: View as ActivityIndicatorProps['component'],
   size: null,
+} as Partial<ActivityIndicatorProps>
+
+WebStyleRegistry.registerComponent(ActivityIndicatorCP)
+
+export const ActivityIndicator = forwardRef(ActivityIndicatorCP) as ((activityIndicatorProps: ActivityIndicatorProps) => JSX.Element) & {
+  defaultProps: Partial<ActivityIndicatorProps>
 }
+
+export * from './styles'
+export * from './types'
