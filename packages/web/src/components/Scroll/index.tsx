@@ -1,32 +1,38 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
-import {
-  ElementType,
-  forwardRef,
-  ReactElement,
-  Ref,
-} from 'react'
-import { NativeHTMLElement } from '../../types'
-import { View, ViewProps } from '../View'
+import { forwardRef, Ref } from 'react'
+import { ComponentWithDefaultProps, NativeHTMLElement } from '../../types'
+import { View } from '../View'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
+import { ScrollComponentProps, ScrollProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-export const ScrollCP = <T extends NativeHTMLElement = 'div'>(
-  props: ViewProps<T>,
-  ref: Ref<any>,
-) => {
+export const Scroll = forwardRef(<T extends NativeHTMLElement = 'div'>(props: ScrollProps<T>, ref: Ref<any>) => {
+
+  const styles = useStylesFor(Scroll.styleRegistryName, props?.style)
 
   return (
-    // @ts-ignore
     <View
       {...props}
       ref={ref}
       scroll
+      style={styles}
     />
-
   )
+}) as ComponentWithDefaultProps<ScrollProps<any>> & GenericStyledComponentAttributes<AnyRecord>
+
+Scroll.styleRegistryName = 'Scroll'
+Scroll.elements = ['wrapper']
+Scroll.rootElement = 'wrapper'
+
+Scroll.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Scroll as (<T extends React.ElementType = 'div'>(props: StyledComponentProps<ScrollProps<T>, typeof styles>) => IJSX)
 }
 
-export * from './styles'
+Scroll.defaultProps = {} as Partial<ScrollComponentProps>
 
-export const Scroll = forwardRef(ScrollCP) as <T extends NativeHTMLElement = 'div'>(
-  props: ViewProps<T>
-) => JSX.Element
+WebStyleRegistry.registerComponent(Scroll)
+
+export * from './styles'
+export * from './types'
+
