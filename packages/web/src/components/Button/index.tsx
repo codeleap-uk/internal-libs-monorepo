@@ -1,62 +1,26 @@
 import React from 'react'
 import {
-  useDefaultComponentStyle,
-  ComponentVariants,
-  AnyFunction,
   TypeGuards,
-  IconPlaceholder,
   StylesOf,
 } from '@codeleap/common'
 import { Text } from '../Text'
-import { Touchable, TouchableProps } from '../Touchable'
+import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
-import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
-import { ButtonComposition, ButtonPresets, ButtonParts } from './styles'
-import { ComponentCommonProps } from '../../types'
-
-/** * Button */
-export type ButtonProps = 
-  ComponentVariants<typeof ButtonPresets> &
-  Partial<Omit<TouchableProps<'button'>, 'variants' | 'styles'>> &
-  ComponentCommonProps & {
-    /** prop */
-    text?: string
-    /** prop */
-    rightIcon?: IconPlaceholder
-    /** prop */
-    icon?: IconPlaceholder
-    /** prop */
-    onPress?: AnyFunction
-    styles?: StylesOf<ButtonComposition>
-    style?: React.CSSProperties
-    /** prop */
-    loading?: boolean
-    loadingShowText?: boolean
-    /** prop */
-    debugName: string
-    /** prop */
-    debounce?: number
-    /** prop */
-    selected?: boolean
-    children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
-    loaderProps?: Partial<ActivityIndicatorProps>
-  }
-
-const defaultProps: Partial<ButtonProps> = {
-  debounce: 600,
-  loadingShowText: false,
-}
+import { ActivityIndicator } from '../ActivityIndicator'
+import { ButtonParts } from './styles'
+import { ButtonProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export const Button = (buttonProps: ButtonProps) => {
+
   const allProps = {
     ...Button.defaultProps,
-    ...buttonProps
+    ...buttonProps,
   }
 
   const {
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
     children,
     icon,
     text,
@@ -72,17 +36,12 @@ export const Button = (buttonProps: ButtonProps) => {
     ...props
   } = allProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Button', typeof ButtonPresets>('u:Button', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'wrapper',
-  })
+  const styles = useStylesFor(Button.styleRegistryName, style)
 
   const getStyles = (key: ButtonParts) => ({
-    ...variantStyles?.[key],
-    ...(disabled ? variantStyles?.[key + ':disabled'] : {}),
-    ...(selected ? variantStyles?.[key + ':selected'] : {})
+    ...styles?.[key],
+    ...(disabled ? styles?.[key + ':disabled'] : {}),
+    ...(selected ? styles?.[key + ':selected'] : {}),
   })
 
   const iconStyles = getStyles('icon')
@@ -97,7 +56,7 @@ export const Button = (buttonProps: ButtonProps) => {
     },
     rightIcon: {
       ...iconStyles,
-      ...getStyles('rightIcon')
+      ...getStyles('rightIcon'),
     },
   }
 
@@ -125,7 +84,7 @@ export const Button = (buttonProps: ButtonProps) => {
     >
       {shouldRenderLeftIcon && <Icon debugName={debugName} name={icon} style={_styles.leftIcon} />}
       {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text debugName={debugName} text={text} css={[_styles.text]} /> : null }
-      
+
       {childrenContent}
 
       <Icon debugName={debugName} name={rightIcon} style={_styles.rightIcon}/>
@@ -136,6 +95,29 @@ export const Button = (buttonProps: ButtonProps) => {
   )
 }
 
-Button.defaultProps = defaultProps
+Button.styleRegistryName = 'Button'
+
+Button.elements = [
+  'wrapper',
+  'text',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+  `loader`,
+]
+
+Button.rootElement = 'wrapper'
+
+Button.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Button as (props: StyledComponentProps<ButtonProps, typeof styles>) => IJSX
+}
+
+Button.defaultProps = {
+  debounce: 600,
+  loadingShowText: false,
+} as Partial<ButtonProps>
+
+WebStyleRegistry.registerComponent(Button)
 
 export * from './styles'
+export * from './types'

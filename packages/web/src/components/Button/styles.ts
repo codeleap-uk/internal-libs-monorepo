@@ -1,4 +1,3 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
 
 export type ButtonStates = 'disabled' | 'selected'
@@ -13,6 +12,3 @@ export type ButtonParts =
 
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
 
-const createButtonStyle = createDefaultVariantFactory<ButtonComposition>()
-
-export const ButtonPresets = includePresets((styles) => createButtonStyle(() => ({ wrapper: styles })))
