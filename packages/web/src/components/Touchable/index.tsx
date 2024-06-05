@@ -1,53 +1,22 @@
-import { AnyFunction, ComponentVariants, onMount, TypeGuards, useCodeleapContext, useDefaultComponentStyle } from '@codeleap/common'
-import React, { ComponentPropsWithRef, ElementType, forwardRef } from 'react'
+import { onMount, TypeGuards } from '@codeleap/common'
+import React, { forwardRef } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
-import { TouchableComposition, TouchablePresets } from './styles'
-import { CSSInterpolation } from '@emotion/css'
-import { StylesOf, NativeHTMLElement } from '../../types'
+import { NativeHTMLElement } from '../../types'
 import { getTestId } from '../../lib/utils/test'
-export * from './styles'
+import { useGlobalContext } from '../../contexts/GlobalContext'
+import { TouchableProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWithRef<T> & {
-  css?: CSSInterpolation | CSSInterpolation[]
-  component?: T
-  disabled?: boolean
-  propagate?: boolean
-  style?: React.CSSProperties
-  onPress?: AnyFunction
-  debugName: string
-  debugComponent?: string
-  styles?: StylesOf<TouchableComposition>
-  debounce?: number
-  leadingDebounce?: boolean
-  setPressed?: (pressed: boolean) => void
-  analyticsEnabled?: boolean
-  analyticsName?: string
-  analyticsData?: Record<string, any>
-} & ComponentVariants<typeof TouchablePresets>
+export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
 
-const defaultProps: Partial<TouchableProps<'button'>> = {
-  propagate: true,
-  debounce: null,
-  component: View as unknown as 'button',
-  style: {},
-  styles: {},
-  responsiveVariants: {},
-  variants: [],
-  css: [],
-  analyticsEnabled: false,
-  analyticsName: null,
-  analyticsData: {},
-  tabIndex: 0,
-}
-export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
-  touchableProps: TouchableProps<T>,
-  ref,
-) => {
-  const mergedProps = {
-    ...(defaultProps),
-    ...(touchableProps),
+  const allProps = {
+    ...Touchable.defaultProps,
+    ...touchableProps,
   }
+
   const {
     propagate,
     debounce,
@@ -60,15 +29,14 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     debugName,
     debugComponent,
     style,
-    styles,
-    responsiveVariants,
-    variants,
     css,
     analyticsEnabled,
     analyticsName,
     analyticsData,
     ...props
-  } = mergedProps
+  } = allProps
+
+  const styles = useStylesFor(Touchable.styleRegistryName, style)
 
   const pressed = React.useRef(!!leadingDebounce)
 
@@ -80,14 +48,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Touchable', typeof TouchablePresets>('u:Touchable', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'wrapper',
-  })
-
-  const { logger } = useCodeleapContext()
+  const { logger } = useGlobalContext()
 
   const notPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
 
@@ -141,13 +102,13 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   }
 
   const _styles = React.useMemo(() => ([
-    variantStyles.wrapper,
-    disabled && variantStyles['wrapper:disabled'],
+    styles.wrapper,
+    disabled && styles['wrapper:disabled'],
     css,
     style,
-  ]), [variantStyles, disabled, style])
+  ]), [styles, disabled, style])
 
-  const testId = getTestId(mergedProps)
+  const testId = getTestId(allProps)
 
   return (
     // @ts-ignore
@@ -164,10 +125,33 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(
   )
 }
 
-export const Touchable = forwardRef(TouchableCP) as (<T extends NativeHTMLElement = 'button'>(
-  touchableProps: TouchableProps<T>
-) => JSX.Element) & {
+TouchableCP.styleRegistryName = 'Touchable'
+
+TouchableCP.elements = ['wrapper']
+
+TouchableCP.rootElement = 'wrapper'
+
+TouchableCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Touchable as (props: StyledComponentProps<TouchableProps, typeof styles>) => IJSX
+}
+
+TouchableCP.defaultProps = {
+  propagate: true,
+  debounce: null,
+  component: View as unknown as 'button',
+  style: {},
+  styles: {},
+  analyticsEnabled: false,
+  analyticsName: null,
+  analyticsData: {},
+  tabIndex: 0,
+} as Partial<TouchableProps<'button'>>
+
+WebStyleRegistry.registerComponent(TouchableCP)
+
+export const Touchable = forwardRef(TouchableCP) as (<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>) => JSX.Element) & {
   defaultProps: Partial<TouchableProps<'button'>>
 }
 
-Touchable.defaultProps = defaultProps
+export * from './styles'
+export * from './types'
