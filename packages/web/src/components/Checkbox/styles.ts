@@ -1,4 +1,3 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { InputBaseParts, InputBaseStates } from '../InputBase'
 
 type AnimatableParts = 'checkmarkWrapper' | 'box'
@@ -15,6 +14,3 @@ export type CheckboxComposition =
   | `${AnimatableParts}:${CheckboxAnimationStates}`
   | '__props'
 
-const createCheckboxStyle = createDefaultVariantFactory<CheckboxComposition>()
-
-export const CheckboxPresets = includePresets((styles) => createCheckboxStyle(() => ({ wrapper: styles })))

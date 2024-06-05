@@ -5,9 +5,8 @@ import { GridProps } from './types'
 import { ListLayout } from '../List'
 import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { AnyRecord, IJSX, StyledComponentProps, GenericStyledComponentAttributes } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
-import { ComponentWithDefaultProps } from '../../types'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (

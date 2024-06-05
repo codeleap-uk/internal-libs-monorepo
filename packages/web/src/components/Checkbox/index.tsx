@@ -1,56 +1,25 @@
 /** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-  StylesOf,
-  PropsOf,
-  IconPlaceholder,
-} from '@codeleap/common'
-import { View } from '../View'
-import { CheckboxPresets, CheckboxComposition } from './styles'
-import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { IconPlaceholder } from '@codeleap/common'
+import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
 import { Icon } from '../Icon'
 import { motion } from 'framer-motion'
-import { ComponentCommonProps } from '../../types/utility'
-
-export * from './styles'
-
-/** * Checkbox */
-export type CheckboxProps = Pick<
-  InputBaseProps,
-  'debugName' | 'disabled' | 'label'
-> & ComponentCommonProps & {
-  styles?: StylesOf<CheckboxComposition>
-  /** prop */
-  value: boolean
-  /** prop */
-  onValueChange: (value: boolean) => void
-  style?: PropsOf<typeof View>['style']
-  /** prop */
-  checkboxOnLeft?: boolean
-  /** prop */
-  checkIcon?: IconPlaceholder
-} & ComponentVariants<typeof CheckboxPresets>
+import { CheckboxProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
-const defaultProps: Partial<CheckboxProps> = {
-  checkIcon: 'check' as IconPlaceholder,
-}
-
 export const Checkbox = (props: CheckboxProps) => {
+
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({ ...Checkbox.defaultProps, ...props })
 
   const {
-    responsiveVariants = {},
-    variants = [],
-    style = {},
-    styles = {},
+    style,
     value,
     disabled,
     debugName,
@@ -59,23 +28,18 @@ export const Checkbox = (props: CheckboxProps) => {
     checkIcon,
   } = others
 
-  const variantStyles = useDefaultComponentStyle<'u:Checkbox', typeof CheckboxPresets>('u:Checkbox', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'wrapper',
-  })
+  const styles = useStylesFor(Checkbox.styleRegistryName, style)
 
   const boxAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: ['box:unchecked', 'box:disabled', 'box:checked', 'box:disabled-checked', 'box:disabled-unchecked'],
     updater: () => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? variantStyles['box:disabled-checked'] : variantStyles['box:disabled-unchecked']
+        disabledStyle = value ? styles['box:disabled-checked'] : styles['box:disabled-unchecked']
       }
-      const style = value ? variantStyles['box:checked'] : variantStyles['box:unchecked']
+      const style = value ? styles['box:checked'] : styles['box:unchecked']
 
       return {
         ...style,
@@ -87,7 +51,7 @@ export const Checkbox = (props: CheckboxProps) => {
   })
 
   const checkmarkWrapperAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: [
       'checkmarkWrapper:unchecked',
       'checkmarkWrapper:disabled',
@@ -99,9 +63,9 @@ export const Checkbox = (props: CheckboxProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? variantStyles['checkmarkWrapper:disabled-checked'] : variantStyles['checkmarkWrapper:disabled-unchecked']
+        disabledStyle = value ? styles['checkmarkWrapper:disabled-checked'] : styles['checkmarkWrapper:disabled-unchecked']
       }
-      const style = value ? variantStyles['checkmarkWrapper:checked'] : variantStyles['checkmarkWrapper:unchecked']
+      const style = value ? styles['checkmarkWrapper:checked'] : styles['checkmarkWrapper:unchecked']
       return {
         ...style,
         ...disabledStyle,
@@ -111,7 +75,7 @@ export const Checkbox = (props: CheckboxProps) => {
     dependencies: [value, disabled],
   })
 
-  const _checkboxOnLeft = checkboxOnLeft ?? variantStyles.__props?.checkboxOnLeft
+  const _checkboxOnLeft = checkboxOnLeft ?? styles.__props?.checkboxOnLeft
 
   const handleChange = (e) => {
     if (disabled) return
@@ -122,9 +86,9 @@ export const Checkbox = (props: CheckboxProps) => {
     {...inputBaseProps}
     debugName={debugName}
     styles={{
-      ...variantStyles,
+      ...styles,
       innerWrapper: [
-        variantStyles.innerWrapper,
+        styles.innerWrapper,
       ],
     }}
     order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
@@ -132,35 +96,65 @@ export const Checkbox = (props: CheckboxProps) => {
   >
     <motion.div
       css={[
-        variantStyles.box,
-        disabled && variantStyles['box:disabled'],
+        styles.box,
+        disabled && styles['box:disabled'],
       ]}
       initial={false}
       animate={boxAnimation}
-      transition={variantStyles['box:transition']}
+      transition={styles['box:transition']}
       onClick={handleChange}
       onKeyDown={handleChange}
       tabIndex={0}
     >
       <motion.div
         css={[
-          variantStyles.checkmarkWrapper,
-          disabled && variantStyles['checkmarkWrapper:disabled'],
+          styles.checkmarkWrapper,
+          disabled && styles['checkmarkWrapper:disabled'],
         ]}
         initial={false}
         animate={checkmarkWrapperAnimation}
-        transition={variantStyles['checkmarkWrapper:transition']}
+        transition={styles['checkmarkWrapper:transition']}
 
       >
         <Icon
           debugName={debugName}
           name={checkIcon as any}
-          css={[variantStyles.checkmark, disabled && variantStyles['checkmark:disabled']]}
-          style={variantStyles.checkmark}
+          css={[styles.checkmark, disabled && styles['checkmark:disabled']]}
+          style={styles.checkmark}
         />
       </motion.div>
     </motion.div>
   </InputBase>
 }
 
-Checkbox.defaultProps = defaultProps
+Checkbox.styleRegistryName = 'Checkbox'
+
+Checkbox.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'checkmarkWrapper',
+  'checkmark',
+  'box',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+]
+
+Checkbox.rootElement = 'wrapper'
+
+Checkbox.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Checkbox as (props: StyledComponentProps<CheckboxProps, typeof styles>) => IJSX
+}
+
+Checkbox.defaultProps = {
+  checkIcon: 'check' as IconPlaceholder,
+} as Partial<CheckboxProps>
+
+WebStyleRegistry.registerComponent(Checkbox)
+
+export * from './styles'
+export * from './types'
