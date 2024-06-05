@@ -1,41 +1,28 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
-
-import { capitalize, StylesOf, TypeGuards } from '@codeleap/common'
+import { capitalize, TypeGuards } from '@codeleap/common'
 import { Scroll } from '../Scroll'
-import { View, ViewProps } from '../View'
-import { ElementType } from 'react'
-import { NativeHTMLElement } from '../../types'
+import { View } from '../View'
+import { CollapseProps, GetCollapseStylesArgs } from './types'
+import { CollapseComposition } from './styles'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
 
-export type CollapseAxis = 'horizontal' | 'vertical'
+export function getCollapseStyles<TCSS = React.CSSProperties, Return extends Record<CollapseComposition, TCSS> =
+  Record<CollapseComposition, TCSS>>(args: GetCollapseStylesArgs): Return {
 
-export type GetCollapseStylesArgs = {
-  direction?: CollapseAxis
-  value: string | number
-   animation?: string
-   scroll ?: boolean
-}
-
-type CollapseComposition = 'wrapper' | 'wrapper:open' |'wrapper:hidden'
-
-export function getCollapseStyles<
-    TCSS = React.CSSProperties,
-    Return extends Record<CollapseComposition, TCSS> = Record<CollapseComposition, TCSS>
->(
-  args: GetCollapseStylesArgs,
-): Return {
   const {
     direction = 'vertical',
     value,
     animation = '0.3s ease',
     scroll = false,
-
   } = args
 
   const dimension = direction === 'horizontal' ? 'width' : 'height'
   const capitalizedDimension = capitalize(dimension)
   const overflowOpen = scroll ? 'auto' : 'hidden'
   const axis = direction === 'vertical' ? 'Y' : 'X'
+
   return {
     'wrapper:closed': {
       [`max${capitalizedDimension}`]: '0px',
@@ -52,40 +39,62 @@ export function getCollapseStyles<
   } as unknown as Return
 }
 
-export type CollapseProps<T extends NativeHTMLElement = 'div'> = ViewProps<T> & {
-    open: boolean
-    scroll?: boolean
-    size?: string | number
-    direction?: CollapseAxis
-    animation?: string
-    styles: StylesOf<CollapseComposition>
-}
+export const Collapse = (props: CollapseProps) => {
 
-export const Collapse = ({
-  open,
-  size = 1000,
-  scroll = false,
-  children,
-  direction,
-  animation,
-  styles,
-  ...props
-}:CollapseProps) => {
+  const {
+    open,
+    size,
+    scroll,
+    children,
+    direction,
+    animation,
+    style,
+    ...wrapperProps
+  } = {
+    ...Collapse.defaultProps,
+    ...props,
+  }
+
+  const styles = useStylesFor(Collapse.styleRegistryName, style)
 
   const Component = scroll ? Scroll : View
+
   const _styles = getCollapseStyles({
     value: size,
     direction,
     animation,
   })
-  // @ts-ignore
-  return <Component css={[
-    _styles.wrapper,
-    open ? _styles['wrapper:open'] : _styles['wrapper:closed'],
-    styles.wrapper,
-  ]} {...props}>
-    {children}
-  </Component>
+
+  return (
+    <Component
+      {...wrapperProps}
+      css={[
+        _styles.wrapper,
+        open ? _styles['wrapper:open'] : _styles['wrapper:closed'],
+        styles.wrapper,
+      ]}
+    >
+      {children}
+    </Component>
+  )
 }
 
+Collapse.styleRegistryName = 'Collapse'
+
+Collapse.elements = ['wrapper']
+
+Collapse.rootElement = 'wrapper'
+
+Collapse.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Collapse as (props: StyledComponentProps<CollapseProps, typeof styles>) => IJSX
+}
+
+Collapse.defaultProps = {
+  size: 1000,
+  scroll: false,
+} as Partial<CollapseProps>
+
+WebStyleRegistry.registerComponent(Collapse)
+
 export * from './styles'
+export * from './types'
