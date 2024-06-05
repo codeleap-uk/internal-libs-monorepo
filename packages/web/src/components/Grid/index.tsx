@@ -1,14 +1,13 @@
 import React from 'react'
-import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { GridPresets } from './styles'
 import { GridProps } from './types'
-import { ListLayout, useInfiniteScroll } from '../List'
-import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
-
-export * from './styles'
-export * from './types'
+import { ListLayout } from '../List'
+import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps, GenericStyledComponentAttributes } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
+import { ComponentWithDefaultProps } from '../../types'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
@@ -16,34 +15,15 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) =>
   )
 }
 
-const defaultProps: Partial<GridProps> = {
-  ListFooterComponent: null,
-  ListHeaderComponent: null,
-  ListLoadingIndicatorComponent: null,
-  ListEmptyComponent: EmptyPlaceholder,
-  ListSeparatorComponent: RenderSeparator,
-  refreshDebounce: 1500,
-  refreshSize: 40,
-  refreshThreshold: 0.1,
-  refreshPosition: 16,
-  refresh: true,
-  columnItemsSpacing: 8,
-  rowItemsSpacing: 8,
-  overscan: 2,
-  reloadTimeout: 350,
-  showFooter: true,
-}
+export const Grid = (props: GridProps) => {
 
-export function Grid<T = any>(props: GridProps<T>) {
   const allProps = {
     ...Grid.defaultProps,
     ...props,
-  } as GridProps
+  }
 
   const {
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
+    style,
     renderItem: RenderItem,
     columnItemsSpacing,
     rowItemsSpacing,
@@ -51,17 +31,13 @@ export function Grid<T = any>(props: GridProps<T>) {
     data,
     overscan,
     separators,
-    masonryProps = {},
+    masonryProps,
     numColumns,
     reloadTimeout,
     showFooter,
   } = allProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const styles = useStylesFor(Grid.styleRegistryName, style)
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
@@ -71,7 +47,7 @@ export function Grid<T = any>(props: GridProps<T>) {
   })
 
   const separator = React.useMemo(() => {
-    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+    return separators ? <ListSeparatorComponent separatorStyles={styles.separator} /> : null
   }, [])
 
   const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
@@ -103,7 +79,7 @@ export function Grid<T = any>(props: GridProps<T>) {
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={variantStyles}
+      variantStyles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
@@ -124,4 +100,41 @@ export function Grid<T = any>(props: GridProps<T>) {
   )
 }
 
-Grid.defaultProps = defaultProps
+Grid.styleRegistryName = 'Grid'
+
+Grid.elements = [
+  'wrapper',
+  'innerWrapper',
+  'separator',
+  'refreshControl',
+  'refreshControlIndicator',
+]
+
+Grid.rootElement = 'wrapper'
+
+Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Grid as (props: StyledComponentProps<GridProps, typeof styles>) => IJSX
+}
+
+Grid.defaultProps = {
+  ListFooterComponent: null,
+  ListHeaderComponent: null,
+  ListLoadingIndicatorComponent: null,
+  ListEmptyComponent: EmptyPlaceholder,
+  ListSeparatorComponent: RenderSeparator,
+  refreshDebounce: 1500,
+  refreshSize: 40,
+  refreshThreshold: 0.1,
+  refreshPosition: 16,
+  refresh: true,
+  columnItemsSpacing: 8,
+  rowItemsSpacing: 8,
+  overscan: 2,
+  reloadTimeout: 350,
+  showFooter: true,
+} as Partial<GridProps>
+
+WebStyleRegistry.registerComponent(Grid)
+
+export * from './styles'
+export * from './types'

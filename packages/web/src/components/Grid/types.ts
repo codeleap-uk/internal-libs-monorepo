@@ -1,15 +1,10 @@
-import { ComponentVariants, StylesOf } from '@codeleap/common'
+import { StyledProp } from '@codeleap/styles'
 import { ComponentCommonProps } from '../../types'
 import { ListProps } from '../List'
-import { GridComposition, GridPresets } from './styles'
+import { GridComposition } from './styles'
 
-export type GridProps<
-  T = any[],
-  Data = T extends Array<infer D> ? D : never
-> = 
-  Omit<ListProps<T, Data>, 'variants' | 'styles'> &
-  ComponentVariants<typeof GridPresets> &  {
-    styles?: StylesOf<GridComposition>
+export type GridProps = ListProps & {
+    style?: StyledProp<GridComposition>
     columnItemsSpacing?: number
     numColumns: number
   } & ComponentCommonProps
