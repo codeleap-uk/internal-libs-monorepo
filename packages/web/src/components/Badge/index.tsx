@@ -1,42 +1,11 @@
 import React from 'react'
-import { ComponentVariants, PropsOf, StylesOf, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { Text } from '../Text'
-import { View, ViewProps } from '../View'
-import { BadgeComposition, BadgePresets } from './styles'
-import { ComponentCommonProps } from '../../types'
-
-export * from './styles'
-
-/** * Badge */
-export type BadgeProps = ComponentVariants<typeof BadgePresets>
-  & ViewProps<'div'>
-  & ComponentCommonProps
-  & {
-    styles?: StylesOf<BadgeComposition>
-    /** prop */
-    maxCount?: number
-    /** prop */
-    minCount?: number
-    /** prop */
-    debugName?: string
-    innerWrapperProps?: Partial<PropsOf<typeof View>>
-    textProps?: Partial<PropsOf<typeof Text>>
-    /** prop */
-    getBadgeContent?: (props: BadgeContent) => string
-    /** prop */
-    renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
-    /** prop */
-    disabled?: boolean
-    /** prop */
-    badge?: number | boolean
-  }
-
-type BadgeContent = BadgeProps & { count: number }
-
-export type BadgeComponentProps = {
-  badge?: BadgeProps['badge']
-  badgeProps?: Partial<BadgeProps>
-}
+import { View } from '../View'
+import { BadgeContent, BadgeProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   if (Number(count) > maxCount) {
@@ -46,20 +15,7 @@ const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   }
 }
 
-const defaultProps: Partial<BadgeProps> = {
-  maxCount: 9,
-  minCount: 1,
-  getBadgeContent: defaultGetBadgeContent,
-  renderBadgeContent: null,
-  disabled: false,
-  badge: true,
-}
-
 export const Badge = (props: BadgeProps) => {
-  const allProps = {
-    ...Badge.defaultProps,
-    ...props,
-  }
 
   const {
     debugName,
@@ -69,43 +25,36 @@ export const Badge = (props: BadgeProps) => {
     minCount,
     getBadgeContent,
     renderBadgeContent,
-    styles = {},
-    variants = [],
-    responsiveVariants = {},
     disabled,
     style = {},
-    css,
     badge,
     ...rest
-  } = allProps
+  } = {
+    ...Badge.defaultProps,
+    ...props,
+  }
+
+  const styles = useStylesFor(Badge.styleRegistryName, style)
 
   const visible = (TypeGuards.isBoolean(badge) && badge === true) || TypeGuards.isNumber(badge)
 
   if (!visible) return null
 
-  const variantStyles = useDefaultComponentStyle<'u:Badge', typeof BadgePresets>('u:Badge', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'wrapper',
-  })
-
   const wrapperStyles = [
-    variantStyles?.wrapper,
-    (disabled && variantStyles?.['wrapper:disabled']),
-    css,
+    styles?.wrapper,
+    (disabled && styles?.['wrapper:disabled']),
     style,
   ]
 
   const innerWrapperStyles = [
-    variantStyles?.innerWrapper,
-    (disabled && variantStyles?.['innerWrapper:disabled']),
+    styles?.innerWrapper,
+    (disabled && styles?.['innerWrapper:disabled']),
     innerWrapperProps?.style,
   ]
 
   const countStyles = [
-    variantStyles?.count,
-    (disabled && variantStyles?.['count:disabled']),
+    styles?.count,
+    (disabled && styles?.['count:disabled']),
     textProps?.style,
   ]
 
@@ -140,4 +89,26 @@ export const Badge = (props: BadgeProps) => {
   )
 }
 
-Badge.defaultProps = defaultProps
+Badge.styleRegistryName = 'Badge'
+
+Badge.elements = ['wrapper', 'innerWrapper', 'count']
+
+Badge.rootElement = 'wrapper'
+
+Badge.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Badge as (props: StyledComponentProps<BadgeProps, typeof styles>) => IJSX
+}
+
+Badge.defaultProps = {
+  maxCount: 9,
+  minCount: 1,
+  getBadgeContent: defaultGetBadgeContent,
+  renderBadgeContent: null,
+  disabled: false,
+  badge: true,
+} as Partial<BadgeProps>
+
+WebStyleRegistry.registerComponent(Badge)
+
+export * from './styles'
+export * from './types'
