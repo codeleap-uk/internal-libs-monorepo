@@ -1,15 +1,9 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
 import React from 'react'
-
-import { ComponentVariants, onMount, PropsOf, TypeGuards, useDefaultComponentStyle, useRef } from '@codeleap/common'
-import { SliderComposition } from './styles'
-import { StylesOf } from '../../types'
+import { onMount, TypeGuards, useRef } from '@codeleap/common'
 import { View } from '../View'
-import { concatStyles, InputBaseProps, InputBase, selectInputBaseProps } from '../InputBase'
-import { SliderPresets } from './styles'
+import { concatStyles, InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
-
 import {
   Root as SliderContainer,
   Track as SliderTrack,
@@ -17,30 +11,10 @@ import {
   Range as SliderRange,
   SliderProps as PrimitiveSliderProps,
 } from '@radix-ui/react-slider'
-
-export * from './styles'
-
-export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueChange'>> & Pick<InputBaseProps, 'disabled' | 'debugName' | 'description' | 'label'> & {
-  indicatorLabel?: {
-    order?: number[]
-    separator?: string
-    transformer?: (value: number[], defaultValue: PrimitiveSliderProps['defaultValue']) => string
-  }
-  value: number | number[]
-  onValueChange: (val: number | number[]) => void
-  styles?: StylesOf<SliderComposition>
-  style?: PropsOf<typeof View>['style']
-  trackMarks?: Record<number, string>
-  trackMarkComponent?: React.ComponentType<TrackMarkProps>
-  onPressThumbSetValue?: boolean
-  onPressThumb?: (value: number | number[], thumbIndex: number) => void
-} & ComponentVariants<typeof SliderPresets>
-
-export type TrackMarkProps = {
-  index: number
-  content?: string | React.ReactNode
-  style?: any
-}
+import { SliderProps, TrackMarkProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
 
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
   const { style } = props
@@ -58,10 +32,11 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
 }
 
 export const Slider = (props: SliderProps) => {
+
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({ ...Slider.defaultProps, ...props })
 
   const {
     onValueChange,
@@ -69,24 +44,23 @@ export const Slider = (props: SliderProps) => {
     value: _value,
     label,
     debugName,
-    styles = {},
-    responsiveVariants = {},
     style,
     disabled,
-    variants,
     trackMarks,
     trackMarkComponent = DefaultSliderTrackMark,
-    defaultValue: defaultSliderValue = [],
-    max = 100,
-    min = 0,
-    indicatorLabel = null,
-    description = null,
-    minStepsBetweenThumbs = 0,
-    step = 1,
-    onPressThumbSetValue = false,
-    onPressThumb = null,
+    max,
+    min,
+    defaultValue: defaultSliderValue,
+    indicatorLabel,
+    description,
+    minStepsBetweenThumbs,
+    step,
+    onPressThumbSetValue,
+    onPressThumb,
     ...sliderProps
   } = others
+
+  const styles = useStylesFor(Slider.styleRegistryName, style)
 
   const isUniqueValue = !TypeGuards.isArray(_value)
   const value = isUniqueValue ? [_value] : _value
@@ -112,39 +86,33 @@ export const Slider = (props: SliderProps) => {
     onValueCommit?.(newValue)
   }
 
-  const variantStyles = useDefaultComponentStyle<'u:Slider', typeof SliderPresets>('u:Slider', {
-    responsiveVariants,
-    variants,
-    styles,
-  })
-
   const thumbStyle = React.useMemo(() => {
     return concatStyles([
-      variantStyles.thumb,
-      disabled && variantStyles['thumb:disabled'],
+      styles.thumb,
+      disabled && styles['thumb:disabled'],
     ])
   }, [])
 
   const trackStyle = React.useMemo(() => {
     return concatStyles([
-      variantStyles.track,
-      disabled && variantStyles['track:disabled'],
-      variantStyles.unselectedTrack,
-      disabled && variantStyles['unselectedTrack:disabled'],
+      styles.track,
+      disabled && styles['track:disabled'],
+      styles.unselectedTrack,
+      disabled && styles['unselectedTrack:disabled'],
     ])
   }, [disabled])
 
   const selectedTrackStyle = React.useMemo(() => {
     return concatStyles([
-      variantStyles.selectedTrack,
-      disabled && variantStyles['selectedTrack:disabled'],
+      styles.selectedTrack,
+      disabled && styles['selectedTrack:disabled'],
     ])
   }, [disabled])
 
   const containerStyle = React.useMemo(() => {
     return concatStyles([
-      variantStyles.sliderContainer,
-      disabled && variantStyles['sliderContainer:disabled'],
+      styles.sliderContainer,
+      disabled && styles['sliderContainer:disabled'],
     ])
   }, [disabled])
 
@@ -159,15 +127,15 @@ export const Slider = (props: SliderProps) => {
 
   const trackMarkStyle = React.useMemo(() => {
     return concatStyles([
-      variantStyles.trackMark,
-      disabled && variantStyles['trackMark:disabled'],
+      styles.trackMark,
+      disabled && styles['trackMark:disabled'],
     ])
   }, [disabled])
 
   const trackMarkWrapperStyle = React.useMemo(() => {
     return [
-      variantStyles.trackMarkWrapper,
-      disabled && variantStyles['trackMarkWrapper:disabled'],
+      styles.trackMarkWrapper,
+      disabled && styles['trackMarkWrapper:disabled'],
     ]
   }, [disabled])
 
@@ -201,9 +169,9 @@ export const Slider = (props: SliderProps) => {
       {...inputBaseProps}
       disabled={disabled}
       styles={{
-        ...variantStyles,
+        ...styles,
         innerWrapper: [
-          variantStyles.innerWrapper,
+          styles.innerWrapper,
         ],
       }}
       labelAsRow
@@ -247,9 +215,9 @@ export const Slider = (props: SliderProps) => {
               const relativeValue = Number(trackMarksProp[idx])
 
               if (idx === 0) {
-                idxStyle = variantStyles.firstTrackMark
+                idxStyle = styles.firstTrackMark
               } else if (idx === trackMarksProp.length - 1) {
-                idxStyle = variantStyles.lastTrackMark
+                idxStyle = styles.lastTrackMark
               } else {
                 const markerPosition = (relativeValue / max) * 100
 
@@ -292,4 +260,45 @@ export const Slider = (props: SliderProps) => {
   )
 }
 
+Slider.styleRegistryName = 'Slider'
+
+Slider.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'thumb',
+  'track',
+  'selectedTrack',
+  'unselectedTrack',
+  'trackMark',
+  'firstTrackMark',
+  'lastTrackMark',
+  'trackMarkWrapper',
+  'sliderContainer',
+]
+
+Slider.rootElement = 'wrapper'
+
+Slider.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Slider as (props: StyledComponentProps<SliderProps, typeof styles>) => IJSX
+}
+
+Slider.defaultProps = {
+  max: 100,
+  min: 0,
+  minStepsBetweenThumbs: 0,
+  defaultValue: [],
+  indicatorLabel: null,
+  description: null,
+  step: 1,
+  onPressThumbSetValue: false,
+  onPressThumb: null,
+} as Partial<SliderProps>
+
+WebStyleRegistry.registerComponent(Slider)
+
 export * from './styles'
+export * from './types'
