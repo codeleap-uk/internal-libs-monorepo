@@ -7,10 +7,58 @@ import {
   useRef,
   useState,
 } from '@codeleap/common'
-import { ImageReading, UseCropPickerProps } from './types'
+import { ImageReading, UseCropPickerProps } from '../../components/CropPicker'
+import { FileInputRef } from '../../components/FileInput'
 import { Crop } from 'react-image-crop'
-import { cropImage, readImage } from './utils'
-import { FileInputRef } from '../FileInput'
+
+export function readImage(file: File | Blob): Promise<ImageReading> {
+  const reader = new FileReader()
+  return new Promise<ImageReading>((resolve) => {
+    reader.onload = () => {
+      const image = new Image()
+      image.onload = () => resolve(image)
+      image.src = reader.result as string
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+export function cropImage(image: ImageReading, crop: Crop): Promise<[string, Blob]> {
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d', { alpha: true })
+
+  if (!ctx) throw new Error('No 2d context')
+
+  canvas.width = image.naturalWidth * (crop.width / 100)
+  canvas.height = image.naturalHeight * (crop.height / 100)
+
+  const x = image.naturalWidth * (crop.x / 100)
+  const y = image.naturalHeight * (crop.y / 100)
+
+  ctx.drawImage(
+    image,
+    x,
+    y,
+    canvas.width,
+    canvas.height,
+    0,
+    0,
+    canvas.width,
+    canvas.height,
+  )
+
+  return new Promise<[string, Blob]>((resolve, reject) => {
+    canvas.toBlob(blob => {
+      if (!blob) {
+        reject(new Error('Canvas is empty'))
+        return
+      }
+      readImage(blob).then(cropped => {
+        resolve([cropped.src, blob])
+      }).catch(reject)
+    }, 'image/png')
+  })
+}
 
 export function useCropPicker({
   onFileSelect,
@@ -61,15 +109,15 @@ export function useCropPicker({
     const { naturalWidth, naturalHeight } = imageData
     const imageAspect = naturalWidth / naturalHeight
     const v =
-      imageAspect >= aspect
-        ? {
-          width: ((naturalHeight * aspect) / naturalWidth) * 100,
-          height: 100,
-        }
-        : {
-          width: 100,
-          height: (naturalWidth / aspect / naturalHeight) * 100,
-        }
+        imageAspect >= aspect
+          ? {
+            width: ((naturalHeight * aspect) / naturalWidth) * 100,
+            height: 100,
+          }
+          : {
+            width: 100,
+            height: (naturalWidth / aspect / naturalHeight) * 100,
+          }
     const initialCrop: Crop = {
       ...v,
       x: (100 - v.width) / 2,

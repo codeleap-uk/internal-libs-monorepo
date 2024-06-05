@@ -5,16 +5,14 @@ import {
 } from '@codeleap/common'
 import { CropPickerPresets } from './styles'
 import { CropPickerProps } from './types'
-import { useCropPicker } from './useCropPicker'
 import { Modal, Button, FileInput, FileInputRef, LoadingOverlay } from '../components'
 
 const ReactCrop: React.ElementType = require('react-image-crop').Component
 import 'react-image-crop/dist/ReactCrop.css'
+import { useCropPicker } from '../../lib'
 
 export * from './styles'
 export * from './types'
-export * from './utils'
-export * from './useCropPicker'
 
 export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
   (props: CropPickerProps, ref) => {
