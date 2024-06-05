@@ -29,14 +29,13 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchablePro
     debugName,
     debugComponent,
     style,
-    css,
     analyticsEnabled,
     analyticsName,
     analyticsData,
     ...props
   } = allProps
 
-  const styles = useStylesFor(Touchable.styleRegistryName, style)
+  const styles = useStylesFor(TouchableCP.styleRegistryName, style)
 
   const pressed = React.useRef(!!leadingDebounce)
 
@@ -104,7 +103,6 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchablePro
   const _styles = React.useMemo(() => ([
     styles.wrapper,
     disabled && styles['wrapper:disabled'],
-    css,
     style,
   ]), [styles, disabled, style])
 
@@ -119,7 +117,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchablePro
       onClick={handleClick}
       onKeyDown={handleClick}
       ref={ref}
-      css={_styles}
+      style={_styles}
       data-testid={testId}
     />
   )
