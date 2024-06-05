@@ -7,9 +7,14 @@ import {
   useRef,
   useState,
 } from '@codeleap/common'
-import { ImageReading, UseCropPickerProps } from '../../components/CropPicker'
-import { FileInputRef } from '../../components/FileInput'
-import { Crop } from 'react-image-crop'
+import { ImageReading } from '../../components/CropPicker'
+import { FileInputProps, FileInputRef } from '../../components/FileInput'
+import { Crop, ReactCropProps } from 'react-image-crop'
+
+export type UseCropPickerProps = Partial<ReactCropProps> & {
+  onFileSelect: FileInputProps['onFileSelect']
+  ref: React.MutableRefObject<FileInputRef> | React.Ref<FileInputRef>
+}
 
 export function readImage(file: File | Blob): Promise<ImageReading> {
   const reader = new FileReader()

@@ -1,17 +1,15 @@
-import { AnyRef, ComponentVariants } from '@codeleap/common'
-import { FileInputProps, FileInputRef } from '../FileInput'
-import { CropPickerComposition, CropPickerPresets } from './styles'
-import { StylesOf } from '../../types'
+import { AnyRef } from '@codeleap/common'
+import { StyledProp } from '@codeleap/styles'
+import { FileInputProps } from '../FileInput'
+import { CropPickerComposition } from './styles'
 import { ReactCropProps } from 'react-image-crop'
 import { ModalProps } from '../Modal'
-import { useCropPicker } from './useCropPicker'
+import { useCropPicker } from '../../lib'
 
 export type BaseCropProps = Partial<ReactCropProps>
 
-export type CropPickerProps = Partial<FileInputProps> &
-  ComponentVariants<typeof CropPickerPresets> & {
-    styles?: StylesOf<CropPickerComposition>
-    style?: React.CSSProperties
+export type CropPickerProps = Partial<FileInputProps> & {
+    style?: StyledProp<CropPickerComposition>
     targetCrop?: BaseCropProps
     modalProps?: Partial<ModalProps>
     title?: string
@@ -24,7 +22,3 @@ export type CropPickerProps = Partial<FileInputProps> &
 
 export type ImageReading = HTMLImageElement
 
-export type UseCropPickerProps = Partial<ReactCropProps> & {
-  onFileSelect: FileInputProps['onFileSelect']
-  ref: React.MutableRefObject<FileInputRef> | React.Ref<FileInputRef>
-}
