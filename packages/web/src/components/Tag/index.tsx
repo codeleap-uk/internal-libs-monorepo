@@ -1,35 +1,23 @@
 import React from 'react'
-import { TypeGuards, useDefaultComponentStyle, useNestedStylesByKey } from '@codeleap/common'
-import { TagParts, TagPresets } from './styles'
+import { TypeGuards } from '@codeleap/common'
+import { TagParts } from './styles'
 import { TagProps } from './types'
 import { Icon } from '../Icon'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { Badge } from '../Badge'
-
-export * from './styles'
-export * from './types'
-
-const defaultProps: Partial<TagProps> = {
-  debugName: 'Tag component',
-  disabled: false,
-}
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export const Tag = (props: TagProps) => {
-  const allProps = {
-    ...Tag.defaultProps,
-    ...props,
-  }
 
   const {
     variants,
     rightComponent,
     leftComponent,
-    responsiveVariants,
-    styles,
     style,
-    css,
     leftIcon,
     text,
     textProps,
@@ -44,16 +32,15 @@ export const Tag = (props: TagProps) => {
     onPress,
     disabled,
     ...touchableProps
-  } = allProps
+  } = {
+    ...Tag.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:Tag', typeof TagPresets>('u:Tag', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const styles = useStylesFor(Tag.styleRegistryName, style)
 
-  const leftBadgeStyles = useNestedStylesByKey('leftBadge', variantStyles)
-  const rightBadgeStyles = useNestedStylesByKey('rightBadge', variantStyles)
+  const leftBadgeStyles = useNestedStylesByKey('leftBadge', styles)
+  const rightBadgeStyles = useNestedStylesByKey('rightBadge', styles)
 
   const isPressable = TypeGuards.isFunction(onPress)
 
@@ -62,20 +49,19 @@ export const Tag = (props: TagProps) => {
   const wrapperProps = isPressable ? { onPress, ...touchableProps } : touchableProps
 
   const getStylesByKey = (styleKey: TagParts) => ([
-    variantStyles?.[styleKey],
-    isPressable && variantStyles[`${styleKey}:pressable`],
-    disabled && variantStyles[`${styleKey}:disabled`],
+    styles?.[styleKey],
+    isPressable && styles[`${styleKey}:pressable`],
+    disabled && styles[`${styleKey}:disabled`],
   ])
 
   const wrapperStyles = React.useMemo(() => ([
     getStylesByKey('wrapper'),
-    css,
     style,
-  ]), [variantStyles, disabled, isPressable, style])
+  ]), [styles, disabled, isPressable, style])
 
-  const textStyles = React.useMemo(() => getStylesByKey('text'), [variantStyles, disabled, isPressable])
-  const leftIconStyles = React.useMemo(() => getStylesByKey('leftIcon'), [variantStyles, disabled, isPressable])
-  const rightIconStyles = React.useMemo(() => getStylesByKey('rightIcon'), [variantStyles, disabled, isPressable])
+  const textStyles = React.useMemo(() => getStylesByKey('text'), [styles, disabled, isPressable])
+  const leftIconStyles = React.useMemo(() => getStylesByKey('leftIcon'), [styles, disabled, isPressable])
+  const rightIconStyles = React.useMemo(() => getStylesByKey('rightIcon'), [styles, disabled, isPressable])
 
   return (
     <Wrapper css={wrapperStyles} disabled={disabled} {...wrapperProps}>
@@ -92,7 +78,7 @@ export const Tag = (props: TagProps) => {
       {!TypeGuards.isNil(leftIcon) && (
         <Icon
           debugName={`${touchableProps?.debugName}:leftIcon`}
-          css={leftIconStyles}
+          style={leftIconStyles}
           name={leftIcon}
           {...leftIconProps}
         />
@@ -104,7 +90,7 @@ export const Tag = (props: TagProps) => {
       {!TypeGuards.isNil(rightIcon) && (
         <Icon
           debugName={`${touchableProps?.debugName}:rightIcon`}
-          css={rightIconStyles}
+          style={rightIconStyles}
           name={rightIcon}
           {...rightIconProps}
         />
@@ -123,4 +109,29 @@ export const Tag = (props: TagProps) => {
   )
 }
 
-Tag.defaultProps = defaultProps
+Tag.styleRegistryName = 'Tag'
+
+Tag.elements = [
+  `wrapper`,
+  'text',
+  'leftIcon',
+  'rightIcon',
+  'leftBadge',
+  'rightBadge',
+]
+
+Tag.rootElement = 'wrapper'
+
+Tag.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Tag as (props: StyledComponentProps<TagProps, typeof styles>) => IJSX
+}
+
+Tag.defaultProps = {
+  debugName: 'Tag component',
+  disabled: false,
+} as Partial<TagProps>
+
+WebStyleRegistry.registerComponent(Tag)
+
+export * from './styles'
+export * from './types'
