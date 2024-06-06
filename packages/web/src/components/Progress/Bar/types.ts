@@ -1,5 +1,5 @@
-import { ComponentVariants, IconPlaceholder, PropsOf, StylesOf } from '@codeleap/common'
-import { ProgressBarComposition, ProgressBarPresets } from './styles'
+import { IconPlaceholder, PropsOf } from '@codeleap/common'
+import { ProgressBarComposition } from './styles'
 import {
   ProgressProps,
   ProgressIndicatorProps,
@@ -7,16 +7,14 @@ import {
 import { IconProps, View, TextProps as _TextProps } from '../../components'
 import { ProgressPropsRoot } from '..'
 import { ElementType } from 'react'
+import { StyledProp } from '@codeleap/styles'
 
 type TextProps = _TextProps<ElementType>
 
-export type ProgressBarProps = ComponentVariants<typeof ProgressBarPresets> &
-  Omit<PropsOf<typeof View>, 'variants' | 'responsiveVariants' | 'styles'> &
-  ProgressPropsRoot & {
-    styles?: StylesOf<ProgressBarComposition>
+export type ProgressBarProps =PropsOf<typeof View> & ProgressPropsRoot & {
+    style?: StyledProp<ProgressBarComposition>
     progressIndicatorProps?: ProgressIndicatorProps
     progressRootProps?: ProgressProps
-
     leftIcon?: IconPlaceholder
     leftIconProps?: Partial<IconProps>
     rightIcon?: IconPlaceholder
