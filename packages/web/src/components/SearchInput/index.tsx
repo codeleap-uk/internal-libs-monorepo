@@ -83,7 +83,22 @@ export const SearchInput = (props: SearchInputProps) => {
 }
 
 SearchInput.styleRegistryName = 'SearchInput'
-SearchInput.elements = ['wrapper', 'text', 'loader']
+
+SearchInput.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'input',
+  'placeholder',
+  'selection',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+]
+
 SearchInput.rootElement = 'wrapper'
 
 SearchInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {

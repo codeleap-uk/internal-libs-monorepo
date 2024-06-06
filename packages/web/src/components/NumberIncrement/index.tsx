@@ -1,12 +1,6 @@
 /** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
 import * as React from 'react'
 import {
-  ComponentVariants,
-  yup,
-  useDefaultComponentStyle,
-  StylesOf,
-  PropsOf,
   TypeGuards,
   onUpdate,
   useState,
@@ -15,76 +9,49 @@ import {
   FormTypes,
   IconPlaceholder,
 } from '@codeleap/common'
-import { View } from '../View'
-import { NumberIncrementPresets, NumberIncrementComposition } from './styles'
-import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
 import {
   PatternFormat,
-  PatternFormatProps as PFProps,
   NumericFormat,
   NumericFormatProps as NFProps,
   NumberFormatBase,
 } from 'react-number-format'
-import { FormatInputValueFunction } from 'react-number-format/types/types'
-
-export * from './styles'
-
-export type NumberIncrementProps = Pick<
-  InputBaseProps,
-  'debugName' | 'disabled' | 'label'
-> & {
-  styles?: StylesOf<NumberIncrementComposition>
-  value: number
-  onValueChange: (value: number) => void
-  onChangeText?: (value: number) => void
-  validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
-  style?: PropsOf<typeof View>['style']
-  max?: number
-  min?: number
-  step?: number
-  editable?: boolean
-  prefix?: NFProps['prefix']
-  suffix?: NFProps['suffix']
-  separator?: NFProps['thousandSeparator']
-  format?: PFProps['format']
-  mask?: PFProps['mask']
-  hasSeparator?: boolean
-  _error?: string
-  formatter?: FormatInputValueFunction
-  placeholder?: string
-} & ComponentVariants<typeof NumberIncrementPresets>
+import { WebStyleRegistry } from '../../lib'
+import { NumberIncrementProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
 export const NumberIncrement = (props: NumberIncrementProps) => {
+
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({ ...props, ...NumberIncrement.defaultProps })
 
   const {
-    responsiveVariants = {},
-    variants = [],
-    style = {},
-    styles = {},
+    style,
     value,
     disabled,
     onValueChange,
     onChangeText,
-    max = 1000000000,
-    min = 0,
-    step = 1,
-    editable = true,
-    hasSeparator = false,
-    format = null,
-    mask = undefined,
+    max,
+    min,
+    step,
+    editable,
+    hasSeparator,
+    format,
+    mask,
     suffix,
-    separator = null,
+    separator,
     prefix,
     validate,
     _error,
-    formatter = null,
+    formatter,
     placeholder,
   } = others
+
+  const styles = useStylesFor(NumberIncrement.styleRegistryName, style)
 
   const [isFocused, setIsFocused] = useState(false)
 
@@ -110,16 +77,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     return false
   }, [value])
 
-  const variantStyles = useDefaultComponentStyle<'u:NumberIncrement', typeof NumberIncrementPresets>(
-    'u:NumberIncrement',
-    {
-      responsiveVariants,
-      variants,
-      styles,
-      rootElement: 'wrapper',
-    },
-  )
-
   const onChange = (newValue: number) => {
     if (onValueChange) onValueChange?.(newValue)
     if (onChangeText) onChangeText?.(newValue)
@@ -143,18 +100,18 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
 
   const inputTextStyle = React.useMemo(() => {
     return [
-      variantStyles.input,
-      isFocused && variantStyles['input:focus'],
-      hasError && variantStyles['input:error'],
-      disabled && variantStyles['input:disabled'],
+      styles.input,
+      isFocused && styles['input:focus'],
+      hasError && styles['input:error'],
+      disabled && styles['input:disabled'],
     ]
   }, [disabled, isFocused, hasError])
 
   const placeholderStyles = [
-    variantStyles.placeholder,
-    isFocused && variantStyles['placeholder:focus'],
-    hasError && variantStyles['placeholder:error'],
-    disabled && variantStyles['placeholder:disabled'],
+    styles.placeholder,
+    isFocused && styles['placeholder:focus'],
+    hasError && styles['placeholder:error'],
+    disabled && styles['placeholder:disabled'],
   ]
 
   const handleBlur = React.useCallback(() => {
@@ -225,10 +182,10 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       {...inputBaseProps}
       error={hasError ? errorMessage : null}
       styles={{
-        ...variantStyles,
+        ...styles,
         innerWrapper: [
-          variantStyles.innerWrapper,
-          editable && variantStyles['innerWrapper:cursor'],
+          styles.innerWrapper,
+          editable && styles['innerWrapper:cursor'],
         ],
       }}
       rightIcon={{
@@ -289,7 +246,45 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
           placeholder={placeholder}
           getInputRef={innerInputRef}
         />
-      ) : <Text text={String(value)} css={inputTextStyle} />}
+      ) : <Text text={String(value)} style={inputTextStyle} />}
     </InputBase>
   )
 }
+
+NumberIncrement.styleRegistryName = 'NumberIncrement'
+
+NumberIncrement.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'input',
+  'placeholder',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+]
+
+NumberIncrement.rootElement = 'wrapper'
+
+NumberIncrement.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return NumberIncrement as (props: StyledComponentProps<NumberIncrementProps, typeof styles>) => IJSX
+}
+
+NumberIncrement.defaultProps = {
+  max: 1000000000,
+  min: 0,
+  step: 1,
+  editable: true,
+  hasSeparator: false,
+  mask: undefined,
+  separator: null,
+  formatter: () => null,
+} as Partial<NumberIncrementProps>
+
+WebStyleRegistry.registerComponent(NumberIncrement)
+
+export * from './types'
+export * from './styles'
