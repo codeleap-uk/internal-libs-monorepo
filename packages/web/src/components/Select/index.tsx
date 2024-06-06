@@ -13,9 +13,9 @@ import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
 import { Icon } from '../Icon'
-
-export * from './styles'
-export * from './types'
+import { WebStyleRegistry } from '../../lib'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { ComponentWithDefaultProps } from '../../types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
   const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused, debugName } = props
@@ -150,30 +150,8 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
   return props.text + `"${props.selectProps.inputValue}"`
 }
 
-const defaultProps: Partial<SelectProps> = {
-  PlaceholderComponent: DefaultPlaceholder,
-  PlaceholderNoItemsComponent: DefaultPlaceholder,
-  LoadingIndicatorComponent: LoadingIndicator,
-  noItemsText: 'No results for ',
-  noItemsIcon: 'placeholderNoItems-select',
-  placeholderText: 'Search items',
-  placeholderIcon: 'placeholder-select',
-  showDropdownIcon: true,
-  placeholder: 'Select',
-  clearable: false,
-  formatPlaceholderNoItems: defaultFormatPlaceholderNoItems,
-  selectedIcon: 'check',
-  searchable: false,
-  separatorMultiValue: ', ',
-  itemProps: {} as ButtonProps,
-  loadingIndicatorSize: 20,
-  options: [],
-  loadInitialValue: false,
-  loadingMessage: 'loading...',
-}
-
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
-  <T extends string | number = string, Multi extends boolean = false>
+ <T extends string | number = string, Multi extends boolean = false>
   (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
 
     type Option = FormTypes.Option<T>
@@ -187,9 +165,8 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     })
 
     const {
-      variants,
       validate,
-      styles,
+      style,
       debugName,
       onValueChange,
       options,
@@ -263,7 +240,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const {
       reactSelectStyles,
-      variantStyles,
+      styles,
       optionsStyles,
       placeholderStyles,
       loadingStyles,
@@ -273,6 +250,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
+      styleRegistryName: Select.styleRegistryName,
     })
 
     useImperativeHandle(inputRef, () => {
@@ -344,7 +322,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       focused: isFocused,
       error: !!hasError,
       disabled: isDisabled,
-      variantStyles,
+      styles,
       debugName: debugName,
     }
 
@@ -397,11 +375,11 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         debugName={debugName}
         error={hasError ? errorMessage : null}
         focused={isFocused}
-        styles={{
-          ...variantStyles,
+        style={{
+          ...styles,
           innerWrapper: [
-            variantStyles.innerWrapper,
-            searchable && variantStyles['innerWrapper:searchable'],
+            styles.innerWrapper,
+            searchable && styles['innerWrapper:searchable'],
           ],
         }}
         innerWrapperProps={{
@@ -418,8 +396,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
-          // escapeRemoves={true}
-          // deleteRemoves={true}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
@@ -477,6 +453,64 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         />
       </InputBase>
     )
-  })
+ }) as ComponentWithDefaultProps<SelectProps> & GenericStyledComponentAttributes<AnyRecord>
 
-Select.defaultProps = defaultProps
+Select.styleRegistryName = 'Select'
+
+Select.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'item',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+  'listPortal',
+  'listHeader',
+  'listWrapper',
+  'list',
+  'inputContainer',
+  'input',
+  'placeholder',
+  'value',
+  'valueMultiple',
+  'valueWrapper',
+  'clearIcon',
+  'dropdownIcon',
+]
+
+Select.rootElement = 'wrapper'
+
+Select.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Select as (props: StyledComponentProps<SelectProps, typeof styles>) => IJSX
+}
+
+Select.defaultProps = {
+  PlaceholderComponent: DefaultPlaceholder,
+  PlaceholderNoItemsComponent: DefaultPlaceholder,
+  LoadingIndicatorComponent: LoadingIndicator,
+  noItemsText: 'No results for ',
+  noItemsIcon: 'placeholderNoItems-select',
+  placeholderText: 'Search items',
+  placeholderIcon: 'placeholder-select',
+  showDropdownIcon: true,
+  placeholder: 'Select',
+  clearable: false,
+  formatPlaceholderNoItems: defaultFormatPlaceholderNoItems,
+  selectedIcon: 'check',
+  searchable: false,
+  separatorMultiValue: ', ',
+  itemProps: {} as ButtonProps,
+  loadingIndicatorSize: 20,
+  options: [],
+  loadInitialValue: false,
+  loadingMessage: 'loading...',
+} as Partial<SelectProps>
+
+WebStyleRegistry.registerComponent(Select)
+
+export * from './styles'
+export * from './types'
