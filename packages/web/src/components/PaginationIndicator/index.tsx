@@ -24,6 +24,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   }
 
   const styles = useStylesFor(PaginationIndicator.styleRegistryName, style)
+
   const loaderStyles = useNestedStylesByKey('loader', styles)
 
   if (isFetching) {

@@ -1,23 +1,13 @@
-import { AnyFunction, IconPlaceholder, TypeGuards } from '@codeleap/common'
+import { IconPlaceholder, TypeGuards } from '@codeleap/common'
 import React, { useState } from 'react'
-import { TextInput, TextInputProps } from '../TextInput'
-import { ComponentWithDefaultProps } from '../../types/utility'
+import { TextInput } from '../TextInput'
+import { SearchInputProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-export type SearchInputProps = {
-  placeholder: string
-  clearable?: boolean
-  debugName: string
-  clearIcon?: IconPlaceholder
-  searchIcon?: IconPlaceholder
-  debounce?: number
-  onSearchChange: (search: string) => void
-  onTypingChange?: (isTyping: boolean) => void
-  onValueChange?: (search: string) => void
-  onClear?: AnyFunction
-  defaultValue?: string
-} & Partial<TextInputProps>
+export const SearchInput = (props: SearchInputProps) => {
 
-export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
   const {
     debugName,
     onSearchChange,
@@ -30,12 +20,15 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     debounce,
     value,
     onValueChange,
-    defaultValue = '',
+    defaultValue,
+    style,
     ...rest
   } = {
     ...SearchInput.defaultProps,
     ...props,
   }
+
+  const styles = useStylesFor(SearchInput.styleRegistryName, style)
 
   const hasStateProps = !TypeGuards.isNil(value) && TypeGuards.isFunction(onValueChange)
 
@@ -44,7 +37,6 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 
   const handleChangeSearch = (value: string) => {
     setSearch(value)
-
     if (TypeGuards.isNil(debounce)) {
       onSearchChange?.(value)
     } else {
@@ -85,13 +77,30 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
         name: searchIcon,
       }}
       {...rest}
+      style={styles}
     />
   )
 }
+
+SearchInput.styleRegistryName = 'SearchInput'
+SearchInput.elements = ['wrapper', 'text', 'loader']
+SearchInput.rootElement = 'wrapper'
+
+SearchInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return SearchInput as (props: StyledComponentProps<SearchInputProps, typeof styles>) => IJSX
+}
+
+SearchInput.defaultProps = {} as Partial<SearchInputProps>
 
 SearchInput.defaultProps = {
   debounce: null,
   clearable: true,
   clearIcon: 'x' as IconPlaceholder,
   searchIcon: 'search' as IconPlaceholder,
-}
+  defaultValue: '',
+} as Partial<SearchInputProps>
+
+WebStyleRegistry.registerComponent(SearchInput)
+
+export * from './types'
+
