@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
 import React from 'react'
 import { TypeGuards, getRenderedComponent } from '@codeleap/common'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -7,10 +6,8 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
-
-export * from './styles'
-export * from './utils'
-export * from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib'
 
 export const InputBaseDefaultOrder:InputBaseProps['order'] = [
   'label',
@@ -18,38 +15,42 @@ export const InputBaseDefaultOrder:InputBaseProps['order'] = [
   'innerWrapper',
   'error',
 ]
+
 const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <React.Fragment>{props.children}</React.Fragment>
 }
 
-export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) => {
+export const InputBase = (props: InputBaseProps) => {
+
   const {
     children,
-    error = null,
+    error,
     label,
-    description = null,
-    leftIcon = null,
-    rightIcon = null,
-    styles,
+    description,
+    leftIcon,
+    rightIcon,
     wrapper,
     debugName,
     innerWrapper,
     focused,
-    innerWrapperProps = {},
-    wrapperProps = {},
-    disabled = false,
-    order = InputBaseDefaultOrder,
+    innerWrapperProps,
+    wrapperProps,
+    disabled,
+    order,
     style,
-    noError = false,
-    labelAsRow = false,
+    noError,
+    labelAsRow,
     innerWrapperRef,
     ...otherProps
-  } = props
+  } = {
+    ...InputBase.defaultProps,
+    ...props,
+  }
 
   const WrapperComponent = wrapper || View
   const InnerWrapperComponent = innerWrapper || View
 
-  const _styles = useInputBaseStyles(props)
+  const _styles = useInputBaseStyles({ ...props, styleRegistryName: InputBase.styleRegistryName })
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
@@ -72,23 +73,26 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
   const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/> : description
 
   const parts = {
-    label: labelAsRow ? <View style={_styles.labelRowStyle}>
-      {_label}
-      {_description}
-    </View> : _label,
-    description: labelAsRow ? null : _description,
-    innerWrapper: <InnerWrapperComponent ref={innerWrapperRef} style={[
-      _styles.innerWrapperStyle,
-    ]} {...innerWrapperProps}>
-      {_leftIcon}
-      {children}
-      {_rightIcon}
-    </InnerWrapperComponent>,
-    error: noError ? null : (
-      _error || <Text children={<React.Fragment>
-        &nbsp;
-      </React.Fragment>} css={_styles.errorStyle}/>
+    label: labelAsRow ? (
+      <View style={_styles.labelRowStyle}>
+        {_label}
+        {_description}
+      </View>
+    ) : (
+      _label
     ),
+    description: labelAsRow ? null : _description,
+    innerWrapper:
+      <InnerWrapperComponent
+        ref={innerWrapperRef}
+        style={[_styles.innerWrapperStyle]}
+        {...innerWrapperProps}
+      >
+        {_leftIcon}
+        {children}
+        {_rightIcon}
+      </InnerWrapperComponent>,
+    error: noError ? null : (_error || <Text children={<React.Fragment> &nbsp; </React.Fragment>} style={_styles.errorStyle}/>),
   }
 
   return (
@@ -106,4 +110,41 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
       }
     </WrapperComponent>
   )
-})
+}
+
+InputBase.styleRegistryName = 'InputBase'
+
+InputBase.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+]
+
+InputBase.rootElement = 'wrapper'
+
+InputBase.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return InputBase as (props: StyledComponentProps<InputBaseProps, typeof styles>) => IJSX
+}
+
+InputBase.defaultProps = {
+  noError: false,
+  labelAsRow: false,
+  disabled: false,
+  order: InputBaseDefaultOrder,
+  rightIcon: null,
+  leftIcon: null,
+  description: null,
+  error: null,
+} as Partial<InputBaseProps>
+
+WebStyleRegistry.registerComponent(InputBase)
+
+export * from './styles'
+export * from './utils'
+export * from './types'

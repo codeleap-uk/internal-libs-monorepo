@@ -1,7 +1,7 @@
 import { PropsOf } from '@codeleap/common'
-import { StylesOf } from '../../types'
 import { InputBaseComposition } from './styles'
 import { ActionIcon } from '../ActionIcon'
+import { StyledProp } from '@codeleap/styles'
 
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
@@ -16,13 +16,13 @@ export type InputBaseProps = React.PropsWithChildren<{
   wrapperProps?: any
   innerWrapper?: React.FC<any>
   innerWrapperProps?: any
-  styles?: StylesOf<InputBaseComposition>
+  style?: StyledProp<InputBaseComposition>
+  styleRegistryName?: string
   description?: React.ReactNode
   debugName: string
   focused?: boolean
   disabled?: boolean
   order?: OrderedParts[]
-  style?: any
   labelAsRow?: boolean
   noError?: boolean
   innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
