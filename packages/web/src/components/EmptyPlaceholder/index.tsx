@@ -51,7 +51,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
 
   if (loading) {
     return (
-      <View css={[styles.wrapper, styles['wrapper:loading']]}>
+      <View style={[styles.wrapper, styles['wrapper:loading']]}>
         <ActivityIndicator debugName={debugName} {...indicatorProps} styles={activityIndicatorStyles}/>
       </View>
     )

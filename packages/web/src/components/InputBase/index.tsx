@@ -65,19 +65,19 @@ export const InputBase = React.forwardRef<unknown, InputBaseProps>((props, ref) 
     debugName: `${debugName} right icon`,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} css={_styles.labelStyle}/> : label
+  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle}/> : label
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} css={_styles.errorStyle}/> : error
+  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle}/> : error
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} css={_styles.descriptionStyle}/> : description
+  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/> : description
 
   const parts = {
-    label: labelAsRow ? <View css={_styles.labelRowStyle}>
+    label: labelAsRow ? <View style={_styles.labelRowStyle}>
       {_label}
       {_description}
     </View> : _label,
     description: labelAsRow ? null : _description,
-    innerWrapper: <InnerWrapperComponent ref={innerWrapperRef} css={[
+    innerWrapper: <InnerWrapperComponent ref={innerWrapperRef} style={[
       _styles.innerWrapperStyle,
     ]} {...innerWrapperProps}>
       {_leftIcon}

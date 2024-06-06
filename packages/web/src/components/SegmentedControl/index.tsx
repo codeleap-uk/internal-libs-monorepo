@@ -35,7 +35,7 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
     <Touchable
       key={touchableProps.key}
       ref={ref}
-      css={[
+      style={[
         styles.button,
         selected && styles['button:selected'],
         disabled && styles['button:disabled'],
@@ -58,7 +58,7 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
       <Text
         text={label}
         debugName={touchableProps?.debugName}
-        css={[
+        style={[
           styles.text,
           selected && styles['text:selected'],
           disabled && styles['text:disabled'],
@@ -151,9 +151,9 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   }
 
   return (
-    <View css={[styles.wrapper, style]} {...rest}>
-      {label && <Text text={label} css={[styles.label, disabled && styles['label:disabled']]} />}
-      <View css={[styles.innerWrapper, disabled && styles['innerWrapper:disabled']]}>
+    <View style={[styles.wrapper, style]} {...rest}>
+      {label && <Text text={label} style={[styles.label, disabled && styles['label:disabled']]} />}
+      <View style={[styles.innerWrapper, disabled && styles['innerWrapper:disabled']]}>
         <Bubble
           css={selectedBubbleStyles}
           animate={bubbleAnimation}

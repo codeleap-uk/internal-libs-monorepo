@@ -76,7 +76,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
 
     if (TypeGuards.isString(TextPlaceholder)) {
-      return <Text debugName={debugName} text={TextPlaceholder} css={[defaultStyles.text]} />
+      return <Text debugName={debugName} text={TextPlaceholder} style={[defaultStyles.text]} />
     } else if (React.isValidElement(TextPlaceholder)) {
       return TextPlaceholder as JSX.Element
     } else if (TypeGuards.isFunction(TextPlaceholder)) {
@@ -111,7 +111,7 @@ const LoadingIndicator = (props: LoadingIndicatorProps) => {
   const { defaultStyles, debugName } = props
 
   return (
-    <View css={[defaultStyles.wrapper]}>
+    <View style={[defaultStyles.wrapper]}>
       <ActivityIndicator debugName={debugName} />
     </View>
   )
@@ -143,7 +143,7 @@ const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSI
   // @ts-ignore
   const text = getMultiValue(selectProps?.value, separator, { searchable })
 
-  return <Text text={text} css={[defaultStyles.text]} />
+  return <Text text={text} style={[defaultStyles.text]} />
 }
 
 const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) => {
@@ -174,7 +174,7 @@ const defaultProps: Partial<SelectProps> = {
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
   <T extends string | number = string, Multi extends boolean = false>
-    (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
+  (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
 
     type Option = FormTypes.Option<T>
 

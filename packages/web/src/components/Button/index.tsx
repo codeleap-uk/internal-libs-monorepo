@@ -74,7 +74,7 @@ export const Button = (buttonProps: ButtonProps) => {
 
   return (
     <Touchable
-      css={[_styles.wrapper, style]}
+      style={[_styles.wrapper, style]}
       component='button'
       debugComponent='Button'
       disabled={disabled}

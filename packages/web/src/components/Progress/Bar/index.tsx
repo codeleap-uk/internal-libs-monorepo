@@ -60,7 +60,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
   })
 
   return (
-    <View css={variantStyles.wrapper} debugName={debugName} {...rest}>
+    <View style={variantStyles.wrapper} debugName={debugName} {...rest}>
       {!TypeGuards.isNil(leftIcon) ? (
         <Icon
           name={leftIcon}
@@ -72,7 +72,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
       {TypeGuards.isString(leftText) ? (
         <Text
           text={leftText}
-          css={[variantStyles.text, variantStyles.leftText]}
+          style={[variantStyles.text, variantStyles.leftText]}
           {...leftTextProps}
         />
       ) : (
@@ -109,7 +109,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
       {TypeGuards.isString(rightText) ? (
         <Text
           text={rightText}
-          css={[variantStyles.text, variantStyles.rightText]}
+          style={[variantStyles.text, variantStyles.rightText]}
           {...rightTextProps}
         />
       ) : (

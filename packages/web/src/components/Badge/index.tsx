@@ -67,12 +67,12 @@ export const Badge = (props: BadgeProps) => {
   let BadgeContent = renderBadgeContent
 
   if (TypeGuards.isNil(renderBadgeContent)) {
-    BadgeContent = () => <Text text={content} {...textProps} css={countStyles} />
+    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} />
   }
 
   return (
-    <View {...rest} css={wrapperStyles}>
-      <View {...innerWrapperProps} css={innerWrapperStyles}>
+    <View {...rest} style={wrapperStyles}>
+      <View {...innerWrapperProps} style={innerWrapperStyles}>
         {showContent
           ? <BadgeContent
             {...props}

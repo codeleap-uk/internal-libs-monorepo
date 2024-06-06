@@ -71,12 +71,12 @@ export const ListLayout = (props: ListLayoutProps) => {
 
   return (
     // @ts-ignore
-    <View css={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
+    <View style={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
       {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
 
       {isEmpty ? <ListEmptyComponent debugName={debugName} {...placeholder} /> : null}
 
-      <View css={[getKeyStyle('innerWrapper'), isEmpty && { display: 'none' }]}>
+      <View style={[getKeyStyle('innerWrapper'), isEmpty && { display: 'none' }]}>
         {(!ListRefreshControlComponent || !refresh) ? null : (
           <ListRefreshControlComponent
             {...props}
@@ -98,7 +98,7 @@ export const ListLayout = (props: ListLayoutProps) => {
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) => {
   return (
-    <View css={[props?.separatorStyles]}></View>
+    <View style={[props?.separatorStyles]}></View>
   )
 }
 export function List<T = any>(props: ListProps<T>) {

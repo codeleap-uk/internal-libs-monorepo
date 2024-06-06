@@ -1,26 +1,23 @@
 /** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
-import React, {
-  useImperativeHandle,
-  useRef,
-} from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { WebInputFile, useCallback } from '@codeleap/common'
-import { HTMLProps } from '../types'
+import { FileInputProps, FileInputRef } from './types'
+import { WebStyleRegistry } from '../../lib'
+import { ComponentWithDefaultProps } from '../../types'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export type FileInputRef = {
-  openFilePicker: () => Promise<WebInputFile[]>
-  clear: () => void
-}
+export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileInputRef>) => {
 
-export type FileInputProps = Omit<HTMLProps<'input'>, 'type' | 'ref'> & {
-  onFileSelect?: (files: WebInputFile[]) => void
-  autoClear?: boolean
-}
-
-export const _FileInput = (inputProps: FileInputProps, ref: React.Ref<FileInputRef>) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const { onFileSelect, autoClear = true, ...props } = inputProps
+  const {
+    onFileSelect,
+    autoClear,
+    ...inputProps
+  } = {
+    ...props,
+    ...FileInput.defaultProps,
+  }
 
   const resolveWithFile = useRef<(file: WebInputFile[]) => any>()
 
@@ -66,26 +63,29 @@ export const _FileInput = (inputProps: FileInputProps, ref: React.Ref<FileInputR
     <input
       type={'file'}
       css={{ visibility: 'hidden', width: 0, height: 0, opacity: 0, display: 'none' }}
-      {...props}
+      {...inputProps}
       ref={inputRef}
       onChange={handleChange}
     />
   )
+}) as ComponentWithDefaultProps<FileInputProps> & GenericStyledComponentAttributes<AnyRecord>
+
+FileInput.styleRegistryName = 'FileInput'
+
+FileInput.elements = [
+
+]
+
+FileInput.rootElement = ''
+
+FileInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return FileInput as (props: StyledComponentProps<FileInputProps, typeof styles>) => IJSX
 }
 
-export const FileInput = React.forwardRef<FileInputRef, FileInputProps>(_FileInput) as unknown as (
-  (props: FileInputProps & { ref?: React.MutableRefObject<FileInputRef> | React.Ref<FileInputRef> }) => JSX.Element
-)
+FileInput.defaultProps = {
+  autoClear: true,
+} as Partial<FileInputProps>
 
-export const useFileInput = () => {
-  const inputRef = useRef<FileInputRef | null>(null)
+WebStyleRegistry.registerComponent(FileInput)
 
-  const openFilePicker = () => {
-    return inputRef.current?.openFilePicker()
-  }
-
-  return {
-    openFilePicker,
-    ref: inputRef,
-  }
-}
+export * from './types'

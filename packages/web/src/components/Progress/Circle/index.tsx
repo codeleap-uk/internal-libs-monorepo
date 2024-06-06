@@ -65,7 +65,7 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
   }, [variantStyles.circle])
 
   return (
-    <View debugName={debugName} css={variantStyles.wrapper} {...rest}>
+    <View debugName={debugName} style={variantStyles.wrapper} {...rest}>
       <CircularProgressbarWithChildren
         value={progress}
         css={[

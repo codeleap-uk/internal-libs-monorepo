@@ -68,7 +68,7 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
   }
 
   const label = TypeGuards.isString(item.label) ? <Text
-    css={[
+    style={[
       styles.optionLabel,
       getStyle('optionLabel'),
     ]}
@@ -78,7 +78,7 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
   return <React.Fragment>
     <Touchable
       debugName={`${debugName} option ${item.value}`}
-      css={[
+      style={[
         styles.optionWrapper,
         getStyle('optionWrapper'),
       ]}
@@ -86,14 +86,14 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       disabled={isDisabled}
     >
       <View
-        css={[
+        style={[
           styles.optionIndicator,
           getStyle('optionIndicator'),
         ]}
 
       >
         <View
-          css={[
+          style={[
             styles.optionIndicatorInner,
             getStyle('optionIndicatorInner'),
           ]}

@@ -15,7 +15,7 @@ export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
 } & ComponentVariants<typeof LoadingOverlayPresets> & ComponentCommonProps
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
-  const { 
+  const {
     visible,
     children,
     styles = {},
@@ -24,13 +24,13 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
     style = {},
     indicatorProps,
     debugName,
-    ...rest 
+    ...rest
   } = props
 
   const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
-    variants, 
-    styles, 
-    responsiveVariants, 
+    variants,
+    styles,
+    responsiveVariants,
     rootElement: 'wrapper',
   })
 
@@ -39,7 +39,7 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
   }, [variantStyles])
 
   return (
-    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible'], style]} {...rest}>
+    <View style={[variantStyles.wrapper, visible && variantStyles['wrapper:visible'], style]} {...rest}>
       <ActivityIndicator debugName={debugName} {...indicatorProps} styles={indicatorStyles} />
       {children}
     </View>

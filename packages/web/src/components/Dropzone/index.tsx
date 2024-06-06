@@ -30,7 +30,7 @@ const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
   } = props
 
   return (
-    <View css={[styles.fileWrapper, hasErrors && styles['fileWrapper:error']]}>
+    <View style={[styles.fileWrapper, hasErrors && styles['fileWrapper:error']]}>
       {isPreview ?
         <img
           onLoad={revokeImageUrl}
@@ -41,13 +41,13 @@ const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
         <Icon
           debugName='DropzoneFilePreview:LeftIcon'
           name={fileLeftIcon}
-          css={styles.fileLeftIcon}
+          style={styles.fileLeftIcon}
         />
       }
 
-      <View css={styles.fileNameWrapper}>
-        <Text text={file.name} css={styles.fileName} />
-        {hasErrors && errors?.map(error => <Text text={error.message} css={styles.fileError} />)}
+      <View style={styles.fileNameWrapper}>
+        <Text text={file.name} style={styles.fileName} />
+        {hasErrors && errors?.map(error => <Text text={error.message} style={styles.fileError} />)}
       </View>
 
       <ActionIcon
@@ -171,17 +171,17 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
   }
 
   return (
-    <View css={styles.wrapper}>
-      <View {...getRootProps() as PropsOf<ViewProps<'div'>>} css={styles.dropzone}>
+    <View style={styles.wrapper}>
+      <View {...getRootProps() as PropsOf<ViewProps<'div'>>} style={styles.dropzone}>
 
         {icon && !hasFiles &&
-          <View css={styles.iconWrapper}>
-            <Icon debugName='Dropzone:Icon' name={icon} css={styles.icon} />
+          <View style={styles.iconWrapper}>
+            <Icon debugName='Dropzone:Icon' name={icon} style={styles.icon} />
           </View>
         }
 
         {hasFiles && (
-          <View css={styles.filesWrapper}>
+          <View style={styles.filesWrapper}>
             {acceptedFiles?.map?.((file, index) => (
               <FilePreview
                 {...fileProps}
@@ -206,7 +206,7 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
         )}
 
         {children}
-        {!!placeholder && <Text text={placeholder} css={styles.placeholder} />}
+        {!!placeholder && <Text text={placeholder} style={styles.placeholder} />}
 
         <input {...getInputProps() as HTMLProps<HTMLInputElement>} />
       </View>

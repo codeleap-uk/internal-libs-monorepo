@@ -87,7 +87,7 @@ export const Drawer = (props: DrawerProps) => {
   ]), [open, styles])
 
   return (
-    <View debugName={debugName} css={wrapperStyles}>
+    <View debugName={debugName} style={wrapperStyles}>
       {darkenBackground && (
         <Overlay
           debugName={debugName}
@@ -99,7 +99,7 @@ export const Drawer = (props: DrawerProps) => {
 
       <View
         variants={['fixed']}
-        css={{
+        style={{
           transform: open ? `translate(0%, 0%)` : hiddenStyle,
           transition: `transform ${animationDuration} ease`,
           [sizeProperty]: size,
@@ -113,9 +113,9 @@ export const Drawer = (props: DrawerProps) => {
           showHeader ? (
             <View
               component='header'
-              css={[styles.header]}
+              style={[styles.header]}
             >
-              {TypeGuards.isString(title) ? <Text css={styles.title} text={title} /> : title}
+              {TypeGuards.isString(title) ? <Text style={styles.title} text={title} /> : title}
               {showCloseButton && (
                 <ActionIcon
                   debugName={debugName}
@@ -129,10 +129,10 @@ export const Drawer = (props: DrawerProps) => {
           ) : null
         }
 
-        <View css={styles.body}>{children}</View>
+        <View style={styles.body}>{children}</View>
 
         {footer && (
-          <View component='footer' css={styles.footer}>
+          <View component='footer' style={styles.footer}>
             {footer}
           </View>
         )}

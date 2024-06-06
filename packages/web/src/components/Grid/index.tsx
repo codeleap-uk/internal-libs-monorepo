@@ -10,7 +10,7 @@ import { WebStyleRegistry } from '../../lib'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
   return (
-    <View css={[props?.separatorStyles]}></View>
+    <View style={[props?.separatorStyles]}></View>
   )
 }
 

@@ -27,7 +27,7 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
 
   return <Text
     text={props.content}
-    css={style}
+    style={style}
   />
 }
 
@@ -207,7 +207,7 @@ export const Slider = (props: SliderProps) => {
       </SliderContainer>
 
       {trackMarksProp ?
-        <View css={trackMarkWrapperStyle}>
+        <View style={trackMarkWrapperStyle}>
           {
             trackMarksProp.map((_, idx) => {
               let idxStyle = {}

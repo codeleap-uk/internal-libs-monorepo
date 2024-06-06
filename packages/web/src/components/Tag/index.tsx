@@ -84,7 +84,7 @@ export const Tag = (props: TagProps) => {
         />
       )}
 
-      {TypeGuards.isString(text) ? <Text text={text} css={textStyles} {...textProps} /> : text}
+      {TypeGuards.isString(text) ? <Text text={text} style={textStyles} {...textProps} /> : text}
       {children}
 
       {!TypeGuards.isNil(rightIcon) && (
