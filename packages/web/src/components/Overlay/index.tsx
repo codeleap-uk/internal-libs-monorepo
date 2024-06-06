@@ -1,37 +1,24 @@
 import React from 'react'
-import {
-  ComponentVariants,
-  StylesOf,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import { Touchable, TouchableProps } from '../Touchable'
-import { View, ViewProps } from '../View'
-import { OverlayComposition, OverlayPresets } from './styles'
+import { Touchable } from '../Touchable'
+import { View } from '../View'
 import { NativeHTMLElement } from '../../types'
-import { usePopState } from '../../lib'
-
-export type OverlayProps<T extends NativeHTMLElement = 'div'> = {
-  visible?: boolean
-  styles?: StylesOf<OverlayComposition>
-  onPress?: TouchableProps<'div'>['onClick']
-} & ComponentVariants<typeof OverlayPresets> & Omit<ViewProps<T>, 'variants' | 'responsiveVariants'>
-
-export * from './styles'
+import { WebStyleRegistry, usePopState } from '../../lib'
+import { OverlayProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T>) => {
-  const { 
-    visible, 
-    responsiveVariants, 
-    variants, 
-    styles, 
-    ...props 
-  } = overlayProps
 
-  const variantStyles = useDefaultComponentStyle('Overlay', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const {
+    visible,
+    style,
+    ...props
+  } = {
+    ...Overlay.defaultProps,
+    ...overlayProps,
+  }
+
+  const styles = useStylesFor(Overlay.styleRegistryName, style)
 
   usePopState(visible, props.onPress)
 
@@ -40,12 +27,30 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
   return (
     // @ts-ignore
     <Component
-      css={[
+      style={[
         { transition: 'opacity 0.2s ease' },
-        variantStyles.wrapper,
-        visible ? variantStyles['wrapper:visible'] : {},
+        styles.wrapper,
+        visible ? styles['wrapper:visible'] : {},
       ]}
       {...props}
     />
   )
 }
+
+Overlay.styleRegistryName = 'Overlay'
+
+Overlay.elements = ['wrapper']
+
+Overlay.rootElement = 'wrapper'
+
+Overlay.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Overlay as (props: StyledComponentProps<OverlayProps, typeof styles>) => IJSX
+}
+
+Overlay.defaultProps = {} as Partial<OverlayProps>
+
+WebStyleRegistry.registerComponent(Overlay)
+
+export * from './styles'
+export * from './types'
+
