@@ -1,4 +1,3 @@
-import { createDefaultVariantFactory, includePresets } from '@codeleap/common'
 import { ActionIconParts } from '../ActionIcon'
 import { InputBaseParts, InputBaseStates } from '../InputBase'
 
@@ -9,7 +8,3 @@ export type IconParts = Exclude<ActionIconParts, 'icon' | 'icon:disabled'>
 
 export type TextInputComposition = `${TextInputParts}:${TextInputStates}` | TextInputParts
 
-const createTextInputStyle =
-  createDefaultVariantFactory<TextInputComposition>()
-
-export const TextInputPresets = includePresets((styles) => createTextInputStyle(() => ({ wrapper: styles })))

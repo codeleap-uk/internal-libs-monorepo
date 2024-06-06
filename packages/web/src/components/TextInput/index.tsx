@@ -1,16 +1,10 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-
 import {
-  ComponentVariants,
-  FormTypes,
   IconPlaceholder,
-  TextInputComposition,
   TypeGuards,
   useBooleanToggle,
-  useDefaultComponentStyle,
   useValidate,
-  yup,
 } from '@codeleap/common'
 import React, {
   forwardRef,
@@ -20,51 +14,19 @@ import React, {
 } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import InputMask from 'react-input-mask'
-import { Touchable, TouchableProps } from '../Touchable'
-import { StylesOf, HTMLProps, ComponentWithDefaultProps } from '../../types/utility'
-import { InputBase, InputBaseProps, selectInputBaseProps } from '../InputBase'
-import { TextInputPresets } from './styles'
-import { getMaskInputProps, TextInputMaskingProps } from './mask'
+import { Touchable } from '../Touchable'
+import { ComponentWithDefaultProps } from '../../types/utility'
+import { InputBase, selectInputBaseProps } from '../InputBase'
+import { getMaskInputProps } from './mask'
 import { getTestId } from '../../lib/utils/test'
+import { InputRef, TextInputProps } from './types'
+import { FileInputRef } from '../FileInput'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib'
 
-export * from './styles'
-export * from './mask'
+export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputRef) => {
 
-type NativeTextInputProps = HTMLProps<'input'>
-
-export type TextInputProps =
-  Omit<InputBaseProps, 'styles' | 'variants'> &
-  Omit<NativeTextInputProps, 'value' | 'crossOrigin' | 'ref'> & {
-    styles?: StylesOf<TextInputComposition>
-    password?: boolean
-    validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
-    debugName?: string
-    visibilityToggle?: boolean
-    value?: NativeTextInputProps['value']
-    multiline?: boolean
-    onPress?: TouchableProps['onPress']
-    onChangeText?: (textValue: string) => void
-    caretColor?: string
-    focused?: boolean
-    _error?: boolean
-    rows?: number
-    masking?: TextInputMaskingProps
-    visibleIcon?: IconPlaceholder
-    hiddenIcon?: IconPlaceholder
-  } & ComponentVariants<typeof TextInputPresets>
-
-type InputRef = {
-  isTextInput?: boolean
-  focus: () => void
-  getInputRef: () => HTMLInputElement
-}
-
-const defaultProps: Partial<TextInputProps> = {
-  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
-  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
-}
-
-export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
   const innerInputRef = useRef<InputRef>(null)
 
   const {
@@ -76,9 +38,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
   })
 
   const {
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
+    style,
     value,
     validate,
     debugName,
@@ -89,11 +49,13 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
     caretColor,
     focused,
     _error,
-    masking = null,
+    masking,
     visibleIcon,
     hiddenIcon,
     ...textInputProps
   } = others as TextInputProps
+
+  const styles = useStylesFor(TextInput.styleRegistryName, style)
 
   const [_isFocused, setIsFocused] = useState(false)
 
@@ -108,12 +70,6 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
 
   const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
 
-  const variantStyles = useDefaultComponentStyle<'u:TextInput', typeof TextInputPresets>('u:TextInput', {
-    responsiveVariants,
-    variants,
-    styles,
-  })
-
   // @ts-ignore
   useImperativeHandle(inputRef, () => {
     return {
@@ -122,7 +78,6 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
           // @ts-expect-error
           innerInputRef.current?.getInputDOMNode()?.focus()
         }
-        
         innerInputRef.current?.focus?.()
       },
       isTextInput: true,
@@ -185,17 +140,17 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
   const errorMessage = validation.message || _error
 
   const placeholderStyles = [
-    variantStyles.placeholder,
-    isFocused && variantStyles['placeholder:focus'],
-    hasError && variantStyles['placeholder:error'],
-    isDisabled && variantStyles['placeholder:disabled'],
+    styles.placeholder,
+    isFocused && styles['placeholder:focus'],
+    hasError && styles['placeholder:error'],
+    isDisabled && styles['placeholder:disabled'],
   ]
 
   const selectionStyles = [
-    variantStyles.selection,
-    isFocused && variantStyles['selection:focus'],
-    hasError && variantStyles['selection:error'],
-    isDisabled && variantStyles['selection:disabled'],
+    styles.selection,
+    isFocused && styles['selection:focus'],
+    hasError && styles['selection:error'],
+    isDisabled && styles['selection:disabled'],
   ]
 
   const secureTextProps = (password && secureTextEntry) && {
@@ -216,12 +171,12 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
       {...inputBaseProps}
       debugName={debugName}
       error={hasError ? errorMessage : null}
-      styles={{
-        ...variantStyles,
+      style={{
+        ...styles,
         innerWrapper: [
-          variantStyles.innerWrapper,
-          isMultiline && variantStyles['innerWrapper:multiline'],
-          hasMultipleLines && variantStyles['innerWrapper:hasMultipleLines'],
+          styles.innerWrapper,
+          isMultiline && styles['innerWrapper:multiline'],
+          hasMultipleLines && styles['innerWrapper:hasMultipleLines'],
         ],
       }}
       innerWrapperProps={{
@@ -252,12 +207,12 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
         // @ts-ignore
         onFocus={handleFocus}
         css={[
-          variantStyles.input,
-          isMultiline && variantStyles['input:multiline'],
-          isFocused && variantStyles['input:focus'],
-          hasError && variantStyles['input:error'],
-          isDisabled && variantStyles['input:disabled'],
-          hasMultipleLines && variantStyles['input:hasMultipleLines'],
+          styles.input,
+          isMultiline && styles['input:multiline'],
+          isFocused && styles['input:focus'],
+          hasError && styles['input:error'],
+          isDisabled && styles['input:disabled'],
+          hasMultipleLines && styles['input:hasMultipleLines'],
           {
             '&::placeholder': placeholderStyles,
           },
@@ -267,7 +222,7 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
           {
             '&:focus': [
               { outline: 'none', borderWidth: 0, borderColor: 'transparent' },
-              isFocused && variantStyles['input:focus'],
+              isFocused && styles['input:focus'],
               caretColorStyle,
             ],
           },
@@ -278,8 +233,40 @@ export const TextInputComponent = forwardRef<InputRef, TextInputProps>((props, i
       />
     </InputBase>
   )
-})
 
-export const TextInput = TextInputComponent as unknown as ComponentWithDefaultProps<TextInputProps>
+}) as ComponentWithDefaultProps<TextInputProps> & GenericStyledComponentAttributes<AnyRecord>
 
-TextInput.defaultProps = defaultProps as TextInputProps
+TextInput.styleRegistryName = 'TextInput'
+
+TextInput.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'errorMessage',
+  'description',
+  'labelRow',
+  'icon',
+  'leftIcon',
+  'rightIcon',
+  'input',
+  'placeholder',
+  'selection',
+]
+
+TextInput.rootElement = 'wrapper'
+
+TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return TextInput as (props: StyledComponentProps<TextInputProps, typeof styles>) => IJSX
+}
+
+TextInput.defaultProps = {
+  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
+  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
+  masking: null,
+} as TextInputProps
+
+WebStyleRegistry.registerComponent(TextInput)
+
+export * from './types'
+export * from './styles'
+export * from './mask'
