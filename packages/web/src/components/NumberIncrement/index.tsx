@@ -27,7 +27,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps({ ...props, ...NumberIncrement.defaultProps })
+  } = selectInputBaseProps({ ...NumberIncrement.defaultProps, ...props })
 
   const {
     style,
