@@ -5,7 +5,8 @@ import { View } from '../View'
 import { BadgeContent, BadgeProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { ComponentWithDefaultProps } from '../../types'
 
 const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   if (Number(count) > maxCount) {
@@ -15,7 +16,7 @@ const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   }
 }
 
-export const Badge = (props: BadgeProps) => {
+export const Badge: ComponentWithDefaultProps<BadgeProps> & GenericStyledComponentAttributes<AnyRecord> = (props: BadgeProps) => {
 
   const {
     debugName,

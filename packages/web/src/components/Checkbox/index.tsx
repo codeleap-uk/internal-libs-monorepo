@@ -16,7 +16,10 @@ export const Checkbox = (props: CheckboxProps) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps({ ...Checkbox.defaultProps, ...props })
+  } = selectInputBaseProps({
+    ...Checkbox.defaultProps,
+    ...props,
+  })
 
   const {
     style,
@@ -82,49 +85,48 @@ export const Checkbox = (props: CheckboxProps) => {
     if (onValueChange && (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter')) onValueChange?.(!value)
   }
 
-  return <InputBase
-    {...inputBaseProps}
-    debugName={debugName}
-    styles={{
-      ...styles,
-      innerWrapper: [
-        styles.innerWrapper,
-      ],
-    }}
-    order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
-    style={style}
-  >
-    <motion.div
-      css={[
-        styles.box,
-        disabled && styles['box:disabled'],
-      ]}
-      initial={false}
-      animate={boxAnimation}
-      transition={styles['box:transition']}
-      onClick={handleChange}
-      onKeyDown={handleChange}
-      tabIndex={0}
+  return (
+    <InputBase
+      {...inputBaseProps}
+      debugName={debugName}
+      style={{
+        ...styles,
+        innerWrapper: [
+          styles.innerWrapper,
+        ],
+      }}
+      order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
     >
       <motion.div
         css={[
-          styles.checkmarkWrapper,
-          disabled && styles['checkmarkWrapper:disabled'],
+          styles.box,
+          disabled && styles['box:disabled'],
         ]}
         initial={false}
-        animate={checkmarkWrapperAnimation}
-        transition={styles['checkmarkWrapper:transition']}
-
+        animate={boxAnimation}
+        transition={styles['box:transition']}
+        onClick={handleChange}
+        onKeyDown={handleChange}
+        tabIndex={0}
       >
-        <Icon
-          debugName={debugName}
-          name={checkIcon as any}
-          css={[styles.checkmark, disabled && styles['checkmark:disabled']]}
-          style={styles.checkmark}
-        />
+        <motion.div
+          css={[
+            styles.checkmarkWrapper,
+            disabled && styles['checkmarkWrapper:disabled'],
+          ]}
+          initial={false}
+          animate={checkmarkWrapperAnimation}
+          transition={styles['checkmarkWrapper:transition']}
+        >
+          <Icon
+            debugName={debugName}
+            name={checkIcon as any}
+            style={[styles.checkmark, disabled && styles['checkmark:disabled']]}
+          />
+        </motion.div>
       </motion.div>
-    </motion.div>
-  </InputBase>
+    </InputBase>
+  )
 }
 
 Checkbox.styleRegistryName = 'Checkbox'
@@ -136,12 +138,13 @@ Checkbox.elements = [
   'errorMessage',
   'description',
   'labelRow',
-  'checkmarkWrapper',
-  'checkmark',
-  'box',
   'icon',
   'leftIcon',
   'rightIcon',
+  'checkmarkWrapper',
+  'checkmark',
+  'box',
+  '__props',
 ]
 
 Checkbox.rootElement = 'wrapper'

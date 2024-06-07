@@ -31,7 +31,7 @@ export const ActivityIndicator = forwardRef((props: ActivityIndicatorProps, ref)
     <View style={[styles.wrapper, _size, style]}>
       <Component
         ref={ref}
-        css={[styles.wrapper, _size, style]}
+        style={[styles.wrapper, _size, style]}
         {...props}
       />
     </View>

@@ -1,7 +1,4 @@
-import {
-  AnyFunction,
-  IconPlaceholder,
-} from '@codeleap/common'
+import { AnyFunction, IconPlaceholder } from '@codeleap/common'
 import React from 'react'
 import { ComponentCommonProps } from '../../types/utility'
 import { DrawerComposition } from './styles'

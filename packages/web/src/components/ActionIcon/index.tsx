@@ -70,9 +70,9 @@ export const ActionIcon = (props: ActionIconProps) => {
 
 ActionIcon.styleRegistryName = 'ActionIcon'
 
-ActionIcon.elements = ['icon', 'touchable']
+ActionIcon.elements = ['touchable', 'icon']
 
-ActionIcon.rootElement = 'wrapper'
+ActionIcon.rootElement = 'touchableWrapper'
 
 ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return ActionIcon as (props: StyledComponentProps<ActionIconProps, typeof styles>) => IJSX

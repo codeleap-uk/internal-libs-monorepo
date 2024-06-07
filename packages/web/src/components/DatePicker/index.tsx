@@ -1,6 +1,5 @@
 import {
   TypeGuards,
-  useNestedStylesByKey,
   useCallback,
   useConditionalState,
 } from '@codeleap/common'
@@ -11,7 +10,7 @@ import { Header, OuterInput } from './components'
 import { format, isBefore, isAfter } from 'date-fns'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export function DatePicker(props: DatePickerProps) {
 
@@ -19,9 +18,7 @@ export function DatePicker(props: DatePickerProps) {
     hideInput,
     value,
     onValueChange,
-    variants,
     style,
-    responsiveVariants,
     defaultValue,
     outerInputComponent: OuterInputComponent,
     headerComponent: HeaderComponent,
@@ -216,8 +213,6 @@ DatePicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 DatePicker.defaultProps = {
-  variants: [],
-  styles: {},
   minDate: new Date(1910, 0, 1),
   maxDate: new Date(),
   startDate: new Date(1923, 0, 1),

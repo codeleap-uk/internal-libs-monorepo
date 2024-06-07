@@ -1,17 +1,10 @@
-import {
-  IconPlaceholder,
-  TypeGuards,
-  getNestedStylesByKey,
-} from '@codeleap/common'
+import { IconPlaceholder, TypeGuards } from '@codeleap/common'
 import { ActionIcon, Text, View } from '../../components'
 import { DatePickerArrowProps, DatePickerHeaderComponent } from '../types'
 import { format, getYear } from 'date-fns'
+import { useNestedStylesByKey } from '@codeleap/styles'
 
-export const ArrowLabel: React.FC<DatePickerArrowProps> = ({
-  name,
-  direction,
-  ...props
-}) => {
+export const ArrowLabel: React.FC<DatePickerArrowProps> = ({ name, direction, ...props }) => {
   return (
     <ActionIcon
       name={name ?? (`chevron-${direction}` as IconPlaceholder)}
@@ -22,6 +15,7 @@ export const ArrowLabel: React.FC<DatePickerArrowProps> = ({
 }
 
 export const Header = (props: DatePickerHeaderComponent) => {
+
   const {
     date,
     decreaseMonth,
@@ -44,15 +38,15 @@ export const Header = (props: DatePickerHeaderComponent) => {
     ? formatHeaderTitle(date)
     : `${month} ${year}`
 
-  const prevArrow = getNestedStylesByKey('prevButton', styles)
-  const nextArrow = getNestedStylesByKey('nextButton', styles)
+  const prevArrow = useNestedStylesByKey('prevButton', styles)
+  const nextArrow = useNestedStylesByKey('nextButton', styles)
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.buttonsWrapper}>
         <ArrowLabel
           direction='left'
-          styles={prevArrow}
+          style={prevArrow}
           onPress={decreaseYear}
           disabled={prevYearButtonDisabled}
         />
@@ -63,7 +57,7 @@ export const Header = (props: DatePickerHeaderComponent) => {
         />
         <ArrowLabel
           direction='right'
-          styles={nextArrow}
+          style={nextArrow}
           onPress={increaseYear}
           disabled={nextYearButtonDisabled}
         />
@@ -71,13 +65,13 @@ export const Header = (props: DatePickerHeaderComponent) => {
       <View style={styles.buttonsWrapper}>
         <ArrowLabel
           direction='left'
-          styles={prevArrow}
+          style={prevArrow}
           onPress={decreaseMonth}
           disabled={prevMonthButtonDisabled}
         />
         <ArrowLabel
           direction='right'
-          styles={nextArrow}
+          style={nextArrow}
           onPress={increaseMonth}
           disabled={nextMonthButtonDisabled}
         />

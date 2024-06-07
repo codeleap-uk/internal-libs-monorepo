@@ -1,14 +1,15 @@
 import React, { forwardRef } from 'react'
 import { GenericStyledComponentAttributes, useNestedStylesByKey } from '@codeleap/styles'
 import { CropPickerProps } from './types'
-import { Modal, Button, FileInput, FileInputRef, LoadingOverlay } from '../components'
+import { Modal, Button, FileInput, LoadingOverlay } from '../components'
 import { useCropPicker } from '../../lib'
-const ReactCrop: React.ElementType = require('react-image-crop').Component
-import 'react-image-crop/dist/ReactCrop.css'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { ComponentWithDefaultProps } from '../../types'
+
+const ReactCrop: React.ElementType = require('react-image-crop').Component
+import 'react-image-crop/dist/ReactCrop.css'
 
 export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
 
@@ -21,6 +22,7 @@ export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
     debugName,
     handle,
     withLoading,
+    style,
     ...fileInputProps
   } = {
     ...CropPickerCP.defaultProps,
@@ -38,7 +40,6 @@ export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
     setRelativeCrop,
     isLoading,
     handleCropChange,
-    style,
   } = handle || useCropPicker({ onFileSelect, ref, ...targetCrop })
 
   const styles = useStylesFor(CropPickerCP.styleRegistryName, style)
@@ -98,13 +99,13 @@ export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
 CropPickerCP.styleRegistryName = 'CropPicker'
 
 CropPickerCP.elements = [
-  'cropPreview',
   'previewSize',
+  'cropPreview',
   `confirmButton`,
   `modal`,
 ]
 
-CropPickerCP.rootElement = 'wrapper'
+CropPickerCP.rootElement = 'previewSize'
 
 CropPickerCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return CropPickerCP as (props: StyledComponentProps<CropPickerProps, typeof styles>) => IJSX

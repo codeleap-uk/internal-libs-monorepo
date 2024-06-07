@@ -68,7 +68,7 @@ export const Collapse = (props: CollapseProps) => {
   return (
     <Component
       {...wrapperProps}
-      css={[
+      style={[
         _styles.wrapper,
         open ? _styles['wrapper:open'] : _styles['wrapper:closed'],
         styles.wrapper,

@@ -8,7 +8,7 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export const ColorPicker = (props: ColorPickerProps) => {
+export const ColorPickerCP = (props: ColorPickerProps) => {
 
   const {
     isPlain,
@@ -25,9 +25,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
     openPickerComponent: OpenPickerComponent,
     footerComponent: FooterComponent,
     openPickerProps,
-  } = props
+  } = {
+    ...ColorPickerCP.defaultProps,
+    ...props,
+  }
 
-  const styles = useStylesFor(ColorPicker.styleRegistryName, style)
+  const styles = useStylesFor(ColorPickerCP.styleRegistryName, style)
 
   const [visible, toggle] = useBooleanToggle(false)
   const [color, setColor] = useState<ColorTypes>(initialColor)
@@ -44,8 +47,18 @@ export const ColorPicker = (props: ColorPickerProps) => {
 
   const Footer = useCallback(() => (
     <View style={styles.footerWrapper}>
-      <ActionIcon debugName='ColorPicker footer trash' name={clearIcon} onPress={handleClear} styles={styles.footerButton} />
-      <ActionIcon debugName='ColorPicker footer check' name={confirmIcon} onPress={handleConfirmation} styles={styles.footerButton} />
+      <ActionIcon
+        debugName='ColorPicker footer trash'
+        name={clearIcon}
+        onPress={handleClear}
+        style={styles.clearIcon}
+      />
+      <ActionIcon
+        debugName='ColorPicker footer check'
+        name={confirmIcon}
+        onPress={handleConfirmation}
+        style={styles.confirmIcon}
+      />
     </View>
   ), [clearIcon, confirmIcon, handleClear, handleConfirmation])
 
@@ -62,10 +75,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
           {openColorPickerBtn}
           <Collapse
             open={visible}
-            styles={{ wrapper: [
-              styles.dropdown,
-              visible && styles['dropdown:open'],
-            ] }}
+            style={{
+              wrapper: [
+                styles.dropdown,
+                visible && styles['dropdown:open'],
+              ] }}
           >
             <View style={styles.dropdownInnerWrapper}>
               {picker}
@@ -78,23 +92,25 @@ export const ColorPicker = (props: ColorPickerProps) => {
   )
 }
 
-ColorPicker.styleRegistryName = 'CropPicker'
+ColorPickerCP.styleRegistryName = 'ColorPicker'
 
-ColorPicker.elements = [
+ColorPickerCP.elements = [
   'wrapper',
   'picker',
   'dropdown',
   'dropdownInnerWrapper',
   'footerWrapper',
+  'clearIcon',
+  'confirmIcon',
 ]
 
-ColorPicker.rootElement = 'wrapper'
+ColorPickerCP.rootElement = 'wrapper'
 
-ColorPicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return ColorPicker as (props: StyledComponentProps<ColorPickerProps, typeof styles>) => IJSX
+ColorPickerCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ColorPickerCP as (props: StyledComponentProps<ColorPickerProps, typeof styles>) => IJSX
 }
 
-ColorPicker.defaultProps = {
+ColorPickerCP.defaultProps = {
   pickerComponent: (props) => <HexColorPicker {...props}/>,
   footerComponent: null,
   icon: 'edit' as IconProps['name'],
@@ -105,9 +121,9 @@ ColorPicker.defaultProps = {
   closeOnConfirm: true,
 } as Partial<ColorPickerProps>
 
-WebStyleRegistry.registerComponent(ColorPicker)
+WebStyleRegistry.registerComponent(ColorPickerCP)
 
-export const CropPicker = React.memo(ColorPicker)
+export const ColorPicker = React.memo(ColorPickerCP)
 
 export * from './styles'
 export * from './types'

@@ -52,7 +52,7 @@ export const Drawer = (props: DrawerProps) => {
     footer,
     darkenBackground,
     showCloseButton,
-    closeButtonProps = {},
+    closeButtonProps,
     position,
     style,
     animationDuration,
@@ -92,7 +92,7 @@ export const Drawer = (props: DrawerProps) => {
         <Overlay
           debugName={debugName}
           visible={open}
-          css={styles.overlay}
+          style={styles.overlay}
           onPress={toggle}
         />
       )}
@@ -113,7 +113,7 @@ export const Drawer = (props: DrawerProps) => {
           showHeader ? (
             <View
               component='header'
-              style={[styles.header]}
+              style={styles.header}
             >
               {TypeGuards.isString(title) ? <Text style={styles.title} text={title} /> : title}
               {showCloseButton && (
@@ -122,7 +122,7 @@ export const Drawer = (props: DrawerProps) => {
                   onPress={toggle}
                   icon={closeIcon as IconPlaceholder}
                   {...closeButtonProps}
-                  styles={closeButtonStyles}
+                  style={closeButtonStyles}
                 />
               )}
             </View>
