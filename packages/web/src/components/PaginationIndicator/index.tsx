@@ -28,12 +28,22 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const loaderStyles = useNestedStylesByKey('loader', styles)
 
   if (isFetching) {
-    return activityIndicator || <View style={styles.wrapper}><ActivityIndicator debugName={debugName} {...indicatorProps} styles={loaderStyles}/></View>
+    return activityIndicator || (
+      <View style={styles.wrapper}>
+        <ActivityIndicator debugName={debugName} {...indicatorProps} style={loaderStyles}/>
+      </View>
+    )
   }
 
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
-      return <Text debugName={debugName} style={styles.text} text={noMoreItemsText.toString()}/>
+      return (
+        <Text
+          debugName={debugName}
+          style={styles.text}
+          text={noMoreItemsText.toString()}
+        />
+      )
     }
     return noMoreItemsText
   }

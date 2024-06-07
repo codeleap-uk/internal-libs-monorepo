@@ -163,7 +163,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
 
   const inputBaseAction = isPressable ? 'onPress' : 'onClick'
 
-  const testId = getTestId(others)
+  const testId = getTestId(textInputProps)
 
   return (
     <InputBase

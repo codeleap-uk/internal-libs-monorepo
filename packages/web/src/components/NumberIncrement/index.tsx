@@ -6,7 +6,6 @@ import {
   useState,
   useRef,
   useValidate,
-  FormTypes,
   IconPlaceholder,
 } from '@codeleap/common'
 import { InputBase, selectInputBaseProps } from '../InputBase'
@@ -26,7 +25,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
 
   const {
     inputBaseProps,
-    others,
+    others: numberIncrementProps,
   } = selectInputBaseProps({ ...NumberIncrement.defaultProps, ...props })
 
   const {
@@ -49,7 +48,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     _error,
     formatter,
     placeholder,
-  } = others
+  } = numberIncrementProps
 
   const styles = useStylesFor(NumberIncrement.styleRegistryName, style)
 
@@ -181,7 +180,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     <InputBase
       {...inputBaseProps}
       error={hasError ? errorMessage : null}
-      styles={{
+      style={{
         ...styles,
         innerWrapper: [
           styles.innerWrapper,
@@ -202,7 +201,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         component: 'button',
         ...inputBaseProps.leftIcon,
       }}
-      style={style}
       disabled={disabled}
       focused={isFocused}
       innerWrapperProps={{
@@ -217,7 +215,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       {editable && !disabled ? (
         <Input
           displayType='input'
-          css={[
+          style={[
             ...inputTextStyle,
             {
               '&::placeholder': placeholderStyles,

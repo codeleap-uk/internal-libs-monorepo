@@ -4,7 +4,7 @@ import { CSSInterpolation } from '@emotion/css'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
-import { SelectProps } from './types'
+import { SelectProps, UseSelectStylesProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
 type ButtonParts = _ButtonParts
@@ -57,7 +57,7 @@ export type OptionState = {
   baseStyles: SelectProps['itemProps']['style']
 }
 
-export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
+export function useSelectStyles<T, Multi extends boolean>(props: UseSelectStylesProps, state: ComponentState) {
 
   const {
     style,

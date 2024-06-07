@@ -117,5 +117,6 @@ SearchInput.defaultProps = {
 
 WebStyleRegistry.registerComponent(SearchInput)
 
+export * from './styles'
 export * from './types'
 

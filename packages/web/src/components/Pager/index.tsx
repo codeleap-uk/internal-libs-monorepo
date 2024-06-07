@@ -103,7 +103,7 @@ const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) 
           return (
             <PageWrapper
               key={index}
-              css={styles.pageWrapper}
+              style={styles.pageWrapper}
               {...pageWrapperProps}
             >
               {child}

@@ -1,7 +1,8 @@
-import { FormTypes, RadioInputComposition, StylesOf } from '@codeleap/common'
+import { FormTypes, StylesOf } from '@codeleap/common'
 import { InputBaseProps } from '../InputBase'
 import { ReactNode } from 'react'
 import { StyledProp } from '@codeleap/styles'
+import { RadioInputComposition } from './styles'
 
 type WrapperProps = InputBaseProps
 

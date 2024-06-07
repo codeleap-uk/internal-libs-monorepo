@@ -86,9 +86,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
 }
 
 Text.styleRegistryName = 'Text'
-
 Text.elements = ['text']
-
 Text.rootElement = 'text'
 
 Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {

@@ -25,4 +25,4 @@ export type ViewProps<T extends NativeHTMLElement> =
     animated?: boolean
     animatedProps?: Partial<MotionProps>
     style?: StyledProp<ViewComposition>
-  } & BaseViewProps
+  } & Omit<BaseViewProps, 'css'>

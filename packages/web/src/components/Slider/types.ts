@@ -3,8 +3,7 @@ import { InputBaseProps } from '../InputBase'
 import { SliderComposition } from './styles'
 import { SliderProps as PrimitiveSliderProps } from '@radix-ui/react-slider'
 
-export type SliderProps =
-Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueChange'>> &
+export type SliderProps = Partial<Omit<PrimitiveSliderProps, 'value' | 'onValueChange'>> &
 Pick<InputBaseProps, 'disabled' | 'debugName' | 'description' | 'label'> & {
     indicatorLabel?: {
       order?: number[]

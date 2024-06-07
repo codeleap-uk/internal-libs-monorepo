@@ -16,7 +16,7 @@ export const Scroll = forwardRef(<T extends NativeHTMLElement = 'div'>(props: Sc
       {...props}
       ref={ref}
       scroll
-      style={styles}
+      style={styles.wrapper}
     />
   )
 }) as ComponentWithDefaultProps<ScrollProps<any>> & GenericStyledComponentAttributes<AnyRecord>

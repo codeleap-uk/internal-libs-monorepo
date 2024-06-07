@@ -27,7 +27,6 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
     style,
     animated,
     animatedProps,
-    css = [],
     ...props
   } = {
     ...View.defaultProps,
@@ -63,9 +62,8 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
       scroll && { overflowY: 'scroll' },
       matches && { display: 'none' },
       style,
-      css,
     ]
-  }, [styles, scroll, matches, css])
+  }, [styles, scroll, matches])
 
   const onHoverProps = TypeGuards.isFunction(onHover) && {
     onMouseEnter: () => handleHover(true),
@@ -86,7 +84,7 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
       {...props}
       {...animatedProps}
       data-testid={testId}
-      css={componentStyles}
+      style={componentStyles}
     >
       {children}
     </Component>

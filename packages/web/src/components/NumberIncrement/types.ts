@@ -4,10 +4,7 @@ import {
 } from '@codeleap/common'
 import { NumberIncrementComposition } from './styles'
 import { InputBaseProps } from '../InputBase'
-import {
-  PatternFormatProps as PFProps,
-  NumericFormatProps as NFProps,
-} from 'react-number-format'
+import { PatternFormatProps as PFProps, NumericFormatProps as NFProps } from 'react-number-format'
 import { FormatInputValueFunction } from 'react-number-format/types/types'
 import { StyledProp } from '@codeleap/styles'
 

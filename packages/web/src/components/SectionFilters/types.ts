@@ -64,7 +64,7 @@ export type SectionFiltersProps = {
 export type OptionProps = {
   option: ItemOptionProps
   item: ItemProps
-  styles: Partial<StylesOf<ButtonComposition>>
+  styles: StylesOf<ButtonComposition>
   selectedItems: object
   onPress: () => void
   canSelectMultiple: boolean

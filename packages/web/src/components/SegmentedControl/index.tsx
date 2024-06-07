@@ -39,7 +39,6 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
         styles.button,
         selected && styles['button:selected'],
         disabled && styles['button:disabled'],
-        style as any,
       ]}
       onPress={onPress}
       disabled={disabled}

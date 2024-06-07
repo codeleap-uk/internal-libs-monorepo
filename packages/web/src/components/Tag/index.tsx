@@ -69,7 +69,7 @@ export const Tag = (props: TagProps) => {
       {leftBadge && (
         <Badge
           debugName={`${touchableProps?.debugName}:leftBadge`}
-          styles={leftBadgeStyles}
+          style={leftBadgeStyles}
           badge={leftBadge}
           disabled={disabled}
           {...leftBadgeProps}
@@ -98,7 +98,7 @@ export const Tag = (props: TagProps) => {
       {rightBadge && (
         <Badge
           debugName={`${touchableProps?.debugName}:rightBadge`}
-          styles={rightBadgeStyles}
+          style={rightBadgeStyles}
           badge={rightBadge}
           disabled={disabled}
           {...rightBadgeProps}

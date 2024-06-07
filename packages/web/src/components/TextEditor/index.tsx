@@ -80,6 +80,7 @@ export const TextEditor = (props: TextEditorProps) => {
   ]
 
   if (!editor) return null
+
   return (
     <View
       style={[
@@ -97,9 +98,7 @@ export const TextEditor = (props: TextEditorProps) => {
       <_FloatingMenu />
       <EditorContent editor={editor} />
       {hasError ? <Text text={errorMessage as string} style={styles['errorMessage:error']} /> : null}
-      <FileInput
-        ref={fileInputRef}
-      />
+      <FileInput ref={fileInputRef} />
     </View>
   )
 }

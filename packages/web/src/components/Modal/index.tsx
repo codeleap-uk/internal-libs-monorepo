@@ -28,6 +28,7 @@ function focusModal(event: FocusEvent, id: string) {
 }
 
 const ModalDefaultHeader = (props: ModalHeaderProps) => {
+
   const {
     id,
     styles,
@@ -69,7 +70,7 @@ const ModalDefaultHeader = (props: ModalHeaderProps) => {
             icon={closeIconName as IconPlaceholder}
             onPress={onPressClose}
             {...closeButtonProps}
-            styles={closeButtonStyles}
+            style={closeButtonStyles}
           />
         )}
       </View>
@@ -91,7 +92,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
     title,
     toggle,
     footer,
-    style = {},
+    style,
     renderHeader: ModalHeader,
     closable,
     withOverlay,
@@ -101,12 +102,12 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
     renderModalBody,
     closeOnEscape,
     onClose,
-    overlayProps = {},
+    overlayProps,
     dismissOnBackdrop,
     zIndex,
     withScrollContainer,
     debugName,
-    backdropProps = {},
+    backdropProps,
     alterHistory,
     id: modalId,
     autoIndex,
@@ -202,7 +203,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
       <Overlay
         debugName={debugName}
         visible={withOverlay ? visible : false}
-        css={[
+        style={[
           styles.backdrop,
           visible
             ? styles['backdrop:visible']
@@ -246,7 +247,6 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
 
           <ModalBody
             style={styles.body}
-            styles={styles}
             id={id}
           >
             {children}

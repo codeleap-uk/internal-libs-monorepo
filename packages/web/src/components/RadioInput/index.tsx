@@ -1,6 +1,5 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
-
 import React from 'react'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
@@ -47,42 +46,44 @@ const Option = <T extends string | number>(props: OptionProps<T>) => {
     text={item.label}
   /> : item.label
 
-  return <React.Fragment>
-    <Touchable
-      debugName={`${debugName} option ${item.value}`}
-      style={[
-        styles.optionWrapper,
-        getStyle('optionWrapper'),
-      ]}
-      onPress={onSelect}
-      disabled={isDisabled}
-    >
-      <View
+  return (
+    <React.Fragment>
+      <Touchable
+        debugName={`${debugName} option ${item.value}`}
         style={[
-          styles.optionIndicator,
-          getStyle('optionIndicator'),
+          styles.optionWrapper,
+          getStyle('optionWrapper'),
         ]}
-
+        onPress={onSelect}
+        disabled={isDisabled}
       >
         <View
           style={[
-            styles.optionIndicatorInner,
-            getStyle('optionIndicatorInner'),
+            styles.optionIndicator,
+            getStyle('optionIndicator'),
           ]}
-        />
-      </View>
-      {label}
 
-    </Touchable>
-    {separator && <View style={styles.optionSeparator} />}
-  </React.Fragment>
+        >
+          <View
+            style={[
+              styles.optionIndicatorInner,
+              getStyle('optionIndicatorInner'),
+            ]}
+          />
+        </View>
+        {label}
+
+      </Touchable>
+      {separator && <View style={styles.optionSeparator} />}
+    </React.Fragment>
+  )
 }
 
 export const RadioInput = <T extends string | number>(props: RadioInputProps<T>) => {
 
   const {
     inputBaseProps,
-    others,
+    others: radioInputProps,
   } = selectInputBaseProps({
     ...RadioInput.defaultProps,
     ...props,
@@ -95,7 +96,7 @@ export const RadioInput = <T extends string | number>(props: RadioInputProps<T>)
     style,
     disabled,
     debugName,
-  } = others
+  } = radioInputProps
 
   const styles = useStylesFor(RadioInput.styleRegistryName, style)
 
@@ -103,7 +104,7 @@ export const RadioInput = <T extends string | number>(props: RadioInputProps<T>)
     <InputBase
       {...inputBaseProps}
       disabled={disabled}
-      styles={{
+      style={{
         ...styles,
         innerWrapper: [
           styles.innerWrapper,

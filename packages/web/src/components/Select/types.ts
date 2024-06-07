@@ -1,4 +1,4 @@
-import { FormTypes, StylesOf, yup } from '@codeleap/common'
+import { FormTypes, yup } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/css'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
@@ -103,3 +103,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |
     'isLoading' | 'menuPortalTarget' | 'closeMenuOnSelect' | 'isMulti'>
 >
+
+export type UseSelectStylesProps = SelectProps & {
+  styleRegistryName: string
+}

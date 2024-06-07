@@ -18,9 +18,19 @@ import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps
 import { ComponentWithDefaultProps } from '../../types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
-  const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused, debugName } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.styles ?? {}) })
+  const {
+    isSelected,
+    optionsStyles,
+    label,
+    selectedIcon,
+    component = null,
+    itemProps = {} as TCustomOption['itemProps'],
+    isFocused,
+    debugName,
+  } = props
+
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.style ?? {}) })
 
   let _Component = null
 
@@ -48,7 +58,6 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
 
 const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
   const { Footer, children } = props
-
   return <React.Fragment>
     <components.Menu {...props}>
       {children}
@@ -59,7 +68,6 @@ const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
 
 const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React.CSSProperties } }) => {
   const { children, defaultStyles } = props
-
   return (
     <components.MenuList {...props}>
       <View style={defaultStyles.wrapper}>

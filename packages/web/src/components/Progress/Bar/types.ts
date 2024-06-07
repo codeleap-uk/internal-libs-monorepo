@@ -1,9 +1,6 @@
 import { IconPlaceholder, PropsOf } from '@codeleap/common'
 import { ProgressBarComposition } from './styles'
-import {
-  ProgressProps,
-  ProgressIndicatorProps,
-} from '@radix-ui/react-progress'
+import { ProgressProps, ProgressIndicatorProps } from '@radix-ui/react-progress'
 import { IconProps, View, TextProps as _TextProps } from '../../components'
 import { ProgressPropsRoot } from '..'
 import { ElementType } from 'react'

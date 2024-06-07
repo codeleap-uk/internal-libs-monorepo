@@ -2,15 +2,15 @@ import { onMount, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
-import { NativeHTMLElement } from '../../types'
+import { ComponentWithDefaultProps, NativeHTMLElement } from '../../types'
 import { getTestId } from '../../lib/utils/test'
 import { useGlobalContext } from '../../contexts/GlobalContext'
 import { TouchableProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponent, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
+export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
 
   const allProps = {
     ...Touchable.defaultProps,
@@ -35,7 +35,7 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchablePro
     ...props
   } = allProps
 
-  const styles = useStylesFor(TouchableCP.styleRegistryName, style)
+  const styles = useStylesFor(Touchable.styleRegistryName, style)
 
   const pressed = React.useRef(!!leadingDebounce)
 
@@ -121,19 +121,19 @@ export const TouchableCP = <T extends NativeHTMLElement = 'button'>(touchablePro
       data-testid={testId}
     />
   )
-}
+}) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponent<AnyRecord>
 
-TouchableCP.styleRegistryName = 'Touchable'
+Touchable.styleRegistryName = 'Touchable'
 
-TouchableCP.elements = ['wrapper']
+Touchable.elements = ['wrapper']
 
-TouchableCP.rootElement = 'wrapper'
+Touchable.rootElement = 'wrapper'
 
-TouchableCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+Touchable.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Touchable as (props: StyledComponentProps<TouchableProps, typeof styles>) => IJSX
 }
 
-TouchableCP.defaultProps = {
+Touchable.defaultProps = {
   propagate: true,
   debounce: null,
   component: View as unknown as 'button',
@@ -145,11 +145,7 @@ TouchableCP.defaultProps = {
   tabIndex: 0,
 } as Partial<TouchableProps<'button'>>
 
-WebStyleRegistry.registerComponent(TouchableCP)
-
-export const Touchable = forwardRef(TouchableCP) as (<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>) => JSX.Element) & {
-  defaultProps: Partial<TouchableProps<'button'>>
-}
+WebStyleRegistry.registerComponent(Touchable)
 
 export * from './styles'
 export * from './types'

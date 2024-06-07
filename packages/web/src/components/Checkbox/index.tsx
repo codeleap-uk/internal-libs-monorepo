@@ -15,7 +15,7 @@ export const Checkbox = (props: CheckboxProps) => {
 
   const {
     inputBaseProps,
-    others,
+    others: checkboxProps,
   } = selectInputBaseProps({
     ...Checkbox.defaultProps,
     ...props,
@@ -29,7 +29,7 @@ export const Checkbox = (props: CheckboxProps) => {
     onValueChange,
     checkboxOnLeft,
     checkIcon,
-  } = others
+  } = checkboxProps
 
   const styles = useStylesFor(Checkbox.styleRegistryName, style)
 

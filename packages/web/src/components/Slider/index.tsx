@@ -36,7 +36,10 @@ export const Slider = (props: SliderProps) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps({ ...Slider.defaultProps, ...props })
+  } = selectInputBaseProps({
+    ...Slider.defaultProps,
+    ...props,
+  })
 
   const {
     onValueChange,
@@ -168,7 +171,7 @@ export const Slider = (props: SliderProps) => {
     <InputBase
       {...inputBaseProps}
       disabled={disabled}
-      styles={{
+      style={{
         ...styles,
         innerWrapper: [
           styles.innerWrapper,

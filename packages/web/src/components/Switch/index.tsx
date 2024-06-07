@@ -12,8 +12,11 @@ export const Switch = (props: SwitchProps) => {
 
   const {
     inputBaseProps,
-    others,
-  } = selectInputBaseProps({ ...Switch.defaultProps, ...props })
+    others: switchProps,
+  } = selectInputBaseProps({
+    ...Switch.defaultProps,
+    ...props,
+  })
 
   const {
     style,
@@ -23,7 +26,7 @@ export const Switch = (props: SwitchProps) => {
     onValueChange,
     onChange,
     switchOnLeft,
-  } = others
+  } = switchProps
 
   const styles = useStylesFor(Switch.styleRegistryName, style)
 
@@ -74,43 +77,44 @@ export const Switch = (props: SwitchProps) => {
     }
   }
 
-  return <InputBase
-    {...inputBaseProps}
-    debugName={debugName}
-    styles={{
-      ...styles,
-      innerWrapper: [
-        styles.innerWrapper,
-      ],
-    }}
-    order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
-    style={style}
-    disabled={disabled}
-    noError
-  >
-    <motion.div
-      css={[
-        styles.track,
-        disabled && styles['track:disabled'],
-      ]}
-      initial={false}
-      animate={trackAnimation}
-      transition={styles['track:transition']}
-      onClick={handleChange}
-      onKeyDown={handleChange}
-      tabIndex={0}
+  return (
+    <InputBase
+      {...inputBaseProps}
+      debugName={debugName}
+      style={{
+        ...styles,
+        innerWrapper: [
+          styles.innerWrapper,
+        ],
+      }}
+      order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
+      disabled={disabled}
+      noError
     >
       <motion.div
         css={[
-          styles.thumb,
-          disabled && styles['thumb:disabled'],
+          styles.track,
+          disabled && styles['track:disabled'],
         ]}
         initial={false}
-        animate={thumbAnimation}
-        transition={styles['thumb:transition']}
-      />
-    </motion.div>
-  </InputBase>
+        animate={trackAnimation}
+        transition={styles['track:transition']}
+        onClick={handleChange}
+        onKeyDown={handleChange}
+        tabIndex={0}
+      >
+        <motion.div
+          css={[
+            styles.thumb,
+            disabled && styles['thumb:disabled'],
+          ]}
+          initial={false}
+          animate={thumbAnimation}
+          transition={styles['thumb:transition']}
+        />
+      </motion.div>
+    </InputBase>
+  )
 }
 
 Switch.styleRegistryName = 'Switch'
@@ -136,9 +140,7 @@ Switch.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Switch as (props: StyledComponentProps<SwitchProps, typeof styles>) => IJSX
 }
 
-Switch.defaultProps = {
-
-} as Partial<SwitchProps>
+Switch.defaultProps = {} as Partial<SwitchProps>
 
 WebStyleRegistry.registerComponent(Switch)
 

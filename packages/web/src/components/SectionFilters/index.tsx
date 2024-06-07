@@ -8,7 +8,7 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps, useTheme, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 const ItemOption = (props: OptionProps) => {
 
@@ -51,7 +51,7 @@ const ItemOption = (props: OptionProps) => {
       text={option?.label}
       onPress={onPress}
       selected={isItemSelected}
-      styles={styles}
+      style={styles}
       {...buttonProps}
     />
   )
@@ -183,7 +183,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     return (
       <View style={styles.footerWrapper}>
         <Button
-          styles={applyButtonStyles}
+          style={applyButtonStyles}
           text={applyButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onApply}
@@ -191,7 +191,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           {...applyFilterButtonProps}
         />
         <Button
-          styles={clearButtonStyles}
+          style={clearButtonStyles}
           text={clearButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onClear}
