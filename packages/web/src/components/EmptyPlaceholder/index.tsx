@@ -3,10 +3,7 @@ import { Icon } from '../Icon'
 import { View } from '../View'
 import { Text } from '../Text'
 import { ActivityIndicator } from '../ActivityIndicator'
-import {
-  IconPlaceholder,
-  TypeGuards,
-} from '@codeleap/common'
+import { IconPlaceholder, TypeGuards } from '@codeleap/common'
 import { EmptyPlaceholderProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
@@ -52,7 +49,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
   if (loading) {
     return (
       <View style={[styles.wrapper, styles['wrapper:loading']]}>
-        <ActivityIndicator debugName={debugName} {...indicatorProps} styles={activityIndicatorStyles}/>
+        <ActivityIndicator debugName={debugName} {...indicatorProps} style={activityIndicatorStyles}/>
       </View>
     )
   }

@@ -50,6 +50,7 @@ export const Grid = (props: GridProps) => {
   }, [])
 
   const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
+
     if (!RenderItem) return null
 
     const gridLength = data?.length || 0

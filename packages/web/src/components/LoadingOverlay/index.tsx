@@ -1,10 +1,9 @@
-import { getNestedStylesByKey } from '@codeleap/common'
 import React from 'react'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { LoadingOverlayProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
@@ -16,17 +15,20 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
     indicatorProps,
     debugName,
     ...rest
-  } = props
+  } = {
+    ...LoadingOverlay.defaultProps,
+    ...props,
+  }
 
   const styles = useStylesFor(LoadingOverlay.styleRegistryName, style)
 
   const indicatorStyles = React.useMemo(() => {
-    return getNestedStylesByKey('indicator', styles)
+    return useNestedStylesByKey('indicator', styles)
   }, [styles])
 
   return (
     <View style={[styles.wrapper, visible && styles['wrapper:visible'], style]} {...rest}>
-      <ActivityIndicator debugName={debugName} {...indicatorProps} styles={indicatorStyles} />
+      <ActivityIndicator debugName={debugName} {...indicatorProps} style={indicatorStyles} />
       {children}
     </View>
   )

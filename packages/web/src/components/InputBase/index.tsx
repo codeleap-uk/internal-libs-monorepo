@@ -22,6 +22,11 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
 
 export const InputBase = (props: InputBaseProps) => {
 
+  const allProps = {
+    ...InputBase.defaultProps,
+    ...props,
+  }
+
   const {
     children,
     error,
@@ -42,15 +47,12 @@ export const InputBase = (props: InputBaseProps) => {
     labelAsRow,
     innerWrapperRef,
     ...otherProps
-  } = {
-    ...InputBase.defaultProps,
-    ...props,
-  }
+  } = allProps
 
   const WrapperComponent = wrapper || View
   const InnerWrapperComponent = innerWrapper || View
 
-  const _styles = useInputBaseStyles({ ...props, styleRegistryName: InputBase.styleRegistryName })
+  const _styles = useInputBaseStyles({ ...allProps, styleRegistryName: InputBase.styleRegistryName })
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore

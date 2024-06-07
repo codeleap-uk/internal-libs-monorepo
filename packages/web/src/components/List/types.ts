@@ -9,13 +9,13 @@ import { ListComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 
 export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
-  variantStyles: StylesOf<ListComposition>
+  styles: StylesOf<ListComposition>
   children?: React.ReactNode
   showFooter?: boolean
 }
 
 export type ListRefreshControlComponent = Partial<ListLayoutProps> & {
-  variantStyles: StylesOf<ListComposition>
+  styles: StylesOf<ListComposition>
 }
 
 export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {

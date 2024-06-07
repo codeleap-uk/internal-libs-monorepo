@@ -1,7 +1,7 @@
 import { TypeGuards } from '@codeleap/common'
 import { useNestedStylesByKey } from '@codeleap/styles'
-import { ActionIconComposition, ActionIconParts } from '../ActionIcon'
-import { InputBaseProps } from './types'
+import { ActionIconParts } from '../ActionIcon'
+import { UseInputBaseStyles } from './types'
 import { concatStyles, getIconStyles, iconStylesOf } from './utils'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
@@ -26,7 +26,7 @@ export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconCompositio
 
 export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | InputBaseParts
 
-export const useInputBaseStyles = (props: InputBaseProps) => {
+export const useInputBaseStyles = (props: UseInputBaseStyles) => {
 
   const {
     focused,
@@ -39,9 +39,9 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const hasError = !TypeGuards.isNil(error)
 
-  const _leftIconStyles = useNestedStylesByKey<ActionIconComposition>('leftIcon', styles)
-  const _rightIconStyles = useNestedStylesByKey<ActionIconComposition>('rightIcon', styles)
-  const _baseIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', styles)
+  const _leftIconStyles = useNestedStylesByKey('leftIcon', styles)
+  const _rightIconStyles = useNestedStylesByKey('rightIcon', styles)
+  const _baseIconStyles = useNestedStylesByKey('icon', styles)
 
   const baseIconStyles = getIconStyles(_baseIconStyles, { hasError, disabled, focused })
 

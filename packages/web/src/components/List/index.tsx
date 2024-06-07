@@ -12,9 +12,10 @@ import { TypeGuards } from '@codeleap/common'
 import { motion } from 'framer-motion'
 
 const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
+
   const {
     refreshing,
-    variantStyles,
+    styles,
     refreshPosition,
     refreshControlProps,
     debugName,
@@ -24,7 +25,7 @@ const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
 
   return (
     <motion.div
-      css={[variantStyles?.refreshControl]}
+      css={[styles?.refreshControl]}
       initial={false}
       animate={{
         opacity: refreshing ? 1 : 0,
@@ -35,7 +36,7 @@ const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
       <ActivityIndicator
         debugName={debugName + 'refresh-indicator'}
         size={refreshSize}
-        style={variantStyles.refreshControlIndicator}
+        style={styles.refreshControlIndicator}
         {...refreshControlIndicatorProps}
       />
     </motion.div>
@@ -43,13 +44,14 @@ const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
 }
 
 export const ListLayout = (props: ListLayoutProps) => {
+
   const {
     ListEmptyComponent,
     ListFooterComponent,
     ListHeaderComponent,
     refresh,
     ListRefreshControlComponent = DefaultRefreshIndicator,
-    variantStyles,
+    styles,
     isEmpty,
     isLoading,
     placeholder = {},
@@ -64,9 +66,9 @@ export const ListLayout = (props: ListLayoutProps) => {
   } = props
 
   const getKeyStyle = React.useCallback((key: ListParts) => ([
-    variantStyles[key],
-    isLoading && variantStyles[`${key}:loading`],
-    isEmpty && variantStyles[`${key}:empty`],
+    styles[key],
+    isLoading && styles[`${key}:loading`],
+    isEmpty && styles[`${key}:empty`],
   ]), [isLoading, isEmpty])
 
   return (
@@ -80,7 +82,7 @@ export const ListLayout = (props: ListLayoutProps) => {
         {(!ListRefreshControlComponent || !refresh) ? null : (
           <ListRefreshControlComponent
             {...props}
-            variantStyles={variantStyles}
+            styles={styles}
           />
         )}
 
@@ -119,9 +121,7 @@ export function List<T = any>(props: ListProps<T>) {
     reloadTimeout,
     showFooter,
     style,
-  } = {
-    ...allProps,
-  }
+  } = allProps
 
   const styles = useStylesFor(List.styleRegistryName, style)
 
@@ -163,7 +163,7 @@ export function List<T = any>(props: ListProps<T>) {
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={styles}
+      styles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry

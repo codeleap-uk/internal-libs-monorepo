@@ -2,9 +2,7 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { WebInputFile, useCallback } from '@codeleap/common'
 import { FileInputProps, FileInputRef } from './types'
-import { WebStyleRegistry } from '../../lib'
 import { ComponentWithDefaultProps } from '../../types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileInputRef>) => {
 
@@ -15,8 +13,8 @@ export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileI
     autoClear,
     ...inputProps
   } = {
-    ...props,
     ...FileInput.defaultProps,
+    ...props,
   }
 
   const resolveWithFile = useRef<(file: WebInputFile[]) => any>()
@@ -62,30 +60,16 @@ export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileI
   return (
     <input
       type={'file'}
-      css={{ visibility: 'hidden', width: 0, height: 0, opacity: 0, display: 'none' }}
+      style={{ visibility: 'hidden', width: 0, height: 0, opacity: 0, display: 'none' }}
       {...inputProps}
       ref={inputRef}
       onChange={handleChange}
     />
   )
-}) as ComponentWithDefaultProps<FileInputProps> & GenericStyledComponentAttributes<AnyRecord>
-
-FileInput.styleRegistryName = 'FileInput'
-
-FileInput.elements = [
-
-]
-
-FileInput.rootElement = ''
-
-FileInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return FileInput as (props: StyledComponentProps<FileInputProps, typeof styles>) => IJSX
-}
+}) as ComponentWithDefaultProps<FileInputProps>
 
 FileInput.defaultProps = {
   autoClear: true,
 } as Partial<FileInputProps>
-
-WebStyleRegistry.registerComponent(FileInput)
 
 export * from './types'

@@ -5,7 +5,7 @@ import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types/utility'
 import { StyledProp } from '@codeleap/styles'
 
-export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
+export type LoadingOverlayProps = Omit<Partial<ViewProps<'div'>>, 'style'> & {
     visible?: boolean
     style?: StyledProp<LoadingOverlayComposition>
     indicatorProps?: ActivityIndicatorProps
