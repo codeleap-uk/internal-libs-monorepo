@@ -1,4 +1,4 @@
 import { ViewComposition } from '../View'
 
-export type ScrollCompostion = ViewComposition
+export type ScrollComposition = ViewComposition
 
