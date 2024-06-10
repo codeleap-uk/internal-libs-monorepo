@@ -11,7 +11,7 @@ import { ComponentWithDefaultProps } from '../../types'
 const ReactCrop: React.ElementType = require('react-image-crop').Component
 import 'react-image-crop/dist/ReactCrop.css'
 
-export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
+const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
 
   const {
     onFileSelect,
