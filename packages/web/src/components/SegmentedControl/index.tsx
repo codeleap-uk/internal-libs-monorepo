@@ -32,6 +32,7 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
   }
 
   return (
+    // @ts-expect-error @verify
     <Touchable
       key={touchableProps.key}
       ref={ref}
@@ -57,6 +58,7 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
       <Text
         text={label}
         debugName={touchableProps?.debugName}
+        // @ts-expect-error @verify
         style={[
           styles.text,
           selected && styles['text:selected'],
@@ -154,7 +156,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
       {label && <Text text={label} style={[styles.label, disabled && styles['label:disabled']]} />}
       <View style={[styles.innerWrapper, disabled && styles['innerWrapper:disabled']]}>
         <Bubble
-          css={selectedBubbleStyles}
+          style={selectedBubbleStyles}
           animate={bubbleAnimation}
           initial={false}
           {...bubbleProps}

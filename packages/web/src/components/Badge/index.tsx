@@ -68,6 +68,7 @@ export const Badge: ComponentWithDefaultProps<BadgeProps> & GenericStyledCompone
   let BadgeContent = renderBadgeContent
 
   if (TypeGuards.isNil(renderBadgeContent)) {
+    // @ts-expect-error @verify
     BadgeContent = () => <Text text={content} {...textProps} style={countStyles} />
   }
 

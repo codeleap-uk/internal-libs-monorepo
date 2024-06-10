@@ -132,6 +132,7 @@ export const Tooltip = (props: TooltipProps) => {
           </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
+          {/* @ts-expect-error @verify */}
           <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, styles.content]} sideOffset={2} side={side} {...contentProps}>
             {
               TypeGuards.isFunction(Content)

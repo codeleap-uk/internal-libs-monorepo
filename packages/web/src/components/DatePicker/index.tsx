@@ -151,7 +151,7 @@ export function DatePicker(props: DatePickerProps) {
         )}
         customInput={
           <OuterInputComponent
-            styles={inputStyles}
+            style={inputStyles}
             focused={visible}
             hideInput={hideInput}
             {...otherProps}

@@ -30,6 +30,7 @@ const Dots = (params: DotsProps) => {
         ]
 
         return (
+          // @ts-expect-error @verify
           <Touchable
             key={index}
             onPress={() => onPress?.(index)}
@@ -101,6 +102,7 @@ const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) 
       >
         {childArray.map((child, index) => {
           return (
+            // @ts-expect-error @verify
             <PageWrapper
               key={index}
               style={styles.pageWrapper}

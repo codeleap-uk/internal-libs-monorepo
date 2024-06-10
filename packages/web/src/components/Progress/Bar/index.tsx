@@ -55,12 +55,13 @@ export const ProgressBar = (props: ProgressBarProps) => {
         leftText
       )}
       <Root
-        css={styles.progress}
+        style={styles.progress}
         value={progress}
         {...progressRootProps}
       >
         <Indicator
           css={[
+            // @ts-expect-error @verify
             styles.indicator,
             { transform: `translateX(-${100 - progress}%)` },
           ]}

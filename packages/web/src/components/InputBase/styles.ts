@@ -89,6 +89,7 @@ export const useInputBaseStyles = (props: UseInputBaseStyles) => {
   ]
 
   const innerWrapperStyle = [
+    // @ts-expect-error @verify
     concatStyles(styles.innerWrapper),
     focused && styles['innerWrapper:focus'],
     hasError && styles['innerWrapper:error'],

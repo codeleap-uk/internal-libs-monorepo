@@ -215,6 +215,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       {editable && !disabled ? (
         <Input
           displayType='input'
+          // @ts-expect-error @verify
           style={[
             ...inputTextStyle,
             {

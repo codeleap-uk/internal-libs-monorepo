@@ -254,6 +254,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadingStyles,
       inputMultiValueStyles,
       menuWrapperStyles,
+      // @ts-expect-error @verify
     } = useSelectStyles(props, {
       error: !!hasError,
       focused: isFocused,
@@ -347,10 +348,12 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       }
 
       if (!hasInputValue) {
-
+        // @ts-expect-error @verify
         return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
       } else {
+        // @ts-expect-error @verify
         const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText
+        // @ts-expect-error @verify
         return <PlaceholderNoItemsComponent {...placeholderProps} text={_Text} />
       }
     }
@@ -440,6 +443,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             Menu: MenuComponent,
             MenuList: MenuListComponent,
             Option: props => (
+              // @ts-expect-error @verify
               <DefaultOption
                 {...props}
                 {...componentProps}

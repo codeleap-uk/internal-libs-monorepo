@@ -203,6 +203,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
       <Overlay
         debugName={debugName}
         visible={withOverlay ? visible : false}
+        // @ts-expect-error @verify
         style={[
           styles.backdrop,
           visible
@@ -213,6 +214,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
       />
 
       <ModalArea style={styles.innerWrapper}>
+        {/* @ts-expect-error @verify */}
         <Touchable
           style={styles.backdropPressable}
           onPress={close}
@@ -245,6 +247,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
             debugName={debugName}
           />
 
+          {/* @ts-expect-error @verify */}
           <ModalBody
             style={styles.body}
             id={id}

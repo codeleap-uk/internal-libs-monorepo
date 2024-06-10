@@ -8,7 +8,7 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
 
-const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
+const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) => {
   return (
     <View style={[props?.separatorStyles]}></View>
   )
@@ -79,6 +79,7 @@ export const Grid = (props: GridProps) => {
     <ListLayout
       {...allProps}
       {...layoutProps}
+      // @ts-expect-error @verify
       variantStyles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >

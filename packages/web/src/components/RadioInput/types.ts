@@ -18,7 +18,7 @@ export type RadioInputProps<T extends string|number> = WrapperProps & {
   style?: StyledProp<RadioInputComposition>
 }
 
-export type OptionProps<T extends string|number> = {
+export type RadioOptionProps<T extends string|number> = {
   item: RadioOption<T>
   selected: boolean
   onSelect(): void

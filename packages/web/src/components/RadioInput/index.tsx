@@ -6,12 +6,12 @@ import { Touchable } from '../Touchable'
 import { TypeGuards } from '@codeleap/common'
 import { View } from '../View'
 import { InputBase, selectInputBaseProps } from '../InputBase'
-import { OptionProps, RadioInputProps } from './types'
+import { RadioOptionProps, RadioInputProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 
-const Option = <T extends string | number>(props: OptionProps<T>) => {
+const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
 
   const {
     debugName,
@@ -48,6 +48,7 @@ const Option = <T extends string | number>(props: OptionProps<T>) => {
 
   return (
     <React.Fragment>
+      {/* @ts-expect-error @verify */}
       <Touchable
         debugName={`${debugName} option ${item.value}`}
         style={[

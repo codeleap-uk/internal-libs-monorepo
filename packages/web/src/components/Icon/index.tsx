@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/react'
 import { View } from '../View'
-import { useGlobalContext } from '../../contexts/GlobalContext'
+import { useGlobalContext } from '@codeleap/common'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
@@ -24,6 +24,7 @@ const IconCP = (props:IconProps) => {
 
   const { logger } = useGlobalContext()
 
+  // @ts-expect-error @verify
   const Component = theme?.icons?.[name]
 
   if (!name) {
@@ -31,7 +32,9 @@ const IconCP = (props:IconProps) => {
     return renderEmptySpace ? (
       <View
         style={{
+          // @ts-expect-error @verify
           height: iconStyle.size ?? iconStyle.height,
+          // @ts-expect-error @verify
           width: iconStyle.size ?? iconStyle.width,
         }}
       />

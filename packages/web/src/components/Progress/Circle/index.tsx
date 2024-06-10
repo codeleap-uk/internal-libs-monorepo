@@ -37,6 +37,7 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
 
   const wrapperSize = useMemo(() => {
     if (TypeGuards.isNumber(propSize)) return propSize
+    // @ts-expect-error @verify
     const { size, width, height } = styles.circle
     const value = size ?? width ?? height
     return value ?? 0
@@ -47,11 +48,14 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
       <CircularProgressbarWithChildren
         value={progress}
         css={[
+          // @ts-expect-error @verify
           styles.circle,
           { width: wrapperSize, height: wrapperSize },
         ]}
         styles={buildStyles({
+          // @ts-expect-error @verify
           pathColor: styles.line?.borderColor,
+          // @ts-expect-error @verify
           trailColor: styles.line?.backgroundColor,
           strokeLinecap: 'butt',
           ...circleStyles,

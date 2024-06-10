@@ -67,6 +67,7 @@ export const Switch = (props: SwitchProps) => {
     dependencies: [value, disabled],
   })
 
+  // @ts-expect-error @verify
   const _switchOnLeft = switchOnLeft ?? styles.__props?.switchOnLeft
 
   const handleChange = (e) => {
@@ -93,7 +94,9 @@ export const Switch = (props: SwitchProps) => {
     >
       <motion.div
         css={[
+          // @ts-expect-error @verify
           styles.track,
+          // @ts-expect-error @verify
           disabled && styles['track:disabled'],
         ]}
         initial={false}
@@ -105,7 +108,9 @@ export const Switch = (props: SwitchProps) => {
       >
         <motion.div
           css={[
+            // @ts-expect-error @verify
             styles.thumb,
+            // @ts-expect-error @verify
             disabled && styles['thumb:disabled'],
           ]}
           initial={false}

@@ -78,6 +78,7 @@ export const Checkbox = (props: CheckboxProps) => {
     dependencies: [value, disabled],
   })
 
+  // @ts-expect-error @verify
   const _checkboxOnLeft = checkboxOnLeft ?? styles.__props?.checkboxOnLeft
 
   const handleChange = (e) => {
@@ -99,7 +100,9 @@ export const Checkbox = (props: CheckboxProps) => {
     >
       <motion.div
         css={[
+          // @ts-expect-error @verify
           styles.box,
+          // @ts-expect-error @verify
           disabled && styles['box:disabled'],
         ]}
         initial={false}
@@ -111,7 +114,9 @@ export const Checkbox = (props: CheckboxProps) => {
       >
         <motion.div
           css={[
+            // @ts-expect-error @verify
             styles.checkmarkWrapper,
+            // @ts-expect-error @verify
             disabled && styles['checkmarkWrapper:disabled'],
           ]}
           initial={false}

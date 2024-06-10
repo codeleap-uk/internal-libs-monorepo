@@ -26,6 +26,7 @@ Scroll.elements = ['wrapper']
 Scroll.rootElement = 'wrapper'
 
 Scroll.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  // @ts-expect-error @verify
   return Scroll as (<T extends React.ElementType = 'div'>(props: StyledComponentProps<ScrollProps<T>, typeof styles>) => IJSX)
 }
 

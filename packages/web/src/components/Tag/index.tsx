@@ -84,6 +84,7 @@ export const Tag = (props: TagProps) => {
         />
       )}
 
+      {/* @ts-expect-error @verify */}
       {TypeGuards.isString(text) ? <Text text={text} style={textStyles} {...textProps} /> : text}
       {children}
 

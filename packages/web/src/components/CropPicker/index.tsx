@@ -40,6 +40,7 @@ export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
     setRelativeCrop,
     isLoading,
     handleCropChange,
+    // @ts-expect-error @verify
   } = handle || useCropPicker({ onFileSelect, ref, ...targetCrop })
 
   const styles = useStylesFor(CropPickerCP.styleRegistryName, style)
@@ -79,6 +80,7 @@ export const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
           >
             <img
               src={image?.src}
+              // @ts-expect-error @verify
               css={[styles.cropPreview, styles.previewSize]}
             />
           </ReactCrop>

@@ -8,7 +8,7 @@ import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { useGlobalContext } from '../../contexts/GlobalContext'
+import { useGlobalContext } from '@codeleap/common'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 
 export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
@@ -46,6 +46,7 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
   }
 
   const platformMediaQuery = useMemo(() => {
+    // @ts-expect-error @verify
     return theme.media.renderToPlatformQuery({
       is,
       not,
@@ -84,6 +85,7 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
       {...props}
       {...animatedProps}
       data-testid={testId}
+      // @ts-expect-error @verify
       style={componentStyles}
     >
       {children}
@@ -96,6 +98,7 @@ View.elements = ['wrapper']
 View.rootElement = 'wrapper'
 
 View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  // @ts-expect-error @verify
   return View as (<T extends React.ElementType = 'div'>(props: StyledComponentProps<ViewProps<T>, typeof styles>) => IJSX)
 }
 

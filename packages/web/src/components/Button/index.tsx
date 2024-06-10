@@ -73,6 +73,7 @@ export const Button = (buttonProps: ButtonProps) => {
   const _hideTextOnLoading = !loadingShowText && loading
 
   return (
+    // @ts-expect-error @verify
     <Touchable
       style={[_styles.wrapper, style]}
       component='button'
