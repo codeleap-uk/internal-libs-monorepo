@@ -7,7 +7,7 @@ import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/style
 import { WebStyleRegistry } from '../../lib'
 import { IconProps } from './types'
 
-const IconCP = (props:IconProps) => {
+export const Icon = (props:IconProps) => {
 
   const {
     name,
@@ -15,12 +15,12 @@ const IconCP = (props:IconProps) => {
     renderEmptySpace,
     ...otherProps
   } = {
-    ...IconCP.defaultProps,
+    ...Icon.defaultProps,
     ...props,
   }
 
   const theme = useTheme(store => store.current)
-  const styles = useStylesFor(IconCP.styleRegistryName, style)
+  const styles = useStylesFor(Icon.styleRegistryName, style)
 
   const { logger } = useGlobalContext()
 
@@ -52,19 +52,17 @@ const IconCP = (props:IconProps) => {
   return <Component {...otherProps} style={styles.icon} />
 }
 
-IconCP.styleRegistryName = 'Icon'
-IconCP.elements = ['icon']
-IconCP.rootElement = 'icon'
+Icon.styleRegistryName = 'Icon'
+Icon.elements = ['icon']
+Icon.rootElement = 'icon'
 
-IconCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return IconCP as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
+Icon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Icon as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
 }
 
-IconCP.defaultProps = {} as Partial<IconProps>
+Icon.defaultProps = {} as Partial<IconProps>
 
-WebStyleRegistry.registerComponent(IconCP)
-
-export const Icon = IconCP as ((props: IconProps) => jsx.JSX.Element)
+WebStyleRegistry.registerComponent(Icon)
 
 export * from './styles'
 export * from './types'

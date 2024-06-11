@@ -100,7 +100,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
   )
 }
 
-const Dropzone = forwardRef((props: DropzoneProps, ref: React.ForwardedRef<DropzoneRef>) => {
+export const Dropzone = forwardRef((props: DropzoneProps, ref: React.ForwardedRef<DropzoneRef>) => {
 
   const {
     icon,

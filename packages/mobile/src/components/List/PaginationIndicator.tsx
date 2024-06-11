@@ -17,12 +17,13 @@ export type PaginationIndicatorProps = {
 }
 
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
+
   const {
     hasMore,
     isFetching,
     noMoreItemsText,
     style,
-    activityIndicator
+    activityIndicator,
   } = {
     ...PaginationIndicator.defaultProps,
     ...props,

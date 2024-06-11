@@ -43,7 +43,7 @@ const Dots = (params: DotsProps) => {
   )
 }
 
-const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) => {
+export const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) => {
 
   const sliderRef = useRef<Slider>()
 

@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 import { GenericStyledComponentAttributes, useNestedStylesByKey } from '@codeleap/styles'
 import { CropPickerProps } from './types'
-import { Modal, Button, FileInput, LoadingOverlay } from '../components'
+import { Modal, Button, FileInput, LoadingOverlay, ColorPickerProps } from '../components'
 import { useCropPicker } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
@@ -121,7 +121,7 @@ CropPickerCP.defaultProps = {
 
 WebStyleRegistry.registerComponent(CropPickerCP)
 
-export const CropPicker = React.memo(CropPickerCP)
+export const CropPicker = React.memo(CropPickerCP) as ComponentWithDefaultProps<CropPickerProps> & GenericStyledComponentAttributes<AnyRecord>
 
 export * from './styles'
 export * from './types'

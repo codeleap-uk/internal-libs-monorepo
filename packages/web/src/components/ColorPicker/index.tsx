@@ -6,7 +6,8 @@ import { useBooleanToggle, useState } from '@codeleap/common'
 import { ColorPickerProps, ColorTypes } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { ComponentWithDefaultProps } from '../../types'
 
 export const ColorPickerCP = (props: ColorPickerProps) => {
 
@@ -123,7 +124,7 @@ ColorPickerCP.defaultProps = {
 
 WebStyleRegistry.registerComponent(ColorPickerCP)
 
-export const ColorPicker = React.memo(ColorPickerCP)
+export const ColorPicker = React.memo(ColorPickerCP) as ComponentWithDefaultProps<ColorPickerProps> & GenericStyledComponentAttributes<AnyRecord>
 
 export * from './styles'
 export * from './types'
