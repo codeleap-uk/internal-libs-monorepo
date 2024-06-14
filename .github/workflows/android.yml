@@ -43,6 +43,9 @@ jobs:
         run: |
           yarn
           yarn global add turbo
+
+      - name: Build libraries
+        run: |
           yarn build
 
       - name: Set up JDK 11
