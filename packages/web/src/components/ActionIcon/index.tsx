@@ -6,10 +6,12 @@ import { ActionIconParts } from './styles'
 import { ActionIconProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
 
 export const ActionIcon = (props: ActionIconProps) => {
-
   const {
     icon,
     name,
@@ -29,39 +31,45 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent: any = isPressable ? Touchable : View
+  const WrapperComponent = isPressable ? Touchable : View
 
   const handlePress = (e) => {
     if (!isPressable) return
-    if (onPress && (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter')) {
+
+    const pressed = e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter'
+
+    if (pressed) {
       onPress?.()
     }
   }
 
-  const getStyles = (key: ActionIconParts) => ({
-    ...styles[key],
-    ...(disabled ? styles[`${key}:disabled`] : {}),
-    ...(isPressable ? styles[`${key}:pressable`] : {}),
-  })
+  const getStyles = (key: ActionIconParts) => mergeStyles([
+    styles[key],
+    disabled && styles[`${key}:disabled`],
+    isPressable && styles[`${key}:pressable`],
+  ])
+
+  const wrapperProps = isPressable ? {
+    onPress: () => handlePress({ type: 'click' }),
+    onKeyDown: handlePress,
+  } : {}
+
+  const wrapperStyles = getStyles('touchableWrapper')
+  const iconStyles = getStyles('icon')
 
   return (
     <WrapperComponent
       disabled={disabled}
       debugName={debugName}
-      {
-        ...(isPressable && {
-          onPress: () => handlePress({ type: 'click' }),
-          onKeyDown: handlePress,
-        })
-      }
+      {...wrapperProps}
       {...touchableProps}
-      stlyle={getStyles('touchableWrapper')}
+      style={wrapperStyles}
     >
       <Icon
         debugName={debugName}
         name={icon ?? name}
         {...iconProps}
-        style={getStyles('icon')}
+        style={iconStyles}
       />
       {children}
     </WrapperComponent>
@@ -69,9 +77,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 }
 
 ActionIcon.styleRegistryName = 'ActionIcon'
-
 ActionIcon.elements = ['touchable', 'icon']
-
 ActionIcon.rootElement = 'touchableWrapper'
 
 ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -84,6 +90,3 @@ ActionIcon.defaultProps = {
 } as Partial<ActionIconProps>
 
 WebStyleRegistry.registerComponent(ActionIcon)
-
-export * from './styles'
-export * from './types'

@@ -3,8 +3,10 @@ import { ActivityIndicatorComposition } from '@codeleap/common'
 import { StyledProp } from '@codeleap/styles'
 import { ComponentCommonProps } from '../../types'
 
-export type ActivityIndicatorProps = ComponentCommonProps & {
+export type ActivityIndicatorProps =
+  ComponentCommonProps &
+  {
     style?: StyledProp<ActivityIndicatorComposition>
-    component?: React.ComponentType<Omit<ActivityIndicatorProps & {ref?: React.Ref<any>}, 'component'>>
+    component?: React.ComponentType<Omit<ActivityIndicatorProps & { ref?: React.Ref<HTMLDivElement> }, 'component'>>
     size?: number
   }

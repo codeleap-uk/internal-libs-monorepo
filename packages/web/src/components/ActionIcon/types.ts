@@ -2,11 +2,14 @@ import { ComponentCommonProps } from '../../types'
 import { TouchableProps } from '../Touchable'
 import { ActionIconComposition } from './styles'
 import { IconProps } from '../Icon'
-import { StyledProp } from '@codeleap/styles'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 
-export type ActionIconProps = TouchableProps & ComponentCommonProps & {
+export type ActionIconProps =
+  Omit<TouchableProps, 'style'> &
+  ComponentCommonProps &
+  {
     iconProps?: Partial<IconProps>
-    icon?: IconProps['name']
-    name?: IconProps['name']
+    icon?: AppIcon
+    name?: AppIcon
     style?: StyledProp<ActionIconComposition>
   }

@@ -7,8 +7,10 @@ import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps, GenericStyledComponentAttributes } from '@codeleap/styles'
 import { ComponentWithDefaultProps } from '../../types'
 
-export const ActivityIndicator = forwardRef((props: ActivityIndicatorProps, ref) => {
+export * from './styles'
+export * from './types'
 
+export const ActivityIndicator = forwardRef<HTMLDivElement>((props: ActivityIndicatorProps, ref) => {
   const {
     style,
     component: Component,
@@ -39,9 +41,7 @@ export const ActivityIndicator = forwardRef((props: ActivityIndicatorProps, ref)
 }) as ComponentWithDefaultProps<ActivityIndicatorProps> & GenericStyledComponentAttributes<AnyRecord>
 
 ActivityIndicator.styleRegistryName = 'ActivityIndicator'
-
 ActivityIndicator.elements = ['wrapper']
-
 ActivityIndicator.rootElement = 'wrapper'
 
 ActivityIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -49,11 +49,8 @@ ActivityIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 ActivityIndicator.defaultProps = {
-  component: View as ActivityIndicatorProps['component'],
+  component: View,
   size: null,
 } as Partial<ActivityIndicatorProps>
 
 WebStyleRegistry.registerComponent(ActivityIndicator)
-
-export * from './styles'
-export * from './types'
