@@ -11,4 +11,3 @@ export type ButtonParts =
   | `loader${Capitalize<ActivityIndicatorComposition>}`
 
 export type ButtonComposition = `${ButtonParts}:${ButtonStates}` | ButtonParts
-

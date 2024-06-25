@@ -5,7 +5,10 @@ import { BadgeComposition } from './styles'
 import { ComponentCommonProps } from '../../types'
 import { StyledProp } from '@codeleap/styles'
 
-export type BadgeProps = Omit<ViewProps<'div'>, 'style'> & ComponentCommonProps & {
+export type BadgeProps =
+  Omit<ViewProps<'div'>, 'style'> &
+  ComponentCommonProps &
+  {
     style?: StyledProp<BadgeComposition>
     maxCount?: number
     minCount?: number

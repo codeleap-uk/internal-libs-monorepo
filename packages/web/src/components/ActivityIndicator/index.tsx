@@ -15,6 +15,7 @@ export const ActivityIndicator = forwardRef<HTMLDivElement>((props: ActivityIndi
     style,
     component: Component,
     size,
+    ...rest
   } = {
     ...ActivityIndicator.defaultProps,
     ...props,
@@ -26,15 +27,15 @@ export const ActivityIndicator = forwardRef<HTMLDivElement>((props: ActivityIndi
     return TypeGuards.isNumber(size) ? {
       width: size,
       height: size,
-    } : {}
+    } : null
   }, [size])
 
   return (
-    <View style={[styles.wrapper, _size, style]}>
+    <View style={[styles.wrapper, _size]}>
       <Component
         ref={ref}
-        style={[styles.wrapper, _size, style]}
-        {...props}
+        {...rest}
+        style={[styles.wrapper, _size]}
       />
     </View>
   )

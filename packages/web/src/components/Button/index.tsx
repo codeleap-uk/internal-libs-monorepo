@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-  TypeGuards,
-  StylesOf,
-} from '@codeleap/common'
+import { TypeGuards, StylesOf } from '@codeleap/common'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
@@ -11,10 +8,12 @@ import { ButtonParts } from './styles'
 import { ButtonProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
 
 export const Button = (buttonProps: ButtonProps) => {
-
   const allProps = {
     ...Button.defaultProps,
     ...buttonProps,
@@ -38,75 +37,53 @@ export const Button = (buttonProps: ButtonProps) => {
 
   const styles = useStylesFor(Button.styleRegistryName, style)
 
-  const getStyles = (key: ButtonParts) => ({
-    ...styles?.[key],
-    ...(disabled ? styles?.[key + ':disabled'] : {}),
-    ...(selected ? styles?.[key + ':selected'] : {}),
-  })
+  const getStyles = (key: ButtonParts, partialStyle = null) => mergeStyles([
+    styles?.[key],
+    disabled ? styles?.[key + ':disabled'] : null,
+    selected ? styles?.[key + ':selected'] : null,
+    partialStyle,
+  ])
 
   const iconStyles = getStyles('icon')
 
-  const _styles: StylesOf<ButtonParts> = {
+  const componentStyles: StylesOf<ButtonParts> = {
     wrapper: getStyles('wrapper'),
     text: getStyles('text'),
     loaderWrapper: getStyles('loaderWrapper'),
-    leftIcon: {
-      ...iconStyles,
-      ...getStyles('leftIcon'),
-    },
-    rightIcon: {
-      ...iconStyles,
-      ...getStyles('rightIcon'),
-    },
+    leftIcon: getStyles('leftIcon', iconStyles),
+    rightIcon: getStyles('rightIcon', iconStyles),
   }
 
-  const childrenContent = TypeGuards.isFunction(children)
-    // @ts-ignore
-    ? children(allProps)
-    : children
-
   // TODO - This is a hack to hide the icon with display: none
-  const isLeftIconHide = _styles?.leftIcon?.display === 'none'
+  const isLeftIconHide = componentStyles?.leftIcon?.display === 'none'
 
-  const shouldRenderLeftIcon = !loading && !isLeftIconHide
+  const shouldRenderLeftIcon = !loading && !isLeftIconHide && !!icon
 
   const _hideTextOnLoading = !loadingShowText && loading
 
   return (
-    // @ts-expect-error @verify
     <Touchable
-      style={[_styles.wrapper, style]}
       component='button'
       debugComponent='Button'
       disabled={disabled}
       onPress={onPress}
       debugName={debugName}
       {...props}
+      style={componentStyles.wrapper}
     >
-      {shouldRenderLeftIcon && <Icon debugName={debugName} name={icon} style={_styles.leftIcon} />}
-      {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text debugName={debugName} text={text} css={[_styles.text]} /> : null }
+      {shouldRenderLeftIcon ? <Icon debugName={debugName} name={icon} style={componentStyles.leftIcon} /> : null}
+      {TypeGuards.isString(text) && !_hideTextOnLoading ? <Text debugName={debugName} text={text} style={componentStyles.text} /> : null}
 
-      {childrenContent}
+      {children}
 
-      <Icon debugName={debugName} name={rightIcon} style={_styles.rightIcon}/>
-      {loading && (
-        <ActivityIndicator debugName={debugName} style={_styles.loaderWrapper} {...loaderProps} />
-      )}
+      {loading ? <ActivityIndicator debugName={debugName} {...loaderProps} style={componentStyles.loaderWrapper} /> : null}
+      {!!rightIcon ? <Icon debugName={debugName} name={rightIcon} style={componentStyles.rightIcon} /> : null}
     </Touchable>
   )
 }
 
 Button.styleRegistryName = 'Button'
-
-Button.elements = [
-  'wrapper',
-  'text',
-  'icon',
-  'leftIcon',
-  'rightIcon',
-  `loader`,
-]
-
+Button.elements = ['wrapper', 'text', 'icon', 'leftIcon', 'rightIcon', `loader`]
 Button.rootElement = 'wrapper'
 
 Button.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -119,6 +96,3 @@ Button.defaultProps = {
 } as Partial<ButtonProps>
 
 WebStyleRegistry.registerComponent(Button)
-
-export * from './styles'
-export * from './types'

@@ -1,15 +1,18 @@
 import React from 'react'
-import { AnyFunction, IconPlaceholder } from '@codeleap/common'
-import { StyledProp } from '@codeleap/styles'
-import { TouchableProps } from '../Touchable'
+import { AnyFunction, PropsOf } from '@codeleap/common'
+import { AppIcon, StyledProp } from '@codeleap/styles'
+import { Touchable } from '../Touchable'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ButtonComposition } from './styles'
 import { ComponentCommonProps } from '../../types'
 
-export type ButtonProps = Partial<TouchableProps<'button'>> & ComponentCommonProps & {
+export type ButtonProps =
+  PropsOf<typeof Touchable, 'style'> &
+  ComponentCommonProps &
+  {
     text?: string
-    rightIcon?: IconPlaceholder
-    icon?: IconPlaceholder
+    rightIcon?: AppIcon
+    icon?: AppIcon
     onPress?: AnyFunction
     style?: StyledProp<ButtonComposition>
     loading?: boolean
@@ -17,6 +20,6 @@ export type ButtonProps = Partial<TouchableProps<'button'>> & ComponentCommonPro
     debugName: string
     debounce?: number
     selected?: boolean
-    children?: React.ReactNode | ((props: Partial<Omit<ButtonProps, 'children'>>) => JSX.Element)
+    children?: React.ReactNode
     loaderProps?: Partial<ActivityIndicatorProps>
   }
