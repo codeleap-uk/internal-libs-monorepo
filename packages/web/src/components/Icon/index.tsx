@@ -1,14 +1,13 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
 import { View } from '../View'
-import { useGlobalContext } from '@codeleap/common'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
 import { IconProps } from './types'
 
-export const Icon = (props:IconProps) => {
+export * from './styles'
+export * from './types'
 
+export const Icon = (props:IconProps) => {
   const {
     name,
     style,
@@ -20,35 +19,29 @@ export const Icon = (props:IconProps) => {
   }
 
   const theme = useTheme(store => store.current)
+
   const styles = useStylesFor(Icon.styleRegistryName, style)
 
-  const { logger } = useGlobalContext()
-
-  // @ts-expect-error @verify
+  // @ts-expect-error theme type
   const Component = theme?.icons?.[name]
 
   if (!name) {
     const iconStyle = styles.icon
+
     return renderEmptySpace ? (
       <View
         style={{
-          // @ts-expect-error @verify
+          // @ts-expect-error icss type
           height: iconStyle.size ?? iconStyle.height,
-          // @ts-expect-error @verify
+          // @ts-expect-error icss type
           width: iconStyle.size ?? iconStyle.width,
         }}
       />
     ) : null
   }
 
-  if (!Component) {
-    logger.warn(
-      `Icon: No icon found in theme for name "${name}".`,
-      { props: { style, name, styles }},
-      'Component',
-    )
-    return null
-  }
+  if (!Component) return null
+
   return <Component {...otherProps} style={styles.icon} />
 }
 
@@ -63,6 +56,3 @@ Icon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 Icon.defaultProps = {} as Partial<IconProps>
 
 WebStyleRegistry.registerComponent(Icon)
-
-export * from './styles'
-export * from './types'

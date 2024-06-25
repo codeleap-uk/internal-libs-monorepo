@@ -8,7 +8,9 @@ import { useCropPicker } from '../../lib'
 
 export type BaseCropProps = Partial<ReactCropProps>
 
-export type CropPickerProps = Partial<FileInputProps> & {
+export type CropPickerProps =
+  Partial<FileInputProps> &
+  {
     style?: StyledProp<CropPickerComposition>
     targetCrop?: BaseCropProps
     modalProps?: Partial<ModalProps>
@@ -21,4 +23,3 @@ export type CropPickerProps = Partial<FileInputProps> & {
   }
 
 export type ImageReading = HTMLImageElement
-

@@ -9,4 +9,3 @@ export type DrawerComposition =
   | 'body'
   | 'box'
   | 'title'
-

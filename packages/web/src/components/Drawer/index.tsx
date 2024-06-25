@@ -1,17 +1,16 @@
-import {
-  IconPlaceholder,
-  TypeGuards,
-} from '@codeleap/common'
-import { CSSObject } from '@emotion/react'
-import React from 'react'
+import { TypeGuards } from '@codeleap/common'
+import React, { CSSProperties, useMemo } from 'react'
 import { Overlay } from '../Overlay'
 import { View } from '../View'
 import { Text } from '../Text'
 import { ActionIcon } from '../ActionIcon'
 import { WebStyleRegistry, usePopState } from '../../lib'
 import { DrawerProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
+
+export * from './styles'
+export * from './types'
 
 export const axisMap = {
   top: [-1, 'Y'],
@@ -20,9 +19,7 @@ export const axisMap = {
   right: [1, 'X'],
 } as const
 
-const resolveHiddenDrawerPosition = (
-  position: DrawerProps['position'],
-): [string, string, CSSObject] => {
+const resolveHiddenDrawerPosition = (position: DrawerProps['position']): [string, string, CSSProperties] => {
   const [translateOrient, translateAxis] = axisMap[position]
 
   const translateValues = {
@@ -33,16 +30,13 @@ const resolveHiddenDrawerPosition = (
   translateValues[translateAxis] = 100 * translateOrient
 
   const css = `translate(${translateValues.X}%, ${translateValues.Y}%)`
-  const positioningKeys =
-    translateAxis === 'X' ? ['top', 'bottom'] : ['left', 'right']
-
+  const positioningKeys = translateAxis === 'X' ? ['top', 'bottom'] : ['left', 'right']
   const positioning = Object.fromEntries(positioningKeys.map((k) => [k, 0]))
-  return [css, translateAxis, positioning]
 
+  return [css, translateAxis, positioning]
 }
 
 export const Drawer = (props: DrawerProps) => {
-
   const {
     open,
     toggle,
@@ -76,84 +70,68 @@ export const Drawer = (props: DrawerProps) => {
 
   const showHeader = (!TypeGuards.isNil(title) || showCloseButton)
 
-  const wrapperStyles = React.useMemo(() => ([
+  const wrapperStyles = useMemo(() => ([
     styles.wrapper,
     {
       transition: 'visibility 0.01s ease',
       transitionDelay: open ? '0' : animationDuration,
       visibility: open ? 'visible' : 'hidden',
     },
-    style,
-  ]), [open, styles])
+  ]), [open, styles.wrapper])
+
+  const boxStyle = {
+    transform: open ? `translate(0%, 0%)` : hiddenStyle,
+    transition: `transform ${animationDuration} ease`,
+    [sizeProperty]: size,
+    [fullProperty]: '100%',
+    ...positioning,
+    [position]: 0,
+    ...styles.box,
+  }
 
   return (
     <View debugName={debugName} style={wrapperStyles}>
-      {darkenBackground && (
+      {darkenBackground ? (
         <Overlay
           debugName={debugName}
           visible={open}
           style={styles.overlay}
           onPress={toggle}
         />
-      )}
+      ) : null}
 
-      <View
-        variants={['fixed']}
-        style={{
-          transform: open ? `translate(0%, 0%)` : hiddenStyle,
-          transition: `transform ${animationDuration} ease`,
-          [sizeProperty]: size,
-          [fullProperty]: '100%',
-          ...positioning,
-          [position]: 0,
-          ...styles.box,
-        }}
-      >
+      <View style={boxStyle}>
         {
           showHeader ? (
-            <View
-              component='header'
-              style={styles.header}
-            >
+            <View component='header' style={styles.header}>
               {TypeGuards.isString(title) ? <Text style={styles.title} text={title} /> : title}
-              {showCloseButton && (
+              {showCloseButton ? (
                 <ActionIcon
                   debugName={debugName}
                   onPress={toggle}
-                  icon={closeIcon as IconPlaceholder}
+                  icon={closeIcon as AppIcon}
                   {...closeButtonProps}
                   style={closeButtonStyles}
                 />
-              )}
+              ) : null}
             </View>
           ) : null
         }
 
         <View style={styles.body}>{children}</View>
 
-        {footer && (
+        {footer ? (
           <View component='footer' style={styles.footer}>
             {footer}
           </View>
-        )}
+        ) : null}
       </View>
     </View>
   )
 }
 
 Drawer.styleRegistryName = 'Drawer'
-
-Drawer.elements = [
-  'wrapper',
-  'overlay',
-  'header',
-  'footer',
-  'closeButton',
-  'body',
-  'box',
-  'title',
-]
-
+Drawer.elements = ['wrapper', 'overlay', 'header', 'footer', 'closeButton', 'body', 'box', 'title']
 Drawer.rootElement = 'wrapper'
 
 Drawer.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -166,11 +144,7 @@ Drawer.defaultProps = {
   showCloseButton: false,
   darkenBackground: true,
   size: '75vw',
-  title: null,
-  closeIcon: 'x' as IconPlaceholder,
+  closeIcon: 'x' as AppIcon,
 } as Partial<DrawerProps>
 
 WebStyleRegistry.registerComponent(Drawer)
-
-export * from './styles'
-export * from './types'

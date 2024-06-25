@@ -9,4 +9,3 @@ export type EmptyPlaceholderComposition =
   | 'image'
   | 'imageWrapper'
   | 'icon'
-

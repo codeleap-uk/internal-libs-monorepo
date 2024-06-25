@@ -8,14 +8,14 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
 
+export * from './styles'
+export * from './types'
+
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) => {
-  return (
-    <View style={[props?.separatorStyles]}></View>
-  )
+  return <View style={props?.separatorStyles} />
 }
 
 export const Grid = (props: GridProps) => {
-
   const allProps = {
     ...Grid.defaultProps,
     ...props,
@@ -50,7 +50,6 @@ export const Grid = (props: GridProps) => {
   }, [])
 
   const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
-
     if (!RenderItem) return null
 
     const gridLength = data?.length || 0
@@ -73,14 +72,13 @@ export const Grid = (props: GridProps) => {
       {_item?.index <= numColumns ? null : separator}
       <RenderItem {..._itemProps} />
     </>
-  }, [RenderItem])
+  }, [])
 
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
-      // @ts-expect-error @verify
-      variantStyles={styles}
+      styles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
@@ -102,15 +100,7 @@ export const Grid = (props: GridProps) => {
 }
 
 Grid.styleRegistryName = 'Grid'
-
-Grid.elements = [
-  'wrapper',
-  'innerWrapper',
-  'separator',
-  'refreshControl',
-  'refreshControlIndicator',
-]
-
+Grid.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl']
 Grid.rootElement = 'wrapper'
 
 Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -118,9 +108,6 @@ Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 Grid.defaultProps = {
-  ListFooterComponent: null,
-  ListHeaderComponent: null,
-  ListLoadingIndicatorComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 1500,
@@ -136,6 +123,3 @@ Grid.defaultProps = {
 } as Partial<GridProps>
 
 WebStyleRegistry.registerComponent(Grid)
-
-export * from './styles'
-export * from './types'

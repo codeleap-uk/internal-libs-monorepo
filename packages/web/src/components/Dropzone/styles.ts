@@ -15,4 +15,3 @@ export type DropzoneComposition =
   | 'fileImage'
   | 'iconWrapper'
   | `fileRightIcon${Capitalize<ActionIconComposition>}`
-

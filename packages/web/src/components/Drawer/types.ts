@@ -1,12 +1,14 @@
-import { AnyFunction, IconPlaceholder } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/common'
 import React from 'react'
 import { ComponentCommonProps } from '../../types/utility'
 import { DrawerComposition } from './styles'
 import { ActionIconProps } from '../ActionIcon'
 import { axisMap } from '.'
-import { StyledProp } from '@codeleap/styles'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 
-export type DrawerProps = {
+export type DrawerProps =
+  ComponentCommonProps &
+  {
     open: boolean
     toggle: AnyFunction
     darkenBackground?: boolean
@@ -18,6 +20,6 @@ export type DrawerProps = {
     style?: StyledProp<DrawerComposition>
     animationDuration?: string
     closeButtonProps?: Partial<ActionIconProps>
-    closeIcon?: IconPlaceholder
+    closeIcon?: AppIcon
     children?: React.ReactNode
-  } & ComponentCommonProps
+  }

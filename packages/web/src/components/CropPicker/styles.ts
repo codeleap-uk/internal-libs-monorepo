@@ -6,4 +6,3 @@ export type CropPickerComposition =
   | 'previewSize'
   | `confirmButton${Capitalize<ButtonComposition>}`
   | `modal${Capitalize<ModalComposition>}`
-

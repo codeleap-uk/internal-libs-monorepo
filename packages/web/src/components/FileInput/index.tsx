@@ -1,16 +1,16 @@
-/** @jsx jsx */
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import { WebInputFile, useCallback } from '@codeleap/common'
+import { WebInputFile, useCallback, TypeGuards } from '@codeleap/common'
 import { FileInputProps, FileInputRef } from './types'
-import { ComponentWithDefaultProps } from '../../types'
+
+export * from './types'
 
 export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileInputRef>) => {
-
   const inputRef = useRef<HTMLInputElement>(null)
 
   const {
     onFileSelect,
     autoClear,
+    onChange,
     ...inputProps
   } = {
     ...FileInput.defaultProps,
@@ -37,7 +37,8 @@ export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileI
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files.length) return
-    inputProps.onChange && inputProps.onChange(e)
+    if (TypeGuards.isFunction(onChange)) onChange(e)
+
     const fileArray = Array.from(e.target?.files || []) as File[]
 
     const files: WebInputFile[] = fileArray.map((obj) => ({
@@ -52,9 +53,7 @@ export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileI
       resolveWithFile.current = undefined
     }
 
-    if (autoClear) {
-      clearInput()
-    }
+    if (autoClear) clearInput()
   }
 
   return (
@@ -66,10 +65,8 @@ export const FileInput = forwardRef((props: FileInputProps, ref: React.Ref<FileI
       onChange={handleChange}
     />
   )
-}) as ComponentWithDefaultProps<FileInputProps>
+})
 
 FileInput.defaultProps = {
   autoClear: true,
 } as Partial<FileInputProps>
-
-export * from './types'
