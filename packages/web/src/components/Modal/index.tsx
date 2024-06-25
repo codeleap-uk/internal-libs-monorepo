@@ -1,11 +1,4 @@
-/** @jsx jsx */
-import {
-  IconPlaceholder,
-  TypeGuards,
-  onMount,
-  onUpdate,
-  useIsomorphicEffect,
-} from '@codeleap/common'
+import { TypeGuards, onMount, onUpdate, useIsomorphicEffect } from '@codeleap/common'
 import React, { useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
@@ -19,16 +12,15 @@ import { modalScrollLock, ModalStore } from '../../lib/tools/modal'
 import { ModalHeaderProps, ModalProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 function focusModal(event: FocusEvent, id: string) {
-  event.preventDefault()
+  event?.preventDefault()
   const modal = document.getElementById(id)
   if (modal) modal.focus()
 }
 
 const ModalDefaultHeader = (props: ModalHeaderProps) => {
-
   const {
     id,
     styles,
@@ -60,32 +52,27 @@ const ModalDefaultHeader = (props: ModalHeaderProps) => {
       <View id={`${id}-title`} style={styles.titleWrapper}>
         {TypeGuards.isString(title) ? (
           <Text debugName={debugName} text={title} style={styles.title} />
-        ) : (
-          title
-        )}
+        ) : title}
 
-        {showCloseButton && (
+        {showCloseButton ? (
           <ActionIcon
             debugName={debugName}
-            icon={closeIconName as IconPlaceholder}
+            icon={closeIconName as AppIcon}
             onPress={onPressClose}
             {...closeButtonProps}
             style={closeButtonStyles}
           />
-        )}
+        ) : null}
       </View>
 
       {TypeGuards.isString(description) ? (
         <Text debugName={debugName} text={description} style={styles.description} />
-      ) : (
-        description
-      )}
+      ) : description}
     </View>
   )
 }
 
 export const ModalContent = (modalProps: ModalProps & { id: string }) => {
-
   const {
     children,
     visible,
@@ -177,7 +164,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
     if (modal) modal.focus()
   }, [id])
 
-  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => { }
+  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => null
 
   const ModalBody = renderModalBody || (scroll ? Scroll : View)
 
@@ -193,43 +180,31 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
       aria-hidden={!visible}
       style={[
         styles.wrapper,
-        visible
-          ? styles['wrapper:visible']
-          : styles['wrapper:hidden'],
-        autoIndex ? { zIndex: index } : {},
+        visible ? styles['wrapper:visible'] : styles['wrapper:hidden'],
+        autoIndex ? { zIndex: index } : null,
         _zIndex,
       ]}
     >
       <Overlay
         debugName={debugName}
         visible={withOverlay ? visible : false}
-        // @ts-expect-error @verify
+        {...overlayProps}
         style={[
           styles.backdrop,
-          visible
-            ? styles['backdrop:visible']
-            : styles['backdrop:hidden'],
+          visible ? styles['backdrop:visible'] : styles['backdrop:hidden'],
         ]}
-        {...overlayProps}
       />
 
       <ModalArea style={styles.innerWrapper}>
-        {/* @ts-expect-error @verify */}
         <Touchable
-          style={styles.backdropPressable}
           onPress={close}
           debounce={1000}
           {...backdropProps}
+          style={styles.backdropPressable}
         />
+
         <View
           component='section'
-          style={[
-            styles.box,
-            visible
-              ? styles['box:visible']
-              : styles['box:hidden'],
-            style,
-          ]}
           className='content'
           tabIndex={0}
           id={id}
@@ -238,6 +213,10 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
           aria-describedby={`${id}-title`}
           aria-label='Close the modal by pressing Escape key'
           {...props}
+          style={[
+            styles.box,
+            visible ? styles['box:visible'] : styles['box:hidden'],
+          ]}
         >
           <ModalHeader
             {...modalProps}
@@ -247,19 +226,15 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
             debugName={debugName}
           />
 
-          {/* @ts-expect-error @verify */}
-          <ModalBody
-            style={styles.body}
-            id={id}
-          >
+          <ModalBody style={styles.body} id={id}>
             {children}
           </ModalBody>
 
-          {footer && (
+          {footer ? (
             <View component='footer' style={styles.footer}>
               {footer}
             </View>
-          )}
+          ) : null}
         </View>
       </ModalArea>
     </View>
@@ -267,7 +242,6 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
 }
 
 export const Modal = (props) => {
-
   const allProps = {
     ...Modal.defaultProps,
     ...props,
@@ -324,7 +298,6 @@ export const Modal = (props) => {
     content,
     document.body,
   )
-
 }
 
 Modal.styleRegistryName = 'Modal'
@@ -352,7 +325,7 @@ Modal.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 Modal.defaultProps = {
   title: '',
-  closeIconName: 'x' as IconPlaceholder,
+  closeIconName: 'x' as AppIcon,
   closable: true,
   withOverlay: true,
   showClose: true,
@@ -370,6 +343,3 @@ Modal.defaultProps = {
 } as Partial<ModalProps>
 
 WebStyleRegistry.registerComponent(Modal)
-
-export * from './styles'
-export * from './types'

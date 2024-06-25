@@ -5,12 +5,14 @@ import { ComponentCommonProps } from '../../types'
 import { PaginationIndicatorComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 
-export type PaginationIndicatorProps = {
+export type PaginationIndicatorProps =
+  ComponentCommonProps & 
+  {
     isFetching?: boolean
-    noMoreItemsText: React.ReactChild
+    noMoreItemsText: React.ReactElement
     hasMore?: boolean
     activityIndicator?: JSX.Element
-    style: StyledProp<PaginationIndicatorComposition>
+    style?: StyledProp<PaginationIndicatorComposition>
     indicatorProps?: Partial<ActivityIndicatorProps>
     textProps?: Partial<TextProps<'p'>>
-  } & ComponentCommonProps
+  }

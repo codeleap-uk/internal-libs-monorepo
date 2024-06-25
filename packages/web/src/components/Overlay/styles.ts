@@ -1,4 +1,2 @@
-import { ViewComposition } from '../View'
 
-export type OverlayComposition = ViewComposition
-
+export type OverlayComposition = 'wrapper'

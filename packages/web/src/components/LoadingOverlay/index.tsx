@@ -6,8 +6,10 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
 
-export const LoadingOverlay = (props: LoadingOverlayProps) => {
+export * from './styles'
+export * from './types'
 
+export const LoadingOverlay = (props: LoadingOverlayProps) => {
   const {
     visible,
     children,
@@ -22,12 +24,10 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
 
   const styles = useStylesFor(LoadingOverlay.styleRegistryName, style)
 
-  const indicatorStyles = React.useMemo(() => {
-    return useNestedStylesByKey('indicator', styles)
-  }, [styles])
+  const indicatorStyles = useNestedStylesByKey('indicator', styles)
 
   return (
-    <View style={[styles.wrapper, visible && styles['wrapper:visible'], style]} {...rest}>
+    <View {...rest} style={[styles.wrapper, visible && styles['wrapper:visible']]}>
       <ActivityIndicator debugName={debugName} {...indicatorProps} style={indicatorStyles} />
       {children}
     </View>
@@ -35,9 +35,7 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
 }
 
 LoadingOverlay.styleRegistryName = 'LoadingOverlay'
-
 LoadingOverlay.elements = ['wrapper', 'indicator']
-
 LoadingOverlay.rootElement = 'wrapper'
 
 LoadingOverlay.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -47,6 +45,3 @@ LoadingOverlay.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 LoadingOverlay.defaultProps = {} as Partial<LoadingOverlayProps>
 
 WebStyleRegistry.registerComponent(LoadingOverlay)
-
-export * from './styles'
-export * from './types'

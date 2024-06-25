@@ -8,8 +8,10 @@ import { PaginationIndicatorProps } from './types'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
-export const PaginationIndicator = (props: PaginationIndicatorProps) => {
+export * from './styles'
+export * from './types'
 
+export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const {
     hasMore,
     isFetching,
@@ -30,7 +32,7 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   if (isFetching) {
     return activityIndicator || (
       <View style={styles.wrapper}>
-        <ActivityIndicator debugName={debugName} {...indicatorProps} style={loaderStyles}/>
+        <ActivityIndicator debugName={debugName} {...indicatorProps} style={loaderStyles} />
       </View>
     )
   }
@@ -41,10 +43,11 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
         <Text
           debugName={debugName}
           style={styles.text}
-          text={noMoreItemsText.toString()}
+          text={String(noMoreItemsText)}
         />
       )
     }
+
     return noMoreItemsText
   }
 
@@ -62,6 +65,3 @@ PaginationIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 PaginationIndicator.defaultProps = {} as Partial<PaginationIndicatorProps>
 
 WebStyleRegistry.registerComponent(PaginationIndicator)
-
-export * from './styles'
-export * from './types'

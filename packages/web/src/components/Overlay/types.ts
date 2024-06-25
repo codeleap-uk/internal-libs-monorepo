@@ -1,12 +1,12 @@
 import { StyledProp } from '@codeleap/styles'
-import { ViewProps } from '../View'
+import { View } from '../View'
 import { OverlayComposition } from './styles'
-import { TouchableProps } from '../Touchable'
-import { NativeHTMLElement } from '../../types'
+import { AnyFunction, PropsOf } from '@codeleap/common'
 
-export type OverlayProps<T extends NativeHTMLElement = 'div'> = {
+export type OverlayProps =
+  PropsOf<typeof View, 'style'> &
+  {
     visible?: boolean
     style?: StyledProp<OverlayComposition>
-    onPress?: TouchableProps<'div'>['onClick']
-  } & ViewProps<T>
-
+    onPress?: AnyFunction
+  }

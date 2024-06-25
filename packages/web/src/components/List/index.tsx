@@ -1,110 +1,22 @@
 import React from 'react'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { ListLayoutProps, ListProps, ListRefreshControlComponent } from './types'
+import { ListProps } from './types'
 import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { ActivityIndicator } from '../ActivityIndicator'
-import { ListParts } from './styles'
-import { TypeGuards } from '@codeleap/common'
-import { motion } from 'framer-motion'
+import { ListLayout } from './ListLayout'
 
-const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {
-
-  const {
-    refreshing,
-    styles,
-    refreshPosition,
-    refreshControlProps,
-    debugName,
-    refreshSize,
-    refreshControlIndicatorProps,
-  } = props
-
-  return (
-    <motion.div
-      css={[styles?.refreshControl]}
-      initial={false}
-      animate={{
-        opacity: refreshing ? 1 : 0,
-        top: refreshing ? refreshPosition : 0,
-      }}
-      {...refreshControlProps}
-    >
-      <ActivityIndicator
-        debugName={debugName + 'refresh-indicator'}
-        size={refreshSize}
-        style={styles.refreshControlIndicator}
-        {...refreshControlIndicatorProps}
-      />
-    </motion.div>
-  )
-}
-
-export const ListLayout = (props: ListLayoutProps) => {
-
-  const {
-    ListEmptyComponent,
-    ListFooterComponent,
-    ListHeaderComponent,
-    refresh,
-    ListRefreshControlComponent = DefaultRefreshIndicator,
-    styles,
-    isEmpty,
-    isLoading,
-    placeholder = {},
-    style,
-    children,
-    debugName,
-    isFetching,
-    isFetchingNextPage,
-    ListLoadingIndicatorComponent,
-    scrollableRef,
-    showFooter = true,
-  } = props
-
-  const getKeyStyle = React.useCallback((key: ListParts) => ([
-    styles[key],
-    isLoading && styles[`${key}:loading`],
-    isEmpty && styles[`${key}:empty`],
-  ]), [isLoading, isEmpty])
-
-  return (
-    // @ts-ignore
-    <View style={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
-      {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
-
-      {isEmpty ? <ListEmptyComponent debugName={debugName} {...placeholder} /> : null}
-
-      <View style={[getKeyStyle('innerWrapper'), isEmpty && { display: 'none' }]}>
-        {(!ListRefreshControlComponent || !refresh) ? null : (
-          <ListRefreshControlComponent
-            {...props}
-            styles={styles}
-          />
-        )}
-
-        {children}
-      </View>
-
-      {((isFetching || isFetchingNextPage) && !TypeGuards.isNil(ListLoadingIndicatorComponent))
-        ? <ListLoadingIndicatorComponent />
-        : null}
-
-      {(!!ListFooterComponent && showFooter) ? <ListFooterComponent {...props} /> : null}
-    </View>
-  )
-}
+export * from './styles'
+export * from './types'
+export * from './ListLayout'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) => {
-  return (
-    <View style={[props?.separatorStyles]}></View>
-  )
+  return <View style={props?.separatorStyles} />
 }
-export function List<T = any>(props: ListProps<T>) {
 
+export function List(props: ListProps) {
   const allProps = {
     ...List.defaultProps,
     ...props,
@@ -183,7 +95,7 @@ export function List<T = any>(props: ListProps<T>) {
 }
 
 List.styleRegistryName = 'List'
-List.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refreshControlIndicator']
+List.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl']
 List.rootElement = 'wrapper'
 
 List.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -191,9 +103,6 @@ List.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 List.defaultProps = {
-  ListFooterComponent: null,
-  ListHeaderComponent: null,
-  ListLoadingIndicatorComponent: null,
   ListEmptyComponent: EmptyPlaceholder,
   ListSeparatorComponent: RenderSeparator,
   refreshDebounce: 1500,
@@ -208,7 +117,3 @@ List.defaultProps = {
 } as Partial<ListProps>
 
 WebStyleRegistry.registerComponent(List)
-
-export * from './styles'
-export * from './types'
-

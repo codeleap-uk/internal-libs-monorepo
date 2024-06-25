@@ -1,6 +1,6 @@
 import { PropsOf, StylesOf } from '@codeleap/common'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { View, ViewProps } from '../View'
+import { ViewProps } from '../View'
 import { motion } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
@@ -25,11 +25,10 @@ export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   isOnly: boolean
 }
 
-export type ListProps<
-T = any[],
-Data = T extends Array<infer D> ? D : never
-> =
-  typeof View & {
+export type ListProps<T = any[], Data = T extends Array<infer D> ? D : never> =
+  ComponentCommonProps &
+  UseInfiniteScrollArgs &
+  {
     data: Data[]
     isFetching?: boolean
     hasNextPage?: boolean
@@ -61,4 +60,4 @@ Data = T extends Array<infer D> ? D : never
     masonryProps?: Partial<ListMasonryProps<T>>
     reloadTimeout?: number
     showFooter?: boolean
-} & ComponentCommonProps & UseInfiniteScrollArgs
+  }

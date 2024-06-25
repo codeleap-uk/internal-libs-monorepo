@@ -1,14 +1,10 @@
-import {
-  AnyFunction,
-  IconPlaceholder,
-  PropsOf,
-} from '@codeleap/common'
+import { AnyFunction, PropsOf } from '@codeleap/common'
 import React from 'react'
 import { OverlayProps } from '../Overlay'
 import { ModalComposition } from './styles'
 import { ActionIconProps } from '../ActionIcon'
 import { TouchableProps } from '../Touchable'
-import { StyledProp } from '@codeleap/styles'
+import { AppIcon, ICSS, StyledProp } from '@codeleap/styles'
 
 export type ModalProps =
   {
@@ -27,7 +23,7 @@ export type ModalProps =
     header?: React.ReactElement
     footer?: React.ReactNode
     withOverlay?: boolean
-    closeIconName?: IconPlaceholder
+    closeIconName?: AppIcon
     keepMounted?: boolean
     renderHeader?: (props: ModalHeaderProps) => React.ReactElement
     debugName?: string
@@ -45,11 +41,14 @@ export type ModalProps =
   }
 
 export type ModalBodyProps = {
-    id: string
-    styles: PropsOf<ModalComposition>
-  }
+  id: string
+  style: ICSS
+  children?: React.ReactNode
+}
 
-export type ModalHeaderProps = Partial<Omit<ModalProps, 'children'>> & {
+export type ModalHeaderProps =
+  Partial<Omit<ModalProps, 'children'>> &
+  {
     id: string
     styles: PropsOf<ModalComposition>
     onPressClose: () => void
