@@ -82,8 +82,9 @@ export const Checkbox = (props: CheckboxProps) => {
   const _checkboxOnLeft = checkboxOnLeft ?? styles.__props?.checkboxOnLeft
 
   const handleChange = (e) => {
+    const isSpaceBarClick = e?.keyCode === 32
     if (disabled) return
-    if (onValueChange && (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter')) onValueChange?.(!value)
+    if (onValueChange && (e?.type === 'click' || e?.keyCode === 13 || isSpaceBarClick || e?.key === 'Enter')) onValueChange?.(!value)
   }
 
   return (
