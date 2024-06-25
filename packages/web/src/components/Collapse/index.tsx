@@ -1,12 +1,14 @@
 /** @jsx jsx */
 import { capitalize, TypeGuards } from '@codeleap/common'
-import { Scroll } from '../Scroll'
 import { View } from '../View'
 import { CollapseProps, GetCollapseStylesArgs } from './types'
 import { CollapseComposition } from './styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
+
+export * from './styles'
+export * from './types'
 
 export function getCollapseStyles<TCSS = React.CSSProperties, Return extends Record<CollapseComposition, TCSS> =
   Record<CollapseComposition, TCSS>>(args: GetCollapseStylesArgs): Return {
@@ -40,7 +42,6 @@ export function getCollapseStyles<TCSS = React.CSSProperties, Return extends Rec
 }
 
 export const Collapse = (props: CollapseProps) => {
-
   const {
     open,
     size,
@@ -49,7 +50,7 @@ export const Collapse = (props: CollapseProps) => {
     direction,
     animation,
     style,
-    ...wrapperProps
+    ...rest
   } = {
     ...Collapse.defaultProps,
     ...props,
@@ -57,32 +58,24 @@ export const Collapse = (props: CollapseProps) => {
 
   const styles = useStylesFor(Collapse.styleRegistryName, style)
 
-  const Component = scroll ? Scroll : View
-
-  const _styles = getCollapseStyles({
-    value: size,
-    direction,
-    animation,
-  })
+  const componentStyles = getCollapseStyles({ value: size, direction, animation })
 
   return (
-    <Component
-      {...wrapperProps}
+    <View
+      {...rest}
       style={[
-        _styles.wrapper,
-        open ? _styles['wrapper:open'] : _styles['wrapper:closed'],
+        componentStyles.wrapper,
+        open ? componentStyles['wrapper:open'] : componentStyles['wrapper:closed'],
         styles.wrapper,
       ]}
     >
       {children}
-    </Component>
+    </View>
   )
 }
 
 Collapse.styleRegistryName = 'Collapse'
-
 Collapse.elements = ['wrapper']
-
 Collapse.rootElement = 'wrapper'
 
 Collapse.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -95,6 +88,3 @@ Collapse.defaultProps = {
 } as Partial<CollapseProps>
 
 WebStyleRegistry.registerComponent(Collapse)
-
-export * from './styles'
-export * from './types'

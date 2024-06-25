@@ -14,4 +14,3 @@ export type CheckboxComposition =
   | `${AnimatableParts}:transition`
   | `${AnimatableParts}:${CheckboxAnimationStates}`
   | '__props'
-

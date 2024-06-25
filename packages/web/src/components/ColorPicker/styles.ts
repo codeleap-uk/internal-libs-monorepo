@@ -11,4 +11,3 @@ export type ColorPickerParts =
   'confirmIcon'
 
 export type ColorPickerComposition = ColorPickerParts
-
