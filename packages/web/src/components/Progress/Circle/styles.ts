@@ -1,2 +1,1 @@
-export type ProgressCircleComposition = 'wrapper' | 'line' | 'circle' | 'text' | 'icon' | 'text'
-
+export type ProgressCircleComposition = 'wrapper' | 'line' | 'circle' | 'text' | 'icon'

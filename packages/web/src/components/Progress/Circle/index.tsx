@@ -1,7 +1,4 @@
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from 'react-circular-progressbar'
+import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
 import { View, Text, Icon } from '../../components'
 import { TypeGuards } from '@codeleap/common'
 import { ProgressCircleProps } from './types'
@@ -11,8 +8,10 @@ import { useStylesFor } from '../../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../../lib'
 
-export const ProgressCircle = (props: ProgressCircleProps) => {
+export * from './styles'
+export * from './types'
 
+export const ProgressCircle = (props: ProgressCircleProps) => {
   const {
     text,
     progress,
@@ -37,45 +36,42 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
 
   const wrapperSize = useMemo(() => {
     if (TypeGuards.isNumber(propSize)) return propSize
-    // @ts-expect-error @verify
-    const { size, width, height } = styles.circle
-    const value = size ?? width ?? height
+    // @ts-expect-error icss type
+    const value = styles.circle?.size ?? styles.circle?.width ?? styles.circle?.height
     return value ?? 0
   }, [styles.circle])
 
   return (
-    <View debugName={debugName} style={styles.wrapper} {...rest}>
+    <View debugName={debugName} {...rest} style={styles.wrapper}>
       <CircularProgressbarWithChildren
         value={progress}
-        css={[
-          // @ts-expect-error @verify
-          styles.circle,
-          { width: wrapperSize, height: wrapperSize },
-        ]}
         styles={buildStyles({
-          // @ts-expect-error @verify
+          // @ts-expect-error icss type
           pathColor: styles.line?.borderColor,
-          // @ts-expect-error @verify
+          // @ts-expect-error icss type
           trailColor: styles.line?.backgroundColor,
           strokeLinecap: 'butt',
           ...circleStyles,
         })}
         {...circleProps}
+        css={{ ...styles.circle, width: wrapperSize, height: wrapperSize }}
       >
         {children}
+
         {!TypeGuards.isNil(icon) ? (
           <Icon
             name={icon}
-            style={styles.icon}
             debugName={`innerIcon-${debugName}`}
             {...iconProps}
+            style={styles.icon}
           />
         ) : null}
+
         {TypeGuards.isString(text) || showProgress ? (
           <Text
-            style={styles.text}
             text={showProgress ? formatProgress(progress) : String(text)}
             {...textProps}
+            style={styles.text}
           />
         ) : text}
       </CircularProgressbarWithChildren>
@@ -93,15 +89,9 @@ ProgressCircle.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 ProgressCircle.defaultProps = {
   progress: 0,
-  variants: [],
-  responsiveVariants: {},
-  styles: {},
   showProgress: false,
   formatProgress: _formatProgress,
   size: null,
 } as Partial<ProgressCircleProps>
 
 WebStyleRegistry.registerComponent(ProgressCircle)
-
-export * from './styles'
-export * from './types'

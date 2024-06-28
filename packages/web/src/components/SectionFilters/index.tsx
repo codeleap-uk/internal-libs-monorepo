@@ -8,10 +8,12 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
 
 const ItemOption = (props: OptionProps) => {
-
   const {
     option,
     item,
@@ -51,14 +53,13 @@ const ItemOption = (props: OptionProps) => {
       text={option?.label}
       onPress={onPress}
       selected={isItemSelected}
-      style={styles}
       {...buttonProps}
+      style={styles}
     />
   )
 }
 
 export const SectionFilters = (props: SectionFiltersProps) => {
-
   const {
     data,
     onSelectItem,
@@ -76,9 +77,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const styles = useStylesFor(SectionFilters.styleRegistryName, style)
 
-  const applyButtonStyles = useNestedStylesByKey('applyButton', styles)
-  const clearButtonStyles = useNestedStylesByKey('clearButton', styles)
-  const itemOptionButtonStyles = useNestedStylesByKey('itemOptionButton', styles)
+  const compositionStyles = useCompositionStyles(['itemOptionButton', 'clearButton', 'applyButton'], styles)
 
   const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { initialValue: {}})
   const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { initialValue: {}})
@@ -87,7 +86,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   const shouldDisableActions = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
 
   const onPressOption = useCallback((params: OnPressOptionProps) => {
-
     const { item, option, canSelectMultiple, hasMultipleOptions } = params
 
     _setDraft((state) => {
@@ -131,7 +129,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   }, [_draft, onSelectItem])
 
   const renderItem = useCallback((item: ItemProps) => {
-
     const {
       showDescriptionLabel = true,
     } = item
@@ -142,7 +139,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     const description = TypeGuards.isString(item?.descriptionLabel) ? item?.descriptionLabel : item?.label
 
     const Option = ({ option }: { option: ItemOptionProps}) => {
-
       if (TypeGuards.isNil(item?.id)) {
         return null
       }
@@ -152,7 +148,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           option={option}
           item={item}
           selectedItems={_draft}
-          styles={itemOptionButtonStyles}
+          styles={compositionStyles?.itemOptionButton}
           onPress={() => onPressOption({ option, item, canSelectMultiple, hasMultipleOptions })}
           canSelectMultiple={canSelectMultiple}
         />
@@ -177,26 +173,26 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       </View>
     )
 
-  }, [_draft, styles, itemOptionButtonStyles])
+  }, [_draft, styles, compositionStyles?.itemOptionButton])
 
   const DefaultFooter = ({ onApply, onClear, shouldDisableActions }: SectionFilterFooterProps) => {
     return (
       <View style={styles.footerWrapper}>
         <Button
-          style={applyButtonStyles}
           text={applyButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onApply}
           disabled={shouldDisableActions}
           {...applyFilterButtonProps}
+          style={compositionStyles?.applyButton}
         />
         <Button
-          style={clearButtonStyles}
           text={clearButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onClear}
           disabled={shouldDisableActions}
           {...clearFilterButtonProps}
+          style={compositionStyles?.clearButton}
         />
       </View>
     )
@@ -218,7 +214,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.innerWrapper}>
-        {isEmpty ? null : data.map((item) => renderItem(item))}
+        {isEmpty ? null : data?.map((item) => renderItem(item))}
       </View>
 
       <Footer
@@ -257,6 +253,3 @@ SectionFilters.defaultProps = {
 }
 
 WebStyleRegistry.registerComponent(SectionFilters)
-
-export * from './styles'
-export * from './types'

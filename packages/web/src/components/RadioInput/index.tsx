@@ -7,12 +7,15 @@ import { TypeGuards } from '@codeleap/common'
 import { View } from '../View'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { RadioOptionProps, RadioInputProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
+import { RadioInputComposition } from './styles'
+
+export * from './styles'
+export * from './types'
 
 const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
-
   const {
     debugName,
     item,
@@ -23,65 +26,40 @@ const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
     separator = false,
   } = props
 
-  const isDisabled = disabled || item.disabled
+  const isDisabled = disabled || item?.disabled
 
-  const getStyle = (key) => {
-    if (isDisabled && selected) {
-      return styles[`${key}:selectedDisabled`]
-    }
-    if (isDisabled) {
-      return styles[`${key}:disabled`]
-    }
-    if (selected) {
-      return styles[`${key}:selected`]
-    }
-    return styles[key]
+  const getStyle = (key: RadioInputComposition) => {
+    let style = null
+
+    if (isDisabled && selected) style = styles[`${key}:selectedDisabled`]
+    else if (isDisabled) style = styles[`${key}:disabled`]
+    else if (selected) style = styles[`${key}:selected`]
+
+    return mergeStyles([styles[key], style])
   }
-
-  const label = TypeGuards.isString(item.label) ? <Text
-    style={[
-      styles.optionLabel,
-      getStyle('optionLabel'),
-    ]}
-    text={item.label}
-  /> : item.label
 
   return (
     <React.Fragment>
       {/* @ts-expect-error @verify */}
       <Touchable
         debugName={`${debugName} option ${item.value}`}
-        style={[
-          styles.optionWrapper,
-          getStyle('optionWrapper'),
-        ]}
+        style={getStyle('optionWrapper')}
         onPress={onSelect}
         disabled={isDisabled}
       >
-        <View
-          style={[
-            styles.optionIndicator,
-            getStyle('optionIndicator'),
-          ]}
-
-        >
-          <View
-            style={[
-              styles.optionIndicatorInner,
-              getStyle('optionIndicatorInner'),
-            ]}
-          />
+        <View style={getStyle('optionIndicator')}>
+          <View style={getStyle('optionIndicatorInner')} />
         </View>
-        {label}
-
+        
+        {TypeGuards.isString(item.label) ? <Text style={getStyle('optionLabel')} text={item.label} /> : item.label}
       </Touchable>
-      {separator && <View style={styles.optionSeparator} />}
+
+      {separator ? <View style={styles.optionSeparator} /> : null}
     </React.Fragment>
   )
 }
 
 export const RadioInput = <T extends string | number>(props: RadioInputProps<T>) => {
-
   const {
     inputBaseProps,
     others: radioInputProps,
@@ -105,12 +83,7 @@ export const RadioInput = <T extends string | number>(props: RadioInputProps<T>)
     <InputBase
       {...inputBaseProps}
       disabled={disabled}
-      style={{
-        ...styles,
-        innerWrapper: [
-          styles.innerWrapper,
-        ],
-      }}
+      style={styles}
       debugName={debugName}
     >
       {options?.map((item, idx) => (
@@ -120,9 +93,9 @@ export const RadioInput = <T extends string | number>(props: RadioInputProps<T>)
           key={idx}
           disabled={disabled}
           styles={styles}
-          selected={value === item.value}
-          onSelect={() => onValueChange(item.value)}
-          separator={idx < options.length - 1}
+          selected={value === item?.value}
+          onSelect={() => onValueChange(item?.value)}
+          separator={idx < options?.length - 1}
         />
       ))}
     </InputBase>
@@ -130,17 +103,7 @@ export const RadioInput = <T extends string | number>(props: RadioInputProps<T>)
 }
 
 RadioInput.styleRegistryName = 'RadioInput'
-
-RadioInput.elements = [
-  'wrapper',
-  'innerWrapper',
-  'label',
-  'errorMessage',
-  'description',
-  'labelRow',
-  'option',
-]
-
+RadioInput.elements = [...InputBase.elements, 'option']
 RadioInput.rootElement = 'wrapper'
 
 RadioInput.withVariantTypes = <S extends AnyRecord, T extends string | number>(styles: S) => {
@@ -150,6 +113,3 @@ RadioInput.withVariantTypes = <S extends AnyRecord, T extends string | number>(s
 RadioInput.defaultProps = {} as Partial<RadioInputProps<string | number>>
 
 WebStyleRegistry.registerComponent(RadioInput)
-
-export * from './styles'
-export * from './types'

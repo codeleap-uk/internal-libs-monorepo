@@ -10,7 +10,7 @@ type RadioOption<T> = FormTypes.Options<T>[number] & {
   disabled?: boolean
 }
 
-export type RadioInputProps<T extends string|number> = WrapperProps & {
+export type RadioInputProps<T extends string|number> = Omit<WrapperProps, 'style'> & {
   options: RadioOption<T>[]
   value: T
   onValueChange(value: T): void

@@ -10,4 +10,3 @@ export type SectionFiltersComposition =
   'footerWrapper' |
   `applyButton${Capitalize<ButtonComposition>}` |
   `clearButton${Capitalize<ButtonComposition>}`
-
