@@ -14,11 +14,13 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
 import { Icon } from '../Icon'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { ComponentWithDefaultProps } from '../../types'
 
-const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
+export * from './styles'
+export * from './types'
 
+const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
   const {
     isSelected,
     optionsStyles,
@@ -42,7 +44,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
-        styles={styles}
+        style={styles}
       />
     )
   } else {
@@ -51,7 +53,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
 
   return (
     <components.Option {...props}>
-      <_Component {...props} styles={styles} />
+      <_Component {...props} style={styles} />
     </components.Option>
   )
 }
@@ -84,7 +86,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
 
     if (TypeGuards.isString(TextPlaceholder)) {
-      return <Text debugName={debugName} text={TextPlaceholder} style={[defaultStyles.text]} />
+      return <Text debugName={debugName} text={TextPlaceholder} style={defaultStyles.text} />
     } else if (React.isValidElement(TextPlaceholder)) {
       return TextPlaceholder as JSX.Element
     } else if (TypeGuards.isFunction(TextPlaceholder)) {
@@ -96,7 +98,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isNil(_IconPlaceholder)) return null
 
     if (TypeGuards.isString(_IconPlaceholder)) {
-      return <Icon debugName={debugName} name={_IconPlaceholder as IconPlaceholder} forceStyle={defaultStyles.icon as React.CSSProperties} />
+      return <Icon debugName={debugName} name={_IconPlaceholder as AppIcon} forceStyle={defaultStyles.icon as React.CSSProperties} />
     } else if (React.isValidElement(_IconPlaceholder)) {
       // @ts-ignore
       return <View style={defaultStyles.icon}>
@@ -119,7 +121,7 @@ const LoadingIndicator = (props: LoadingIndicatorProps) => {
   const { defaultStyles, debugName } = props
 
   return (
-    <View style={[defaultStyles.wrapper]}>
+    <View style={defaultStyles.wrapper}>
       <ActivityIndicator debugName={debugName} />
     </View>
   )
@@ -151,7 +153,7 @@ const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSI
   // @ts-ignore
   const text = getMultiValue(selectProps?.value, separator, { searchable })
 
-  return <Text text={text} style={[defaultStyles.text]} />
+  return <Text text={text} style={defaultStyles.text} />
 }
 
 const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) => {
@@ -348,12 +350,9 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       }
 
       if (!hasInputValue) {
-        // @ts-expect-error @verify
         return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
       } else {
-        // @ts-expect-error @verify
         const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText
-        // @ts-expect-error @verify
         return <PlaceholderNoItemsComponent {...placeholderProps} text={_Text} />
       }
     }
@@ -443,7 +442,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
             Menu: MenuComponent,
             MenuList: MenuListComponent,
             Option: props => (
-              // @ts-expect-error @verify
               <DefaultOption
                 {...props}
                 {...componentProps}
@@ -470,16 +468,8 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 Select.styleRegistryName = 'Select'
 
 Select.elements = [
-  'wrapper',
-  'innerWrapper',
-  'label',
-  'errorMessage',
-  'description',
-  'labelRow',
+  ...InputBase.elements,
   'item',
-  'icon',
-  'leftIcon',
-  'rightIcon',
   'listPortal',
   'listHeader',
   'listWrapper',
@@ -523,6 +513,3 @@ Select.defaultProps = {
 } as Partial<SelectProps>
 
 WebStyleRegistry.registerComponent(Select)
-
-export * from './styles'
-export * from './types'

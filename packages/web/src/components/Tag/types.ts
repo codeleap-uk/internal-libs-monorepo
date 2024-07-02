@@ -1,5 +1,4 @@
-import { IconPlaceholder } from '@codeleap/common'
-import { StyledProp } from '@codeleap/styles'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 import { ReactElement } from 'react'
 import { TagComposition } from './styles'
 import { BadgeProps } from '../Badge'
@@ -9,13 +8,17 @@ import { ComponentCommonProps } from '../../types'
 import { TouchableProps } from '../Touchable'
 import { ViewProps } from '../View'
 
-export type TagProps = ViewProps<'div'> & TouchableProps & ComponentCommonProps & {
+export type TagProps =
+  Omit<ViewProps<'div'>, 'style'> &
+  Omit<TouchableProps, 'style'> &
+  ComponentCommonProps &
+  {
     style?: StyledProp<TagComposition>
     text?: TextProps<'p'>['text'] | ReactElement
     textProps?: Partial<TextProps<'p'>>
-    leftIcon?: IconPlaceholder
+    leftIcon?: AppIcon
     leftIconProps?: Partial<IconProps>
-    rightIcon?: IconPlaceholder
+    rightIcon?: AppIcon
     rightIconProps?: Partial<IconProps>
     leftComponent?: ReactElement
     rightComponent?: ReactElement

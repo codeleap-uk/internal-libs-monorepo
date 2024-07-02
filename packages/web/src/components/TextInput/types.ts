@@ -1,13 +1,16 @@
-import { FormTypes, IconPlaceholder, yup } from '@codeleap/common'
+import { FormTypes, yup } from '@codeleap/common'
 import { TouchableProps } from '../Touchable'
-import { StyledProp } from '@codeleap/styles'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 import { InputBaseProps } from '../InputBase'
 import { HTMLProps } from '../../types'
 import { TextInputComposition } from './styles'
 
 type NativeTextInputProps = HTMLProps<'input'>
 
-export type TextInputProps = Omit<InputBaseProps, 'style'> & Omit<NativeTextInputProps, 'value' | 'crossOrigin' | 'ref'> & {
+export type TextInputProps =
+  Omit<InputBaseProps, 'style'> &
+  Omit<NativeTextInputProps, 'value' | 'crossOrigin' | 'ref' | 'style'> &
+  {
     style?: StyledProp<TextInputComposition>
     password?: boolean
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
@@ -22,8 +25,8 @@ export type TextInputProps = Omit<InputBaseProps, 'style'> & Omit<NativeTextInpu
     _error?: boolean
     rows?: number
     masking?: TextInputMaskingProps
-    visibleIcon?: IconPlaceholder
-    hiddenIcon?: IconPlaceholder
+    visibleIcon?: AppIcon
+    hiddenIcon?: AppIcon
   }
 
 export type InputRef = {

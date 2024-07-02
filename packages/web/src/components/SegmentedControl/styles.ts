@@ -10,4 +10,3 @@ type SegmentedControlParts =
     `label`
 
 export type SegmentedControlComposition = SegmentedControlParts | `${SegmentedControlParts}:${SegmentedControlStates}`
-

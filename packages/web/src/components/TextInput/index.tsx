@@ -25,8 +25,11 @@ import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 
-export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputRef) => {
+export * from './types'
+export * from './styles'
+export * from './mask'
 
+export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputRef) => {
   const innerInputRef = useRef<InputRef>(null)
 
   const {
@@ -191,7 +194,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
         },
         debugName,
       }}
-      rightIcon={rightIcon}
+      rightIcon={rightIcon as any}
       focused={isFocused}
     >
 
@@ -237,22 +240,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
 }) as ComponentWithDefaultProps<TextInputProps> & GenericStyledComponentAttributes<AnyRecord>
 
 TextInput.styleRegistryName = 'TextInput'
-
-TextInput.elements = [
-  'wrapper',
-  'innerWrapper',
-  'label',
-  'errorMessage',
-  'description',
-  'labelRow',
-  'icon',
-  'leftIcon',
-  'rightIcon',
-  'input',
-  'placeholder',
-  'selection',
-]
-
+TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']
 TextInput.rootElement = 'wrapper'
 
 TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -266,7 +254,3 @@ TextInput.defaultProps = {
 } as TextInputProps
 
 WebStyleRegistry.registerComponent(TextInput)
-
-export * from './types'
-export * from './styles'
-export * from './mask'

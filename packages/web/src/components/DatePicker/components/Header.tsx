@@ -2,7 +2,7 @@ import { IconPlaceholder, TypeGuards } from '@codeleap/common'
 import { ActionIcon, Text, View } from '../../components'
 import { DatePickerArrowProps, DatePickerHeaderComponent } from '../types'
 import { format, getYear } from 'date-fns'
-import { useNestedStylesByKey } from '@codeleap/styles'
+import { useCompositionStyles } from '@codeleap/styles'
 
 export const ArrowLabel: React.FC<DatePickerArrowProps> = ({ name, direction, ...props }) => {
   return (
@@ -15,7 +15,6 @@ export const ArrowLabel: React.FC<DatePickerArrowProps> = ({ name, direction, ..
 }
 
 export const Header = (props: DatePickerHeaderComponent) => {
-
   const {
     date,
     decreaseMonth,
@@ -38,15 +37,14 @@ export const Header = (props: DatePickerHeaderComponent) => {
     ? formatHeaderTitle(date)
     : `${month} ${year}`
 
-  const prevArrow = useNestedStylesByKey('prevButton', styles)
-  const nextArrow = useNestedStylesByKey('nextButton', styles)
+  const compositionStyles = useCompositionStyles(['prevButton', 'nextButton'], styles)
 
   return (
     <View style={styles.wrapper}>
       <View style={styles.buttonsWrapper}>
         <ArrowLabel
           direction='left'
-          style={prevArrow}
+          style={compositionStyles.prevButton}
           onPress={decreaseYear}
           disabled={prevYearButtonDisabled}
         />
@@ -57,7 +55,7 @@ export const Header = (props: DatePickerHeaderComponent) => {
         />
         <ArrowLabel
           direction='right'
-          style={nextArrow}
+          style={compositionStyles.nextButton}
           onPress={increaseYear}
           disabled={nextYearButtonDisabled}
         />
@@ -65,13 +63,13 @@ export const Header = (props: DatePickerHeaderComponent) => {
       <View style={styles.buttonsWrapper}>
         <ArrowLabel
           direction='left'
-          style={prevArrow}
+          style={compositionStyles.prevButton}
           onPress={decreaseMonth}
           disabled={prevMonthButtonDisabled}
         />
         <ArrowLabel
           direction='right'
-          style={nextArrow}
+          style={compositionStyles.nextButton}
           onPress={increaseMonth}
           disabled={nextMonthButtonDisabled}
         />

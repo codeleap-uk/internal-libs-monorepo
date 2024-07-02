@@ -7,13 +7,12 @@ type SliderParts =
     'selectedTrack' |
     'unselectedTrack' |
     'trackMark' |
-   'firstTrackMark' |
+    'firstTrackMark' |
     'lastTrackMark' |
     'trackMarkWrapper' |
     'sliderContainer' |
-     IconLessInputBaseParts
+    IconLessInputBaseParts
 
 type SliderStates = Exclude<InputBaseStates, 'focus'>
 
 export type SliderComposition = `${SliderParts}:${SliderStates}` | SliderParts
-

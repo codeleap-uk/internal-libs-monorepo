@@ -10,8 +10,10 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, GenericStyledComponent, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
+export * from './styles'
+export * from './types'
 
+export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
   const allProps = {
     ...Touchable.defaultProps,
     ...touchableProps,
@@ -56,14 +58,7 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
 
     if (!propagate) stopPropagation(event)
 
-    if (notPressable) {
-      logger.warn(
-        'No onPress passed to touchable',
-        touchableProps,
-        'User interaction',
-      )
-      return
-    }
+    if (notPressable) return
 
     const _onPress = () => {
       if (event && (event?.type !== 'click' && event?.keyCode !== 13 && event?.key !== 'Enter')) return null
@@ -100,11 +95,7 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
     }
   }
 
-  const _styles = React.useMemo(() => ([
-    styles.wrapper,
-    disabled && styles['wrapper:disabled'],
-    style,
-  ]), [styles, disabled, style])
+  const _styles = [styles.wrapper, disabled && styles['wrapper:disabled']]
 
   const testId = getTestId(allProps)
 
@@ -124,9 +115,7 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
 }) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponent<AnyRecord>
 
 Touchable.styleRegistryName = 'Touchable'
-
 Touchable.elements = ['wrapper']
-
 Touchable.rootElement = 'wrapper'
 
 Touchable.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -137,8 +126,6 @@ Touchable.defaultProps = {
   propagate: true,
   debounce: null,
   component: View as unknown as 'button',
-  style: {},
-  styles: {},
   analyticsEnabled: false,
   analyticsName: null,
   analyticsData: {},
@@ -146,6 +133,3 @@ Touchable.defaultProps = {
 } as Partial<TouchableProps<'button'>>
 
 WebStyleRegistry.registerComponent(Touchable)
-
-export * from './styles'
-export * from './types'

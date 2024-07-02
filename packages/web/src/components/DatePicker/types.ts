@@ -36,7 +36,10 @@ export type YearComponentProps = {
 
 type RootDatePickerProps = 'startDate' | 'minDate' | 'maxDate'
 
-export type DatePickerProps = Partial<Pick<Partial<ReactDatePickerProps>, RootDatePickerProps>> & {
+export type DatePickerProps =
+  Omit<Partial<Pick<Partial<ReactDatePickerProps>, RootDatePickerProps>>, 'style'> &
+  Omit<TextInputProps, 'defaultValue' | 'style'> &
+  {
     style?: StyledProp<DatePickerComposition>
     hideInput?: boolean
     value: Date
@@ -55,4 +58,4 @@ export type DatePickerProps = Partial<Pick<Partial<ReactDatePickerProps>, RootDa
     toggle?: () => void
     yearShow?: boolean
     setYearShow?: () => void
-  } & Omit<TextInputProps, 'defaultValue' | 'style'>
+  }

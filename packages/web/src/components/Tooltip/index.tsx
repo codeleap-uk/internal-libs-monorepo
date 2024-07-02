@@ -14,8 +14,10 @@ import { TooltipProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-export const Tooltip = (props: TooltipProps) => {
+export * from './styles'
+export * from './types'
 
+export const Tooltip = (props: TooltipProps) => {
   const allProps = {
     ...Tooltip.defaultProps,
     ...props,
@@ -111,8 +113,8 @@ export const Tooltip = (props: TooltipProps) => {
         open={visible}
         onOpenChange={onOpenChange}
         {...rest}
-        // @ts-ignore expected error
-        css={[styles.wrapper, style]}
+        // @ts-ignore
+        style={styles.wrapper}
       >
         <TooltipTrigger
           onClick={_onPress}
@@ -180,6 +182,3 @@ Tooltip.defaultProps = {
 } as Partial<TooltipProps>
 
 WebStyleRegistry.registerComponent(Tooltip)
-
-export * from './styles'
-export * from './types'

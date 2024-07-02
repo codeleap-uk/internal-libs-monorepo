@@ -58,16 +58,9 @@ export type OptionState = {
 }
 
 export function useSelectStyles<T, Multi extends boolean>(props: UseSelectStylesProps, state: ComponentState) {
+  const { style } = props
 
-  const {
-    style,
-  } = props
-
-  const {
-    error,
-    focused,
-    disabled,
-  } = state
+  const { error, focused, disabled } = state
 
   const styles = useStylesFor(props?.styleRegistryName, style)
 

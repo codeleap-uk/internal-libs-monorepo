@@ -8,4 +8,3 @@ export type TooltipParts =
   'triggerInnerWrapper'
 
 export type TooltipComposition = `content:${TooltipSide}` | TooltipParts
-

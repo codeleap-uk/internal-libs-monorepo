@@ -2,7 +2,6 @@ import { TextInput } from '../../components'
 import { DatePickerProps } from '../types'
 
 export const OuterInput: DatePickerProps['outerInputComponent'] = ({ valueLabel, focused, hideInput, ...props }) => {
-
   if (hideInput) {
     return null
   }

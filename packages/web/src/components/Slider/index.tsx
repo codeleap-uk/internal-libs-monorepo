@@ -2,7 +2,7 @@
 import React from 'react'
 import { onMount, TypeGuards, useRef } from '@codeleap/common'
 import { View } from '../View'
-import { concatStyles, InputBase, selectInputBaseProps } from '../InputBase'
+import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
 import {
   Root as SliderContainer,
@@ -13,8 +13,11 @@ import {
 } from '@radix-ui/react-slider'
 import { SliderProps, TrackMarkProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
+
+export * from './styles'
+export * from './types'
 
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
   const { style } = props
@@ -25,14 +28,10 @@ const DefaultSliderTrackMark = (props: TrackMarkProps) => {
     </React.Fragment>
   }
 
-  return <Text
-    text={props.content}
-    style={style}
-  />
+  return <Text text={props.content} style={style} />
 }
 
 export const Slider = (props: SliderProps) => {
-
   const {
     inputBaseProps,
     others,
@@ -50,7 +49,7 @@ export const Slider = (props: SliderProps) => {
     style,
     disabled,
     trackMarks,
-    trackMarkComponent = DefaultSliderTrackMark,
+    trackMarkComponent: SliderTrackMark = DefaultSliderTrackMark,
     max,
     min,
     defaultValue: defaultSliderValue,
@@ -79,8 +78,6 @@ export const Slider = (props: SliderProps) => {
     }
   })
 
-  const SliderTrackMark = trackMarkComponent
-
   const handleChange: SliderProps['onValueChange'] = (newValue: Array<number>) => {
     onValueChange(isUniqueValue ? newValue?.[0] : newValue)
   }
@@ -90,14 +87,14 @@ export const Slider = (props: SliderProps) => {
   }
 
   const thumbStyle = React.useMemo(() => {
-    return concatStyles([
+    return mergeStyles([
       styles.thumb,
       disabled && styles['thumb:disabled'],
     ])
   }, [])
 
   const trackStyle = React.useMemo(() => {
-    return concatStyles([
+    return mergeStyles([
       styles.track,
       disabled && styles['track:disabled'],
       styles.unselectedTrack,
@@ -106,14 +103,14 @@ export const Slider = (props: SliderProps) => {
   }, [disabled])
 
   const selectedTrackStyle = React.useMemo(() => {
-    return concatStyles([
+    return mergeStyles([
       styles.selectedTrack,
       disabled && styles['selectedTrack:disabled'],
     ])
   }, [disabled])
 
   const containerStyle = React.useMemo(() => {
-    return concatStyles([
+    return mergeStyles([
       styles.sliderContainer,
       disabled && styles['sliderContainer:disabled'],
     ])
@@ -129,17 +126,17 @@ export const Slider = (props: SliderProps) => {
   }, [trackMarksHaveContent])
 
   const trackMarkStyle = React.useMemo(() => {
-    return concatStyles([
+    return mergeStyles([
       styles.trackMark,
       disabled && styles['trackMark:disabled'],
     ])
   }, [disabled])
 
   const trackMarkWrapperStyle = React.useMemo(() => {
-    return [
+    return mergeStyles([
       styles.trackMarkWrapper,
       disabled && styles['trackMarkWrapper:disabled'],
-    ]
+    ])
   }, [disabled])
 
   const sliderLabel = React.useMemo(() => {
@@ -171,12 +168,7 @@ export const Slider = (props: SliderProps) => {
     <InputBase
       {...inputBaseProps}
       disabled={disabled}
-      style={{
-        ...styles,
-        innerWrapper: [
-          styles.innerWrapper,
-        ],
-      }}
+      style={styles}
       labelAsRow
       description={sliderLabel}
     >
@@ -232,10 +224,7 @@ export const Slider = (props: SliderProps) => {
                 }
               }
 
-              const style = [
-                trackMarkStyle,
-                idxStyle,
-              ]
+              const style = mergeStyles([trackMarkStyle, idxStyle])
 
               if (!trackMarksHaveContent) {
                 return <SliderTrackMark
@@ -266,12 +255,7 @@ export const Slider = (props: SliderProps) => {
 Slider.styleRegistryName = 'Slider'
 
 Slider.elements = [
-  'wrapper',
-  'innerWrapper',
-  'label',
-  'errorMessage',
-  'description',
-  'labelRow',
+  ...InputBase.elements,
   'thumb',
   'track',
   'selectedTrack',
@@ -302,6 +286,3 @@ Slider.defaultProps = {
 } as Partial<SliderProps>
 
 WebStyleRegistry.registerComponent(Slider)
-
-export * from './styles'
-export * from './types'

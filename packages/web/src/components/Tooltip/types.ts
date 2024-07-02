@@ -13,20 +13,23 @@ import { ViewProps } from '../View'
 import { StyledProp } from '@codeleap/styles'
 
 type TooltipComponentProps = {
-    contentProps?: TooltipContentProps
-    portalProps?: TooltipPortalProps
-    arrowProps?: TooltipArrowProps
-    triggerProps?: TooltipTriggerProps
-    providerProps?: TooltipProviderProps
-  }
+  contentProps?: TooltipContentProps
+  portalProps?: TooltipPortalProps
+  arrowProps?: TooltipArrowProps
+  triggerProps?: TooltipTriggerProps
+  providerProps?: TooltipProviderProps
+}
 
-export type TooltipProps = PrimitiveTooltipProps & TooltipComponentProps & {
+export type TooltipProps =
+  Omit<PrimitiveTooltipProps, 'style'> &
+  Omit<TooltipComponentProps, 'style'> &
+  {
     toggle?: AnyFunction
     visible?: boolean
     content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
     triggerWrapper?: React.ElementType
     triggerWrapperProps?: Partial<ViewProps<'div'>>
-    style: StyledProp<TooltipComposition>
+    style?: StyledProp<TooltipComposition>
     side?: 'left' | 'right' | 'bottom' | 'top'
     openOnPress?: boolean
     openOnHover?: boolean

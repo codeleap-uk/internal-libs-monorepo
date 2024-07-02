@@ -9,10 +9,12 @@ import { View } from '../View'
 import { Badge } from '../Badge'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
 
 export const Tag = (props: TagProps) => {
-
   const {
     variants,
     rightComponent,
@@ -39,8 +41,7 @@ export const Tag = (props: TagProps) => {
 
   const styles = useStylesFor(Tag.styleRegistryName, style)
 
-  const leftBadgeStyles = useNestedStylesByKey('leftBadge', styles)
-  const rightBadgeStyles = useNestedStylesByKey('rightBadge', styles)
+  const compositionStyles = useCompositionStyles(['rightBadge', 'leftBadge'], styles)
 
   const isPressable = TypeGuards.isFunction(onPress)
 
@@ -48,28 +49,24 @@ export const Tag = (props: TagProps) => {
 
   const wrapperProps = isPressable ? { onPress, ...touchableProps } : touchableProps
 
-  const getStylesByKey = (styleKey: TagParts) => ([
+  const getStylesByKey = (styleKey: TagParts) => mergeStyles([
     styles?.[styleKey],
     isPressable && styles[`${styleKey}:pressable`],
     disabled && styles[`${styleKey}:disabled`],
   ])
 
-  const wrapperStyles = React.useMemo(() => ([
-    getStylesByKey('wrapper'),
-    style,
-  ]), [styles, disabled, isPressable, style])
-
+  const wrapperStyles = React.useMemo(() => getStylesByKey('wrapper'), [styles, disabled, isPressable, style])
   const textStyles = React.useMemo(() => getStylesByKey('text'), [styles, disabled, isPressable])
   const leftIconStyles = React.useMemo(() => getStylesByKey('leftIcon'), [styles, disabled, isPressable])
   const rightIconStyles = React.useMemo(() => getStylesByKey('rightIcon'), [styles, disabled, isPressable])
 
   return (
-    <Wrapper css={wrapperStyles} disabled={disabled} {...wrapperProps}>
+    <Wrapper disabled={disabled} {...wrapperProps} style={wrapperStyles}>
       {leftComponent}
       {leftBadge && (
         <Badge
           debugName={`${touchableProps?.debugName}:leftBadge`}
-          style={leftBadgeStyles}
+          style={compositionStyles.leftBadge}
           badge={leftBadge}
           disabled={disabled}
           {...leftBadgeProps}
@@ -84,7 +81,6 @@ export const Tag = (props: TagProps) => {
         />
       )}
 
-      {/* @ts-expect-error @verify */}
       {TypeGuards.isString(text) ? <Text text={text} style={textStyles} {...textProps} /> : text}
       {children}
 
@@ -99,7 +95,7 @@ export const Tag = (props: TagProps) => {
       {rightBadge && (
         <Badge
           debugName={`${touchableProps?.debugName}:rightBadge`}
-          style={rightBadgeStyles}
+          style={compositionStyles.rightBadge}
           badge={rightBadge}
           disabled={disabled}
           {...rightBadgeProps}
@@ -111,16 +107,7 @@ export const Tag = (props: TagProps) => {
 }
 
 Tag.styleRegistryName = 'Tag'
-
-Tag.elements = [
-  `wrapper`,
-  'text',
-  'leftIcon',
-  'rightIcon',
-  'leftBadge',
-  'rightBadge',
-]
-
+Tag.elements = ['wrapper', 'text', 'leftIcon', 'rightIcon', 'leftBadge', 'rightBadge']
 Tag.rootElement = 'wrapper'
 
 Tag.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -133,6 +120,3 @@ Tag.defaultProps = {
 } as Partial<TagProps>
 
 WebStyleRegistry.registerComponent(Tag)
-
-export * from './styles'
-export * from './types'

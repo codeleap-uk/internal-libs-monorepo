@@ -10,10 +10,13 @@ import { Header, OuterInput } from './components'
 import { format, isBefore, isAfter } from 'date-fns'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
+export * from './components'
 
 export function DatePicker(props: DatePickerProps) {
-
   const {
     hideInput,
     value,
@@ -48,7 +51,6 @@ export function DatePicker(props: DatePickerProps) {
   const [yearShow, setYearShow] = useConditionalState(_yearShow, _setYearShow, { initialValue: false })
 
   const DayContentComponent = useCallback((_param: DayComponentProps) => {
-
     const param = {
       ..._param,
       ...dayProps,
@@ -94,7 +96,6 @@ export function DatePicker(props: DatePickerProps) {
   }, [value])
 
   const YearContentComponent = useCallback((_param) => {
-
     const param = {
       ..._param,
       ...yearProps,
@@ -129,8 +130,7 @@ export function DatePicker(props: DatePickerProps) {
     )
   }, [value])
 
-  const inputStyles = useNestedStylesByKey('outerInput', styles)
-  const headerStyles = useNestedStylesByKey('header', styles)
+  const compositionStyles = useCompositionStyles(['outerInput', 'header'], styles)
 
   return (
     <View style={styles.wrapper}>
@@ -151,7 +151,7 @@ export function DatePicker(props: DatePickerProps) {
         )}
         customInput={
           <OuterInputComponent
-            style={inputStyles}
+            style={compositionStyles.outerInput}
             focused={visible}
             hideInput={hideInput}
             {...otherProps}
@@ -159,7 +159,7 @@ export function DatePicker(props: DatePickerProps) {
         }
         renderCustomHeader={(headerProps) => (
           <HeaderComponent
-            styles={headerStyles}
+            styles={compositionStyles.header}
             setYearShow={setYearShow}
             prevYearButtonDisabled={yearShow}
             nextYearButtonDisabled={yearShow}
@@ -222,7 +222,3 @@ DatePicker.defaultProps = {
 } as Partial<DatePickerProps>
 
 WebStyleRegistry.registerComponent(DatePicker)
-
-export * from './styles'
-export * from './types'
-export * from './components'

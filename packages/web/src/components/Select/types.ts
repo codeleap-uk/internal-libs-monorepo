@@ -26,13 +26,13 @@ type DynamicSelectProps<T, Multi extends boolean> =
     Props<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>>
   >)
 
-export type ReactSelectProps<T, Multi extends boolean = false> = InputBaseProps & {
+export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'style'> & {
   options: FormTypes.Options<T>
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
   validate?: FormTypes.ValidatorWithoutForm<SelectValue<T, Multi>> | yup.SchemaOf<SelectValue<T, Multi>>
-  style: StyledProp<SelectComposition>
+  style?: StyledProp<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 
 export type ComponentPartProps = {

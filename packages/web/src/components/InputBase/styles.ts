@@ -27,7 +27,6 @@ export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconCompositio
 export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | InputBaseParts
 
 export const useInputBaseStyles = (props: UseInputBaseStyles) => {
-
   const {
     focused,
     disabled,

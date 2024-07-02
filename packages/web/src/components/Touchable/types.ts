@@ -3,7 +3,9 @@ import { ComponentPropsWithRef, ElementType } from 'react'
 import { TouchableComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 
-export type TouchableProps<T extends ElementType = 'button'> = ComponentPropsWithRef<T> & {
+export type TouchableProps<T extends ElementType = 'button'> =
+  Omit<ComponentPropsWithRef<T>, 'style'> &
+  {
     component?: T
     disabled?: boolean
     propagate?: boolean

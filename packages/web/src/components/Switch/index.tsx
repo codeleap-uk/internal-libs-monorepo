@@ -1,15 +1,17 @@
 /** @jsx jsx */
-import * as React from 'react'
+import React from 'react'
 import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
 import { SwitchProps, WebStyleRegistry, useAnimatedVariantStyles } from '../..'
 import { motion } from 'framer-motion'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
+
+export * from './styles'
+export * from './types'
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
 export const Switch = (props: SwitchProps) => {
-
   const {
     inputBaseProps,
     others: switchProps,
@@ -67,8 +69,11 @@ export const Switch = (props: SwitchProps) => {
     dependencies: [value, disabled],
   })
 
-  // @ts-expect-error @verify
+  // @ts-expect-error icss type
   const _switchOnLeft = switchOnLeft ?? styles.__props?.switchOnLeft
+
+  const thumbStyles = mergeStyles([styles.thumb, disabled && styles['thumb:disabled']])
+  const trackStyles = mergeStyles([styles.track, disabled && styles['track:disabled']])
 
   const handleChange = (e) => {
     if (disabled) return
@@ -82,23 +87,13 @@ export const Switch = (props: SwitchProps) => {
     <InputBase
       {...inputBaseProps}
       debugName={debugName}
-      style={{
-        ...styles,
-        innerWrapper: [
-          styles.innerWrapper,
-        ],
-      }}
+      style={styles}
       order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}
       disabled={disabled}
       noError
     >
       <motion.div
-        css={[
-          // @ts-expect-error @verify
-          styles.track,
-          // @ts-expect-error @verify
-          disabled && styles['track:disabled'],
-        ]}
+        style={trackStyles}
         initial={false}
         animate={trackAnimation}
         transition={styles['track:transition']}
@@ -107,12 +102,7 @@ export const Switch = (props: SwitchProps) => {
         tabIndex={0}
       >
         <motion.div
-          css={[
-            // @ts-expect-error @verify
-            styles.thumb,
-            // @ts-expect-error @verify
-            disabled && styles['thumb:disabled'],
-          ]}
+          style={thumbStyles}
           initial={false}
           animate={thumbAnimation}
           transition={styles['thumb:transition']}
@@ -123,22 +113,7 @@ export const Switch = (props: SwitchProps) => {
 }
 
 Switch.styleRegistryName = 'Switch'
-
-Switch.elements = [
-  'wrapper',
-  'innerWrapper',
-  'label',
-  'errorMessage',
-  'description',
-  'labelRow',
-  'icon',
-  'leftIcon',
-  'rightIcon',
-  'track',
-  'thumb',
-  '__props',
-]
-
+Switch.elements = [...InputBase.elements, 'track', 'thumb', '__props']
 Switch.rootElement = 'wrapper'
 
 Switch.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -148,6 +123,3 @@ Switch.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 Switch.defaultProps = {} as Partial<SwitchProps>
 
 WebStyleRegistry.registerComponent(Switch)
-
-export * from './styles'
-export * from './types'

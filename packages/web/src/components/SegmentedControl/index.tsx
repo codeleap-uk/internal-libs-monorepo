@@ -9,10 +9,12 @@ import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
 
 const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
-
   const {
     selected,
     onPress,
@@ -25,53 +27,48 @@ const Option = (props: SegmentedControlOptionProps, ref: OptionRef) => {
     ...touchableProps
   } = props
 
-  const iconStyles = {
-    ...styles.icon as object,
-    ...(selected ? styles['icon:selected'] as object : {}),
-    ...(disabled ? styles['icon:disabled'] as object : {}),
-  }
+  const iconStyles = mergeStyles([
+    styles.icon,
+    (selected ? styles['icon:selected'] : null),
+    (disabled ? styles['icon:disabled'] : null),
+  ])
 
   return (
-    // @ts-expect-error @verify
     <Touchable
       key={touchableProps.key}
       ref={ref}
+      onPress={onPress}
+      disabled={disabled}
+      {...touchableProps}
       style={[
         styles.button,
         selected && styles['button:selected'],
         disabled && styles['button:disabled'],
       ]}
-      onPress={onPress}
-      disabled={disabled}
-      {...touchableProps}
     >
-      {
-        !!icon && (
-          <Icon
-            debugName={touchableProps?.debugName}
-            name={icon}
-            style={iconStyles}
-            {...iconProps}
-          />
-        )
-      }
+      {!!icon ? (
+        <Icon
+          debugName={touchableProps?.debugName}
+          name={icon}
+          {...iconProps}
+          style={iconStyles}
+        />
+      ) : null}
       <Text
         text={label}
         debugName={touchableProps?.debugName}
-        // @ts-expect-error @verify
+        {...textProps}
         style={[
           styles.text,
           selected && styles['text:selected'],
           disabled && styles['text:disabled'],
         ]}
-        {...textProps}
       />
     </Touchable>
   )
 }
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
-
   const {
     label,
     options,
@@ -152,14 +149,14 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   }
 
   return (
-    <View style={[styles.wrapper, style]} {...rest}>
-      {label && <Text text={label} style={[styles.label, disabled && styles['label:disabled']]} />}
+    <View {...rest} style={styles.wrapper}>
+      {label ? <Text text={label} style={[styles.label, disabled && styles['label:disabled']]} /> : null}
       <View style={[styles.innerWrapper, disabled && styles['innerWrapper:disabled']]}>
         <Bubble
-          style={selectedBubbleStyles}
           animate={bubbleAnimation}
           initial={false}
           {...bubbleProps}
+          style={selectedBubbleStyles}
         />
         {options.map((o, idx) => (
           <Option
@@ -177,12 +174,12 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             icon={o.icon}
             selected={value === o.value}
             styles={styles}
-            style={largestWidth}
             disabled={disabled}
             textProps={textProps}
             iconProps={iconProps}
             tabIndex={0}
             {...props?.touchableProps}
+            style={largestWidth}
           />
         ))}
       </View>
@@ -218,6 +215,3 @@ SegmentedControl.defaultProps = {
 } as Partial<SegmentedControlProps>
 
 WebStyleRegistry.registerComponent(SegmentedControl)
-
-export * from './styles'
-export * from './types'

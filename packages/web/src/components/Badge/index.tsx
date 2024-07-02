@@ -7,6 +7,9 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
+export * from './styles'
+export * from './types'
+
 const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   if (Number(count) > maxCount) {
     return `${maxCount}+`

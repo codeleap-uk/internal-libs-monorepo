@@ -21,4 +21,3 @@ export type DatePickerComposition =
   | DatePickerParts
   | `outerInput${Capitalize<TextInputComposition>}`
   | `header${Capitalize<DatePickerHeaderComposition>}`
-
