@@ -1,6 +1,6 @@
 import { HTMLProps, NativeHTMLElement } from '../../types'
 import { AnimationProps, MotionProps } from 'framer-motion'
-import { Breakpoint, StyledProp } from '@codeleap/styles'
+import { StyledProp } from '@codeleap/styles'
 import { ViewComposition } from './styles'
 
 export type ViewComponentProps = {
@@ -16,10 +16,10 @@ export type ViewProps<T extends NativeHTMLElement> =
     scroll?: boolean
     debugName?: string
     debug?: boolean
-    is?: Breakpoint
-    not?: Breakpoint
-    up?: Breakpoint
-    down?: Breakpoint
+    is?: any
+    not?: any
+    up?: any
+    down?: any
     onHover?: (isMouseOverElement: boolean) => void
     animated?: boolean
     animatedProps?: Partial<MotionProps>

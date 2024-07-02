@@ -6,6 +6,7 @@ import { AnyFunction, PropsOf } from '@codeleap/common'
 export type OverlayProps =
   PropsOf<typeof View, 'style'> &
   {
+    debugName: string
     visible?: boolean
     style?: StyledProp<OverlayComposition>
     onPress?: AnyFunction
