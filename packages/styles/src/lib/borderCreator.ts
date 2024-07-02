@@ -23,11 +23,7 @@ export const borderCreator: BorderCreator = (args) => {
 
   const theme = themeStore.getState().current
 
-  const color = theme?.['colors']?.[colorKey]
-
-  if (!color) {
-    throw new Error(`Border cannot be create for "color ${colorKey}" not exists in theme.`)
-  }
+  const color = theme?.['colors']?.[colorKey] ?? colorKey
 
   const borderStyles: ICSS = {}
 
