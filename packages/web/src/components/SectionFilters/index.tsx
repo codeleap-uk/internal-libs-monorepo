@@ -7,7 +7,7 @@ import { View } from '../View'
 import { Text } from '../Text'
 import { Button } from '../Button'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'

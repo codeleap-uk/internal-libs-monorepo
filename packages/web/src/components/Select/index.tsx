@@ -13,7 +13,7 @@ import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
 import { Icon } from '../Icon'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { ComponentWithDefaultProps } from '../../types'
 

@@ -4,7 +4,7 @@ import { HexColorPicker } from 'react-colorful'
 import { TypeGuards, useBooleanToggle, useState } from '@codeleap/common'
 import { ColorPickerProps, ColorTypes, ColorPickerFooterProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'

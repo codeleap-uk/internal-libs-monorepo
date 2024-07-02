@@ -7,7 +7,7 @@ import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
 export * from './styles'
 export * from './utils'

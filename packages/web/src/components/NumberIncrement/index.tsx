@@ -4,7 +4,7 @@ import { TypeGuards, onUpdate, useState, useRef, useValidate } from '@codeleap/c
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
 import { PatternFormat, NumericFormat, NumericFormatProps as NFProps, NumberFormatBase } from 'react-number-format'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { NumberIncrementProps } from './types'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'

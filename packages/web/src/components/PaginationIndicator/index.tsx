@@ -5,7 +5,7 @@ import { Text } from '../Text'
 import { View } from '../View'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { PaginationIndicatorProps } from './types'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'

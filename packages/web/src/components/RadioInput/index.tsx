@@ -9,7 +9,7 @@ import { InputBase, selectInputBaseProps } from '../InputBase'
 import { RadioOptionProps, RadioInputProps } from './types'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { RadioInputComposition } from './styles'
 
 export * from './styles'

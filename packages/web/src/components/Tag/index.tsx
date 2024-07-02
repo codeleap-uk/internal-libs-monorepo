@@ -8,7 +8,7 @@ import { Touchable } from '../Touchable'
 import { View } from '../View'
 import { Badge } from '../Badge'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 
 export * from './styles'

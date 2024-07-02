@@ -1,10 +1,12 @@
 /** @jsx jsx */
 import React from 'react'
 import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
-import { SwitchProps, WebStyleRegistry, useAnimatedVariantStyles } from '../..'
+import { useAnimatedVariantStyles } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { motion } from 'framer-motion'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { SwitchProps } from './types'
 
 export * from './styles'
 export * from './types'

@@ -4,7 +4,7 @@ import { BubbleMenu, FloatingMenu, EditorContent } from '@tiptap/react'
 import { FileInput, Text, View } from '../components'
 import { TextEditorProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'

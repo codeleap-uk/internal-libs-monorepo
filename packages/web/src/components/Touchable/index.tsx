@@ -7,7 +7,7 @@ import { getTestId } from '../../lib/utils/test'
 import { useGlobalContext } from '@codeleap/common'
 import { TouchableProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, GenericStyledComponent, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'

@@ -5,7 +5,7 @@ import { CollapseProps, GetCollapseStylesArgs } from './types'
 import { CollapseComposition } from './styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
 export * from './styles'
 export * from './types'

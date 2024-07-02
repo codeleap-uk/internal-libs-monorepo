@@ -6,7 +6,7 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { TypeGuards } from '@codeleap/common'
 import { EmptyPlaceholderProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'

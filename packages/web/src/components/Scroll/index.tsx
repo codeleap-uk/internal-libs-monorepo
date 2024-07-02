@@ -3,7 +3,7 @@ import { forwardRef, Ref } from 'react'
 import { ComponentWithDefaultProps, NativeHTMLElement } from '../../types'
 import { View } from '../View'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { ScrollComponentProps, ScrollProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 

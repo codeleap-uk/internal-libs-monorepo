@@ -11,7 +11,7 @@ import { Touchable } from '../Touchable'
 import { modalScrollLock, ModalStore } from '../../lib/tools/modal'
 import { ModalHeaderProps, ModalProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'

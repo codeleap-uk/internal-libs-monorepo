@@ -4,7 +4,7 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { LoadingOverlayProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
 export * from './styles'
 export * from './types'

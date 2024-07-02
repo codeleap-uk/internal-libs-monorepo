@@ -6,7 +6,7 @@ import { formatProgress as _formatProgress } from '../utils'
 import { useMemo } from '@codeleap/common'
 import { useStylesFor } from '../../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../../lib'
+import { WebStyleRegistry } from '../../../lib/WebStyleRegistry'
 
 export * from './styles'
 export * from './types'

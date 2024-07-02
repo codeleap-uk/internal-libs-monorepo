@@ -23,7 +23,7 @@ import { InputRef, TextInputProps } from './types'
 import { FileInputRef } from '../FileInput'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
 export * from './types'
 export * from './styles'

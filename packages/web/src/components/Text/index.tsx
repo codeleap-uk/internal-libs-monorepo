@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import React, { ElementType } from 'react'
 import { TextProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'

@@ -4,7 +4,7 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { ListProps } from './types'
 import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { ListLayout } from './ListLayout'
 

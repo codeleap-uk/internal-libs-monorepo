@@ -6,7 +6,7 @@ import { Touchable } from '../Touchable'
 import { DotsProps, PagerProps, PagerRef } from './types'
 import { ComponentWithDefaultProps } from '../../types'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
 import 'slick-carousel/slick/slick.css'

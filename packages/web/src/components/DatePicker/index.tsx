@@ -9,7 +9,7 @@ import ReactDatePicker from 'react-datepicker'
 import { Header, OuterInput } from './components'
 import { format, isBefore, isAfter } from 'date-fns'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'

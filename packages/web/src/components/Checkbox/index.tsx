@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { CheckboxProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, AppIcon, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { CheckboxParts } from './styles'
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()

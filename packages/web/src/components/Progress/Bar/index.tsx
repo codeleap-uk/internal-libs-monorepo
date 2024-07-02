@@ -3,7 +3,7 @@ import { Root, Indicator } from '@radix-ui/react-progress'
 import { Icon, Text, View } from '../../components'
 import { ProgressBarProps } from './types'
 import { formatProgress as _formatProgress } from '../utils'
-import { WebStyleRegistry } from '../../../lib'
+import { WebStyleRegistry } from '../../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../../lib/hooks/useStylesFor'
 

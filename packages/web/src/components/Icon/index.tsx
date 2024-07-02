@@ -1,7 +1,7 @@
 import { View } from '../View'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { IconProps } from './types'
 
 export * from './styles'

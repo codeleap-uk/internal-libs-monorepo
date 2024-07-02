@@ -5,7 +5,7 @@ import { View } from '../View'
 import { ActionIconParts } from './styles'
 import { ActionIconProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'

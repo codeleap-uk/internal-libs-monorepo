@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicatorProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, GenericStyledComponentAttributes } from '@codeleap/styles'
 import { ComponentWithDefaultProps } from '../../types'
 

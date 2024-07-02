@@ -4,7 +4,7 @@ import { Text } from '../Text'
 import { View } from '../View'
 import { BadgeContent, BadgeProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'

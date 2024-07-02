@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { WebStyleRegistry } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, mergeStyles, StyledComponentProps, useTheme } from '@codeleap/styles'
 
 export * from './styles'
