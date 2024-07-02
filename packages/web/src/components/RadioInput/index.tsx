@@ -40,7 +40,6 @@ const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
 
   return (
     <React.Fragment>
-      {/* @ts-expect-error @verify */}
       <Touchable
         debugName={`${debugName} option ${item.value}`}
         style={getStyle('optionWrapper')}

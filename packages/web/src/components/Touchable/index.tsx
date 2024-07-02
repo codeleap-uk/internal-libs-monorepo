@@ -8,7 +8,7 @@ import { useGlobalContext } from '@codeleap/common'
 import { TouchableProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { AnyRecord, GenericStyledComponent, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponent, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -112,7 +112,7 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
       data-testid={testId}
     />
   )
-}) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponent<AnyRecord>
+}) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponentAttributes<AnyRecord> 
 
 Touchable.styleRegistryName = 'Touchable'
 Touchable.elements = ['wrapper']

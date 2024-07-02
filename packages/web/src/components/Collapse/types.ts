@@ -21,4 +21,5 @@ export type CollapseProps =
     direction?: CollapseAxis
     animation?: string
     style?: StyledProp<CollapseComposition>
+    children?: React.ReactNode
   }

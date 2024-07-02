@@ -11,6 +11,7 @@ import { Button } from '../Button'
 import { LoadingOverlay } from '../LoadingOverlay'
 
 const ReactCrop: React.ElementType = require('react-image-crop').Component
+
 import 'react-image-crop/dist/ReactCrop.css'
 
 export * from './styles'
@@ -53,6 +54,7 @@ const CropPickerCP = forwardRef((props: CropPickerProps, ref) => {
   return (
     <>
       <FileInput
+        // @ts-ignore
         ref={fileInputRef}
         onChange={(files) => onFilesReturned(files)}
         {...fileInputProps}

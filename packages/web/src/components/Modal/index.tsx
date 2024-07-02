@@ -14,6 +14,9 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
+export * from './styles'
+export * from './types'
+
 function focusModal(event: FocusEvent, id: string) {
   event?.preventDefault()
   const modal = document.getElementById(id)
@@ -199,6 +202,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
         <Touchable
           onPress={close}
           debounce={1000}
+          debugName='modal backdrop'
           {...backdropProps}
           style={styles.backdropPressable}
         />
