@@ -1,5 +1,5 @@
 import { TypeGuards } from '@codeleap/common'
-import { useNestedStylesByKey } from '@codeleap/styles'
+import { useCompositionStyles } from '@codeleap/styles'
 import { ActionIconParts } from '../ActionIcon'
 import { UseInputBaseStyles } from './types'
 import { concatStyles, getIconStyles, iconStylesOf } from './utils'
@@ -38,19 +38,17 @@ export const useInputBaseStyles = (props: UseInputBaseStyles) => {
 
   const hasError = !TypeGuards.isNil(error)
 
-  const _leftIconStyles = useNestedStylesByKey('leftIcon', styles)
-  const _rightIconStyles = useNestedStylesByKey('rightIcon', styles)
-  const _baseIconStyles = useNestedStylesByKey('icon', styles)
+  const compositionStyles = useCompositionStyles(['leftIcon', 'rightIcon', 'icon'], styles)
 
-  const baseIconStyles = getIconStyles(_baseIconStyles, { hasError, disabled, focused })
+  const baseIconStyles = getIconStyles(compositionStyles.icon, { hasError, disabled, focused })
 
-  const leftIconStylesCompose = getIconStyles(_leftIconStyles, {
+  const leftIconStylesCompose = getIconStyles(compositionStyles.leftIcon, {
     hasError,
     disabled: disabled || props?.leftIcon?.disabled,
     focused,
   })
 
-  const rightIconStylesCompose = getIconStyles(_rightIconStyles, {
+  const rightIconStylesCompose = getIconStyles(compositionStyles.rightIcon, {
     hasError,
     disabled: disabled || props?.rightIcon?.disabled,
     focused,
@@ -88,8 +86,7 @@ export const useInputBaseStyles = (props: UseInputBaseStyles) => {
   ]
 
   const innerWrapperStyle = [
-    // @ts-expect-error @verify
-    concatStyles(styles.innerWrapper),
+    concatStyles(Array.isArray(styles.innerWrapper) ? styles.innerWrapper : [styles.innerWrapper]),
     focused && styles['innerWrapper:focus'],
     hasError && styles['innerWrapper:error'],
     disabled && styles['innerWrapper:disabled'],

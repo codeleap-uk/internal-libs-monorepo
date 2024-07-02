@@ -7,8 +7,10 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
-export const TextEditor = (props: TextEditorProps) => {
+export * from './styles'
+export * from './types'
 
+export const TextEditor = (props: TextEditorProps) => {
   const {
     children,
     editor,
@@ -91,7 +93,6 @@ export const TextEditor = (props: TextEditorProps) => {
         {
           '.tiptap': editorStyles,
         },
-        style,
       ]}
     >
       {toolbarComponent}
@@ -100,7 +101,6 @@ export const TextEditor = (props: TextEditorProps) => {
       <_FloatingMenu />
       <EditorContent editor={editor} />
       {hasError ? <Text text={errorMessage as string} style={styles['errorMessage:error']} /> : null}
-      {/* @ts-expect-error @verify */}
       <FileInput ref={fileInputRef} />
     </View>
   )
@@ -127,6 +127,3 @@ TextEditor.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 TextEditor.defaultProps = {} as Partial<TextEditorProps>
 
 WebStyleRegistry.registerComponent(TextEditor)
-
-export * from './styles'
-export * from './types'

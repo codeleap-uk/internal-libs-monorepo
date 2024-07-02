@@ -1,28 +1,18 @@
 /** @jsx jsx */
 import * as React from 'react'
-import {
-  TypeGuards,
-  onUpdate,
-  useState,
-  useRef,
-  useValidate,
-  IconPlaceholder,
-} from '@codeleap/common'
+import { TypeGuards, onUpdate, useState, useRef, useValidate } from '@codeleap/common'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
-import {
-  PatternFormat,
-  NumericFormat,
-  NumericFormatProps as NFProps,
-  NumberFormatBase,
-} from 'react-number-format'
+import { PatternFormat, NumericFormat, NumericFormatProps as NFProps, NumberFormatBase } from 'react-number-format'
 import { WebStyleRegistry } from '../../lib'
 import { NumberIncrementProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
-export const NumberIncrement = (props: NumberIncrementProps) => {
+export * from './types'
+export * from './styles'
 
+export const NumberIncrement = (props: NumberIncrementProps) => {
   const {
     inputBaseProps,
     others: numberIncrementProps,
@@ -188,14 +178,14 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         ],
       }}
       rightIcon={{
-        name: 'plus' as IconPlaceholder,
+        name: 'plus' as AppIcon,
         disabled: disabled || incrementDisabled,
         onPress: () => handleChange('increment'),
         component: 'button',
         ...inputBaseProps.rightIcon,
       }}
       leftIcon={{
-        name: 'minus' as IconPlaceholder,
+        name: 'minus' as AppIcon,
         disabled: disabled || decrementDisabled,
         onPress: () => handleChange('decrement'),
         component: 'button',
@@ -251,21 +241,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
 }
 
 NumberIncrement.styleRegistryName = 'NumberIncrement'
-
-NumberIncrement.elements = [
-  'wrapper',
-  'innerWrapper',
-  'label',
-  'errorMessage',
-  'description',
-  'labelRow',
-  'input',
-  'placeholder',
-  'icon',
-  'leftIcon',
-  'rightIcon',
-]
-
+NumberIncrement.elements = [...InputBase.elements, 'input', 'placeholder']
 NumberIncrement.rootElement = 'wrapper'
 
 NumberIncrement.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -284,6 +260,3 @@ NumberIncrement.defaultProps = {
 } as Partial<NumberIncrementProps>
 
 WebStyleRegistry.registerComponent(NumberIncrement)
-
-export * from './types'
-export * from './styles'

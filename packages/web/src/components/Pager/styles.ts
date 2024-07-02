@@ -5,4 +5,3 @@ export type PagerComposition =
   | 'dots'
   | 'pageWrapper'
   | 'footerWrapper'
-

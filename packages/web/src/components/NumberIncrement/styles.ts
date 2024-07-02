@@ -8,4 +8,3 @@ export type NumberIncrementComposition =
   | NumberIncrementParts
   | `${NumberIncrementParts}:${NumberIncrementStates}`
   | `innerWrapper:cursor`
-

@@ -1,13 +1,6 @@
 import { onUpdate } from '@codeleap/common'
 import Slider from 'react-slick'
-import React, {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-} from 'react'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
+import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
 import { DotsProps, PagerProps, PagerRef } from './types'
@@ -16,15 +9,21 @@ import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps
 import { WebStyleRegistry } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+
+export * from './styles'
+export * from './types'
+
 const Dots = (params: DotsProps) => {
   const { page, childArray, onPress, styles, dotsDisabled } = params
+
   return (
     <View style={styles.dots}>
       {childArray.map((_, index) => {
-
         const isSelected = index === page
 
-        const css = [
+        const style = [
           styles[isSelected ? 'dot:selected' : 'dot'],
           dotsDisabled && styles['dot:disabled'],
         ]
@@ -34,7 +33,7 @@ const Dots = (params: DotsProps) => {
           <Touchable
             key={index}
             onPress={() => onPress?.(index)}
-            style={css}
+            style={style}
             disabled={dotsDisabled}
           />
         )
@@ -44,13 +43,12 @@ const Dots = (params: DotsProps) => {
 }
 
 export const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) => {
-
   const sliderRef = useRef<Slider>()
 
   const {
     style,
     children,
-    renderPageWrapper,
+    renderPageWrapper: PageWrapper,
     page,
     dots,
     dotsDisabled,
@@ -69,7 +67,6 @@ export const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<Page
   const styles = useStylesFor(Pager.styleRegistryName, style)
 
   const childArray = React.Children.toArray(children)
-  const PageWrapper = renderPageWrapper || View
 
   const goTo = useCallback(
     (page: number) => {
@@ -88,7 +85,7 @@ export const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<Page
   }, [page])
 
   return (
-    <View style={[styles.wrapper, style]}>
+    <View style={styles.wrapper}>
       <Slider
         adaptiveHeight={true}
         {...rest}
@@ -154,9 +151,7 @@ Pager.defaultProps = {
   dotsDisabled: false,
   infinite: false,
   disableSwipe: false,
+  renderPageWrapper: View,
 } as Partial<PagerProps>
 
 WebStyleRegistry.registerComponent(Pager)
-
-export * from './styles'
-export * from './types'

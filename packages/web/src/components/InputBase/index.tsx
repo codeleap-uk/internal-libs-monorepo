@@ -9,6 +9,10 @@ import { Text } from '../Text'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib'
 
+export * from './styles'
+export * from './utils'
+export * from './types'
+
 export const InputBaseDefaultOrder:InputBaseProps['order'] = [
   'label',
   'description',
@@ -21,7 +25,6 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
 }
 
 export const InputBase = (props: InputBaseProps) => {
-
   const allProps = {
     ...InputBase.defaultProps,
     ...props,
@@ -87,7 +90,7 @@ export const InputBase = (props: InputBaseProps) => {
     innerWrapper:
       <InnerWrapperComponent
         ref={innerWrapperRef}
-        style={[_styles.innerWrapperStyle]}
+        style={_styles.innerWrapperStyle}
         {...innerWrapperProps}
       >
         {_leftIcon}
@@ -99,9 +102,9 @@ export const InputBase = (props: InputBaseProps) => {
 
   return (
     <WrapperComponent
-      css={[_styles.wrapperStyle, style]}
       {...otherProps}
       {...wrapperProps}
+      style={_styles.wrapperStyle}
     >
       {
         order.map((key) => (
@@ -146,7 +149,3 @@ InputBase.defaultProps = {
 } as Partial<InputBaseProps>
 
 WebStyleRegistry.registerComponent(InputBase)
-
-export * from './styles'
-export * from './utils'
-export * from './types'
