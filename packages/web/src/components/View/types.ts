@@ -1,7 +1,6 @@
-import { BaseViewProps, BreakpointPlaceholder } from '@codeleap/common'
 import { HTMLProps, NativeHTMLElement } from '../../types'
 import { AnimationProps, MotionProps } from 'framer-motion'
-import { StyledProp } from '@codeleap/styles'
+import { Breakpoint, StyledProp } from '@codeleap/styles'
 import { ViewComposition } from './styles'
 
 export type ViewComponentProps = {
@@ -10,19 +9,19 @@ export type ViewComponentProps = {
 }
 
 export type ViewProps<T extends NativeHTMLElement> =
-  HTMLProps<T> &
-  AnimationProps &
+  Omit<HTMLProps<T>, 'style'> &
+  Omit<AnimationProps, 'style'> &
   {
     component?: T
     scroll?: boolean
     debugName?: string
     debug?: boolean
-    is?: BreakpointPlaceholder
-    not?: BreakpointPlaceholder
-    up?: BreakpointPlaceholder
-    down?: BreakpointPlaceholder
+    is?: Breakpoint
+    not?: Breakpoint
+    up?: Breakpoint
+    down?: Breakpoint
     onHover?: (isMouseOverElement: boolean) => void
     animated?: boolean
     animatedProps?: Partial<MotionProps>
     style?: StyledProp<ViewComposition>
-  } & Omit<BaseViewProps, 'css'>
+  }

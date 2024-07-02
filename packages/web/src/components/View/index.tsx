@@ -8,11 +8,12 @@ import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib'
-import { useGlobalContext } from '@codeleap/common'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, mergeStyles, StyledComponentProps, useTheme } from '@codeleap/styles'
+
+export * from './styles'
+export * from './types'
 
 export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
-
   const {
     component,
     children,
@@ -39,14 +40,12 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
 
   const theme = useTheme(store => store.current)
 
-  const { logger } = useGlobalContext()
-
   function handleHover(isMouseOverElement: boolean) {
     onHover?.(isMouseOverElement)
   }
 
   const platformMediaQuery = useMemo(() => {
-    // @ts-expect-error @verify
+    // @ts-expect-error theme type
     return theme.media.renderToPlatformQuery({
       is,
       not,
@@ -58,34 +57,27 @@ export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
   const matches = useMediaQuery(platformMediaQuery)
 
   const componentStyles = useMemo(() => {
-    return [
+    return mergeStyles([
       styles.wrapper,
       scroll && { overflowY: 'scroll' },
       matches && { display: 'none' },
-      style,
-    ]
-  }, [styles, scroll, matches])
+    ])
+  }, [styles.wrapper, scroll, matches])
 
   const onHoverProps = TypeGuards.isFunction(onHover) && {
     onMouseEnter: () => handleHover(true),
     onMouseLeave: () => handleHover(false),
   }
 
-  if (debug) {
-    logger.log(debugName, { componentStyles, platformMediaQuery, matches })
-  }
-
   const testId = getTestId(viewProps)
 
   return (
     <Component
-      // @ts-expect-error
       ref={ref}
       {...onHoverProps}
       {...props}
       {...animatedProps}
       data-testid={testId}
-      // @ts-expect-error @verify
       style={componentStyles}
     >
       {children}
@@ -110,6 +102,3 @@ View.defaultProps = {
 } as Partial<ViewComponentProps>
 
 WebStyleRegistry.registerComponent(View)
-
-export * from './styles'
-export * from './types'

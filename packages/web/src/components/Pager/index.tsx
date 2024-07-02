@@ -29,12 +29,12 @@ const Dots = (params: DotsProps) => {
         ]
 
         return (
-          // @ts-expect-error @verify
           <Touchable
             key={index}
             onPress={() => onPress?.(index)}
             style={style}
             disabled={dotsDisabled}
+            debugName='dots'
           />
         )
       })}
