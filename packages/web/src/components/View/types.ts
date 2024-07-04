@@ -24,4 +24,5 @@ export type ViewProps<T extends NativeHTMLElement> =
     animated?: boolean
     animatedProps?: Partial<MotionProps>
     style?: StyledProp<ViewComposition>
+    children?: React.ReactNode
   }

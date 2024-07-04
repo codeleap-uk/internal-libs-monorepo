@@ -10,7 +10,6 @@ import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, mergeStyles, StyledComponentProps, useTheme } from '@codeleap/styles'
 
 export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
-
   const {
     component,
     children,
