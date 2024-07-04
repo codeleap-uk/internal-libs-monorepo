@@ -3,10 +3,10 @@ import { AnimationProps, MotionProps } from 'framer-motion'
 import { StyledProp } from '@codeleap/styles'
 import { ViewComposition } from './styles'
 
-export type ViewComponentProps = {
+export type ViewComponentProps = React.PropsWithChildren<{
   viewProps: ViewProps<'div'>
   ref: React.Ref<any>
-}
+}>
 
 export type ViewProps<T extends NativeHTMLElement> =
   Omit<HTMLProps<T>, 'style'> &

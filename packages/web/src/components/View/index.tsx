@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import { useMemo, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
@@ -10,10 +9,8 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, GenericStyledComponentAttributes, IJSX, mergeStyles, StyledComponentProps, useTheme } from '@codeleap/styles'
 
-export * from './styles'
-export * from './types'
+export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
 
-export const View = forwardRef(({ viewProps, ref }: ViewComponentProps) => {
   const {
     component,
     children,
@@ -102,3 +99,6 @@ View.defaultProps = {
 } as Partial<ViewComponentProps>
 
 WebStyleRegistry.registerComponent(View)
+
+export * from './styles'
+export * from './types'

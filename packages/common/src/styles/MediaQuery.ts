@@ -31,22 +31,22 @@ export function buildMediaQueries<T extends ThemeBreakpoints>(
       // Upwards of... (excluding)
       const min = getBreakpoint(test)
 
-      return `@media screen and (min-width:${min}px)`
+      return `@media screen and (minWidth:${min}px)`
     },
     down: (test) => {
       // Downwards of... (excluding)
       const max = getBreakpoint(test)
-      return `@media screen and (max-width:${max}px)`
+      return `@media screen and (maxWidth:${max}px)`
     },
     is: (test) => {
       // Is media... (exact)
       const value = getBreakpoint(test)
-      return `@media screen and (min-width:${value}px) and (max-width:${value}px)`
+      return `@media screen and (minWidth:${value}px) and (maxWidth:${value}px)`
     },
     not: (test) => {
       // Is NOT media... (exact)
       const value = getBreakpoint(test)
-      return `@media not screen and (min-width:${value}px) and (max-width:${value}px)`
+      return `@media not screen and (minWidth:${value}px) and (maxWidth:${value}px)`
     },
   }
   const renderToPlatformQuery: MediaQueries<
