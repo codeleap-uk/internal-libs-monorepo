@@ -74,7 +74,7 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
       {...props}
       {...animatedProps}
       data-testid={testId}
-      style={componentStyles}
+      css={componentStyles}
     >
       {children}
     </Component>
