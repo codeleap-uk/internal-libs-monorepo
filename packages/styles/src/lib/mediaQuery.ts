@@ -28,22 +28,22 @@ export function createMediaQueries<T extends IBreakpoints>(breakpoints: T): Medi
     up: (breakpoint: keyof IBreakpoints) => {
       // Upwards of... (excluding)
       const min = getBreakpoint(breakpoint)
-      return `@media screen and (minWidth:${min}px)`
+      return `@media screen and (min-width:${min}px)`
     },
     down: (breakpoint: keyof IBreakpoints) => {
       // Downwards of... (excluding)
       const max = getBreakpoint(breakpoint)
-      return `@media screen and (maxWidth:${max}px)`
+      return `@media screen and (max-width:${max}px)`
     },
     is: (breakpoint: keyof IBreakpoints) => {
       // Is media... (exact)
       const value = getBreakpoint(breakpoint)
-      return `@media screen and (minWidth:${value}px) and (maxWidth:${value}px)`
+      return `@media screen and (min-width:${value}px) and (max-width:${value}px)`
     },
     not: (breakpoint: keyof IBreakpoints) => {
       // Is NOT media... (exact)
       const value = getBreakpoint(breakpoint)
-      return `@media not screen and (minWidth:${value}px) and (maxWidth:${value}px)`
+      return `@media not screen and (min-width:${value}px) and (max-width:${value}px)`
     },
   }
 
