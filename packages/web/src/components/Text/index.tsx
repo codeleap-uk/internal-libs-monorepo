@@ -74,7 +74,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   }
 
   return (
-    <Component {...componentProps} style={_styles}>
+    <Component {...componentProps} css={_styles}>
       {text || children}
     </Component>
   )
