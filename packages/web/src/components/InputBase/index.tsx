@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import React from 'react'
 import { TypeGuards, getRenderedComponent } from '@codeleap/common'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
