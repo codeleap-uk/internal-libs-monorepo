@@ -14,6 +14,7 @@ export * from './styles'
 export * from './types'
 
 export const Button = (buttonProps: ButtonProps) => {
+
   const allProps = {
     ...Button.defaultProps,
     ...buttonProps,

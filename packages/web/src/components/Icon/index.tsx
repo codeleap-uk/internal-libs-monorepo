@@ -42,7 +42,7 @@ export const Icon = (props:IconProps) => {
 
   if (!Component) return null
 
-  return <Component {...otherProps} style={styles.icon} />
+  return <Component {...otherProps} css={styles.icon} />
 }
 
 Icon.styleRegistryName = 'Icon'
