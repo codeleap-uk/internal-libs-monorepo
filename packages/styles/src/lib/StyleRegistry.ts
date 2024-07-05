@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleProp, VariantStyleSheet } from '../types'
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
@@ -37,7 +38,7 @@ export class CodeleapStyleRegistry {
 
     if (!!cache.value) {
       return {
-        [component]: this.createStyle(cache.value)
+        [component]: this.createStyle(cache.value),
       }
     }
 
@@ -57,7 +58,7 @@ export class CodeleapStyleRegistry {
       variantName = _variantName
     }
 
-    let variantStyle = this.commonVariants[variantName] ?? this.commonVariants[variant]
+    const variantStyle = this.commonVariants[variantName] ?? this.commonVariants[variant]
 
     let style = null
 
@@ -69,12 +70,12 @@ export class CodeleapStyleRegistry {
 
     if (!!mediaQuery) {
       style = {
-        [mediaQuery]: style
+        [mediaQuery]: style,
       }
     }
 
     const commonStyles = {
-      [component]: this.createStyle(style)
+      [component]: this.createStyle(style),
     }
 
     this.styleCache.cacheFor('common', cache.key, style)
@@ -111,8 +112,8 @@ export class CodeleapStyleRegistry {
 
         return {
           [component]: this.createStyle({
-            [mediaQuery]: stylesheet[variantName][component]
-          })
+            [mediaQuery]: stylesheet[variantName][component],
+          }),
         }
       }
 
@@ -174,7 +175,7 @@ export class CodeleapStyleRegistry {
     }
   }
 
-  getDefaultVariantStyle(componentName: string, defaultVariantStyleName: string = 'default') {
+  getDefaultVariantStyle(componentName: string, defaultVariantStyleName = 'default') {
     const stylesheet = minifier.decompress(this.stylesheets[componentName])
 
     const defaultStyle = stylesheet?.[defaultVariantStyleName]
@@ -234,7 +235,7 @@ export class CodeleapStyleRegistry {
       // @ts-ignore
       for (const composition in componentStyles) {
         styles[composition] = {
-          [mediaQuery]: componentStyles[composition]
+          [mediaQuery]: componentStyles[composition],
         }
       }
     }
@@ -297,7 +298,7 @@ export class CodeleapStyleRegistry {
         const breakpointStyle = style[responsiveStyleKey][responsiveStyle]
 
         responsiveStyles = deepmerge({ all: true })(responsiveStyles, {
-          [mediaQuery]: this.getStyles(componentName, breakpointStyle, component)
+          [mediaQuery]: this.getStyles(componentName, breakpointStyle, component),
         })
       }
 
@@ -325,7 +326,7 @@ export class CodeleapStyleRegistry {
         componentName,
         componentStyles,
         component,
-        s => this.getStyleWithResponsive(componentName, s, component)
+        s => this.getStyleWithResponsive(componentName, s, component),
       )
 
       styles.push({ [component]: componentStyle })
@@ -338,7 +339,7 @@ export class CodeleapStyleRegistry {
     return styles
   }
 
-  styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle: boolean = true): T {
+  styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle = true): T {
     const cache = this.styleCache.keyFor('components', { componentName, style, stylesheet: this.stylesheets[componentName] })
 
     if (!!cache.value) {
@@ -361,7 +362,7 @@ export class CodeleapStyleRegistry {
 
       return this.mergeStylesWithCache(
         [defaultStyle, computedVariantStyle],
-        cache.key
+        cache.key,
       )
     }
 
@@ -387,7 +388,7 @@ export class CodeleapStyleRegistry {
       } else {
         return this.mergeStylesWithCache(
           [defaultStyle, responsiveStyles, { [rootElement]: style }],
-          cache.key
+          cache.key,
         )
       }
     }
@@ -395,7 +396,7 @@ export class CodeleapStyleRegistry {
     if (isStyleArray) {
       const filteredStyle = (style as Array<any>)?.filter(s => !!s)
 
-      let variants: string[] = []
+      const variants: string[] = []
       const styles: ICSS[] = [defaultStyle]
       let idx = 0
 
@@ -454,7 +455,7 @@ export class CodeleapStyleRegistry {
       appVariants,
       dynamicVariants,
       spacingVariants,
-      insetVariants
+      insetVariants,
     )
 
     this.commonVariants = commonVariants
