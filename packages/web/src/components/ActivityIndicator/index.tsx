@@ -31,13 +31,11 @@ export const ActivityIndicator = forwardRef<HTMLDivElement>((props: ActivityIndi
   }, [size])
 
   return (
-    <View style={[styles.wrapper, _size]}>
-      <Component
-        ref={ref}
-        {...rest}
-        style={[styles.wrapper, _size]}
-      />
-    </View>
+    <Component
+      ref={ref}
+      {...rest}
+      style={[styles.wrapper, _size]}
+    />
   )
 }) as ComponentWithDefaultProps<ActivityIndicatorProps> & GenericStyledComponentAttributes<AnyRecord>
 
