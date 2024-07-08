@@ -5,8 +5,7 @@ import { TypeGuards, useConditionalState, useState } from '@codeleap/common'
 import { ColorPickerProps, ColorTypes, ColorPickerFooterProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { ComponentWithDefaultProps } from '../../types'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -32,7 +31,7 @@ const DefaultFooter = (props: ColorPickerFooterProps) => {
   )
 }
 
-export const ColorPickerCP = (props: ColorPickerProps) => {
+export const ColorPicker = (props: ColorPickerProps) => {
   const {
     isPlain,
     initialColor,
@@ -49,11 +48,11 @@ export const ColorPickerCP = (props: ColorPickerProps) => {
     footerComponent: FooterComponent,
     openPickerProps,
   } = {
-    ...ColorPickerCP.defaultProps,
+    ...ColorPicker.defaultProps,
     ...props,
   }
 
-  const styles = useStylesFor(ColorPickerCP.styleRegistryName, style)
+  const styles = useStylesFor(ColorPicker.styleRegistryName, style)
 
   const [visible, toggle] = useConditionalState(props?.visible, props?.toggle, { initialValue: false })
   const [color, setColor] = useState<ColorTypes>(initialColor)
@@ -120,15 +119,15 @@ export const ColorPickerCP = (props: ColorPickerProps) => {
   )
 }
 
-ColorPickerCP.styleRegistryName = 'ColorPicker'
-ColorPickerCP.elements = ['wrapper', 'picker', 'dropdown', 'dropdownInnerWrapper', 'footerWrapper', 'clearIcon', 'confirmIcon']
-ColorPickerCP.rootElement = 'wrapper'
+ColorPicker.styleRegistryName = 'ColorPicker'
+ColorPicker.elements = ['wrapper', 'picker', 'dropdown', 'dropdownInnerWrapper', 'footerWrapper', 'clearIcon', 'confirmIcon']
+ColorPicker.rootElement = 'wrapper'
 
-ColorPickerCP.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return ColorPickerCP as (props: StyledComponentProps<ColorPickerProps, typeof styles>) => IJSX
+ColorPicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ColorPicker as (props: StyledComponentProps<ColorPickerProps, typeof styles>) => IJSX
 }
 
-ColorPickerCP.defaultProps = {
+ColorPicker.defaultProps = {
   pickerComponent: (props) => <HexColorPicker {...props} />,
   footerComponent: DefaultFooter,
   icon: 'edit' as AppIcon,
@@ -139,6 +138,5 @@ ColorPickerCP.defaultProps = {
   closeOnConfirm: true,
 } as Partial<ColorPickerProps>
 
-WebStyleRegistry.registerComponent(ColorPickerCP)
+WebStyleRegistry.registerComponent(ColorPicker)
 
-export const ColorPicker = React.memo(ColorPickerCP) as ComponentWithDefaultProps<ColorPickerProps> & GenericStyledComponentAttributes<AnyRecord>
