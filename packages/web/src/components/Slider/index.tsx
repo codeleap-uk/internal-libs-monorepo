@@ -78,7 +78,7 @@ export const Slider = (props: SliderProps) => {
   })
 
   const handleChange: SliderProps['onValueChange'] = (newValue: Array<number>) => {
-    onValueChange(isUniqueValue ? newValue?.[0] : newValue)
+    onValueChange?.(isUniqueValue ? newValue?.[0] : newValue)
   }
 
   const handleValueCommit = (newValue: Array<number>) => {
