@@ -1,10 +1,12 @@
 import { PropsOf } from '@codeleap/common'
 import { ProgressBarComposition } from './styles'
 import { ProgressProps, ProgressIndicatorProps } from '@radix-ui/react-progress'
-import { IconProps, View, TextProps as _TextProps } from '../../components'
 import { ProgressPropsRoot } from '..'
 import { ElementType } from 'react'
 import { AppIcon, StyledProp } from '@codeleap/styles'
+import { TextProps as _TextProps } from '../../Text/types'
+import { IconProps } from '../../Icon/types'
+import { View } from '../../View'
 
 type TextProps = _TextProps<ElementType>
 

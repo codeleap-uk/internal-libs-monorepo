@@ -71,6 +71,7 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
   const testId = getTestId(viewProps)
 
   return (
+    // @ts-ignore
     <Component
       ref={ref}
       {...onHoverProps}
@@ -82,7 +83,7 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
       {children}
     </Component>
   )
-}) as ComponentWithDefaultProps<ViewProps<any>> & GenericStyledComponentAttributes<AnyRecord>
+}) as ComponentWithDefaultProps<ViewProps<'div'>> & GenericStyledComponentAttributes<AnyRecord>
 
 View.styleRegistryName = 'View'
 View.elements = ['wrapper']
