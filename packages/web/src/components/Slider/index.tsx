@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import React from 'react'
 import { onMount, TypeGuards, useRef } from '@codeleap/common'
 import { View } from '../View'

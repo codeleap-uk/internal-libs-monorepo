@@ -33,5 +33,7 @@ export type ColorPickerProps = {
   openPickerComponent?: (props: ColorPickerPickerProps) => JSX.Element
   pickerComponent?: (props: any) => JSX.Element
   footerComponent?: (props: ColorPickerFooterProps) => JSX.Element
+  visible?: boolean
+  toggle?: React.Dispatch<React.SetStateAction<boolean>>
   children?: React.ReactNode
 }

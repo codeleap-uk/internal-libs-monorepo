@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
 import React from 'react'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
@@ -49,7 +47,7 @@ const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
         <View style={getStyle('optionIndicator')}>
           <View style={getStyle('optionIndicatorInner')} />
         </View>
-        
+
         {TypeGuards.isString(item.label) ? <Text style={getStyle('optionLabel')} text={item.label} /> : item.label}
       </Touchable>
 

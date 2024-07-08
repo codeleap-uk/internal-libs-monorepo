@@ -19,6 +19,7 @@ const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
 }
 
 export const Badge = (props: BadgeProps) => {
+
   const {
     debugName,
     innerWrapperProps,

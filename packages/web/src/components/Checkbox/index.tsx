@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
 import { Icon } from '../Icon'
@@ -10,9 +9,6 @@ import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { CheckboxParts } from './styles'
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
-
-export * from './styles'
-export * from './types'
 
 export const Checkbox = (props: CheckboxProps) => {
   const {
@@ -140,3 +136,6 @@ Checkbox.defaultProps = {
 } as Partial<CheckboxProps>
 
 WebStyleRegistry.registerComponent(Checkbox)
+
+export * from './styles'
+export * from './types'

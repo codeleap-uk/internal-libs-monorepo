@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import { capitalize, TypeGuards } from '@codeleap/common'
 import { View } from '../View'
 import { CollapseProps, GetCollapseStylesArgs } from './types'

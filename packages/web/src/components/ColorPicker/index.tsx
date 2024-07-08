@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react'
 import { ActionIcon, Collapse, View } from '../components'
 import { HexColorPicker } from 'react-colorful'
-import { TypeGuards, useBooleanToggle, useState } from '@codeleap/common'
+import { TypeGuards, useConditionalState, useState } from '@codeleap/common'
 import { ColorPickerProps, ColorTypes, ColorPickerFooterProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { ComponentWithDefaultProps } from '../../types'
 
 export * from './styles'
 export * from './types'
@@ -54,7 +55,7 @@ export const ColorPickerCP = (props: ColorPickerProps) => {
 
   const styles = useStylesFor(ColorPickerCP.styleRegistryName, style)
 
-  const [visible, toggle] = useBooleanToggle(false)
+  const [visible, toggle] = useConditionalState(props?.visible, props?.toggle, { initialValue: false })
   const [color, setColor] = useState<ColorTypes>(initialColor)
 
   const handleConfirmation = useCallback((color: ColorTypes) => {
@@ -70,7 +71,19 @@ export const ColorPickerCP = (props: ColorPickerProps) => {
   // Dragging to change the color in any other way does not seem to work for some reason.
   const picker = <View style={styles.picker}><PickerComponent color={color} onChange={setColor} /></View>
 
-  const openColorPickerBtn = !!OpenPickerComponent ? <OpenPickerComponent color={color} visible={visible} toggle={toggle} /> : <ActionIcon onPress={toggle} icon={icon} {...openPickerProps} />
+  const openColorPickerBtn = !!OpenPickerComponent ? (
+    <OpenPickerComponent
+      color={color}
+      visible={visible}
+      toggle={toggle}
+    />
+  ) : (
+    <ActionIcon
+      onPress={toggle}
+      icon={icon}
+      {...openPickerProps}
+    />
+  )
 
   return (
     <View style={styles.wrapper}>
@@ -83,7 +96,7 @@ export const ColorPickerCP = (props: ColorPickerProps) => {
               wrapper: [
                 styles.dropdown,
                 visible && styles['dropdown:open'],
-              ]
+              ],
             }}
           >
             <View style={styles.dropdownInnerWrapper}>
@@ -128,4 +141,4 @@ ColorPickerCP.defaultProps = {
 
 WebStyleRegistry.registerComponent(ColorPickerCP)
 
-export const ColorPicker = React.memo(ColorPickerCP)
+export const ColorPicker = React.memo(ColorPickerCP) as ComponentWithDefaultProps<ColorPickerProps> & GenericStyledComponentAttributes<AnyRecord>

@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import { forwardRef, Ref } from 'react'
 import { ComponentWithDefaultProps, NativeHTMLElement } from '../../types'
 import { View } from '../View'

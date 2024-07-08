@@ -1,5 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import { FormTypes, useValidate, useState, TypeGuards, onUpdate, IconPlaceholder, useEffect } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'

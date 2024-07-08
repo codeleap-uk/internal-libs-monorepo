@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import React from 'react'
 import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../../lib'

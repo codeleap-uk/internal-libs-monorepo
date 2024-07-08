@@ -1,4 +1,3 @@
-/** @jsx jsx */
 import * as React from 'react'
 import { TypeGuards, onUpdate, useState, useRef, useValidate } from '@codeleap/common'
 import { InputBase, selectInputBaseProps } from '../InputBase'
