@@ -211,6 +211,10 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const Footer = renderFooterComponent || DefaultFooter
 
+  if (!data?.length) {
+    return null
+  }
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.innerWrapper}>

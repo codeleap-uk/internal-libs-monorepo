@@ -4,7 +4,7 @@ import { SectionFiltersComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 
 export type ItemOptionProps = {
-  label?: string
+  label?: string | number
   value: string | number
   itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
 }
@@ -18,7 +18,7 @@ export type OnPressOptionProps = {
 
 export type ItemProps = {
   id: string | number
-  label?: string
+  label?: string | number
   canSelectMultiple?: boolean
   descriptionLabel?: string
   showDescriptionLabel?: boolean

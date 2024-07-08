@@ -40,11 +40,13 @@ export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   if (!hasMore) {
     if (TypeGuards.isString(noMoreItemsText) || TypeGuards.isNumber(noMoreItemsText)) {
       return (
-        <Text
-          debugName={debugName}
-          style={styles.text}
-          text={String(noMoreItemsText)}
-        />
+        <View style={styles.wrapper}>
+          <Text
+            debugName={debugName}
+            style={styles.text}
+            text={String(noMoreItemsText)}
+          />
+        </View>
       )
     }
 
