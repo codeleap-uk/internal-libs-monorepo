@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Provider as TooltipContainer,
   Root as TooltipWrapper,
@@ -7,7 +7,7 @@ import {
   Content as TooltipContent,
   Arrow as TooltipArrow,
 } from '@radix-ui/react-tooltip'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards, useConditionalState } from '@codeleap/common'
 import { View } from '../View'
 import { useClickOutsideElement } from '../../lib'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
@@ -53,9 +53,7 @@ export const Tooltip = (props: TooltipProps) => {
 
   const styles = useStylesFor(Tooltip.styleRegistryName, style)
 
-  const hasStateProps = !TypeGuards.isNil(_visible) && TypeGuards.isFunction(_toggle)
-
-  const [visible, toggle] = hasStateProps ? [_visible, _toggle] : useState(false)
+  const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false })
 
   const tooltipDirectionStyle = React.useMemo(() => {
     return side ? styles[`content:${side}`] : styles.content
