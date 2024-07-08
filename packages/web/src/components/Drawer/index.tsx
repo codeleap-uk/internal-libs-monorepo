@@ -72,8 +72,8 @@ export const Drawer = (props: DrawerProps) => {
   const showHeader = (!TypeGuards.isNil(title) || showCloseButton)
 
   const wrapperStyles = useMemo(() => ([
-    styles.wrapper,
     {
+      ...styles.wrapper,
       transition: 'visibility 0.01s ease',
       transitionDelay: open ? '0' : animationDuration,
       visibility: open ? 'visible' : 'hidden',
