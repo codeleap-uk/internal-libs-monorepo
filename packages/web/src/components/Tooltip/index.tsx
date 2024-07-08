@@ -113,7 +113,6 @@ export const Tooltip = (props: TooltipProps) => {
         onOpenChange={onOpenChange}
         {...rest}
         // @ts-ignore
-        style={styles.wrapper}
       >
         <TooltipTrigger
           onClick={_onPress}
@@ -122,12 +121,12 @@ export const Tooltip = (props: TooltipProps) => {
           asChild
           ref={triggerRef}
           {...triggerProps}
-          style={styles.triggerWrapper}
+          css={styles.triggerWrapper}
         >
           <TriggerWrapper
             {...allProps as any}
             {...triggerWrapperProps}
-            style={styles.triggerInnerWrapper}
+            css={styles.triggerInnerWrapper}
           >
             {children}
           </TriggerWrapper>
@@ -145,7 +144,7 @@ export const Tooltip = (props: TooltipProps) => {
                 />
                 : Content
             }
-            <TooltipArrow {...arrowProps} style={styles.arrow} />
+            <TooltipArrow {...arrowProps} css={styles.arrow} />
           </TooltipContent>
         </TooltipPortal>
       </TooltipWrapper>
@@ -157,14 +156,13 @@ export const Tooltip = (props: TooltipProps) => {
 Tooltip.styleRegistryName = 'Tooltip'
 
 Tooltip.elements = [
-  'wrapper',
   'content',
   'arrow',
   'triggerWrapper',
   'triggerInnerWrapper',
 ]
 
-Tooltip.rootElement = 'wrapper'
+Tooltip.rootElement = 'content'
 
 Tooltip.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Tooltip as (props: StyledComponentProps<TooltipProps, typeof styles>) => IJSX

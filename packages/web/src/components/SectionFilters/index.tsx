@@ -50,7 +50,7 @@ const ItemOption = (props: OptionProps) => {
   return (
     <Button
       debugName='Item option'
-      text={option?.label}
+      text={String(option?.label)}
       onPress={onPress}
       selected={isItemSelected}
       {...buttonProps}
@@ -157,7 +157,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
     return (
       <View style={styles.optionWrapper}>
-        {showDescriptionLabel ? <Text style={styles.label} text={description} /> : null}
+        {showDescriptionLabel ? <Text style={styles.label} text={`${description}`} /> : null}
         <View style={styles.optionInnerWrapper}>
           {hasMultipleOptions ? (
             item?.options?.map?.((option) => <Option option={option} />)
