@@ -8,8 +8,7 @@ import { forwardRef, useImperativeHandle, useState, HTMLProps } from 'react'
 import { ActionIcon } from '../ActionIcon'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
-import { ComponentWithDefaultProps } from '../../types'
+import { AnyRecord, AppIcon, IJSX, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -77,7 +76,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
     FilePreviewComponent,
     ...rest
   } = props
-  
+
   const hasErrors = errors?.length > 0
   const isPreview = withImagePreview && isImage(file)
 
@@ -108,7 +107,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
   )
 }
 
-export const Dropzone = forwardRef((props: DropzoneProps, ref: React.ForwardedRef<DropzoneRef>) => {
+export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
 
   const {
     icon,
@@ -215,13 +214,13 @@ export const Dropzone = forwardRef((props: DropzoneProps, ref: React.ForwardedRe
         ) : null}
 
         {children}
-        
+
         {!!placeholder ? <Text text={placeholder} style={styles.placeholder} /> : null}
 
         <input {...getInputProps() as HTMLProps<HTMLInputElement>} />
       </View>
     </View>)
-}) as ComponentWithDefaultProps<DropzoneProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<DropzoneProps>
 
 Dropzone.styleRegistryName = 'Dropzone'
 

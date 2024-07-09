@@ -4,8 +4,7 @@ import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'rea
 import { View } from '../View'
 import { Touchable } from '../Touchable'
 import { DotsProps, PagerProps, PagerRef } from './types'
-import { ComponentWithDefaultProps } from '../../types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
@@ -42,7 +41,8 @@ const Dots = (params: DotsProps) => {
   )
 }
 
-export const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<PagerRef>) => {
+export const Pager = forwardRef<PagerRef, PagerProps>((props, ref) => {
+
   const sliderRef = useRef<Slider>()
 
   const {
@@ -127,7 +127,7 @@ export const Pager = forwardRef((props: PagerProps, ref: React.ForwardedRef<Page
       </View>
     </View>
   )
-}) as ComponentWithDefaultProps<PagerProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<PagerProps>
 
 Pager.styleRegistryName = 'Pager'
 

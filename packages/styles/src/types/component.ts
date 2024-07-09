@@ -34,3 +34,7 @@ export type GenericStyledComponent<
 > = ((props: Props) => IJSX) & GenericStyledComponentAttributes<Props>
 
 export type AnyStyledComponent = GenericStyledComponent<any>
+
+export type ComponentWithDefaultProps<P> = ((props: P) => JSX.Element) & { defaultProps?: Partial<P> }
+
+export type StyledComponentWithProps<Props> = ComponentWithDefaultProps<Props> & GenericStyledComponentAttributes<Props>

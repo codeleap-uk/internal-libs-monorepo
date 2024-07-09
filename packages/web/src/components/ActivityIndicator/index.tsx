@@ -4,13 +4,12 @@ import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicatorProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, IJSX, StyledComponentProps, GenericStyledComponentAttributes } from '@codeleap/styles'
-import { ComponentWithDefaultProps } from '../../types'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
-export const ActivityIndicator = forwardRef<HTMLDivElement>((props: ActivityIndicatorProps, ref) => {
+export const ActivityIndicator = forwardRef<HTMLDivElement, ActivityIndicatorProps>((props, ref) => {
   const {
     style,
     component: Component,
@@ -37,7 +36,7 @@ export const ActivityIndicator = forwardRef<HTMLDivElement>((props: ActivityIndi
       style={[styles.wrapper, _size]}
     />
   )
-}) as ComponentWithDefaultProps<ActivityIndicatorProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<ActivityIndicatorProps>
 
 ActivityIndicator.styleRegistryName = 'ActivityIndicator'
 ActivityIndicator.elements = ['wrapper']

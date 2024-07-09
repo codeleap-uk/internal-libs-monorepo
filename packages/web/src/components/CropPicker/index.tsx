@@ -1,11 +1,10 @@
 import React, { forwardRef, Ref } from 'react'
-import { GenericStyledComponentAttributes, mergeStyles, useCompositionStyles } from '@codeleap/styles'
+import { mergeStyles, StyledComponentWithProps, useCompositionStyles } from '@codeleap/styles'
 import { CropPickerProps } from './types'
 import { useCropPicker } from '../../lib'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { ComponentWithDefaultProps } from '../../types'
 import { FileInput, FileInputRef } from '../FileInput'
 import { Modal } from '../Modal'
 import { Button } from '../Button'
@@ -18,7 +17,8 @@ import 'react-image-crop/dist/ReactCrop.css'
 export * from './styles'
 export * from './types'
 
-export const CropPicker = forwardRef((props: CropPickerProps, ref) => {
+export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref) => {
+
   const {
     onFileSelect,
     targetCrop,
@@ -94,7 +94,7 @@ export const CropPicker = forwardRef((props: CropPickerProps, ref) => {
       </Modal>
     </>
   )
-}) as ComponentWithDefaultProps<CropPickerProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<CropPickerProps>
 
 CropPicker.styleRegistryName = 'CropPicker'
 CropPicker.elements = ['previewSize', 'cropPreview', 'confirmButton', 'modal']

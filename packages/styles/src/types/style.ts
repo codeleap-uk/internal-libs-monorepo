@@ -4,28 +4,28 @@ import { DefaultVariants } from '../lib/defaultVariants'
 import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects } from './core'
 import { Multiplier, Spacing } from './spacing'
 
-type Inset = 
+type Inset =
   | `top:${Multiplier}`
   | `bottom:${Multiplier}`
   | `left:${Multiplier}`
   | `right:${Multiplier}`
 
-export type CommonVariants = 
+export type CommonVariants =
   Spacing |
   Inset |
   DynamicVariants |
-  keyof DefaultVariants | 
+  keyof DefaultVariants |
   keyof IAppVariants |
   `effect:${keyof IEffects}`
 
-type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = string, HasComposition = string> = 
-  ICSS | 
-  Variants | 
-  CommonVariants | 
-  boolean | 
-  null | 
-  '' | 
-  (HasBreakpoints extends string ? `${keyof IBreakpoints}:${string & Variants | CommonVariants}` : null) | 
+type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = string, HasComposition = string> =
+  ICSS |
+  Variants |
+  CommonVariants |
+  boolean |
+  null |
+  '' |
+  (HasBreakpoints extends string ? `${keyof IBreakpoints}:${string & Variants | CommonVariants}` : null) |
   (HasBreakpoints extends string ? {
     'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants, boolean, string> | StyleAtom<Composition, Variants, boolean, string>[]>>
   } : null) |
@@ -39,3 +39,4 @@ export type StyleProp<
 export type VariantStyleSheet = Record<string, any>
 
 export type StyledProp<T extends string> = StyleProp<Record<T, ICSS>>
+

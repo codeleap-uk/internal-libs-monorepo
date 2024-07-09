@@ -1,4 +1,3 @@
-import { AnyRef } from '@codeleap/common'
 import { StyledProp } from '@codeleap/styles'
 import { FileInputProps } from '../FileInput'
 import { CropPickerComposition } from './styles'
@@ -18,7 +17,6 @@ export type CropPickerProps =
     confirmButton?: string
     debugName: string
     handle?: ReturnType<typeof useCropPicker>
-    ref: AnyRef<HTMLElement>
     withLoading?: boolean
   }
 
