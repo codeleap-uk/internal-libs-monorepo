@@ -8,8 +8,7 @@ import { TextInput as NativeTextInput, TextInputProps as NativeTextInputProps, N
 import { Touchable } from '../Touchable'
 import { useActionValidate } from './utils'
 import { NumberIncrementProps } from './types'
-import { ComponentWithDefaultProps } from '../../types'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -285,7 +284,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       )}
     </InputBase>
   )
-}) as ComponentWithDefaultProps<NumberIncrementProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<NumberIncrementProps>
 
 NumberIncrement.styleRegistryName = 'NumberIncrement'
 NumberIncrement.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']

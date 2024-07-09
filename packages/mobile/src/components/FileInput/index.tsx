@@ -58,10 +58,7 @@ function parsePickerData(data: ImageOrVideo): FileResult {
   }
 }
 
-const _FileInput = forwardRef<
-  FileInputRef,
-  FileInputProps
->((fileInputProps, ref) => {
+const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref) => {
   const {
 
     onFileSelect,

@@ -3,9 +3,8 @@ import { arePropsEqual, TypeGuards } from '@codeleap/common'
 import { Badge } from '../Badge'
 import { View } from '../View'
 import { IconProps } from './types'
-import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, GenericStyledComponentAttributes, useTheme } from '@codeleap/styles'
+import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, useTheme, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
-import { ComponentWithDefaultProps } from '../../types'
 import { useStylesFor } from '../../hooks'
 
 export * from './styles'
@@ -67,7 +66,7 @@ function areEqual(prevProps, nextProps) {
   return res
 }
 
-export const Icon = React.memo(IconComponent, areEqual) as unknown as ComponentWithDefaultProps<IconProps> & GenericStyledComponentAttributes<AnyRecord>
+export const Icon = React.memo(IconComponent, areEqual) as StyledComponentWithProps<IconProps>
 
 Icon.styleRegistryName = 'Icon'
 Icon.elements = ['icon', 'iconBadgeWrapper', 'badge']

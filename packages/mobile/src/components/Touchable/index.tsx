@@ -5,10 +5,9 @@ import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Keyboard } from 'react-native'
 import { PressableRipple } from '../../modules/PressableRipple'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { TouchableProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { ComponentWithDefaultProps } from '../../types'
 import { useStylesFor } from '../../hooks'
 
 export * from './styles'
@@ -169,7 +168,7 @@ export const Touchable = forwardRef<
       pressableStyle.width = '100%'
       pressableStyle.height = '100%'
     }
-    
+
     wrapperStyle.overflow = 'visible'
 
     return {
@@ -224,7 +223,7 @@ export const Touchable = forwardRef<
       )}
     </Wrapper>
   )
-}) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<TouchableProps>
 
 Touchable.styleRegistryName = 'Touchable'
 Touchable.elements = ['wrapper', 'feedback', 'pressable']

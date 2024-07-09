@@ -1,9 +1,9 @@
-import React, { forwardRef, useState, ReactElement } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { TypeGuards } from '@codeleap/common'
 import { Animated, Platform, Text as NativeText } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { TextProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -94,7 +94,7 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
       {children}
     </Component>
   )
-}) as unknown as ((props: TextProps & { ref?: React.MutableRefObject<NativeText> }) => ReactElement) & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<TextProps>
 
 Text.styleRegistryName = 'Text'
 Text.elements = ['text', 'pressFeedback']

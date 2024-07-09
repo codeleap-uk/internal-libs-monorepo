@@ -5,7 +5,7 @@ import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { SegmentedControlOption } from './Option'
 import { SegmentedControlProps, SegmentedControlRef } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -181,9 +181,7 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
       </ScrollView>
     </View>
   )
-}) as unknown as (<T = string>(props: SegmentedControlProps<T> & { ref?: React.Ref<SegmentedControlRef> }) => ReactElement) & {
-  defaultProps: Partial<SegmentedControlProps>
-} & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<SegmentedControlProps>
 
 SegmentedControl.styleRegistryName = 'SegmentedControl'
 SegmentedControl.elements = ['wrapper', 'selectedBubble', 'innerWrapper', 'scroll', 'text', 'icon', 'button', 'label', 'badge']
@@ -196,7 +194,7 @@ SegmentedControl.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 SegmentedControl.defaultProps = {
   renderBubble: DefaultBubble,
   renderOption: SegmentedControlOption,
-  scrollToCurrentOptionOnMount: true
+  scrollToCurrentOptionOnMount: true,
 }
 
 MobileStyleRegistry.registerComponent(SegmentedControl)

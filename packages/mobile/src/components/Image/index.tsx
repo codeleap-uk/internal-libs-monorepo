@@ -7,9 +7,8 @@ import { isFile, toMultipartFile } from '../../utils'
 import { LoadingOverlay } from '../LoadingOverlay'
 import FastImage from 'react-native-fast-image'
 import { ImageProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
-import { ComponentWithDefaultProps } from '../../types'
 import { useStylesFor } from '../../hooks'
 
 export * from './styles'
@@ -138,7 +137,7 @@ function areEqual(prevProps, nextProps) {
   return res
 }
 
-export const Image = React.memo(ImageComponent, areEqual) as unknown as ComponentWithDefaultProps<ImageProps> & GenericStyledComponentAttributes<AnyRecord>
+export const Image = React.memo(ImageComponent, areEqual) as StyledComponentWithProps<ImageProps>
 
 Image.styleRegistryName = 'Image'
 Image.elements = ['wrapper', 'touchable', 'overlay']

@@ -4,106 +4,104 @@ import { RefreshControl, SectionList } from 'react-native'
 import { View } from '../View'
 import { useKeyboardPaddingStyle } from '../../utils'
 import { SectionListProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, JSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
 
-export const Sections = forwardRef<SectionList, SectionListProps>(
-  (sectionsProps, ref) => {
-    const {
-      style,
-      onRefresh,
-      component,
-      refreshing,
-      placeholder,
-      keyboardAware,
-      refreshControlProps,
-      contentContainerStyle,
-      fakeEmpty,
-      refreshControl,
-      ...props
-    } = {
-      ...Sections.defaultProps,
-      ...sectionsProps,
-    }
+export const Sections = forwardRef<SectionList, SectionListProps>((sectionsProps, ref) => {
 
-    const styles = useStylesFor(Sections.styleRegistryName, style)
+  const {
+    style,
+    onRefresh,
+    component,
+    refreshing,
+    placeholder,
+    keyboardAware,
+    refreshControlProps,
+    contentContainerStyle,
+    fakeEmpty,
+    refreshControl,
+    ...props
+  } = {
+    ...Sections.defaultProps,
+    ...sectionsProps,
+  }
 
-    const renderSeparator = useCallback(() => {
-      return <View style={styles?.separator} />
-    }, [styles?.separator])
+  const styles = useStylesFor(Sections.styleRegistryName, style)
 
-    const getItemPosition = (section, itemIdx) => {
-      const listLength = section?.length || 0
+  const renderSeparator = useCallback(() => {
+    return <View style={styles?.separator} />
+  }, [styles?.separator])
 
-      const isFirst = itemIdx === 0
-      const isLast = itemIdx === listLength - 1
-      const isOnly = isFirst && isLast
+  const getItemPosition = (section, itemIdx) => {
+    const listLength = section?.length || 0
 
-      return { isFirst, isLast, isOnly }
-    }
+    const isFirst = itemIdx === 0
+    const isLast = itemIdx === listLength - 1
+    const isOnly = isFirst && isLast
 
-    const getSectionPosition = (data) => {
-      const listLength = props.sections?.length || 0
+    return { isFirst, isLast, isOnly }
+  }
 
-      const isFirst = data.section.key === props.sections[0].key
-      const isLast = data.section.key === props.sections[listLength - 1].key
-      const isOnly = isFirst && isLast
+  const getSectionPosition = (data) => {
+    const listLength = props.sections?.length || 0
 
-      return { isFirst, isLast, isOnly }
-    }
+    const isFirst = data.section.key === props.sections[0].key
+    const isLast = data.section.key === props.sections[listLength - 1].key
+    const isOnly = isFirst && isLast
 
-    const renderSectionHeader = useCallback((data) => {
-      if (!props?.renderSectionHeader) return null
+    return { isFirst, isLast, isOnly }
+  }
 
-      return props?.renderSectionHeader({ ...data, ...getSectionPosition(data) })
-    }, [props?.renderSectionHeader, props?.sections?.length])
+  const renderSectionHeader = useCallback((data) => {
+    if (!props?.renderSectionHeader) return null
 
-    const renderSectionFooter = useCallback((data) => {
-      if (!props?.renderSectionFooter) return null
+    return props?.renderSectionHeader({ ...data, ...getSectionPosition(data) })
+  }, [props?.renderSectionHeader, props?.sections?.length])
 
-      return props?.renderSectionFooter({ ...data, ...getSectionPosition(data) })
-    }, [props?.renderSectionFooter, props?.sections?.length])
+  const renderSectionFooter = useCallback((data) => {
+    if (!props?.renderSectionFooter) return null
 
-    const renderItem = useCallback((data) => {
-      if (!props?.renderItem) return null
+    return props?.renderSectionFooter({ ...data, ...getSectionPosition(data) })
+  }, [props?.renderSectionFooter, props?.sections?.length])
 
-      return props?.renderItem({ ...data, ...getItemPosition(data.section?.data, data?.index) })
+  const renderItem = useCallback((data) => {
+    if (!props?.renderItem) return null
 
-    }, [props?.renderItem, props?.sections?.length])
+    return props?.renderItem({ ...data, ...getItemPosition(data.section?.data, data?.index) })
 
-    const separatorProp = props.separators
-    const isEmpty = !props.sections || !props.sections.length
-    const separator = !isEmpty && separatorProp == true && renderSeparator
+  }, [props?.renderItem, props?.sections?.length])
 
-    const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
+  const separatorProp = props.separators
+  const isEmpty = !props.sections || !props.sections.length
+  const separator = !isEmpty && separatorProp == true && renderSeparator
 
-    return (
-      <SectionList
-        style={styles?.wrapper}
-        contentContainerStyle={keyboardStyle}
-        showsVerticalScrollIndicator={false}
-        // @ts-ignore
-        ref={ref}
-        ItemSeparatorComponent={separator}
-        {...props}
-        refreshControl={
-          !!onRefresh && (
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          )
-        }
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
-        renderSectionFooter={renderSectionFooter}
-      />
-    )
-  },
-) as unknown as (<T = any>(props: SectionListProps<T>) => JSX.Element) & GenericStyledComponentAttributes<AnyRecord> & {
-  defaultProps: Partial<SectionListProps>
-}
+  const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
+
+  return (
+    <SectionList
+      style={styles?.wrapper}
+      contentContainerStyle={keyboardStyle}
+      showsVerticalScrollIndicator={false}
+      // @ts-ignore
+      ref={ref}
+      ItemSeparatorComponent={separator}
+      {...props}
+      refreshControl={
+        !!onRefresh && (
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        )
+      }
+      renderItem={renderItem}
+      renderSectionHeader={renderSectionHeader}
+      renderSectionFooter={renderSectionFooter}
+    />
+  )
+},
+) as StyledComponentWithProps<SectionListProps>
 
 Sections.styleRegistryName = 'Sections'
 Sections.elements = ['wrapper', 'content', 'separator']

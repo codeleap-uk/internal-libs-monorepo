@@ -6,7 +6,7 @@ import { RefreshControl } from '../RefreshControl'
 import { List } from '../List'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { GridProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -22,87 +22,83 @@ const defaultProps: Partial<GridProps> = {
   refreshControlProps: {},
 }
 
-const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
-  (flatGridProps, ref) => {
-    const {
-      style,
-      onRefresh,
-      refreshing,
-      placeholder,
-      refreshControlProps = {},
-      spacing,
-      numColumns,
-      ...props
-    } = {
-      ...Grid.defaultProps,
-      ...flatGridProps,
-    }
+const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref) => {
 
-    // @ts-expect-error
-    const themeSpacing = useTheme(store => store.current?.spacing)
+  const {
+    style,
+    onRefresh,
+    refreshing,
+    placeholder,
+    refreshControlProps = {},
+    spacing,
+    numColumns,
+    ...props
+  } = {
+    ...Grid.defaultProps,
+    ...flatGridProps,
+  }
 
-    const styles = useStylesFor(Grid.styleRegistryName, style)
+  // @ts-expect-error
+  const themeSpacing = useTheme(store => store.current?.spacing)
 
-    const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
-      if (!props?.renderItem) return null
-      const listLength = props?.data?.length || 0
+  const styles = useStylesFor(Grid.styleRegistryName, style)
 
-      const isFirst = data.index === 0
-      const isLast = data.index === listLength - 1
-      const isOnly = isFirst && isLast
+  const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
+    if (!props?.renderItem) return null
+    const listLength = props?.data?.length || 0
 
-      const idx = data.index + 1
-      const isLastInRow = !isFirst && idx % (numColumns) === 0
-      const isFirstInRow = isFirst || data.index % numColumns === 0
-      const isOnlyInRow = !isFirstInRow && !isLastInRow
+    const isFirst = data.index === 0
+    const isLast = data.index === listLength - 1
+    const isOnly = isFirst && isLast
 
-      let gap = themeSpacing?.marginRight?.(spacing / 2)
-      if (isLastInRow) gap = themeSpacing?.marginLeft?.(spacing / 2)
-      else if (isOnlyInRow) gap = themeSpacing?.marginHorizontal?.(spacing / 2)
+    const idx = data.index + 1
+    const isLastInRow = !isFirst && idx % (numColumns) === 0
+    const isFirstInRow = isFirst || data.index % numColumns === 0
+    const isOnlyInRow = !isFirstInRow && !isLastInRow
 
-      const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
-      const RenderItem = props?.renderItem
+    let gap = themeSpacing?.marginRight?.(spacing / 2)
+    if (isLastInRow) gap = themeSpacing?.marginLeft?.(spacing / 2)
+    else if (isOnlyInRow) gap = themeSpacing?.marginHorizontal?.(spacing / 2)
 
-      return (
-        <View style={[styles.itemWrapper, gap]}>
-          <RenderItem {...data} {..._itemProps} />
-        </View>
-      )
-    }, [props?.renderItem, props?.data?.length])
-
-    const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
-    const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
-    const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
-
-    const _gridProps = {
-      ...props,
-      ref: ref,
-      ListEmptyComponent: <EmptyPlaceholder {...placeholder} />,
-      ListHeaderComponentStyle: styles.header,
-      ListFooterComponentStyle: styles.footer,
-      ItemSeparatorComponent: separator,
-      refreshControl,
-      style: styles.wrapper,
-      contentContainerStyle: [styles.content, props?.contentContainerStyle],
-      showsVerticalScrollIndicator: false,
-      numColumns,
-      renderItem,
-    }
+    const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
+    const RenderItem = props?.renderItem
 
     return (
-      // @ts-ignore
-      <List
-        {..._gridProps}
-      />
+      <View style={[styles.itemWrapper, gap]}>
+        <RenderItem {...data} {..._itemProps} />
+      </View>
     )
-  },
+  }, [props?.renderItem, props?.data?.length])
+
+  const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
+  const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
+  const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
+
+  const _gridProps = {
+    ...props,
+    ref: ref,
+    ListEmptyComponent: <EmptyPlaceholder {...placeholder} />,
+    ListHeaderComponentStyle: styles.header,
+    ListFooterComponentStyle: styles.footer,
+    ItemSeparatorComponent: separator,
+    refreshControl,
+    style: styles.wrapper,
+    contentContainerStyle: [styles.content, props?.contentContainerStyle],
+    showsVerticalScrollIndicator: false,
+    numColumns,
+    renderItem,
+  }
+
+  return (
+  // @ts-ignore
+    <List
+      {..._gridProps}
+    />
+  )
+},
 )
 
-export type GridComponentType =
-  (<T extends any[] = any[]>(props: GridProps<T>) => JSX.Element) &
-  GenericStyledComponentAttributes<AnyRecord> & { defaultProps?: Partial<GridProps> }
-
-export const Grid = GridCP as unknown as GridComponentType
+export const Grid = GridCP as StyledComponentWithProps<GridProps>
 
 Grid.styleRegistryName = 'Grid'
 Grid.elements = ['wrapper', 'content', 'separator', 'header', 'refreshControl', 'itemWrapper', 'footer']

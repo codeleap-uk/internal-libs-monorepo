@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 import { TypeGuards, useValidate, useBooleanToggle } from '@codeleap/common'
 import { forwardRef, useImperativeHandle } from 'react'
-import { ComponentWithDefaultProps } from '../../types'
 import { TextInput as NativeTextInput, NativeSyntheticEvent, TextInputFocusEventData } from 'react-native'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Touchable } from '../Touchable'
 import { MaskedTextInput } from '../../modules/textInputMask'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { TextInputProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
@@ -175,7 +174,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       {...maskingExtraProps}
     />
   </InputBase>
-}) as ComponentWithDefaultProps<TextInputProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<TextInputProps>
 
 TextInput.styleRegistryName = 'TextInput'
 TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']
