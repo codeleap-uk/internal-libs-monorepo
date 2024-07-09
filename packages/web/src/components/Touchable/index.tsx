@@ -2,18 +2,19 @@ import { onMount, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { stopPropagation } from '../../lib'
 import { View } from '../View'
-import { ComponentWithDefaultProps, NativeHTMLElement } from '../../types'
+import { NativeHTMLElement } from '../../types'
 import { getTestId } from '../../lib/utils/test'
 import { useGlobalContext } from '@codeleap/common'
 import { TouchableProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
 export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
+
   const allProps = {
     ...Touchable.defaultProps,
     ...touchableProps,
@@ -112,7 +113,7 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
       data-testid={testId}
     />
   )
-}) as ComponentWithDefaultProps<TouchableProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<TouchableProps>
 
 Touchable.styleRegistryName = 'Touchable'
 Touchable.elements = ['wrapper']

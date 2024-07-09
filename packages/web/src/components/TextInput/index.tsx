@@ -13,13 +13,12 @@ import React, {
 import TextareaAutosize from 'react-autosize-textarea'
 import InputMask from 'react-input-mask'
 import { Touchable } from '../Touchable'
-import { ComponentWithDefaultProps } from '../../types/utility'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { getMaskInputProps } from './mask'
 import { getTestId } from '../../lib/utils/test'
 import { InputRef, TextInputProps } from './types'
 import { FileInputRef } from '../FileInput'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
@@ -235,7 +234,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
     </InputBase>
   )
 
-}) as ComponentWithDefaultProps<TextInputProps> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<TextInputProps>
 
 TextInput.styleRegistryName = 'TextInput'
 TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']

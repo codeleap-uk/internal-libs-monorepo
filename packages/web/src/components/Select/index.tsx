@@ -1,5 +1,5 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards, onUpdate, IconPlaceholder, useEffect } from '@codeleap/common'
+import { FormTypes, useValidate, useState, TypeGuards, onUpdate, useEffect } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -12,8 +12,7 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
 import { Icon } from '../Icon'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, AppIcon, GenericStyledComponentAttributes, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { ComponentWithDefaultProps } from '../../types'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -461,7 +460,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         />
       </InputBase>
     )
- }) as ComponentWithDefaultProps<SelectProps> & GenericStyledComponentAttributes<AnyRecord>
+ }) as StyledComponentWithProps<SelectProps>
 
 Select.styleRegistryName = 'Select'
 

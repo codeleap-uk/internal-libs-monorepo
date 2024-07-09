@@ -1,13 +1,12 @@
 import { useMemo, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
-import { ComponentWithDefaultProps } from '../../types'
 import { motion } from 'framer-motion'
 import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, mergeStyles, StyledComponentProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -83,7 +82,7 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
       {children}
     </Component>
   )
-}) as ComponentWithDefaultProps<ViewProps<'div'>> & GenericStyledComponentAttributes<AnyRecord>
+}) as StyledComponentWithProps<ViewProps<'div'>>
 
 View.styleRegistryName = 'View'
 View.elements = ['wrapper']
