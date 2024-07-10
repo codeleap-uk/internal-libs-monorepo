@@ -16,7 +16,7 @@
     "react": "link:../../apps/web/node_modules/react"
   },
   "scripts": {
-    "build": "rm -rf ./dist && ./compile.sh",
+    "build": "rm -rf ./dist && tsc --build",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
