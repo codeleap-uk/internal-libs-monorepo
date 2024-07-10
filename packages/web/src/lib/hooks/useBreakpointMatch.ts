@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
-import { TypeGuards, useCodeleapContext } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
+import { useTheme } from '@codeleap/styles'
 import { useMediaQuery } from './useMediaQuery'
 
 export type BreakpointsMatch<T extends string = string> = Record<T, any>
 
 export function useBreakpointMatch<T extends string = string>(values: Partial<BreakpointsMatch<T>>) {
-  const { Theme } = useCodeleapContext()
+
+  const Theme = useTheme(store => store.current)
 
   const themeBreakpoints: Record<string, number> = Theme?.breakpoints
 
