@@ -89,18 +89,18 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
   const inputTextStyle = React.useMemo(() => {
     return [
       styles.input,
-      isFocused && styles['input:focus'],
-      hasError && styles['input:error'],
-      disabled && styles['input:disabled'],
-    ]
+      isFocused ? styles['input:focus'] : null,
+      hasError ? styles['input:error'] : null,
+      disabled ? styles['input:disabled'] : null,
+    ].filter(Boolean)
   }, [disabled, isFocused, hasError])
 
   const placeholderStyles = [
     styles.placeholder,
-    isFocused && styles['placeholder:focus'],
-    hasError && styles['placeholder:error'],
-    disabled && styles['placeholder:disabled'],
-  ]
+    isFocused ? styles['placeholder:focus'] : null,
+    hasError ? styles['placeholder:error'] : null,
+    disabled ? styles['placeholder:disabled'] : null,
+  ].filter(Boolean)
 
   const handleBlur = React.useCallback(() => {
     if (TypeGuards.isNumber(max) && (value >= max)) {
@@ -205,11 +205,10 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         <Input
           displayType='input'
           css={[
-            ...inputTextStyle,
+            //@ts-expect-error
             {
+              ...inputTextStyle,
               '&::placeholder': placeholderStyles,
-            },
-            {
               '&:focus': [
                 {
                   outline: 'none',
@@ -217,6 +216,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
                   borderColor: 'transparent',
                 },
               ],
+
             },
           ]}
           inputMode='numeric'

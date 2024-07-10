@@ -28,6 +28,7 @@ export const Overlay = (overlayProps: OverlayProps) => {
   const Component = isPressable ? Touchable : View
 
   return (
+    // @ts-expect-error
     <Component
       {...props}
       style={[

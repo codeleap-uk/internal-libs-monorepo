@@ -101,8 +101,8 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
   const testId = getTestId(allProps)
 
   return (
+    // @ts-expect-error
     <View
-    // @ts-ignore
       component={Component || 'button'}
       {...props}
       debugName={debugName}

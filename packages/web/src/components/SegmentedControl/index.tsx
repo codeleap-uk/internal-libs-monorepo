@@ -157,6 +157,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
           animate={bubbleAnimation}
           initial={false}
           {...bubbleProps}
+          //@ts-expect-error
           css={selectedBubbleStyles}
         />
         {options.map((o, idx) => (

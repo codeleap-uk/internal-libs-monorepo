@@ -11,6 +11,7 @@ export const Scroll = forwardRef(<T extends NativeHTMLElement = 'div'>(props: Sc
   const styles = useStylesFor(Scroll.styleRegistryName, props?.style)
 
   return (
+    // @ts-expect-error
     <View
       {...props}
       ref={ref}

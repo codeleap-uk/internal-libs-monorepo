@@ -8,7 +8,7 @@ import { forwardRef, useImperativeHandle, useState, HTMLProps } from 'react'
 import { ActionIcon } from '../ActionIcon'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, AppIcon, IJSX, StyledComponentWithProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'

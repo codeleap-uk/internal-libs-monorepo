@@ -121,6 +121,7 @@ export const Tooltip = (props: TooltipProps) => {
           asChild
           ref={triggerRef}
           {...triggerProps}
+          //@ts-expect-error
           css={styles.triggerWrapper}
         >
           <TriggerWrapper
@@ -144,7 +145,11 @@ export const Tooltip = (props: TooltipProps) => {
                 />
                 : Content
             }
-            <TooltipArrow {...arrowProps} css={styles.arrow} />
+            <TooltipArrow
+              {...arrowProps}
+              //@ts-expect-error
+              css={styles.arrow}
+            />
           </TooltipContent>
         </TooltipPortal>
       </TooltipWrapper>

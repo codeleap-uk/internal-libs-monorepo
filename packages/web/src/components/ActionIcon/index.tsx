@@ -58,6 +58,7 @@ export const ActionIcon = (props: ActionIconProps) => {
   const iconStyles = getStyles('icon')
 
   return (
+    // @ts-expect-error
     <WrapperComponent
       disabled={disabled}
       debugName={debugName}
