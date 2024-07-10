@@ -254,11 +254,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       inputMultiValueStyles,
       menuWrapperStyles,
       // @ts-expect-error @verify
-    } = useSelectStyles(props, {
+    } = useSelectStyles({ ...props, styleRegistryName: Select.styleRegistryName }, {
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
-      styleRegistryName: Select.styleRegistryName,
     })
 
     useImperativeHandle(inputRef, () => {
