@@ -173,11 +173,11 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
       error={hasError ? errorMessage : null}
       style={{
         ...styles,
-        innerWrapper: [
-          styles.innerWrapper,
-          isMultiline && styles['innerWrapper:multiline'],
-          hasMultipleLines && styles['innerWrapper:hasMultipleLines'],
-        ],
+        innerWrapper: {
+          ...styles.innerWrapper,
+          ...(isMultiline ? styles['innerWrapper:multiline'] : {}),
+          ...(hasMultipleLines ? styles['innerWrapper:hasMultipleLines'] : {}),
+        },
       }}
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
