@@ -31,7 +31,6 @@ export const SearchInput = (props: SearchInputProps) => {
     value,
     onValueChange,
     defaultValue,
-    style,
     ...rest
   } = {
     ...SearchInput.defaultProps,

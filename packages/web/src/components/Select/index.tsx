@@ -493,7 +493,7 @@ Select.defaultProps = {
   noItemsText: 'No results for ',
   noItemsIcon: 'placeholderNoItems-select',
   placeholderText: 'Search items',
-  placeholderIcon: 'placeholder-select',
+  placeholderIcon: 'search',
   showDropdownIcon: true,
   placeholder: 'Select',
   clearable: false,
