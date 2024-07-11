@@ -31,10 +31,8 @@ export const useInputBaseStyles = (props: UseInputBaseStyles) => {
     focused,
     disabled,
     error,
-    style,
+    style: styles,
   } = props
-
-  const styles = useStylesFor(props?.styleRegistryName, style)
 
   const hasError = !TypeGuards.isNil(error)
 

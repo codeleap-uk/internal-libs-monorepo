@@ -24,6 +24,7 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
 }
 
 export const InputBase = (props: InputBaseProps) => {
+
   const allProps = {
     ...InputBase.defaultProps,
     ...props,
@@ -54,18 +55,16 @@ export const InputBase = (props: InputBaseProps) => {
   const WrapperComponent = wrapper || View
   const InnerWrapperComponent = innerWrapper || View
 
-  const _styles = useInputBaseStyles({ ...allProps, styleRegistryName: InputBase.styleRegistryName })
+  const _styles = useInputBaseStyles(allProps)
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
-    // @ts-ignore
-    styles: _styles.leftIconStyles,
+    style: _styles.leftIconStyles,
     disabled,
     debugName: `${debugName} left icon`,
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
-    // @ts-ignore
-    styles: _styles.rightIconStyles,
+    style: _styles.rightIconStyles,
     disabled,
     debugName: `${debugName} right icon`,
   })

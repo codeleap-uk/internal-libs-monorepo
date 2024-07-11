@@ -383,10 +383,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         focused={isFocused}
         style={{
           ...styles,
-          innerWrapper: [
-            styles.innerWrapper,
-            searchable && styles['innerWrapper:searchable'],
-          ],
+          innerWrapper: {
+            ...styles.innerWrapper,
+            ...(searchable ? styles['innerWrapper:searchable'] : {}),
+          },
         }}
         innerWrapperProps={{
           ...(inputBaseProps.innerWrapperProps || {}),

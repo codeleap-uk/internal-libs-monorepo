@@ -171,10 +171,10 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
       error={hasError ? errorMessage : null}
       style={{
         ...styles,
-        innerWrapper: [
-          styles.innerWrapper,
-          editable && styles['innerWrapper:cursor'],
-        ],
+        innerWrapper: {
+          ...styles.innerWrapper,
+          ...(editable ? styles['innerWrapper:cursor'] : {}),
+        },
       }}
       rightIcon={{
         name: 'plus' as AppIcon,
