@@ -68,6 +68,8 @@ export class CodeleapStyleRegistry {
       style = variantStyle
     }
 
+    if (!style) return null
+
     if (!!mediaQuery) {
       style = {
         [mediaQuery]: style,
