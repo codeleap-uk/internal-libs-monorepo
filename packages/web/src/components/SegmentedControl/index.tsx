@@ -41,29 +41,29 @@ const Option = (props: SegmentedControlOptionProps) => {
       onPress={onPress}
       disabled={disabled}
       {...touchableProps}
-      style={[
-        styles.button,
-        selected && styles['button:selected'],
-        disabled && styles['button:disabled'],
-      ]}
+      style={{
+        ...styles.button,
+        ...(selected ? styles['button:selected'] : {}),
+        ...(disabled ? styles['button:disabled'] : {}),
+      }}
     >
       {!!icon ? (
         <Icon
           debugName={touchableProps?.debugName}
           name={icon}
           {...iconProps}
-          style={iconStyles}
+          style={{ ...iconStyles }}
         />
       ) : null}
       <Text
         text={label}
         debugName={touchableProps?.debugName}
         {...textProps}
-        style={[
-          styles.text,
-          selected && styles['text:selected'],
-          disabled && styles['text:disabled'],
-        ]}
+        style={{
+          ...styles.text,
+          ...(selected ? styles['text:selected'] : {}),
+          ...(disabled ? styles['text:disabled'] : {}),
+        }}
       />
     </Touchable>
   )
@@ -181,7 +181,6 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             iconProps={iconProps}
             tabIndex={0}
             {...props?.touchableProps}
-            style={largestWidth}
           />
         ))}
       </View>
