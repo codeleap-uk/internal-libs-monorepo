@@ -55,5 +55,6 @@ export const mergeStyles = (styles: Array<any>) => {
 
 export const ignoredStyleKeys = [
   'textAlign',
-  'textDecoration'
+  'textDecoration',
+  'textOverflow'
 ]
