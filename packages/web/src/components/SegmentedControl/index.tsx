@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { View } from '../View'
-import { useRef, TypeGuards } from '@codeleap/common'
+import { useRef, TypeGuards, AnyRef } from '@codeleap/common'
 import { Text } from '../Text'
 import { motion, AnimationProps } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'
@@ -14,11 +14,10 @@ import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/st
 export * from './styles'
 export * from './types'
 
-const Option = (props: SegmentedControlOptionProps) => {
+const Option = forwardRef<AnyRef<any>, SegmentedControlOptionProps >((props, ref) => {
   const {
     selected,
     onPress,
-    ref,
     styles,
     iconProps = {},
     label,
@@ -67,9 +66,10 @@ const Option = (props: SegmentedControlOptionProps) => {
       />
     </Touchable>
   )
-}
+})
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
+
   const {
     label,
     options,
@@ -154,11 +154,10 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
       {label ? <Text text={label} style={[styles.label, disabled && styles['label:disabled']]} /> : null}
       <View style={[styles.innerWrapper, disabled && styles['innerWrapper:disabled']]}>
         <Bubble
+          css={selectedBubbleStyles}
           animate={bubbleAnimation}
           initial={false}
           {...bubbleProps}
-          //@ts-expect-error
-          css={selectedBubbleStyles}
         />
         {options.map((o, idx) => (
           <Option
