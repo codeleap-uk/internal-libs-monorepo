@@ -48,11 +48,13 @@ export function spacingFactory<T extends string>(
           [`${property}Left`]: value,
           [`${property}Right`]: value,
         })
+        break
       case 'Vertical':
         getter = (value: number) => ({
           [`${property}Top`]: value,
           [`${property}Bottom`]: value,
         })
+        break
       case '':
         getter = (value: number) => ({
           [`${property}Top`]: value,
@@ -60,10 +62,12 @@ export function spacingFactory<T extends string>(
           [`${property}Right`]: value,
           [`${property}Bottom`]: value,
         })
+        break
       default:
         getter = (value: number) => ({
           [`${property}${position}`]: value,
         })
+        break
     }
 
     spacings[key] = (n: number | string) => {
