@@ -205,10 +205,14 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         <Input
           displayType='input'
           css={[
-            //@ts-expect-error
+            // @ts-expect-error
+            ...inputTextStyle,
+            // @ts-expect-error
             {
-              ...inputTextStyle,
               '&::placeholder': placeholderStyles,
+            },
+            // @ts-expect-error
+            {
               '&:focus': [
                 {
                   outline: 'none',
@@ -216,7 +220,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
                   borderColor: 'transparent',
                 },
               ],
-
             },
           ]}
           inputMode='numeric'
