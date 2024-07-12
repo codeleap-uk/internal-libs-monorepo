@@ -11,6 +11,7 @@ export * from './types'
 export * from './styles'
 
 export const ProgressBar = (props: ProgressBarProps) => {
+
   const {
     progress,
     style,
@@ -62,11 +63,14 @@ export const ProgressBar = (props: ProgressBarProps) => {
       ) : leftText}
 
       <Root
+        css={styles.progress}
         value={progress}
         {...progressRootProps}
-        style={styles.progress}
       >
-        <Indicator {...progressIndicatorProps} style={{ ...styles.indicator, transform: `translateX(-${100 - progress}%)` }} />
+        <Indicator
+          css={{ ...styles.indicator, transform: `translateX(-${100 - progress}%)` }}
+          {...progressIndicatorProps}
+        />
       </Root>
 
       {TypeGuards.isString(text) || showProgress ? (
