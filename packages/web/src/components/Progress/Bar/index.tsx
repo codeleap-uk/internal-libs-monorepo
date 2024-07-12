@@ -11,7 +11,6 @@ export * from './types'
 export * from './styles'
 
 export const ProgressBar = (props: ProgressBarProps) => {
-
   const {
     progress,
     style,
@@ -63,6 +62,7 @@ export const ProgressBar = (props: ProgressBarProps) => {
       ) : leftText}
 
       <Root
+        // @ts-expect-error
         css={styles.progress}
         value={progress}
         {...progressRootProps}
