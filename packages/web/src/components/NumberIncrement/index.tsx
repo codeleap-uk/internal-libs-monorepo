@@ -257,7 +257,8 @@ NumberIncrement.defaultProps = {
   hasSeparator: false,
   mask: undefined,
   separator: null,
-  formatter: () => null,
+  format: null,
+  formatter: null,
 } as Partial<NumberIncrementProps>
 
 WebStyleRegistry.registerComponent(NumberIncrement)
