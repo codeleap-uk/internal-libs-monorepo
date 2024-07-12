@@ -202,7 +202,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       style={compositionStyles?.searchInput}
     />
 
-    <List<any>
+    <List
       data={searchable ? filteredOptions : options}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}

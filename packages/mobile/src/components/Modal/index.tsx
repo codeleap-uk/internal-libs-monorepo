@@ -9,7 +9,7 @@ import { Touchable } from '../Touchable'
 import { ActionIcon } from '../ActionIcon'
 import { useState } from 'react'
 import { ModalHeaderProps, ModalProps } from './types'
-import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme, AppTheme, Theme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -80,8 +80,7 @@ export const Modal = (modalProps: ModalProps) => {
     ...modalProps,
   }
 
-  // @ts-expect-error
-  const themeValues = useTheme(store => store.current?.values)
+  const themeValues = useTheme(store => (store.current as AppTheme<Theme>)?.values)
 
   const [modalHeight, setModalHeight] = useState(0)
 

@@ -1,9 +1,8 @@
 import { TypeGuards } from '@codeleap/common'
 import { useCompositionStyles } from '@codeleap/styles'
 import { ActionIconParts } from '../ActionIcon'
-import { UseInputBaseStyles } from './types'
+import { InputBaseProps } from './types'
 import { concatStyles, getIconStyles, iconStylesOf } from './utils'
-import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
@@ -26,7 +25,7 @@ export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconCompositio
 
 export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | InputBaseParts
 
-export const useInputBaseStyles = (props: UseInputBaseStyles) => {
+export const useInputBaseStyles = (props: InputBaseProps) => {
   const {
     focused,
     disabled,

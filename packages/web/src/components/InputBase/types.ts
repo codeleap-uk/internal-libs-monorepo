@@ -1,7 +1,6 @@
 import { PropsOf, StylesOf } from '@codeleap/common'
 import { InputBaseComposition } from './styles'
 import { ActionIcon, ActionIconComposition } from '../ActionIcon'
-import { StyledProp } from '@codeleap/styles'
 
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
@@ -16,7 +15,7 @@ export type InputBaseProps = React.PropsWithChildren<{
   wrapperProps?: any
   innerWrapper?: React.FC<any>
   innerWrapperProps?: any
-  style?: StyledProp<InputBaseComposition>
+  style?: StylesOf<InputBaseComposition>
   description?: React.ReactNode
   debugName: string
   focused?: boolean
@@ -41,8 +40,4 @@ export type IconState = {
   focused: boolean
   hasError: boolean
   disabled: boolean
-}
-
-export type UseInputBaseStyles = InputBaseProps & {
-  styleRegistryName?: string
 }

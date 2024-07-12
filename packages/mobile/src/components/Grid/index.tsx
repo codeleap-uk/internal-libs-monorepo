@@ -1,4 +1,4 @@
-import React, { useCallback, forwardRef } from 'react'
+import React, { useCallback, forwardRef, ComponentType } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
@@ -6,7 +6,7 @@ import { RefreshControl } from '../RefreshControl'
 import { List } from '../List'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { GridProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, AppTheme, IJSX, StyledComponentProps, StyledComponentWithProps, Theme, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -23,7 +23,6 @@ const defaultProps: Partial<GridProps> = {
 }
 
 const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref) => {
-
   const {
     style,
     onRefresh,
@@ -38,8 +37,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref)
     ...flatGridProps,
   }
 
-  // @ts-expect-error
-  const themeSpacing = useTheme(store => store.current?.spacing)
+  const themeSpacing = useTheme(store => (store.current as AppTheme<Theme>)?.spacing)
 
   const styles = useStylesFor(Grid.styleRegistryName, style)
 
@@ -74,29 +72,24 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref)
   const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
   const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
 
-  const _gridProps = {
-    ...props,
-    ref: ref,
-    ListEmptyComponent: <EmptyPlaceholder {...placeholder} />,
-    ListHeaderComponentStyle: styles.header,
-    ListFooterComponentStyle: styles.footer,
-    ItemSeparatorComponent: separator,
-    refreshControl,
-    style: styles.wrapper,
-    contentContainerStyle: [styles.content, props?.contentContainerStyle],
-    showsVerticalScrollIndicator: false,
-    numColumns,
-    renderItem,
-  }
-
   return (
-  // @ts-ignore
     <List
-      {..._gridProps}
+      // @ts-expect-error
+      ref={ref}
+      {...props}
+      ListEmptyComponent={<EmptyPlaceholder {...placeholder} />}
+      ListHeaderComponentStyle={styles.header}
+      ListFooterComponentStyle={styles.footer}
+      ItemSeparatorComponent={separator as unknown as ComponentType}
+      refreshControl={refreshControl}
+      style={styles.wrapper}
+      contentContainerStyle={[styles.content, props?.contentContainerStyle]}
+      showsVerticalScrollIndicator={false}
+      numColumns={numColumns}
+      renderItem={renderItem}
     />
   )
-},
-)
+})
 
 export const Grid = GridCP as StyledComponentWithProps<GridProps>
 

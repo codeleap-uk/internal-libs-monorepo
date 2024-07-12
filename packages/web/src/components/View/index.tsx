@@ -72,7 +72,7 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
   return (
     // @ts-expect-error
     <Component
-    // @ts-expect-error
+      // @ts-expect-error
       ref={ref}
       {...onHoverProps}
       {...props}

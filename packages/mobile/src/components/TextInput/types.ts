@@ -7,7 +7,7 @@ import { TextInputComposition } from './styles'
 
 export type TextInputProps =
   Omit<InputBaseProps, 'style'> &
-  RNTextInputProps &
+  Omit<RNTextInputProps, 'style'> &
   {
     password?: boolean
     validate?: FormTypes.ValidatorFunctionWithoutForm | yup.SchemaOf<string>

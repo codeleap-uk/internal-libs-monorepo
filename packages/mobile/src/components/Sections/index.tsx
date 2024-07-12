@@ -4,7 +4,7 @@ import { RefreshControl, SectionList } from 'react-native'
 import { View } from '../View'
 import { useKeyboardPaddingStyle } from '../../utils'
 import { SectionListProps } from './types'
-import { AnyRecord, IJSX, JSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 

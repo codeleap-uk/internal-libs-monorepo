@@ -330,7 +330,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       visible={visible}
       toggle={toggle}
     >
-      <ListComponent<SelectProps<any>['options']>
+      <ListComponent
         data={searchable ? filteredOptions : options}
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
