@@ -2,7 +2,7 @@ import React from 'react'
 import { View } from '../View'
 import { ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition } from './styles'
-import { PropsOf, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/common'
 import { ComponentCommonProps } from '../../types'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 
@@ -22,7 +22,7 @@ export type EmptyPlaceholderProps =
     description?: React.ReactElement | string
     icon?: AppIcon | ((props: EmptyPlaceholderProps) => JSX.Element) | null
     image?: string
-    imageProps?: PropsOf<typeof HTMLImageElement>
+    imageProps?: Partial<HTMLImageElement>
     loading?: boolean
     style?: StyledProp<EmptyPlaceholderComposition>
     renderEmpty?: (props: RenderEmptyProps) => JSX.Element

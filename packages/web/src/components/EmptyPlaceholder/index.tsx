@@ -13,6 +13,7 @@ export * from './styles'
 export * from './types'
 
 export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
+
   const {
     itemName,
     title,
