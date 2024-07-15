@@ -22,6 +22,7 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
     iconProps = {},
     label,
     icon,
+    largestWidth,
     textProps,
     disabled,
     ...touchableProps
@@ -44,6 +45,7 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
         ...styles.button,
         ...(selected ? styles['button:selected'] : {}),
         ...(disabled ? styles['button:disabled'] : {}),
+        width: largestWidth?.width,
       }}
     >
       {!!icon ? (
@@ -179,6 +181,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             disabled={disabled}
             textProps={textProps}
             iconProps={iconProps}
+            largestWidth={largestWidth}
             tabIndex={0}
             {...props?.touchableProps}
           />

@@ -38,4 +38,7 @@ export type SegmentedControlOptionProps =
     textProps?: Omit<PropsOf<typeof Text>, 'key'>
     iconProps?: Partial<IconProps>
     icon?: AppIcon
+    largestWidth?: {
+      width: number
+    }
   }
