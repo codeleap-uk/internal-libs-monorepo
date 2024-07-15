@@ -21,6 +21,8 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     style,
     icon: IconEmpty,
     renderEmpty: RenderEmpty,
+    image,
+    imageProps,
     wrapperProps,
     imageWrapperProps,
     indicatorProps,
@@ -37,14 +39,24 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
   const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 
   const _Image = React.useMemo(() => {
-    if (TypeGuards.isNil(IconEmpty)) return null
+    if (TypeGuards.isString(image)) {
+      return <img
+        {...imageProps}
+        src={image as HTMLImageElement['src']}
+        css={[styles.image]}
+      />
+    } else {
 
-    if (TypeGuards.isString(IconEmpty)) {
-      return <Icon debugName={debugName} name={IconEmpty as AppIcon} forceStyle={styles.icon} />
-    } else if (React.isValidElement(IconEmpty)) {
-      return <IconEmpty {...props} />
+      if (TypeGuards.isNil(IconEmpty)) return null
+
+      if (TypeGuards.isString(IconEmpty)) {
+        return <Icon debugName={debugName} name={IconEmpty as AppIcon} forceStyle={styles.icon} />
+      } else if (React.isValidElement(IconEmpty)) {
+        return <IconEmpty {...props} />
+      }
     }
-  }, [IconEmpty])
+
+  }, [IconEmpty, image])
 
   if (loading) {
     return (
