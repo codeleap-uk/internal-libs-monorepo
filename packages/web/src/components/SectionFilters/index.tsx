@@ -8,12 +8,13 @@ import { Text } from '../Text'
 import { Button } from '../Button'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
 const ItemOption = (props: OptionProps) => {
+
   const {
     option,
     item,
@@ -60,6 +61,7 @@ const ItemOption = (props: OptionProps) => {
 }
 
 export const SectionFilters = (props: SectionFiltersProps) => {
+
   const {
     data,
     onSelectItem,
@@ -148,7 +150,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           option={option}
           item={item}
           selectedItems={_draft}
-          styles={compositionStyles?.itemOptionButton}
+          styles={{ ...compositionStyles?.itemOptionButton }}
           onPress={() => onPressOption({ option, item, canSelectMultiple, hasMultipleOptions })}
           canSelectMultiple={canSelectMultiple}
         />
@@ -157,7 +159,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
     return (
       <View style={styles.optionWrapper}>
-        {showDescriptionLabel ? <Text style={styles.label} text={`${description}`} /> : null}
+        {showDescriptionLabel && description ? <Text style={styles.label} text={`${description}`} /> : null}
         <View style={styles.optionInnerWrapper}>
           {hasMultipleOptions ? (
             item?.options?.map?.((option) => <Option option={option} />)
