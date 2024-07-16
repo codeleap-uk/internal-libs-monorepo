@@ -55,6 +55,7 @@ export const ColorPicker = (props: ColorPickerProps) => {
   const styles = useStylesFor(ColorPicker.styleRegistryName, style)
 
   const [visible, toggle] = useConditionalState(props?.visible, props?.toggle, { initialValue: false })
+
   const [color, setColor] = useState<ColorTypes>(initialColor)
 
   const handleConfirmation = useCallback((color: ColorTypes) => {
@@ -74,11 +75,11 @@ export const ColorPicker = (props: ColorPickerProps) => {
     <OpenPickerComponent
       color={color}
       visible={visible}
-      toggle={toggle}
+      toggle={() => toggle(!visible)}
     />
   ) : (
     <ActionIcon
-      onPress={toggle}
+      onPress={() => toggle(!visible)}
       icon={icon}
       {...openPickerProps}
     />
