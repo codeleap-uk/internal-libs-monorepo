@@ -26,6 +26,7 @@ export function getCollapseStyles<TCSS = React.CSSProperties, Return extends Rec
 
   return {
     'wrapper:closed': {
+      ['display']: 'none',
       [`max${capitalizedDimension}`]: '0px',
       [`overflow${axis}`]: 'hidden',
     },
