@@ -1,18 +1,14 @@
-import {
-  TypeGuards,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { View } from '../View'
 import { Button } from '../Button'
 import { useMediaQuery, usePagination, useStylesFor, WebStyleRegistry } from '../../lib'
 import { PaginationButtonsProps } from './types'
-import { IconProps } from '../Icon'
-import { AnyRecord, AppTheme, IJSX, StyledComponentProps, Theme, useNestedStylesByKey, useTheme } from '@codeleap/styles'
+import { AnyRecord, AppIcon, AppTheme, IJSX, StyledComponentProps, Theme, useCompositionStyles, useTheme } from '@codeleap/styles'
 
 export * from './styles'
+export * from './types'
 
 export const PaginationButtons = (props: PaginationButtonsProps) => {
-
   const allProps = {
     ...PaginationButtons.defaultProps,
     ...props,
@@ -38,7 +34,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const { boundaries = 2 } = paginationProps
 
-  const query = theme.media.down('tabletSmall')
+  const query = theme.media.down('tabletSmall' as never)
 
   const _isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
   const isMobileQuery = TypeGuards.isBoolean(isMobile) ? isMobile : _isMobile
@@ -64,10 +60,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const styles = useStylesFor(PaginationButtons.styleRegistryName, style)
 
-  const itemStyles = useNestedStylesByKey('button', styles)
-
-  const arrowLeftStyles = useNestedStylesByKey('arrowLeftButton', styles)
-  const arrowRightStyles = useNestedStylesByKey('arrowRightButton', styles)
+  const compositionStyles = useCompositionStyles(['button', 'arrowLeftButton', 'arrowRightButton'], styles)
 
   const fetchPreviousPage = () => {
     props?.onFetchPreviousPage?.()
@@ -84,7 +77,6 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
   }
 
   const onPressItem = ({ item, isArrowLeft, isArrowRight }: { item: string | number; isArrowLeft: boolean; isArrowRight: boolean }) => {
-
     if (item === abbreviationSymbol) {
       return null
     }
@@ -103,23 +95,20 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
     props?.onPressItem?.(item)
     fetchPage(Number(item))
-
   }
 
   return (
     <View style={styles.wrapper}>
-
       {displayLeftArrow ? (
         <Button
           icon={controlLeftIconName}
           onPress={() => onPressItem({ item: null, isArrowLeft: true, isArrowRight: false })}
-          style={arrowLeftStyles}
           {...leftArrowButtonProps}
+          style={compositionStyles.arrowLeftButton}
         />
       ) : null}
 
       {range?.map?.((item, index) => {
-
         if (props?.renderItem) {
           return props?.renderItem?.(item, index)
         }
@@ -141,10 +130,10 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
           <Button
             text={String(item)}
             selected={selected}
-            onPress={() => onPressItem({ item, isArrowLeft: false, isArrowRight: false }) }
-            style={itemStyles}
+            onPress={() => onPressItem({ item, isArrowLeft: false, isArrowRight: false })}
             disabled={disabled}
             {...itemProps}
+            style={compositionStyles.button}
           />
         )
 
@@ -154,24 +143,16 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
         <Button
           icon={controlRightIconName}
           onPress={() => onPressItem({ item: null, isArrowLeft: false, isArrowRight: true })}
-          style={arrowRightStyles}
           {...rightArrowButtonProps}
+          style={compositionStyles.arrowRightButton}
         />
       ) : null}
-
     </View>
   )
 }
 
 PaginationButtons.styleRegistryName = 'PaginationButtons'
-
-PaginationButtons.elements = [
-  'wrapper',
-  'button',
-  'arrowLeftButton',
-  'arrowRightButton',
-]
-
+PaginationButtons.elements = ['wrapper', 'button', 'arrowLeftButton', 'arrowRightButton']
 PaginationButtons.rootElement = 'wrapper'
 
 PaginationButtons.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -185,8 +166,8 @@ PaginationButtons.defaultProps = {
   disabled: false,
   isMobile: null,
   abbreviationSymbol: '...',
-  controlLeftIconName: 'chevron-left' as IconProps['name'],
-  controlRightIconName: 'chevron-right' as IconProps['name'],
+  controlLeftIconName: 'chevron-left' as AppIcon,
+  controlRightIconName: 'chevron-right' as AppIcon,
 } as Partial<PaginationButtonsProps>
 
 WebStyleRegistry.registerComponent(PaginationButtons)

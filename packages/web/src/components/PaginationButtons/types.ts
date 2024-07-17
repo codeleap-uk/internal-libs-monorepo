@@ -1,15 +1,12 @@
-import {
-  AnyFunction,
-  ComponentVariants,
-  PropsOf,
-  StylesOf,
-} from '@codeleap/common'
-import { PaginationButtonPresets, PaginationButtonsComposition } from './styles'
+import { AnyFunction, PropsOf } from '@codeleap/common'
+import { PaginationButtonsComposition } from './styles'
 import { Button } from '../Button'
 import { PaginationParams } from '../../lib'
-import { IconProps } from '../Icon'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 
-export type PaginationButtonsProps = {
+export type PaginationButtonsProps =
+  PaginationParams &
+  {
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
     renderItem?: (item: string | number, index: number) => JSX.Element
@@ -20,10 +17,10 @@ export type PaginationButtonsProps = {
     displayLeftArrow?: boolean
     displayRightArrow?: boolean
     isMobile?: boolean
-    styles?: StylesOf<PaginationButtonsComposition>
     itemProps?: Partial<PropsOf<typeof Button>>
-    controlLeftIconName?: IconProps['name']
-    controlRightIconName?: IconProps['name']
+    controlLeftIconName?: AppIcon
+    controlRightIconName?: AppIcon
     leftArrowButtonProps?: Partial<PropsOf<typeof Button>>
     rightArrowButtonProps?: Partial<PropsOf<typeof Button>>
-} & ComponentVariants<typeof PaginationButtonPresets> & PaginationParams
+    style?: StyledProp<PaginationButtonsComposition>
+  }

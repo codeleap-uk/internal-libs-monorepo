@@ -44,10 +44,10 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
       return <img
         {...imageProps}
         src={image as HTMLImageElement['src']}
-        css={[styles.image]}
+        // @ts-expect-error
+        css={styles.image}
       />
     } else {
-
       if (TypeGuards.isNil(IconEmpty)) return null
 
       if (TypeGuards.isString(IconEmpty)) {
