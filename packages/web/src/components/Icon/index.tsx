@@ -25,14 +25,12 @@ export const Icon = (props:IconProps) => {
   const Component = theme?.icons?.[name]
 
   if (!name) {
-    const iconStyle = styles.icon
+    const iconStyle = styles.icon as React.CSSProperties & { size: number }
 
     return renderEmptySpace ? (
       <View
         style={{
-          // @ts-expect-error icss type
           height: iconStyle.size ?? iconStyle.height,
-          // @ts-expect-error icss type
           width: iconStyle.size ?? iconStyle.width,
         }}
       />
@@ -41,7 +39,7 @@ export const Icon = (props:IconProps) => {
 
   if (!Component) return null
 
-  return <Component {...otherProps} css={styles.icon} />
+  return <Component {...otherProps} style={styles.icon} />
 }
 
 Icon.styleRegistryName = 'Icon'
