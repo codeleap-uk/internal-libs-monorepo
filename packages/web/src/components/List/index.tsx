@@ -96,7 +96,7 @@ export function List(props: ListProps) {
 }
 
 List.styleRegistryName = 'List'
-List.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl']
+List.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refreshControlIndicator']
 List.rootElement = 'wrapper'
 
 List.withVariantTypes = <S extends AnyRecord>(styles: S) => {

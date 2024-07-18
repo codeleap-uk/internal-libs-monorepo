@@ -12,4 +12,3 @@ export type SwitchComposition =
   | `${SwitchParts}:${SwitchStates}`
   | `${AnimatableParts}:transition`
   | `${AnimatableParts}:${SwitchAnimationStates}`
-  | '__props'

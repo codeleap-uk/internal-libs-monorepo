@@ -100,7 +100,7 @@ export const Grid = (props: GridProps) => {
 }
 
 Grid.styleRegistryName = 'Grid'
-Grid.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl']
+Grid.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refreshControlIndicator']
 Grid.rootElement = 'wrapper'
 
 Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {

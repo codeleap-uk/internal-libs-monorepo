@@ -1,2 +1,1 @@
-
-export type OverlayComposition = 'wrapper'
+export type OverlayComposition = 'wrapper' | 'wrapper:visible'

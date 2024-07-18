@@ -246,6 +246,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
 }
 
 export const Modal = (props) => {
+
   const allProps = {
     ...Modal.defaultProps,
     ...props,
