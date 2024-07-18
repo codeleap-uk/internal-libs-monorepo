@@ -42,4 +42,5 @@ export type TooltipProps =
     onHover?: (hoverType: 'enter' | 'leave', value: boolean) => void
     onPress?: (value: boolean) => void
     children?: React.ReactNode
+    debugName?: string
   }

@@ -4,7 +4,7 @@ import { themeStore } from './themeStore'
 import { capitalize } from './utils'
 
 type BorderCreatorArgs = {
-  color: keyof IColors
+  color: keyof IColors | (string & {})
   width?: number | string
   directions?: typeof borderDirection[number][]
   // @ts-expect-error borderStyle not exists

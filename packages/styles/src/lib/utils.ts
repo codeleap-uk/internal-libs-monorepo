@@ -1,5 +1,5 @@
 import deepmerge from '@fastify/deepmerge'
-import { ICSS } from '../types'
+import { ICSS, StyledProp } from '../types'
 import { spacingShortVariants, spacingVariants } from '../types/spacing'
 
 export function capitalize(str: string, reverse = false) {
@@ -58,3 +58,17 @@ export const ignoredStyleKeys = [
   'textDecoration',
   'textOverflow'
 ]
+
+export const concatStyles = <T extends string>(styles: Array<StyledProp<T>>): StyledProp<T> => {
+  const results = []
+  
+  for (const style of styles) {
+    if (Array.isArray(style)) {
+      results.push(...style)
+    } else {
+      results.push(style)
+    }
+  }
+
+  return results as unknown as StyledProp<T>
+}
