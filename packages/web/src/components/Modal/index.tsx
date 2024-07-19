@@ -6,7 +6,6 @@ import { View } from '../View'
 import { Text } from '../Text'
 import { Overlay } from '../Overlay'
 import { ActionIcon } from '../ActionIcon'
-import { Scroll } from '../Scroll'
 import { Touchable } from '../Touchable'
 import { modalScrollLock, ModalStore } from '../../lib/tools/modal'
 import { ModalHeaderProps, ModalProps } from './types'
@@ -169,9 +168,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
 
   const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => null
 
-  const ModalBody = renderModalBody || (scroll ? Scroll : View)
-
-  const ModalArea = withScrollContainer ? Scroll : View
+  const ModalBody = renderModalBody || View
 
   const _zIndex = React.useMemo(() => {
     return TypeGuards.isNumber(zIndex) ? { zIndex } : {}
@@ -198,7 +195,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
         ]}
       />
 
-      <ModalArea style={styles.innerWrapper}>
+      <View style={styles.innerWrapper}>
         <Touchable
           onPress={close}
           debounce={1000}
@@ -240,7 +237,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
             </View>
           ) : null}
         </View>
-      </ModalArea>
+      </View>
     </View>
   )
 }
