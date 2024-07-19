@@ -12,7 +12,7 @@ export type PagerRef = {
 
 export type PagerProps =
   Omit<Settings, 'style'> &
-  ComponentCommonProps & 
+  ComponentCommonProps &
   {
     style?: StyledProp<PagerComposition>
     page?: number

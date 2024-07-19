@@ -10,4 +10,3 @@ export type ListParts =
   'refreshControlIndicator'
 
 export type ListComposition = `${ListParts}:${ListStates}` | ListParts
-

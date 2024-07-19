@@ -5,7 +5,6 @@ import { FileInputProps, FileInputRef } from './types'
 export * from './types'
 
 export const FileInput = forwardRef<FileInputRef, FileInputProps>((props, ref) => {
-
   const inputRef = useRef<HTMLInputElement>(null)
 
   const {

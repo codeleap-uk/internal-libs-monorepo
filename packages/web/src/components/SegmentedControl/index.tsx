@@ -53,7 +53,7 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
           debugName={touchableProps?.debugName}
           name={icon}
           {...iconProps}
-          style={{ ...iconStyles }}
+          style={iconStyles}
         />
       ) : null}
       <Text
@@ -71,7 +71,6 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
 })
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
-
   const {
     label,
     options,

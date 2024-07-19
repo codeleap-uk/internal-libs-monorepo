@@ -1,10 +1,10 @@
 import { StyledProp } from '@codeleap/styles'
-import { View } from '../View'
+import { ViewProps } from '../View'
 import { OverlayComposition } from './styles'
-import { AnyFunction, PropsOf } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/common'
 
 export type OverlayProps =
-  PropsOf<typeof View, 'style'> &
+  Omit<ViewProps<'div'>, 'style'> &
   {
     debugName: string
     visible?: boolean

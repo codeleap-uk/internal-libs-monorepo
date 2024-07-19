@@ -54,7 +54,8 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
           ...circleStyles,
         })}
         {...circleProps}
-        css={{ ...styles.circle, width: wrapperSize, height: wrapperSize }}
+        // @ts-expect-error
+        css={[styles.circle, { width: wrapperSize, height: wrapperSize }]}
       >
         {children}
 

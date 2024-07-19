@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ImgHTMLAttributes } from 'react'
 import { View } from '../View'
 import { ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition } from './styles'
@@ -22,7 +22,7 @@ export type EmptyPlaceholderProps =
     description?: React.ReactElement | string
     icon?: AppIcon | ((props: EmptyPlaceholderProps) => JSX.Element) | null
     image?: string
-    imageProps?: Partial<HTMLImageElement>
+    imageProps?: ImgHTMLAttributes<HTMLImageElement>
     loading?: boolean
     style?: StyledProp<EmptyPlaceholderComposition>
     renderEmpty?: (props: RenderEmptyProps) => JSX.Element

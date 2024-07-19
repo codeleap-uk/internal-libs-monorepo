@@ -8,6 +8,9 @@ import { AnyRecord, AppIcon, IJSX, mergeStyles, StyledComponentProps } from '@co
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { CheckboxParts } from './styles'
 
+export * from './styles'
+export * from './types'
+
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
 export const Checkbox = (props: CheckboxProps) => {
@@ -136,6 +139,3 @@ Checkbox.defaultProps = {
 } as Partial<CheckboxProps>
 
 WebStyleRegistry.registerComponent(Checkbox)
-
-export * from './styles'
-export * from './types'

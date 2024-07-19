@@ -1,4 +1,3 @@
-import { PropsOf } from '@codeleap/common'
 import { ProgressBarComposition } from './styles'
 import { ProgressProps, ProgressIndicatorProps } from '@radix-ui/react-progress'
 import { ProgressPropsRoot } from '..'
@@ -6,12 +5,12 @@ import { ElementType } from 'react'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { TextProps as _TextProps } from '../../Text/types'
 import { IconProps } from '../../Icon/types'
-import { View } from '../../View'
+import { ViewProps } from '../../View'
 
 type TextProps = _TextProps<ElementType>
 
 export type ProgressBarProps =
-  PropsOf<typeof View, 'style'> &
+  Omit<ViewProps<'div'>, 'style'> &
   Omit<ProgressPropsRoot, 'style'> & 
   {
     style?: StyledProp<ProgressBarComposition>

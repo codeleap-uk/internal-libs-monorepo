@@ -4,7 +4,7 @@ import React, { ElementType } from 'react'
 import { TextProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -61,8 +61,6 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     }
   }
 
-  const _styles = mergeStyles([styles.text, disabled && styles['text:disabled']])
-
   const pressProps = isPressable ? {
     onClick: disabled ? null : _onPress,
   } : {}
@@ -74,7 +72,7 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
   }
 
   return (
-    <Component {...componentProps} css={_styles}>
+    <Component {...componentProps} css={[styles.text, disabled && styles['text:disabled']]}>
       {text || children}
     </Component>
   )

@@ -19,7 +19,6 @@ const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
 }
 
 export const Badge = (props: BadgeProps) => {
-
   const {
     debugName,
     innerWrapperProps,
@@ -70,11 +69,7 @@ export const Badge = (props: BadgeProps) => {
 
   const showContent = TypeGuards.isNumber(count) && count >= minCount
 
-  let BadgeContent = renderBadgeContent
-
-  if (TypeGuards.isNil(renderBadgeContent)) {
-    BadgeContent = () => <Text text={content} {...textProps} />
-  }
+  const BadgeContent = TypeGuards.isNil(renderBadgeContent) ? () => <Text text={content} {...textProps} /> : renderBadgeContent
 
   return (
     <View {...rest} style={wrapperStyles}>

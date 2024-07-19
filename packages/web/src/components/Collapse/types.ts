@@ -1,6 +1,5 @@
-import { PropsOf } from '@codeleap/common'
 import { StyledProp } from '@codeleap/styles'
-import { View } from '../View'
+import { ViewProps } from '../View'
 import { CollapseComposition } from './styles'
 
 export type CollapseAxis = 'horizontal' | 'vertical'
@@ -13,7 +12,7 @@ export type GetCollapseStylesArgs = {
 }
 
 export type CollapseProps =
-  PropsOf<typeof View, 'style'> &
+  Omit<ViewProps<'div'>, 'style'> &
   {
     open: boolean
     scroll?: boolean

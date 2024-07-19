@@ -23,7 +23,8 @@ const Dots = (params: DotsProps) => {
         const isSelected = index === page
 
         const style = [
-          styles[isSelected ? 'dot:selected' : 'dot'],
+          styles.dot,
+          isSelected && styles['dot:selected'],
           dotsDisabled && styles['dot:disabled'],
         ]
 
@@ -42,7 +43,6 @@ const Dots = (params: DotsProps) => {
 }
 
 export const Pager = forwardRef<PagerRef, PagerProps>((props, ref) => {
-
   const sliderRef = useRef<Slider>()
 
   const {
@@ -114,7 +114,7 @@ export const Pager = forwardRef<PagerRef, PagerProps>((props, ref) => {
       <View style={styles.footerWrapper}>
         {footer}
 
-        {dots && (
+        {dots ? (
           <Dots
             page={page}
             onPress={onChange}
@@ -123,7 +123,7 @@ export const Pager = forwardRef<PagerRef, PagerProps>((props, ref) => {
             dotsDisabled={dotsDisabled}
             {...dotsProps}
           />
-        )}
+        ) : null}
       </View>
     </View>
   )
@@ -134,7 +134,6 @@ Pager.styleRegistryName = 'Pager'
 Pager.elements = [
   'wrapper',
   'dot',
-  'dot:selected',
   'dots',
   'pageWrapper',
   'footerWrapper',

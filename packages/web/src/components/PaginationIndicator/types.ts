@@ -9,7 +9,7 @@ export type PaginationIndicatorProps =
   ComponentCommonProps & 
   {
     isFetching?: boolean
-    noMoreItemsText: React.ReactElement
+    noMoreItemsText: JSX.Element | string | number
     hasMore?: boolean
     activityIndicator?: JSX.Element
     style?: StyledProp<PaginationIndicatorComposition>

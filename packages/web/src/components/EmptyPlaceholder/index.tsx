@@ -13,7 +13,6 @@ export * from './styles'
 export * from './types'
 
 export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
-
   const {
     itemName,
     title,
@@ -47,16 +46,15 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
         // @ts-expect-error
         css={styles.image}
       />
-    } else {
-      if (TypeGuards.isNil(IconEmpty)) return null
-
-      if (TypeGuards.isString(IconEmpty)) {
-        return <Icon debugName={debugName} name={IconEmpty as AppIcon} forceStyle={styles.icon} />
-      } else if (React.isValidElement(IconEmpty)) {
-        return <IconEmpty {...props} />
-      }
     }
 
+    if (TypeGuards.isNil(IconEmpty)) return null
+
+    if (TypeGuards.isString(IconEmpty)) {
+      return <Icon debugName={debugName} name={IconEmpty as AppIcon} forceStyle={styles.icon} />
+    } else if (React.isValidElement(IconEmpty)) {
+      return <IconEmpty {...props} />
+    }
   }, [IconEmpty, image])
 
   if (loading) {
@@ -68,18 +66,16 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
   }
 
   if (!TypeGuards.isNil(RenderEmpty)) {
-    const _emptyProps = {
-      emptyText,
-      emptyIconName: IconEmpty as AppIcon,
-      styles: {
-        ...styles,
-        activityIndicatorStyles,
-      },
-    }
-
     return (
       <View {...wrapperProps} style={styles.wrapper}>
-        <RenderEmpty {..._emptyProps} />
+        <RenderEmpty
+          emptyText={emptyText}
+          emptyIconName={IconEmpty as AppIcon}
+          styles={{
+            ...styles,
+            activityIndicatorStyles,
+          }}
+        />
       </View>
     )
   }

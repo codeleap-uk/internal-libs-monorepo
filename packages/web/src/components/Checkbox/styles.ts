@@ -13,3 +13,4 @@ export type CheckboxComposition =
   | `${CheckboxParts}:${CheckboxStates}`
   | `${AnimatableParts}:transition`
   | `${AnimatableParts}:${CheckboxAnimationStates}`
+  | '__props'

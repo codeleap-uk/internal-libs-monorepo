@@ -129,7 +129,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
     }
   }
 
-  const handleTabKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, { firstElement, lastElement }: Record<'firstElement' |'lastElement', HTMLDivElement>) => {
+  const handleTabKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, { firstElement, lastElement }: Record<'firstElement' | 'lastElement', HTMLDivElement>) => {
     if (e.key === 'Tab' || e?.keyCode === 9) {
       if (e.shiftKey && document.activeElement === firstElement) {
         e.preventDefault()
@@ -245,8 +245,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
   )
 }
 
-export const Modal = (props) => {
-
+export const Modal = (props: ModalProps) => {
   const allProps = {
     ...Modal.defaultProps,
     ...props,

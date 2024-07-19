@@ -12,7 +12,7 @@ export * from './styles'
 export * from './utils'
 export * from './types'
 
-export const InputBaseDefaultOrder:InputBaseProps['order'] = [
+export const InputBaseDefaultOrder: InputBaseProps['order'] = [
   'label',
   'description',
   'innerWrapper',
@@ -24,7 +24,6 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
 }
 
 export const InputBase = (props: InputBaseProps) => {
-
   const allProps = {
     ...InputBase.defaultProps,
     ...props,
@@ -69,11 +68,11 @@ export const InputBase = (props: InputBaseProps) => {
     debugName: `${debugName} right icon`,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle}/> : label
+  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle} /> : label
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle}/> : error
+  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle} /> : error
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle}/> : description
+  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle} /> : description
 
   const parts = {
     label: labelAsRow ? (
@@ -95,7 +94,7 @@ export const InputBase = (props: InputBaseProps) => {
         {children}
         {_rightIcon}
       </InnerWrapperComponent>,
-    error: noError ? null : (_error || <Text children={<React.Fragment> &nbsp; </React.Fragment>} style={_styles.errorStyle}/>),
+    error: noError ? null : (_error || <Text children={<React.Fragment> &nbsp; </React.Fragment>} style={_styles.errorStyle} />),
   }
 
   return (

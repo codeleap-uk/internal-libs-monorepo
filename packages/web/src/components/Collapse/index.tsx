@@ -1,5 +1,4 @@
 import { capitalize, TypeGuards } from '@codeleap/common'
-import { View } from '../View'
 import { CollapseProps, GetCollapseStylesArgs } from './types'
 import { CollapseComposition } from './styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
@@ -45,7 +44,6 @@ export const Collapse = (props: CollapseProps) => {
   const {
     open,
     size,
-    scroll,
     children,
     direction,
     animation,
@@ -61,16 +59,16 @@ export const Collapse = (props: CollapseProps) => {
   const componentStyles = getCollapseStyles({ value: size, direction, animation })
 
   return (
-    <View
+    <div
       {...rest}
-      style={[
+      css={[
         componentStyles.wrapper,
         open ? componentStyles['wrapper:open'] : componentStyles['wrapper:closed'],
         styles.wrapper,
       ]}
     >
       {children}
-    </View>
+    </div>
   )
 }
 
@@ -84,7 +82,6 @@ Collapse.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 Collapse.defaultProps = {
   size: 1000,
-  scroll: false,
 } as Partial<CollapseProps>
 
 WebStyleRegistry.registerComponent(Collapse)

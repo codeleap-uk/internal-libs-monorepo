@@ -8,8 +8,8 @@ export type DropzoneFile = File
 
 export type DropzoneFileRejection = FileRejection
 
-export type DropzoneProps = 
-  Omit<DropzoneOptions, 'style'> & 
+export type DropzoneProps =
+  Omit<DropzoneOptions, 'style'> &
   {
     style?: StyledProp<DropzoneComposition>
     icon?: AppIcon
@@ -26,8 +26,8 @@ export type DropzoneProps =
     FilePreviewComponent?: (props: DropzoneInnerFilePreviewProps) => JSX.Element
   }
 
-export type DropzoneFilePreviewProps = 
-  Pick<DropzoneProps, 'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview' | 'FilePreviewComponent'> & 
+export type DropzoneFilePreviewProps =
+  Pick<DropzoneProps, 'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview' | 'FilePreviewComponent'> &
   {
     file: DropzoneFile
     errors?: DropzoneFileRejection['errors']
@@ -37,8 +37,8 @@ export type DropzoneFilePreviewProps =
     index?: number
   }
 
-export type DropzoneInnerFilePreviewProps = 
-  DropzoneFilePreviewProps & 
+export type DropzoneInnerFilePreviewProps =
+  DropzoneFilePreviewProps &
   {
     hasErrors: boolean
     revokeImageUrl: () => void

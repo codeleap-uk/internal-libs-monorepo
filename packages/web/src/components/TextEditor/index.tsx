@@ -57,7 +57,7 @@ export const TextEditor = (props: TextEditorProps) => {
 
   const _BubbleMenu = useCallback(() => {
     return (
-      // @ts-expect-error @verify
+      // @ts-expect-error icss type
       <BubbleMenu css={[styles.bubbleMenu]} {...bubbleMenuProps} editor={editor}>
         <View style={styles.bubbleMenuInnerWrapper}>
           {bubbleMenuProps?.renderContent}
@@ -68,7 +68,7 @@ export const TextEditor = (props: TextEditorProps) => {
 
   const _FloatingMenu = useCallback(() => {
     return (
-      // @ts-expect-error @verify
+      // @ts-expect-error icss type
       <FloatingMenu css={[styles.floatingMenu]} {...floatingMenuProps} editor={editor}>
         <View style={styles.floatingMenuInnerWrapper}>
           {floatingMenuProps?.renderContent}

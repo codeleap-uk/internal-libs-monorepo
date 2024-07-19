@@ -18,7 +18,6 @@ export * from './styles'
 export * from './types'
 
 export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref) => {
-
   const {
     onFileSelect,
     targetCrop,
@@ -74,7 +73,7 @@ export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref)
           />
         }
         {...modalProps}
-        styles={composition?.modal}
+        style={composition?.modal}
       >
         {!!image?.src ? (
           <ReactCrop
@@ -86,7 +85,8 @@ export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref)
           >
             <img
               src={image?.src}
-              style={mergeStyles([styles.cropPreview, styles.previewSize])}
+              // @ts-expect-error
+              css={[styles.cropPreview, styles.previewSize]}
             />
           </ReactCrop>
         ) : null}

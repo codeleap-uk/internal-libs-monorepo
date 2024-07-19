@@ -13,7 +13,6 @@ export type ViewProps<T extends NativeHTMLElement> =
   Omit<AnimationProps, 'style'> &
   {
     component?: NativeHTMLElement
-    scroll?: boolean
     debugName?: string
     debug?: boolean
     is?: any

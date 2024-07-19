@@ -39,18 +39,18 @@ const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
 
   return (
     <View style={[styles.fileWrapper, hasErrors && styles['fileWrapper:error']]}>
-      {isPreview ?
+      {isPreview ? (
         <img
           onLoad={revokeImageUrl}
           src={imageUrl}
-          style={styles.fileImage}
+          css={styles.fileImage}
         />
-        :
+      ) : (
         <Icon
           debugName='DropzoneFilePreview:LeftIcon'
           name={fileLeftIcon}
           style={styles.fileLeftIcon}
-        />
+        />)
       }
 
       <View style={styles.fileNameWrapper}>
@@ -108,7 +108,6 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
 }
 
 export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
-
   const {
     icon,
     placeholder,

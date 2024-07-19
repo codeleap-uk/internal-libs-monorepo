@@ -6,7 +6,7 @@ import { ViewComponentProps, ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, IJSX, mergeStyles, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -21,7 +21,6 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
     onHover,
     debugName,
     down,
-    scroll,
     debug,
     style,
     animated,
@@ -54,14 +53,6 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
 
   const matches = useMediaQuery(platformMediaQuery)
 
-  const componentStyles = useMemo(() => {
-    return mergeStyles([
-      styles.wrapper,
-      scroll && { overflowY: 'scroll' },
-      matches && { display: 'none' },
-    ])
-  }, [styles.wrapper, scroll, matches])
-
   const onHoverProps = TypeGuards.isFunction(onHover) && {
     onMouseEnter: () => handleHover(true),
     onMouseLeave: () => handleHover(false),
@@ -70,7 +61,6 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
   const testId = getTestId(viewProps)
 
   return (
-    // @ts-expect-error
     <Component
       // @ts-expect-error
       ref={ref}
@@ -78,7 +68,8 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
       {...props}
       {...animatedProps}
       data-testid={testId}
-      css={componentStyles}
+      // @ts-expect-error
+      css={[styles.wrapper, matches && { display: 'none' }]}
     >
       {children}
     </Component>
@@ -96,7 +87,6 @@ View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 View.defaultProps = {
   component: 'div',
-  scroll: false,
   debug: false,
   animated: false,
 } as Partial<ViewComponentProps>

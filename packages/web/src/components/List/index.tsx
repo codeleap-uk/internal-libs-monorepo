@@ -17,7 +17,6 @@ const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) 
 }
 
 export function List(props: ListProps) {
-
   const allProps = {
     ...List.defaultProps,
     ...props,

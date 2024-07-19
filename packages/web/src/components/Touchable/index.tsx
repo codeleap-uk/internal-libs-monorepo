@@ -14,7 +14,6 @@ export * from './styles'
 export * from './types'
 
 export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
-
   const allProps = {
     ...Touchable.defaultProps,
     ...touchableProps,
@@ -96,8 +95,6 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
     }
   }
 
-  const _styles = [styles.wrapper, disabled && styles['wrapper:disabled']]
-
   const testId = getTestId(allProps)
 
   return (
@@ -109,7 +106,7 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
       onClick={handleClick}
       onKeyDown={handleClick}
       ref={ref}
-      style={_styles}
+      style={[styles.wrapper, disabled && styles['wrapper:disabled']]}
       data-testid={testId}
     />
   )

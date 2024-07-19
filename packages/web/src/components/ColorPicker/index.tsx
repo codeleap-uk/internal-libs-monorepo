@@ -92,12 +92,10 @@ export const ColorPicker = (props: ColorPickerProps) => {
           {openColorPickerBtn}
           <Collapse
             open={visible}
-            style={{
-              wrapper: [
-                styles.dropdown,
-                visible && styles['dropdown:open'],
-              ],
-            }}
+            style={[
+              styles.dropdown,
+              visible && styles['dropdown:open'],
+            ]}
           >
             <View style={styles.dropdownInnerWrapper}>
               {picker}
@@ -140,4 +138,3 @@ ColorPicker.defaultProps = {
 } as Partial<ColorPickerProps>
 
 WebStyleRegistry.registerComponent(ColorPicker)
-

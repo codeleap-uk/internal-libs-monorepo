@@ -1,7 +1,8 @@
+
+type Dots = 'dot' | 'dot:selected' | 'dot:disabled' | 'dots'
+
 export type PagerComposition =
   | 'wrapper'
-  | 'dot'
-  | 'dot:selected'
-  | 'dots'
   | 'pageWrapper'
   | 'footerWrapper'
+  | Dots
