@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { TypeGuards } from '@codeleap/common'
 import { Text } from '../Text'
 import { View } from '../View'
@@ -40,28 +40,24 @@ export const Badge = (props: BadgeProps) => {
 
   const visible = (TypeGuards.isBoolean(badge) && badge === true) || TypeGuards.isNumber(badge)
 
-  const { wrapperStyles, innerWrapperStyles, countStyles } = useMemo(() => {
-    const wrapperStyles = [
-      styles?.wrapper,
-      (disabled && styles?.['wrapper:disabled']),
-    ]
-
-    const innerWrapperStyles = [
-      styles?.innerWrapper,
-      (disabled && styles?.['innerWrapper:disabled']),
-      innerWrapperProps?.style,
-    ]
-
-    const countStyles = [
-      styles?.count,
-      (disabled && styles?.['count:disabled']),
-      textProps?.style,
-    ]
-
-    return { wrapperStyles, innerWrapperStyles, countStyles }
-  }, [styles, disabled])
-
   if (!visible) return null
+
+  const wrapperStyles = [
+    styles?.wrapper,
+    (disabled && styles?.['wrapper:disabled']),
+  ]
+
+  const innerWrapperStyles = [
+    styles?.innerWrapper,
+    (disabled && styles?.['innerWrapper:disabled']),
+    innerWrapperProps?.style,
+  ]
+
+  const countStyles = [
+    styles?.count,
+    (disabled && styles?.['count:disabled']),
+    textProps?.style,
+  ]
 
   const count = TypeGuards.isNumber(badge) ? badge : null
 

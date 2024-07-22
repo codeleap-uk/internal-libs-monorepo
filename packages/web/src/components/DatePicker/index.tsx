@@ -56,16 +56,14 @@ export function DatePicker(props: DatePickerProps) {
       ...dayProps,
     }
 
-    const { day, date: _date } = param
-
-    const date = format(new Date(_date), 'dd MMM yyyy')
+    const date = format(new Date(param?.date), 'dd MMM yyyy')
     const dateValue = value ? format(new Date(value), 'dd MMM yyyy') : ''
 
     const isSelected = date === dateValue
 
     const isDisabled = [
-      isBefore(_date, minDate),
-      isAfter(_date, maxDate),
+      isBefore(param?.date, minDate),
+      isAfter(param?.date, maxDate),
     ].some(Boolean)
 
     const getStyles = (key) => {
@@ -90,7 +88,7 @@ export function DatePicker(props: DatePickerProps) {
 
     return (
       <View style={getStyles('dayWrapper')}>
-        <Text style={getStyles('day')} disabled={isDisabled} text={String(day)} />
+        <Text style={getStyles('day')} disabled={isDisabled} text={String(param?.day)} />
       </View>
     )
   }, [value])
@@ -101,9 +99,7 @@ export function DatePicker(props: DatePickerProps) {
       ...yearProps,
     }
 
-    const { year } = param
-
-    const isSelected = String(value)?.includes(year)
+    const isSelected = String(value)?.includes(param?.year)
 
     const getStyles = (key) => {
       return {
@@ -125,7 +121,7 @@ export function DatePicker(props: DatePickerProps) {
 
     return (
       <View style={getStyles('yearWrapper')}>
-        <Text style={getStyles('year')} text={year} />
+        <Text style={getStyles('year')} text={param?.year} />
       </View>
     )
   }, [value])
@@ -198,8 +194,6 @@ DatePicker.styleRegistryName = 'DatePicker'
 
 DatePicker.elements = [
   'wrapper',
-  'dayWrapper',
-  'yearWrapper',
   'day',
   'year',
   'outerInput',

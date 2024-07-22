@@ -4,7 +4,7 @@ import { DatePickerArrowProps, DatePickerHeaderComponent } from '../types'
 import { format, getYear } from 'date-fns'
 import { useCompositionStyles } from '@codeleap/styles'
 
-export const ArrowLabel: React.FC<DatePickerArrowProps> = ({ name, direction, ...props }) => {
+export const ArrowLabel = ({ name, direction, ...props }: DatePickerArrowProps) => {
   return (
     <ActionIcon
       name={name ?? (`chevron-${direction}` as IconPlaceholder)}

@@ -4,7 +4,7 @@ import { ComponentCommonProps } from '../../types'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 
 export type CheckboxProps =
-  Pick<InputBaseProps, 'debugName' | 'disabled' | 'label'> &
+  Pick<InputBaseProps, 'disabled' | 'label'> &
   ComponentCommonProps &
   {
     style?: StyledProp<CheckboxComposition>

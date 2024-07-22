@@ -7,6 +7,7 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, AppIcon, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { CheckboxParts } from './styles'
+import { TypeGuards } from '@codeleap/common'
 
 export * from './styles'
 export * from './types'
@@ -78,20 +79,31 @@ export const Checkbox = (props: CheckboxProps) => {
   })
 
   // @ts-expect-error __props is ICSS
-  const _checkboxOnLeft = checkboxOnLeft ?? styles.__props?.checkboxOnLeft
+  const _checkboxOnLeft = checkboxOnLeft ?? styles?.__props?.checkboxOnLeft
 
   const handleChange = (e) => {
+    if (disabled) return
+    if (!TypeGuards.isFunction(onValueChange)) return
+
     const isSpaceBarClick = e?.keyCode === 32
     const isEnterKey = e?.key === 'Enter'
     const isClick = e?.type === 'click'
-    if (disabled) return
-    if (onValueChange && (isClick || e?.keyCode === 13 || isSpaceBarClick || isEnterKey)) onValueChange?.(!value)
+
+    if (isClick || e?.keyCode === 13 || isSpaceBarClick || isEnterKey) {
+      onValueChange?.(!value)
+    }
   }
 
   const getStyles = (key: CheckboxParts) => mergeStyles([
     styles[key],
     disabled ? styles[key + ':disabled'] : null,
   ])
+
+  const componentStyles = {
+    box: getStyles('box'),
+    checkmarkWrapper: getStyles('checkmarkWrapper'),
+    checkmark: getStyles('checkmark'),
+  }
 
   return (
     <InputBase
@@ -101,7 +113,7 @@ export const Checkbox = (props: CheckboxProps) => {
       order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}
     >
       <motion.div
-        style={getStyles('box')}
+        style={componentStyles.box}
         initial={false}
         animate={boxAnimation}
         transition={styles['box:transition']}
@@ -110,7 +122,7 @@ export const Checkbox = (props: CheckboxProps) => {
         tabIndex={0}
       >
         <motion.div
-          style={getStyles('checkmarkWrapper')}
+          style={componentStyles.checkmarkWrapper}
           initial={false}
           animate={checkmarkWrapperAnimation}
           transition={styles['checkmarkWrapper:transition']}
@@ -118,7 +130,7 @@ export const Checkbox = (props: CheckboxProps) => {
           <Icon
             debugName={debugName}
             name={checkIcon as AppIcon}
-            style={getStyles('checkmark')}
+            style={componentStyles.checkmark}
           />
         </motion.div>
       </motion.div>

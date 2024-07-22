@@ -1,5 +1,5 @@
 import React, { forwardRef, Ref } from 'react'
-import { mergeStyles, StyledComponentWithProps, useCompositionStyles } from '@codeleap/styles'
+import { StyledComponentWithProps, useCompositionStyles } from '@codeleap/styles'
 import { CropPickerProps } from './types'
 import { useCropPicker } from '../../lib'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
@@ -111,4 +111,3 @@ CropPicker.defaultProps = {
 } as Partial<CropPickerProps>
 
 WebStyleRegistry.registerComponent(CropPicker)
-
