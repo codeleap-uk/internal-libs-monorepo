@@ -18,7 +18,7 @@ import { getMaskInputProps } from './mask'
 import { getTestId } from '../../lib/utils/test'
 import { InputRef, TextInputProps } from './types'
 import { FileInputRef } from '../FileInput'
-import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
@@ -27,8 +27,6 @@ export * from './styles'
 export * from './mask'
 
 export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputRef) => {
-  const innerInputRef = useRef<InputRef>(null)
-
   const {
     inputBaseProps,
     others,
@@ -54,6 +52,8 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
     hiddenIcon,
     ...textInputProps
   } = others as TextInputProps
+
+  const innerInputRef = useRef<InputRef>(null)
 
   const styles = useStylesFor(TextInput.styleRegistryName, style)
 
@@ -121,7 +121,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
-    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as IconPlaceholder,
+    icon: (secureTextEntry ? hiddenIcon : visibleIcon) as AppIcon,
     debugName: `${debugName} toggle visibility`,
   } : null
 
@@ -194,7 +194,6 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
       rightIcon={rightIcon as any}
       focused={isFocused}
     >
-
       <InputElement
         editable={`${!isPressable && !isDisabled}`}
         {...buttonModeProps}
@@ -245,8 +244,8 @@ TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 TextInput.defaultProps = {
-  hiddenIcon: 'input-visiblity:hidden' as IconPlaceholder,
-  visibleIcon: 'input-visiblity:visible' as IconPlaceholder,
+  hiddenIcon: 'input-visiblity:hidden' as AppIcon,
+  visibleIcon: 'input-visiblity:visible' as AppIcon,
   masking: null,
 } as TextInputProps
 

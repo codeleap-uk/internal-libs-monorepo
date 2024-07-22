@@ -6,7 +6,7 @@ import { CenterWrapperStyles, CenterWrapperComposition } from '../app/stylesheet
 
 export type CenterWrapperProps = React.PropsWithChildren<{
   styles?: StylesOf<CenterWrapperComposition>
-  innerProps?: ViewProps<'div'>
+  innerProps?: ViewProps
 } & ComponentVariants<typeof CenterWrapperStyles>>
 
 export const CenterWrapper = (props: CenterWrapperProps) => {

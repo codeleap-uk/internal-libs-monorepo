@@ -28,7 +28,7 @@ export type TooltipProps =
     visible?: boolean
     content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
     triggerWrapper?: React.ElementType
-    triggerWrapperProps?: Partial<ViewProps<'div'>>
+    triggerWrapperProps?: Partial<ViewProps>
     style?: StyledProp<TooltipComposition>
     side?: 'left' | 'right' | 'bottom' | 'top'
     openOnPress?: boolean

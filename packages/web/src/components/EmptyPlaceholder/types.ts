@@ -1,5 +1,5 @@
 import React, { ImgHTMLAttributes } from 'react'
-import { View } from '../View'
+import { ViewProps } from '../View'
 import { ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition } from './styles'
 import { StylesOf } from '@codeleap/common'
@@ -20,13 +20,13 @@ export type EmptyPlaceholderProps =
     itemName?: string
     title?: React.ReactElement | string
     description?: React.ReactElement | string
-    icon?: AppIcon | ((props: EmptyPlaceholderProps) => JSX.Element) | null
+    icon?: AppIcon | ((props: EmptyPlaceholderProps) => JSX.Element)
     image?: string
     imageProps?: ImgHTMLAttributes<HTMLImageElement>
     loading?: boolean
     style?: StyledProp<EmptyPlaceholderComposition>
     renderEmpty?: (props: RenderEmptyProps) => JSX.Element
-    wrapperProps?: Partial<typeof View>
-    imageWrapperProps?: Partial<typeof View>
+    wrapperProps?: ViewProps
+    imageWrapperProps?: ViewProps
     indicatorProps?: Partial<ActivityIndicatorProps>
   }

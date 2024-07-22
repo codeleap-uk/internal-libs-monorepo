@@ -133,7 +133,7 @@ export const Tooltip = (props: TooltipProps) => {
           </TriggerWrapper>
         </TooltipTrigger>
         <TooltipPortal {...portalProps}>
-          {/* @ts-expect-error @verify */}
+          {/* @ts-expect-error icss type */}
           <TooltipContent ref={contentRef} css={[tooltipDirectionStyle, styles.content]} sideOffset={2} side={side} {...contentProps}>
             {
               TypeGuards.isFunction(Content)
@@ -147,7 +147,7 @@ export const Tooltip = (props: TooltipProps) => {
             }
             <TooltipArrow
               {...arrowProps}
-              //@ts-expect-error
+              //@ts-expect-error icss type
               css={styles.arrow}
             />
           </TooltipContent>

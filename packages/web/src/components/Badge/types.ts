@@ -6,7 +6,7 @@ import { ComponentCommonProps } from '../../types'
 import { StyledProp } from '@codeleap/styles'
 
 export type BadgeProps =
-  Omit<ViewProps<'div'>, 'style'> &
+  Omit<ViewProps, 'style'> &
   ComponentCommonProps &
   {
     style?: StyledProp<BadgeComposition>

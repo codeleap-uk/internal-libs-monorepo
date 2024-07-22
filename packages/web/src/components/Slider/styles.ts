@@ -1,17 +1,17 @@
 import { IconLessInputBaseParts, InputBaseParts, InputBaseStates } from '../InputBase'
 
 type SliderParts =
-    InputBaseParts |
-    'thumb' |
-    'track' |
-    'selectedTrack' |
-    'unselectedTrack' |
-    'trackMark' |
-    'firstTrackMark' |
-    'lastTrackMark' |
-    'trackMarkWrapper' |
-    'sliderContainer' |
-    IconLessInputBaseParts
+	InputBaseParts |
+	'thumb' |
+	'track' |
+	'selectedTrack' |
+	'unselectedTrack' |
+	'trackMark' |
+	'firstTrackMark' |
+	'lastTrackMark' |
+	'trackMarkWrapper' |
+	'sliderContainer' |
+	IconLessInputBaseParts
 
 type SliderStates = Exclude<InputBaseStates, 'focus'>
 

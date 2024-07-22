@@ -59,6 +59,7 @@ export type PlaceholderProps = NoticeProps & ComponentPartProps & {
     icon: CSSInterpolation
   }
   icon: SelectPlaceholderElement
+  image: HTMLImageElement['src']
 } & ComponentCommonProps
 
 export type LoadingIndicatorProps = NoticeProps & {
@@ -80,8 +81,10 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => JSX.Element
     noItemsText?: SelectPlaceholderElement
     noItemsIcon?: SelectPlaceholderElement
+    noItemsImage?: PlaceholderProps['image']
     placeholderText?: SelectPlaceholderElement
     placeholderIcon?: SelectPlaceholderElement
+    placeholderImage?: PlaceholderProps['image']
     showDropdownIcon?: boolean
     formatPlaceholderNoItems?: (props: PlaceholderProps & { text: string }) => string
     selectedIcon?: string

@@ -117,7 +117,7 @@ Touchable.elements = ['wrapper']
 Touchable.rootElement = 'wrapper'
 
 Touchable.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Touchable as (props: StyledComponentProps<TouchableProps, typeof styles>) => IJSX
+  return Touchable as <T extends NativeHTMLElement = 'button'>(props: StyledComponentProps<TouchableProps<T>, typeof styles>) => IJSX
 }
 
 Touchable.defaultProps = {

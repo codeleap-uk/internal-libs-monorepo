@@ -4,7 +4,7 @@ import { OverlayComposition } from './styles'
 import { AnyFunction } from '@codeleap/common'
 
 export type OverlayProps =
-  Omit<ViewProps<'div'>, 'style'> &
+  Omit<ViewProps, 'style'> &
   {
     debugName: string
     visible?: boolean

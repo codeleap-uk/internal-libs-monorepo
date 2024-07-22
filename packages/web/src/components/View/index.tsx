@@ -2,16 +2,17 @@ import { useMemo, TypeGuards } from '@codeleap/common'
 import React, { forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
 import { motion } from 'framer-motion'
-import { ViewComponentProps, ViewProps } from './types'
+import { ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
+import { NativeHTMLElement } from '../../types'
 
 export * from './styles'
 export * from './types'
 
-export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
+export const View = forwardRef(<T extends NativeHTMLElement = 'div'>(viewProps: ViewProps<T>, ref) => {
   const {
     component,
     children,
@@ -21,7 +22,6 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
     onHover,
     debugName,
     down,
-    debug,
     style,
     animated,
     animatedProps,
@@ -68,27 +68,25 @@ export const View = forwardRef((viewProps: ViewComponentProps, ref: any) => {
       {...props}
       {...animatedProps}
       data-testid={testId}
-      // @ts-expect-error
+      // @ts-expect-error icss type
       css={[styles.wrapper, matches && { display: 'none' }]}
     >
       {children}
     </Component>
   )
-}) as StyledComponentWithProps<ViewProps<'div'>>
+}) as StyledComponentWithProps<ViewProps>
 
 View.styleRegistryName = 'View'
 View.elements = ['wrapper']
 View.rootElement = 'wrapper'
 
 View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  // @ts-expect-error @verify
-  return View as (<T extends React.ElementType = 'div'>(props: StyledComponentProps<ViewProps<T>, typeof styles>) => IJSX)
+  return View as <T extends NativeHTMLElement = 'div'>(props: StyledComponentProps<ViewProps<T>, typeof styles>) => IJSX
 }
 
 View.defaultProps = {
   component: 'div',
-  debug: false,
   animated: false,
-} as Partial<ViewComponentProps>
+} as Partial<ViewProps>
 
 WebStyleRegistry.registerComponent(View)

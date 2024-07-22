@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { ListProps } from './types'
+import { ListItem, ListProps } from './types'
 import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
@@ -12,7 +12,7 @@ export * from './styles'
 export * from './types'
 export * from './ListLayout'
 
-const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) => {
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props?.separatorStyles} />
 }
 
@@ -99,7 +99,7 @@ List.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refr
 List.rootElement = 'wrapper'
 
 List.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return List as (props: StyledComponentProps<ListProps, typeof styles>) => IJSX
+  return List as <T extends ListItem>(props: StyledComponentProps<ListProps<T>, typeof styles>) => IJSX
 }
 
 List.defaultProps = {

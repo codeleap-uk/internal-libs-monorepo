@@ -1,5 +1,5 @@
 import { PropsOf } from '@codeleap/common'
-import { IconProps, ProgressCircleComposition, View, TextProps as _TextProps } from '../../components'
+import { IconProps, ProgressCircleComposition, ViewProps, TextProps as _TextProps } from '../../components'
 import { ProgressPropsRoot } from '..'
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
 import { ElementType } from 'react'
@@ -7,9 +7,9 @@ import { AppIcon, StyledProp } from '@codeleap/styles'
 
 type TextProps = _TextProps<ElementType>
 
-export type ProgressCircleProps = 
-  PropsOf<typeof View, 'style' | 'children'> & 
-  Omit<ProgressPropsRoot, 'style'> & 
+export type ProgressCircleProps =
+  Omit<ViewProps, 'style'> &
+  Omit<ProgressPropsRoot, 'style'> &
   {
     style?: StyledProp<ProgressCircleComposition>
     circleProps?: PropsOf<typeof CircularProgressbarWithChildren>

@@ -6,7 +6,7 @@ import { ComponentCommonProps } from '../../types/utility'
 import { StyledProp } from '@codeleap/styles'
 
 export type LoadingOverlayProps =
-  Omit<ViewProps<'div'>, 'style'> &
+  Omit<ViewProps, 'style'> &
   ComponentCommonProps &
   {
     visible?: boolean

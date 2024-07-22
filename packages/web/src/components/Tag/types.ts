@@ -9,7 +9,7 @@ import { TouchableProps } from '../Touchable'
 import { ViewProps } from '../View'
 
 export type TagProps =
-  Omit<ViewProps<'div'>, 'style'> &
+  Omit<ViewProps, 'style'> &
   Omit<TouchableProps, 'style'> &
   ComponentCommonProps &
   {

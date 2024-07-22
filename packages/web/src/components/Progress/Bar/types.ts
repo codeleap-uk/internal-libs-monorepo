@@ -10,7 +10,7 @@ import { ViewProps } from '../../View'
 type TextProps = _TextProps<ElementType>
 
 export type ProgressBarProps =
-  Omit<ViewProps<'div'>, 'style'> &
+  Omit<ViewProps, 'style'> &
   Omit<ProgressPropsRoot, 'style'> & 
   {
     style?: StyledProp<ProgressBarComposition>

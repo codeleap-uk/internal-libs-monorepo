@@ -1,9 +1,8 @@
-import { ViewComposition } from '../View'
 
 type ListStates = 'empty' | 'loading'
 
 export type ListParts =
-  ViewComposition |
+  'wrapper' |
   'innerWrapper' |
   'separator' |
   'refreshControl' |

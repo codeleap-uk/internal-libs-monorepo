@@ -2,7 +2,7 @@ import React from 'react'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { GridProps } from './types'
-import { ListLayout } from '../List'
+import { ListItem, ListLayout } from '../List'
 import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
@@ -11,7 +11,7 @@ import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 export * from './styles'
 export * from './types'
 
-const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['style'] }) => {
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props?.separatorStyles} />
 }
 
@@ -104,7 +104,7 @@ Grid.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refr
 Grid.rootElement = 'wrapper'
 
 Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Grid as (props: StyledComponentProps<GridProps, typeof styles>) => IJSX
+  return Grid as <T extends ListItem = ListItem>(props: StyledComponentProps<GridProps<T>, typeof styles>) => IJSX
 }
 
 Grid.defaultProps = {
@@ -120,6 +120,7 @@ Grid.defaultProps = {
   overscan: 2,
   reloadTimeout: 350,
   showFooter: true,
+  numColumns: 2,
 } as Partial<GridProps>
 
 WebStyleRegistry.registerComponent(Grid)

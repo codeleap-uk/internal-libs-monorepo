@@ -83,7 +83,7 @@ Text.elements = ['text']
 Text.rootElement = 'text'
 
 Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Text as (props: StyledComponentProps<TextProps<any>, typeof styles>) => IJSX
+  return Text as <T extends ElementType>(props: StyledComponentProps<TextProps<T>, typeof styles>) => IJSX
 }
 
 Text.defaultProps = {

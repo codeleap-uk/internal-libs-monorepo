@@ -14,7 +14,6 @@ export * from './styles'
 export * from './types'
 
 const ItemOption = (props: OptionProps) => {
-
   const {
     option,
     item,
@@ -61,7 +60,6 @@ const ItemOption = (props: OptionProps) => {
 }
 
 export const SectionFilters = (props: SectionFiltersProps) => {
-
   const {
     data,
     onSelectItem,

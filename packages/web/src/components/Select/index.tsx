@@ -77,7 +77,7 @@ const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
-  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder, debugName } = props
+  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder, image, debugName } = props
 
   const _Text = () => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
@@ -92,7 +92,11 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
   }
 
   const _Image = () => {
-    if (TypeGuards.isNil(_IconPlaceholder)) return null
+    if (TypeGuards.isNil(_IconPlaceholder) && TypeGuards.isNil(image)) return null
+
+    if (TypeGuards.isString(image)) {
+      return <img src={image} css={defaultStyles.icon} />
+    }
 
     if (TypeGuards.isString(_IconPlaceholder)) {
       return <Icon debugName={debugName} name={_IconPlaceholder as AppIcon} forceStyle={defaultStyles.icon as React.CSSProperties} />
@@ -191,8 +195,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       LoadingIndicatorComponent,
       noItemsText,
       noItemsIcon,
+      noItemsImage,
       placeholderText,
       placeholderIcon,
+      placeholderImage,
       showDropdownIcon,
       placeholder,
       clearable,
@@ -337,11 +343,13 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       const hasInputValue = !!props.selectProps.inputValue
       const styles = placeholderStyles[hasInputValue ? 'noItems' : 'empty']
       const icon = hasInputValue ? noItemsIcon : placeholderIcon
+      const image = hasInputValue ? noItemsImage : placeholderImage
 
       const placeholderProps = {
         ...props,
         ...componentProps,
         icon,
+        image,
         defaultStyles: styles,
       }
 
@@ -491,7 +499,6 @@ Select.defaultProps = {
   PlaceholderNoItemsComponent: DefaultPlaceholder,
   LoadingIndicatorComponent: LoadingIndicator,
   noItemsText: 'No results for ',
-  noItemsIcon: 'placeholderNoItems-select',
   placeholderText: 'Search items',
   placeholderIcon: 'search',
   showDropdownIcon: true,

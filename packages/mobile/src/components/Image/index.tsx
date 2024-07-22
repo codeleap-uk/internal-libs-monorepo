@@ -132,7 +132,7 @@ export const ImageComponent = (props: ImageProps) => {
 }
 
 function areEqual(prevProps, nextProps) {
-  const check = ['source', 'style', 'variants', 'resizeMode', 'fast']
+  const check = ['source', 'style', 'resizeMode', 'fast']
   const res = arePropsEqual(prevProps, nextProps, { check })
   return res
 }

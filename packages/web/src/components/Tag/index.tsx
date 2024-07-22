@@ -16,7 +16,6 @@ export * from './types'
 
 export const Tag = (props: TagProps) => {
   const {
-    variants,
     rightComponent,
     leftComponent,
     style,

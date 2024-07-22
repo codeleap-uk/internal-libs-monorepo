@@ -179,7 +179,7 @@ export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
 
   return (
     <View style={styles.wrapper}>
-      <View {...getRootProps() as PropsOf<ViewProps<'div'>>} style={styles.dropzone}>
+      <View {...getRootProps() as PropsOf<ViewProps>} style={styles.dropzone}>
 
         {icon && !hasFiles ? (
           <View style={styles.iconWrapper}>

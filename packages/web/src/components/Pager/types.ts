@@ -21,7 +21,7 @@ export type PagerProps =
     renderPageWrapper?: React.FC
     footer?: ReactElement
     dotsProps?: DotsProps
-    pageWrapperProps?: ViewProps<'div'>
+    pageWrapperProps?: ViewProps
     dotsDisabled?: boolean
     disableSwipe?: boolean
   }

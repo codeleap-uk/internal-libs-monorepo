@@ -54,29 +54,29 @@ export const InputBase = (props: InputBaseProps) => {
   const WrapperComponent = wrapper || View
   const InnerWrapperComponent = innerWrapper || View
 
-  const _styles = useInputBaseStyles(allProps)
+  const styles = useInputBaseStyles(allProps)
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
-    style: _styles.leftIconStyles,
+    style: styles.leftIconStyles,
     disabled,
     debugName: `${debugName} left icon`,
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
-    style: _styles.rightIconStyles,
+    style: styles.rightIconStyles,
     disabled,
     debugName: `${debugName} right icon`,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle} /> : label
+  const _label = TypeGuards.isString(label) ? <Text text={label} style={styles.labelStyle} /> : label
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle} /> : error
+  const _error = TypeGuards.isString(error) ? <Text text={error} style={styles.errorStyle} /> : error
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle} /> : description
+  const _description = TypeGuards.isString(description) ? <Text text={description} style={styles.descriptionStyle} /> : description
 
   const parts = {
     label: labelAsRow ? (
-      <View style={_styles.labelRowStyle}>
+      <View style={styles.labelRowStyle}>
         {_label}
         {_description}
       </View>
@@ -87,21 +87,21 @@ export const InputBase = (props: InputBaseProps) => {
     innerWrapper:
       <InnerWrapperComponent
         ref={innerWrapperRef}
-        style={_styles.innerWrapperStyle}
+        style={styles.innerWrapperStyle}
         {...innerWrapperProps}
       >
         {_leftIcon}
         {children}
         {_rightIcon}
       </InnerWrapperComponent>,
-    error: noError ? null : (_error || <Text children={<React.Fragment> &nbsp; </React.Fragment>} style={_styles.errorStyle} />),
+    error: noError ? null : (_error || <Text children={<React.Fragment> &nbsp; </React.Fragment>} style={styles.errorStyle} />),
   }
 
   return (
     <WrapperComponent
       {...otherProps}
       {...wrapperProps}
-      style={_styles.wrapperStyle}
+      style={styles.wrapperStyle}
     >
       {
         order.map((key) => (
