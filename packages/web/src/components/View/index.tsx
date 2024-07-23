@@ -43,7 +43,7 @@ export const View = forwardRef(<T extends NativeHTMLElement = 'div'>(viewProps: 
 
   const platformMediaQuery = useMemo(() => {
     // @ts-expect-error theme type
-    return theme.media.renderToPlatformQuery({
+    return theme?.media?.renderToPlatformQuery({
       is,
       not,
       up,
