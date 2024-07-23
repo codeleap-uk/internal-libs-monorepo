@@ -13,7 +13,7 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 export * from './styles'
 export * from './types'
 
-export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(touchableProps: TouchableProps<T>, ref) => {
+export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchableProps: TouchableProps, ref) => {
   const allProps = {
     ...Touchable.defaultProps,
     ...touchableProps,
@@ -98,13 +98,13 @@ export const Touchable = forwardRef(<T extends NativeHTMLElement = 'button'>(tou
   const testId = getTestId(allProps)
 
   return (
-    // @ts-expect-error
     <View
       component={Component || 'button'}
       {...props}
       debugName={debugName}
       onClick={handleClick}
       onKeyDown={handleClick}
+      // @ts-expect-error
       ref={ref}
       style={[styles.wrapper, disabled && styles['wrapper:disabled']]}
       data-testid={testId}
@@ -123,7 +123,7 @@ Touchable.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 Touchable.defaultProps = {
   propagate: true,
   debounce: null,
-  component: View as unknown as 'button',
+  component: View,
   analyticsEnabled: false,
   analyticsName: null,
   analyticsData: {},

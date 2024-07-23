@@ -1,12 +1,12 @@
 import { AnyFunction } from '@codeleap/common'
 import { ComponentPropsWithRef, ElementType } from 'react'
 import { TouchableComposition } from './styles'
-import { StyledProp } from '@codeleap/styles'
+import { AnyRecord, StyledProp } from '@codeleap/styles'
 
 export type TouchableProps<T extends ElementType = 'button'> =
   Omit<ComponentPropsWithRef<T>, 'style'> &
   {
-    component?: T
+    component?: ElementType<AnyRecord>
     disabled?: boolean
     propagate?: boolean
     onPress?: AnyFunction

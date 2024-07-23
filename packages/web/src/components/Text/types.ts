@@ -1,12 +1,12 @@
 import { ComponentPropsWithoutRef, ElementType } from 'react'
 import { TextComposition } from './styles'
-import { StyledProp } from '@codeleap/styles'
+import { AnyRecord, StyledProp } from '@codeleap/styles'
 import { MotionProps } from 'framer-motion'
 
 export type TextProps<T extends ElementType = 'p'> =
   Omit<ComponentPropsWithoutRef<T>, 'style'> &
   {
-    component?: T
+    component?: ElementType<AnyRecord>
     text?: string
     style?: StyledProp<TextComposition>
     debugName?: string

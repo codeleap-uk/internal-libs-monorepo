@@ -1,13 +1,13 @@
-import { HTMLProps, NativeHTMLElement } from '../../types'
 import { AnimationProps, MotionProps } from 'framer-motion'
-import { StyledProp } from '@codeleap/styles'
+import { AnyRecord, StyledProp } from '@codeleap/styles'
 import { ViewComposition } from './styles'
+import { ComponentPropsWithRef, ElementType } from 'react'
 
-export type ViewProps<T extends NativeHTMLElement = 'div'> =
-  Omit<HTMLProps<T>, 'style'> &
+export type ViewProps<T extends ElementType = 'div'> =
+  Omit<ComponentPropsWithRef<T>, 'style'> &
   Omit<AnimationProps, 'style'> &
   {
-    component?: NativeHTMLElement
+    component?: ElementType<AnyRecord>
     debugName?: string
     is?: any
     not?: any

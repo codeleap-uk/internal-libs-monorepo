@@ -1,15 +1,15 @@
 import { TypeGuards } from '@codeleap/common'
 import { motion } from 'framer-motion'
-import React, { ElementType } from 'react'
+import React, { ElementType, forwardRef } from 'react'
 import { TextProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
-export const Text = <T extends ElementType = 'p'>(textProps: TextProps<T>) => {
+export const Text = forwardRef<HTMLParagraphElement, TextProps>((textProps, ref) => {
   const {
     style,
     text,
@@ -30,7 +30,7 @@ export const Text = <T extends ElementType = 'p'>(textProps: TextProps<T>) => {
 
   const styles = useStylesFor(Text.styleRegistryName, style)
 
-  const Component = animated ? (motion?.[component] || motion.p) : (component || 'p')
+  const Component: ElementType = animated ? (motion?.[component as string] || motion.p) : (component || 'p')
 
   const pressedRef = React.useRef(false)
 
@@ -65,18 +65,18 @@ export const Text = <T extends ElementType = 'p'>(textProps: TextProps<T>) => {
     onClick: disabled ? null : _onPress,
   } : {}
 
-  const componentProps: any = {
+  const componentProps: AnyRecord = {
     ...props,
     ...pressProps,
     ...animatedProps,
   }
 
   return (
-    <Component {...componentProps} css={[styles.text, disabled && styles['text:disabled']]}>
+    <Component {...componentProps} ref={ref} css={[styles.text, disabled && styles['text:disabled']]}>
       {text || children}
     </Component>
   )
-}
+}) as StyledComponentWithProps<TextProps>
 
 Text.styleRegistryName = 'Text'
 Text.elements = ['text']
@@ -94,6 +94,6 @@ Text.defaultProps = {
   pressDisabled: false,
   animated: false,
   animatedProps: {},
-} as Partial<TextProps<'p'>>
+} as Partial<TextProps>
 
 WebStyleRegistry.registerComponent(Text)

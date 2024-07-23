@@ -1,5 +1,4 @@
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'
-import { View, Text, Icon } from '../../components'
 import { TypeGuards } from '@codeleap/common'
 import { ProgressCircleProps } from './types'
 import { formatProgress as _formatProgress } from '../utils'
@@ -7,6 +6,10 @@ import { useMemo } from '@codeleap/common'
 import { useStylesFor } from '../../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../../lib/WebStyleRegistry'
+import { Text } from '../../Text'
+import { Icon } from '../../Icon'
+import { View } from '../../View'
+import { CSSProperties } from 'react'
 
 export * from './styles'
 export * from './types'
@@ -41,15 +44,15 @@ export const ProgressCircle = (props: ProgressCircleProps) => {
     return value ?? 0
   }, [styles.circle])
 
+  const lineStyle = styles.line as CSSProperties
+
   return (
     <View debugName={debugName} {...rest} style={styles.wrapper}>
       <CircularProgressbarWithChildren
         value={progress}
         styles={buildStyles({
-          // @ts-expect-error icss type
-          pathColor: styles.line?.borderColor,
-          // @ts-expect-error icss type
-          trailColor: styles.line?.backgroundColor,
+          pathColor: lineStyle?.borderColor,
+          trailColor: lineStyle?.backgroundColor,
           strokeLinecap: 'butt',
           ...circleStyles,
         })}
