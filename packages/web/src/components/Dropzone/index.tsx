@@ -33,7 +33,7 @@ const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
   } = props
 
   const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation()
+    e?.stopPropagation?.()
     onRemove?.()
   }
 
@@ -60,6 +60,7 @@ const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
 
       <ActionIcon
         onPress={handleRemove}
+        propagate={false}
         debugName='DropzoneFilePreview:RightIcon'
         name={fileRightIcon}
         style={fileRightIconStyles}
