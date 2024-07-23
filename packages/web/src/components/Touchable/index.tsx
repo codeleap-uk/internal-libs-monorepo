@@ -1,10 +1,7 @@
-import { onMount, TypeGuards } from '@codeleap/common'
-import React, { forwardRef } from 'react'
+import { onMount, TypeGuards, useGlobalContext } from '@codeleap/common'
+import React, { ComponentType, ElementType, forwardRef, HTMLAttributes } from 'react'
 import { stopPropagation } from '../../lib'
-import { View } from '../View'
-import { NativeHTMLElement } from '../../types'
 import { getTestId } from '../../lib/utils/test'
-import { useGlobalContext } from '@codeleap/common'
 import { TouchableProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
@@ -24,7 +21,7 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
     debounce,
     leadingDebounce,
     setPressed,
-    component: Component,
+    component,
     disabled,
     onPress,
     onClick,
@@ -41,6 +38,8 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
 
   const pressed = React.useRef(!!leadingDebounce)
 
+  const { logger } = useGlobalContext()
+
   onMount(() => {
     if (!!leadingDebounce && !!debounce) {
       setTimeout(() => {
@@ -49,7 +48,7 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
     }
   })
 
-  const { logger } = useGlobalContext()
+  const Component = component as unknown as ComponentType<HTMLAttributes<HTMLButtonElement>>
 
   const notPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
 
@@ -98,15 +97,13 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
   const testId = getTestId(allProps)
 
   return (
-    <View
-      component={Component || 'button'}
+    <Component
       {...props}
-      debugName={debugName}
       onClick={handleClick}
       onKeyDown={handleClick}
-      // @ts-expect-error
       ref={ref}
-      style={[styles.wrapper, disabled && styles['wrapper:disabled']]}
+      // @ts-expect-error icss type
+      css={[styles.wrapper, disabled && styles['wrapper:disabled']]}
       data-testid={testId}
     />
   )
@@ -117,17 +114,17 @@ Touchable.elements = ['wrapper']
 Touchable.rootElement = 'wrapper'
 
 Touchable.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Touchable as <T extends NativeHTMLElement = 'button'>(props: StyledComponentProps<TouchableProps<T>, typeof styles>) => IJSX
+  return Touchable as <T extends ElementType = 'button'>(props: StyledComponentProps<TouchableProps<T>, typeof styles>) => IJSX
 }
 
 Touchable.defaultProps = {
   propagate: true,
   debounce: null,
-  component: View,
+  component: 'div',
   analyticsEnabled: false,
   analyticsName: null,
   analyticsData: {},
   tabIndex: 0,
-} as Partial<TouchableProps<'button'>>
+} as Partial<TouchableProps>
 
 WebStyleRegistry.registerComponent(Touchable)
