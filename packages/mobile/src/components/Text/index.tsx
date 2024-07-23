@@ -16,12 +16,15 @@ export const Text = forwardRef<NativeText, TextProps>((textProps, ref) => {
     children,
     onPress,
     style,
-    debounce = 1000,
+    debounce,
     pressDisabled,
     animated,
     animatedStyle,
     ...props
-  } = textProps
+  } = {
+    ...Text.defaultProps,
+    ...textProps,
+  }
 
   const pressPolyfillEnabled = Platform.select({
     ios: props.suppressHighlighting,
@@ -103,6 +106,10 @@ Text.rootElement = 'text'
 Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Text as (props: StyledComponentProps<TextProps & { ref?: React.MutableRefObject<NativeText> }, typeof styles>) => IJSX
 }
+
+Text.defaultProps = {
+  debounce: 1000,
+} as Partial<TextProps>
 
 MobileStyleRegistry.registerComponent(Text)
 

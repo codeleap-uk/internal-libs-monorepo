@@ -12,7 +12,6 @@ export * from './styles'
 export * from './types'
 
 export const Sections = forwardRef<SectionList, SectionListProps>((sectionsProps, ref) => {
-
   const {
     style,
     onRefresh,
@@ -83,13 +82,13 @@ export const Sections = forwardRef<SectionList, SectionListProps>((sectionsProps
 
   return (
     <SectionList
-      style={styles?.wrapper}
       contentContainerStyle={keyboardStyle}
       showsVerticalScrollIndicator={false}
       // @ts-ignore
       ref={ref}
       ItemSeparatorComponent={separator}
       {...props}
+      style={styles?.wrapper}
       refreshControl={
         !!onRefresh && (
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -114,6 +113,6 @@ Sections.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 Sections.defaultProps = {
   keyboardShouldPersistTaps: 'handled',
   keyboardAware: true,
-}
+} as Partial<SectionListProps>
 
 MobileStyleRegistry.registerComponent(Sections)

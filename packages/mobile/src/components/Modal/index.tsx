@@ -150,14 +150,13 @@ export const Modal = (modalProps: ModalProps) => {
         }}
       />
 
-      {/* @ts-expect-error */}
       <ScrollComponent
-        style={scrollStyle}
         contentContainerStyle={styles?.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardAware
         animated
         {...scrollProps}
+        style={scrollStyle}
       >
         {dismissOnBackdrop ? (
           <Touchable
@@ -171,10 +170,10 @@ export const Modal = (modalProps: ModalProps) => {
 
         <View
           animated
-          style={styles?.box}
           animatedStyle={boxAnimationStyles}
           {...props}
           onLayout={onModalLayout}
+          style={styles?.box}
         >
           {header ? header : <Header {...headerProps} />}
 
@@ -205,7 +204,7 @@ Modal.defaultProps = {
   dismissOnBackdrop: true,
   scroll: true,
   closeOnHardwareBackPress: true,
-}
+} as Partial<ModalProps>
 
 MobileStyleRegistry.registerComponent(Modal)
 

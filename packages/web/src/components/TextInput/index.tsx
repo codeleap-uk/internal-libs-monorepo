@@ -1,9 +1,4 @@
-import {
-  IconPlaceholder,
-  TypeGuards,
-  useBooleanToggle,
-  useValidate,
-} from '@codeleap/common'
+import { TypeGuards, useBooleanToggle, useValidate } from '@codeleap/common'
 import React, {
   forwardRef,
   useImperativeHandle,

@@ -10,8 +10,8 @@ export * from './types'
 export * from './styles'
 
 export const View = <T extends React.ComponentType = typeof RNView>(props: ViewProps<T>) => {
-  const { 
-    style, 
+  const {
+    style,
     component: _Component = RNView,
     animated = false,
     animatedStyle,
@@ -20,7 +20,7 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
 
   const styles = useStylesFor(View.styleRegistryName, style)
 
-  const Component: React.ComponentType<any> = animated ? Animated.View : _Component
+  const Component: React.ComponentType<AnyRecord> = animated ? Animated.View : _Component
 
   return (
     <Component {...viewProps} style={[styles.wrapper, animatedStyle]} />

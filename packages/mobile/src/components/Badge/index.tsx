@@ -18,15 +18,6 @@ const defaultGetBadgeContent = ({ count, maxCount }: BadgeContent) => {
   }
 }
 
-const defaultProps: Partial<BadgeProps> = {
-  maxCount: 9,
-  minCount: 1,
-  getBadgeContent: defaultGetBadgeContent,
-  renderBadgeContent: null,
-  disabled: false,
-  badge: true,
-}
-
 export const Badge = (props: BadgeProps) => {
   const allProps = {
     ...Badge.defaultProps,
@@ -76,11 +67,7 @@ export const Badge = (props: BadgeProps) => {
 
   const showContent = TypeGuards.isNumber(count) && count >= minCount
 
-  let BadgeContent = renderBadgeContent
-
-  if (TypeGuards.isNil(renderBadgeContent)) {
-    BadgeContent = () => <Text text={content} {...textProps} style={countStyles} />
-  }
+  const BadgeContent = TypeGuards.isNil(renderBadgeContent) ? () => <Text text={content} {...textProps} style={countStyles} /> : renderBadgeContent
 
   return (
     <View {...rest} style={wrapperStyles}>
@@ -104,7 +91,15 @@ export const Badge = (props: BadgeProps) => {
 Badge.styleRegistryName = 'Badge'
 Badge.elements = ['wrapper', 'innerWrapper', 'count']
 Badge.rootElement = 'wrapper'
-Badge.defaultProps = defaultProps
+
+Badge.defaultProps = {
+  maxCount: 9,
+  minCount: 1,
+  getBadgeContent: defaultGetBadgeContent,
+  renderBadgeContent: null,
+  disabled: false,
+  badge: true,
+} as Partial<BadgeProps>
 
 Badge.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Badge as (props: StyledComponentProps<BadgeProps, typeof styles>) => IJSX

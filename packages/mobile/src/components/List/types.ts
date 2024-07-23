@@ -5,7 +5,7 @@ import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { RefreshControlProps } from '../RefreshControl'
 import { ViewProps } from '../View'
 
-export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
+export type DataboundFlatListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout' | 'style'
 
 export type AugmentedRenderItemInfo<T> = ListRenderItemInfo<T> & {
   isFirst: boolean
@@ -25,11 +25,10 @@ export type ReplaceFlatlistProps<P, T> =
     loading?: boolean
   }
 
-export type FlatListProps<
-  T = any[],
-  Data = T extends Array<infer D> ? D : never
-> =
-  ReplaceFlatlistProps<RNFlatListProps<Data>, Data> &
+export type ListItem = {}
+
+export type FlatListProps<T extends ListItem = ListItem> =
+  ReplaceFlatlistProps<RNFlatListProps<T>, T> &
   Omit<ViewProps, 'style'> &
   {
     separators?: boolean

@@ -119,6 +119,6 @@ Switch.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Switch as (props: StyledComponentProps<SwitchProps, typeof styles>) => IJSX
 }
 
-Switch.defaultProps = {}
+Switch.defaultProps = {} as Partial<SwitchProps>
 
 MobileStyleRegistry.registerComponent(Switch)

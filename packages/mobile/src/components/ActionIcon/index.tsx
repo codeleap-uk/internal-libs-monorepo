@@ -30,19 +30,19 @@ export const ActionIcon = (props: ActionIconProps) => {
   const compositionStyles = useCompositionStyles(['badge', 'touchable'], styles)
 
   return (
-    <Touchable style={compositionStyles?.touchable} {...touchableProps}>
+    <Touchable {...touchableProps} style={compositionStyles?.touchable}>
       <Icon
         name={icon ?? name}
+        {...iconProps}
         style={[
           styles.icon,
           touchableProps?.disabled && styles['icon:disabled'],
         ]}
-        {...iconProps}
       />
 
       {children}
 
-      <Badge badge={badge} style={compositionStyles?.badge} {...badgeProps} />
+      <Badge badge={badge} {...badgeProps} style={compositionStyles?.badge} />
     </Touchable>
   )
 }
@@ -58,6 +58,6 @@ ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 ActionIcon.defaultProps = {
   hitSlop: 10,
   badge: false,
-}
+} as Partial<ActionIconProps>
 
 MobileStyleRegistry.registerComponent(ActionIcon)

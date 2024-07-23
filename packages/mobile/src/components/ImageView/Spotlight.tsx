@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { deepEqual, onUpdate, ReactState, TypeGuards, usePrevious, useUnmount } from '@codeleap/common'
-
 import uuid from 'react-native-uuid'
 import { ImageView, ImageViewProps } from './component'
 import { ImageProps } from '../Image'

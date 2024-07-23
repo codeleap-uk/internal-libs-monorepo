@@ -12,7 +12,6 @@ export * from './styles'
 export * from './types'
 
 export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
-
   const {
     style,
     refreshTimeout,
@@ -85,8 +84,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
       {children}
     </Component>
   )
-},
-) as StyledComponentWithProps<ScrollProps>
+}) as StyledComponentWithProps<ScrollProps>
 
 Scroll.styleRegistryName = 'Scroll'
 Scroll.elements = ['wrapper', 'content']
@@ -101,6 +99,6 @@ Scroll.defaultProps = {
   refreshTimeout: 3000,
   keyboardAware: true,
   animated: true,
-}
+} as Partial<ScrollProps>
 
 MobileStyleRegistry.registerComponent(Scroll)

@@ -1,11 +1,11 @@
-import React, { ReactElement, useImperativeHandle, useMemo, useRef, useState, Ref } from 'react'
+import React, { useImperativeHandle, useMemo, useRef, useState, Ref } from 'react'
 import { Easing, ScrollView } from 'react-native'
 import { Text } from '../Text'
 import { View } from '../View'
 import { useAnimatedVariantStyles } from '../../utils'
 import { SegmentedControlOption } from './Option'
 import { SegmentedControlProps, SegmentedControlRef } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -195,6 +195,6 @@ SegmentedControl.defaultProps = {
   renderBubble: DefaultBubble,
   renderOption: SegmentedControlOption,
   scrollToCurrentOptionOnMount: true,
-}
+} as Partial<SegmentedControlProps>
 
 MobileStyleRegistry.registerComponent(SegmentedControl)

@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { TypeGuards, onMount } from '@codeleap/common'
+import { TypeGuards, onMount, useGlobalContext } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
@@ -13,10 +13,7 @@ import { useStylesFor } from '../../hooks'
 export * from './styles'
 export * from './types'
 
-export const Touchable = forwardRef<
-  RNView,
-  TouchableProps
->((touchableProps, ref) => {
+export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref) => {
   const {
     children,
     onPress,
@@ -50,33 +47,30 @@ export const Touchable = forwardRef<
 
   const styles = useStylesFor(Touchable.styleRegistryName, style)
 
-  // const { logger } = useCodeleapContext()
+  const { logger } = useGlobalContext()
 
   const press = () => {
-    if (!onPress) {
-      // logger.warn('No onPress passed to touchable', {
-      //   touchableProps,
-      // }, 'User Interaction')
-      return
-    }
+    if (!onPress) return
+
     const _onPress = () => {
-      // logger.log(
-      //   `<${debugComponent || 'Touchable'}/>  pressed`,
-      //   debugName,
-      //   'User interaction',
-      // )
+      logger.log(
+        `<${debugComponent || 'Touchable'}/>  pressed`,
+        debugName,
+        'User interaction',
+      )
       if (dismissKeyboard) {
         Keyboard.dismiss()
       }
       if (analyticsEnabled) {
         const name = analyticsName || debugName
         if (!!name?.trim?.()) {
-          // logger.analytics?.interaction(name, analyticsData)
+          logger.analytics?.interaction(name, analyticsData)
         }
       }
 
-      onPress && onPress()
+      onPress()
     }
+    
     if (TypeGuards.isNumber(debounce)) {
       if (pressed.current) {
         return
@@ -91,7 +85,6 @@ export const Touchable = forwardRef<
     } else {
       _onPress()
     }
-
   }
 
   const _styles = StyleSheet.flatten([styles?.wrapper, props?.disabled && styles?.['wrapper:disabled']])
@@ -188,15 +181,12 @@ export const Touchable = forwardRef<
   const disableRipple = disableFeedback || rippleDisabled || Platform.OS !== 'android'
 
   return (
-    <Wrapper style={[wrapperStyle]} hitSlop={hitSlop}>
+    <Wrapper style={wrapperStyle} hitSlop={hitSlop}>
       {!disableRipple ? (
         <PressableRipple
           onPress={press}
-          style={[
-            pressableStyle,
-            styles?.pressable,
-          ]}
           {...props}
+          style={[pressableStyle, styles?.pressable]}
           rippleFades={false}
           rippleDuration={350}
           rippleOpacity={0.1}
@@ -240,6 +230,6 @@ Touchable.defaultProps = {
   analyticsEnabled: false,
   analyticsName: null,
   dismissKeyboard: true,
-}
+} as Partial<TouchableProps>
 
 MobileStyleRegistry.registerComponent(Touchable)

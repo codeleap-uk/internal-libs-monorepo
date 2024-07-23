@@ -4,7 +4,7 @@ import { InputBaseProps } from '../InputBase'
 import { StyledProp } from '@codeleap/styles'
 
 export type SliderProps =
-  Partial<Omit<RNSliderProps, 'value' | 'onValueChange'>> &
+  Partial<Omit<RNSliderProps, 'value' | 'onValueChange' | 'style'>> &
   Pick<InputBaseProps, 'disabled' | 'debugName' | 'description' | 'label'> &
   {
     debounce?: number | null

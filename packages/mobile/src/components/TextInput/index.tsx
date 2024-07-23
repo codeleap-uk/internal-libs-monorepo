@@ -30,7 +30,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     value,
     validate,
     debugName,
-    visibilityToggle = false,
+    visibilityToggle,
     masking,
     password,
     onChangeMask,
@@ -187,6 +187,7 @@ TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 TextInput.defaultProps = {
   hiddenIcon: 'input-visiblity:hidden' as AppIcon,
   visibleIcon: 'input-visiblity:visible' as AppIcon,
-}
+  visibilityToggle: false,
+} as Partial<TextInputProps>
 
 MobileStyleRegistry.registerComponent(TextInput)

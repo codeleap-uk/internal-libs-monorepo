@@ -1,13 +1,13 @@
-import { IconPlaceholder, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { ActionIcon, Text, View } from '../../components'
 import { DatePickerArrowProps, DatePickerHeaderComponent } from '../types'
 import { format, getYear } from 'date-fns'
-import { useCompositionStyles } from '@codeleap/styles'
+import { AppIcon, useCompositionStyles } from '@codeleap/styles'
 
 export const ArrowLabel = ({ name, direction, ...props }: DatePickerArrowProps) => {
   return (
     <ActionIcon
-      name={name ?? (`chevron-${direction}` as IconPlaceholder)}
+      name={name ?? (`chevron-${direction}` as AppIcon)}
       debugName={'Calendar arrowLabel'}
       {...props}
     />

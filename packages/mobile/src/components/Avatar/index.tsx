@@ -3,7 +3,7 @@ import { TypeGuards, matchInitialToColor, useMemo } from '@codeleap/common'
 import { Image } from '../Image'
 import { Touchable } from '../Touchable'
 import { Text } from '../Text'
-import { View } from '../View'
+import { View, ViewProps } from '../View'
 import { Icon } from '../Icon'
 import { Badge } from '../Badge'
 import { AvatarProps } from './types'
@@ -18,7 +18,7 @@ export const Avatar = (props: AvatarProps) => {
   const {
     debugName,
     name = '',
-    firstNameOnly = true,
+    firstNameOnly,
     image,
     icon,
     badgeIcon,
@@ -26,7 +26,7 @@ export const Avatar = (props: AvatarProps) => {
     description,
     onPress,
     noFeedback,
-    badge = false,
+    badge,
     badgeProps = {},
     style,
     ...viewProps
@@ -57,21 +57,19 @@ export const Avatar = (props: AvatarProps) => {
     return <Text text={text || initials} style={styles.initials} />
   }
 
-  // @ts-expect-error
+  // @ts-expect-error icss type
   const hasBackgroundColor = !!styles?.touchable?.backgroundColor
 
   const badgeStyles = useNestedStylesByKey('badge', styles)
 
   return (
-    <View style={styles.wrapper} {...viewProps as any}>
+    <View {...viewProps as ViewProps} style={styles.wrapper}>
       <Touchable
         debugName={'Avatar:' + debugName}
         onPress={() => onPress?.()}
         style={[
           styles.touchable,
-          !hasBackgroundColor && {
-            backgroundColor: randomColor,
-          },
+          !hasBackgroundColor && { backgroundColor: randomColor },
         ]}
         noFeedback={noFeedback || !onPress}
       >
@@ -83,7 +81,7 @@ export const Avatar = (props: AvatarProps) => {
           </View>
         ) : null}
 
-        <Badge badge={badge} style={badgeStyles} {...badgeProps} />
+        <Badge badge={badge} {...badgeProps} style={badgeStyles} />
       </Touchable>
 
       {badgeIcon ? (
@@ -108,6 +106,9 @@ Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Avatar as (props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX
 }
 
-Avatar.defaultProps = {}
+Avatar.defaultProps = {
+  badge: false,
+  firstNameOnly: true,
+} as AvatarProps
 
 MobileStyleRegistry.registerComponent(Avatar)

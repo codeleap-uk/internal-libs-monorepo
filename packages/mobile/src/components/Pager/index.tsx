@@ -10,18 +10,6 @@ import { useStylesFor } from '../../hooks'
 export * from './styles'
 export * from './types'
 
-const defaultProps: Partial<PagerProps> = {
-  page: 0,
-  returnEarly: true,
-  windowing: false,
-  keyboardShouldPersistTaps: 'handled',
-  scrollEnabled: true,
-  scrollRightEnabled: true,
-  scrollLeftEnabled: true,
-  scrollDirectionThrottle: 650,
-  waitEventDispatchTimeout: 250,
-}
-
 export const Pager = (pagerProps: PagerProps) => {
   const {
     width: widthProp,
@@ -204,6 +192,16 @@ Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Pager as (props: StyledComponentProps<PageProps, typeof styles>) => IJSX
 }
 
-Pager.defaultProps = defaultProps
+Pager.defaultProps = {
+  page: 0,
+  returnEarly: true,
+  windowing: false,
+  keyboardShouldPersistTaps: 'handled',
+  scrollEnabled: true,
+  scrollRightEnabled: true,
+  scrollLeftEnabled: true,
+  scrollDirectionThrottle: 650,
+  waitEventDispatchTimeout: 250,
+} as Partial<PagerProps>
 
 MobileStyleRegistry.registerComponent(Pager)

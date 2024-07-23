@@ -9,8 +9,9 @@ import { useStylesFor } from '../../hooks'
 export * from './styles'
 export * from './types'
 
-const defaultProps: Partial<AvatarGroupProps> = {
-  displacement: 20.5,
+const getAvatarStyle = (index: number, displacement: number = 20.5) => {
+  const right = index * displacement
+  return { right: `${right}%` }
 }
 
 export const AvatarGroup = (props: AvatarGroupProps) => {
@@ -52,11 +53,8 @@ AvatarGroup.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return AvatarGroup as (props: StyledComponentProps<AvatarGroupProps, typeof styles>) => IJSX
 }
 
-AvatarGroup.defaultProps = defaultProps
+AvatarGroup.defaultProps = {
+  displacement: 20.5,
+} as Partial<AvatarGroupProps>
 
 MobileStyleRegistry.registerComponent(AvatarGroup)
-
-const getAvatarStyle = (index: number, displacement: number = 20.5) => {
-  const right = index * displacement
-  return { right: `${right}%` }
-}

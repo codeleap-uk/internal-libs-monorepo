@@ -5,8 +5,6 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 export * from './utils'
@@ -31,67 +29,67 @@ export const InputBase = (props: InputBaseProps) => {
     description = null,
     leftIcon = null,
     rightIcon = null,
-    wrapper,
+    wrapper: WrapperComponent,
     debugName,
-    innerWrapper,
+    innerWrapper: InnerWrapperComponent,
     focused,
     innerWrapperProps = {},
     wrapperProps = {},
-    disabled = false,
+    disabled,
     order = InputBaseDefaultOrder,
     style,
-    labelAsRow = false,
-    hideErrorMessage = false,
+    labelAsRow,
+    hideErrorMessage,
     ...otherProps
-  } = props
+  } = {
+    ...InputBase.defaultProps,
+    ...props,
+  }
 
-  const WrapperComponent = wrapper || View
-  const InnerWrapperComponent = innerWrapper || View
-
-  const _styles = useInputBaseStyles(props)
+  const styles = useInputBaseStyles(props)
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
-    style: _styles.leftIconStyles,
+    style: styles.leftIconStyles,
     debugName: `${debugName} left icon`,
     dismissKeyboard: false,
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
     // @ts-ignore
-    style: _styles.rightIconStyles,
+    style: styles.rightIconStyles,
     debugName: `${debugName} right icon`,
     dismissKeyboard: false,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle} /> : label
+  const _label = TypeGuards.isString(label) ? <Text text={label} style={styles.labelStyle} /> : label
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle} /> : error
+  const _error = TypeGuards.isString(error) ? <Text text={error} style={styles.errorStyle} /> : error
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle} /> : description
+  const _description = TypeGuards.isString(description) ? <Text text={description} style={styles.descriptionStyle} /> : description
 
   const parts = {
-    label: labelAsRow ? <View style={_styles.labelRowStyle}>
+    label: labelAsRow ? <View style={styles.labelRowStyle}>
       {_label}
       {_description}
     </View> : _label,
     description: labelAsRow ? null : _description,
     innerWrapper: <InnerWrapperComponent style={[
-      _styles.innerWrapperStyle,
+      styles.innerWrapperStyle,
     ]} {...innerWrapperProps}>
       {_leftIcon}
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
     error: hideErrorMessage ? null : (
-      _error || <Text text={''} style={_styles.errorStyle} />
+      _error || <Text text={''} style={styles.errorStyle} />
     ),
   }
 
   return <WrapperComponent
     {...otherProps}
     {...wrapperProps}
-    style={_styles.wrapperStyle}
+    style={styles.wrapperStyle}
   >
     {
       order.map((key) => <KeyPassthrough key={key}>
@@ -102,12 +100,13 @@ export const InputBase = (props: InputBaseProps) => {
   </WrapperComponent>
 }
 
-InputBase.styleRegistryName = 'InputBase'
 InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
-InputBase.rootElement = 'wrapper'
 
-InputBase.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return InputBase as (props: StyledComponentProps<InputBaseProps, typeof styles>) => IJSX
-}
-
-MobileStyleRegistry.registerComponent(InputBase)
+InputBase.defaultProps = {
+  disabled: false,
+  labelAsRow: false,
+  hideErrorMessage: false,
+  order: InputBaseDefaultOrder,
+  wrapper: View,
+  innerWrapper: View,
+} as Partial<InputBaseProps>

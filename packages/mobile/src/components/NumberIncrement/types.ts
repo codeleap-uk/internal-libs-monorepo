@@ -10,7 +10,7 @@ type MaskOptions = Masking['options']
 
 export type NumberIncrementProps =
   Omit<InputBaseProps, 'style'> &
-  RNTextInputProps &
+  Omit<RNTextInputProps, 'style'> &
   {
     value: number
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>

@@ -43,14 +43,17 @@ export type ReplaceAutocompleteProps<Props, T, Multi extends boolean = false> = 
   keyof ValueBoundAutocompleteProps<T, Multi>
 > & ValueBoundAutocompleteProps<T, Multi>
 
-export type AutocompleteProps<T = any, Multi extends boolean = false> = {
+export type AutocompleteProps<T = any, Multi extends boolean = false> =
+  Omit<FlatListProps<T>, 'renderItem' | 'style'> &
+  ValueBoundAutocompleteProps<T, Multi> &
+  {
     placeholder?: string
     label?: FormTypes.Label
     closeOnSelect?: boolean
     style?: StyledProp<AutocompleteComposition>
     keyboardAware?: GetKeyboardAwarePropsOptions
     multiple?: Multi
-    itemProps?: Partial<Pick<AutocompleteRenderFNProps<any>, 'iconProps'|'textProps'|'touchableProps'>>
+    itemProps?: Partial<Pick<AutocompleteRenderFNProps<any>, 'iconProps' | 'textProps' | 'touchableProps'>>
     searchable?: boolean
     limit?: number
     selectedIcon?: AppIcon
@@ -61,8 +64,6 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> = {
     debugName: string
     searchComponent?: React.ComponentType<SearchInputProps>
     listPlaceholder?: Partial<EmptyPlaceholderProps>
-    listProps?: Partial<Omit<FlatListProps<T>, 'renderItem'|'style'>>
+    listProps?: Partial<Omit<FlatListProps<T>, 'renderItem' | 'style'>>
     loading: boolean | ((isLoading: boolean) => boolean)
   }
-    & Omit<FlatListProps<T>, 'renderItem'|'style'>
-    & ValueBoundAutocompleteProps<T, Multi>

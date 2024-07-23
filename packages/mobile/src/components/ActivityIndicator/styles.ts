@@ -1,6 +1,2 @@
 
-export type ActivityIndicatorComposition =
-  'wrapper' |
-  'backCircle' |
-  'frontCircle' |
-  'circle'
+export type ActivityIndicatorComposition = 'wrapper'

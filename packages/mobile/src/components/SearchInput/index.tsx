@@ -87,4 +87,4 @@ SearchInput.defaultProps = {
   debounce: null,
   clearIcon: 'x' as AppIcon,
   searchIcon: 'search' as AppIcon,
-}
+} as Partial<SearchInputProps>

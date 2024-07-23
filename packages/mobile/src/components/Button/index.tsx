@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { Badge } from '../Badge'
 import { ButtonProps } from './types'
-import { AnyRecord, GenericStyledComponentAttributes, useNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, mergeStyles, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -27,7 +27,7 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
     selected,
     rightIcon,
     style,
-    badge = false,
+    badge,
     badgeProps = {},
     ...props
   } = {
@@ -39,20 +39,18 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
 
   const styles = useStylesFor(Button.styleRegistryName, style)
 
-  function getStyles(key: ButtonParts) {
-    return mergeStyles([
-      styles[key],
-      selected && styles[key + ':selected'],
-      disabled && styles[key + ':disabled'],
-    ])
-  }
+  const getStyles = (key: ButtonParts) => mergeStyles([
+    styles[key],
+    selected && styles[key + ':selected'],
+    disabled && styles[key + ':disabled'],
+  ])
 
   const iconStyle = getStyles('icon')
 
   const leftIconStyle = StyleSheet.flatten([iconStyle, getStyles('leftIcon')])
   const rightIconStyle = StyleSheet.flatten([iconStyle, getStyles('rightIcon')])
 
-  const _styles = {
+  const componentStyles = {
     wrapper: getStyles('wrapper'),
     loader: getStyles('loader'),
     leftIcon: leftIconStyle,
@@ -80,13 +78,12 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
   const rightFeedback = getFeedbackStyle(pressed)
 
   // @ts-expect-error This is a hack to hide the icon when there is no text
-  const isLeftIconHidden = _styles?.leftIcon?.display != 'none'
+  const isLeftIconHidden = componentStyles?.leftIcon?.display != 'none'
 
   const badgeStyles = useNestedStylesByKey('badge', styles)
 
   return (
     <Touchable
-      style={[_styles.wrapper, { feedback: styles.feedback }, getFeedbackWrapperStyle(pressed)]}
       ref={ref}
       disabled={disabled}
       onPress={onPress}
@@ -94,13 +91,14 @@ export const Button = forwardRef<GetRefType<TouchableProps['ref']>, ButtonProps>
       noFeedback={!onPress}
       setPressed={setPressed}
       {...props}
+      style={[componentStyles.wrapper, { feedback: styles.feedback }, getFeedbackWrapperStyle(pressed)]}
     >
-      {loading ? <ActivityIndicator style={[_styles.loader, getFeedbackStyle(pressed)]} /> : null}
-      {(!loading && isLeftIconHidden) ? <Icon name={icon} style={[_styles.leftIcon, getFeedbackStyle(pressed)]} /> : null}
-      {text ? <Text text={text} style={[_styles.text, getFeedbackStyle(pressed)]} /> : null}
+      {loading ? <ActivityIndicator style={[componentStyles.loader, getFeedbackStyle(pressed)]} /> : null}
+      {(!loading && isLeftIconHidden) ? <Icon name={icon} style={[componentStyles.leftIcon, getFeedbackStyle(pressed)]} /> : null}
+      {text ? <Text text={text} style={[componentStyles.text, getFeedbackStyle(pressed)]} /> : null}
       {children}
-      <Icon name={rightIcon} style={[_styles.rightIcon, rightFeedback]} />
-      <Badge badge={badge} style={badgeStyles} {...badgeProps} />
+      {rightIcon ? <Icon name={rightIcon} style={[componentStyles.rightIcon, rightFeedback]} /> : null}
+      <Badge badge={badge} {...badgeProps} style={badgeStyles} />
     </Touchable>
   )
 }) as StyledComponentWithProps<ButtonProps>
@@ -115,6 +113,7 @@ Button.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 Button.defaultProps = {
   hitSlop: 10,
-}
+  badge: false
+} as Partial<ButtonProps>
 
 MobileStyleRegistry.registerComponent(Button)

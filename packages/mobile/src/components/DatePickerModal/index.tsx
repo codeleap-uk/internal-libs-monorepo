@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { TypeGuards, useBooleanToggle, useConditionalState, useI18N } from '@codeleap/common'
+import { TypeGuards, useBooleanToggle, useI18N } from '@codeleap/common'
 import DatePicker from 'react-native-date-picker'
 import Modal from '../Modal'
 import { TextInput } from '../TextInput'
@@ -77,17 +77,6 @@ const DefaultFooter: DatePickerModalProps['footerComponent'] = (props) => {
     text={'Done'}
     style={doneStyles}
   />
-}
-
-const defaultProps: Partial<DatePickerModalProps> = {
-  outerInputComponent: OuterInputComponent,
-  formatDate: defaultFormatDate,
-  footerComponent: DefaultFooter,
-  mode: 'date',
-  commitDate: 'onConfirm',
-  showDoneButton: true,
-  isCustomModal: true,
-  toggleOnConfirm: true,
 }
 
 export const DatePickerModal = (props: DatePickerModalProps) => {
@@ -233,6 +222,15 @@ DatePickerModal.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return DatePickerModal as (props: StyledComponentProps<DatePickerModalProps, typeof styles>) => IJSX
 }
 
-DatePickerModal.defaultProps = defaultProps
+DatePickerModal.defaultProps = {
+  outerInputComponent: OuterInputComponent,
+  formatDate: defaultFormatDate,
+  footerComponent: DefaultFooter,
+  mode: 'date',
+  commitDate: 'onConfirm',
+  showDoneButton: true,
+  isCustomModal: true,
+  toggleOnConfirm: true,
+} as Partial<DatePickerModalProps>
 
 MobileStyleRegistry.registerComponent(DatePickerModal)

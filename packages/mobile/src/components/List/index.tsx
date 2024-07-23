@@ -5,21 +5,19 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { RefreshControl } from '../RefreshControl'
 import { useKeyboardPaddingStyle } from '../../utils'
-import { AnyRecord, GenericStyledComponentAttributes, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
-import { FlatListProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { FlatListProps, ListItem } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
 export * from './styles'
 export * from './types'
-export * from './PaginationIndicator'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props.separatorStyles} />
 }
 
-const ListCP = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => {
-
+export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => {
   const {
     style,
     onRefresh,
@@ -101,17 +99,14 @@ const ListCP = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => {
       renderItem={renderItem}
     />
   )
-},
-)
-
-export const List = ListCP as StyledComponentWithProps<FlatListProps>
+}) as StyledComponentWithProps<FlatListProps>
 
 List.styleRegistryName = 'List'
 List.elements = ['wrapper', 'content', 'separator', 'header', 'refreshControl']
 List.rootElement = 'wrapper'
 
 List.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return List as (<T extends any[] = any[]>(props: StyledComponentProps<FlatListProps<T>, typeof styles>) => IJSX)
+  return List as <T extends ListItem>(props: StyledComponentProps<FlatListProps<T>, typeof styles>) => IJSX
 }
 
 List.defaultProps = {
@@ -119,6 +114,6 @@ List.defaultProps = {
   fakeEmpty: false,
   loading: false,
   keyboardAware: true,
-}
+} as Partial<FlatListProps>
 
 MobileStyleRegistry.registerComponent(List)

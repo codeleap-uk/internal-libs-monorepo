@@ -33,6 +33,18 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
   })
 }
 
+const defaultGetLabel = (option) => {
+  if (TypeGuards.isArray(option)) {
+    if (option.length === 0) return null
+
+    return option.map(o => o.label).join(', ')
+
+  } else {
+    if (!option) return null
+    return option?.label
+  }
+}
+
 const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (props) => {
   const {
     currentValueLabel,
@@ -60,31 +72,6 @@ const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (
     placeholder={placeholder as any}
     {...inputProps}
   />
-}
-
-const defaultProps: Partial<SelectProps<any, boolean>> = {
-  getLabel(option) {
-    if (TypeGuards.isArray(option)) {
-      if (option.length === 0) return null
-
-      return option.map(o => o.label).join(', ')
-
-    } else {
-      if (!option) return null
-      return option?.label
-    }
-  },
-  outerInputComponent: OuterInput,
-  searchInputProps: {},
-  arrowIconName: 'chevrons-up-down' as AppIcon,
-  clearIconName: 'x' as AppIcon,
-  placeholder: 'Select',
-  clearable: false,
-  selectedIcon: 'check' as AppIcon,
-  hideInput: false,
-  multiple: false,
-  loadOptionsOnOpen: false,
-  disabled: false,
 }
 
 export const Select = <T extends string | number = string, Multi extends boolean = false>(selectProps: SelectProps<T, Multi>) => {
@@ -120,11 +107,11 @@ export const Select = <T extends string | number = string, Multi extends boolean
     visible: _visible,
     toggle: _toggle,
     ListHeaderComponent,
-    ListComponent = List,
+    ListComponent,
     onLoadOptionsError,
     loadOptionsOnMount = defaultOptions.length === 0,
     loadOptionsOnOpen,
-    filterItems = defaultFilterFunction,
+    filterItems,
     getLabel,
     searchInputProps,
     outerInputComponent,
@@ -335,7 +322,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         style={compositionStyles?.list}
-        keyExtractor={(i) => i.value}
+        keyExtractor={(i: { value: any }) => i.value}
         renderItem={renderListItem}
         fakeEmpty={loading}
         separators
@@ -359,6 +346,21 @@ Select.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Select as (<T extends string | number = string, Multi extends boolean = false>(props: StyledComponentProps<SelectProps<T, Multi>, typeof styles>) => IJSX)
 }
 
-Select.defaultProps = defaultProps
+Select.defaultProps = {
+  getLabel: defaultGetLabel,
+  outerInputComponent: OuterInput,
+  searchInputProps: {},
+  arrowIconName: 'chevrons-up-down' as AppIcon,
+  clearIconName: 'x' as AppIcon,
+  placeholder: 'Select',
+  clearable: false,
+  selectedIcon: 'check' as AppIcon,
+  hideInput: false,
+  multiple: false,
+  loadOptionsOnOpen: false,
+  disabled: false,
+  filterItems: defaultFilterFunction,
+  ListComponent: List,
+} as Partial<SelectProps<any, boolean>>
 
 MobileStyleRegistry.registerComponent(Select)

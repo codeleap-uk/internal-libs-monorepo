@@ -99,13 +99,14 @@ const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
   </>
 }
 
-export const RadioGroup = <T extends string | number>(
-  props: RadioGroupProps<T>,
-) => {
+export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...RadioGroup.defaultProps,
+    ...props,
+  })
 
   const {
     options,
@@ -119,7 +120,7 @@ export const RadioGroup = <T extends string | number>(
 
   const styles = useStylesFor(RadioGroup.styleRegistryName, style)
 
-  // @ts-expect-error
+  // @ts-expect-error icss type
   const _radioOnRight = radioOnRight ?? styles?.__props?.radioOnRight
 
   return <InputBase
@@ -151,5 +152,7 @@ RadioGroup.rootElement = 'wrapper'
 RadioGroup.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return RadioGroup as (<T extends string | number>(props: StyledComponentProps<RadioGroupProps<T>, typeof styles>) => IJSX)
 }
+
+RadioGroup.defaultProps = {} as Partial<RadioGroupProps<string | number>>
 
 MobileStyleRegistry.registerComponent(RadioGroup)

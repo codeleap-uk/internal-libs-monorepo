@@ -229,12 +229,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     <InputBase
       {...inputBaseProps}
       error={hasError ? errorMessage : null}
-      style={{
-        ...styles,
-        innerWrapper: [
-          styles?.innerWrapper,
-        ],
-      }}
+      style={styles}
       rightIcon={{
         name: 'plus' as AppIcon,
         disabled: disabled || incrementDisabled || !editable,
@@ -308,6 +303,6 @@ NumberIncrement.defaultProps = {
   timeoutActionFocus: 300,
   actionPressAutoFocus: true,
   actionDebounce: null,
-}
+} as Partial<NumberIncrementProps>
 
 MobileStyleRegistry.registerComponent(NumberIncrement)

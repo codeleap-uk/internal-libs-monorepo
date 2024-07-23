@@ -3,7 +3,7 @@ import { ListRenderItemInfo } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { RefreshControl } from '../RefreshControl'
-import { List } from '../List'
+import { List, ListItem } from '../List'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
 import { GridProps } from './types'
 import { AnyRecord, AppTheme, IJSX, StyledComponentProps, StyledComponentWithProps, Theme, useTheme } from '@codeleap/styles'
@@ -17,12 +17,7 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props.separatorStyles} />
 }
 
-const defaultProps: Partial<GridProps> = {
-  keyboardShouldPersistTaps: 'handled',
-  refreshControlProps: {},
-}
-
-const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref) => {
+export const Grid = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref) => {
   const {
     style,
     onRefresh,
@@ -31,6 +26,7 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref)
     refreshControlProps = {},
     spacing,
     numColumns,
+    renderItem: RenderItem,
     ...props
   } = {
     ...Grid.defaultProps,
@@ -42,7 +38,8 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref)
   const styles = useStylesFor(Grid.styleRegistryName, style)
 
   const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
-    if (!props?.renderItem) return null
+    if (!RenderItem) return null
+
     const listLength = props?.data?.length || 0
 
     const isFirst = data.index === 0
@@ -59,14 +56,13 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref)
     else if (isOnlyInRow) gap = themeSpacing?.marginHorizontal?.(spacing / 2)
 
     const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
-    const RenderItem = props?.renderItem
 
     return (
       <View style={[styles.itemWrapper, gap]}>
         <RenderItem {...data} {..._itemProps} />
       </View>
     )
-  }, [props?.renderItem, props?.data?.length])
+  }, [RenderItem, props?.data?.length])
 
   const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
   const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
@@ -89,18 +85,19 @@ const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref)
       renderItem={renderItem}
     />
   )
-})
-
-export const Grid = GridCP as StyledComponentWithProps<GridProps>
+}) as StyledComponentWithProps<GridProps>
 
 Grid.styleRegistryName = 'Grid'
 Grid.elements = ['wrapper', 'content', 'separator', 'header', 'refreshControl', 'itemWrapper', 'footer']
 Grid.rootElement = 'wrapper'
 
 Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Grid as (<T extends any[] = any[]>(props: StyledComponentProps<GridProps<T>, typeof styles>) => IJSX)
+  return Grid as (<T extends ListItem>(props: StyledComponentProps<GridProps<T>, typeof styles>) => IJSX)
 }
 
-Grid.defaultProps = defaultProps
+Grid.defaultProps = {
+  keyboardShouldPersistTaps: 'handled',
+  refreshControlProps: {},
+} as Partial<GridProps>
 
 MobileStyleRegistry.registerComponent(Grid)

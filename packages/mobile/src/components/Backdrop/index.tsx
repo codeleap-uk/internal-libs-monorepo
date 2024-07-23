@@ -41,15 +41,13 @@ export const Backdrop = (props: BackdropProps) => {
     <View
       animated
       pointerEvents={visible ? 'auto' : 'none'}
-      style={styles.wrapper}
       animatedStyle={animation}
       {...wrapperProps}
+      style={styles.wrapper}
     >
-      {
-        isPressable
-          ? <Touchable style={styles.touchable} {...rest} noFeedback android_ripple={null} />
-          : null
-      }
+      {isPressable
+        ? <Touchable {...rest} style={styles.touchable} noFeedback android_ripple={null} />
+        : null}
 
       {children}
     </View>
@@ -65,6 +63,6 @@ Backdrop.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Backdrop as (props: StyledComponentProps<BackdropProps, typeof styles>) => IJSX
 }
 
-Backdrop.defaultProps = {}
+Backdrop.defaultProps = {} as Partial<BackdropProps>
 
 MobileStyleRegistry.registerComponent(Backdrop)

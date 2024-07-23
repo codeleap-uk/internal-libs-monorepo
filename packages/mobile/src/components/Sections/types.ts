@@ -6,7 +6,7 @@ import { ViewProps } from '../View'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { RefreshControlProps } from '../RefreshControl'
 
-export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
+export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout' | 'style'
 
 export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & {
   isFirst: boolean

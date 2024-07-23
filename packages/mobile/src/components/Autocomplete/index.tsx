@@ -22,24 +22,15 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
   })
 }
 
-const defaultProps: Partial<AutocompleteProps<any, boolean>> = {
-  getLabel(option) {
-    if (TypeGuards.isArray(option)) {
-      if (option.length === 0) return null
+const defaultGetLabel = (option) => {
+  if (TypeGuards.isArray(option)) {
+    if (option.length === 0) return null
 
-      return option.map(o => o.label).join(', ')
-    } else {
-      if (!option) return null
-      return option?.label
-    }
-  },
-  searchInputProps: {},
-  selectedIcon: 'check' as AppIcon,
-  searchComponent: SearchInput,
-  placeholder: 'Select',
-  searchable: true,
-  multiple: false,
-  selectable: false,
+    return option.map(o => o.label).join(', ')
+  } else {
+    if (!option) return null
+    return option?.label
+  }
 }
 
 export const Autocomplete = <T extends string | number = string, Multi extends boolean = false>(autocomplete: AutocompleteProps<T, Multi>) => {
@@ -226,6 +217,15 @@ Autocomplete.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Autocomplete as (<T extends string | number = string, Multi extends boolean = false>(props: StyledComponentProps<AutocompleteProps<T, Multi>, typeof styles>) => IJSX)
 }
 
-Autocomplete.defaultProps = defaultProps
+Autocomplete.defaultProps = {
+  getLabel: defaultGetLabel,
+  searchInputProps: {},
+  selectedIcon: 'check' as AppIcon,
+  searchComponent: SearchInput,
+  placeholder: 'Select',
+  searchable: true,
+  multiple: false,
+  selectable: false,
+} as Partial<AutocompleteProps<any, boolean>>
 
 MobileStyleRegistry.registerComponent(Autocomplete)

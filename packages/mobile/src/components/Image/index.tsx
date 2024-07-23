@@ -14,7 +14,7 @@ import { useStylesFor } from '../../hooks'
 export * from './styles'
 export * from './types'
 
-export const ImageComponent = (props: ImageProps) => {
+export const Image = React.memo((props: ImageProps) => {
   const {
     style,
     fast,
@@ -47,7 +47,7 @@ export const ImageComponent = (props: ImageProps) => {
   const wrapperProps = {
     onPress: spotlightActions.onImagePressed,
     debugName: `Press spotlight image ${props.source}`,
-    style: [styles.touchable],
+    style: styles.touchable,
     android_ripple: null,
   }
 
@@ -120,24 +120,20 @@ export const ImageComponent = (props: ImageProps) => {
   return (
     <Wrapper {...wrapperProps}>
       <NativeImage
-        style={[aspectRatioStyle, styles.wrapper]}
         resizeMode={resizeMode}
         source={imSource}
         {...(imageProps as any)}
         {...loadProps.current}
+        style={[aspectRatioStyle, styles.wrapper]}
       />
+
       {loadingElement}
     </Wrapper>
   )
-}
-
-function areEqual(prevProps, nextProps) {
-  const check = ['source', 'style', 'resizeMode', 'fast']
-  const res = arePropsEqual(prevProps, nextProps, { check })
-  return res
-}
-
-export const Image = React.memo(ImageComponent, areEqual) as StyledComponentWithProps<ImageProps>
+}, (prevProps, nextProps) => {
+  const equal = arePropsEqual(prevProps, nextProps, { check: ['source', 'style', 'resizeMode', 'fast'] })
+  return equal
+}) as StyledComponentWithProps<ImageProps>
 
 Image.styleRegistryName = 'Image'
 Image.elements = ['wrapper', 'touchable', 'overlay']

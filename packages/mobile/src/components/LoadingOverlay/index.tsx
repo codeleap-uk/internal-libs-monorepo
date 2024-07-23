@@ -15,7 +15,10 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
     children,
     visible,
     style,
-  } = props
+  } = {
+    ...LoadingOverlay.defaultProps,
+    ...props
+  }
 
   const transition = useRef(null)
 
@@ -55,6 +58,8 @@ export const LoadingOverlay = (props: LoadingOverlayProps) => {
 LoadingOverlay.styleRegistryName = 'LoadingOverlay'
 LoadingOverlay.elements = ['wrapper', 'loader', 'transition']
 LoadingOverlay.rootElement = 'wrapper'
+
+LoadingOverlay.defaultProps = {} as Partial<LoadingOverlayProps>
 
 LoadingOverlay.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return LoadingOverlay as (props: StyledComponentProps<LoadingOverlayProps, typeof styles>) => IJSX

@@ -83,6 +83,6 @@ EmptyPlaceholder.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return EmptyPlaceholder as (props: StyledComponentProps<EmptyPlaceholderProps, typeof styles>) => IJSX
 }
 
-EmptyPlaceholder.defaultProps = {}
+EmptyPlaceholder.defaultProps = {} as Partial<EmptyPlaceholderProps>
 
 MobileStyleRegistry.registerComponent(EmptyPlaceholder)

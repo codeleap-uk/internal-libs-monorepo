@@ -1,49 +1,20 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import {
-  parseFilePathData,
-  MobileFile,
-  AnyRef,
-  FormTypes,
-} from '@codeleap/common'
+import { parseFilePathData, MobileFile } from '@codeleap/common'
 import { OSAlert } from '../../utils'
 import ImageCropPicker, { ImageOrVideo, Options } from 'react-native-image-crop-picker'
-import DocumentPicker, { DocumentPickerOptions } from 'react-native-document-picker'
-export * from './styles'
+import DocumentPicker from 'react-native-document-picker'
+import { FileInputImageSource, FileInputProps, FileInputRef, FileResult } from './types'
 
-export const useSomething = useImperativeHandle
-
-type FileInputImageSource = 'camera' | 'library' | 'fs'
-
-type FileResult = FormTypes.AnyFile
-
-export type FileInputRef = {
-  openFilePicker: (string?: FileInputImageSource) => Promise<FileResult[]>
-}
-export type FileInputProps = {
-  mode: 'hidden' | 'button'
-  onFileSelect?: (files: FileResult[]) => void
-  options?: DocumentPickerOptions<any>
-
-  ref?: AnyRef<FileInputRef>
-
-  type?: 'image' | 'anyFile'
-  alertProps?: Parameters<typeof OSAlert.ask>[0]
-  pickerOptions?: Partial<Options>
-  required?: boolean
-  onOpenCamera?: (resolve: (() => void)) => Promise<void>
-  onOpenFileSystem?: (resolve: (() => void)) => Promise<void>
-  onOpenGallery?: (resolve: (() => void)) => Promise<void>
-  onError?: (error: any) => void
-}
+export * from './types'
 
 const pickerDefaults = {
   cropping: true,
 }
 
 function parsePickerData(data: ImageOrVideo): FileResult {
-
   const filePathData = parseFilePathData(data.path)
-  const d: MobileFile = {
+
+  const file: MobileFile = {
     ...data,
     name: filePathData.name,
     size: data.size,
@@ -53,29 +24,25 @@ function parsePickerData(data: ImageOrVideo): FileResult {
   }
 
   return {
-    file: d,
+    file,
     preview: data.path,
   }
 }
 
 const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref) => {
   const {
-
     onFileSelect,
-
     options,
     type = 'image',
     alertProps,
-
     pickerOptions,
-
     onOpenCamera = null,
     onOpenGallery = null,
     onOpenFileSystem = null,
     onError,
   } = fileInputProps
+
   const resolveWithFile = useRef<(file: FileResult[]) => any>()
-  // const { logger } = useCodeleapContext()
 
   const handleResolve = (files: Array<FileResult>) => {
     if (resolveWithFile.current) {
@@ -101,10 +68,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
   }
 
   function handleError(err) {
-
-    // logger.warn('File Input Error', err, 'FILE INPUT')
     onError?.(err)
-
   }
 
   const mergedOptions = {
@@ -121,6 +85,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
     }
     handleResolve?.(imageArray.map(parsePickerData))
   }
+
   const onPress = (open?: FileInputImageSource, options?: Options) => {
     if (open == 'fs') {
       openFileSystem()
@@ -129,6 +94,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
       ImageCropPicker[call]({ ...mergedOptions, ...(options || {}) }).then(handlePickerResolution)
     }
   }
+
   const openFilePicker = async (imageSource = null) => {
     if (type === 'image') {
       if (imageSource === 'camera') {

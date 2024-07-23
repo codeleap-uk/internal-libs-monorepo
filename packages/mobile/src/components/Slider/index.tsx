@@ -12,6 +12,7 @@ import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
 export * from './styles'
+export * from './types'
 
 const DefaultSliderTrackMark = (props: TrackMarkProps) => {
   const { style, onPress } = props
@@ -36,7 +37,10 @@ export const Slider = (props: SliderProps) => {
   const {
     inputBaseProps: { label: _label, description: _description, ..._inputBaseProps },
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...Slider.defaultProps,
+    ...props,
+  })
 
   const {
     debounce = null,
@@ -48,13 +52,12 @@ export const Slider = (props: SliderProps) => {
     style,
     disabled,
     trackMarks,
-    trackMarksClickable = false,
-    labelClickable = false,
-    trackMarkComponent = DefaultSliderTrackMark,
+    trackMarksClickable,
+    labelClickable,
+    trackMarkComponent: SliderTrackMark,
     ...sliderProps
   } = others
 
-  const SliderTrackMark = trackMarkComponent
   const [_value, _setValue] = React.useState(value)
 
   onUpdate(() => {
@@ -221,5 +224,11 @@ Slider.elements = [
 Slider.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Slider as (props: StyledComponentProps<SliderProps, typeof styles>) => IJSX
 }
+
+Slider.defaultProps = {
+  trackMarksClickable: false,
+  labelClickable: false,
+  trackMarkComponent: DefaultSliderTrackMark,
+} as Partial<SliderProps>
 
 MobileStyleRegistry.registerComponent(Slider)

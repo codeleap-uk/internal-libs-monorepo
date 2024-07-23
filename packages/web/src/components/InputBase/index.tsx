@@ -114,8 +114,6 @@ export const InputBase = (props: InputBaseProps) => {
   )
 }
 
-InputBase.styleRegistryName = 'InputBase'
-
 InputBase.elements = [
   'wrapper',
   'innerWrapper',
@@ -128,12 +126,6 @@ InputBase.elements = [
   'rightIcon',
 ]
 
-InputBase.rootElement = 'wrapper'
-
-InputBase.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return InputBase as (props: StyledComponentProps<InputBaseProps, typeof styles>) => IJSX
-}
-
 InputBase.defaultProps = {
   noError: false,
   labelAsRow: false,
@@ -144,5 +136,3 @@ InputBase.defaultProps = {
   description: null,
   error: null,
 } as Partial<InputBaseProps>
-
-WebStyleRegistry.registerComponent(InputBase)

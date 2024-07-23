@@ -14,12 +14,15 @@ export const IconComponent = (props: IconProps) => {
   const {
     name,
     style,
-    badge = false,
+    badge,
     badgeProps = {},
     wrapperProps = {},
     source,
     ...otherProps
-  } = props
+  } = {
+    ...Icon.defaultProps,
+    ...props,
+  }
 
   const icons = useTheme(store => (store.current as AppTheme<Theme>)?.icons)
 
@@ -45,12 +48,7 @@ export const IconComponent = (props: IconProps) => {
       width: styles.icon?.size || styles.icon?.width || props?.size,
     }
 
-    const wrapperStyle = [
-      sized,
-      (styles.iconBadgeWrapper ?? {}),
-    ]
-
-    return <View {...wrapperProps} style={wrapperStyle}>
+    return <View {...wrapperProps} style={[sized, styles.iconBadgeWrapper]}>
       <Component {...otherProps} style={styles.icon} source={source} />
       <Badge style={badgeStyles} badge={badge} {...badgeProps} />
     </View>
@@ -70,6 +68,10 @@ export const Icon = React.memo(IconComponent, areEqual) as StyledComponentWithPr
 Icon.styleRegistryName = 'Icon'
 Icon.elements = ['icon', 'iconBadgeWrapper', 'badge']
 Icon.rootElement = 'icon'
+
+Icon.defaultProps = {
+  badge: false,
+} as Partial<IconProps>
 
 Icon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return IconComponent as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX

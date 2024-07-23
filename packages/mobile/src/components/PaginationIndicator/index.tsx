@@ -1,23 +1,13 @@
 import React from 'react'
 import { TypeGuards } from '@codeleap/common'
-import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
+import { ActivityIndicator } from '../ActivityIndicator'
 import { Text } from '../Text'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, StyledProp } from '@codeleap/styles'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
-
-export type PaginationIndicatorComposition = 'text' | `loader${Capitalize<ActivityIndicatorComposition>}`
-
-export type PaginationIndicatorProps = {
-  isFetching?: boolean
-  noMoreItemsText: JSX.Element | string | number
-  hasMore?: boolean
-  activityIndicator?: JSX.Element
-  style?: StyledProp<PaginationIndicatorComposition>
-}
+import { PaginationIndicatorProps } from './types'
 
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
-
   const {
     hasMore,
     isFetching,
@@ -56,6 +46,6 @@ PaginationIndicator.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return PaginationIndicator as (props: StyledComponentProps<PaginationIndicatorProps, typeof styles>) => IJSX
 }
 
-PaginationIndicator.defaultProps = {}
+PaginationIndicator.defaultProps = {} as PaginationIndicatorProps
 
 MobileStyleRegistry.registerComponent(PaginationIndicator)

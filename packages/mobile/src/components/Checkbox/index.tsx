@@ -14,10 +14,6 @@ export * from './types'
 
 const reversedOrder = [...InputBaseDefaultOrder].reverse()
 
-const defaultProps: Partial<CheckboxProps> = {
-  checkIcon: 'check' as AppIcon,
-}
-
 export const Checkbox = (props: CheckboxProps) => {
   const {
     inputBaseProps,
@@ -130,6 +126,8 @@ Checkbox.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Checkbox as (props: StyledComponentProps<CheckboxProps, typeof styles>) => IJSX
 }
 
-Checkbox.defaultProps = defaultProps
+Checkbox.defaultProps = {
+  checkIcon: 'check' as AppIcon,
+} as Partial<CheckboxProps>
 
 MobileStyleRegistry.registerComponent(Checkbox)
