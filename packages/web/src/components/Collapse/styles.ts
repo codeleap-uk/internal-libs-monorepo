@@ -1,4 +1,4 @@
-type CollapseState = 'open' | 'hidden'
+type CollapseState = 'open' | 'closed'
 
 type CollapseParts = 'wrapper'
 
