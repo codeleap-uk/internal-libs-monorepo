@@ -88,7 +88,7 @@ export function DatePicker(props: DatePickerProps) {
 
     return (
       <View style={getStyles('dayWrapper')}>
-        <Text style={getStyles('day')} disabled={isDisabled} text={String(param?.day)} />
+        <Text style={getStyles('day')} text={String(param?.day)} />
       </View>
     )
   }, [value])

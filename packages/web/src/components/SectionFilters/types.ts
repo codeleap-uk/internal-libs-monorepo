@@ -1,12 +1,12 @@
-import { Button, ButtonComposition } from '../Button'
-import { PropsOf, StylesOf } from '@codeleap/common'
+import { ButtonComposition, ButtonProps } from '../Button'
+import { StylesOf } from '@codeleap/common'
 import { SectionFiltersComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 
 export type ItemOptionProps = {
   label?: string | number
   value: string | number
-  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<ButtonProps, 'debugName'>
 }
 
 export type OnPressOptionProps = {
@@ -23,8 +23,8 @@ export type ItemProps = {
   descriptionLabel?: string
   showDescriptionLabel?: boolean
   options?: ItemOptionProps[]
-  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-  selectedItemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<ButtonProps, 'debugName'>
+  selectedItemProps?: Omit<ButtonProps, 'debugName'>
 }
 
 export type onSelectItemProps = {
@@ -53,8 +53,8 @@ export type SectionFiltersProps = {
   onClearItems?: ClearFunction
   onApplyItems?: ApplyFunction
   renderFooterComponent?: (props: SectionFilterFooterProps) => JSX.Element
-  applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-  clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  applyFilterButtonProps?: Omit<ButtonProps, 'debugName'>
+  clearFilterButtonProps?: Omit<ButtonProps, 'debugName'>
   filterOnOptionPress?: boolean
   applyButtonText?: string
   clearButtonText?: string

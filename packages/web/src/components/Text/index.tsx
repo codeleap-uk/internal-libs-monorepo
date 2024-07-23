@@ -9,7 +9,7 @@ import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 export * from './styles'
 export * from './types'
 
-export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
+export const Text = <T extends ElementType = 'p'>(textProps: TextProps<T>) => {
   const {
     style,
     text,
@@ -83,7 +83,7 @@ Text.elements = ['text']
 Text.rootElement = 'text'
 
 Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Text as <T extends ElementType>(props: StyledComponentProps<TextProps<T>, typeof styles>) => IJSX
+  return Text as <T extends ElementType = 'p'>(props: StyledComponentProps<TextProps<T>, typeof styles>) => IJSX
 }
 
 Text.defaultProps = {

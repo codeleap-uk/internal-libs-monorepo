@@ -1,8 +1,6 @@
-import { PropsOf, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/common'
 import { InputBaseComposition } from './styles'
-import { ActionIcon, ActionIconComposition } from '../ActionIcon'
-
-type ActionIconProps = PropsOf<typeof ActionIcon>
+import { ActionIconComposition, ActionIconProps } from '../ActionIcon'
 
 type OrderedParts = 'label' | 'description' | 'innerWrapper' | 'error'
 

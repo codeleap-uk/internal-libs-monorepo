@@ -1,6 +1,5 @@
-import { PropsOf } from '@codeleap/common'
-import { Text } from '../Text'
-import { View, ViewProps } from '../View'
+import { TextProps } from '../Text'
+import { ViewProps } from '../View'
 import { BadgeComposition } from './styles'
 import { ComponentCommonProps } from '../../types'
 import { StyledProp } from '@codeleap/styles'
@@ -13,8 +12,8 @@ export type BadgeProps =
     maxCount?: number
     minCount?: number
     debugName?: string
-    innerWrapperProps?: Partial<PropsOf<typeof View>>
-    textProps?: Partial<PropsOf<typeof Text>>
+    innerWrapperProps?: Partial<ViewProps>
+    textProps?: Partial<TextProps>
     getBadgeContent?: (props: BadgeContent) => string
     renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
     disabled?: boolean

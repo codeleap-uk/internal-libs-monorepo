@@ -1,7 +1,7 @@
 import React from 'react'
-import { PropsOf, StylesOf } from '@codeleap/common'
-import { Text } from '../Text'
-import { Touchable } from '../Touchable'
+import { StylesOf } from '@codeleap/common'
+import { TextProps } from '../Text'
+import { TouchableProps } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
 import { MotionProps, AnimationProps, ForwardRefComponent } from 'framer-motion'
 import { IconProps } from '../Icon'
@@ -14,28 +14,28 @@ export type SegmentedControlProps<T = string> = {
   onValueChange?: (v: any) => void
   bubbleProps?: React.HTMLAttributes<HTMLDivElement> & MotionProps
   label?: string
-  touchableProps?: Partial<PropsOf<typeof Touchable>>
+  touchableProps?: Partial<TouchableProps>
   debugName?: string
   disabled?: boolean
   animationProps?: AnimationProps
   transitionDuration?: number
   RenderAnimatedView?: ForwardRefComponent<HTMLDivElement, any>
-  textProps?: Omit<PropsOf<typeof Text>, 'key'>
+  textProps?: TextProps
   iconProps?: Partial<IconProps>
   debounce?: number
   debounceEnabled?: boolean
 }
 
-export type OptionRef = PropsOf<typeof Touchable>['ref']
+export type OptionRef = TouchableProps['ref']
 
 export type SegmentedControlOptionProps =
-  PropsOf<typeof Touchable> &
+  TouchableProps &
   {
     selected?: boolean
     label: string
     styles?: StylesOf<SegmentedControlComposition>
     value?: any
-    textProps?: Omit<PropsOf<typeof Text>, 'key'>
+    textProps?: TextProps
     iconProps?: Partial<IconProps>
     icon?: AppIcon
     largestWidth?: {

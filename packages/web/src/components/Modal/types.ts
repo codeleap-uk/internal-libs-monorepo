@@ -3,7 +3,7 @@ import React from 'react'
 import { OverlayProps } from '../Overlay'
 import { ModalComposition } from './styles'
 import { ActionIconProps } from '../ActionIcon'
-import { Touchable } from '../Touchable'
+import { TouchableProps } from '../Touchable'
 import { AppIcon, ICSS, StyledProp } from '@codeleap/styles'
 
 export type ModalProps =
@@ -34,7 +34,7 @@ export type ModalProps =
     zIndex?: number
     withScrollContainer?: boolean
     scrollLock?: boolean
-    backdropProps?: Partial<PropsOf<typeof Touchable>>
+    backdropProps?: Partial<TouchableProps>
     alterHistory?: boolean
     modalId?: string
     autoIndex?: boolean

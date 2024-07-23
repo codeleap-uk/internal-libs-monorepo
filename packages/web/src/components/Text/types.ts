@@ -3,7 +3,7 @@ import { TextComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 import { MotionProps } from 'framer-motion'
 
-export type TextProps<T extends ElementType> =
+export type TextProps<T extends ElementType = 'p'> =
   Omit<ComponentPropsWithoutRef<T>, 'style'> &
   {
     component?: T

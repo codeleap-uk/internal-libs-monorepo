@@ -1,6 +1,6 @@
-import { AnyFunction, PropsOf } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/common'
 import { PaginationButtonsComposition } from './styles'
-import { Button } from '../Button'
+import { ButtonProps } from '../Button'
 import { PaginationParams } from '../../lib'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 
@@ -17,10 +17,10 @@ export type PaginationButtonsProps =
     displayLeftArrow?: boolean
     displayRightArrow?: boolean
     isMobile?: boolean
-    itemProps?: Partial<PropsOf<typeof Button>>
+    itemProps?: Partial<ButtonProps>
     controlLeftIconName?: AppIcon
     controlRightIconName?: AppIcon
-    leftArrowButtonProps?: Partial<PropsOf<typeof Button>>
-    rightArrowButtonProps?: Partial<PropsOf<typeof Button>>
+    leftArrowButtonProps?: Partial<ButtonProps>
+    rightArrowButtonProps?: Partial<ButtonProps>
     style?: StyledProp<PaginationButtonsComposition>
   }
