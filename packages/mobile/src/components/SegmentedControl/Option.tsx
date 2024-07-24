@@ -2,12 +2,12 @@ import React from 'react'
 import { PropsOf } from '@codeleap/common'
 import { StylesOf } from '../../types'
 import { Text } from '../Text'
-import { Touchable } from '../Touchable'
+import { Touchable, TouchableProps } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
 import { Icon } from '../Icon'
 import { AppIcon } from '@codeleap/styles'
 
-export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
+export type SegmentedControlOptionProps = Omit<TouchableProps, 'debugName'> & {
   selected?: boolean
   label: string
   value: string
@@ -15,6 +15,7 @@ export type SegmentedControlOptionProps = PropsOf<typeof Touchable> & {
   textProps?: Omit<PropsOf<typeof Text>, 'key'>
   icon?: AppIcon
   badge?: React.ReactNode
+  debugName?: string
 }
 
 export const SegmentedControlOption = (props: SegmentedControlOptionProps) => {

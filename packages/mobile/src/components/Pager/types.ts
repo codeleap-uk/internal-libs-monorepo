@@ -16,7 +16,7 @@ export type PageProps = {
 export type ScrollEvent = NativeSyntheticEvent<NativeScrollEvent>
 
 export type PagerProps =
-  Omit<ScrollViewProps, 'style' | 'children'> &
+  Omit<ScrollViewProps, 'style'> &
   {
     children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
     page?: number

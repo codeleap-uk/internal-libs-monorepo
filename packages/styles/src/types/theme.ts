@@ -2,7 +2,7 @@ import { BorderCreator } from '../lib/borderCreator'
 import { MediaQueries } from '../lib/mediaQuery'
 import type { DefaultVariants } from '../lib/defaultVariants'
 import { MultiplierFunction, Spacings } from '../lib/spacing'
-import { IEffect } from './core'
+import { ICSS, IEffect } from './core'
 
 type AnyMap = {
   [key: string]: any
@@ -73,8 +73,5 @@ export type AppTheme<T extends Theme> = {
   inset: InsetMap
   baseSpacing: number
   value: (multiplier: number) => number
-  sized: (size: number | string) => ({
-    width: number | string,
-    height: number | string
-  })
+  sized: (size: number | string) => ICSS
 }

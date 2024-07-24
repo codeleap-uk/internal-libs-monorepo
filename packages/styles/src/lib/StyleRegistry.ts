@@ -247,8 +247,10 @@ export class CodeleapStyleRegistry {
     return styles
   }
 
-  getStyles(componentName: string, style: any, component?: any, predicateObj?: (style: any) => any) {
+  getStyles(componentName: string, _style: any, component?: any, predicateObj?: (style: any) => any) {
     let styles = {}
+
+    const style = typeof _style == 'string' ? [_style] : _style
 
     if (Array.isArray(style)) {
       const variants = []
