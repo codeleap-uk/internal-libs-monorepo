@@ -189,7 +189,7 @@ Pager.elements = ['page', 'wrapper']
 Pager.rootElement = 'wrapper'
 
 Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Pager as (props: StyledComponentProps<PageProps, typeof styles>) => IJSX
+  return Pager as (props: StyledComponentProps<PagerProps, typeof styles>) => IJSX
 }
 
 Pager.defaultProps = {

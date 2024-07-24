@@ -25,7 +25,7 @@ export type ReplaceFlatlistProps<P, T> =
     loading?: boolean
   }
 
-export type ListItem = {}
+export type ListItem = any
 
 export type FlatListProps<T extends ListItem = ListItem> =
   ReplaceFlatlistProps<RNFlatListProps<T>, T> &
