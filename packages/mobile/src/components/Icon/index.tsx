@@ -74,7 +74,7 @@ Icon.defaultProps = {
 } as Partial<IconProps>
 
 Icon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return IconComponent as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
+  return Icon as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
 }
 
 MobileStyleRegistry.registerComponent(Icon)
