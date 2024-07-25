@@ -344,12 +344,13 @@ export class CodeleapStyleRegistry {
   }
 
   styleFor<T = unknown>(componentName: string, componentStyle: StyleProp<T>, mergeWithDefaultStyle = true): T {
-    const style = this.copyStyle(componentStyle)
-    const cache = this.styleCache.keyFor('components', { componentName, style, stylesheet: this.stylesheets[componentName] })
+    const cache = this.styleCache.keyFor('components', { componentName, componentStyle, stylesheet: this.stylesheets[componentName] })
 
     if (!!cache.value) {
       return cache.value as T
     }
+
+    const style = this.copyStyle(componentStyle)
 
     const isStyleArray = Array.isArray(style)
 
