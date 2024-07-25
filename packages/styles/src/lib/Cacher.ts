@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
 import { AnyRecord } from '../types'
 import { CacheType } from '../types/cache'
-import { STORES_PERSIST_VERSION, STORE_CACHE_ENABLED } from './constants'
+import { StyleConstants } from './constants'
 import { hashKey } from './hashKey'
 
 function getStaleTime() {
@@ -42,8 +42,8 @@ export class Cache<T extends any = any> {
     if (!persistCache) return
 
     this.createPersistor(registryName)
-    
-    if (!STORE_CACHE_ENABLED || !this.persistor) return
+
+    if (!StyleConstants.STORE_CACHE_ENABLED || !this.persistor) return
 
     const currentTime = new Date()
     const staleTime = new Date(this.store.staleTime)
@@ -108,9 +108,9 @@ export class Cache<T extends any = any> {
       }),
       {
         name: `@styles.caches.${registryName}`,
-        version: STORES_PERSIST_VERSION,
+        version: StyleConstants.STORES_PERSIST_VERSION,
         migrate: (persistedState: StorePersistor, version) => {
-          if (version != STORES_PERSIST_VERSION) {
+          if (version != StyleConstants.STORES_PERSIST_VERSION) {
             persistedState.staleTime = getStaleTime()
             persistedState.cached = {}
     

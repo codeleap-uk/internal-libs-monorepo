@@ -1,6 +1,6 @@
 import { Cache } from './Cacher'
 import { hashKey } from './hashKey'
-import { STORES_PERSIST_VERSION, CACHE_ENABLED } from './constants'
+import { StyleConstants } from './constants'
 import { CacheType } from '../types/cache'
 import { minifier } from './minifier'
 import { StateStorage } from 'zustand/middleware'
@@ -23,7 +23,7 @@ export class StyleCache {
   }
 
   registerBaseKey(keys: Array<any>) {
-    keys.push(STORES_PERSIST_VERSION)
+    keys.push(StyleConstants.STORES_PERSIST_VERSION)
 
     const baseKey = hashKey(keys)
 
@@ -56,7 +56,7 @@ export class StyleCache {
   }
 
   cacheFor(type: CacheType, key: string, value: any) {
-    if (!CACHE_ENABLED) {
+    if (!StyleConstants.CACHE_ENABLED) {
       return value
     }
 

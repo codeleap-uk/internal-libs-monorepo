@@ -1,6 +1,6 @@
 
-export const STORES_PERSIST_VERSION = 49
-
-export const STORE_CACHE_ENABLED = false
-
-export const CACHE_ENABLED = false
+export const StyleConstants = {
+  STORES_PERSIST_VERSION: 1,
+  STORE_CACHE_ENABLED: true,
+  CACHE_ENABLED: true,
+}
