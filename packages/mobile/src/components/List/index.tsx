@@ -59,7 +59,7 @@ export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => 
     }
 
     return <RenderItem {...itemProps} />
-  }, [dataLength])
+  }, [dataLength, RenderItem])
 
   const isEmpty = !data || !data?.length
 

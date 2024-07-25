@@ -15,7 +15,7 @@ import { SelectComposition } from './styles'
 export type SelectRenderFNProps<T> = {
   style: StylesOf<SelectComposition>
   onPress: () => void
-  isSelected?: boolean
+  selected?: boolean
   item: FormTypes.Options<T>[number]
   touchableProps?: Partial<PropsOf<typeof Touchable>>
   textProps?: Partial<PropsOf<typeof Text>>

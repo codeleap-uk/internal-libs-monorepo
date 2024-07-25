@@ -87,7 +87,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     options = [],
     style,
     description,
-    renderItem,
+    renderItem: Item,
     listProps,
     debugName,
     placeholder,
@@ -219,8 +219,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
       close?.()
     }
   }, [isValueArray, (isValueArray ? value : [value]), limit, multiple])
-
-  const Item = renderItem || Button
 
   const renderListItem = useCallback(({ item, index }) => {
     let selected = false
@@ -360,6 +358,7 @@ Select.defaultProps = {
   loadOptionsOnOpen: false,
   disabled: false,
   filterItems: defaultFilterFunction,
+  renderItem: Button,
   ListComponent: List,
 } as Partial<SelectProps<any, boolean>>
 

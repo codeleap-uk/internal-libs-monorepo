@@ -343,7 +343,8 @@ export class CodeleapStyleRegistry {
     return styles
   }
 
-  styleFor<T = unknown>(componentName: string, style: StyleProp<T>, mergeWithDefaultStyle = true): T {
+  styleFor<T = unknown>(componentName: string, componentStyle: StyleProp<T>, mergeWithDefaultStyle = true): T {
+    const style = this.copyStyle(componentStyle)
     const cache = this.styleCache.keyFor('components', { componentName, style, stylesheet: this.stylesheets[componentName] })
 
     if (!!cache.value) {
@@ -497,6 +498,20 @@ export class CodeleapStyleRegistry {
     const currentColorScheme = this.theme?.current?.['currentColorScheme'] ?? this.theme?.colorScheme ?? 'default'
 
     this.styleCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariants])
+  }
+
+  private copyStyle(style: any) {
+    let copiedStyle = null
+
+    if (Array.isArray(style)) {
+      copiedStyle = [...style]
+    } else if (typeof copiedStyle == 'object') {
+      copiedStyle = {...style}
+    } else {
+      copiedStyle = style
+    }
+
+    return copiedStyle
   }
 
   createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
