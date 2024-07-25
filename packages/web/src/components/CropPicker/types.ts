@@ -5,6 +5,7 @@ import { StylesOf } from '../../types'
 import { ReactCropProps } from 'react-image-crop'
 import { ModalProps } from '../Modal'
 import { useCropPicker } from './useCropPicker'
+import { ButtonProps } from '../Button'
 
 export type BaseCropProps = Partial<ReactCropProps>
 
@@ -20,6 +21,7 @@ export type CropPickerProps = Partial<FileInputProps> &
     handle?: ReturnType<typeof useCropPicker>
     ref: AnyRef<HTMLElement>
     withLoading?: boolean
+    confirmButtonProps?: Partial<ButtonProps>
   }
 
 export type ImageReading = HTMLImageElement

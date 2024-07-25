@@ -36,6 +36,7 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
       debugName,
       handle,
       withLoading = false,
+      confirmButtonProps,
       ...fileInputProps
     } = allProps
 
@@ -82,6 +83,7 @@ export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
               styles={buttonStyles}
               onPress={onConfirmCrop}
               debugName={debugName}
+              {...confirmButtonProps}
             />
           }
           {...modalProps}
