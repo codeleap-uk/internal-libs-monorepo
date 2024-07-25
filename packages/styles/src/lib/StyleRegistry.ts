@@ -505,7 +505,7 @@ export class CodeleapStyleRegistry {
 
     if (Array.isArray(style)) {
       copiedStyle = [...style]
-    } else if (typeof copiedStyle == 'object') {
+    } else if (typeof style == 'object') {
       copiedStyle = {...style}
     } else {
       copiedStyle = style
