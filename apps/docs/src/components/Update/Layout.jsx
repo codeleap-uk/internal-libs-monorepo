@@ -13,7 +13,7 @@ function UpdatePage(props) {
 
   const version = pageContext?.version?.replace('_', '.')
 
-  const mediaQuery = theme.media.down('mid')
+  const mediaQuery = theme.media.down('tabletSmall')
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
   return (
@@ -54,7 +54,7 @@ const styles = createStyles((theme) => ({
     minHeight: '90svh',
     paddingBottom: theme.spacing.value(3),
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       ...theme.presets.column,
     }
   },

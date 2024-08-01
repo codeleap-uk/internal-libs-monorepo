@@ -1,6 +1,6 @@
 import { React, theme } from '@/app'
 import { Text, View, Icon, Checkbox } from '@/components'
-import { useCodeleapContext, useState, useMemo, TypeGuards, useBooleanToggle } from '@codeleap/common'
+import { useState, useMemo, TypeGuards, useBooleanToggle } from '@codeleap/common'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import { Image } from '../Image'
 import { Link } from '../Link'
@@ -107,7 +107,7 @@ export const mdxTransforms = {
       }
     }, [children?.props?.children?.[0]])
 
-    return <View component='blockquote' style={['padding:2', 'fullWidth', 'alignCenter']} css={[quoteType?.value && blockquoteStyles[quoteType.key]]}>
+    return <View component='blockquote' style={['padding:2', 'fullWidth', 'alignCenter', quoteType?.value && blockquoteStyles[quoteType.key]]}>
       {
         quoteType?.key && (
           <Icon name={`docsquote-${quoteType?.key}`} size={24} style={blockquoteStyles[quoteType.key + '-icon']} />
@@ -155,7 +155,6 @@ export const mdxTransforms = {
     const className = props.children.props.className || ''
     const matches = className.match(/language-(?<lang>.*)/)
     const [hover, setHover] = useState(false)
-    const { currentTheme } = useCodeleapContext()
 
     const code = props.children.props.children.trim()
 
@@ -168,7 +167,7 @@ export const mdxTransforms = {
             ? matches.groups.lang
             : ''
         }
-        theme={CodeThemes[currentTheme]}
+        theme={CodeThemes['light']}
 
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => {

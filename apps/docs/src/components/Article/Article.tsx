@@ -8,7 +8,7 @@ export const Article = ({ children, title = '', source = '', description = '', l
   return (
     <PhotoProvider>
       <View style={styles.wrapper}>
-        <View style={['column', 'padding:4', 'gap:1', 'backgroundColor:body']}>
+        <View style={['column', 'padding:4', 'gap:1', 'backgroundColor:neutral2']}>
           <View style={['row', 'center', 'justifyStart', 'gap:2']}>
             <Text style={['h1', 'bold']} text={title} />
             {!!tag && (

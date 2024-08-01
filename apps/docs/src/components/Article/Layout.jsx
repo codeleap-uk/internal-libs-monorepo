@@ -45,7 +45,7 @@ function ArticlePage(props) {
 
   const lib = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
 
-  const mediaQuery = theme.media.down('mid')
+  const mediaQuery = theme.media.down('tabletSmall')
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
   const Footer = () => {

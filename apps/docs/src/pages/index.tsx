@@ -97,7 +97,8 @@ export default () => {
 const styles = createStyles((theme) => ({
   title: {
     fontSize: 64, // yes, it is quite
-    fontWeight: '900'
+    fontWeight: '900',
+    color: '#000'
   },
   wrapper: {
     width: '100vw',

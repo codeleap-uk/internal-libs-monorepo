@@ -8,7 +8,7 @@ type LogoProps = PropsOf<typeof Touchable>
 export function Logo(props: LogoProps) {
   const { style } = props
 
-  const styles = concatStyles([style, ['h4', 'extraBold', 'color:neutral10']])
+  const styles = concatStyles([style, ['h4', 'extraBold', 'color:neutral10', 'paddingVertical:2']])
 
   return (
     <Text style={styles} text={Settings.AppName} />

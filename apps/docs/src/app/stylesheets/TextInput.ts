@@ -162,6 +162,42 @@ export const TextInputStyles = {
       display: 'none',
     },
   })),
+  docSearch: createTextInputVariant((theme) => ({
+    wrapper: {
+      minWidth: 300
+    },
+    innerWrapper: {
+      minHeight: 'auto',
+      borderRadius: theme.borderRadius.rounded,
+      ...theme.spacing.paddingHorizontal(2),
+      ...theme.spacing.paddingVertical(1),
+      ...theme.border({ width: 1, color: 'neutral5' }),
+      paddingVertical: theme.spacing.value(0),
+      ...theme.presets.row,
+      ...theme.presets.alignCenter,
+      backgroundColor: theme.colors['neutral1'],
+      cursor: 'text',
+    },
+    input: {
+      ...customTextStyles('p4'),
+      flex: 1,
+      minWidth: null,
+      width: '100%',
+      color: theme.colors['neutral10'],
+      borderWidth: 0,
+    },
+    placeholder: {
+      color: theme.colors['neutral7'],
+    },
+    leftIconTouchableWrapper: {
+      ...theme.spacing.marginRight(2),
+    },
+    iconIcon: {
+      height: 0,
+      width: 0,
+      color: theme.colors['neutral7'],
+    },
+  })),
 }
 
 StyleRegistry.registerVariants('TextInput', TextInputStyles)

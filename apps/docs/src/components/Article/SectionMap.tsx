@@ -77,7 +77,7 @@ const styles = createStyles((theme) => ({
     maxWidth: SECTION_WIDTH,
     borderLeft: `1px solid ${theme.colors.neutral3}`,
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       minWidth: '100vw',
       maxWidth: '100vw',
       minHeight: 'unset',

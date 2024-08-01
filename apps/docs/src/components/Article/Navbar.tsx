@@ -62,7 +62,7 @@ const Category = ({ name, items, location }) => {
         }]}
       />
 
-      <Collapse open={open} height={items.length * 80} css={styles.collapsibleList}>
+      <Collapse open={open} height={items.length * 80} style={styles.collapsibleList}>
         {_items}
       </Collapse>
     </View>
@@ -72,7 +72,7 @@ const Category = ({ name, items, location }) => {
 export const Navbar = ({ pages, location }: NavbarProps) => {
   const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
 
-  const isMobile = useMediaQuery(theme.media.down('mid'), { getInitialValueInEffect: false })
+  const isMobile = useMediaQuery(theme.media.down('tabletSmall'), { getInitialValueInEffect: false })
 
   const Items = () => <>
     {pages.map?.(([category, items]) => {
@@ -80,7 +80,7 @@ export const Navbar = ({ pages, location }: NavbarProps) => {
     })}
   </>
 
-  return <View style={['column', 'gap:0.5']} style={styles.sidebar}>
+  return <View style={['column', 'gap:0.5', styles.sidebar]}>
     {isMobile && <Button text='Open navigation' onPress={toggleDrawer} style={['docNavbar']} />}
 
     {!isMobile && <Items />}
@@ -111,16 +111,16 @@ const styles = createStyles((theme) => ({
     borderRight: `1px solid ${theme.colors.neutral3}`,
     paddingTop: theme.spacing.value(3),
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       minWidth: '100vw',
       maxWidth: '100vw',
       minHeight: 'unset',
       paddingTop: 0,
-    }
+    },
   },
   toggleButton: {
     transition: 'transform 0.3s ease',
-    ...theme.presets.fixed,
+    position: 'fixed',
     zIndex: 1,
     right: theme.spacing.value(3),
     bottom: theme.spacing.value(3),

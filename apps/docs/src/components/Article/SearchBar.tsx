@@ -82,7 +82,7 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
         }}
         debugName='SearchBar'
         placeholder='Search'
-        variants={['pill', 'fullWidth', 'noError', 'docSearch']}
+        style={['pill', 'fullWidth', 'noError', 'docSearch']}
         onChangeText={setSearch}
         value={search}
       />
@@ -108,7 +108,7 @@ const styles = createStyles((theme) => ({
   wrapper: {
     ...theme.spacing.marginRight(2),
     ...theme.presets.relative,
-    gap: theme.spacing.value(2),
+    ...theme.presets.center,
 
     [theme.media.down('tabletSmall')]: {
       order: -2,

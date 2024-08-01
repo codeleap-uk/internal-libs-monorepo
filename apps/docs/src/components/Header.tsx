@@ -35,7 +35,7 @@ const navItems = [
   },
 ]
 
-const BREAKPOINT = 'mid'
+const BREAKPOINT = 'tabletSmall'
 
 const NavContent = () => {
   const location = useLocation()
@@ -110,12 +110,11 @@ export const Header = ({ center, searchBar = null }) => {
     <Wrapper
       style={[
         styles.floatingHeader, 
-        'paddingVertical:2', 
-        { innerWrapper: styles.wrapper, wrapper: styles.floatingHeader 
-      }]}
+        { innerWrapper: styles.wrapper, wrapper: styles.floatingHeader }
+      ]}
     >
       <Link to={'/'} style={styles.logoWrapper}>
-        <Logo style={styles.logo} />
+        <Logo />
       </Link>
 
       {searchBar}
@@ -154,13 +153,7 @@ const styles = createStyles((theme) => ({
     paddingRight: 40,
 
     borderBottom: `1px solid ${theme.colors.neutral3}`,
-    alignItems: 'center'
-  },
-  logo: {
-    width: logoSize * 4,
-    [theme.media.down(BREAKPOINT)]: {
-      width: logoSize,
-    },
+    alignItems: 'center',
   },
   logoWrapper: {
     marginRight: 'auto',
