@@ -29,7 +29,7 @@ type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = stri
   (HasBreakpoints extends string ? {
     'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants, boolean, string> | StyleAtom<Composition, Variants, boolean, string>[]>>
   } : null) |
-  (HasComposition extends string ? Partial<Record<keyof Composition, StyleAtom<AnyRecord, Variants, HasBreakpoints, boolean> | StyleAtom<AnyRecord, Variants, HasBreakpoints, boolean>[]>> : null)
+  (HasComposition extends string ? Partial<Record<keyof Composition, StyleAtom<AnyRecord, Variants, boolean, boolean> | StyleAtom<AnyRecord, Variants, boolean, boolean>[]>> : null)
 
 export type StyleProp<
   Composition = AnyRecord,
