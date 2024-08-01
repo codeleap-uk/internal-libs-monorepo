@@ -1,34 +1,36 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
+import { StyleSheets, StyleRegistry } from '@/app'
 import { View } from '@/components'
-import { ComponentVariants, useDefaultComponentStyle } from '@codeleap/common'
-import { StylesOf, ViewProps } from '@codeleap/web'
-import { CenterWrapperStyles, CenterWrapperComposition } from '../app/stylesheets/CenterWrapper'
+import { CenterWrapperComposition } from '../app/stylesheets/CenterWrapper'
+import { StyledProp, StyledComponent } from '@codeleap/styles'
+import { useStylesFor, ViewProps } from '@codeleap/web'
 
-export type CenterWrapperProps = React.PropsWithChildren<{
-  styles?: StylesOf<CenterWrapperComposition>
+export type CenterWrapperProps = {
   innerProps?: ViewProps
-} & ComponentVariants<typeof CenterWrapperStyles>>
+  style?: StyledProp<CenterWrapperComposition>
+  children?: ReactNode
+}
 
-export const CenterWrapper = (props: CenterWrapperProps) => {
+export const CenterWrapper: StyledComponent<typeof StyleSheets.CenterWrapperStyles, CenterWrapperProps> = (props) => {
   const {
     children,
-    variants = [],
-    styles = {},
-    responsiveVariants = {},
+    style,
     innerProps = {},
+    ...rest
   } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:CenterWrapper', typeof CenterWrapperStyles>('u:CenterWrapper', {
-    variants,
-    styles,
-    responsiveVariants,
-  })
+  const styles = useStylesFor(CenterWrapper.styleRegistryName, style)
 
   return (
-    <View css={[variantStyles.wrapper]} {...props}>
-      <View css={[variantStyles.innerWrapper]} {...innerProps}>
+    <View {...rest} style={styles.wrapper}>
+      <View {...innerProps} style={styles.innerWrapper}>
         {children}
       </View>
     </View>
   )
 }
+
+CenterWrapper.styleRegistryName = 'CenterWrapper'
+CenterWrapper.elements = ['wrapper', 'innerWrapper']
+
+StyleRegistry.registerComponent(CenterWrapper)

@@ -1,5 +1,6 @@
-import { React, variantProvider } from '@/app'
+import { React } from '@/app'
 import { View, Text, Icon } from '@/components'
+import { createStyles } from '@codeleap/styles'
 import { useLocation, WindowLocation } from '@reach/router'
 import { Link } from '../Link'
 
@@ -22,9 +23,9 @@ const SectionText = (props: SectionTextProps) => {
   const isSelected = location?.href?.includes(node?.url)
 
   return (
-    <View variants={['column', 'gap:2']}>
+    <View style={['column', 'gap:2']}>
       <Link 
-        variants={['p3', 'noUnderline', subContent && 'marginLeft:1', isSelected && 'primary3']} 
+        style={['p3', 'noUnderline', subContent && 'marginLeft:1', isSelected && 'primary3']} 
         text={node?.title} 
         to={pathOrigin + node?.url} 
       />
@@ -41,10 +42,10 @@ export const SectionMap = ({ content = [] }) => {
   const pathOrigin = location?.origin + location?.pathname
 
   return (
-    <View css={styles.wrapper}>
-      <View variants={['alignCenter', 'gap:2']}>
+    <View style={styles.wrapper}>
+      <View style={['alignCenter', 'gap:2']}>
         <Icon debugName='table content' name='layers' size={20} />
-        <Text variants={['h4', 'primary']} text={'Table of contents'} />
+        <Text style={['h4', 'primary']} text={'Table of contents'} />
       </View>
 
       {content?.map((node, idx) => (
@@ -56,7 +57,7 @@ export const SectionMap = ({ content = [] }) => {
 
 const SECTION_WIDTH = 280
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   wrapper: {
     backgroundColor: theme.colors.background,
     position: 'sticky',
@@ -82,4 +83,4 @@ const styles = variantProvider.createComponentStyle((theme) => ({
       minHeight: 'unset',
     },
   },
-}), true)
+}))

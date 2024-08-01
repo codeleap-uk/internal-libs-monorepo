@@ -1,11 +1,11 @@
-import { DrawerPresets, DrawerComposition } from '@codeleap/web'
-import { variantProvider } from '../theme'
+import { createStyles } from '@codeleap/styles'
+import { DrawerComposition } from '@codeleap/web'
+import { StyleRegistry } from '../styles'
 
-const createDrawerStyle = variantProvider.createVariantFactory<DrawerComposition>()
+const createDrawerVariant = createStyles<DrawerComposition>
 
-export const AppDrawerStyles = {
-  ...DrawerPresets,
-  default: createDrawerStyle((theme) => ({
+export const DrawerStyles = {
+  default: createDrawerVariant((theme) => ({
     wrapper: {
       zIndex: 3000,
       elevation: 3000,
@@ -57,6 +57,8 @@ export const AppDrawerStyles = {
       color: theme.colors.primary3,
       width: theme.values.iconSize[3],
       height: theme.values.iconSize[3],
-    }
+    },
   })),
 }
+
+StyleRegistry.registerVariants('Drawer', DrawerStyles)

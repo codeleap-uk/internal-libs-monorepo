@@ -1,69 +1,99 @@
-import { IconComposition, IconPresets } from "@codeleap/web"
-import { variantProvider } from ".."
+import { createStyles } from '@codeleap/styles'
+import { IconComposition } from '@codeleap/web'
+import { StyleRegistry } from '../styles'
 
-const createIconStyle = variantProvider.createVariantFactory<IconComposition>()
+const createIconVariant = createStyles<IconComposition>
 
-export const AppIconStyles = {
-  ...IconPresets,
-  default: createIconStyle((theme) => ({
+export const IconStyles = {
+  default: createIconVariant((theme) => ({
     icon: {
-      color: theme.colors.icon,
+      color: theme.colors.neutral10,
+      width: theme.values.iconSize[4],
+      height: theme.values.iconSize[4],
     },
   })),
-  white: createIconStyle((theme) => ({
+  white: createIconVariant((theme) => ({
     icon: {
-      color: theme.colors.white,
+      color: theme.colors.neutral1,
+    },
+  })),
+  primary: createIconVariant((theme) => ({
+    icon: {
+      color: theme.colors.primary3,
+      fill: theme.colors.primary3,
+    },
+  })),
+  negative: createIconVariant((theme) => ({
+    icon: {
+      color: theme.colors.neutral1,
+      fill: theme.colors.neutral1,
+    },
+  })),
+  positive: createIconVariant((theme) => ({
+    icon: {
+      color: theme.colors.neutral10,
+      fill: theme.colors.neutral10,
     },
   })),
 
-  primary: createIconStyle((theme) => ({
-    icon: {
-      color: theme.colors['primary-3'],
-      fill: theme.colors['primary-3'],
-    },
-  })),
-  negative: createIconStyle((theme) => ({
-    icon: {
-      color: theme.colors['neutral-1'],
-      fill: theme.colors['neutral-1'],
-    },
-  })),
-  positive: createIconStyle((theme) => ({
-    icon: {
-      color: theme.colors['neutral-10'],
-      fill: theme.colors['neutral-10'],
-    },
-  })),
-
-  huge: createIconStyle((theme) => ({
+  huge: createIconVariant((theme) => ({
     icon: {
       ...theme.sized(8),
     },
   })),
-  large: createIconStyle((theme) => ({
+  large: createIconVariant((theme) => ({
     icon: {
       ...theme.sized(6),
     },
   })),
-  largeish: createIconStyle((theme) => ({
+  largeish: createIconVariant((theme) => ({
     icon: {
       ...theme.sized(4),
     },
   })),
-  medium: createIconStyle((theme) => ({
+  medium: createIconVariant((theme) => ({
     icon: {
       ...theme.sized(3),
     },
   })),
-  small: createIconStyle((theme) => ({
+  small: createIconVariant((theme) => ({
     icon: {
       ...theme.sized(2.5),
     },
   })),
-  smaller: createIconStyle((theme) => ({
+  smaller: createIconVariant((theme) => ({
     icon: {
       ...theme.sized(2),
     },
   })),
-
+  'size:2': createIconVariant((theme) => ({
+    icon: {
+      width: theme.values.iconSize[2],
+      height: theme.values.iconSize[2],
+    },
+  })),
+  'size:3': createIconVariant((theme) => ({
+    icon: {
+      width: theme.values.iconSize[3],
+      height: theme.values.iconSize[3],
+    },
+  })),
+  'size:4': createIconVariant((theme) => ({
+    icon: {
+      width: theme.values.iconSize[4],
+      height: theme.values.iconSize[4],
+    },
+  })),
+  'primary3': createIconVariant((theme) => ({
+    icon: {
+      color: theme.colors.primary3,
+    },
+  })),
+  'neutral10': createIconVariant((theme) => ({
+    icon: {
+      color: theme.colors.neutral10,
+    },
+  })),
 }
+
+StyleRegistry.registerVariants('Icon', IconStyles)

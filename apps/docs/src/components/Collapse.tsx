@@ -1,6 +1,3 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
-import { Scroll, View } from '@/components'
 import { TypeGuards } from '@codeleap/common'
 
 type CollapseProps = {
@@ -12,10 +9,8 @@ type CollapseProps = {
 }
 
 export const Collapse = ({ open, height = 1000, scroll, children, ...props }: CollapseProps) => {
-  const Component = scroll ? Scroll : View
-
   return (
-    <Component css={[
+    <div css={[
       {
         height: 'auto',
         maxHeight: open ?
@@ -26,6 +21,6 @@ export const Collapse = ({ open, height = 1000, scroll, children, ...props }: Co
       },
     ]} {...props}>
       {children}
-    </Component>
+    </div>
   )
 }

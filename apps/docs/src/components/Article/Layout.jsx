@@ -6,11 +6,12 @@ import { SectionMap } from './SectionMap'
 import { mdxTransforms } from './mdxTransforms'
 import { Navbar } from './Navbar'
 import { Article } from './Article'
-import { Theme, variantProvider } from '@/app'
+import { theme } from '@/app'
 import { Button, View, Text, Icon } from '@/components'
 import { SearchBar } from './SearchBar'
 import { capitalize } from '@codeleap/common'
 import { useMediaQuery } from '@codeleap/web'
+import { createStyles } from '@codeleap/styles'
 
 const PageNavButton = ({ data, type = 'previous' }) => {
   const isNext = type === 'next'
@@ -18,18 +19,18 @@ const PageNavButton = ({ data, type = 'previous' }) => {
 
   return (
     <Button 
-      variants={['alignCenter', 'alignSelfEnd', 'docNavAction']} 
+      style={['alignCenter', 'alignSelfEnd', 'docNavAction']} 
       onPress={onPress}
       disabled={!data}
     >
-      {!isNext && <Icon name={'chevron-left'} size={24} color={Theme.colors.light.neutral7} />}
+      {!isNext && <Icon name={'chevron-left'} size={24} color={theme.colors.neutral7} />}
 
-      <View variants={['column', 'fullHeight', 'alignStart', 'gap:1']}>
-        <Text text={capitalize(type)} variants={['h5', 'color:primary3']} />
-        <Text text={data?.title ?? 'No article'} variants={['p2', 'color:neutral7', 'ellipsis']} />
+      <View style={['column', 'fullHeight', 'alignStart', 'gap:1']}>
+        <Text text={capitalize(type)} style={['h5', 'color:primary3']} />
+        <Text text={data?.title ?? 'No article'} style={['p2', 'color:neutral7', 'ellipsis']} />
       </View>
 
-      {isNext && <Icon name={'chevron-right'} size={24} color={Theme.colors.light.neutral7} />}
+      {isNext && <Icon name={'chevron-right'} size={24} color={theme.colors.neutral7} />}
     </Button>
   )
 }
@@ -44,14 +45,16 @@ function ArticlePage(props) {
 
   const lib = pageContext?.isLibrary ? `@codeleap/${pageContext?.module}` : capitalize(pageContext?.module)
 
-  const mediaQuery = Theme.media.down('mid')
+  const mediaQuery = theme.media.down('mid')
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
   const Footer = () => {
     return (
       <View 
-        variants={['justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex', 'gap:2', 'marginVertical:2']}
-        responsiveVariants={{ mid: ['column'] }}
+        style={[
+          'justifySpaceBetween', 'fullWidth', 'alignSelfEnd', 'flex', 'gap:2', 'marginVertical:2',
+          { breakpoints: { tabletSmall: 'column' } }
+        ]}
       >
         <PageNavButton data={previous} type='previous' />
         <PageNavButton data={next} type='next' />
@@ -62,7 +65,7 @@ function ArticlePage(props) {
   return (
     <Page
       title={title}
-      responsiveVariants={{ mid: ['column'] }}
+      style={{ tabletSmall: ['column'] }}
       center={false}
       contentStyle={styles.content}
       searchBar={!isMobile && <SearchBar items={flatData} />}
@@ -83,13 +86,13 @@ function ArticlePage(props) {
   )
 }
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   content: {
     height: '100%',
     minHeight: '90svh',
     paddingBottom: theme.spacing.value(3),
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       ...theme.presets.column,
     }
   },
@@ -102,7 +105,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     color: theme.colors.neutral10,
     transition: 'color 0.2s ease',
   },
-}), true)
+}))
 
 export const query = graphql`
   query($id: String!) {
