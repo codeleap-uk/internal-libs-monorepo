@@ -7,6 +7,7 @@ import { ActionIconProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+import { ElementType } from 'react'
 
 export * from './styles'
 export * from './types'
@@ -31,7 +32,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent = isPressable ? Touchable : View
+  const WrapperComponent: ElementType = isPressable ? Touchable : View
 
   const handlePress = (e) => {
     if (!isPressable) return
@@ -58,7 +59,6 @@ export const ActionIcon = (props: ActionIconProps) => {
   const iconStyles = getStyles('icon')
 
   return (
-    // @ts-expect-error
     <WrapperComponent
       disabled={disabled}
       debugName={debugName}

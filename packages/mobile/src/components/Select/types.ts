@@ -22,6 +22,7 @@ export type SelectRenderFNProps<T> = {
   iconProps?: Partial<PropsOf<typeof Icon>>
   index: number
   debugName: string
+  text?: string
 }
 
 export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
