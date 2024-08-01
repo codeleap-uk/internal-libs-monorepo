@@ -14,7 +14,6 @@ import {
 export * from './useConditionalState'
 export * from './useIsomorphicEffect'
 export * from './usePromise'
-export * from './useWarning'
 export * from './useNestedStylesByKey'
 export * from './useListState'
 export * from './useUncontrolled'
