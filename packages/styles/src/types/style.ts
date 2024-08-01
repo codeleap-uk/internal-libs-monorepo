@@ -25,7 +25,7 @@ type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = stri
   boolean |
   null |
   '' |
-  (HasBreakpoints extends string ? `${keyof IBreakpoints}:${string & Variants | CommonVariants}` : null) |
+  (HasBreakpoints extends string ? `${keyof IBreakpoints}:${CommonVariants}` : null) |
   (HasBreakpoints extends string ? {
     'breakpoints': Partial<Record<`${keyof IBreakpoints}:${keyof Queries}` | keyof IBreakpoints, StyleAtom<Composition, Variants, boolean, string> | StyleAtom<Composition, Variants, boolean, string>[]>>
   } : null) |
@@ -39,4 +39,3 @@ export type StyleProp<
 export type VariantStyleSheet = Record<string, any>
 
 export type StyledProp<T extends string> = StyleProp<Record<T, ICSS>>
-
