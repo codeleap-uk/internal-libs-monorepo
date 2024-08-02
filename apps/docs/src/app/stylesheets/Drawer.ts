@@ -1,19 +1,15 @@
-import { DrawerPresets, DrawerComposition } from '@codeleap/web'
-import { variantProvider } from '../theme'
+import { createStyles } from '@codeleap/styles'
+import { DrawerComposition } from '@codeleap/web'
+import { StyleRegistry } from '../styles'
 
-const createDrawerStyle = variantProvider.createVariantFactory<DrawerComposition>()
+const createDrawerVariant = createStyles<DrawerComposition>
 
-export const AppDrawerStyles = {
-  ...DrawerPresets,
-  default: createDrawerStyle((theme) => ({
+export const DrawerStyles = {
+  default: createDrawerVariant((theme) => ({
     wrapper: {
       zIndex: 3000,
-      elevation: 3000,
       position: 'fixed',
       ...theme.presets.whole,
-      visibility: 'hidden',
-      display: 'flex',
-      ...theme.presets.row,
     },
     body: {
       flexDirection: 'column',
@@ -21,10 +17,19 @@ export const AppDrawerStyles = {
       overflowY: 'auto',
     },
     overlay: {
+      ...theme.presets.absolute,
+      ...theme.presets.whole,
       backgroundColor: theme.colors.neutral10,
-      height: '100vh',
-      elevation: 1,
-      zIndex: 1,
+      zIndex: -1,
+      minHeight: '100svh',
+      transition: 'opacity 0.2s ease-in-out',
+      animation: 'opacity 0.2s ease-in-out',
+    },
+    'overlay:visible': {
+      opacity: 0.5,
+    },
+    'overlay:hidden': {
+      opacity: 0,
     },
     box: {
       backgroundColor: theme.colors.neutral1,
@@ -57,6 +62,8 @@ export const AppDrawerStyles = {
       color: theme.colors.primary3,
       width: theme.values.iconSize[3],
       height: theme.values.iconSize[3],
-    }
+    },
   })),
 }
+
+StyleRegistry.registerVariants('Drawer', DrawerStyles)

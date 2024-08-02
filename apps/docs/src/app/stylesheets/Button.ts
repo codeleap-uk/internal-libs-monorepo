@@ -1,12 +1,12 @@
-import { variantProvider } from '../theme'
-import { ButtonComposition, ButtonPresets } from '@codeleap/web'
-import { assignTextStyle } from './Text'
+import { createStyles } from '@codeleap/styles'
+import { ButtonComposition } from '@codeleap/web'
+import { StyleRegistry } from '../styles'
+import { customTextStyles } from './Text'
 
-const createButtonStyle = variantProvider.createVariantFactory<ButtonComposition>()
+const createButtonVariant = createStyles<ButtonComposition>
 
-export const AppButtonStyles = {
-  ...ButtonPresets,
-  default: createButtonStyle((theme) => ({
+export const ButtonStyles = {
+  default: createButtonVariant((theme) => ({
     wrapper: {
       cursor: 'pointer',
       border: 'none',
@@ -20,12 +20,12 @@ export const AppButtonStyles = {
       ...theme.presets.alignCenter,
       ...theme.presets.justifyCenter,
       width: 'auto',
-      
+
       '&:hover': {
         backgroundColor: theme.colors.primary4,
       },
       ...theme.spacing.padding(1),
-      ...theme.spacing.paddingHorizontal(2)
+      ...theme.spacing.paddingHorizontal(2),
     },
     text: {
       textAlign: 'center',
@@ -60,13 +60,9 @@ export const AppButtonStyles = {
       '&:hover': {
         backgroundColor: theme.colors.neutral2,
       },
-      '&:active': {
-        backgroundColor: theme.colors.neutral2,
-      },
     },
   })),
-
-  docItem: createButtonStyle((theme) => ({
+  docItem: createButtonVariant((theme) => ({
     wrapper: {
       cursor: 'pointer',
       border: 'none',
@@ -94,12 +90,12 @@ export const AppButtonStyles = {
     text: {
       width: '100%',
       textAlign: 'start',
-      ...assignTextStyle('p2')(theme).text,
+      ...customTextStyles('p2'),
       color: theme.colors.neutral10,
       fontWeight: 400,
     },
   })),
-  'docItem:selected': createButtonStyle((theme) => ({
+  'docItem:selected': createButtonVariant((theme) => ({
     wrapper: {
       backgroundColor: theme.colors.primary1,
       
@@ -110,23 +106,23 @@ export const AppButtonStyles = {
     text: {
       width: '100%',
       textAlign: 'start',
-      ...assignTextStyle('p2')(theme).text,
+      ...customTextStyles('p2'),
       color: theme.colors.primary3,
     },
   })),
-  'docItem:list': createButtonStyle((theme) => ({
+  'docItem:list': createButtonVariant((theme) => ({
     wrapper: {
       paddingLeft: theme.spacing.value(5) + theme.spacing.value(2.8),
     },
   })),
 
-  hiddenIcon: createButtonStyle((theme) => ({
+  hiddenIcon: createButtonVariant((theme) => ({
     icon: {
       opacity: 0,
     }
   })),
 
-  'docNavAction': createButtonStyle((theme) => ({
+  'docNavAction': createButtonVariant((theme) => ({
     wrapper: {
       ...theme.presets.row,
       backgroundColor: theme.colors.background,
@@ -155,7 +151,7 @@ export const AppButtonStyles = {
     }
   })),
 
-  docNavbar: createButtonStyle((theme) => ({
+  docNavbar: createButtonVariant((theme) => ({
     wrapper: {
       ...theme.presets.row,
       backgroundColor: theme.colors.primary1,
@@ -174,8 +170,10 @@ export const AppButtonStyles = {
     },
     text: {
       width: '100%',
-      ...assignTextStyle('p3')(theme).text,
+      ...customTextStyles('p3'),
       color: theme.colors.primary3,
     },
   })),
 }
+
+StyleRegistry.registerVariants('Button', ButtonStyles)

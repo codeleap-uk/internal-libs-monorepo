@@ -1,5 +1,6 @@
-import { ButtonComposition, createDefaultVariantFactory, includePresets, TextInputComposition } from '@codeleap/common'
+import { ButtonComposition } from '../Button'
 import { ListComposition } from '../List'
+import { TextInputComposition } from '../TextInput'
 
 type ItemStates = '' | ':selected'
 
@@ -12,7 +13,3 @@ export type AutocompleteComposition =
   `list${Capitalize<ListComposition>}` |
   `item${Capitalize<ItemComposition>}` |
   `searchInput${Capitalize<TextInputComposition>}`
-
-const createSelectStyle = createDefaultVariantFactory<AutocompleteComposition>()
-
-export const AutocompletePresets = includePresets((style) => createSelectStyle(() => ({ wrapper: style })))

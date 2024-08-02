@@ -1,13 +1,22 @@
-import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/common'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { View, ViewProps } from '../View'
-import { ListComposition, ListPresets } from './styles'
-import { motion } from 'framer-motion'
+import { ViewProps } from '../View'
+import { MotionProps } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
-import { UseInfiniteScrollArgs } from './useInfiniteScroll'
-import { ItemMasonryProps, ListMasonryProps } from '../../lib'
-import { ListLayoutProps } from './ListLayout'
+import { ItemMasonryProps, ListMasonryProps, UseInfiniteScrollArgs, UseInfiniteScrollReturn } from '../../lib'
+import { ListComposition } from './styles'
+import { StyledProp } from '@codeleap/styles'
+
+export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollReturn['layoutProps'] & {
+  styles: StylesOf<ListComposition>
+  children?: React.ReactNode
+  showFooter?: boolean
+}
+
+export type ListRefreshControlComponent = Partial<ListLayoutProps> & {
+  styles: StylesOf<ListComposition>
+}
 
 export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   item: T
@@ -16,26 +25,27 @@ export type AugmentedRenderItemInfo<T> = ItemMasonryProps<T> & {
   isOnly: boolean
 }
 
-export type ListProps<
-T = any[],
-Data = T extends Array<infer D> ? D : never
-> = 
-  ComponentVariants<typeof ListPresets> &
-  Omit<typeof View, 'variants' | 'styles'> & {
-    data: Data[]
+export type ListItem = {
+  id: string | number
+}
+
+export type ListProps<T extends ListItem = ListItem> =
+  ComponentCommonProps &
+  UseInfiniteScrollArgs &
+  {
+    data: T[]
     isFetching?: boolean
     hasNextPage?: boolean
     separators?: boolean
     onRefresh?: () => void
-    placeholder?: EmptyPlaceholderProps
-    styles?: StylesOf<ListComposition>
+    placeholder?: Omit<EmptyPlaceholderProps, 'debugName'>
     keyExtractor?: (item: T, index: number) => string
     renderItem: (data: AugmentedRenderItemInfo<T>) => React.ReactElement
     ListFooterComponent?: (props: ListLayoutProps) => React.ReactElement
     ListLoadingIndicatorComponent?: () => React.ReactElement
     ListRefreshControlComponent?: () => React.ReactElement
     ListEmptyComponent?: React.FC | ((props: EmptyPlaceholderProps) => React.ReactElement)
-    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps<'div'>['css'] }) => React.ReactElement)
+    ListSeparatorComponent?: React.FC | ((props: { separatorStyles: ViewProps['style'] }) => React.ReactElement)
     isLoading?: boolean
     isFetchingNextPage?: boolean
     fetchNextPage?: () => void
@@ -45,13 +55,13 @@ Data = T extends Array<infer D> ? D : never
     refreshThreshold?: number
     refreshPosition?: number
     refresh?: boolean
-    refreshControlProps?: PropsOf<typeof motion.div>
+    refreshControlProps?: Partial<MotionProps>
     refreshControlIndicatorProps?: Partial<ActivityIndicatorProps>
-    style?: React.CSSProperties
+    style?: StyledProp<ListComposition>
     ref?: React.MutableRefObject<undefined>
     rowItemsSpacing?: number
     overscan?: number
     masonryProps?: Partial<ListMasonryProps<T>>
     reloadTimeout?: number
     showFooter?: boolean
-} & ComponentCommonProps & UseInfiniteScrollArgs
+  }

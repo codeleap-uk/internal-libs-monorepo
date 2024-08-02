@@ -1,8 +1,9 @@
-import { variantProvider, Settings } from '@/app'
+import { Settings } from '@/app'
 import { Header } from './Header'
 import { Helmet } from 'react-helmet'
 import { PropsOf } from '@codeleap/common'
 import { CenterWrapper, View } from '@/components'
+import { createStyles } from '@codeleap/styles'
 
 type PageProps = PropsOf<typeof CenterWrapper> & {
   center?: boolean
@@ -34,7 +35,7 @@ export const Page = (props: PageProps) => {
   } = props
 
   return (
-    <View variants={['column']} css={[styles.wrapper, !center && centerWrapperProps?.styles?.wrapper]} className={className}>
+    <View style={['column', styles.wrapper, !center && centerWrapperProps?.style?.wrapper]} className={className}>
       {!withRouter && <Helmet>{title && <title>{title} {appendNameToTitle ? ` | ${Settings.AppName}` : ''}</title>}</Helmet>}
       {header && typeof header === 'boolean' ? <Header center={headerCenter ? center : false} searchBar={searchBar} /> : header}
       {center ? (
@@ -48,7 +49,7 @@ export const Page = (props: PageProps) => {
   )
 }
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   wrapper: {
     position: 'relative',
     minHeight: '100vh',
@@ -56,4 +57,4 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     maxWidth: '100%',
     backgroundColor: theme.colors.background,
   },
-}), true)
+}))

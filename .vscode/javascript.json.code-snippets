@@ -168,7 +168,7 @@
   "<Button/>": {
     "prefix": ["button", "<Button/>"],
     "body": [
-      "<Button variant={`${1:default}`} text={`${2:Hello World!}`} onPress={${3:() => log(`press`)}}/>",
+      "<Button style={[`${1:default}`]} text={`${2:Hello World!}`} onPress={${3:() => log(`press`)}}/>",
     ],
     "description": "[CodeLeap] <Button/> lib component\n\n",
   },
@@ -184,7 +184,7 @@
   "<Text/>": {
     "prefix": ["text", "txt", "<Text/>"],
     "body": [
-      "<Text variant={`${1:p1}`} text={`${2:Hello world!}`}/>",
+      "<Text style={[`${1:p1}`]} text={`${2:Hello world!}`}/>",
     ],
     "description": "[CodeLeap] <Text/> lib component\n\n",
   },
@@ -227,7 +227,7 @@
       "  return (",
       "    <View style={styles.wrapper}>",
       "      <View style={styles.innerWrapper}>",
-      "        <Text variant={`h3`} text={`${1:${TM_FILENAME_BASE}}`}/>",
+      "        <Text style={[`h3`]} text={`${1:${TM_FILENAME_BASE}}`}/>",
       "      </View>",
       "    </View>",
       "  )",
@@ -259,7 +259,7 @@
       "    <Page>",
       "      <View style={styles.wrapper}>",
       "        <View style={styles.innerWrapper}>",
-      "          <Text variant={`h3`} text={`${1:${TM_FILENAME_BASE}}`}/>",
+      "          <Text style={[`h3`]} text={`${1:${TM_FILENAME_BASE}}`}/>",
       "        </View>",
       "      </View>",
       "    </Page>",

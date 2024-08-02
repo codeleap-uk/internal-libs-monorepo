@@ -1,22 +1,22 @@
 import React from 'react'
 import { Text, View, Page, Link } from '@/components'
-import { variantProvider } from '@/app'
 
 import updates from '../updates/index.json'
+import { createStyles } from '@codeleap/styles'
 
 export default () => {
   return <>
     <Page title='Updates' headerCenter={false}>
       <View style={styles.wrapper}>
-        <Text variants={['h1']} text={'Updates'} />
-        <Text variants={['h3']} style={{ fontWeight: 300 }} text={'Important notes about specific versions of our libraries can be found below.'} />
+        <Text style={['h1']} text={'Updates'} />
+        <Text style={['h3', { fontWeight: 300 }]} text={'Important notes about specific versions of our libraries can be found below.'} />
 
-        <View variants={['separator']} />
+        <View style={['separator']} />
 
-        <View variants={['marginTop:4', 'column', 'gap:2']}>
+        <View style={['marginTop:4', 'column', 'gap:2']}>
           {updates?.list?.map(({ version, path, title }) => (
-            <Link key={String(version)} to={path} variants={['noUnderline']}>
-              <Text variants={['h3']} style={styles.version} text={`${version} - ${title}`} />
+            <Link key={String(version)} to={path} style={['noUnderline']}>
+              <Text style={['h3', styles.version]} text={`${version} - ${title}`} />
             </Link>
           ))}
         </View>
@@ -25,7 +25,7 @@ export default () => {
   </>
 }
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   title: {
     fontSize: 64,
     fontWeight: '900'
@@ -47,4 +47,4 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     justifyContent: 'flex-start',
     ...theme.spacing.paddingVertical(7),
   },
-}), true)
+}))

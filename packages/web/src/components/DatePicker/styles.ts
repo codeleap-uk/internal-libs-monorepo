@@ -1,8 +1,4 @@
-import {
-  TextInputComposition,
-  createDefaultVariantFactory,
-  includePresets,
-} from '@codeleap/common'
+import { TextInputComposition } from '@codeleap/common'
 import { ActionIconComposition } from '../ActionIcon'
 
 export type DatePickerStates = ':selected' | ':disabled' | ''
@@ -25,10 +21,3 @@ export type DatePickerComposition =
   | DatePickerParts
   | `outerInput${Capitalize<TextInputComposition>}`
   | `header${Capitalize<DatePickerHeaderComposition>}`
-
-const createDatePickerStyle =
-  createDefaultVariantFactory<DatePickerComposition>()
-
-export const DatePickerPresets = includePresets(
-  (style) => createDatePickerStyle(() => ({ wrapper: style })),
-)

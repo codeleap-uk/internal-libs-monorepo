@@ -1,7 +1,8 @@
-import { TypeGuards, createDefaultVariantFactory, getRenderedComponent, includePresets, useDefaultComponentStyle, useMemo, useNestedStylesByKey } from "@codeleap/common"
-import { ActionIconComposition, ActionIconParts } from "../ActionIcon"
+import { TypeGuards } from "@codeleap/common"
+import { ActionIconParts } from "../ActionIcon"
 import { InputBaseProps } from "./types"
-import { StyleSheet } from "react-native"
+import { mergeStyles, useCompositionStyles } from '@codeleap/styles'
+import { useMemo } from 'react'
 
 type InputIcons = 'icon' | 'leftIcon' | 'rightIcon'
 
@@ -24,32 +25,33 @@ export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconCompositio
 
 export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | InputBaseParts
 
-const createTextInputBaseComposition = createDefaultVariantFactory<InputBaseComposition>()
+const getIconStyles = (obj, state) => ({
+  icon: mergeStyles([
+    obj.icon, 
+    state.focused && obj['icon:focus'],
+    state.hasError && obj['icon:error'], 
+    state.disabled && obj['icon:disabled']
+  ]),
+  'icon:disabled': mergeStyles([
+    state.disabled && obj['icon:disabled']
+  ]),
+  touchableWrapper: mergeStyles([
+    obj.touchableWrapper, 
+    state.focused && obj['touchableWrapper:focus'],
+    state.hasError && obj['touchableWrapper:error'], 
+    state.disabled && obj['touchableWrapper:disabled']
+  ]),
+  'touchableWrapper:disabled': mergeStyles([
+    state.disabled && obj['touchableWrapper:disabled']
+  ])
+})
 
-export const InputBasePresets = includePresets((styles) => createTextInputBaseComposition(() => ({ wrapper: styles })))
+const useIconStyles = (styles, iconStyles, states) => {
+  return useMemo(() => {
+    const _iconStyles = getIconStyles(iconStyles, states)
 
-
-const getIconStyles = (obj, state) => {
-  return {
-    icon: [
-      obj.icon, 
-      state.focused && obj['icon:focus'],
-      state.hasError && obj['icon:error'], 
-      state.disabled && obj['icon:disabled']
-    ],
-    'icon:disabled': [
-      state.disabled && obj['icon:disabled']
-    ],
-    touchableWrapper: [
-      obj.touchableWrapper, 
-      state.focused && obj['touchableWrapper:focus'],
-      state.hasError && obj['touchableWrapper:error'], 
-      state.disabled && obj['touchableWrapper:disabled']
-    ],
-    'touchableWrapper:disabled': [
-      state.disabled && obj['touchableWrapper:disabled']
-    ]
-  }
+    return mergeStyles([styles, _iconStyles])
+  }, [states, styles, iconStyles])
 }
 
 export const useInputBaseStyles = (props: InputBaseProps) => {
@@ -57,76 +59,65 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused,
     disabled,
     error,
-    styles
+    style: styles,
   } = props
 
   const hasError = !TypeGuards.isNil(error)
 
-  const variantStyles = useDefaultComponentStyle<'u:InputBase', typeof InputBasePresets>('u:InputBase', {
-    styles,
-    transform: StyleSheet.flatten,
-    rootElement: 'wrapper'
+  const compositionStyles = useCompositionStyles(['leftIcon', 'rightIcon', 'icon'], styles)
+
+  const generalIconStyles = getIconStyles(compositionStyles?.icon, { hasError, disabled })
+
+  const leftIconStyles = useIconStyles(generalIconStyles, compositionStyles?.leftIcon, { 
+    // @ts-expect-error
+    hasError, disabled: (disabled || props?.leftIcon?.disabled), focused 
   })
 
-  const _leftIconStyles = useNestedStylesByKey<ActionIconComposition>('leftIcon', variantStyles)
-  const _rightIconStyles = useNestedStylesByKey<ActionIconComposition>('rightIcon', variantStyles)
-  const _generalIconStyles = useNestedStylesByKey<ActionIconComposition>('icon', variantStyles)
-
-  const generalIconStyles = getIconStyles(_generalIconStyles, { hasError, disabled })
-
-  const leftIconStyles = [
-    generalIconStyles, 
-    // @ts-ignore
-    getIconStyles(_leftIconStyles, { hasError, disabled: disabled || props?.leftIcon?.disabled, focused })
-  ]
-
-  const rightIconStyles = [
-    generalIconStyles,
-    // @ts-ignore
-    getIconStyles(_rightIconStyles, { hasError, disabled: disabled || props?.right?.disabled, focused })
-  ]
+  const rightIconStyles = useIconStyles(generalIconStyles, compositionStyles?.rightIcon, { 
+    // @ts-expect-error
+    hasError, disabled: (disabled || props?.rightIcon?.disabled), focused
+  })
 
   const labelStyle = [
-    variantStyles.label,
-    focused && variantStyles['label:focus'],
-    hasError && variantStyles['label:error'],
-    disabled && variantStyles['label:disabled'],
-    
+    styles.label,
+    focused && styles['label:focus'],
+    hasError && styles['label:error'],
+    disabled && styles['label:disabled'],
   ]
 
   const errorStyle = [
-    variantStyles.errorMessage,
-    focused && variantStyles['errorMessage:focus'],
-    hasError && variantStyles['errorMessage:error'],
-    disabled && variantStyles['errorMessage:disabled'],
+    styles.errorMessage,
+    focused && styles['errorMessage:focus'],
+    hasError && styles['errorMessage:error'],
+    disabled && styles['errorMessage:disabled'],
   ]
 
   const descriptionStyle = [
-    variantStyles.description,
-    focused && variantStyles['description:focus'],
-    hasError && variantStyles['description:error'],
-    disabled && variantStyles['description:disabled'],
+    styles.description,
+    focused && styles['description:focus'],
+    hasError && styles['description:error'],
+    disabled && styles['description:disabled'],
   ]
 
   const wrapperStyle = [
-    variantStyles.wrapper,
-    focused && variantStyles['wrapper:focus'],
-    error && variantStyles['wrapper:error'],
-    disabled && variantStyles['wrapper:disabled'],
+    styles.wrapper,
+    focused && styles['wrapper:focus'],
+    error && styles['wrapper:error'],
+    disabled && styles['wrapper:disabled'],
   ]
 
   const innerWrapperStyle = [
-    variantStyles.innerWrapper,
-    focused && variantStyles['innerWrapper:focus'],
-    hasError && variantStyles['innerWrapper:error'],
-    disabled && variantStyles['innerWrapper:disabled'],
+    styles.innerWrapper,
+    focused && styles['innerWrapper:focus'],
+    hasError && styles['innerWrapper:error'],
+    disabled && styles['innerWrapper:disabled'],
   ]
 
   const labelRowStyle = [
-    variantStyles.labelRow,
-    focused && variantStyles['labelRow:focus'],
-    hasError && variantStyles['labelRow:error'],
-    disabled && variantStyles['labelRow:disabled'],
+    styles.labelRow,
+    focused && styles['labelRow:focus'],
+    hasError && styles['labelRow:error'],
+    disabled && styles['labelRow:disabled'],
   ]
 
  return {

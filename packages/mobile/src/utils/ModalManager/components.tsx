@@ -1,9 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import { usePrevious, onMount, onUpdate, PropsOf } from '@codeleap/common'
 import { useModalContext } from './context'
 import { Portal } from '@gorhom/portal'
 import { Modal as _Modal } from '../../components/Modal'
-import { Drawer as _Drawer } from '../../components/Drawer'
 
 type UseManagedModalArgs = {
   id?: string
@@ -72,34 +71,6 @@ export const Modal:React.FC<ManagedModalProps> = ({
     <_Modal {...componentProps}>
       {children}
     </_Modal>
-  )
-
-  if (absolute) {
-    return <Portal>
-      {content}
-    </Portal>
-  }
-
-  return content
-}
-
-export type ManagedDrawerProps<T = PropsOf<typeof _Drawer>> = Omit<T, 'visible' | 'toggle'> & UseManagedModalArgs & {
-
-  absolute?: boolean
-
-}
-
-export const Drawer:React.FC<ManagedDrawerProps> = ({
-  children,
-  absolute = true,
-  ...props
-}) => {
-  const componentProps = useManagedModal(props)
-
-  const content = (
-    <_Drawer {...componentProps}>
-      {children}
-    </_Drawer>
   )
 
   if (absolute) {

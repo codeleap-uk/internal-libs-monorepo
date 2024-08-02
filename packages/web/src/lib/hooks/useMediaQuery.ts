@@ -16,17 +16,18 @@ export function useMediaQuery(
   } = queryOptions
 
   const _query = useMemo(() => {
-    return query.trim().replace('@media screen and ', '')
+    if (!query) return ''
+    return query?.trim()?.replace('@media screen and ', '')
   }, [query])
 
   const [matches, setMatches] = useState(
-    getInitialValueInEffect ? initialValue : isMediaQuery(query, initialValue),
+    (getInitialValueInEffect || !query) ? initialValue : isMediaQuery(query, initialValue),
   )
 
   const queryRef = useRef<MediaQueryList>()
 
   useEffect(() => {
-    if (query.trim() === '') return
+    if (query?.trim() === '' || !query) return
 
     if ('matchMedia' in window) {
       queryRef.current = window.matchMedia(_query)

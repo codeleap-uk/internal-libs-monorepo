@@ -35,10 +35,10 @@
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
-    "./src/**/*.js",
   ],
   "exclude": [
     "node_modules",
+    "../../node_modules",
     "dist",
     "./src/tests/**/*"
   ],

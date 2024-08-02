@@ -1,86 +1,27 @@
-import {
-  AnyFunction,
-  ComponentVariants,
-  onUpdate,
-  TypeGuards,
-  useDefaultComponentStyle,
-  useWarning,
-} from '@codeleap/common'
-import React, { ReactNode, useCallback, useRef } from 'react'
-import {
-  Dimensions,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  ScrollView,
-  ScrollViewProps,
-  StyleSheet,
-} from 'react-native'
-import { StylesOf } from '../../types/utility'
+import React, { useCallback, useRef } from 'react'
+import { onUpdate, TypeGuards } from '@codeleap/common'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { Dimensions, ScrollView } from 'react-native'
+import { MobileStyleRegistry } from '../../Registry'
 import { View } from '../View'
-import { PagerPresets, PagerComposition } from './styles'
+import { PageProps, PagerProps, ScrollEvent } from './types'
+import { useStylesFor } from '../../hooks'
+
 export * from './styles'
-
-export type PageProps = {
-  isLast: boolean
-  isFirst: boolean
-  isActive: boolean
-  isNext: boolean
-  page: number
-  index: number
-  isPrevious: boolean
-}
-
-type ScrollEvent = NativeSyntheticEvent<NativeScrollEvent>
-
-export type PagerProps = React.PropsWithChildren<{
-  variants?: ComponentVariants<typeof PagerPresets>['variants']
-  styles?: StylesOf<PagerComposition>
-  children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
-  page?: number
-  style?: any
-  setPage?: (page: number) => void
-  returnEarly?: boolean
-  renderPageWrapper?: React.FC<PageProps>
-  pageWrapperProps?: any
-  width?: number
-  onScroll?: (event: ScrollEvent, args: { isLeft?: boolean; isRight?: boolean; x?: number }) => void
-  /** If TRUE render page, nextPage and prevPage only */
-  windowing?: boolean
-  scrollRightEnabled?: boolean
-  scrollLeftEnabled?: boolean
-  scrollDirectionThrottle?: number
-  onSwipeLastPage?: (event: ScrollEvent) => void
-  waitEventDispatchTimeout?: number
-} & ScrollViewProps>
-
-const defaultProps: Partial<PagerProps> = {
-  variants: [],
-  styles: {},
-  page: 0,
-  returnEarly: true,
-  windowing: false,
-  keyboardShouldPersistTaps: 'handled',
-  scrollEnabled: true,
-  scrollRightEnabled: true,
-  scrollLeftEnabled: true,
-  scrollDirectionThrottle: 650,
-  waitEventDispatchTimeout: 250,
-}
+export * from './types'
 
 export const Pager = (pagerProps: PagerProps) => {
   const {
-    styles,
-    variants,
     width: widthProp,
     page,
-    style = {},
-    returnEarly = true,
+    style,
+    returnEarly,
     renderPageWrapper,
     pageWrapperProps = {},
     children,
-    windowing = false,
+    windowing,
     setPage,
-    scrollEnabled = true,
+    scrollEnabled,
     scrollLeftEnabled,
     scrollRightEnabled,
     onScroll,
@@ -88,7 +29,7 @@ export const Pager = (pagerProps: PagerProps) => {
     onSwipeLastPage,
     waitEventDispatchTimeout,
   } = {
-    ...defaultProps,
+    ...Pager.defaultProps,
     ...pagerProps,
   }
 
@@ -97,32 +38,20 @@ export const Pager = (pagerProps: PagerProps) => {
   const [positionX, setPositionX] = React.useState(0)
   const [scrollPositionX, setScrollPositionX] = React.useState(0)
   const [_scrollEnabled, setScrollEnabled] = React.useState(true)
-
   const waitEventDispatch = useRef(false)
 
-  const variantStyles = useDefaultComponentStyle<'u:Pager', typeof PagerPresets>(
-    'u:Pager',
-    {
-      styles,
-      transform: StyleSheet.flatten,
-      variants,
-    },
-  )
+  const styles = useStylesFor(Pager.styleRegistryName, style)
 
   const windowWidth = Dimensions.get('window').width
-  let width = widthProp ?? variantStyles.wrapper.width
+
+  // @ts-expect-error
+  let width = widthProp ?? styles?.wrapper?.width
 
   const validWidth = TypeGuards.isNumber(width)
 
   if (!validWidth) {
     width = windowWidth
   }
-
-  useWarning(
-    !validWidth,
-    'Pager',
-    'provided width is not a number, using default width',
-  )
 
   const nChildren = React.Children.count(children)
 
@@ -134,7 +63,7 @@ export const Pager = (pagerProps: PagerProps) => {
 
   const handleScrollEnd = useCallback((event: ScrollEvent) => {
     if (!scrollEnabled) return null
-    
+
     if (waitEventDispatch.current === true) return null
 
     waitEventDispatch.current = true
@@ -213,13 +142,12 @@ export const Pager = (pagerProps: PagerProps) => {
       onMomentumScrollEnd={handleScrollEnd}
       scrollEventThrottle={hasScrollDirectionDisabled ? 2000 : 300}
       showsHorizontalScrollIndicator={false}
-      style={[variantStyles.wrapper, style]}
       {...pagerProps}
+      style={styles?.wrapper}
       onScroll={handleScroll}
       scrollEnabled={childArr.length > 1 && scrollEnabled && _scrollEnabled}
     >
       {childArr.map((child: PagerProps['children'][number], index) => {
-
         const isActive = index === page
         const isLast = index === lastPage
         const isFirst = index === 0
@@ -246,8 +174,8 @@ export const Pager = (pagerProps: PagerProps) => {
 
         const wrapperProps = {
           key: index,
-          style: [{ height: '100%', width }, variantStyles.page],
           ...pageWrapperProps,
+          style: [{ height: '100%', width }, styles?.page],
         }
 
         return <WrapperComponent {...wrapperProps}>{content}</WrapperComponent>
@@ -256,4 +184,24 @@ export const Pager = (pagerProps: PagerProps) => {
   )
 }
 
-Pager.defaultProps = defaultProps
+Pager.styleRegistryName = 'Pager'
+Pager.elements = ['page', 'wrapper']
+Pager.rootElement = 'wrapper'
+
+Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Pager as (props: StyledComponentProps<PagerProps, typeof styles>) => IJSX
+}
+
+Pager.defaultProps = {
+  page: 0,
+  returnEarly: true,
+  windowing: false,
+  keyboardShouldPersistTaps: 'handled',
+  scrollEnabled: true,
+  scrollRightEnabled: true,
+  scrollLeftEnabled: true,
+  scrollDirectionThrottle: 650,
+  waitEventDispatchTimeout: 250,
+} as Partial<PagerProps>
+
+MobileStyleRegistry.registerComponent(Pager)

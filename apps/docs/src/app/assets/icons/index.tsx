@@ -155,7 +155,7 @@ export const RenderIcon = ({ path, name = '', style = {}, log, ...otherProps }:a
   if (log) {
     logger.log('Icon style for ' + name, appliedStyles, 'Component style')
   }
-  return <Image source={path} css={appliedStyles} />
+  return <img src={path} css={appliedStyles} />
 
 }
 

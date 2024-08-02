@@ -1,72 +1,25 @@
-import * as React from 'react'
-import { View, ViewProps } from '../View'
-import { ButtonProps } from '../Button'
+import React from 'react'
+import { View } from '../View'
 import { Scroll } from '../Scroll'
-import {
-  ComponentVariants,
-  getNestedStylesByKey,
-  IconPlaceholder,
-  PropsOf,
-  TypeGuards,
-  useDefaultComponentStyle,
-  useRef,
-  useCodeleapContext,
-} from '@codeleap/common'
-import {
-  ModalComposition,
-  ModalPresets,
-  ModalParts,
-} from './styles'
-import { ScrollView, StyleSheet } from 'react-native'
-import { StylesOf } from '../../types/utility'
-
+import { TypeGuards } from '@codeleap/common'
 import { Backdrop } from '../Backdrop'
 import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
-import { Text, TextProps } from '../Text'
+import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { ActionIcon } from '../ActionIcon'
 import { useState } from 'react'
+import { ModalHeaderProps, ModalProps } from './types'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme, AppTheme, Theme } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
-
-export type ModalProps = Omit<ViewProps, 'variants' | 'styles'> & {
-  variants?: ComponentVariants<typeof ModalPresets>['variants']
-  styles?: StylesOf<ModalComposition>
-  dismissOnBackdrop?: boolean
-  buttonProps?: ButtonProps
-  accessible?: boolean
-  showClose?: boolean
-  closable?: boolean
-  footer?: React.ReactNode
-  title?: React.ReactNode
-  debugName: string
-  closeIconName?: IconPlaceholder
-  visible: boolean
-  toggle?: () => void
-  zIndex?: number
-  description?: React.ReactElement
-  scroll?: boolean
-  header?: React.ReactElement
-  closeOnHardwareBackPress?: boolean
-  renderHeader?: (props: ModalHeaderProps) => React.ReactElement
-  keyboardAware?: boolean
-  scrollProps?: PropsOf<typeof Scroll, 'ref'>
-}
-
-export type ModalHeaderProps = Omit<ModalProps, 'styles' | 'renderHeader'> & {
-  styles: {
-    wrapper: ViewProps['style']
-    titleWrapper: ViewProps['style']
-    title: TextProps['style']
-    description: TextProps['style']
-    closeButton: ButtonProps['styles']
-  }
-  description?: React.ReactElement
-}
+export * from './types'
 
 const DefaultHeader = (props: ModalHeaderProps) => {
   const {
     styles,
+    buttonStyles,
     title = null,
     showClose = false,
     description = null,
@@ -74,9 +27,10 @@ const DefaultHeader = (props: ModalHeaderProps) => {
     closeIconName = 'x',
     toggle,
   } = props
+
   return <>
     {(title || showClose || description) && (
-      <View style={styles.wrapper}>
+      <View style={styles.header}>
         <View style={styles.titleWrapper}>
           {TypeGuards.isString(title) ? (
             <Text text={title} style={styles.title} />
@@ -84,14 +38,14 @@ const DefaultHeader = (props: ModalHeaderProps) => {
             title
           )}
 
-          {(showClose && closable) && (
+          {(showClose && closable) ? (
             <ActionIcon
               debugName={`${debugName} modal close button`}
-              icon={closeIconName as IconPlaceholder}
+              icon={closeIconName as AppIcon}
               onPress={toggle}
-              styles={styles.closeButton}
+              style={buttonStyles}
             />
-          )}
+          ) : null}
         </View>
 
         {TypeGuards.isString(description) ? (
@@ -100,51 +54,39 @@ const DefaultHeader = (props: ModalHeaderProps) => {
           description
         )}
       </View>
-    )}</>
+    )}
+  </>
 }
 
 export const Modal = (modalProps: ModalProps) => {
   const {
-    variants = [],
-    styles = {},
     visible,
-
-    closable = true,
-
+    closable,
     footer,
     children,
     toggle = () => null,
-    dismissOnBackdrop = true,
+    dismissOnBackdrop,
     header = null,
     debugName,
-    scroll = true,
+    scroll,
     renderHeader,
     zIndex = null,
     scrollProps = {},
-    closeOnHardwareBackPress = true,
+    closeOnHardwareBackPress,
+    style,
     ...props
   } = {
     ...Modal.defaultProps,
     ...modalProps,
   }
+
+  const themeValues = useTheme(store => (store.current as AppTheme<Theme>)?.values)
+
   const [modalHeight, setModalHeight] = useState(0)
-  const { Theme } = useCodeleapContext()
 
-  const variantStyles = useDefaultComponentStyle('u:Modal', {
-    variants: variants as any,
-    transform: StyleSheet.flatten,
-    styles,
-  }) as ModalProps['styles']
-  const scrollRef = useRef<ScrollView>(null)
-  function getStyles(key: ModalParts) {
-    const s = [
-      variantStyles[key],
-      styles[key],
-    ]
+  const styles = useStylesFor(Modal.styleRegistryName, style)
 
-    return StyleSheet.flatten(s)
-  }
-  const buttonStyles = React.useMemo(() => getNestedStylesByKey('closeButton', variantStyles), [variantStyles])
+  const buttonStyles = useNestedStylesByKey('closeButton', styles)
 
   const boxAnimationStyles = useAnimatedVariantStyles({
     updater: (states) => {
@@ -152,31 +94,24 @@ export const Modal = (modalProps: ModalProps) => {
       return visible ? states['box:visible'] : states['box:hidden']
     },
     animatedProperties: ['box:hidden', 'box:visible'],
-    variantStyles,
-    transition: variantStyles['box:transition'],
+    variantStyles: styles,
+    transition: styles['box:transition'],
     dependencies: [visible],
   })
 
-  const wrapperStyle = getStyles('wrapper')
-
   const ScrollComponent = scroll ? Scroll : View
-  const scrollStyle = scroll ? getStyles('scroll') : getStyles('innerWrapper')
+  const scrollStyle = scroll ? styles?.scroll : styles?.innerWrapper
 
-  const heightThreshold = Theme.values.height * 0.75
-  const topSpacing = modalHeight > heightThreshold ? variantStyles.topSpacing : Theme.spacing.paddingTop(0)
+  const heightThreshold = themeValues?.height * 0.75
+  const topSpacing = modalHeight > heightThreshold ? styles?.topSpacing : 0
 
   const headerProps: ModalHeaderProps = {
-
     ...modalProps,
     closable,
-    styles: {
-      wrapper: getStyles('header'),
-      title: getStyles('title'),
-      description: getStyles('description'),
-      closeButton: buttonStyles,
-      titleWrapper: getStyles('titleWrapper'),
-    },
+    styles,
+    buttonStyles,
   }
+
   const Header = renderHeader || DefaultHeader
 
   useBackButton(() => {
@@ -194,65 +129,83 @@ export const Modal = (modalProps: ModalProps) => {
 
   return (
     <View
-      style={[wrapperStyle, {
-        zIndex: TypeGuards.isNumber(zIndex) ? zIndex : wrapperStyle?.zIndex, ...topSpacing,
-      }]}
+      style={[
+        styles?.wrapper,
+        // @ts-expect-error
+        { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : styles?.wrapper?.zIndex, ...topSpacing }
+      ]}
       pointerEvents={visible ? 'auto' : 'none'}
     >
-
-      <Backdrop visible={visible} debugName={`Modal ${debugName} backdrop`} styles={{
-        'wrapper:hidden': variantStyles['backdrop:hidden'],
-        'wrapper:visible': variantStyles['backdrop:visible'],
-        wrapper: variantStyles.backdrop,
-      }}
+      <Backdrop
+        visible={visible}
+        debugName={`Modal ${debugName} backdrop`}
+        style={{
+          'wrapper:hidden': styles['backdrop:hidden'],
+          'wrapper:visible': styles['backdrop:visible'],
+          'wrapper': styles?.backdrop,
+        }}
         wrapperProps={{
-          transition: { ...variantStyles['backdrop:transition'] },
+          // @ts-expect-error
+          transition: styles['backdrop:transition'],
         }}
       />
+
       <ScrollComponent
-        style={scrollStyle}
-        contentContainerStyle={getStyles('scrollContent')}
+        contentContainerStyle={styles?.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardAware
         animated
-
         {...scrollProps}
+        style={scrollStyle}
       >
-        {dismissOnBackdrop &&
+        {dismissOnBackdrop ? (
           <Touchable
             onPress={closable && visible ? toggle : (() => { })}
             debounce={400}
             debugName={'Modal backdrop touchable'}
-            style={variantStyles.backdropTouchable}
+            style={styles?.backdropTouchable}
             android_ripple={null}
             noFeedback
-          />}
+          />) : null}
 
         <View
           animated
-          style={[getStyles('box'), boxAnimationStyles]}
+          animatedStyle={boxAnimationStyles}
           {...props}
           onLayout={onModalLayout}
+          style={styles?.box}
         >
-
           {header ? header : <Header {...headerProps} />}
 
-          <View style={getStyles('body')}>{children}</View>
-          {footer && (
-            <View style={getStyles('footer')}>
+          <View style={styles?.body}>{children}</View>
+
+          {footer ? (
+            <View style={styles?.footer}>
               {typeof footer === 'string' ? <Text text={footer} /> : footer}
             </View>
-          )}
+          ) : null}
         </View>
-
       </ScrollComponent>
     </View >
-
   )
 }
 
-Modal.defaultProps = {
-  closeIconName: 'close' as IconPlaceholder,
+Modal.styleRegistryName = 'Modal'
+Modal.elements = ['box', 'backdrop', 'innerWrapper', 'scroll', 'body', 'footer', 'header', 'title', 'description', 'closeButton', 'topSpacing']
+Modal.rootElement = 'wrapper'
+
+Modal.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Modal as (props: StyledComponentProps<ModalProps, typeof styles>) => IJSX
 }
+
+Modal.defaultProps = {
+  closeIconName: 'close' as AppIcon,
+  closable: true,
+  dismissOnBackdrop: true,
+  scroll: true,
+  closeOnHardwareBackPress: true,
+} as Partial<ModalProps>
+
+MobileStyleRegistry.registerComponent(Modal)
 
 export default Modal

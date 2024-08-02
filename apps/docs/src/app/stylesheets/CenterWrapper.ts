@@ -1,18 +1,14 @@
-import { includePresets } from "@codeleap/common"
-import { variantProvider } from ".."
+import { StyleRegistry, theme } from '../styles'
+import { createStyles } from '@codeleap/styles'
 
 export type CenterWrapperComposition = 'wrapper' | 'innerWrapper'
 
-const createCenterWrapperStyle =
-  variantProvider.createVariantFactory<CenterWrapperComposition>()
+const createCenterWrapperVariant = createStyles<CenterWrapperComposition>
 
-const presets = includePresets((styles) => createCenterWrapperStyle(() => ({ innerWrapper: styles })))
-
-const MAX_WIDTH = 1280
+const safeHorizontalPaddings = theme.presets.safeHorizontalPaddings()
 
 export const CenterWrapperStyles = {
-  ...presets,
-  default: createCenterWrapperStyle((theme) => ({
+  default: createCenterWrapperVariant((theme) => ({
     wrapper: {
       justifyContent: 'center',
       alignItems: 'center',
@@ -23,28 +19,38 @@ export const CenterWrapperStyles = {
       flex: 1,
       display: 'flex',
       width: '100%',
-      maxWidth: MAX_WIDTH,
+      maxWidth: theme.values.maxContentWidth,
 
-      [theme.media.down('xxlarge')]: {
-        paddingLeft: theme.spacing.value(16),
-        paddingRight: theme.spacing.value(16),
+      [theme.media.up('desktopHuge')]: {
+        paddingLeft: safeHorizontalPaddings.desktopHuge,
+        paddingRight: safeHorizontalPaddings.desktopHuge,
       },
-      [theme.media.down('large')]: {
-        paddingLeft: theme.spacing.value(12),
-        paddingRight: theme.spacing.value(12),
+      [theme.media.down('desktopLarge')]: {
+        paddingLeft: safeHorizontalPaddings.desktopLarge,
+        paddingRight: safeHorizontalPaddings.desktopLarge,
       },
-      [theme.media.down('largeish')]: {
-        paddingLeft: theme.spacing.value(8),
-        paddingRight: theme.spacing.value(8),
+      [theme.media.down('desktop')]: {
+        paddingLeft: safeHorizontalPaddings.desktop,
+        paddingRight: safeHorizontalPaddings.desktop,
       },
-      [theme.media.down('mid')]: {
-        paddingLeft: theme.spacing.value(4),
-        paddingRight: theme.spacing.value(4),
+      [theme.media.down('laptop')]: {
+        paddingLeft: safeHorizontalPaddings.laptop,
+        paddingRight: safeHorizontalPaddings.laptop,
       },
-      [theme.media.down('small')]: {
-        paddingLeft: theme.spacing.value(2),
-        paddingRight: theme.spacing.value(2),
+      [theme.media.down('tablet')]: {
+        paddingLeft: safeHorizontalPaddings.tablet,
+        paddingRight: safeHorizontalPaddings.tablet,
+      },
+      [theme.media.down('tabletSmall')]: {
+        paddingLeft: safeHorizontalPaddings.tabletSmall,
+        paddingRight: safeHorizontalPaddings.tabletSmall,
+      },
+      [theme.media.down('mobile')]: {
+        paddingLeft: safeHorizontalPaddings.mobile,
+        paddingRight: safeHorizontalPaddings.mobile,
       },
     },
   })),
 }
+
+StyleRegistry.registerVariants('CenterWrapper', CenterWrapperStyles)

@@ -1,9 +1,9 @@
 import * as FormTypes from './types'
 import { usePartialState, useMemo, deepGet, deepSet, deepMerge, TypeGuards } from '../../utils'
 import { FunctionType } from '../../types'
-import { useCodeleapContext } from '../../styles/StyleProvider'
 import { createRef, useCallback, useRef } from 'react'
 import { useI18N } from '../i18n'
+import { useGlobalContext } from '../../contexts/GlobalContext'
 
 export * as FormTypes from './types'
 
@@ -48,7 +48,7 @@ export function useForm<
   }, [form.staticFieldProps])
 
   const [formValues, setFormValues] = usePartialState<Values>(getInitialState)
-  const { logger, Theme } = useCodeleapContext()
+  const { logger, isBrowser } = useGlobalContext()
   const [fieldErrors, setFieldErrors] = usePartialState(getInitialErrors)
   // @ts-ignore
   function setFieldValue(...args: FieldPaths) {
@@ -151,7 +151,7 @@ export function useForm<
 
     if (type === 'number') {
       dynamicProps.value = Number.isNaN(dynamicProps.value) ? '' : String(dynamicProps.value)
-      if (Theme.IsBrowser) {
+      if (isBrowser) {
         dynamicProps.type = 'number'
       } else {
         dynamicProps.keyboardType = 'numeric'
@@ -175,7 +175,7 @@ export function useForm<
     }
 
     if (type === 'text' || type === 'number') {
-      if (!Theme.IsBrowser && !staticProps.multiline) {
+      if (!isBrowser && !staticProps.multiline) {
         dynamicProps.returnKeyType = 'next'
       }
 
@@ -186,7 +186,7 @@ export function useForm<
       }
       dynamicProps.ref = inputRefs.current[thisRefIdx]
       registeredTextRefsOnThisRender++
-      if (!Theme.IsBrowser && !staticProps.multiline) {
+      if (!isBrowser && !staticProps.multiline) {
         dynamicProps.onSubmitEditing = () => {
           const nextRef = thisRefIdx + 1
           if (inputRefs.current.length <= nextRef) return

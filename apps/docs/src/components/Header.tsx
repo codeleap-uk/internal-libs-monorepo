@@ -1,8 +1,12 @@
-import { variantProvider, Theme, assignTextStyle, React } from '@/app'
-import { View, CenterWrapper, Drawer, Logo, Link, ActionIcon, Text } from '@/components'
+import React from 'react'
+import { theme } from '@/app'
+import { customTextStyles } from '@/app/stylesheets/Text'
+import { View, CenterWrapper, Drawer, Logo, Link, ActionIcon } from '@/components'
 import { onUpdate, useState } from '@codeleap/common'
+import { createStyles } from '@codeleap/styles'
 import { useMediaQuery } from '@codeleap/web'
 import { useLocation } from '@reach/router'
+import { ElementType } from 'react'
 
 const navItems = [
   {
@@ -32,13 +36,13 @@ const navItems = [
   },
 ]
 
-const BREAKPOINT = 'mid'
+const BREAKPOINT = 'tabletSmall'
 
 const NavContent = () => {
   const location = useLocation()
 
   return (
-    <View variants={['gap:1', 'center']} responsiveVariants={{ [BREAKPOINT]: ['column', 'gap:2', 'alignStart', 'paddingVertical:3'] }}>
+    <View style={['gap:1', 'center', { breakpoints: { tabletSmall: ['column', 'gap:2', 'alignStart', 'paddingVertical:3'] } }]}>
       {
         navItems.map(i => {
           const isSelected = location?.pathname?.includes(i?.url)
@@ -47,8 +51,7 @@ const NavContent = () => {
               key={i.url}
               text={i.name}
               to={i.url + (i?.page ? '/' : '/index')}
-              variants={['noUnderline']}
-              css={[styles.navItem, isSelected && styles['navItem:selected']]}
+              style={[styles.navItem, isSelected && styles['navItem:selected']]}
             />
           )
         })
@@ -78,58 +81,51 @@ const DrawerMenu = ({ isMobile }) => {
 
   return <>
     <Drawer
-      styles={{
-        box: styles.drawer,
-      }}
-      css={[styles.drawer]}
+      debugName='header'
       open={drawerOpen}
-      size='75vw'
+      size={75}
       position='right'
       toggle={toggleDrawer}
       showCloseButton
     >
-
       <NavContent />
     </Drawer>
 
     <ActionIcon
+      debugName='close header'
       icon='menu'
-      variants={['marginLeft:auto', 'minimal', 'neutral10']}
+      style={['marginLeft:auto', 'minimal', 'neutral10']}
       onPress={toggleDrawer}
     />
   </>
 }
 
 export const Header = ({ center, searchBar = null }) => {
-  const mediaQuery = Theme.media.down(BREAKPOINT)
+  const mediaQuery = theme.media.down(BREAKPOINT)
   const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
-  const Wrapper = center ? CenterWrapper : View
+  const Wrapper: ElementType = center ? CenterWrapper : View
 
   return (
     <Wrapper
-      styles={{
-        innerWrapper: styles.wrapper,
-        wrapper: styles.floatingHeader as any,
-      }}
-      style={styles.floatingHeader}
-      variants={['paddingVertical:2']}
+      style={[
+        styles.floatingHeader, 
+        { innerWrapper: styles.wrapper, wrapper: styles.floatingHeader }
+      ]}
     >
-      <Link to={'/'} css={styles.logoWrapper}>
-        <Logo style={styles.logo} />
+      <Link to={'/'} style={styles.logoWrapper}>
+        <Logo debugName='logo' />
       </Link>
 
       {searchBar}
 
-      {
-        isMobile ? (
-          <DrawerMenu isMobile={isMobile} />
-        ) : (
-          <View variants={['alignCenter']}>
-            <NavContent />
-          </View>
-        )
-      }
+      {isMobile ? (
+        <DrawerMenu isMobile={isMobile} />
+      ) : (
+        <View style={'alignCenter'}>
+          <NavContent />
+        </View>
+      )}
     </Wrapper>
   )
 }
@@ -137,7 +133,7 @@ export const Header = ({ center, searchBar = null }) => {
 const closeIconSize = 24
 const logoSize = 32
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   wrapper: {
     ...theme.presets.row,
     ...theme.presets.alignCenter,
@@ -155,20 +151,13 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     paddingRight: 40,
 
     borderBottom: `1px solid ${theme.colors.neutral3}`,
-    // justifyContent: 'center',
-    alignItems: 'center'
-  },
-  logo: {
-    width: logoSize * 4,
-    [Theme.media.down(BREAKPOINT)]: {
-      width: logoSize,
-    },
+    alignItems: 'center',
   },
   logoWrapper: {
     marginRight: 'auto',
     textDecoration: 'none',
 
-    [Theme.media.down(BREAKPOINT)]: {
+    [theme.media.down(BREAKPOINT)]: {
       marginRight: theme.spacing.value(0),
       display: 'flex',
       ...theme.presets.justifyCenter,
@@ -194,7 +183,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   },
   profileWrapper: {
     borderRadius: theme.borderRadius.small,
-    ...theme.border.neutral5({ width: 1 }),
+    ...theme.border({ width: 1, color: 'neutral5' }),
     ...theme.presets.centerRow,
     ...theme.spacing.padding(2),
     ...theme.presets.fullWidth,
@@ -214,7 +203,7 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     textOverflow: 'ellipsis',
   },
   navItem: {
-    ...assignTextStyle('h5')(theme).text,
+    ...customTextStyles('h5'),
     ...theme.presets.textCenter,
     color: theme.colors.neutral9,
     fontWeight: '600',
@@ -223,9 +212,9 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     ...theme.spacing.paddingVertical(0.5),
     borderRadius: theme.borderRadius.rounded,
 
-    [Theme.media.down(BREAKPOINT)]: {
+    [theme.media.down(BREAKPOINT)]: {
       width: '100%',
-      ...assignTextStyle('p1')(theme).text,
+      ...customTextStyles('p1'),
       ...theme.presets.textLeft,
       ...theme.spacing.padding(2),
       backgroundColor: theme.colors.transparent,
@@ -239,10 +228,10 @@ const styles = variantProvider.createComponentStyle((theme) => ({
 
     backgroundColor: theme.colors.primary1,
 
-    [Theme.media.down(BREAKPOINT)]: {
+    [theme.media.down(BREAKPOINT)]: {
       backgroundColor: theme.colors.primary1,
       color: theme.colors.primary3,
       fontWeight: '600',
     },
   },
-}), true)
+}))

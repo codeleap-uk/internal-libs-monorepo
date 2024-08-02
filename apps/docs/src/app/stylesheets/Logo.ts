@@ -1,26 +1,33 @@
-import { variantProvider } from '../theme'
-import { includePresets } from '@codeleap/common'
+import { createStyles } from '@codeleap/styles'
+import { StyleRegistry } from '../styles'
 
 export type LogoComposition = 'wrapper' | 'image'
 
-const createLogoStyle = variantProvider.createVariantFactory<LogoComposition>()
+const createLogoVariant = createStyles<LogoComposition>
 
-const presets = includePresets((s) => createLogoStyle(() => ({ wrapper: s })))
+const LOGO_SPLASH_SIZE = 230
 
 export const LogoStyles = {
-  ...presets,
-  default: createLogoStyle(() => ({
-    image: {
-      userSelect: 'none',
-      textDecoration: 'none',
-    },
-  })),
-  splash: createLogoStyle(() => ({
+  default: createLogoVariant(() => ({
     wrapper: {
-      width: '30%',
+      userSelect: 'none',
     },
     image: {
       width: '100%',
+      userSelect: 'none',
+    },
+  })),
+  splash: createLogoVariant(() => ({
+    wrapper: {
+      width: LOGO_SPLASH_SIZE,
+      cursor: 'default',
+    },
+    image: {
+      width: LOGO_SPLASH_SIZE,
+      objectFit: 'contain',
+      cursor: 'default',
     },
   })),
 }
+
+StyleRegistry.registerVariants('Logo', LogoStyles)

@@ -1,13 +1,13 @@
-import { ComponentVariants, FormTypes, StylesOf, yup } from '@codeleap/common'
+import { FormTypes, yup } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/css'
-import { CSSObject } from '@emotion/react'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
 import { ComponentCommonProps } from '../../types'
 import { ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
-import { SelectPresets, SelectComposition, OptionState } from './styles'
+import { SelectComposition, OptionState } from './styles'
+import { StyledProp } from '@codeleap/styles'
 
 type SelectValue<T, Multi extends boolean> = Multi extends true ? T[] : T
 
@@ -26,20 +26,20 @@ type DynamicSelectProps<T, Multi extends boolean> =
     Props<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>>
   >)
 
-export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'styles' | 'variants'> &{
+export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'style'> & {
   options: FormTypes.Options<T>
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
   validate?: FormTypes.ValidatorWithoutForm<SelectValue<T, Multi>> | yup.SchemaOf<SelectValue<T, Multi>>
-  styles?: StylesOf<SelectComposition>
+  style?: StyledProp<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 
 export type ComponentPartProps = {
   focused: boolean
   error: boolean
   disabled: boolean
-  variantStyles: Record<SelectComposition, React.CSSProperties>
+  styles: Record<SelectComposition, React.CSSProperties>
 }
 
 export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonProps & {
@@ -59,6 +59,7 @@ export type PlaceholderProps = NoticeProps & ComponentPartProps & {
     icon: CSSInterpolation
   }
   icon: SelectPlaceholderElement
+  image: HTMLImageElement['src']
 } & ComponentCommonProps
 
 export type LoadingIndicatorProps = NoticeProps & {
@@ -71,7 +72,6 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     debugName?: string
     clearable?: boolean
     closeOnSelect?: boolean
-    css?: CSSObject
     focused?: boolean
     _error?: string
     renderItem?: (props: TCustomOption) => JSX.Element
@@ -81,8 +81,10 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => JSX.Element
     noItemsText?: SelectPlaceholderElement
     noItemsIcon?: SelectPlaceholderElement
+    noItemsImage?: PlaceholderProps['image']
     placeholderText?: SelectPlaceholderElement
     placeholderIcon?: SelectPlaceholderElement
+    placeholderImage?: PlaceholderProps['image']
     showDropdownIcon?: boolean
     formatPlaceholderNoItems?: (props: PlaceholderProps & { text: string }) => string
     selectedIcon?: string
@@ -96,12 +98,15 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     limit?: number
     loadInitialValue?: boolean
     loadingMessage?: string
-    selectedOption?: { label: FormTypes.Label; value: T; } | SelectValue<T, Multi>
+    selectedOption?: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>
     selectRef?: MutableRefObject<any>
-    setSelectedOption?: (value: { label: FormTypes.Label; value: T; } | SelectValue<T, Multi>) => void
+    setSelectedOption?: (value: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>) => void
   } & Omit<
     ReactSelectProps<T, Multi>,
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |
     'isLoading' | 'menuPortalTarget' | 'closeMenuOnSelect' | 'isMulti'>
-    & ComponentVariants<typeof SelectPresets>
 >
+
+export type UseSelectStylesProps = SelectProps & {
+  styleRegistryName: string
+}

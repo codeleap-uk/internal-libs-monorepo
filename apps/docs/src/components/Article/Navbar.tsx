@@ -1,4 +1,4 @@
-import { React, variantProvider, Theme } from '@/app'
+import { React, theme } from '@/app'
 import { Collapse } from '../Collapse'
 import { MdxMetadata } from 'types/mdx'
 import { onUpdate, useBooleanToggle } from '@codeleap/common'
@@ -6,6 +6,7 @@ import { Link } from '../Link'
 import { View, Button, Drawer } from '@/components'
 import { Location } from '@reach/router'
 import { useMediaQuery } from '@codeleap/web'
+import { createStyles } from '@codeleap/styles'
 
 type NavbarProps = {
   pages: [string, MdxMetadata[]][]
@@ -14,11 +15,11 @@ type NavbarProps = {
 }
 
 const ArticleLink = ({ title, path, selected, isRoot }) => (
-  <Link to={path} variants={['noUnderline']}>
+  <Link to={path} style={['noUnderline']}>
     <Button
       text={title}
       onPress={() => null}
-      variants={['docItem', 'hiddenIcon', selected && 'docItem:selected', !isRoot && 'docItem:list']}
+      style={['docItem', 'hiddenIcon', selected && 'docItem:selected', !isRoot && 'docItem:list']}
     />
   </Link>
 )
@@ -46,23 +47,22 @@ const Category = ({ name, items, location }) => {
   }, [selected])
 
   return (
-    <View variants={['column', 'fullWidth', 'gap:0.5']}>
+    <View style={['column', 'fullWidth', 'gap:0.5']}>
       <Button
         text={name}
         onPress={toggle}
         icon='chevron-right'
-        variants={['docItem']}
-        styles={{
+        style={['docItem', {
           text: {
             fontWeight: 900
           },
           icon: {
             transform: `rotate(${open ? 90 : 0}deg)`,
           }
-        }}
+        }]}
       />
 
-      <Collapse open={open} height={items.length * 80} css={styles.collapsibleList}>
+      <Collapse open={open} height={items.length * 80} style={styles.collapsibleList}>
         {_items}
       </Collapse>
     </View>
@@ -72,7 +72,7 @@ const Category = ({ name, items, location }) => {
 export const Navbar = ({ pages, location }: NavbarProps) => {
   const [isDrawerOpen, toggleDrawer] = useBooleanToggle(false)
 
-  const isMobile = useMediaQuery(Theme.media.down('mid'), { getInitialValueInEffect: false })
+  const isMobile = useMediaQuery(theme.media.down('tabletSmall'), { getInitialValueInEffect: false })
 
   const Items = () => <>
     {pages.map?.(([category, items]) => {
@@ -80,8 +80,8 @@ export const Navbar = ({ pages, location }: NavbarProps) => {
     })}
   </>
 
-  return <View variants={['column', 'gap:0.5']} style={styles.sidebar}>
-    {isMobile && <Button text='Open navigation' onPress={toggleDrawer} variants={['docNavbar']} />}
+  return <View style={['column', 'gap:0.5', styles.sidebar]}>
+    {isMobile && <Button text='Open navigation' onPress={toggleDrawer} style={['docNavbar']} />}
 
     {!isMobile && <Items />}
 
@@ -91,7 +91,7 @@ export const Navbar = ({ pages, location }: NavbarProps) => {
         open={isDrawerOpen}
         position='left'
         toggle={toggleDrawer}
-        size='85vw'
+        size={85}
       >
         <Items />
       </Drawer>
@@ -101,7 +101,7 @@ export const Navbar = ({ pages, location }: NavbarProps) => {
 
 const SECTION_WIDTH = 280
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   sidebar: {
     height: '100%',
     position: 'static',
@@ -111,16 +111,16 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     borderRight: `1px solid ${theme.colors.neutral3}`,
     paddingTop: theme.spacing.value(3),
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       minWidth: '100vw',
       maxWidth: '100vw',
       minHeight: 'unset',
       paddingTop: 0,
-    }
+    },
   },
   toggleButton: {
     transition: 'transform 0.3s ease',
-    ...theme.presets.fixed,
+    position: 'fixed',
     zIndex: 1,
     right: theme.spacing.value(3),
     bottom: theme.spacing.value(3),
@@ -128,4 +128,4 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   collapsibleList: {
     ...theme.presets.column,
   },
-}), true)
+}))

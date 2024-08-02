@@ -1,9 +1,6 @@
-import { PropsOf } from '@codeleap/common'
-import { StylesOf } from '../../types'
+import { StylesOf } from '@codeleap/common'
 import { InputBaseComposition } from './styles'
-import { ActionIcon } from '../ActionIcon'
-
-type ActionIconProps = PropsOf<typeof ActionIcon>
+import { ActionIconComposition, ActionIconProps } from '../ActionIcon'
 
 type OrderedParts = 'label' | 'description' | 'innerWrapper' | 'error'
 
@@ -16,14 +13,29 @@ export type InputBaseProps = React.PropsWithChildren<{
   wrapperProps?: any
   innerWrapper?: React.FC<any>
   innerWrapperProps?: any
-  styles?: StylesOf<InputBaseComposition>
+  style?: StylesOf<InputBaseComposition>
   description?: React.ReactNode
   debugName: string
   focused?: boolean
   disabled?: boolean
   order?: OrderedParts[]
-  style?: any
   labelAsRow?: boolean
   noError?: boolean
   innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
 }>
+
+export type OmitDiff<T1, T2> = {
+  [K in Exclude<keyof T1, keyof T2>]: T1[K]
+} & {
+  [K in keyof T2]: T2[K]
+}
+
+export type InputBaseKey = keyof InputBaseProps
+
+export type IconStyles = StylesOf<ActionIconComposition>
+
+export type IconState = {
+  focused: boolean
+  hasError: boolean
+  disabled: boolean
+}

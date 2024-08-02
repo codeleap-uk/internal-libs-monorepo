@@ -1,7 +1,7 @@
 import { onMount, throttle, useUnmount } from '../../utils'
 import { AppSettings } from '../../config'
-import { useCodeleapContext } from '../../styles'
 import { PerformanceError } from './errors'
+import { useGlobalContext } from '../../contexts/GlobalContext'
 
 export type InspectRenderOptions = {
   noHooks?: boolean
@@ -36,7 +36,7 @@ export function makePerformanceInspector(settings: AppSettings) {
     const blacklist = settings?.PerformanceInspector.blacklist || []
     if (blacklist.some((item) => name.startsWith(item))) return
 
-    const { logger } = useCodeleapContext()
+    const { logger } = useGlobalContext()
     const { noHooks, logMode, throttleInterval, maxRenders } = options
 
     if (
