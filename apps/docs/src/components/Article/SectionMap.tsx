@@ -1,7 +1,10 @@
-import { React } from '@/app'
-import { View, Text, Icon } from '@/components'
+import { React, theme } from '@/app'
+import { View, Text, Icon, ActionIcon } from '@/components'
 import { createStyles } from '@codeleap/styles'
+import { useMediaQuery } from '@codeleap/web'
 import { useLocation, WindowLocation } from '@reach/router'
+import { useState } from 'react'
+import { Collapse } from '../Collapse'
 import { Link } from '../Link'
 
 type Node = {
@@ -38,19 +41,30 @@ const SectionText = (props: SectionTextProps) => {
 
 export const SectionMap = ({ content = [] }) => {
   const location = useLocation()
+  const [open, setOpen] = useState(false)
+
+  const mediaQuery = theme.media.down('tabletSmall')
+  const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
   const pathOrigin = location?.origin + location?.pathname
+
+  const sections = content?.map((node, idx) => (
+    <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />
+  ))
 
   return (
     <View style={styles.wrapper}>
       <View style={['alignCenter', 'gap:2']}>
-        <Icon debugName='table content' name='layers' size={20} />
-        <Text style={['h4', 'primary']} text={'Table of contents'} />
+        {isMobile ? (
+          <ActionIcon debugName='table content' name='layers' onPress={() => setOpen(!open)} />
+        ): (
+          <Icon debugName='table content' name='layers' size={20} />
+        )}
+
+        <Text style={['h4', 'color:primary3']} text={'Table of contents'} />
       </View>
 
-      {content?.map((node, idx) => (
-        <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />
-      ))}
+      {isMobile ? <Collapse open={open}>{sections}</Collapse> : sections}
     </View>
   )
 }

@@ -25,7 +25,7 @@ const packages = [
 ]
 
 export default () => {
-  const renderItem = React.useCallback((item, i) => (
+  const RenderItem = React.useCallback(({ item, i }) => (
     <Fade bottom delay={800 + (i * 250)}>
       <Link key={i + 'link'} to={item?.url + '/index'} style={['noUnderline']}>
         <View style={styles.link}>
@@ -60,7 +60,7 @@ export default () => {
         </View>
 
         <View style={['row', 'gap:4', { breakpoints: { tabletSmall: 'column' } }]}>
-          {packages?.map(renderItem)}
+          {packages?.map((item, i) => <RenderItem item={item} i={i} key={'package-' + i} />)}
         </View>
 
         <View style={['row', 'gap:2']}>
