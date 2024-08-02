@@ -20,6 +20,27 @@ const axisMap = {
   'bottom': ['bottom', 'right', 'left']
 }
 
+const getInsetPath = (position: DrawerProps['position'], value: number) => {
+  let inset = ''
+
+  switch (position) {
+    case 'left':
+      inset = `inset(0 ${value}% 0 0)`
+      break
+    case 'right':
+      inset = `inset(0 0 0 ${value}%)`
+      break
+    case 'top':
+      inset = `inset(0 0 ${value}% 0)`
+      break
+    case 'bottom':
+      inset = `inset(${value}% 0 0 0)`
+      break
+  }
+
+  return inset
+}
+
 export const Drawer = (props: DrawerProps) => {
   const {
     open,
@@ -61,18 +82,22 @@ export const Drawer = (props: DrawerProps) => {
   const fixedValue = fixedProperty == 'width' ? '100vw' : '100vh'
   const measureProperty = expansionProperty == 'width' ? 'svw' : 'svh'
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    [expansionProperty]: open ? `${size}${measureProperty}` : '0px',
-    transition: {
-      duration: open ? 0.2 : 0.3,
+  const animatedStyle = useAnimatedStyle(() => {
+    const value = open ? 0 : 100
+
+    return {
+      clipPath: getInsetPath(position, value),
+      transition: {
+        duration: 0.25,
+      }
     }
-  }), [open])
+  }, [open])
 
   const wrapperAnimatedStyle = useAnimatedStyle(() => ({
     opacity: open ? 1 : 0,
     pointerEvents: open ? 'auto' : 'none',
     transition: {
-      duration: open ? 0.1 : 0.3,
+      duration: open ? 0.2 : 1.5,
     }
   }), [open])
 
@@ -83,6 +108,7 @@ export const Drawer = (props: DrawerProps) => {
       zIndex: 999,
       position: 'fixed',
       [fixedProperty]: fixedValue,
+      [expansionProperty]: `${size}${measureProperty}`
     }
   ]
 

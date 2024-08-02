@@ -91,7 +91,7 @@ export const Navbar = ({ pages, location }: NavbarProps) => {
         open={isDrawerOpen}
         position='left'
         toggle={toggleDrawer}
-        size='85vw'
+        size={85}
       >
         <Items />
       </Drawer>
