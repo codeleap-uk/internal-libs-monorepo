@@ -4,6 +4,7 @@ import { CropPickerComposition } from './styles'
 import { ReactCropProps } from 'react-image-crop'
 import { ModalProps } from '../Modal'
 import { useCropPicker } from '../../lib'
+import { ButtonProps } from '../Button'
 
 export type BaseCropProps = Partial<ReactCropProps>
 
@@ -18,6 +19,7 @@ export type CropPickerProps =
     debugName: string
     handle?: ReturnType<typeof useCropPicker>
     withLoading?: boolean
+    confirmButtonProps?: Partial<ButtonProps>
   }
 
 export type ImageReading = HTMLImageElement
