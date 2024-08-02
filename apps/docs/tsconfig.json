@@ -24,17 +24,22 @@
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.js",
-    "**/*.tsx",
-    "**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
   ],
   "exclude": [
     "node_modules",
+    "cache",
+    "public",
     "!node_modules/@tanstack/**/*",
     "babel.config.js",
     "metro.config.js",
     "jest.config.js",
-    ".eslint*"
+    ".eslint*",
+    ".vscode",
+    ".github",
+    "public",
+    "static",
+    ".cache",
   ]
 }

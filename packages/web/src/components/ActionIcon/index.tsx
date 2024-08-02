@@ -40,7 +40,7 @@ export const ActionIcon = (props: ActionIconProps) => {
     const pressed = e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter'
 
     if (pressed) {
-      onPress?.(e)
+      onPress?.()
     }
   }
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { theme } from '@/app'
 import { customTextStyles } from '@/app/stylesheets/Text'
 import { View, CenterWrapper, Drawer, Logo, Link, ActionIcon } from '@/components'
@@ -81,9 +82,8 @@ const DrawerMenu = ({ isMobile }) => {
   return <>
     <Drawer
       debugName='header'
-      style={[styles.drawer, { box: styles.drawer }]}
       open={drawerOpen}
-      size='75vw'
+      size={75}
       position='right'
       toggle={toggleDrawer}
       showCloseButton
@@ -114,20 +114,18 @@ export const Header = ({ center, searchBar = null }) => {
       ]}
     >
       <Link to={'/'} style={styles.logoWrapper}>
-        <Logo />
+        <Logo debugName='logo' />
       </Link>
 
       {searchBar}
 
-      {
-        isMobile ? (
-          <DrawerMenu isMobile={isMobile} />
-        ) : (
-          <View style={'alignCenter'}>
-            <NavContent />
-          </View>
-        )
-      }
+      {isMobile ? (
+        <DrawerMenu isMobile={isMobile} />
+      ) : (
+        <View style={'alignCenter'}>
+          <NavContent />
+        </View>
+      )}
     </Wrapper>
   )
 }

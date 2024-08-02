@@ -1,10 +1,10 @@
-import { TypeGuards } from '@codeleap/common'
-import React, { CSSProperties, useMemo } from 'react'
+import { TypeGuards, useMemo } from '@codeleap/common'
 import { Overlay } from '../Overlay'
 import { View } from '../View'
 import { Text } from '../Text'
 import { ActionIcon } from '../ActionIcon'
-import { usePopState } from '../../lib'
+import ReactDOM from 'react-dom'
+import { useAnimatedStyle, usePopState } from '../../lib'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { DrawerProps } from './types'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
@@ -13,28 +13,11 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 export * from './styles'
 export * from './types'
 
-export const axisMap = {
-  top: [-1, 'Y'],
-  bottom: [1, 'Y'],
-  left: [-1, 'X'],
-  right: [1, 'X'],
-} as const
-
-const resolveHiddenDrawerPosition = (position: DrawerProps['position']): [string, string, CSSProperties] => {
-  const [translateOrient, translateAxis] = axisMap[position]
-
-  const translateValues = {
-    X: 0,
-    Y: 0,
-  }
-
-  translateValues[translateAxis] = 100 * translateOrient
-
-  const css = `translate(${translateValues.X}%, ${translateValues.Y}%)`
-  const positioningKeys = translateAxis === 'X' ? ['top', 'bottom'] : ['left', 'right']
-  const positioning = Object.fromEntries(positioningKeys.map((k) => [k, 0]))
-
-  return [css, translateAxis, positioning]
+const axisMap = {
+  'left': ['top', 'left'],
+  'right': ['top', 'right'],
+  'top': ['top', 'right', 'left'],
+  'bottom': ['bottom', 'right', 'left']
 }
 
 export const Drawer = (props: DrawerProps) => {
@@ -50,7 +33,6 @@ export const Drawer = (props: DrawerProps) => {
     closeButtonProps,
     position,
     style,
-    animationDuration,
     debugName,
     closeIcon,
   } = {
@@ -62,55 +44,81 @@ export const Drawer = (props: DrawerProps) => {
 
   const styles = useStylesFor(Drawer.styleRegistryName, style)
 
-  const [hiddenStyle, axis, positioning] = resolveHiddenDrawerPosition(position)
-
-  const sizeProperty = axis === 'X' ? 'width' : 'height'
-  const fullProperty = sizeProperty === 'height' ? 'width' : 'height'
-
   const closeButtonStyles = useNestedStylesByKey('closeButton', styles)
+
+  const pose = useMemo(() => {
+    const pose = {}
+
+    for (const p of axisMap[position]) {
+      pose[p] = 0
+    }
+
+    return pose
+  }, [])
+
+  const expansionProperty = ['left', 'right'].includes(position) ? 'width': 'height'
+  const fixedProperty = expansionProperty == 'width' ? 'height' : 'width'
+  const fixedValue = fixedProperty == 'width' ? '100vw' : '100vh'
+  const measureProperty = expansionProperty == 'width' ? 'svw' : 'svh'
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    [expansionProperty]: open ? `${size}${measureProperty}` : '0px',
+    transition: {
+      duration: open ? 0.2 : 0.3,
+    }
+  }), [open])
+
+  const wrapperAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: open ? 1 : 0,
+    pointerEvents: open ? 'auto' : 'none',
+    transition: {
+      duration: open ? 0.1 : 0.3,
+    }
+  }), [open])
+
+  const boxStyles = [
+    styles.box,
+    pose,
+    {
+      zIndex: 999,
+      position: 'fixed',
+      [fixedProperty]: fixedValue,
+    }
+  ]
 
   const showHeader = (!TypeGuards.isNil(title) || showCloseButton)
 
-  const wrapperStyles = useMemo(() => ([
-    {
-      ...styles.wrapper,
-      transition: 'visibility 0.01s ease',
-      transitionDelay: open ? '0' : animationDuration,
-      visibility: open ? 'visible' : 'hidden',
-    },
-  ]), [open, styles.wrapper])
-
-  const boxStyle = {
-    transform: open ? `translate(0%, 0%)` : hiddenStyle,
-    transition: `transform ${animationDuration} ease`,
-    [sizeProperty]: size,
-    [fullProperty]: '100%',
-    ...positioning,
-    [position]: 0,
-    ...styles.box,
-  }
-
-  return (
-    <View debugName={debugName} style={wrapperStyles}>
+  const content = (
+    <View 
+      debugName={debugName} 
+      animated
+      animatedProps={wrapperAnimatedStyle}
+      style={styles.wrapper}
+    >
       {darkenBackground ? (
         <Overlay
           debugName={debugName}
           visible={open}
-          style={styles.overlay}
+          style={[
+            styles.overlay,
+            open ? styles['overlay:visible'] : styles['overlay:hidden'],
+          ]}
           onPress={toggle}
         />
       ) : null}
 
-      <View style={boxStyle}>
+      <View animated animatedProps={animatedStyle} style={boxStyles}>
         {
           showHeader ? (
             <View component='header' style={styles.header}>
               {TypeGuards.isString(title) ? <Text style={styles.title} text={title} /> : title}
+              
               {showCloseButton ? (
                 <ActionIcon
                   debugName={debugName}
-                  onPress={toggle}
                   icon={closeIcon as AppIcon}
+                  onPress={toggle}
+                  propagate={false}
                   {...closeButtonProps}
                   style={closeButtonStyles}
                 />
@@ -129,6 +137,13 @@ export const Drawer = (props: DrawerProps) => {
       </View>
     </View>
   )
+
+  if (typeof window === 'undefined') return content
+
+  return ReactDOM.createPortal(
+    content,
+    document.body,
+  )
 }
 
 Drawer.styleRegistryName = 'Drawer'
@@ -140,11 +155,10 @@ Drawer.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 Drawer.defaultProps = {
-  animationDuration: '0.3s',
-  position: 'bottom',
+  position: 'left',
   showCloseButton: false,
   darkenBackground: true,
-  size: '75vw',
+  size: 75,
   closeIcon: 'x' as AppIcon,
 } as Partial<DrawerProps>
 

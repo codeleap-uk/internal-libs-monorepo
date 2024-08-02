@@ -59,7 +59,7 @@ export default () => {
           </Fade>
         </View>
 
-        <View style={['row', 'gap:4']}>
+        <View style={['row', 'gap:4', { breakpoints: { tabletSmall: 'column' } }]}>
           {packages?.map(renderItem)}
         </View>
 
