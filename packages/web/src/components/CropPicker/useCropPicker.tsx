@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from '@codeleap/common'
-import { ImageReading, UseCropPickerProps } from './types'
+import { CropImageType, ImageReading, UseCropPickerProps } from './types'
 import { Crop } from 'react-image-crop'
 import { cropImage, readImage } from './utils'
 import { FileInputRef } from '../FileInput'
@@ -40,9 +40,9 @@ export function useCropPicker({
     setTimeout(() => setImage(null), 500)
   }
 
-  const onConfirmCrop = async () => {
+  const onConfirmCrop = async (imageType: CropImageType = 'jpeg') => {
     setIsLoading(true)
-    const [preview, croppedFile] = await cropImage(image, relativeCrop)
+    const [preview, croppedFile] = await cropImage(image, relativeCrop, imageType)
     onResolved([
       {
         file: new File([croppedFile], 'cropped.jpg'),

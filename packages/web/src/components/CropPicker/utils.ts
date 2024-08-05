@@ -1,5 +1,5 @@
 import { Crop } from 'react-image-crop'
-import { ImageReading } from './types'
+import { CropImageType, ImageReading } from './types'
 
 export function readImage(file: File | Blob): Promise<ImageReading> {
   const reader = new FileReader()
@@ -13,7 +13,7 @@ export function readImage(file: File | Blob): Promise<ImageReading> {
   })
 }
 
-export function cropImage(image: ImageReading, crop: Crop): Promise<[string, Blob]> {
+export function cropImage(image: ImageReading, crop: Crop, type: CropImageType): Promise<[string, Blob]> {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d', { alpha: true })
 
@@ -46,6 +46,6 @@ export function cropImage(image: ImageReading, crop: Crop): Promise<[string, Blo
       readImage(blob).then(cropped => {
         resolve([cropped.src, blob])
       }).catch(reject)
-    }, 'image/png')
+    }, `image/${type}`)
   })
 }

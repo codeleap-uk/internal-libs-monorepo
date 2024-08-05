@@ -7,6 +7,8 @@ import { ModalProps } from '../Modal'
 import { useCropPicker } from './useCropPicker'
 import { ButtonProps } from '../Button'
 
+export type CropImageType = 'png' | 'jpeg' | 'webp'
+
 export type BaseCropProps = Partial<ReactCropProps>
 
 export type CropPickerProps = Partial<FileInputProps> &
