@@ -1,21 +1,17 @@
 import { DropzoneFilePreviewProps, DropzoneInnerFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
-import { DropzonePresets } from './styles'
-import { IconPlaceholder, PropsOf, TypeGuards, onUpdate, useCallback, useDefaultComponentStyle, useNestedStylesByKey, useRef } from '@codeleap/common'
+import { PropsOf, TypeGuards, onUpdate, useCallback } from '@codeleap/common'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'
 import { Icon } from '../Icon'
 import { forwardRef, useImperativeHandle, useState, HTMLProps } from 'react'
 import { ActionIcon } from '../ActionIcon'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps, useNestedStylesByKey } from '@codeleap/styles'
 
-const defaultProps: Partial<DropzoneProps> = {
-  icon: 'file-plus' as IconPlaceholder,
-  multiple: false,
-  acceptedFiles: [],
-  fileLeftIcon: 'file' as IconPlaceholder,
-  fileRightIcon: 'x' as IconPlaceholder,
-  withImagePreview: true,
-}
+export * from './styles'
+export * from './types'
 
 function isImage(file) {
   return file?.type?.startsWith('image/')
@@ -24,7 +20,7 @@ function isImage(file) {
 const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
   const {
     file,
-    variantStyles,
+    styles,
     errors = [],
     onRemove,
     fileLeftIcon,
@@ -36,34 +32,38 @@ const DefaultFilePreview = (props: DropzoneInnerFilePreviewProps) => {
     isPreview,
   } = props
 
+  const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e?.stopPropagation?.()
+    onRemove?.()
+  }
+
   return (
-    <View css={[variantStyles.fileWrapper, hasErrors && variantStyles['fileWrapper:error']]}>
-      {isPreview ?
+    <View style={[styles.fileWrapper, hasErrors && styles['fileWrapper:error']]}>
+      {isPreview ? (
         <img
           onLoad={revokeImageUrl}
           src={imageUrl}
-          css={variantStyles.fileImage}
+          css={styles.fileImage}
         />
-        :
+      ) : (
         <Icon
           debugName='DropzoneFilePreview:LeftIcon'
           name={fileLeftIcon}
-          css={variantStyles.fileLeftIcon}
-        />
+          style={styles.fileLeftIcon}
+        />)
       }
 
-      <View css={variantStyles.fileNameWrapper}>
-        <Text text={file.name} css={variantStyles.fileName} />
-        {hasErrors && errors?.map(error => <Text text={error.message} css={variantStyles.fileError} />)}
+      <View style={styles.fileNameWrapper}>
+        <Text text={file.name} style={styles.fileName} />
+        {hasErrors && errors?.map(error => <Text text={error.message} style={styles.fileError} />)}
       </View>
 
       <ActionIcon
-        onClick={e => {
-          e.stopPropagation()
-          onRemove?.()
-        }} debugName='DropzoneFilePreview:RightIcon'
+        onPress={handleRemove}
+        propagate={false}
+        debugName='DropzoneFilePreview:RightIcon'
         name={fileRightIcon}
-        styles={fileRightIconStyles}
+        style={fileRightIconStyles}
       />
     </View>
   )
@@ -77,9 +77,9 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
     FilePreviewComponent,
     ...rest
   } = props
+
   const hasErrors = errors?.length > 0
-  const _isImage = isImage(file)
-  const isPreview = withImagePreview && _isImage
+  const isPreview = withImagePreview && isImage(file)
 
   const [imageUrl, setImageUrl] = useState<string>()
 
@@ -88,8 +88,10 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
   }
 
   onUpdate(() => {
-    if (_isImage) setImageUrl(URL.createObjectURL(file))
-  }, [file, _isImage])
+    if (isImage(file)) {
+      setImageUrl(URL.createObjectURL(file))
+    }
+  }, [file])
 
   const _FilePreview = !TypeGuards.isNil(FilePreviewComponent) ? FilePreviewComponent : DefaultFilePreview
 
@@ -106,15 +108,8 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
   )
 }
 
-const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<DropzoneRef>) => {
-  const allProps = {
-    ...DropzoneComponent.defaultProps,
-    ...props,
-  }
+export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
   const {
-    responsiveVariants,
-    styles,
-    variants,
     icon,
     placeholder,
     multiple,
@@ -129,19 +124,19 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
     onRemove,
     children,
     FilePreviewComponent,
-    ...rest } = allProps
+    style,
+    ...rest
+  } = {
+    ...Dropzone.defaultProps,
+    ...props,
+  }
+
+  const styles = useStylesFor(Dropzone.styleRegistryName, style)
 
   const [rejectedFilesState, setRejectedFilesState] = useState<DropzoneProps['rejectedFiles']>([])
   const [rejectedFiles, setRejectedFiles] = [rejectedFilesProps || rejectedFilesState, setRejectedFilesProps || setRejectedFilesState]
 
-  const variantStyles = useDefaultComponentStyle<'u:Dropzone', typeof DropzonePresets>('u:Dropzone', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'wrapper',
-  })
-
-  const fileRightIconStyles = useNestedStylesByKey('fileRightIcon', variantStyles)
+  const fileRightIconStyles = useNestedStylesByKey('fileRightIcon', styles)
 
   const handleDrop = useCallback((newAcceptedFiles: File[], newRejectedFiles: FileRejection[], event) => {
     setRejectedFiles(newRejectedFiles)
@@ -178,23 +173,23 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
   const fileProps = {
     fileLeftIcon,
     fileRightIcon,
-    variantStyles,
+    styles,
     withImagePreview,
     fileRightIconStyles,
   }
 
   return (
-    <View css={variantStyles.wrapper}>
-      <View {...getRootProps() as PropsOf<ViewProps<'div'>>} css={variantStyles.dropzone}>
+    <View style={styles.wrapper}>
+      <View {...getRootProps() as PropsOf<ViewProps>} style={styles.dropzone}>
 
-        {icon && !hasFiles &&
-          <View css={variantStyles.iconWrapper}>
-            <Icon debugName='Dropzone:Icon' name={icon} css={variantStyles.icon} />
+        {icon && !hasFiles ? (
+          <View style={styles.iconWrapper}>
+            <Icon debugName='Dropzone:Icon' name={icon} style={styles.icon} />
           </View>
-        }
+        ) : null}
 
-        {hasFiles && (
-          <View css={variantStyles.filesWrapper}>
+        {hasFiles ? (
+          <View style={styles.filesWrapper}>
             {acceptedFiles?.map?.((file, index) => (
               <FilePreview
                 {...fileProps}
@@ -216,20 +211,49 @@ const DropzoneComponent = (props: DropzoneProps, ref: React.ForwardedRef<Dropzon
                 FilePreviewComponent={FilePreviewComponent}
               />))}
           </View>
-        )}
+        ) : null}
 
         {children}
-        {!!placeholder && <Text text={placeholder} css={variantStyles.placeholder} />}
+
+        {!!placeholder ? <Text text={placeholder} style={styles.placeholder} /> : null}
 
         <input {...getInputProps() as HTMLProps<HTMLInputElement>} />
       </View>
     </View>)
+}) as StyledComponentWithProps<DropzoneProps>
+
+Dropzone.styleRegistryName = 'Dropzone'
+
+Dropzone.elements = [
+  'wrapper',
+  'dropzone',
+  'icon',
+  'placeholder',
+  'filesWrapper',
+  'fileWrapper',
+  'fileLeftIcon',
+  'fileName',
+  'fileError',
+  'fileErrors',
+  'fileNameWrapper',
+  'fileImage',
+  'iconWrapper',
+  `fileRightIcon`,
+]
+
+Dropzone.rootElement = 'wrapper'
+
+Dropzone.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Dropzone as (props: StyledComponentProps<DropzoneProps, typeof styles>) => IJSX
 }
 
-export * from './styles'
-export * from './types'
+Dropzone.defaultProps = {
+  icon: 'file-plus' as AppIcon,
+  multiple: false,
+  acceptedFiles: [],
+  fileLeftIcon: 'file' as AppIcon,
+  fileRightIcon: 'x' as AppIcon,
+  withImagePreview: true,
+} as Partial<DropzoneProps>
 
-DropzoneComponent.defaultProps = defaultProps
-
-// @ts-ignore
-export const Dropzone = forwardRef(DropzoneComponent)
+WebStyleRegistry.registerComponent(Dropzone)

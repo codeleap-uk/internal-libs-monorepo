@@ -1,9 +1,10 @@
-import { React, variantProvider } from '@/app'
+import { React } from '@/app'
 import { capitalize, useDebounce, useMemo, useState } from '@codeleap/common'
 import { MdxMetadata } from 'types/mdx'
 import { Collapse } from '../Collapse'
 import { Link } from '../Link'
 import { View, TextInput, Text } from '@/components'
+import { createStyles } from '@codeleap/styles'
 
 export const SearchBar = (props: { items: MdxMetadata[] }) => {
   const [search, setSearch] = useState('')
@@ -45,17 +46,17 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
 
   const resultList = hasResults ? Object.entries<MdxMetadata[]>(results).map(([moduleName, moduleResults], idx, arr) => {
     return (
-      <View variants={[
+      <View style={[
         'column',
         'gap:2',
       ]}>
         <Text text={`@codeleap/${moduleName}`} />
         {moduleResults.map(({ title, path, category }) => (
-          <Link css={styles.result} to={`/${path}`}>
-            <Text text={title} variants={['inline']} />
+          <Link style={styles.result} to={`/${path}`}>
+            <Text text={title} style={['inline']} />
             {
               category !== 'root' ?
-                <Text text={`- ${capitalize(category)}`} variants={['inline', 'marginLeft:1']} />
+                <Text text={`- ${capitalize(category)}`} style={['inline', 'marginLeft:1']} />
                 : null
             }
           </Link>
@@ -67,13 +68,13 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
   const isDropdownOpen = debouncedSearch.length > 0
 
   const NotFound = () => {
-    return <View variants={['fullHeight', 'center', 'flex']}>
+    return <View style={['fullHeight', 'center', 'flex']}>
       <Text text={'No results found'} />
     </View>
   }
 
   return (
-    <View css={styles.wrapper} id='SearchBar'>
+    <View style={styles.wrapper} id='SearchBar'>
       <TextInput
         leftIcon={{
           name: 'search',
@@ -81,7 +82,7 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
         }}
         debugName='SearchBar'
         placeholder='Search'
-        variants={['pill', 'fullWidth', 'noError', 'docSearch']}
+        style={['pill', 'fullWidth', 'noError', 'docSearch']}
         onChangeText={setSearch}
         value={search}
       />
@@ -103,13 +104,13 @@ export const SearchBar = (props: { items: MdxMetadata[] }) => {
 
 const MIN_HEIGHT = 250
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   wrapper: {
     ...theme.spacing.marginRight(2),
     ...theme.presets.relative,
-    gap: theme.spacing.value(2),
+    ...theme.presets.center,
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       order: -2,
       ...theme.spacing.marginHorizontal(1),
       ...theme.presets.alignSelfStretch,
@@ -134,4 +135,4 @@ const styles = variantProvider.createComponentStyle((theme) => ({
   result: {
     ...theme.spacing.marginLeft(3),
   },
-}), true)
+}))

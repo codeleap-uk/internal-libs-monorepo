@@ -1,7 +1,5 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/react'
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards, onUpdate, IconPlaceholder, useEffect } from '@codeleap/common'
+import { FormTypes, useValidate, useState, TypeGuards, onUpdate, useEffect } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -13,12 +11,13 @@ import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { CSSInterpolation } from '@emotion/css'
 import { Icon } from '../Icon'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
-
   const {
     isSelected,
     optionsStyles,
@@ -30,7 +29,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
     debugName,
   } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.styles ?? {}) })
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.style ?? {}) })
 
   let _Component = null
 
@@ -42,7 +41,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
-        styles={styles}
+        style={styles}
         {...props?.data?.itemProps}
       />
     )
@@ -52,14 +51,13 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
 
   return (
     <components.Option {...props}>
-      <_Component {...props} styles={styles} />
+      <_Component {...props} style={styles} />
     </components.Option>
   )
 }
 
 const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
   const { Footer, children } = props
-
   return <React.Fragment>
     <components.Menu {...props}>
       {children}
@@ -70,7 +68,6 @@ const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
 
 const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React.CSSProperties } }) => {
   const { children, defaultStyles } = props
-
   return (
     <components.MenuList {...props}>
       <View style={defaultStyles.wrapper}>
@@ -81,13 +78,13 @@ const CustomMenuList = (props: MenuListProps & { defaultStyles: { wrapper: React
 }
 
 const DefaultPlaceholder = (props: PlaceholderProps) => {
-  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder, debugName } = props
+  const { text: TextPlaceholder, defaultStyles, icon: _IconPlaceholder, image, debugName } = props
 
   const _Text = () => {
     if (TypeGuards.isNil(TextPlaceholder)) return null
 
     if (TypeGuards.isString(TextPlaceholder)) {
-      return <Text debugName={debugName} text={TextPlaceholder} css={[defaultStyles.text]} />
+      return <Text debugName={debugName} text={TextPlaceholder} style={defaultStyles.text} />
     } else if (React.isValidElement(TextPlaceholder)) {
       return TextPlaceholder as JSX.Element
     } else if (TypeGuards.isFunction(TextPlaceholder)) {
@@ -96,10 +93,14 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
   }
 
   const _Image = () => {
-    if (TypeGuards.isNil(_IconPlaceholder)) return null
+    if (TypeGuards.isNil(_IconPlaceholder) && TypeGuards.isNil(image)) return null
+
+    if (TypeGuards.isString(image)) {
+      return <img src={image} css={defaultStyles.icon} />
+    }
 
     if (TypeGuards.isString(_IconPlaceholder)) {
-      return <Icon debugName={debugName} name={_IconPlaceholder as IconPlaceholder} forceStyle={defaultStyles.icon as React.CSSProperties} />
+      return <Icon debugName={debugName} name={_IconPlaceholder as AppIcon} forceStyle={defaultStyles.icon as React.CSSProperties} />
     } else if (React.isValidElement(_IconPlaceholder)) {
       // @ts-ignore
       return <View style={defaultStyles.icon}>
@@ -122,7 +123,7 @@ const LoadingIndicator = (props: LoadingIndicatorProps) => {
   const { defaultStyles, debugName } = props
 
   return (
-    <View css={[defaultStyles.wrapper]}>
+    <View style={defaultStyles.wrapper}>
       <ActivityIndicator debugName={debugName} />
     </View>
   )
@@ -154,33 +155,11 @@ const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSI
   // @ts-ignore
   const text = getMultiValue(selectProps?.value, separator, { searchable })
 
-  return <Text text={text} css={[defaultStyles.text]} />
+  return <Text text={text} style={defaultStyles.text} />
 }
 
 const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: string }) => {
   return props.text + `"${props.selectProps.inputValue}"`
-}
-
-const defaultProps: Partial<SelectProps> = {
-  PlaceholderComponent: DefaultPlaceholder,
-  PlaceholderNoItemsComponent: DefaultPlaceholder,
-  LoadingIndicatorComponent: LoadingIndicator,
-  noItemsText: 'No results for ',
-  noItemsIcon: 'placeholderNoItems-select',
-  placeholderText: 'Search items',
-  placeholderIcon: 'placeholder-select',
-  showDropdownIcon: true,
-  placeholder: 'Select',
-  clearable: false,
-  formatPlaceholderNoItems: defaultFormatPlaceholderNoItems,
-  selectedIcon: 'check',
-  searchable: false,
-  separatorMultiValue: ', ',
-  itemProps: {} as ButtonProps,
-  loadingIndicatorSize: 20,
-  options: [],
-  loadInitialValue: false,
-  loadingMessage: 'loading...',
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
@@ -198,9 +177,8 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     })
 
     const {
-      variants,
       validate,
-      styles,
+      style,
       debugName,
       onValueChange,
       options,
@@ -218,8 +196,10 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       LoadingIndicatorComponent,
       noItemsText,
       noItemsIcon,
+      noItemsImage,
       placeholderText,
       placeholderIcon,
+      placeholderImage,
       showDropdownIcon,
       placeholder,
       clearable,
@@ -274,13 +254,14 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const {
       reactSelectStyles,
-      variantStyles,
+      styles,
       optionsStyles,
       placeholderStyles,
       loadingStyles,
       inputMultiValueStyles,
       menuWrapperStyles,
-    } = useSelectStyles(props, {
+      // @ts-expect-error @verify
+    } = useSelectStyles({ ...props, styleRegistryName: Select.styleRegistryName }, {
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
@@ -355,7 +336,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       focused: isFocused,
       error: !!hasError,
       disabled: isDisabled,
-      variantStyles,
+      styles,
       debugName: debugName,
     }
 
@@ -363,16 +344,17 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       const hasInputValue = !!props.selectProps.inputValue
       const styles = placeholderStyles[hasInputValue ? 'noItems' : 'empty']
       const icon = hasInputValue ? noItemsIcon : placeholderIcon
+      const image = hasInputValue ? noItemsImage : placeholderImage
 
       const placeholderProps = {
         ...props,
         ...componentProps,
         icon,
+        image,
         defaultStyles: styles,
       }
 
       if (!hasInputValue) {
-
         return <PlaceholderComponent {...placeholderProps} text={placeholderText} />
       } else {
         const _Text = TypeGuards.isString(noItemsText) ? formatPlaceholderNoItems({ ...placeholderProps, text: noItemsText }) : noItemsText
@@ -408,12 +390,12 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         debugName={debugName}
         error={hasError ? errorMessage : null}
         focused={isFocused}
-        styles={{
-          ...variantStyles,
-          innerWrapper: [
-            variantStyles.innerWrapper,
-            searchable && variantStyles['innerWrapper:searchable'],
-          ],
+        style={{
+          ...styles,
+          innerWrapper: {
+            ...styles.innerWrapper,
+            ...(searchable ? styles['innerWrapper:searchable'] : {}),
+          },
         }}
         innerWrapperProps={{
           ...(inputBaseProps.innerWrapperProps || {}),
@@ -429,8 +411,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
-          // escapeRemoves={true}
-          // deleteRemoves={true}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
@@ -488,6 +468,52 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         />
       </InputBase>
     )
-  })
+  }) as StyledComponentWithProps<SelectProps>
 
-Select.defaultProps = defaultProps
+Select.styleRegistryName = 'Select'
+
+Select.elements = [
+  ...InputBase.elements,
+  'item',
+  'listPortal',
+  'listHeader',
+  'listWrapper',
+  'list',
+  'inputContainer',
+  'input',
+  'placeholder',
+  'value',
+  'valueMultiple',
+  'valueWrapper',
+  'clearIcon',
+  'dropdownIcon',
+]
+
+Select.rootElement = 'wrapper'
+
+Select.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Select as (props: StyledComponentProps<SelectProps, typeof styles>) => IJSX
+}
+
+Select.defaultProps = {
+  PlaceholderComponent: DefaultPlaceholder,
+  PlaceholderNoItemsComponent: DefaultPlaceholder,
+  LoadingIndicatorComponent: LoadingIndicator,
+  noItemsText: 'No results for ',
+  placeholderText: 'Search items',
+  placeholderIcon: 'search',
+  showDropdownIcon: true,
+  placeholder: 'Select',
+  clearable: false,
+  formatPlaceholderNoItems: defaultFormatPlaceholderNoItems,
+  selectedIcon: 'check',
+  searchable: false,
+  separatorMultiValue: ', ',
+  itemProps: {} as ButtonProps,
+  loadingIndicatorSize: 20,
+  options: [],
+  loadInitialValue: false,
+  loadingMessage: 'loading...',
+} as Partial<SelectProps>
+
+WebStyleRegistry.registerComponent(Select)

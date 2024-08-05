@@ -1,4 +1,4 @@
-import { Theme } from '@/app'
+import { theme } from '@/app'
 import { IOptions, RecursivePartial } from "tsparticles-engine"
 
 type PropsGet = {
@@ -37,10 +37,10 @@ export const particlesOptions: RecursivePartial<IOptions> = {
   ...defaultConfig,
   particles: {
     color: {
-      value: Theme.colors.light.primary3,
+      value: theme.colors.primary3,
     },
     links: {
-      color: Theme.colors.light.primary5,
+      color: theme.colors.primary5,
       distance: 150,
       enable: true,
       opacity: 0.4,
@@ -84,10 +84,10 @@ export const getParticlesOptions = ({ opacity }: PropsGet): RecursivePartial<IOp
     ...defaultConfig,
     particles: {
       color: {
-        value: Theme.colors.light.primary3,
+        value: theme.colors.primary3,
       },
       links: {
-        color: Theme.colors.light.primary5,
+        color: theme.colors.primary5,
         distance: 150,
         enable: true,
         opacity: opacity,

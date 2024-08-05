@@ -1,25 +1,16 @@
-import { Settings, TCSS } from '@/app'
-import { ComponentVariants, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
+import { Settings } from '@/app'
+import { PropsOf } from '@codeleap/common'
 import { Text, Touchable } from '@/components'
-import { LogoStyles, LogoComposition } from '../app/stylesheets/Logo'
-import { StylesOf } from '@codeleap/web'
+import { concatStyles } from '@codeleap/styles'
 
-type LogoProps = {
-  styles?: StylesOf<LogoComposition>
-  style?: TCSS
-} & ComponentVariants<typeof LogoStyles> & Omit<PropsOf<typeof Touchable>, 'variants'|'styles'>
+type LogoProps = PropsOf<typeof Touchable>
 
 export function Logo(props: LogoProps) {
-  const { responsiveVariants, variants, styles } = props
+  const { style } = props
 
-  const variantStyles = useDefaultComponentStyle<'u:Logo', typeof LogoStyles>('u:Logo', {
-    responsiveVariants,
-    rootElement: 'wrapper',
-    styles,
-    variants,
-  })
+  const styles = concatStyles([style, ['h4', 'extraBold', 'color:neutral10', 'paddingVertical:2']])
 
   return (
-    <Text variants={['h4', 'extraBold', 'color:neutral10']} text={Settings.AppName} style={variantStyles.image} />
+    <Text style={styles} text={Settings.AppName} />
   )
 }

@@ -1,49 +1,28 @@
 import React from 'react'
-import { useDefaultComponentStyle } from '@codeleap/common'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { GridPresets } from './styles'
 import { GridProps } from './types'
-import { ListLayout, useInfiniteScroll } from '../List'
-import { ItemMasonryProps, ListMasonry, useMasonryReload } from '../../lib'
+import { ListItem, ListLayout } from '../List'
+import { ItemMasonryProps, ListMasonry, useInfiniteScroll, useMasonryReload } from '../../lib'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
 export * from './styles'
 export * from './types'
 
-const RenderSeparator = (props: { separatorStyles: ViewProps<'div'>['css'] }) => {
-  return (
-    <View css={[props?.separatorStyles]}></View>
-  )
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
+  return <View style={props?.separatorStyles} />
 }
 
-const defaultProps: Partial<GridProps> = {
-  ListFooterComponent: null,
-  ListHeaderComponent: null,
-  ListLoadingIndicatorComponent: null,
-  ListEmptyComponent: EmptyPlaceholder,
-  ListSeparatorComponent: RenderSeparator,
-  refreshDebounce: 1500,
-  refreshSize: 40,
-  refreshThreshold: 0.1,
-  refreshPosition: 16,
-  refresh: true,
-  columnItemsSpacing: 8,
-  rowItemsSpacing: 8,
-  overscan: 2,
-  reloadTimeout: 350,
-  showFooter: true,
-}
-
-export function Grid<T = any>(props: GridProps<T>) {
+export const Grid = (props: GridProps) => {
   const allProps = {
     ...Grid.defaultProps,
     ...props,
-  } as GridProps
+  }
 
   const {
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
+    style,
     renderItem: RenderItem,
     columnItemsSpacing,
     rowItemsSpacing,
@@ -51,17 +30,13 @@ export function Grid<T = any>(props: GridProps<T>) {
     data,
     overscan,
     separators,
-    masonryProps = {},
+    masonryProps,
     numColumns,
     reloadTimeout,
     showFooter,
   } = allProps
 
-  const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const styles = useStylesFor(Grid.styleRegistryName, style)
 
   const { layoutProps, onLoadMore } = useInfiniteScroll(allProps)
 
@@ -71,7 +46,7 @@ export function Grid<T = any>(props: GridProps<T>) {
   })
 
   const separator = React.useMemo(() => {
-    return separators ? <ListSeparatorComponent separatorStyles={variantStyles.separator} /> : null
+    return separators ? <ListSeparatorComponent separatorStyles={styles.separator} /> : null
   }, [])
 
   const renderItem = React.useCallback((_item: ItemMasonryProps<any>) => {
@@ -97,13 +72,13 @@ export function Grid<T = any>(props: GridProps<T>) {
       {_item?.index <= numColumns ? null : separator}
       <RenderItem {..._itemProps} />
     </>
-  }, [RenderItem])
+  }, [])
 
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
-      variantStyles={variantStyles}
+      styles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >
       <ListMasonry
@@ -124,4 +99,28 @@ export function Grid<T = any>(props: GridProps<T>) {
   )
 }
 
-Grid.defaultProps = defaultProps
+Grid.styleRegistryName = 'Grid'
+Grid.elements = ['wrapper', 'innerWrapper', 'separator', 'refreshControl', 'refreshControlIndicator']
+Grid.rootElement = 'wrapper'
+
+Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Grid as <T extends ListItem = ListItem>(props: StyledComponentProps<GridProps<T>, typeof styles>) => IJSX
+}
+
+Grid.defaultProps = {
+  ListEmptyComponent: EmptyPlaceholder,
+  ListSeparatorComponent: RenderSeparator,
+  refreshDebounce: 1500,
+  refreshSize: 40,
+  refreshThreshold: 0.1,
+  refreshPosition: 16,
+  refresh: true,
+  columnItemsSpacing: 8,
+  rowItemsSpacing: 8,
+  overscan: 2,
+  reloadTimeout: 350,
+  showFooter: true,
+  numColumns: 2,
+} as Partial<GridProps>
+
+WebStyleRegistry.registerComponent(Grid)

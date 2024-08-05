@@ -1,88 +1,53 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Icon } from '../Icon'
 import { View } from '../View'
 import { Text } from '../Text'
-import { ActivityIndicator, ActivityIndicatorComposition } from '../ActivityIndicator'
-import {
-  ComponentVariants,
-
-  getNestedStylesByKey,
-  IconPlaceholder,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-
-import {
-  EmptyPlaceholderComposition,
-  EmptyPlaceholderPresets,
-} from './styles'
-
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types'
-import { Image, ImageProps } from '../Image'
+import { ActivityIndicator } from '../ActivityIndicator'
+import { Image } from '../Image'
+import { EmptyPlaceholderProps } from './types'
+import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
+export * from './types'
 
-export type EmptyPlaceholderProps = {
-  itemName?: string
-
-  title?: React.ReactElement | string
-  description?: React.ReactElement | string
-  image?: ImageProps['source']
-  icon?: IconPlaceholder
-
-  loading?: boolean
-
-  styles?: StylesOf<EmptyPlaceholderComposition>
-  variants?: ComponentVariants<typeof EmptyPlaceholderPresets>['variants']
-
-  renderEmpty?: (props: {
-    emptyText:string | React.ReactElement
-    emptyIconName?: IconPlaceholder
-    styles: StylesOf<EmptyPlaceholderComposition> & {activityIndicatorStyles: StylesOf<ActivityIndicatorComposition>}
-  }) => React.ReactElement
-}
-
-export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPlaceholderProps) => {
+export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
   const {
     itemName,
     title,
     loading,
     description,
     image,
-    styles = {},
-    variants = [],
     icon = null,
     renderEmpty,
-  } = props
+    style,
+  } = {
+    ...EmptyPlaceholder.defaultProps,
+    ...props,
+  }
+
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
-  const componentStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderPresets>('u:EmptyPlaceholder', {
-    variants,
-    transform: StyleSheet.flatten,
-    styles,
-  })
+  const styles = useStylesFor(EmptyPlaceholder.styleRegistryName, style)
 
-  const activityIndicatorStyles = useMemo(() => getNestedStylesByKey('loader', componentStyles)
-    , [componentStyles])
+  const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 
   if (loading) {
     return (
-      <View style={[componentStyles.wrapper, componentStyles['wrapper:loading']]} >
-        <ActivityIndicator styles={activityIndicatorStyles}/>
+      <View style={[styles.wrapper, styles['wrapper:loading']]} >
+        <ActivityIndicator style={activityIndicatorStyles} />
       </View>
     )
   }
 
   if (renderEmpty) {
     return (
-      <View style={componentStyles.wrapper}>
+      <View style={styles.wrapper}>
         {renderEmpty({
           emptyText,
-          emptyIconName: icon as IconPlaceholder,
-          styles: {
-            ...componentStyles,
-            activityIndicatorStyles,
-          },
+          emptyIconName: icon as AppIcon,
+          style: styles,
         })}
       </View>
     )
@@ -91,21 +56,33 @@ export const EmptyPlaceholder:React.FC<EmptyPlaceholderProps> = (props: EmptyPla
   let _image = null
 
   if (icon) {
-    _image = <Icon name={icon} style={componentStyles.icon}/>
+    _image = <Icon name={icon as AppIcon} style={styles.icon} />
   } else if (image) {
-    _image = <Image source={image} style={[componentStyles.image]}/>
+    _image = <Image source={image} style={styles.image} />
   }
 
   return (
-    <View style={componentStyles.wrapper}>
+    <View style={styles.wrapper}>
       {React.isValidElement(_image) ? (
-        <View style={componentStyles.imageWrapper}>
+        <View style={styles.imageWrapper}>
           {_image}
         </View>
       ) : null}
 
-      {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} style={componentStyles.title}/> }
-      {React.isValidElement(description) ? description : <Text text={description} style={componentStyles.description}/> }
+      {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} style={styles.title} />}
+      {React.isValidElement(description) ? description : <Text text={description} style={styles.description} />}
     </View>
   )
 }
+
+EmptyPlaceholder.styleRegistryName = 'EmptyPlaceholder'
+EmptyPlaceholder.elements = ['wrapper', 'loader', 'title', 'description', 'image', 'icon']
+EmptyPlaceholder.rootElement = 'wrapper'
+
+EmptyPlaceholder.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return EmptyPlaceholder as (props: StyledComponentProps<EmptyPlaceholderProps, typeof styles>) => IJSX
+}
+
+EmptyPlaceholder.defaultProps = {} as Partial<EmptyPlaceholderProps>
+
+MobileStyleRegistry.registerComponent(EmptyPlaceholder)

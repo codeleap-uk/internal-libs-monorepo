@@ -114,9 +114,7 @@ const dark = {
   }],
 }
 
-const CodeThemes = {
+export const CodeThemes = {
   dark,
   light,
 }
-
-export default CodeThemes

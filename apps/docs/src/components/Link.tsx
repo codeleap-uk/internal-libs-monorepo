@@ -1,7 +1,7 @@
-import { LinkStyles } from '@/app/stylesheets/Link'
-import { ComponentVariants, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
-
-import { scrollToElem, stopPropagation } from '@codeleap/web'
+import { StyleRegistry, StyleSheets } from '@/app'
+import { PropsOf } from '@codeleap/common'
+import { AnyRecord, PropsWithVariants } from '@codeleap/styles'
+import { scrollToElem, stopPropagation, useStylesFor } from '@codeleap/web'
 import { Link as GatsbyLink } from 'gatsby'
 import { Link as GatsbyI18nLink } from 'gatsby-plugin-react-i18next'
 
@@ -13,15 +13,15 @@ export type LinkProps = GatsbyLinkProps & {
   to?: string
   text?: string
   type?: 'default' | 'i18n'
-} & ComponentVariants<typeof LinkStyles>
+  style?: PropsWithVariants<AnyRecord, typeof StyleSheets.LinkStyles>['style']
+}
 
 export const Link = (linkProps: LinkProps) => {
-  const { to, text, openNewTab, onScroll = null, responsiveVariants, children, variants, type = 'default', ...props } = linkProps
+  const { to, text, openNewTab, onScroll = null, children, style, type = 'default', ...props } = linkProps
 
   const isExternal = ['http', 'tel', 'mailto'].some((start) => to.startsWith(start))
 
   function handleClick(event: React.MouseEvent) {
-
     if (to) {
       if (to.startsWith('#')) {
         event.preventDefault()
@@ -40,11 +40,7 @@ export const Link = (linkProps: LinkProps) => {
     }
   }
 
-  const variantStyles = useDefaultComponentStyle<'u:Link', typeof LinkStyles>('u:Link', {
-    responsiveVariants,
-    variants,
-    rootElement: 'anchor',
-  })
+  const styles = useStylesFor(Link.styleRegistryName, style)
 
   const content = children || text
 
@@ -52,7 +48,7 @@ export const Link = (linkProps: LinkProps) => {
     return <a
       href={to}
       onClick={handleClick}
-      css={[variantStyles.text, variantStyles.anchor]}
+      css={[styles.text, styles.anchor]}
       {...props}
     >
       {content}
@@ -66,7 +62,7 @@ export const Link = (linkProps: LinkProps) => {
       // @ts-ignore
       ref={linkProps.ref}
       to={to}
-      css={[variantStyles.text, variantStyles.anchor]}
+      css={[styles.text, styles.anchor]}
       onClick={handleClick}
       {...props}
     >
@@ -74,3 +70,9 @@ export const Link = (linkProps: LinkProps) => {
     </_Link>
   )
 }
+
+Link.styleRegistryName = 'Link'
+Link.rootElement = 'anchor'
+Link.elements = ['anchor', 'text']
+
+StyleRegistry.registerComponent(Link)

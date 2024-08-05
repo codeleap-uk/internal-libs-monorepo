@@ -1,18 +1,19 @@
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react'
-import { TypeGuards, getNestedStylesByKey, useCallback, useDefaultComponentStyle, useMemo, useConditionalState } from '@codeleap/common'
-import { SectionFilterPresets } from './styles'
-import { ItemOptionProps, ItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps, SectionFilterFooterProps, onSelectItemProps } from './types'
+import { TypeGuards, useCallback, useMemo, useConditionalState } from '@codeleap/common'
+import { ItemOptionProps, ItemProps, OnPressOptionProps, OptionProps, SectionFiltersProps, SectionFilterFooterProps } from './types'
 import { View } from '../View'
 import { Text } from '../Text'
 import { Button } from '../Button'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
 const ItemOption = (props: OptionProps) => {
-
   const {
     option,
     item,
@@ -49,24 +50,21 @@ const ItemOption = (props: OptionProps) => {
   return (
     <Button
       debugName='Item option'
-      text={option?.label}
+      text={String(option?.label)}
       onPress={onPress}
       selected={isItemSelected}
-      styles={styles}
       {...buttonProps}
+      style={styles}
     />
   )
 }
 
 export const SectionFilters = (props: SectionFiltersProps) => {
-
   const {
     data,
     onSelectItem,
     renderFooterComponent,
-    responsiveVariants,
-    variants,
-    styles,
+    style,
     applyFilterButtonProps,
     clearFilterButtonProps,
     applyButtonText,
@@ -77,19 +75,9 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     ...props,
   }
 
-  const variantStyles = useDefaultComponentStyle<'u:SectionFilters', typeof SectionFilterPresets>(
-    'u:SectionFilters',
-    {
-      responsiveVariants,
-      variants,
-      styles,
-      rootElement: 'wrapper',
-    },
-  )
+  const styles = useStylesFor(SectionFilters.styleRegistryName, style)
 
-  const applyButtonStyles = getNestedStylesByKey('applyButton', variantStyles)
-  const clearButtonStyles = getNestedStylesByKey('clearButton', variantStyles)
-  const itemOptionButtonStyles = getNestedStylesByKey('itemOptionButton', variantStyles)
+  const compositionStyles = useCompositionStyles(['itemOptionButton', 'clearButton', 'applyButton'], styles)
 
   const [_selectedItems, _setSelectedItems] = useConditionalState(props?.selectedItems, props?.setSelectedItems, { initialValue: {}})
   const [_draft, _setDraft] = useConditionalState(props?.draftItems, props?.setDraftItems, { initialValue: {}})
@@ -98,7 +86,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   const shouldDisableActions = Object.keys(_draft)?.length === 0 && Object.keys(_selectedItems)?.length === 0
 
   const onPressOption = useCallback((params: OnPressOptionProps) => {
-
     const { item, option, canSelectMultiple, hasMultipleOptions } = params
 
     _setDraft((state) => {
@@ -142,7 +129,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   }, [_draft, onSelectItem])
 
   const renderItem = useCallback((item: ItemProps) => {
-
     const {
       showDescriptionLabel = true,
     } = item
@@ -153,7 +139,6 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     const description = TypeGuards.isString(item?.descriptionLabel) ? item?.descriptionLabel : item?.label
 
     const Option = ({ option }: { option: ItemOptionProps}) => {
-
       if (TypeGuards.isNil(item?.id)) {
         return null
       }
@@ -163,7 +148,7 @@ export const SectionFilters = (props: SectionFiltersProps) => {
           option={option}
           item={item}
           selectedItems={_draft}
-          styles={itemOptionButtonStyles}
+          styles={{ ...compositionStyles?.itemOptionButton }}
           onPress={() => onPressOption({ option, item, canSelectMultiple, hasMultipleOptions })}
           canSelectMultiple={canSelectMultiple}
         />
@@ -171,9 +156,9 @@ export const SectionFilters = (props: SectionFiltersProps) => {
     }
 
     return (
-      <View style={variantStyles.optionWrapper}>
-        {showDescriptionLabel ? <Text style={variantStyles.label} text={description} /> : null}
-        <View style={variantStyles.optionInnerWrapper}>
+      <View style={styles.optionWrapper}>
+        {showDescriptionLabel && description ? <Text style={styles.label} text={`${description}`} /> : null}
+        <View style={styles.optionInnerWrapper}>
           {hasMultipleOptions ? (
             item?.options?.map?.((option) => <Option option={option} />)
           ) : (
@@ -188,26 +173,26 @@ export const SectionFilters = (props: SectionFiltersProps) => {
       </View>
     )
 
-  }, [_draft, variantStyles, itemOptionButtonStyles])
+  }, [_draft, styles, compositionStyles?.itemOptionButton])
 
   const DefaultFooter = ({ onApply, onClear, shouldDisableActions }: SectionFilterFooterProps) => {
     return (
-      <View style={variantStyles.footerWrapper}>
+      <View style={styles.footerWrapper}>
         <Button
-          styles={applyButtonStyles}
           text={applyButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onApply}
           disabled={shouldDisableActions}
           {...applyFilterButtonProps}
+          style={compositionStyles?.applyButton}
         />
         <Button
-          styles={clearButtonStyles}
           text={clearButtonText}
           debugName={`Section Filters Footer - Apply items`}
           onPress={onClear}
           disabled={shouldDisableActions}
           {...clearFilterButtonProps}
+          style={compositionStyles?.clearButton}
         />
       </View>
     )
@@ -226,10 +211,14 @@ export const SectionFilters = (props: SectionFiltersProps) => {
 
   const Footer = renderFooterComponent || DefaultFooter
 
+  if (!data?.length) {
+    return null
+  }
+
   return (
-    <View style={variantStyles.wrapper}>
-      <View style={variantStyles.innerWrapper}>
-        {isEmpty ? null : data.map((item) => renderItem(item))}
+    <View style={styles.wrapper}>
+      <View style={styles.innerWrapper}>
+        {isEmpty ? null : data?.map((item) => renderItem(item))}
       </View>
 
       <Footer
@@ -241,8 +230,30 @@ export const SectionFilters = (props: SectionFiltersProps) => {
   )
 }
 
+SectionFilters.styleRegistryName = 'SectionFilters'
+
+SectionFilters.elements = [
+  'wrapper',
+  'innerWrapper',
+  'label',
+  'optionWrapper',
+  'optionInnerWrapper',
+  'itemOptionButton',
+  'footerWrapper',
+  'applyButton',
+  'clearButton',
+]
+
+SectionFilters.rootElement = 'wrapper'
+
+SectionFilters.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return SectionFilters as (props: StyledComponentProps<SectionFiltersProps, typeof styles>) => IJSX
+}
+
 SectionFilters.defaultProps = {
   applyButtonText: 'Filter',
   clearButtonText: 'Clear',
   filterOnOptionPress: false,
 }
+
+WebStyleRegistry.registerComponent(SectionFilters)

@@ -16,11 +16,12 @@ export const InputBaseDefaultOrder: InputBaseProps['order'] = [
   'innerWrapper',
   'error',
 ]
+
 const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <>{props.children}</>
 }
 
-export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
+export const InputBase = (props: InputBaseProps) => {
   const {
     children,
     error = null,
@@ -28,69 +29,67 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
     description = null,
     leftIcon = null,
     rightIcon = null,
-    styles,
-    wrapper,
+    wrapper: WrapperComponent,
     debugName,
-    innerWrapper,
+    innerWrapper: InnerWrapperComponent,
     focused,
     innerWrapperProps = {},
     wrapperProps = {},
-    disabled = false,
+    disabled,
     order = InputBaseDefaultOrder,
     style,
-    labelAsRow = false,
-    hideErrorMessage = false,
+    labelAsRow,
+    hideErrorMessage,
     ...otherProps
-  } = props
+  } = {
+    ...InputBase.defaultProps,
+    ...props,
+  }
 
-  const WrapperComponent = wrapper || View
-  const InnerWrapperComponent = innerWrapper || View
-
-  const _styles = useInputBaseStyles(props)
+  const styles = useInputBaseStyles(props)
 
   const _leftIcon = getRenderedComponent<Partial<ActionIconProps>>(leftIcon, ActionIcon, {
     // @ts-ignore
-    styles: _styles.leftIconStyles,
+    style: styles.leftIconStyles,
     debugName: `${debugName} left icon`,
     dismissKeyboard: false,
   })
 
   const _rightIcon = getRenderedComponent<Partial<ActionIconProps>>(rightIcon, ActionIcon, {
-
     // @ts-ignore
-    styles: _styles.rightIconStyles,
+    style: styles.rightIconStyles,
     debugName: `${debugName} right icon`,
     dismissKeyboard: false,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={_styles.labelStyle} /> : label
+  const _label = TypeGuards.isString(label) ? <Text text={label} style={styles.labelStyle} /> : label
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={_styles.errorStyle} /> : error
+  const _error = TypeGuards.isString(error) ? <Text text={error} style={styles.errorStyle} /> : error
 
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={_styles.descriptionStyle} /> : description
+  const _description = TypeGuards.isString(description) ? <Text text={description} style={styles.descriptionStyle} /> : description
 
   const parts = {
-    label: labelAsRow ? <View style={_styles.labelRowStyle}>
+    label: labelAsRow ? <View style={styles.labelRowStyle}>
       {_label}
       {_description}
     </View> : _label,
     description: labelAsRow ? null : _description,
     innerWrapper: <InnerWrapperComponent style={[
-      _styles.innerWrapperStyle,
+      styles.innerWrapperStyle,
     ]} {...innerWrapperProps}>
       {_leftIcon}
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
     error: hideErrorMessage ? null : (
-      _error || <Text text={''} style={_styles.errorStyle} />
+      _error || <Text text={''} style={styles.errorStyle} />
     ),
   }
 
   return <WrapperComponent
-    style={[_styles.wrapperStyle, style]}
     {...otherProps}
     {...wrapperProps}
+    style={styles.wrapperStyle}
   >
     {
       order.map((key) => <KeyPassthrough key={key}>
@@ -98,6 +97,16 @@ export const InputBase = React.forwardRef<any, InputBaseProps>((props, ref) => {
       </KeyPassthrough>)
 
     }
-
   </WrapperComponent>
-})
+}
+
+InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
+
+InputBase.defaultProps = {
+  disabled: false,
+  labelAsRow: false,
+  hideErrorMessage: false,
+  order: InputBaseDefaultOrder,
+  wrapper: View,
+  innerWrapper: View,
+} as Partial<InputBaseProps>

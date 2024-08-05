@@ -58,27 +58,20 @@ jobs:
       - name: Git branch name
         id: git-branch-name
         uses: EthanSK/git-branch-name-action@v1
+
+      - name: Get latest google play version
+        run: |
+          pip install codemagic-cli-tools
+          pip3 install pyOpenSSL --upgrade
+
+          echo "update version code"
+
+          export GPLAY=$(google-play get-latest-build-number --package-name uk.co.codeleap.template --credentials @file:apps/mobile/android/app/keystores/playstore-credentials.json)
+          
+          yarn mobile updatePlayStoreVersion $GPLAY
+          cat apps/mobile/android/app/version.json
       
       - name: New internal version
         run: |
           cd apps/mobile/android/fastlane
           fastlane internal
-
-      - name: Commit version file
-        if: always()
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          cd apps/mobile
-          git restore android/app/version.json
-          git pull
-          git checkout master
-          git pull origin master
-          cd android/fastlane
-          fastlane increment_version_code
-          cd ..
-          ls
-          git add ./app/version.json
-          git diff-index --quiet HEAD || git commit -m "Update version.json"
-          git push origin master
-

@@ -1,74 +1,60 @@
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-  useNestedStylesByKey,
-} from '@codeleap/common'
 import React from 'react'
-import { StyleSheet, StyleProp, ViewStyle } from 'react-native'
-import { StylesOf } from '../../types'
-import { AvatarGroupComposition, AvatarGroupPresets } from './styles'
-import { View, ViewProps } from '../View'
-import { Avatar, AvatarProps } from '../Avatar'
+import { View } from '../View'
+import { Avatar } from '../Avatar'
+import { AvatarGroupProps } from './types'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
-export type AvatarGroupProps = ComponentVariants<typeof AvatarGroupPresets> & {
-  styles?: StylesOf<AvatarGroupComposition>
-  style?: ViewProps['style']
-  avatars: AvatarProps[]
-  displacement?: number
-  avatarVariants?: AvatarProps['variants']
-}
+export * from './styles'
+export * from './types'
 
-const defaultProps: Partial<AvatarGroupProps> = {
-  displacement: 20.5,
+const getAvatarStyle = (index: number, displacement: number = 20.5) => {
+  const right = index * displacement
+  return { right: `${right}%` }
 }
 
 export const AvatarGroup = (props: AvatarGroupProps) => {
   const {
-    variants = [],
     avatars = [],
-    avatarVariants,
-    styles,
     style,
     displacement,
+    debugName,
     ...viewProps
   } = {
-    ...defaultProps,
+    ...AvatarGroup.defaultProps,
     ...props,
   }
 
-  const variantStyles = useDefaultComponentStyle('u:AvatarGroup', {
-    variants,
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const styles = useStylesFor(AvatarGroup.styleRegistryName, style)
 
-  const avatarStyles = useNestedStylesByKey('avatar', variantStyles)
+  const avatarStyles = useNestedStylesByKey('avatar', styles)
 
   return (
-    <View
-      style={[variantStyles.wrapper, style]}
-      variants={['row']}
-      {...viewProps}
-    >
-      {avatars.map((avatar, index) => (
+    <View {...viewProps} style={styles.wrapper}>
+      {avatars?.map?.((avatar, index) => (
         <Avatar
           firstNameOnly
-          key={avatar.debugName || index}
+          key={debugName + index}
+          debugName={`${debugName}: ${avatar?.debugName ?? index}`}
           {...avatar}
-          variants={avatar.variants || avatarVariants}
-          style={getAvatarStyle(index, displacement)}
-          styles={avatarStyles}
+          style={[avatarStyles, (avatar?.style ?? {}), getAvatarStyle(index, displacement)]}
         />
       ))}
     </View>
   )
 }
 
-AvatarGroup.defaultProps = defaultProps
+AvatarGroup.styleRegistryName = 'AvatarGroup'
+AvatarGroup.elements = ['wrapper', 'avatar']
+AvatarGroup.rootElement = 'wrapper'
 
-const getAvatarStyle = (index: number, displacementPixels: number): StyleProp<ViewStyle> => {
-  const displacement = index * 20.5
-  return { right: `${displacement}%` }
+AvatarGroup.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return AvatarGroup as (props: StyledComponentProps<AvatarGroupProps, typeof styles>) => IJSX
 }
 
-export * from './styles'
+AvatarGroup.defaultProps = {
+  displacement: 20.5,
+} as Partial<AvatarGroupProps>
+
+MobileStyleRegistry.registerComponent(AvatarGroup)

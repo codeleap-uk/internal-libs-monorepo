@@ -1,11 +1,11 @@
-import { ActionIconComposition, ActionIconPresets } from '@codeleap/web'
-import { variantProvider } from '..'
+import { ActionIconComposition } from '@codeleap/web'
+import { createStyles } from '@codeleap/styles'
+import { StyleRegistry } from '../styles'
 
-const createActionIconStyle = variantProvider.createVariantFactory<ActionIconComposition>()
+const createActionIconVariant = createStyles<ActionIconComposition>
 
-export const AppActionIconStyles = {
-  ...ActionIconPresets,
-  default: createActionIconStyle((theme) => ({
+export const ActionIconStyles = {
+  default: createActionIconVariant((theme) => ({
     icon: {
       width: theme.values.iconSize[2],
       height: theme.values.iconSize[2],
@@ -27,9 +27,9 @@ export const AppActionIconStyles = {
     'touchableWrapper:disabled': {
       cursor: 'not-allowed',
       backgroundColor: theme.colors.neutral2,
-    }
+    },
   })),
-  small: createActionIconStyle((theme) => ({
+  small: createActionIconVariant((theme) => ({
     touchableWrapper: {
       width: theme.values.itemHeight.small,
       height: theme.values.itemHeight.small,
@@ -41,68 +41,68 @@ export const AppActionIconStyles = {
       height: theme.values.iconSize[1],
     },
   })),
-  large: createActionIconStyle((theme) => ({
+  large: createActionIconVariant((theme) => ({
     touchableWrapper: {
       width: theme.values.itemHeight.default,
       height: theme.values.itemHeight.default,
     },
   })),
-  'iconSize:1': createActionIconStyle((theme) => ({
+  'iconSize:1': createActionIconVariant((theme) => ({
     icon: {
       width: theme.values.iconSize[1],
       height: theme.values.iconSize[1],
     },
   })),
-  'iconSize:2': createActionIconStyle((theme) => ({
+  'iconSize:2': createActionIconVariant((theme) => ({
     icon: {
       width: theme.values.iconSize[2],
       height: theme.values.iconSize[2],
     },
   })),
-  'iconSize:3': createActionIconStyle((theme) => ({
+  'iconSize:3': createActionIconVariant((theme) => ({
     icon: {
       width: theme.values.iconSize[3],
       height: theme.values.iconSize[3],
     },
   })),
-  floating: createActionIconStyle((theme) => ({
+  floating: createActionIconVariant((theme) => ({
     touchableWrapper: {
       borderRadius: theme.borderRadius.rounded,
     },
   })),
-  outline: createActionIconStyle((theme) => ({
+  outline: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.neutral10,
     },
     touchableWrapper: {
       backgroundColor: theme.colors.neutral1,
-      ...theme.border.neutral5(theme.values.borderWidth.small),
+      ...theme.border({ width: theme.values.borderWidth.small, color: theme.colors.neutral5 }),
     },
     'icon:disabled': {
       color: theme.colors.neutral5,
     },
     'touchableWrapper:disabled': {
       backgroundColor: theme.colors.neutral1,
-      ...theme.border.neutral2(theme.values.borderWidth.small),
+      ...theme.border({ width: theme.values.borderWidth.small, color: theme.colors.neutral2 }),
     },
   })),
-  'primary:outline': createActionIconStyle((theme) => ({
+  'primary:outline': createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.primary3,
     },
     touchableWrapper: {
       backgroundColor: theme.colors.neutral1,
-      ...theme.border.primary3(theme.values.borderWidth.small),
+      ...theme.border({ width: theme.values.borderWidth.small, color: theme.colors.primary3 }),
     },
     'icon:disabled': {
       color: theme.colors.neutral5,
     },
     'touchableWrapper:disabled': {
       backgroundColor: theme.colors.neutral3,
-      ...theme.border.primary3(theme.values.borderWidth.small),
+      ...theme.border({ width: theme.values.borderWidth.small, color: theme.colors.primary3 }),
     },
   })),
-  minimal: createActionIconStyle((theme) => ({
+  minimal: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.primary3,
     },
@@ -117,7 +117,7 @@ export const AppActionIconStyles = {
       backgroundColor: 'transparent',
     },
   })),
-  destructive: createActionIconStyle((theme) => ({
+  destructive: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.neutral1,
     },
@@ -125,57 +125,69 @@ export const AppActionIconStyles = {
       backgroundColor: theme.colors.destructive2,
     },
   })),
-  'destructive:outline': createActionIconStyle((theme) => ({
+  'destructive:outline': createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.destructive2,
     },
     touchableWrapper: {
       backgroundColor: theme.colors.neutral1,
-      ...theme.border.destructive2(theme.values.borderWidth.small),
+      ...theme.border({ width: theme.values.borderWidth.small, color: theme.colors.destructive2 }),
     },
   })),
-  'destructive:minimal': createActionIconStyle((theme) => ({
+  'destructive:minimal': createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.destructive2,
     },
     touchableWrapper: {
       backgroundColor: theme.colors.neutral1,
-      ...theme.border.neutral5(theme.values.borderWidth.small),
+      ...theme.border({ width: theme.values.borderWidth.small, color: theme.colors.neutral5 }),
     },
   })),
-  selected: createActionIconStyle((theme) => ({
+  selected: createActionIconVariant((theme) => ({
     touchableWrapper: {
       backgroundColor: theme.colors.neutral2,
     },
   })),
-  neutral1: createActionIconStyle((theme) => ({
+  neutral1: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.neutral1,
     },
   })),
-  originalColor: createActionIconStyle((theme) => ({
+  originalColor: createActionIconVariant((theme) => ({
     icon: {
-      color: 'unset'
-    }
+      color: 'unset',
+    },
   })),
-  primary3: createActionIconStyle((theme) => ({
+  primary3: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.primary3,
     },
   })),
-  destructive2: createActionIconStyle((theme) => ({
+  destructive2: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.destructive2,
     },
   })),
-  positive2: createActionIconStyle((theme) => ({
+  positive2: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.positive2,
     },
   })),
-  neutral10: createActionIconStyle((theme) => ({
+  neutral10: createActionIconVariant((theme) => ({
     icon: {
       color: theme.colors.neutral10,
     },
   })),
+  normalize: createActionIconVariant((theme) => ({
+    'touchableWrapper': {
+      width: 'unset',
+      height: 'unset',
+      borderRadius: 'unset',
+      ...theme.presets.center,
+      backgroundColor: 'unset',
+      padding: theme.spacing.value(0),
+    },
+  })),
 }
+
+StyleRegistry.registerVariants('ActionIcon', ActionIconStyles)

@@ -6,6 +6,7 @@ import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnim
 import { PressableRippleProps } from '../modules/PressableRipple/type'
 import { useSoftInputState } from 'react-native-avoid-softinput'
 import { useMemo } from 'react'
+import { mergeStyles } from '@codeleap/styles'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -199,6 +200,16 @@ type RippleConfig = {
 }
 export type TouchableFeedbackConfig = RippleConfig | FeedbackConfig
 
+export type TouchFeedbackConfig = {
+  type?: 'ripple' | 'opacity' | 'highlight' | 'styles' | 'none'
+  config?: PressableRippleProps
+  iosFallback?: FeedbackConfig
+  value?: number
+  brightness?: number
+  shiftOpacity?: number
+  styles?: StyleProp<ViewStyle>
+}
+
 export type UsePressableFeedbackConfig = {
   disabled?: boolean
   feedbackConfig?: TouchableFeedbackConfig
@@ -353,5 +364,5 @@ export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {
 
   const totalPadding = softInputHeight + bottomPadding
 
-  return isSoftInputShown && enabled ? [propStyle, { paddingBottom: totalPadding }] : [propStyle]
+  return isSoftInputShown && enabled ? mergeStyles([propStyle, { paddingBottom: totalPadding }]) : propStyle
 }

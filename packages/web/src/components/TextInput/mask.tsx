@@ -1,53 +1,5 @@
-import { FormTypes, TypeGuards } from '@codeleap/common'
-
-type beforeMaskedValueChangeArgs = {
-  state: {
-    value: string | undefined
-    selection: {
-      start: number
-      end: number
-      length?: number
-    }
-  }
-  userInput: null | string
-}
-
-type FormatChar = `[${string}]`
-
-export type MaskProps = {
-  obfuscated?: boolean
-  mask?: string
-  placeholder?: string
-  maskChar?: string
-  formatChars?: Record<string, FormatChar>
-  alwaysShowMask?: boolean
-  validator?: FormTypes.ValidatorFunctionWithoutForm
-  maskType?: 'BRL' | 'INTERNATIONAL'
-  getRawValue?: (value: any) => string
-}
-
-export type TextInputMaskTypeProp =
-  | 'credit-card'
-  | 'cpf'
-  | 'cnpj'
-  | 'zip-code'
-  | 'cel-phone'
-  | 'custom'
-
-export interface TextInputMaskingProps {
-  type: TextInputMaskTypeProp
-  options?: MaskProps
-  onChangeMask?: (
-    newState: beforeMaskedValueChangeArgs['state'],
-    oldState: beforeMaskedValueChangeArgs['state'],
-    userInput: beforeMaskedValueChangeArgs['userInput']
-  ) => beforeMaskedValueChangeArgs['state']
-  saveFormatted?: boolean
-}
-
-type InputMaskProps = {
-  masking: TextInputMaskingProps
-}
+import { TypeGuards } from '@codeleap/common'
+import { FormatChar, InputMaskProps, MaskProps, TextInputMaskTypeProp } from './types'
 
 export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { notSaveFormatted: boolean } => {
   const {

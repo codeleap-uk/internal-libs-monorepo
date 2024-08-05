@@ -1,9 +1,11 @@
-import { capitalize, createDefaultVariantFactory, FormTypes, getNestedStylesByKey, includePresets, useDefaultComponentStyle } from '@codeleap/common'
+import { capitalize, FormTypes } from '@codeleap/common'
+import { useNestedStylesByKey } from '@codeleap/styles'
 import { CSSInterpolation } from '@emotion/css'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
-import { SelectProps } from './types'
+import { SelectProps, UseSelectStylesProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
 
 type ButtonParts = _ButtonParts
 
@@ -43,57 +45,38 @@ export type SelectState = 'error' | 'focus' | 'disabled'
 
 export type SelectComposition = SelectParts | `${SelectParts}:${SelectState}` | SelectStatefulParts
 
-const createSelectStyle = createDefaultVariantFactory<SelectComposition>()
-
-export const SelectPresets = includePresets((styles) => createSelectStyle(() => ({ wrapper: styles })))
-
 export type ComponentState = {
   error?: boolean
   focused?: boolean
   disabled?: boolean
 }
 
-export type OptionState = { 
+export type OptionState = {
   isSelected: boolean
   isFocused: boolean
-  baseStyles: SelectProps['itemProps']['styles'] 
+  baseStyles: SelectProps['itemProps']['style']
 }
 
-export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, Multi>, state: ComponentState) {
-  const {
-    responsiveVariants = {},
-    variants,
-    styles,
-  } = props
+export function useSelectStyles<T, Multi extends boolean>(props: UseSelectStylesProps, state: ComponentState) {
+  const { style } = props
 
-  const {
-    error,
-    focused,
-    disabled,
-  } = state
+  const { error, focused, disabled } = state
 
-  const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>(
-    'u:Select',
-    {
-      responsiveVariants,
-      variants,
-      styles,
-    },
-  )
+  const styles = useStylesFor(props?.styleRegistryName, style)
 
   const stylesKey = (key: SelectParts | SelectStatefulParts, _styles: CSSObjectWithLabel = {}) => ({
     ..._styles,
-    ...variantStyles[key],
-    ...(focused ? variantStyles[key + ':focus'] : {}),
-    ...(disabled ? variantStyles[key + ':disabled'] : {}),
-    ...(error ? variantStyles[key + ':error'] : {}),
+    ...styles[key],
+    ...(focused ? styles[key + ':focus'] : {}),
+    ...(disabled ? styles[key + ':disabled'] : {}),
+    ...(error ? styles[key + ':error'] : {}),
   })
 
-  const optionNestedStyles = getNestedStylesByKey('item', variantStyles)
+  const optionNestedStyles = useNestedStylesByKey('item', styles)
 
   const optionStyleKey = (
     key: ButtonParts | `${ButtonParts}:${ItemState}`,
-    state: OptionState
+    state: OptionState,
   ) => {
     return {
       ...stylesKey(`item${capitalize(key)}` as any),
@@ -169,7 +152,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
   }
 
   return {
-    variantStyles,
+    styles,
     reactSelectStyles,
     optionsStyles,
     placeholderStyles,

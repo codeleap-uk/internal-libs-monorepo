@@ -1,70 +1,37 @@
-import * as React from 'react'
-import {
-  ComponentVariants,
-  useDefaultComponentStyle,
-  arePropsEqual,
-  FormTypes,
-  TypeGuards,
-  getNestedStylesByKey,
-} from '@codeleap/common'
-import {
-  Image as NativeImage,
-  ImageProps as NativeImageProps,
-  ImageStyle,
-  StyleProp,
-  StyleSheet,
-  TextStyle,
-  ViewStyle,
-} from 'react-native'
-import {
-  ImageComposition,
-  ImagePresets,
-} from './styles'
+import React from 'react'
+import { arePropsEqual, TypeGuards } from '@codeleap/common'
+import { Image as NativeImage } from 'react-native'
 import { useImageSpotlight } from '../ImageView/Spotlight'
 import { Touchable } from '../Touchable'
 import { isFile, toMultipartFile } from '../../utils'
-import { LoadingOverlay, LoadingOverlayProps } from '../LoadingOverlay'
-import { StylesOf } from '../../types'
-import FastImage, { Source } from 'react-native-fast-image'
+import { LoadingOverlay } from '../LoadingOverlay'
+import FastImage from 'react-native-fast-image'
+import { ImageProps } from './types'
+import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
+export * from './types'
 
-export type ImageProps = Omit<NativeImageProps, 'source' | 'style'> & {
-  variants?: ComponentVariants<typeof ImagePresets>['variants']
-  fast?: boolean
-  styles?: StylesOf<ImageComposition>
-  style?: StyleProp<ImageStyle | TextStyle | ViewStyle>
-  source:
-    | Source
-    | FormTypes.AnyFile
-  resizeMode?: keyof typeof FastImage.resizeMode
-  spotlight?: string
-  maintainAspectRatio?: boolean
-  withLoadingOverlay?: boolean | ((props: LoadingOverlayProps) => JSX.Element)
-}
-
-export const ImageComponent = (props:ImageProps) => {
+export const Image = React.memo((props: ImageProps) => {
   const {
-    variants,
     style,
-    styles: componentStyleSheet = {},
-    fast = true,
+    fast,
     spotlight = null,
-    resizeMode = 'contain',
+    resizeMode,
     source,
-    withLoadingOverlay = false,
-    maintainAspectRatio = true,
+    withLoadingOverlay,
+    maintainAspectRatio,
     ...imageProps
-  } = props
+  } = {
+    ...Image.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:Image', typeof ImagePresets>('u:Image', {
-    variants,
-    styles: componentStyleSheet,
-    transform: StyleSheet.flatten,
-  })
   const [loading, setLoading] = React.useState(false)
 
-  const styles = StyleSheet.flatten([variantStyles.wrapper, style])
+  const styles = useStylesFor(Image.styleRegistryName, style)
 
   let imSource = source
 
@@ -73,12 +40,14 @@ export const ImageComponent = (props:ImageProps) => {
   } else if (TypeGuards.isString(source)) {
     imSource = { uri: source }
   }
+
   const spotlightActions = useImageSpotlight(spotlight, props.source)
   const Wrapper = !!spotlight ? Touchable : ({ children }) => <>{children}</>
+
   const wrapperProps = {
     onPress: spotlightActions.onImagePressed,
     debugName: `Press spotlight image ${props.source}`,
-    style: [variantStyles.touchable],
+    style: styles.touchable,
     android_ripple: null,
   }
 
@@ -122,23 +91,21 @@ export const ImageComponent = (props:ImageProps) => {
   const Loading = TypeGuards.isFunction(withLoadingOverlay) ? withLoadingOverlay : LoadingOverlay
   const showLoading = !!withLoadingOverlay
 
-  const overlayStyle = React.useMemo(() => getNestedStylesByKey('overlay', variantStyles), [variantStyles])
+  const overlayStyle = useNestedStylesByKey('overlay', styles)
 
   const loadingElement = React.useMemo(() => {
     return showLoading ? (
-      <Loading visible={loading} styles={overlayStyle}/>
-
+      <Loading visible={loading} style={overlayStyle} />
     ) : null
   }, [showLoading, loading])
 
   if (fast) {
     return (
       <Wrapper {...wrapperProps}>
-
         <FastImage
-          style={[aspectRatioStyle, styles]}
+          style={[aspectRatioStyle, styles.wrapper]}
           // @ts-ignore
-          tintColor={styles?.tintColor}
+          tintColor={styles?.wrapper?.tintColor}
           // @ts-ignore
           source={imSource}
           resizeMode={FastImage.resizeMode[resizeMode || 'contain']}
@@ -149,25 +116,38 @@ export const ImageComponent = (props:ImageProps) => {
       </Wrapper>
     )
   }
-  return <Wrapper {...wrapperProps}>
-    <NativeImage
-      style={[aspectRatioStyle, styles]}
-      resizeMode={resizeMode}
-      source={imSource}
-      {...(imageProps as any)}
-      {...loadProps.current}
-    />
-    {
-      loadingElement
-    }
-  </Wrapper>
+
+  return (
+    <Wrapper {...wrapperProps}>
+      <NativeImage
+        resizeMode={resizeMode}
+        source={imSource}
+        {...(imageProps as any)}
+        {...loadProps.current}
+        style={[aspectRatioStyle, styles.wrapper]}
+      />
+
+      {loadingElement}
+    </Wrapper>
+  )
+}, (prevProps, nextProps) => {
+  const equal = arePropsEqual(prevProps, nextProps, { check: ['source', 'style', 'resizeMode', 'fast'] })
+  return equal
+}) as StyledComponentWithProps<ImageProps>
+
+Image.styleRegistryName = 'Image'
+Image.elements = ['wrapper', 'touchable', 'overlay']
+Image.rootElement = 'wrapper'
+
+Image.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Image as (props: StyledComponentProps<ImageProps, typeof styles>) => IJSX
 }
 
-function areEqual(prevProps, nextProps) {
-  const check = ['source', 'style', 'variants', 'resizeMode', 'fast']
-  const res = arePropsEqual(prevProps, nextProps, { check })
-  return res
+Image.defaultProps = {
+  fast: true,
+  resizeMode: 'contain',
+  withLoadingOverlay: false,
+  maintainAspectRatio: true,
 }
 
-export const Image = React.memo(ImageComponent, areEqual) as typeof ImageComponent
-
+MobileStyleRegistry.registerComponent(Image)

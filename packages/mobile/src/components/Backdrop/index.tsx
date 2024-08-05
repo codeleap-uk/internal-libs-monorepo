@@ -1,51 +1,68 @@
 import React from 'react'
-import { ComponentVariants, onUpdate, PropsOf, useDefaultComponentStyle } from '@codeleap/common'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
-
-import { StylesOf } from '../../types/utility'
-import { StyleSheet } from 'react-native'
 import { useAnimatedVariantStyles } from '../../utils'
-import { BackdropComposition, BackdropPresets } from './styles'
+import { BackdropProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
-export type BackdropProps = React.PropsWithChildren<
+export * from './types'
 
-  PropsOf<typeof Touchable> & {
-    visible: boolean
-    wrapperProps?: PropsOf<typeof View>
-    variants?: ComponentVariants<typeof BackdropPresets>['variants']
-    styles?: StylesOf<BackdropComposition>
-}>
+export const Backdrop = (props: BackdropProps) => {
+  const {
+    visible,
+    children,
+    wrapperProps = {},
+    style,
+    ...rest
+  } = {
+    ...Backdrop.defaultProps,
+    ...props,
+  }
 
-export const Backdrop = (backdropProps:BackdropProps) => {
-  const { variants = [], styles = {}, visible, children, wrapperProps = {}, ...props } = backdropProps
-
-  const variantStyles = useDefaultComponentStyle<'u:Backdrop', typeof BackdropPresets>('u:Backdrop', {
-    variants,
-    rootElement: 'wrapper',
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const styles = useStylesFor(Backdrop.styleRegistryName, style)
 
   const animation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: ['wrapper:hidden', 'wrapper:visible'],
     updater: (s) => {
       'worklet'
-      return visible ? s['wrapper:visible'] :  s['wrapper:hidden']
+      return visible ? s['wrapper:visible'] : s['wrapper:hidden']
     },
     dependencies: [visible],
-    transition: variantStyles.transition,
+    transition: styles.transition,
   })
 
+  const isPressable = !!props?.onPress
 
-  return <View pointerEvents={visible ? 'auto' : 'none' } animated style={[variantStyles.wrapper, animation]} {...wrapperProps}>
-    {
-      !!props?.onPress ?
-        <Touchable style={variantStyles.touchable} {...props} noFeedback android_ripple={null}/>
-        : null
-    }
-    {children}
-  </View>
+  return (
+    <View
+      animated
+      pointerEvents={visible ? 'auto' : 'none'}
+      animatedStyle={animation}
+      {...wrapperProps}
+      style={styles.wrapper}
+    >
+      {isPressable
+        ? <Touchable {...rest} style={styles.touchable} noFeedback android_ripple={null} />
+        : null}
+
+      {children}
+    </View>
+  )
 }
+
+
+Backdrop.styleRegistryName = 'Backdrop'
+Backdrop.elements = ['wrapper', 'touchable', 'transition']
+Backdrop.rootElement = 'wrapper'
+
+Backdrop.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Backdrop as (props: StyledComponentProps<BackdropProps, typeof styles>) => IJSX
+}
+
+Backdrop.defaultProps = {} as Partial<BackdropProps>
+
+MobileStyleRegistry.registerComponent(Backdrop)

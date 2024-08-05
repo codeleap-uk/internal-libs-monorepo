@@ -1,27 +1,18 @@
-import {
-  ComponentVariants,
-  IconPlaceholder,
-  PropsOf,
-  StylesOf,
-} from '@codeleap/common'
-import { DropzoneComposition, DropzonePresets } from './styles'
-import { View } from '../View'
-import {
-  DropzoneOptions,
-  FileRejection,
-  DropzoneRef as ReactDropzoneRef,
-} from 'react-dropzone'
+import { StylesOf } from '@codeleap/common'
+import { DropzoneComposition } from './styles'
+import { DropzoneOptions, FileRejection, DropzoneRef as ReactDropzoneRef } from 'react-dropzone'
 import { ActionIconComposition } from '../ActionIcon'
+import { AppIcon, StyledProp } from '@codeleap/styles'
 
 export type DropzoneFile = File
 
 export type DropzoneFileRejection = FileRejection
 
-export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
-  DropzoneOptions & {
-    styles?: StylesOf<DropzoneComposition>
-    style?: PropsOf<typeof View>['style']
-    icon?: IconPlaceholder
+export type DropzoneProps =
+  Omit<DropzoneOptions, 'style'> &
+  {
+    style?: StyledProp<DropzoneComposition>
+    icon?: AppIcon
     placeholder?: string
     acceptedFiles: File[]
     rejectedFiles?: DropzoneFileRejection[]
@@ -29,30 +20,31 @@ export type DropzoneProps = ComponentVariants<typeof DropzonePresets> &
     setRejectedFiles?: React.Dispatch<React.SetStateAction<DropzoneFileRejection[]>>
     onRemove?: (file: DropzoneFile) => void
     children?: React.ReactNode
-    fileRightIcon?: IconPlaceholder
-    fileLeftIcon?: IconPlaceholder
+    fileRightIcon?: AppIcon
+    fileLeftIcon?: AppIcon
     withImagePreview?: boolean
     FilePreviewComponent?: (props: DropzoneInnerFilePreviewProps) => JSX.Element
   }
 
-export type DropzoneFilePreviewProps = Pick<
-  DropzoneProps,
-  'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview' | 'FilePreviewComponent'
-> & {
-  file: DropzoneFile
-  errors?: DropzoneFileRejection['errors']
-  variantStyles: StylesOf<DropzoneComposition>
-  onRemove?: () => void
-  fileRightIconStyles?: StylesOf<ActionIconComposition>
-  index?: number
-}
+export type DropzoneFilePreviewProps =
+  Pick<DropzoneProps, 'fileRightIcon' | 'fileLeftIcon' | 'withImagePreview' | 'FilePreviewComponent'> &
+  {
+    file: DropzoneFile
+    errors?: DropzoneFileRejection['errors']
+    styles: StylesOf<DropzoneComposition>
+    onRemove?: () => void
+    fileRightIconStyles?: StylesOf<ActionIconComposition>
+    index?: number
+  }
 
-export type DropzoneInnerFilePreviewProps = DropzoneFilePreviewProps & {
-  hasErrors: boolean
-  revokeImageUrl: () => void
-  imageUrl: string
-  isPreview: boolean
-}
+export type DropzoneInnerFilePreviewProps =
+  DropzoneFilePreviewProps &
+  {
+    hasErrors: boolean
+    revokeImageUrl: () => void
+    imageUrl: string
+    isPreview: boolean
+  }
 
 export type DropzoneRef = ReactDropzoneRef & {
   clear: () => void

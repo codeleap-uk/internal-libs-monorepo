@@ -1,117 +1,115 @@
-import React, { forwardRef } from 'react'
-import {
-  getNestedStylesByKey,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import { CropPickerPresets } from './styles'
+import React, { forwardRef, Ref } from 'react'
+import { StyledComponentWithProps, useCompositionStyles } from '@codeleap/styles'
 import { CropPickerProps } from './types'
-import { useCropPicker } from './useCropPicker'
-import { Modal, Button, FileInput, FileInputRef, LoadingOverlay } from '../components'
+import { useCropPicker } from '../../lib'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { FileInput, FileInputRef } from '../FileInput'
+import { Modal } from '../Modal'
+import { Button } from '../Button'
+import { LoadingOverlay } from '../LoadingOverlay'
 
 const ReactCrop: React.ElementType = require('react-image-crop').Component
+
 import 'react-image-crop/dist/ReactCrop.css'
 
 export * from './styles'
 export * from './types'
-export * from './utils'
-export * from './useCropPicker'
 
-export const _CropPicker = forwardRef<FileInputRef, CropPickerProps>(
-  (props: CropPickerProps, ref) => {
-    const allProps = {
-      // @ts-ignore
-      ...CropPicker.defaultProps,
-      ...props,
-    }
+export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref) => {
+  const {
+    onFileSelect,
+    targetCrop,
+    modalProps,
+    title,
+    confirmButton,
+    debugName,
+    handle,
+    withLoading,
+    style,
+    confirmButtonProps,
+    ...fileInputProps
+  } = {
+    ...CropPicker.defaultProps,
+    ...props,
+  }
 
-    const {
-      onFileSelect,
-      targetCrop,
-      variants = [],
-      responsiveVariants = {},
-      styles = {},
-      modalProps = {},
-      title = 'Crop Image',
-      confirmButton = 'Confirm Crop',
-      debugName,
-      handle,
-      withLoading = false,
-      ...fileInputProps
-    } = allProps
+  const {
+    onConfirmCrop,
+    onFilesReturned,
+    onClose,
+    fileInputRef,
+    visible,
+    image,
+    crop,
+    setRelativeCrop,
+    isLoading,
+    handleCropChange,
+  } = handle || useCropPicker({ onFileSelect, ref: ref as unknown as Ref<FileInputRef>, ...targetCrop })
 
-    const {
-      onConfirmCrop,
-      onFilesReturned,
-      onClose,
-      fileInputRef,
-      visible,
-      image,
-      crop,
-      setRelativeCrop,
-      isLoading,
-      handleCropChange,
-    } = handle || useCropPicker({ onFileSelect, ref, ...targetCrop })
+  const styles = useStylesFor(CropPicker.styleRegistryName, style)
 
-    const variantStyles = useDefaultComponentStyle<
-      'u:CropPicker',
-      typeof CropPickerPresets
-    >('u:CropPicker', {
-      variants,
-      responsiveVariants,
-      styles,
-    })
+  const composition = useCompositionStyles(['confirmButton', 'modal'], styles)
 
-    const buttonStyles = getNestedStylesByKey('confirmButton', variantStyles)
-    const modalStyles = getNestedStylesByKey('modal', variantStyles)
+  return (
+    <>
+      <FileInput
+        // @ts-ignore
+        ref={fileInputRef}
+        onChange={(files) => onFilesReturned(files)}
+        {...fileInputProps}
+      />
 
-    return (
-      <>
-        <FileInput
-          ref={fileInputRef}
-          onChange={(files) => onFilesReturned(files)}
-          {...fileInputProps}
-        />
-        <Modal
-          visible={visible}
-          toggle={onClose}
-          title={title}
-          styles={modalStyles}
-          footer={
-            <Button
-              text={confirmButton}
-              styles={buttonStyles}
-              onPress={onConfirmCrop}
-              debugName={debugName}
+      <Modal
+        visible={visible}
+        toggle={onClose}
+        title={title}
+        footer={
+          <Button
+            text={confirmButton}
+            style={composition?.confirmButton}
+            onPress={onConfirmCrop}
+            debugName={debugName}
+            {...confirmButtonProps}
+          />
+        }
+        {...modalProps}
+        style={composition?.modal}
+      >
+        {!!image?.src ? (
+          <ReactCrop
+            crop={crop}
+            onChange={handleCropChange}
+            onComplete={(_, relCrop) => setRelativeCrop(relCrop)}
+            {...targetCrop}
+            style={styles.previewSize}
+          >
+            <img
+              src={image?.src}
+              // @ts-expect-error
+              css={[styles.cropPreview, styles.previewSize]}
             />
-          }
-          {...modalProps}
-        >
-          {!!image?.src && (
-            <ReactCrop
-              crop={crop}
-              onChange={handleCropChange}
-              onComplete={(_, relCrop) => setRelativeCrop(relCrop)}
-              style={variantStyles.previewSize}
-              {...targetCrop}
-            >
-              <img
-                src={image?.src}
-                css={[variantStyles.cropPreview, variantStyles.previewSize]}
-              />
-            </ReactCrop>
-          )}
-          {
-            withLoading ? (
-              <LoadingOverlay
-                debugName='CropPicker'
-                visible={isLoading}
-              />
-            ) : null
-          }
-        </Modal>
-      </>
-    )
-  },
-)
+          </ReactCrop>
+        ) : null}
+        {withLoading ? <LoadingOverlay debugName='CropPicker' visible={isLoading} /> : null}
+      </Modal>
+    </>
+  )
+}) as StyledComponentWithProps<CropPickerProps>
 
-export const CropPicker = React.memo(_CropPicker)
+CropPicker.styleRegistryName = 'CropPicker'
+CropPicker.elements = ['previewSize', 'cropPreview', 'confirmButton', 'modal']
+CropPicker.rootElement = 'previewSize'
+
+CropPicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return CropPicker as (props: StyledComponentProps<CropPickerProps, typeof styles>) => IJSX
+}
+
+CropPicker.defaultProps = {
+  title: 'Crop Image',
+  confirmButton: 'Confirm Crop',
+  withLoading: false,
+} as Partial<CropPickerProps>
+
+WebStyleRegistry.registerComponent(CropPicker)

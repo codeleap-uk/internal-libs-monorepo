@@ -1,5 +1,4 @@
-import * as React from 'react'
-
+import React from 'react'
 import { onUpdate, PropsOf } from '@codeleap/common'
 import _ImageView from 'react-native-image-viewing'
 import { StatusBar } from 'react-native'

@@ -43,3 +43,10 @@ export type Paths<T, D extends number = 2> = [D] extends [never]
         : '')
     )
 
+export type ExtractPath<T> = T extends object
+  ? {
+    [K in keyof T & (string | number)]: T[K] extends object
+      ? `${K}` | `${K}.${ExtractPath<T[K]>}`
+      : `${K}`
+  }[keyof T & (string | number)]
+  : never

@@ -3,25 +3,16 @@ import { graphql } from 'gatsby'
 import { FormTypes, TypeGuards } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/serialize'
 
-type CommonProps = {
+export type ImageProps = {
   source: string | FormTypes.AnyFile
   css?: CSSInterpolation | CSSInterpolation[]
   alt?: string
   objectFit?: Exclude<React.CSSProperties['objectFit'], React.CSSProperties['objectFit'][]>
   style?: CSSInterpolation
+  type?: 'static' | 'dynamic'
 }
 
-type StaticImageProps = {
-  type?: 'static'
-}
-
-type DynamicImageProps = {
-  type?: 'dynamic'
-}
-
-export type ImageProps = (StaticImageProps | DynamicImageProps) & CommonProps
-
-export const Image:React.FC<ImageProps> = (imageProps) => {
+export const Image = (imageProps: ImageProps) => {
   const {
     source,
     type = 'static',

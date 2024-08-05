@@ -1,9 +1,12 @@
 import React from 'react'
-import { onUpdate, useCallback, useDefaultComponentStyle, useState, useValidate } from '@codeleap/common'
+import { onUpdate, useCallback, useState, useValidate } from '@codeleap/common'
 import { BubbleMenu, FloatingMenu, EditorContent } from '@tiptap/react'
 import { FileInput, Text, View } from '../components'
 import { TextEditorProps } from './types'
-import { TextEditorPresets } from './styles'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+
 export * from './styles'
 export * from './types'
 
@@ -11,17 +14,19 @@ export const TextEditor = (props: TextEditorProps) => {
   const {
     children,
     editor,
-    variants = [],
-    styles = {},
-    responsiveVariants = {},
-    style = {},
+    style,
     bubbleMenuProps,
     floatingMenuProps,
     toolbarComponent,
     fileInputRef,
     _error,
     validate,
-  } = props
+  } = {
+    ...TextEditor.defaultProps,
+    ...props,
+  }
+
+  const styles = useStylesFor(TextEditor.styleRegistryName, style)
 
   const [_isFocused, setIsFocused] = useState(false)
   const validation = useValidate(editor?.getText() ?? '', validate)
@@ -29,12 +34,6 @@ export const TextEditor = (props: TextEditorProps) => {
   const hasError = !validation.isValid || _error
   const errorMessage = validation.message || _error
   const isDisabled = !editor?.isEditable ?? null
-
-  const variantStyles = useDefaultComponentStyle<'u:TextEditor', typeof TextEditorPresets>('u:TextEditor', {
-    variants,
-    styles,
-    responsiveVariants,
-  })
 
   const handleBlur = React.useCallback(() => {
     validation?.onInputBlurred()
@@ -58,8 +57,9 @@ export const TextEditor = (props: TextEditorProps) => {
 
   const _BubbleMenu = useCallback(() => {
     return (
-      <BubbleMenu css={[variantStyles.bubbleMenu]} {...bubbleMenuProps} editor={editor}>
-        <View style={variantStyles.bubbleMenuInnerWrapper}>
+      // @ts-expect-error icss type
+      <BubbleMenu css={[styles.bubbleMenu]} {...bubbleMenuProps} editor={editor}>
+        <View style={styles.bubbleMenuInnerWrapper}>
           {bubbleMenuProps?.renderContent}
         </View>
       </BubbleMenu>
@@ -68,8 +68,9 @@ export const TextEditor = (props: TextEditorProps) => {
 
   const _FloatingMenu = useCallback(() => {
     return (
-      <FloatingMenu css={[variantStyles.floatingMenu]} {...floatingMenuProps} editor={editor}>
-        <View style={variantStyles.floatingMenuInnerWrapper}>
+      // @ts-expect-error icss type
+      <FloatingMenu css={[styles.floatingMenu]} {...floatingMenuProps} editor={editor}>
+        <View style={styles.floatingMenuInnerWrapper}>
           {floatingMenuProps?.renderContent}
         </View>
       </FloatingMenu>
@@ -77,21 +78,21 @@ export const TextEditor = (props: TextEditorProps) => {
   }, [editor])
 
   const editorStyles = [
-    variantStyles.editor,
-    hasError && variantStyles['editor:error'],
-    isDisabled && variantStyles['editor:disabled'],
+    styles.editor,
+    hasError && styles['editor:error'],
+    isDisabled && styles['editor:disabled'],
   ]
 
   if (!editor) return null
+
   return (
     <View
-      css={[
-        variantStyles.wrapper,
-        hasError && variantStyles['wrapper:error'],
+      style={[
+        styles.wrapper,
+        hasError && styles['wrapper:error'],
         {
           '.tiptap': editorStyles,
         },
-        style,
       ]}
     >
       {toolbarComponent}
@@ -99,10 +100,30 @@ export const TextEditor = (props: TextEditorProps) => {
       <_BubbleMenu />
       <_FloatingMenu />
       <EditorContent editor={editor} />
-      {hasError ? <Text text={errorMessage as string} css={variantStyles['errorMessage:error']} /> : null}
-      <FileInput
-        ref={fileInputRef}
-      />
+      {hasError ? <Text text={errorMessage as string} style={styles['errorMessage:error']} /> : null}
+      <FileInput ref={fileInputRef} />
     </View>
   )
 }
+
+TextEditor.styleRegistryName = 'TextEditor'
+
+TextEditor.elements = [
+  'wrapper',
+  'editor',
+  'floatingMenu',
+  'bubbleMenu',
+  'bubbleMenuInnerWrapper',
+  'floatingMenuInnerWrapper',
+  'errorMessage',
+]
+
+TextEditor.rootElement = 'wrapper'
+
+TextEditor.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return TextEditor as (props: StyledComponentProps<TextEditorProps, typeof styles>) => IJSX
+}
+
+TextEditor.defaultProps = {} as Partial<TextEditorProps>
+
+WebStyleRegistry.registerComponent(TextEditor)

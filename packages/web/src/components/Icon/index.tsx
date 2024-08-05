@@ -1,57 +1,55 @@
-/** @jsx jsx */
-import { CSSObject, jsx } from '@emotion/react'
-import { CSSInterpolation } from '@emotion/css'
-import {
-  ComponentVariants,
-  IconPlaceholder,
-  IconStyles,
-  useDefaultComponentStyle,
-  useCodeleapContext,
-} from '@codeleap/common'
 import { View } from '../View'
-import { ComponentCommonProps } from '../../types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, AppTheme, IJSX, StyledComponentProps, Theme, useTheme } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { IconProps } from './types'
 
 export * from './styles'
+export * from './types'
 
-export type IconProps = ComponentCommonProps & {
-  name: IconPlaceholder
-  style?: React.CSSProperties
-  size?: string | number
-  color?: string
-  renderEmptySpace?: boolean
-  forceStyle?: CSSObject | CSSInterpolation | React.CSSProperties
-  css?: CSSInterpolation | CSSInterpolation[]
-} & ComponentVariants<typeof IconStyles>
+export const Icon = (props:IconProps) => {
+  const {
+    name,
+    style,
+    renderEmptySpace,
+    ...otherProps
+  } = {
+    ...Icon.defaultProps,
+    ...props,
+  }
 
-const IconCP = ({ name, style, variants, renderEmptySpace, ...otherProps }:IconProps) => {
-  const { Theme, logger } = useCodeleapContext()
-  const Component = Theme?.icons?.[name]
+  const theme = useTheme(store => store.current) as AppTheme<Theme>
 
-  const variantStyles = useDefaultComponentStyle('Icon', {
-    variants,
-    styles: {
-      icon: style,
-    },
-    rootElement: 'icon',
-  })
+  const styles = useStylesFor(Icon.styleRegistryName, style)
+
+  const Component = theme?.icons?.[name]
 
   if (!name) {
-    const iconStyle = variantStyles.icon
-    return renderEmptySpace ? <View css={{
-      height: iconStyle.size ?? iconStyle.height,
-      width: iconStyle.size ?? iconStyle.width,
-    }}/> : null
+    const iconStyle = styles.icon as React.CSSProperties & { size: number }
+
+    return renderEmptySpace ? (
+      <View
+        style={{
+          height: iconStyle.size ?? iconStyle.height,
+          width: iconStyle.size ?? iconStyle.width,
+        }}
+      />
+    ) : null
   }
 
-  if (!Component) {
-    logger.warn(
-      `Icon: No icon found in theme for name "${name}".`,
-      { props: { style, name, variants, variantStyles }},
-      'Component',
-    )
-    return null
-  }
-  return <Component style={variantStyles.icon} {...otherProps}/>
+  if (!Component) return null
+
+  return <Component {...otherProps} style={styles.icon} />
 }
 
-export const Icon = IconCP as ((props: IconProps) => jsx.JSX.Element)
+Icon.styleRegistryName = 'Icon'
+Icon.elements = ['icon']
+Icon.rootElement = 'icon'
+
+Icon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Icon as (props: StyledComponentProps<IconProps, typeof styles>) => IJSX
+}
+
+Icon.defaultProps = {} as Partial<IconProps>
+
+WebStyleRegistry.registerComponent(Icon)

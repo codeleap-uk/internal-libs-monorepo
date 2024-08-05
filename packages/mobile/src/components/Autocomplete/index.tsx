@@ -1,20 +1,16 @@
-import {
-  useDefaultComponentStyle,
-  TypeGuards,
-  useNestedStylesByKey,
-  FormTypes,
-  onMount,
-  useSearch,
-} from '@codeleap/common'
 import React, { useCallback } from 'react'
-import { StyleSheet } from 'react-native'
+import { TypeGuards, FormTypes, onMount, useSearch } from '@codeleap/common'
 import { List } from '../List'
-import { SearchInput } from '../TextInput'
-import { AutocompletePresets } from './styles'
+import { SearchInput } from '../SearchInput'
 import { AutocompleteProps } from './types'
 import { Button } from '../Button'
 import { View } from '../View'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
+
 export * from './styles'
+export * from './types'
 
 const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
   return options.filter((option) => {
@@ -26,51 +22,40 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
   })
 }
 
-const defaultProps: Partial<AutocompleteProps<any, boolean>> = {
-  getLabel(option) {
+const defaultGetLabel = (option) => {
+  if (TypeGuards.isArray(option)) {
+    if (option.length === 0) return null
 
-    if (TypeGuards.isArray(option)) {
-
-      if (option.length === 0) return null
-
-      return option.map(o => o.label).join(', ')
-
-    } else {
-      if (!option) return null
-      return option?.label
-    }
-  },
-  searchInputProps: {},
-  selectedIcon: 'check' as any,
-  searchComponent: SearchInput,
+    return option.map(o => o.label).join(', ')
+  } else {
+    if (!option) return null
+    return option?.label
+  }
 }
 
 export const Autocomplete = <T extends string | number = string, Multi extends boolean = false>(autocomplete: AutocompleteProps<T, Multi>) => {
   const allProps = {
-    ...defaultProps,
+    ...Autocomplete.defaultProps,
     ...autocomplete,
   }
 
   const {
     value,
     onValueChange,
-    styles = {},
     options = [],
-    variants,
     renderItem,
-
     debugName,
-    placeholder = 'Select',
+    placeholder,
     itemProps = {},
-    searchable = true,
+    searchable,
     loadOptions,
-    multiple = false,
+    multiple,
     limit = null,
     defaultOptions = options,
     onLoadOptionsError,
     selectedIcon,
     loadOptionsOnMount = defaultOptions.length === 0,
-    selectable = false,
+    selectable,
     searchComponent,
     filterItems = defaultFilterFunction,
     searchInputProps: searchProps = {},
@@ -108,21 +93,13 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
     }
   })
 
-  const variantStyles = useDefaultComponentStyle<'u:Autocomplete', typeof AutocompletePresets>('u:Autocomplete', {
-    transform: StyleSheet.flatten,
-    rootElement: 'inputWrapper',
-    styles,
-    variants,
-  })
+  const styles = useStylesFor(Autocomplete.styleRegistryName, style)
 
-  const itemStyles = useNestedStylesByKey('item', variantStyles)
-
-  const listStyles = useNestedStylesByKey('list', variantStyles)
+  const compositionStyles = useCompositionStyles(['item', 'list', 'searchInput'], styles)
 
   const currentOptions = searchable ? filteredOptions : defaultOptions
 
   const select = (selectedValue) => {
-
     let newValue = null
 
     let newOption = null
@@ -163,13 +140,11 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
     } else {
       setLabelOptions([newOption])
     }
-
   }
 
   const Item = renderItem || Button
 
   const renderListItem = useCallback(({ item }) => {
-
     let selected = false
 
     if (multiple && isValueArray) {
@@ -193,7 +168,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       rightIcon={selectedIcon}
       // @ts-ignore
       icon={selectedIcon}
-      styles={itemStyles}
+      style={compositionStyles?.item}
       {...itemProps}
     />
   }, [value, select, multiple, selectable, isValueArray])
@@ -202,7 +177,7 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
 
   const showLoading = TypeGuards.isFunction(loadingProp) ? loadingProp(loading) : (loadingProp || loading)
 
-  return <View style={[variantStyles.wrapper, style]}>
+  return <View style={styles?.wrapper}>
     <Search
       placeholder={placeholder}
       debugName={debugName}
@@ -215,13 +190,14 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
       onSearchChange={onChangeSearch}
       hideErrorMessage
       {...searchProps}
+      style={compositionStyles?.searchInput}
     />
 
-    <List<any>
+    <List
       data={searchable ? filteredOptions : options}
       scrollEnabled={false}
       showsHorizontalScrollIndicator={false}
-      styles={listStyles}
+      style={compositionStyles?.list}
       // @ts-ignore
       keyExtractor={(i) => i.value}
       renderItem={renderListItem}
@@ -233,7 +209,23 @@ export const Autocomplete = <T extends string | number = string, Multi extends b
   </View>
 }
 
-export * from './styles'
-export * from './types'
+Autocomplete.styleRegistryName = 'Autocomplete'
+Autocomplete.elements = ['wrapper', 'list', 'item', 'searchInput']
+Autocomplete.rootElement = 'wrapper'
 
-Autocomplete.defaultProps = defaultProps
+Autocomplete.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Autocomplete as (<T extends string | number = string, Multi extends boolean = false>(props: StyledComponentProps<AutocompleteProps<T, Multi>, typeof styles>) => IJSX)
+}
+
+Autocomplete.defaultProps = {
+  getLabel: defaultGetLabel,
+  searchInputProps: {},
+  selectedIcon: 'check' as AppIcon,
+  searchComponent: SearchInput,
+  placeholder: 'Select',
+  searchable: true,
+  multiple: false,
+  selectable: false,
+} as Partial<AutocompleteProps<any, boolean>>
+
+MobileStyleRegistry.registerComponent(Autocomplete)

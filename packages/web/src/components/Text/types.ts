@@ -1,14 +1,14 @@
-import { StylesOf, ComponentVariants } from '@codeleap/common'
-import { MotionProps } from 'framer-motion'
 import { ComponentPropsWithoutRef, ElementType } from 'react'
-import { TextComposition, TextPresets } from './styles'
+import { TextComposition } from './styles'
+import { AnyRecord, StyledProp } from '@codeleap/styles'
+import { MotionProps } from 'framer-motion'
 
-export type TextProps<T extends ElementType> = ComponentPropsWithoutRef<T> &
-  ComponentVariants<typeof TextPresets> & {
-    component?: T
+export type TextProps<T extends ElementType = 'p'> =
+  Omit<ComponentPropsWithoutRef<T>, 'style'> &
+  {
+    component?: ElementType<AnyRecord>
     text?: string
-    styles?: StylesOf<TextComposition>
-    msg?: string
+    style?: StyledProp<TextComposition>
     debugName?: string
     debounce?: number
     pressDisabled?: boolean

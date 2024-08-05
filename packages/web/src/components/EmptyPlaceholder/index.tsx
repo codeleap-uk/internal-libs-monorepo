@@ -2,131 +2,111 @@ import React from 'react'
 import { Icon } from '../Icon'
 import { View } from '../View'
 import { Text } from '../Text'
-import { ActivityIndicator, ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
-import { EmptyPlaceholderComposition, EmptyPlaceholderPresets } from './styles'
-import {
-  ComponentVariants,
-  getNestedStylesByKey,
-  IconPlaceholder,
-  StylesOf,
-  TypeGuards,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
-import { ComponentCommonProps } from '../../types'
+import { ActivityIndicator } from '../ActivityIndicator'
+import { TypeGuards } from '@codeleap/common'
+import { EmptyPlaceholderProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 
 export * from './styles'
-
-type RenderEmptyProps = {
-  emptyText: string | React.ReactElement
-  emptyIconName?: IconPlaceholder
-  styles: StylesOf<EmptyPlaceholderComposition> & {
-    activityIndicatorStyles: StylesOf<ActivityIndicatorComposition>
-  }
-}
-
-export type EmptyPlaceholderProps = ComponentVariants<typeof EmptyPlaceholderPresets> & {
-  itemName?: string
-  title?: React.ReactElement | string
-  description?: React.ReactElement | string
-  icon?: IconPlaceholder | ((props: EmptyPlaceholderProps) => JSX.Element) | null
-  loading?: boolean
-  styles?: StylesOf<EmptyPlaceholderComposition>
-  style?: React.CSSProperties
-  renderEmpty?: (props: RenderEmptyProps) => JSX.Element
-  wrapperProps?: Partial<typeof View>
-  imageWrapperProps?: Partial<typeof View>
-  indicatorProps?: Partial<ActivityIndicatorProps>
-} & ComponentCommonProps
-
-const defaultProps: Partial<EmptyPlaceholderProps> = {}
+export * from './types'
 
 export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
-  const allProps = {
-    ...EmptyPlaceholder.defaultProps,
-    ...props,
-  }
-
   const {
     itemName,
     title,
     loading,
     description,
-    styles = {},
     style,
-    variants = [],
-    responsiveVariants = {},
-    icon: IconEmpty = null,
-    renderEmpty: RenderEmpty = null,
-    wrapperProps = {},
-    imageWrapperProps = {},
-    indicatorProps = {},
+    icon: IconEmpty,
+    renderEmpty: RenderEmpty,
+    image,
+    imageProps,
+    wrapperProps,
+    imageWrapperProps,
+    indicatorProps,
     debugName,
-  } = allProps
-  
+  } = {
+    ...EmptyPlaceholder.defaultProps,
+    ...props,
+  }
+
+  const styles = useStylesFor(EmptyPlaceholder.styleRegistryName, style)
+
   const emptyText = title || (itemName && `No ${itemName} found.`) || 'No items.'
 
-  const variantStyles = useDefaultComponentStyle<'u:EmptyPlaceholder', typeof EmptyPlaceholderPresets>('u:EmptyPlaceholder', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
-
-  const activityIndicatorStyles = React.useMemo(() => {
-    return getNestedStylesByKey('loader', variantStyles)
-  }, [variantStyles])
+  const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 
   const _Image = React.useMemo(() => {
+    if (TypeGuards.isString(image)) {
+      return <img
+        {...imageProps}
+        src={image as HTMLImageElement['src']}
+        // @ts-expect-error
+        css={styles.image}
+      />
+    }
+
     if (TypeGuards.isNil(IconEmpty)) return null
 
     if (TypeGuards.isString(IconEmpty)) {
-      return <Icon debugName={debugName} name={IconEmpty as IconPlaceholder} forceStyle={variantStyles.icon} />
+      return <Icon debugName={debugName} name={IconEmpty as AppIcon} forceStyle={styles.icon} />
     } else if (React.isValidElement(IconEmpty)) {
       return <IconEmpty {...props} />
     }
-  }, [IconEmpty])
+  }, [IconEmpty, image])
 
   if (loading) {
     return (
-      <View css={[variantStyles.wrapper, variantStyles['wrapper:loading']]}>
-        <ActivityIndicator debugName={debugName} {...indicatorProps} styles={activityIndicatorStyles}/>
+      <View style={[styles.wrapper, styles['wrapper:loading']]}>
+        <ActivityIndicator debugName={debugName} {...indicatorProps} style={activityIndicatorStyles} />
       </View>
     )
   }
 
   if (!TypeGuards.isNil(RenderEmpty)) {
-    const _emptyProps = {
-      emptyText,
-      emptyIconName: IconEmpty as IconPlaceholder,
-      styles: {
-        ...variantStyles,
-        activityIndicatorStyles,
-      },
-    }
-
     return (
-      <View {...wrapperProps} css={[variantStyles.wrapper, style]}>
-        <RenderEmpty {..._emptyProps}/>
+      <View {...wrapperProps} style={styles.wrapper}>
+        <RenderEmpty
+          emptyText={emptyText}
+          emptyIconName={IconEmpty as AppIcon}
+          styles={{
+            ...styles,
+            activityIndicatorStyles,
+          }}
+        />
       </View>
     )
   }
-  
+
   return (
-    <View {...wrapperProps} css={[variantStyles.wrapper, style]}>
-      <View {...imageWrapperProps} css={variantStyles.imageWrapper}>
+    <View {...wrapperProps} style={styles.wrapper}>
+      <View {...imageWrapperProps} style={styles.imageWrapper}>
         {_Image}
       </View>
 
-      {TypeGuards.isString(emptyText) 
-        ? <Text debugName={debugName} text={emptyText} css={variantStyles.title}/>
+      {TypeGuards.isString(emptyText)
+        ? <Text debugName={debugName} text={emptyText} style={styles.title} />
         : React.isValidElement(emptyText) ? emptyText : null
       }
-      
-      {TypeGuards.isString(description) 
-        ? <Text debugName={debugName} text={description} css={variantStyles.description}/>
+
+      {TypeGuards.isString(description)
+        ? <Text debugName={debugName} text={description} style={styles.description} />
         : React.isValidElement(description) ? description : null
       }
     </View>
   )
 }
 
-EmptyPlaceholder.defaultProps = defaultProps
+EmptyPlaceholder.styleRegistryName = 'EmptyPlaceholder'
+EmptyPlaceholder.elements = ['wrapper', 'loader', 'title', 'description', 'image', 'imageWrapper', 'icon']
+EmptyPlaceholder.rootElement = 'wrapper'
+
+EmptyPlaceholder.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return EmptyPlaceholder as (props: StyledComponentProps<EmptyPlaceholderProps, typeof styles>) => IJSX
+}
+
+EmptyPlaceholder.defaultProps = {} as Partial<EmptyPlaceholderProps>
+
+WebStyleRegistry.registerComponent(EmptyPlaceholder)
