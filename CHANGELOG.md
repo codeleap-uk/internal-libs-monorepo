@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.25.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.24.3...v3.25.2) (2024-08-05)
+
+
+### Bug Fixes
+
+* **web:** infinite loading when uploading large images on Firefox ([f5568cf](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f5568cfc7ffafd811d0a96789f29313e815a2a24))
+
 ### [3.24.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.24.2...v3.24.3) (2024-07-25)
 
 ### [3.24.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.24.1...v3.24.2) (2024-06-14)
