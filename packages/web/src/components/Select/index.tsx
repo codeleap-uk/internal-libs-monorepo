@@ -29,7 +29,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
     debugName,
   } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.style ?? {}) })
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (props?.data?.itemProps?.style ?? itemProps?.style ?? {}) })
 
   let _Component = null
 
@@ -41,8 +41,8 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
-        style={styles}
         {...props?.data?.itemProps}
+        style={styles}
       />
     )
   } else {
