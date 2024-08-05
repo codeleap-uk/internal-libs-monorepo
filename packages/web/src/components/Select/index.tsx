@@ -20,7 +20,7 @@ export * from './types'
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
   const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused, debugName } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.styles ?? {}) })
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (props?.data?.itemProps?.styles ?? itemProps?.styles ?? {}) })
 
   let _Component = null
 
@@ -32,6 +32,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
+        {...props?.data?.itemProps}
         styles={styles}
       />
     )
@@ -174,7 +175,7 @@ const defaultProps: Partial<SelectProps> = {
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
   <T extends string | number = string, Multi extends boolean = false>
-    (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
+  (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
 
     type Option = FormTypes.Option<T>
 

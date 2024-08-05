@@ -1,11 +1,11 @@
-import { ComponentVariants, FormTypes, StylesOf, yup } from '@codeleap/common'
+import { ComponentVariants, FormTypes, PropsOf, StylesOf, yup } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from '@emotion/react'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
 import { ComponentCommonProps } from '../../types'
-import { ButtonProps } from '../Button'
+import { Button, ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
 import { SelectPresets, SelectComposition, OptionState } from './styles'
 
@@ -27,7 +27,7 @@ type DynamicSelectProps<T, Multi extends boolean> =
   >)
 
 export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'styles' | 'variants'> &{
-  options: FormTypes.Options<T>
+  options: FormTypes.Options<T> & { itemProps?: PropsOf<typeof Button> }
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
@@ -45,6 +45,7 @@ export type ComponentPartProps = {
 export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonProps & {
   optionsStyles: (state: OptionState) => OptionState['baseStyles']
   selectedIcon?: string
+  data: OptionProps['data'] & { itemProps?: PropsOf<typeof Button>}
   itemProps?: ButtonProps
   styles?: OptionState['baseStyles']
 }
@@ -96,9 +97,9 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     limit?: number
     loadInitialValue?: boolean
     loadingMessage?: string
-    selectedOption?: { label: FormTypes.Label; value: T; } | SelectValue<T, Multi>
+    selectedOption?: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>
     selectRef?: MutableRefObject<any>
-    setSelectedOption?: (value: { label: FormTypes.Label; value: T; } | SelectValue<T, Multi>) => void
+    setSelectedOption?: (value: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>) => void
   } & Omit<
     ReactSelectProps<T, Multi>,
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |
