@@ -20,7 +20,8 @@ export * from './types'
 const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
   const { isSelected, optionsStyles, label, selectedIcon, component = null, itemProps = {} as TCustomOption['itemProps'], isFocused, debugName } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.styles ?? {}) })
+  // @ts-ignore
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (props?.data?.itemProps?.style ?? itemProps?.style ?? {}) })
 
   let _Component = null
 
@@ -33,6 +34,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         debugName={debugName}
         {...itemProps}
         styles={styles}
+        {...props?.data?.itemProps}
       />
     )
   } else {

@@ -1,11 +1,11 @@
-import { ComponentVariants, FormTypes, StylesOf, yup } from '@codeleap/common'
+import { ComponentVariants, FormTypes, PropsOf, StylesOf, yup } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/css'
 import { CSSObject } from '@emotion/react'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
 import { ComponentCommonProps } from '../../types'
-import { ButtonProps } from '../Button'
+import { Button, ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
 import { SelectPresets, SelectComposition, OptionState } from './styles'
 
@@ -27,7 +27,7 @@ type DynamicSelectProps<T, Multi extends boolean> =
   >)
 
 export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'styles' | 'variants'> &{
-  options: FormTypes.Options<T>
+  options: FormTypes.Options<T> & { itemProps?: PropsOf<typeof Button> }
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
@@ -47,6 +47,7 @@ export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonPr
   selectedIcon?: string
   itemProps?: ButtonProps
   styles?: OptionState['baseStyles']
+  data: OptionProps['data'] & { itemProps?: PropsOf<typeof Button>}
 }
 
 type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Element) | JSX.Element
