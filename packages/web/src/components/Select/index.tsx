@@ -33,8 +33,8 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
-        styles={styles}
         {...props?.data?.itemProps}
+        styles={styles}
       />
     )
   } else {
@@ -176,7 +176,7 @@ const defaultProps: Partial<SelectProps> = {
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
   <T extends string | number = string, Multi extends boolean = false>
-    (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
+  (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
 
     type Option = FormTypes.Option<T>
 
