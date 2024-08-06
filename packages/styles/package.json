@@ -22,8 +22,8 @@
     "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
-    "typescript": "5.0.4",
-    "react": "18.1.0"
+    "react": "18.1.0",
+    "typescript": "5.0.4"
   },
   "dependencies": {
     "@fastify/deepmerge": "1.3.0",

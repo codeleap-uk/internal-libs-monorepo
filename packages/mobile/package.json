@@ -9,8 +9,8 @@
     "directory": "packages/mobile"
   },
   "devDependencies": {
-    "@codeleap/config": "*",
-    "@codeleap/common": "*"
+    "@codeleap/common": "*",
+    "@codeleap/config": "*"
   },
   "scripts": {
     "build": "tsc --build",
@@ -27,19 +27,19 @@
     "@react-navigation/native-stack": "6.9.8",
     "@react-navigation/stack": "6.3.11",
     "react": "18.1.0",
-    "react-native": "0.73.8",
+    "react-native": "0.74.5",
+    "react-native-avoid-softinput": "3.1.5",
     "react-native-calendars": "1.1293.0",
     "react-native-date-picker": "4.2.13",
     "react-native-device-info": "10.3.0",
     "react-native-fast-image": "8.6.3",
     "react-native-gesture-handler": "2.9.0",
     "react-native-image-crop-picker": "0.37.2",
-    "react-native-super-grid": "4.6.1",
     "react-native-image-viewing": "0.2.2",
     "react-native-keyboard-aware-scroll-view": "0.9.5",
-    "typescript": "5.0.4",
-    "react-native-avoid-softinput": "3.1.5",
-    "react-native-mmkv": "2.12.2"
+    "react-native-mmkv": "2.12.2",
+    "react-native-super-grid": "4.6.1",
+    "typescript": "5.0.4"
   },
   "dependencies": {
     "@gorhom/portal": "1.0.14",

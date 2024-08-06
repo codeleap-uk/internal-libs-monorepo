@@ -11,7 +11,6 @@
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "styles": "node ../../node_modules/@codeleap/common/dist/scripts/createStyleSheets",
     "license-crawler": "npm-license-crawler --json ./src/app/license.json --onlyDirectDependencies",
-    "postinstall": "yarn patch-package && node ./postInstall.js && yarn run license-crawler",
     "deploy": "gatsby-plugin-s3 deploy",
     "build-web": "node ./scripts/updates.js && gatsby build",
     "dev": "node ./scripts/updates.js && gatsby develop",
@@ -82,12 +81,12 @@
     "react-particles": "^2.2.3",
     "react-photo-view": "^1.2.3",
     "react-redux": "^8.0.5",
+    "react-reveal": "1.2.2",
     "react-toastify": "^8.2.0",
     "tsparticles": "^2.2.3",
     "tsparticles-engine": "^2.2.3",
     "url-parse": "^1.5.10",
-    "yup": "^0.32.11",
-    "react-reveal": "1.2.2"
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "7.20.12",

@@ -41,19 +41,19 @@
     "husky": "^8.0.2",
     "install": "^0.13.0",
     "npm-license-crawler": "^0.2.1",
+    "openai": "^4.6.0",
+    "patch-package": "8.0.0",
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
     "syncpack": "^9.8.4",
     "ts-node-dev": "^1.1.8",
     "typedoc": "0.25.1",
-    "typescript": "5.0.4",
-    "openai": "^4.6.0",
     "typedoc-json-parser": "^8.2.0",
-    "patch-package": "8.0.0"
+    "typescript": "5.0.4"
   },
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "yarn@1.22.17"
+  "packageManager": "yarn@3.6.4"
 }
