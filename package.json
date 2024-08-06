@@ -3,12 +3,10 @@
   "version": "0.0.2",
   "private": true,
   "repository": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ]
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "postinstall": "node ./scripts/postInstall.js && yarn patch-package",
     "build": "turbo run build --filter='./packages/*'",
