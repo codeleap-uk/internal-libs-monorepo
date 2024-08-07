@@ -13,7 +13,12 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   const { emptyIndexes, numberPhotosMissing } = useMemo(() => {
     const copyPhotos = [...photos]
 
-    const emptyIndexes = copyPhotos.map((photo, index) => !!photo?.filename ? null : index).filter(v => typeof v === 'number')
+    const emptyIndexes = copyPhotos.reduce((indexes, photo, index) => {
+      if (!photo?.filename) {
+        indexes.push(index)
+      }
+      return indexes
+    }, [])
 
     const numberPhotosMissing = emptyIndexes?.length
 
@@ -25,18 +30,18 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
 
   const sortPhotos = (_unorderedPhotos: T[]): T[] => {
     const unorderedPhotos = [..._unorderedPhotos]
-    const newPhotos = []
-    const missingPhotos = []
 
-    for (const unorderedPhoto of unorderedPhotos) {
-      if (!!unorderedPhoto?.filename) {
-        newPhotos.push(unorderedPhoto)
-      } else {
-        missingPhotos.push(unorderedPhoto)
-      }
-    }
+    const [newPhotos, emptyPhotos] = unorderedPhotos.reduce(
+      ([newPhotos, emptyPhotos], photo) => {
+        !!photo?.filename ? newPhotos.push(photo) : emptyPhotos.push(photo)
+        return [newPhotos, emptyPhotos]
+      },
+      [[], []] as [T[], T[]]
+    )
 
-    return [...newPhotos, ...missingPhotos]
+    const photosSorted = newPhotos.concat(emptyPhotos)
+
+    return photosSorted
   }
 
   const handleOpenPicker = async (pickerType: FileInputImageSource, photo: T, order: number) => {
@@ -52,15 +57,18 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       logger.error('Error opening file picker:', error)
     }
 
+    if (files?.length <= 0) return null
+
     const isMultiple = files?.length > 1 && !isEdit
 
     const newPhotos = [...photos]
 
     if (isMultiple) {
-      for (const idx in files) {
-        const file = files?.[idx]
+      for (const fileIndex in files) {
+        const file = files?.[fileIndex]
+        const order = emptyIndexes[fileIndex]
 
-        newPhotos[emptyIndexes[idx]] = {
+        newPhotos[order] = {
           filename: file?.file?.uri
         } as T
       }
@@ -72,9 +80,9 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       } as T
     }
 
-    const sortedPhotos = sortPhotos(newPhotos)
+    const photosSorted = sortPhotos(newPhotos)
 
-    onChangePhotos(sortedPhotos)
+    onChangePhotos(photosSorted)
   }
 
   const handleDeletePhoto = (photo: T, order: number) => {
@@ -84,9 +92,9 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       filename: null,
     } as T
 
-    const sortedPhotos = sortPhotos(newPhotos)
+    const photosSorted = sortPhotos(newPhotos)
 
-    onChangePhotos(sortedPhotos)
+    onChangePhotos(photosSorted)
   }
 
   const handlePressPhoto = (currentData: T[], photo: T, order: number) => {
@@ -104,9 +112,9 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   }
 
   const onChangePhotosOrder = (newData: T[]) => {
-    const sortedPhotos = sortPhotos(newData)
+    const photosSorted = sortPhotos(newData)
 
-    onChangePhotos(sortedPhotos)
+    onChangePhotos(photosSorted)
   }
 
   return {

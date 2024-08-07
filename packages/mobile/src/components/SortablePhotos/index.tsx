@@ -37,6 +37,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     multiple,
     pickerConfig,
     emptyIcon,
+    disableDragDropEmptyItems,
     itemWidth: _itemWidth,
     itemHeight: _itemHeight,
     width: _parentWidth,
@@ -89,7 +90,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
         marginChildrenTop={childrenMargin}
         onDataChange={onChangePhotosOrder}
         onClickItem={handlePressPhoto}
-        fixedItems={emptyIndexes}
+        fixedItems={disableDragDropEmptyItems ? emptyIndexes : undefined}
         {...rest}
         renderItem={(item, order) => (
           <RenderItem
@@ -118,6 +119,7 @@ SortablePhotos.defaultProps = {
   numColumns: 3,
   renderPhoto: DefaultItem,
   multiple: true,
+  disableDragDropEmptyItems: true,
   gap: 16,
   emptyIcon: 'plus',
   pickerConfig: {

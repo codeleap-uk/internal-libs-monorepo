@@ -44,5 +44,6 @@ export type SortablePhotosProps<T extends SortablePhoto> = {
   scaleDuration?: number
   slideDuration?: number
   emptyIcon?: AppIcon
+  disableDragDropEmptyItems?: boolean
   style?: StyledProp<SortablePhotosComposition>
 }
