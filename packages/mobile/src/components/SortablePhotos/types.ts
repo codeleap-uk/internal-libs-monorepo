@@ -46,4 +46,9 @@ export type SortablePhotosProps<T extends SortablePhoto> = {
   emptyIcon?: AppIcon
   disableDragDropEmptyItems?: boolean
   style?: StyledProp<SortablePhotosComposition>
+  modalTitle?: string
+  modalBody?: string
+  modalLibraryText?: string
+  modalCameraText?: string
+  modalDeleteText?: string
 }

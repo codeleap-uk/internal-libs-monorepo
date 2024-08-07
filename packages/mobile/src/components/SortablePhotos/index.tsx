@@ -29,6 +29,11 @@ const DefaultItem = <T extends SortablePhoto>(props: SortableItemProps<T>) => {
 const screenWidth = Dimensions.get('screen').width
 
 export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
+  const allProps = {
+    ...SortablePhotos.defaultProps,
+    ...props,
+  }
+
   const {
     numColumns,
     renderPhoto: RenderItem,
@@ -43,7 +48,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     width: _parentWidth,
     style,
     ...rest
-  } = props
+  } = allProps
 
   const styles = useStylesFor(SortablePhotos.styleRegistryName, style)
 
@@ -53,7 +58,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     numberPhotosMissing,
     emptyIndexes,
     onChangePhotosOrder,
-  } = useSortablePhotos<T>(props)
+  } = useSortablePhotos<T>(allProps)
 
   const defaultParentWidth = screenWidth - (gap * 2)
   const defaultItemWidth = (defaultParentWidth / numColumns) - gap
@@ -122,6 +127,11 @@ SortablePhotos.defaultProps = {
   disableDragDropEmptyItems: true,
   gap: 16,
   emptyIcon: 'plus',
+  modalTitle: 'Photos',
+  modalBody: null,
+  modalLibraryText: 'Choose from gallery',
+  modalCameraText: 'Take a photo',
+  modalDeleteText: 'Remove photo',
   pickerConfig: {
     cropping: true,
     showCropFrame: true,

@@ -5,7 +5,16 @@ import { SortablePhoto, SortablePhotosProps } from './types'
 const SortableAlert = CreateOSAlert()
 
 export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
-  const { photos, onChangePhotos, onPressPhoto } = props
+  const { 
+    photos, 
+    onChangePhotos, 
+    onPressPhoto,
+    modalBody,
+    modalTitle,
+    modalCameraText,
+    modalDeleteText,
+    modalLibraryText,
+  } = props
 
   const input = useFileInput()
   const { logger } = useGlobalContext()
@@ -69,6 +78,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
         const order = emptyIndexes[fileIndex]
 
         newPhotos[order] = {
+          ...newPhotos[order],
           filename: file?.file?.uri
         } as T
       }
@@ -76,6 +86,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       const file = files?.[0]
 
       newPhotos[order] = {
+        ...newPhotos[order],
         filename: file?.file?.uri
       } as T
     }
@@ -89,6 +100,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     const newPhotos = [...photos]
 
     newPhotos[order] = {
+      ...newPhotos[order],
       filename: null,
     } as T
 
@@ -98,14 +110,16 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   }
 
   const handlePressPhoto = (currentData: T[], photo: T, order: number) => {
-    SortableAlert.ask({
-      title: 'Open',
-      body: 'body',
+    SortableAlert.custom({
+      title: modalTitle,
+      body: modalBody,
       options: [
-        { text: 'Library', onPress: () => handleOpenPicker('library', photo, order) },
-        { text: 'Camera', onPress: () => handleOpenPicker('camera', photo, order) },
-        !!photo?.filename && { text: 'Delete', onPress: () => handleDeletePhoto(photo, order) }
-      ]
+        { text: modalLibraryText, onPress: () => handleOpenPicker('library', photo, order) },
+        { text: modalCameraText, onPress: () => handleOpenPicker('camera', photo, order) },
+        !!photo?.filename && { text: modalDeleteText, onPress: () => handleDeletePhoto(photo, order) },
+      ],
+      // @ts-expect-error
+      isRow: false,
     })
 
     onPressPhoto?.(currentData, photo, order)
