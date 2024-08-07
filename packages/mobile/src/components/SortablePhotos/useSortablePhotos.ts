@@ -1,4 +1,4 @@
-import { CreateOSAlert, useMemo } from '@codeleap/common'
+import { CreateOSAlert, useGlobalContext, useMemo } from '@codeleap/common'
 import { FileInputImageSource, useFileInput } from '../FileInput'
 import { SortablePhotosProps } from './types'
 
@@ -8,11 +8,12 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
   const { photos, onChangePhotos, onPressItem } = props
 
   const input = useFileInput()
+  const { logger } = useGlobalContext()
 
   const numberPhotosMissing = useMemo(() => {
     const copyPhotos = [...photos]
 
-    const missingSlots = copyPhotos?.filter(photo => !!photo?.filename)
+    const missingSlots = copyPhotos?.filter(photo => !photo?.filename)
 
     return missingSlots?.length
   }, [JSON.stringify(photos)])
@@ -36,22 +37,30 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
   const handleOpenPicker = async (pickerType: FileInputImageSource, item: any, order: number) => {
     let files = []
 
+    const isEdit = !!item?.filename
+
     try {
-      files = await input?.openFilePicker(pickerType)
+      files = await input?.openFilePicker(pickerType, { multiple: isEdit ? false : props?.multiple })
     } catch (error) {
-      console.error('Error opening file picker:', error)
+      logger.error('Error opening file picker:', error)
     }
 
-    const isMultiple = files?.length > 1
-
-    console.log('files', files)
+    const isMultiple = files?.length > 1 && !isEdit
 
     const newPhotos = [...photos]
 
     if (isMultiple) {
+      const indexes = newPhotos.map((photo, index) => !!photo?.filename ? null : index).filter(v => !!v)
 
+      for (const idx in files) {
+        const file = files?.[idx]
+
+        newPhotos[indexes[idx]] = {
+          filename: file?.file?.uri
+        }
+      }
     } else {
-      const file = files[0]
+      const file = files?.[0]
 
       newPhotos[order] = {
         filename: file?.file?.uri

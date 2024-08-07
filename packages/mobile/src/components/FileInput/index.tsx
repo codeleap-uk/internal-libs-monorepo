@@ -95,12 +95,12 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
     }
   }
 
-  const openFilePicker = async (imageSource = null) => {
+  const openFilePicker = async (imageSource = null, options = {}) => {
     if (type === 'image') {
       if (imageSource === 'camera') {
-        onPress('camera')
+        onPress('camera', options)
       } else if (imageSource === 'library') {
-        onPress('library')
+        onPress('library', options)
       } else {
         OSAlert.ask({
           title: 'Change Image',
@@ -150,8 +150,8 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
   }
 
   useImperativeHandle(ref, () => ({
-    openFilePicker: (imageSource: FileInputImageSource = null) => {
-      openFilePicker(imageSource)
+    openFilePicker: (imageSource: FileInputImageSource = null, options: Partial<Options> = {}) => {
+      openFilePicker(imageSource, options)
       return new Promise<FileResult[]>((resolve) => {
         resolveWithFile.current = resolve
       })
@@ -166,8 +166,8 @@ export const FileInput = _FileInput as unknown as ((props: FileInputProps) => JS
 export const useFileInput = () => {
   const inputRef = useRef<FileInputRef>(null)
 
-  const openFilePicker = (imageSource: FileInputImageSource = null): Promise<FileResult[]> => {
-    return inputRef.current?.openFilePicker(imageSource)
+  const openFilePicker = (imageSource: FileInputImageSource = null, options: Partial<Options> = {}): Promise<FileResult[]> => {
+    return inputRef.current?.openFilePicker(imageSource, options)
   }
 
   return {

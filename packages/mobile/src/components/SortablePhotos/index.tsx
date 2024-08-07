@@ -98,7 +98,7 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
 SortablePhotos.defaultProps = {
   numColumns: 3,
   renderItem: DefaultItem,
-  multiple: false,
+  multiple: true,
   gap: 16,
   pickerConfig: {
     cropping: true,
