@@ -4,46 +4,17 @@ import { ReactElement, useRef } from 'react'
 import { FileInput, FileInputImageSource, useFileInput } from '../FileInput'
 import { Icon } from '../Icon'
 import { Image } from '../Image'
+import { Dimensions, View } from 'react-native'
+import { DragSortableView } from 'react-native-drag-sort'
+import { SortableItemProps, SortablePhotosProps } from './types'
 
-import { View } from 'react-native'
-import DraggableGrid from 'react-native-draggable-grid'
-
-type Photo = {
-  filename: any
-}
-
-type ItemProps = {
-  item: Photo
-  order: number
-  height: number
-  width: number
-}
-
-type SortablePhotosProps = {
-  numColumns?: number
-  renderItem: (props: ItemProps) => ReactElement
-  photos: Photo[]
-  setPhotos: any
-  onDragStart?: () => void
-  onDragEnd?: () => void
-  onItemPress?: () => void
-  itemHeight: number
-  itemWidth: number
-}
-
-const pickerOptions = {
-  multiple: true,
-  maxFiles: 1,
-  cropping: true,
-  showCropFrame: true,
-  compressImageMaxHeight: 1700,
-  compressImageMaxWidth: 1700,
-  compressImageQuality: 0.8,
-}
+export * from './types'
 
 const SortableAlert = CreateOSAlert()
 
-const DefaultItem = ({ item, order, width, height }: ItemProps) => {
+const DefaultItem = (props: SortableItemProps) => {
+  const { item, order, width, height } = props
+
   // if (!!item?.filename) {
   //   return (
   //     <View style={{ width, height }}>
@@ -53,7 +24,7 @@ const DefaultItem = ({ item, order, width, height }: ItemProps) => {
   // }
 
   return (
-    <View key={item.key} style={{ width, height, backgroundColor: '#0002' }}>
+    <View style={{ width, height, backgroundColor: '#0002' }}>
       {/* <Icon name={'user' as AppIcon} color='red' /> */}
     </View>
   )
@@ -66,15 +37,33 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
     photos,
     onDragEnd,
     onDragStart,
-    onItemPress,
-    itemHeight,
+    onPressItem,
+    gap,
     itemWidth,
+    itemHeight = itemWidth,
+    width: sortableWidth,
     setPhotos,
+    multiple,
+    maxFiles,
+    pickerConfig,
+    ...rest
   } = props
+
+  const photoWidth = (sortableWidth - (gap * (numColumns * 2))) / numColumns
+
+  console.log(photoWidth)
+  console.log(itemWidth)
 
   const pressedPhotoRef = useRef(null)
 
   const input = useFileInput()
+
+  const fileInputPickerOptions = {
+    ...SortablePhotos.defaultProps.pickerConfig,
+    ...pickerConfig,
+    multiple,
+    maxFiles,
+  }
 
   const handleOpenPicker = async (pickerType: FileInputImageSource) => {
     let files = []
@@ -104,25 +93,45 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
   }
 
   return (
-    <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
+    <View style={{ width: '100%', height: '100%', backgroundColor: '#0002', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <FileInput 
         mode='hidden'
         ref={input.ref}
-        pickerOptions={pickerOptions}
+        pickerOptions={fileInputPickerOptions}
       />
 
-      <DraggableGrid<Photo>
-        numColumns={numColumns}
-        data={photos}
-        renderItem={(item, order) => <RenderItem key={item.key} width={itemWidth} height={itemHeight} item={item} order={order} />}
-        onDragRelease={(items) => setPhotos(items)}
-        onItemPress={handlePressItem}
+      <DragSortableView
+        dataSource={photos}
+        renderItem={(item, order) => <RenderItem key={item.key} width={photoWidth} height={photoWidth} item={item} order={order} />}
+        onClickItem={handlePressItem}
+        childrenHeight={photoWidth}
+        childrenWidth={photoWidth}
+        parentWidth={sortableWidth}
+        marginChildrenBottom={gap}
+        marginChildrenLeft={gap}
+        marginChildrenRight={gap}
+        marginChildrenTop={gap}
+        {...rest}
       />
     </View>
   )
 }
 
+// numColumns
+// gap
+
 SortablePhotos.defaultProps = {
   numColumns: 3,
   renderItem: DefaultItem,
+  multiple: false,
+  maxFiles: 1,
+  gap: 8,
+  width: Dimensions.get('window').width - 16,
+  pickerConfig: {
+    cropping: true,
+    showCropFrame: true,
+    compressImageMaxHeight: 1700,
+    compressImageMaxWidth: 1700,
+    compressImageQuality: 0.8,
+  },
 } as Partial<SortablePhotosProps>
