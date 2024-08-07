@@ -23,7 +23,7 @@ export type SortablePhotosProps = {
   numColumns?: number
   renderItem: (props: SortableItemProps) => ReactElement
   photos: Photo[]
-  setPhotos: any
+  onChangePhotos: (newPhotos: any[]) => void
   gap?: number
   itemHeight?: number
   itemWidth: number
@@ -35,7 +35,6 @@ export type SortablePhotosProps = {
   delayLongPress?: number
   pickerConfig?: SortablePhotosPickerConfig
   multiple?: boolean
-  maxFiles?: number
   maxScale?: number
   minOpacity?: number
   scaleDuration?: number

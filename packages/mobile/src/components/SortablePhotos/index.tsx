@@ -10,7 +10,7 @@ import { useSortablePhotos } from './useSortablePhotos'
 export * from './types'
 
 const DefaultItem = (props: SortableItemProps) => {
-  const { item, order, width, height } = props
+  const { item, width, height } = props
 
   return (
     <View style={{ width, height, backgroundColor: '#0002', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -30,11 +30,8 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
     numColumns,
     renderItem: RenderItem,
     photos,
-    onPressItem,
     gap,
-    setPhotos,
     multiple,
-    maxFiles,
     pickerConfig,
     itemWidth: _itemWidth,
     itemHeight: _itemHeight,
@@ -44,7 +41,9 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
 
   const {
     input,
-    handlePressItem,
+    handlePressPhoto,
+    numberPhotosMissing,
+    onChangePhotosOrder,
   } = useSortablePhotos(props)
 
   const defaultParentWidth = windowWidth - (gap * 2)
@@ -60,7 +59,7 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
     ...SortablePhotos.defaultProps.pickerConfig,
     ...pickerConfig,
     multiple,
-    maxFiles,
+    maxFiles: numberPhotosMissing,
   }
 
   return (
@@ -80,8 +79,8 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
         marginChildrenLeft={childrenMargin}
         marginChildrenRight={childrenMargin}
         marginChildrenTop={childrenMargin}
-        onDataChange={(newData) => console.log('newData', newData)}
-        onClickItem={handlePressItem}
+        onDataChange={onChangePhotosOrder}
+        onClickItem={handlePressPhoto}
         {...rest}
         renderItem={(item, order) => (
           <RenderItem
@@ -100,7 +99,6 @@ SortablePhotos.defaultProps = {
   numColumns: 3,
   renderItem: DefaultItem,
   multiple: false,
-  maxFiles: 1,
   gap: 16,
   pickerConfig: {
     cropping: true,
