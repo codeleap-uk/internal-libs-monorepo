@@ -1,7 +1,6 @@
-
 export type ExtractParams<T extends string> =
-  T extends `${infer _Start}{{${infer Param}}}${infer Rest}` 
-    ? Param | ExtractParams<Rest> 
+  T extends `${infer _Start}{{${infer Param}}}${infer Rest}`
+    ? Param | ExtractParams<Rest>
     : never
 
 type Params<T> = {
@@ -10,8 +9,8 @@ type Params<T> = {
 
 // @ts-ignore
 type ExtractRoutes<T, PM, Prefix extends string = ''> = {
-  [K in keyof T & string]: 
-    T[K] extends string 
+  [K in keyof T & string]:
+    T[K] extends string
       ? {
         // @ts-ignore
         [P in `${Prefix}${Prefix extends '' ? '' : '.'}${K}`]: PM[K]
@@ -19,7 +18,7 @@ type ExtractRoutes<T, PM, Prefix extends string = ''> = {
       : ExtractRoutes<T[K], PM[K], `${Prefix}${Prefix extends '' ? '' : '.'}${K}`>
 }[keyof T]
 
-type UnionToIntersection<U> = 
+type UnionToIntersection<U> =
   (U extends any ? (x: U)=> void : never) extends ((x: infer I)=>void) ? I : never
 
 export type Routes<T> = UnionToIntersection<ExtractRoutes<T, Params<T>>>
@@ -32,7 +31,7 @@ export type RouteParams = {
   [x: string]: string
 }
 
-export type Navigator<O extends object = {}> = (path: RoutePath, options: O) => void
+export type Navigator<O extends object = {}, C extends Record<string, any> = {}> = (path: RoutePath, options: O, context?: C) => void
 
 export type AnyValue = {
   [key: string]: any
@@ -40,8 +39,8 @@ export type AnyValue = {
 
 export type HistoryData = {
   origin: string
-  date: Date,
-  path: RoutePath,
+  date: Date
+  path: RoutePath
   metadata: any
   info: any
 }
