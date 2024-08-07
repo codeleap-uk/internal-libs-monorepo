@@ -47,7 +47,7 @@
     "ts-node-dev": "^1.1.8",
     "typedoc": "0.25.1",
     "typescript": "5.0.4",
-    "openai": "^4.6.0",
+    "openai": "4.33.0",
     "typedoc-json-parser": "^8.2.0",
     "patch-package": "8.0.0"
   },
