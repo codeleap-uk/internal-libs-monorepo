@@ -1,14 +1,18 @@
+import { AppIcon, ICSS, StyledProp } from '@codeleap/styles'
 import { ReactElement } from 'react'
+import { SortablePhotosComposition } from './styles'
 
 export type SortablePhoto = {
   filename: string | null
 }
 
 export type SortableItemProps<T extends SortablePhoto> = {
-  item: T
+  photo: T
   order: number
   height: number
   width: number
+  styles: Record<SortablePhotosComposition, ICSS>
+  emptyIcon: AppIcon
 }
 
 export type SortablePhotosPickerConfig = {
@@ -21,17 +25,17 @@ export type SortablePhotosPickerConfig = {
 
 export type SortablePhotosProps<T extends SortablePhoto> = {
   numColumns?: number
-  renderItem: (props: SortableItemProps<T>) => ReactElement
+  renderPhoto?: (props: SortableItemProps<T>) => ReactElement
   photos: T[]
   onChangePhotos: (newPhotos: T[]) => void
   gap?: number
   itemHeight?: number
-  itemWidth: number
+  itemWidth?: number
   width?: number
-  onPressItem?: (data: T[], item: T, order: number) => void
+  onPressPhoto?: (data: T[], photo: T, order: number) => void
   onDragStart?: (fromIndex: number) => void
   onDragEnd?: (fromIndex: number, toIndex: number) => void
-  keyExtractor?: (item: T, order: number) => any
+  keyExtractor?: (photo: T, order: number) => any
   delayLongPress?: number
   pickerConfig?: SortablePhotosPickerConfig
   multiple?: boolean
@@ -39,4 +43,6 @@ export type SortablePhotosProps<T extends SortablePhoto> = {
   minOpacity?: number
   scaleDuration?: number
   slideDuration?: number
+  emptyIcon?: AppIcon
+  style?: StyledProp<SortablePhotosComposition>
 }

@@ -1,4 +1,4 @@
-import { AppIcon } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { FileInput } from '../FileInput'
 import { Icon } from '../Icon'
 import { Image } from '../Image'
@@ -6,18 +6,21 @@ import { Dimensions, View } from 'react-native'
 import { DragSortableView } from 'react-native-drag-sort'
 import { SortableItemProps, SortablePhoto, SortablePhotosProps } from './types'
 import { useSortablePhotos } from './useSortablePhotos'
+import { useStylesFor } from '../../hooks'
+import { MobileStyleRegistry } from '../../Registry'
 
+export * from './styles'
 export * from './types'
 
 const DefaultItem = <T extends SortablePhoto>(props: SortableItemProps<T>) => {
-  const { item, width, height } = props
+  const { photo, width, height, styles, emptyIcon } = props
 
   return (
-    <View style={{ width, height, backgroundColor: '#0002', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+    <View style={[{ width, height }, styles.photoWrapper]}>
       {
-        !!item?.filename
-          ? <Image resizeMode='cover' source={{ uri: item?.filename }} style={{ width: '100%', height: '100%' }} />
-          : <Icon name={'plus' as AppIcon} style={{ color: '#0003' }} size={32} />
+        !!photo?.filename
+          ? <Image resizeMode='cover' source={{ uri: photo?.filename }} style={styles.photoImage} />
+          : <Icon name={emptyIcon} style={styles.photoEmptyIcon} />
       }
     </View>
   )
@@ -28,16 +31,20 @@ const screenWidth = Dimensions.get('screen').width
 export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const {
     numColumns,
-    renderItem: RenderItem,
+    renderPhoto: RenderItem,
     photos,
     gap,
     multiple,
     pickerConfig,
+    emptyIcon,
     itemWidth: _itemWidth,
     itemHeight: _itemHeight,
     width: _parentWidth,
+    style,
     ...rest
   } = props
+
+  const styles = useStylesFor(SortablePhotos.styleRegistryName, style)
 
   const {
     input,
@@ -63,7 +70,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
   }
 
   return (
-    <View style={{ width: '100%', height: '100%', backgroundColor: '#0002', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.wrapper}>
       <FileInput
         mode='hidden'
         ref={input.ref}
@@ -86,8 +93,10 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
           <RenderItem
             width={itemWidth}
             height={itemHeight}
-            item={item}
+            photo={item}
             order={order}
+            styles={styles}
+            emptyIcon={emptyIcon}
           />
         )}
       />
@@ -95,11 +104,20 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
   )
 }
 
+SortablePhotos.styleRegistryName = 'SortablePhotos'
+SortablePhotos.elements = ['wrapper', 'photo']
+SortablePhotos.rootElement = 'wrapper'
+
+SortablePhotos.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return SortablePhotos as <T extends SortablePhoto>(props: StyledComponentProps<SortablePhotosProps<T>, typeof styles>) => IJSX
+}
+
 SortablePhotos.defaultProps = {
   numColumns: 3,
-  renderItem: DefaultItem,
+  renderPhoto: DefaultItem,
   multiple: true,
   gap: 16,
+  emptyIcon: 'plus',
   pickerConfig: {
     cropping: true,
     showCropFrame: true,
@@ -108,3 +126,5 @@ SortablePhotos.defaultProps = {
     compressImageQuality: 0.8,
   },
 } as Partial<SortablePhotosProps<any>>
+
+MobileStyleRegistry.registerComponent(SortablePhotos)

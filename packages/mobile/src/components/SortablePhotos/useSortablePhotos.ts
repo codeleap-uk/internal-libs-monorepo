@@ -5,7 +5,7 @@ import { SortablePhoto, SortablePhotosProps } from './types'
 const SortableAlert = CreateOSAlert()
 
 export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
-  const { photos, onChangePhotos, onPressItem } = props
+  const { photos, onChangePhotos, onPressPhoto } = props
 
   const input = useFileInput()
   const { logger } = useGlobalContext()
@@ -34,10 +34,10 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     return [...newPhotos, ...missingPhotos]
   }
 
-  const handleOpenPicker = async (pickerType: FileInputImageSource, item: T, order: number) => {
+  const handleOpenPicker = async (pickerType: FileInputImageSource, photo: T, order: number) => {
     let files = []
 
-    const isEdit = !!item?.filename
+    const isEdit = !!photo?.filename
 
     try {
       files = await input?.openFilePicker(pickerType, { 
@@ -74,7 +74,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     onChangePhotos(sortedPhotos)
   }
 
-  const handleDeletePhoto = (item: T, order: number) => {
+  const handleDeletePhoto = (photo: T, order: number) => {
     const newPhotos = [...photos]
 
     newPhotos[order] = {
@@ -86,18 +86,18 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     onChangePhotos(sortedPhotos)
   }
 
-  const handlePressPhoto = (currentData: T[], item: T, order: number) => {
+  const handlePressPhoto = (currentData: T[], photo: T, order: number) => {
     SortableAlert.ask({
       title: 'Open',
       body: 'body',
       options: [
-        { text: 'Library', onPress: () => handleOpenPicker('library', item, order) },
-        { text: 'Camera', onPress: () => handleOpenPicker('camera', item, order) },
-        { text: 'Delete', onPress: () => handleDeletePhoto(item, order) }
+        { text: 'Library', onPress: () => handleOpenPicker('library', photo, order) },
+        { text: 'Camera', onPress: () => handleOpenPicker('camera', photo, order) },
+        { text: 'Delete', onPress: () => handleDeletePhoto(photo, order) }
       ]
     })
 
-    onPressItem?.(currentData, item, order)
+    onPressPhoto?.(currentData, photo, order)
   }
 
   const onChangePhotosOrder = (newData: T[]) => {
