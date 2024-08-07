@@ -4,12 +4,12 @@ import { Icon } from '../Icon'
 import { Image } from '../Image'
 import { Dimensions, View } from 'react-native'
 import { DragSortableView } from 'react-native-drag-sort'
-import { SortableItemProps, SortablePhotosProps } from './types'
+import { SortableItemProps, SortablePhoto, SortablePhotosProps } from './types'
 import { useSortablePhotos } from './useSortablePhotos'
 
 export * from './types'
 
-const DefaultItem = (props: SortableItemProps) => {
+const DefaultItem = <T extends SortablePhoto>(props: SortableItemProps<T>) => {
   const { item, width, height } = props
 
   return (
@@ -23,9 +23,9 @@ const DefaultItem = (props: SortableItemProps) => {
   )
 }
 
-const windowWidth = Dimensions.get('window').width
+const screenWidth = Dimensions.get('screen').width
 
-export const SortablePhotos = (props: SortablePhotosProps) => {
+export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const {
     numColumns,
     renderItem: RenderItem,
@@ -44,9 +44,9 @@ export const SortablePhotos = (props: SortablePhotosProps) => {
     handlePressPhoto,
     numberPhotosMissing,
     onChangePhotosOrder,
-  } = useSortablePhotos(props)
+  } = useSortablePhotos<T>(props)
 
-  const defaultParentWidth = windowWidth - (gap * 2)
+  const defaultParentWidth = screenWidth - (gap * 2)
   const defaultItemWidth = (defaultParentWidth / numColumns) - gap
 
   const itemWidth = _itemWidth ?? defaultItemWidth
@@ -107,4 +107,4 @@ SortablePhotos.defaultProps = {
     compressImageMaxWidth: 1700,
     compressImageQuality: 0.8,
   },
-} as Partial<SortablePhotosProps>
+} as Partial<SortablePhotosProps<any>>

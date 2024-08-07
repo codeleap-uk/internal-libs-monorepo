@@ -1,10 +1,10 @@
 import { CreateOSAlert, useGlobalContext, useMemo } from '@codeleap/common'
 import { FileInputImageSource, useFileInput } from '../FileInput'
-import { SortablePhotosProps } from './types'
+import { SortablePhoto, SortablePhotosProps } from './types'
 
 const SortableAlert = CreateOSAlert()
 
-export const useSortablePhotos = (props: SortablePhotosProps) => {
+export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const { photos, onChangePhotos, onPressItem } = props
 
   const input = useFileInput()
@@ -18,7 +18,7 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
     return missingSlots?.length
   }, [JSON.stringify(photos)])
 
-  const sortPhotos = (_unorderedPhotos: any[]) => {
+  const sortPhotos = (_unorderedPhotos: T[]): T[] => {
     const unorderedPhotos = [..._unorderedPhotos]
     const newPhotos = []
     const missingPhotos = []
@@ -34,13 +34,15 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
     return [...newPhotos, ...missingPhotos]
   }
 
-  const handleOpenPicker = async (pickerType: FileInputImageSource, item: any, order: number) => {
+  const handleOpenPicker = async (pickerType: FileInputImageSource, item: T, order: number) => {
     let files = []
 
     const isEdit = !!item?.filename
 
     try {
-      files = await input?.openFilePicker(pickerType, { multiple: isEdit ? false : props?.multiple })
+      files = await input?.openFilePicker(pickerType, { 
+        multiple: isEdit ? false : props?.multiple 
+      })
     } catch (error) {
       logger.error('Error opening file picker:', error)
     }
@@ -57,14 +59,14 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
 
         newPhotos[indexes[idx]] = {
           filename: file?.file?.uri
-        }
+        } as T
       }
     } else {
       const file = files?.[0]
 
       newPhotos[order] = {
         filename: file?.file?.uri
-      }
+      } as T
     }
 
     const sortedPhotos = sortPhotos(newPhotos)
@@ -72,19 +74,19 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
     onChangePhotos(sortedPhotos)
   }
 
-  const handleDeletePhoto = (item: any, order: number) => {
+  const handleDeletePhoto = (item: T, order: number) => {
     const newPhotos = [...photos]
 
     newPhotos[order] = {
       filename: null,
-    }
+    } as T
 
     const sortedPhotos = sortPhotos(newPhotos)
 
     onChangePhotos(sortedPhotos)
   }
 
-  const handlePressPhoto = (currentData: any[], item: any, order: number) => {
+  const handlePressPhoto = (currentData: T[], item: T, order: number) => {
     SortableAlert.ask({
       title: 'Open',
       body: 'body',
@@ -98,7 +100,7 @@ export const useSortablePhotos = (props: SortablePhotosProps) => {
     onPressItem?.(currentData, item, order)
   }
 
-  const onChangePhotosOrder = (newData: any[]) => {
+  const onChangePhotosOrder = (newData: T[]) => {
     const sortedPhotos = sortPhotos(newData)
 
     onChangePhotos(sortedPhotos)

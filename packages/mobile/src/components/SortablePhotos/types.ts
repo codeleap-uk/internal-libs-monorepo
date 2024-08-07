@@ -1,11 +1,11 @@
 import { ReactElement } from 'react'
 
-type Photo = {
-  filename: any
+export type SortablePhoto = {
+  filename: string | null
 }
 
-export type SortableItemProps = {
-  item: Photo
+export type SortableItemProps<T extends SortablePhoto> = {
+  item: T
   order: number
   height: number
   width: number
@@ -19,19 +19,19 @@ export type SortablePhotosPickerConfig = {
   showCropFrame?: boolean
 }
 
-export type SortablePhotosProps = {
+export type SortablePhotosProps<T extends SortablePhoto> = {
   numColumns?: number
-  renderItem: (props: SortableItemProps) => ReactElement
-  photos: Photo[]
-  onChangePhotos: (newPhotos: any[]) => void
+  renderItem: (props: SortableItemProps<T>) => ReactElement
+  photos: T[]
+  onChangePhotos: (newPhotos: T[]) => void
   gap?: number
   itemHeight?: number
   itemWidth: number
   width?: number
-  onPressItem?: (data: any[], item: any, order: number) => void
+  onPressItem?: (data: T[], item: T, order: number) => void
   onDragStart?: (fromIndex: number) => void
   onDragEnd?: (fromIndex: number, toIndex: number) => void
-  keyExtractor?: (item: any, order: number) => any
+  keyExtractor?: (item: T, order: number) => any
   delayLongPress?: number
   pickerConfig?: SortablePhotosPickerConfig
   multiple?: boolean
