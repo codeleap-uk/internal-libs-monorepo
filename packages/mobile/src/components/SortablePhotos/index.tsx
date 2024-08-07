@@ -50,6 +50,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     input,
     handlePressPhoto,
     numberPhotosMissing,
+    emptyIndexes,
     onChangePhotosOrder,
   } = useSortablePhotos<T>(props)
 
@@ -88,6 +89,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
         marginChildrenTop={childrenMargin}
         onDataChange={onChangePhotosOrder}
         onClickItem={handlePressPhoto}
+        fixedItems={emptyIndexes}
         {...rest}
         renderItem={(item, order) => (
           <RenderItem

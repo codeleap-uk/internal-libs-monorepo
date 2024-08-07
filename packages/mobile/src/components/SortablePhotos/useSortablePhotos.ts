@@ -10,12 +10,17 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   const input = useFileInput()
   const { logger } = useGlobalContext()
 
-  const numberPhotosMissing = useMemo(() => {
+  const { emptyIndexes, numberPhotosMissing } = useMemo(() => {
     const copyPhotos = [...photos]
 
-    const missingSlots = copyPhotos?.filter(photo => !photo?.filename)
+    const emptyIndexes = copyPhotos.map((photo, index) => !!photo?.filename ? null : index).filter(v => typeof v === 'number')
 
-    return missingSlots?.length
+    const numberPhotosMissing = emptyIndexes?.length
+
+    return {
+      emptyIndexes,
+      numberPhotosMissing,
+    }
   }, [JSON.stringify(photos)])
 
   const sortPhotos = (_unorderedPhotos: T[]): T[] => {
@@ -40,8 +45,8 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     const isEdit = !!photo?.filename
 
     try {
-      files = await input?.openFilePicker(pickerType, { 
-        multiple: isEdit ? false : props?.multiple 
+      files = await input?.openFilePicker(pickerType, {
+        multiple: isEdit ? false : props?.multiple
       })
     } catch (error) {
       logger.error('Error opening file picker:', error)
@@ -52,12 +57,10 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     const newPhotos = [...photos]
 
     if (isMultiple) {
-      const indexes = newPhotos.map((photo, index) => !!photo?.filename ? null : index).filter(v => !!v)
-
       for (const idx in files) {
         const file = files?.[idx]
 
-        newPhotos[indexes[idx]] = {
+        newPhotos[emptyIndexes[idx]] = {
           filename: file?.file?.uri
         } as T
       }
@@ -93,7 +96,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       options: [
         { text: 'Library', onPress: () => handleOpenPicker('library', photo, order) },
         { text: 'Camera', onPress: () => handleOpenPicker('camera', photo, order) },
-        { text: 'Delete', onPress: () => handleDeletePhoto(photo, order) }
+        !!photo?.filename && { text: 'Delete', onPress: () => handleDeletePhoto(photo, order) }
       ]
     })
 
@@ -114,5 +117,6 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     sortPhotos,
     numberPhotosMissing,
     onChangePhotosOrder,
+    emptyIndexes,
   }
 }
