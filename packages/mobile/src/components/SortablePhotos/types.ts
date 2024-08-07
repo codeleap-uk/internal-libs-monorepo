@@ -28,11 +28,10 @@ export type SortablePhotosProps = {
   itemHeight?: number
   itemWidth: number
   width?: number
-  onPressItem?: (data: any[],item: any,index: number) => void
+  onPressItem?: (data: any[], item: any, order: number) => void
   onDragStart?: (fromIndex: number) => void
-  onDragEnd?: (fromIndex: number,toIndex: number) => void
-  onPhotosChange?: (data: any[]) => void
-  keyExtractor?: (item: any,index: number) => any
+  onDragEnd?: (fromIndex: number, toIndex: number) => void
+  keyExtractor?: (item: any, order: number) => any
   delayLongPress?: number
   pickerConfig?: SortablePhotosPickerConfig
   multiple?: boolean
