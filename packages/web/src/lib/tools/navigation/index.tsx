@@ -5,7 +5,7 @@ const IS_SSR = typeof window === 'undefined' || typeof history === 'undefined'
 
 const defaultConfig: Partial<Config> = {
   historyEnabled: false,
-  getMetadata: () => {}
+  getMetadata: () => {},
 }
 
 export type {
@@ -13,7 +13,7 @@ export type {
   Routes,
 }
 
-export class Navigation<O extends object, R extends object = {}> {
+export class Navigation<O extends object, R extends object = {}, C extends Record<string, any> = {}> {
   private _history: History = {}
 
   private config: Config = defaultConfig
@@ -21,6 +21,8 @@ export class Navigation<O extends object, R extends object = {}> {
   get history() {
     return this._history
   }
+
+  public context: C = {} as C
 
   private putHistory(path: RoutePath, info: any = {}) {
     const idx = Object.keys(this._history).length + 1
@@ -34,7 +36,7 @@ export class Navigation<O extends object, R extends object = {}> {
         path,
         metadata: this.config?.getMetadata?.(),
         info,
-      }
+      },
     }
 
     this._history = this.merge(this._history, value)
@@ -53,7 +55,7 @@ export class Navigation<O extends object, R extends object = {}> {
 
   constructor(
     routes: R,
-    navigator: Navigator<O>,
+    navigator: Navigator<O, C>,
     config: Config = {},
   ) {
     this.navigator = navigator
@@ -69,15 +71,15 @@ export class Navigation<O extends object, R extends object = {}> {
    * @returns Is on the route - boolean
    */
   public isCurrentRoute<T extends keyof Routes<R>>(
-    route: T, 
+    route: T,
     // @ts-expect-error
     routeParams: Record<Routes<R>[T], string|number> = {} as any,
-    exact: boolean = false,
+    exact = false,
   ) {
     if (IS_SSR) return false
-  
+
     let path = window?.location?.pathname
-    
+
     // @ts-ignore
     const routePath = this.getPathWithParams(route, routeParams)
 
@@ -99,7 +101,7 @@ export class Navigation<O extends object, R extends object = {}> {
     if (path?.includes(routePath)) {
       return true
     }
-  
+
     return false
   }
 
@@ -134,9 +136,9 @@ export class Navigation<O extends object, R extends object = {}> {
    * @returns Path - string
    */
   public getPathWithParams<T extends keyof Routes<R>>(
-    route: T, 
+    route: T,
     // @ts-expect-error
-    routeParams: Record<Routes<R>[T], string|number> = {} as any
+    routeParams: Record<Routes<R>[T], string|number> = {} as any,
   ) {
     let path = this.getPath(route)
 
@@ -162,7 +164,7 @@ export class Navigation<O extends object, R extends object = {}> {
   }
 
   /**
-   * Function to navigate to the previous page, if history is enabled, the penultimate record will be used, 
+   * Function to navigate to the previous page, if history is enabled, the penultimate record will be used,
    * otherwise the browser's own api with "history.back()"
    */
   public goBack() {
@@ -182,7 +184,7 @@ export class Navigation<O extends object, R extends object = {}> {
     }
 
     const info = this.merge(historyData?.info, {
-      'action': 'goBack'
+      'action': 'goBack',
     })
 
     this.to(historyData?.path, historyData?.info?.options ?? {}, info)
@@ -194,9 +196,9 @@ export class Navigation<O extends object, R extends object = {}> {
    * @param options Route parameters (marked by {{}}), which will be automatically shown if they exist, and navigator options and route queryParams can also be passed through the "params" property
    */
   public navigate<T extends keyof Routes<R>>(
-    route: T, 
+    route: T,
     // @ts-expect-error
-    options: Record<Routes<R>[T], string|number> & O & { params?: RouteParams } = {} as any
+    options: Record<Routes<R>[T], string|number> & O & { params?: RouteParams } = {} as any,
   ) {
     // @ts-ignore
     let path = this.getPath(route)
@@ -229,15 +231,15 @@ export class Navigation<O extends object, R extends object = {}> {
 
     if (typeof params === 'object') {
       let searchParams = null
-  
+
       for (const paramKey in (params ?? {})) {
         const value = params?.[paramKey]
         const param = `${paramKey}=${encodeURIComponent(value)}`
         const separator = searchParams == null ? '' : '&'
-  
+
         searchParams = `${searchParams ?? ''}${separator}${param}`
       }
-  
+
       if (typeof searchParams === 'string') {
         if (path?.endsWith('/')) {
           path = path.slice(0, -1)
@@ -268,7 +270,7 @@ export class Navigation<O extends object, R extends object = {}> {
       this.putHistory(path, this.merge(options, info))
     }
 
-    this.navigator(path, options)
+    this.navigator(path, options, this.context)
   }
 
   /**
