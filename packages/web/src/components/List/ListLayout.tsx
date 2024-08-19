@@ -56,6 +56,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     ListLoadingIndicatorComponent,
     scrollableRef,
     showFooter = true,
+    wrapperProps = {},
   } = props
 
   const getKeyStyle = (key: ListParts) => mergeStyles([
@@ -67,7 +68,7 @@ export const ListLayout = (props: ListLayoutProps) => {
   const showIndicator = (isFetching || isFetchingNextPage) && !TypeGuards.isNil(ListLoadingIndicatorComponent)
 
   return (
-    <View style={getKeyStyle('wrapper')} ref={scrollableRef}>
+    <View style={getKeyStyle('wrapper')} ref={scrollableRef} {...wrapperProps}>
       {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
 
       {isEmpty ? <ListEmptyComponent debugName={debugName} {...placeholder} /> : null}

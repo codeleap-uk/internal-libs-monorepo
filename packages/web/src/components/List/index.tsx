@@ -33,6 +33,7 @@ export function List(props: ListProps) {
     reloadTimeout,
     showFooter,
     style,
+    layoutWrapperProps = {},
   } = allProps
 
   const styles = useStylesFor(List.styleRegistryName, style)
@@ -71,10 +72,15 @@ export function List(props: ListProps) {
     </>
   }, [RenderItem])
 
+  console.log('testeeeeeeeeee', {
+    layoutWrapperProps
+  })
+
   return (
     <ListLayout
       {...allProps}
       {...layoutProps}
+      wrapperProps={layoutWrapperProps}
       styles={styles}
       showFooter={reloadingLayout ? false : showFooter}
     >
