@@ -54,4 +54,5 @@ Data = T extends Array<infer D> ? D : never
     masonryProps?: Partial<ListMasonryProps<T>>
     reloadTimeout?: number
     showFooter?: boolean
+    layoutWrapperProps?: Partial<PropsOf<typeof View>>
 } & ComponentCommonProps & UseInfiniteScrollArgs

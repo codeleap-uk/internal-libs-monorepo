@@ -1,5 +1,5 @@
 import React from 'react'
-import { StylesOf, TypeGuards } from '@codeleap/common'
+import { StylesOf, TypeGuards, PropsOf } from '@codeleap/common'
 import { ListComposition, ListParts } from './styles'
 import { ListProps } from './types'
 import { View } from '../View'
@@ -11,6 +11,7 @@ export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollR
   variantStyles: StylesOf<ListComposition>
   children?: React.ReactNode
   showFooter?: boolean
+  wrapperProps?: Partial<PropsOf<typeof View>>
 }
 
 type ListRefreshControlComponent = Partial<ListLayoutProps> & {
@@ -67,6 +68,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     ListLoadingIndicatorComponent,
     scrollableRef,
     showFooter = true,
+    wrapperProps = {},
   } = props
 
   const getKeyStyle = React.useCallback((key: ListParts) => ([
@@ -77,7 +79,7 @@ export const ListLayout = (props: ListLayoutProps) => {
 
   return (
     // @ts-ignore
-    <View css={[getKeyStyle('wrapper'), style]} ref={scrollableRef}>
+    <View css={[getKeyStyle('wrapper'), style]} ref={scrollableRef} {...wrapperProps}>
       {!!ListHeaderComponent ? <ListHeaderComponent /> : null}
 
       {isEmpty ? <ListEmptyComponent debugName={debugName} {...placeholder} /> : null}

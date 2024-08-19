@@ -56,6 +56,7 @@ export function List<T = any>(props: ListProps<T>) {
     masonryProps = {},
     reloadTimeout,
     showFooter,
+    layoutWrapperProps = {},
   } = allProps
 
   const variantStyles = useDefaultComponentStyle<'u:List', typeof ListPresets>('u:List', {
@@ -102,6 +103,7 @@ export function List<T = any>(props: ListProps<T>) {
     <ListLayout
       {...allProps}
       {...layoutProps}
+      wrapperProps={layoutWrapperProps}
       variantStyles={variantStyles}
       showFooter={reloadingLayout ? false : showFooter}
     >
