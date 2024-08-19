@@ -72,10 +72,6 @@ export function List(props: ListProps) {
     </>
   }, [RenderItem])
 
-  console.log('testeeeeeeeeee', {
-    layoutWrapperProps
-  })
-
   return (
     <ListLayout
       {...allProps}
