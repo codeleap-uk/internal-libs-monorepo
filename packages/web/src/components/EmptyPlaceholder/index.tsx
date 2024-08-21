@@ -27,6 +27,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     imageWrapperProps,
     indicatorProps,
     debugName,
+    ImageComponent,
   } = {
     ...EmptyPlaceholder.defaultProps,
     ...props,
@@ -39,10 +40,12 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
   const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 
   const _Image = React.useMemo(() => {
-    if (TypeGuards.isString(image)) {
-      return <img
+
+    if (!TypeGuards.isNil(image)) {
+
+      return <ImageComponent
         {...imageProps}
-        src={image as HTMLImageElement['src']}
+        source={image as HTMLImageElement['src']}
         // @ts-expect-error
         css={styles.image}
       />
@@ -102,7 +105,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
 EmptyPlaceholder.styleRegistryName = 'EmptyPlaceholder'
 EmptyPlaceholder.elements = ['wrapper', 'loader', 'title', 'description', 'image', 'imageWrapper', 'icon']
 EmptyPlaceholder.rootElement = 'wrapper'
-
+EmptyPlaceholder.ImageComponent = 'img'
 EmptyPlaceholder.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return EmptyPlaceholder as (props: StyledComponentProps<EmptyPlaceholderProps, typeof styles>) => IJSX
 }
