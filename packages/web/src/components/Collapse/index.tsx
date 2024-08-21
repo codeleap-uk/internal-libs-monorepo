@@ -27,6 +27,7 @@ export const Collapse = (props: CollapseProps) => {
       transition={{ duration: 0.2 }}
       {...rest}
       css={[
+        // @ts-expect-error
         styles.wrapper,
 
       ]}
