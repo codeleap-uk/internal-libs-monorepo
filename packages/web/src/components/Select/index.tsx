@@ -233,7 +233,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const _innerInputRef = useRef<any>(null)
     const innerInputRef = selectRef || _innerInputRef
-    const innerWrapperRef = useRef(null)
+    const innerWrapperRef = useRef<HTMLDivElement>(null)
 
     const hasSelectedOptionState = !TypeGuards.isNil(_selectedOption) && TypeGuards.isFunction(_setSelectedOption)
 
@@ -275,6 +275,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
+      parentWidth: innerWrapperRef?.current?.clientWidth,
     })
 
     useImperativeHandle(inputRef, () => {
@@ -420,8 +421,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
-          // escapeRemoves={true}
-          // deleteRemoves={true}
+          menuPortalTarget={document.body}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
@@ -436,7 +436,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           defaultOptions={loadOptionsOnMount}
           ref={innerInputRef}
           closeMenuOnSelect={closeOnSelect}
-          menuPortalTarget={innerWrapperRef.current}
           placeholder={(loadOptionsOnMount && !loadedOptions) ? loadingMessage : placeholder}
           isDisabled={isDisabled}
           isClearable={clearable}

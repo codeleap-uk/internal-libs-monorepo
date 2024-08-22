@@ -51,6 +51,7 @@ export type ComponentState = {
   error?: boolean
   focused?: boolean
   disabled?: boolean
+  parentWidth?: number
 }
 
 export type OptionState = { 
@@ -70,6 +71,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     error,
     focused,
     disabled,
+    parentWidth,
   } = state
 
   const variantStyles = useDefaultComponentStyle<'u:Select', typeof SelectPresets>(
@@ -138,10 +140,18 @@ export function useSelectStyles<T, Multi extends boolean>(props: SelectProps<T, 
     wrapper: stylesKey('itemsWrapper'),
   }
 
+  const parseMenuPortalStyles = (baseStyles: CSSObjectWithLabel) => {
+    return {
+      ...baseStyles,
+      width: parentWidth,
+      left: `calc(${baseStyles.left}px - ((${parentWidth}px - ${baseStyles.width}px) / 2))`
+    }
+  }
+
   const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
     container: (baseStyles) => stylesKey('inputContainer', baseStyles),
     control: () => stylesKey('inputContainer'),
-    menuPortal: (baseStyles) => stylesKey('listPortal', baseStyles),
+    menuPortal: (baseStyles) => stylesKey('listPortal', parseMenuPortalStyles(baseStyles)),
     menu: (baseStyles) => stylesKey('listWrapper', baseStyles),
     menuList: (baseStyles) => stylesKey('list', baseStyles),
     group: () => ({}),
