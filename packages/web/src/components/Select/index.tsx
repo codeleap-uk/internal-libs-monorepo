@@ -421,7 +421,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
-          menuPortalTarget={document.body}
+          menuPortalTarget={typeof document === 'undefined' ? undefined : document.body}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
