@@ -1,25 +1,39 @@
 import React from 'react'
-import { ActionIconProps, IconProps } from '../components'
+import { ActionIconProps, ColorPickerComposition } from '../components'
+import { AppIcon, ICSS, StyledProp } from '@codeleap/styles'
 import { RgbColor, RgbaColor, HslColor, HsvColor, HslaColor, HsvaColor } from 'react-colorful'
-import { ComponentVariants } from '@codeleap/common'
-import { ColorPickerComposition, ColorPickerPresets } from './styles'
 
 export type ColorTypes = RgbColor | HslColor | HsvColor | RgbaColor | HslaColor | HsvaColor | string
 
-export type ColorPickerProps = React.PropsWithChildren<{
-  styles?: ColorPickerComposition
-  style?: React.CSSProperties
+export type ColorPickerFooterProps = Pick<ColorPickerProps, 'confirmIcon' | 'clearIcon'> & {
+  color?: ColorTypes
+  handleConfirmation: (value: ColorTypes) => void
+  handleClear: (value: ColorTypes) => void
+  styles: Record<ColorPickerComposition, ICSS>
+}
+
+export type ColorPickerPickerProps = {
+  color: ColorTypes
+  visible: boolean
+  toggle: (v?: boolean) => void
+}
+
+export type ColorPickerProps = {
+  style?: StyledProp<ColorPickerComposition>
   isPlain?: boolean
   closeOnConfirm?: boolean
   initialColor?: ColorTypes
   showFooter?: boolean
-  icon?: IconProps['name']
-  clearIcon?: IconProps['name']
-  confirmIcon?: IconProps['name']
+  icon?: AppIcon
+  clearIcon?: AppIcon
+  confirmIcon?: AppIcon
   openPickerProps?: ActionIconProps
   onConfirm?: (color: ColorTypes) => void
   onClear?: () => void
-  openPickerComponent?: (props: { color: ColorTypes; visible: boolean; toggle: (v?: boolean) => void }) => JSX.Element
+  openPickerComponent?: (props: ColorPickerPickerProps) => JSX.Element
   pickerComponent?: (props: any) => JSX.Element
-  footerComponent?: (props: {color: ColorTypes; handleConfirmation: () => void; handleClear: () => void}) => JSX.Element
-} & ComponentVariants<typeof ColorPickerPresets>>
+  footerComponent?: (props: ColorPickerFooterProps) => JSX.Element
+  visible?: boolean
+  toggle?: React.Dispatch<React.SetStateAction<boolean>>
+  children?: React.ReactNode
+}

@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text, View, Page, Link, Button, Icon } from '@/components'
-import { Settings, variantProvider } from '@/app'
 import { Particles } from '../components/Particles'
 import { navigate } from 'gatsby'
 import Fade from 'react-reveal/Fade'
+import { createStyles } from '@codeleap/styles'
 
 const packages = [
   {
@@ -25,15 +25,15 @@ const packages = [
 ]
 
 export default () => {
-  const renderItem = React.useCallback((item, i) => (
+  const RenderItem = React.useCallback(({ item, i }) => (
     <Fade bottom delay={800 + (i * 250)}>
-      <Link key={i + 'link'} to={item?.url + '/index'} variants={['noUnderline']}>
+      <Link key={i + 'link'} to={item?.url + '/index'} style={['noUnderline']}>
         <View style={styles.link}>
-          <View variants={['backgroundColor:primary3', 'padding:1', 'border-radius:small']}>
+          <View style={['backgroundColor:primary3', 'padding:1', 'borderRadius:small']}>
             <Icon debugName='' name='layers' size={24} />
           </View>
-          <Text text={item?.name} variants={['h5']} />
-          <Text text={item?.description} variants={['p4']} />
+          <Text text={item?.name} style={['h5']} />
+          <Text text={item?.description} style={['p4']} />
         </View>
       </Link>
     </Fade>
@@ -42,12 +42,11 @@ export default () => {
   return <>
     <Page title='Home' headerCenter={false}>
       <View style={styles.wrapper}>
-        <View variants={['column', 'gap:2']}>
+        <View style={['column', 'gap:2']}>
           <Fade left>
             <Text 
               text={'A full featured library of React for mobile and web platforms'} 
-              variants={['h1']}
-              responsiveVariants={{ mid: ['h1'] }}
+              style={['h1']}
               style={styles.title}
             />
           </Fade>
@@ -55,20 +54,19 @@ export default () => {
           <Fade left>
             <Text 
               text='Create complete web and mobile applications with a single code with various hooks and features to create your project 2x faster' 
-              variants={['h3', 'thin']}
-              responsiveVariants={{ mid: ['p1'] }}
+              style={['h3', 'thin']}
             />
           </Fade>
         </View>
 
-        <View variants={['row', 'gap:4']} responsiveVariants={{ mid: ['column'] }}>
-          {packages?.map(renderItem)}
+        <View style={['row', 'gap:4', { breakpoints: { tabletSmall: 'column' } }]}>
+          {packages?.map((item, i) => <RenderItem item={item} i={i} key={'package-' + i} />)}
         </View>
 
-        <View variants={['row', 'gap:2']} responsiveVariants={{ mid: ['column'] }}>
+        <View style={['row', 'gap:2']}>
           <Fade delay={1000}>
             <Button 
-              variants={['padding:2', 'w:200px']}
+              style={['padding:2', 'w:200px']}
               text='Get started' 
               onPress={() => navigate('/concepts/index/')} 
               styles={{
@@ -78,9 +76,9 @@ export default () => {
           </Fade>
           
           <Fade delay={1200}>
-            <Link variants={['noUnderline']} to='https://github.com/codeleap-uk/internal-libs-monorepo' target='_blank'>
+            <Link style={['noUnderline']} to='https://github.com/codeleap-uk/internal-libs-monorepo' target='_blank'>
               <Button 
-                variants={['padding:2', 'w:200px']}
+                style={['padding:2', 'w:200px']}
                 text='GitHub'
                 styles={{
                   'text': { fontWeight: 700 }
@@ -96,10 +94,11 @@ export default () => {
   </>
 }
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   title: {
     fontSize: 64, // yes, it is quite
-    fontWeight: '900'
+    fontWeight: '900',
+    color: '#000'
   },
   wrapper: {
     width: '100vw',
@@ -118,8 +117,8 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       maxWidth: '100%'
     }
   },
-}), true)
+}))

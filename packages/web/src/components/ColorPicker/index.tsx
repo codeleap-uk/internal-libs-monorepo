@@ -1,87 +1,115 @@
-/* eslint-disable max-len */
 import React, { useCallback } from 'react'
-import { ActionIcon, Collapse, ColorPickerPresets, View } from '../components'
+import { ActionIcon, Collapse, View } from '../components'
 import { HexColorPicker } from 'react-colorful'
-import { useBooleanToggle, useDefaultComponentStyle, useState } from '@codeleap/common'
-import { ColorPickerProps, ColorTypes } from './types'
+import { TypeGuards, useConditionalState, useState } from '@codeleap/common'
+import { ColorPickerProps, ColorTypes, ColorPickerFooterProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
-const defaultProps = {
-  pickerComponent: (props) => <HexColorPicker {...props}/>,
-  icon: 'edit',
-  clearIcon: 'trash',
-  confirmIcon: 'check',
-  showFooter: true,
+const DefaultFooter = (props: ColorPickerFooterProps) => {
+  const { styles, clearIcon, handleClear, confirmIcon, handleConfirmation } = props
+
+  return (
+    <View style={styles.footerWrapper}>
+      <ActionIcon
+        debugName='ColorPicker footer trash'
+        name={clearIcon}
+        onPress={handleClear}
+        style={styles.clearIcon}
+      />
+      <ActionIcon
+        debugName='ColorPicker footer check'
+        name={confirmIcon}
+        onPress={handleConfirmation}
+        style={styles.confirmIcon}
+      />
+    </View>
+  )
 }
 
 export const ColorPicker = (props: ColorPickerProps) => {
   const {
-    isPlain = false,
+    isPlain,
     initialColor,
     showFooter,
     icon,
+    style,
     clearIcon,
     confirmIcon,
-    variants = [],
-    styles = {},
-    responsiveVariants = {},
     onConfirm,
     onClear,
-    closeOnConfirm = true,
+    closeOnConfirm,
     pickerComponent: PickerComponent,
     openPickerComponent: OpenPickerComponent,
-    footerComponent: FooterComponent = null,
+    footerComponent: FooterComponent,
     openPickerProps,
-  } = props
-  const [visible, toggle] = useBooleanToggle(false)
+  } = {
+    ...ColorPicker.defaultProps,
+    ...props,
+  }
+
+  const styles = useStylesFor(ColorPicker.styleRegistryName, style)
+
+  const [visible, toggle] = useConditionalState(props?.visible, props?.toggle, { initialValue: false })
+
   const [color, setColor] = useState<ColorTypes>(initialColor)
 
-  const variantStyles = useDefaultComponentStyle<'u:ColorPicker', typeof ColorPickerPresets>('u:ColorPicker', {
-    variants,
-    styles,
-    responsiveVariants,
-  })
-
-  const handleConfirmation = useCallback(() => {
+  const handleConfirmation = useCallback((color: ColorTypes) => {
     onConfirm?.(color)
-    closeOnConfirm && toggle(false)
-  }, [color])
+    if (closeOnConfirm) toggle(false)
+  }, [])
 
-  const handleClear = useCallback(() => {
+  const handleClear = useCallback((initialColor: ColorTypes) => {
     setColor(initialColor)
-    onClear?.()
-  }, [initialColor])
-
-  const Footer = useCallback(() => (
-    <View style={variantStyles.footerWrapper}>
-      <ActionIcon debugName='ColorPicker footer trash' name={clearIcon} onPress={handleClear} styles={variantStyles.footerButton} />
-      <ActionIcon debugName='ColorPicker footer check' name={confirmIcon} onPress={handleConfirmation} styles={variantStyles.footerButton} />
-    </View>
-  ), [clearIcon, confirmIcon, handleClear, handleConfirmation])
+    if (TypeGuards.isFunction(onClear)) onClear?.()
+  }, [])
 
   // Dragging to change the color in any other way does not seem to work for some reason.
-  const picker = <View style={variantStyles.picker}><PickerComponent color={color} onChange={setColor} /></View>
+  const picker = <View style={styles.picker}><PickerComponent color={color} onChange={setColor} /></View>
 
-  const _footer = !!showFooter && FooterComponent ? <FooterComponent color={color} handleConfirmation={handleConfirmation} handleClear={handleClear}/> : <Footer/>
-  const openColorPickerBtn = !!OpenPickerComponent ? <OpenPickerComponent color={color} visible={visible} toggle={toggle}/> : <ActionIcon onPress={toggle} icon={icon} {...openPickerProps}/>
+  const openColorPickerBtn = !!OpenPickerComponent ? (
+    <OpenPickerComponent
+      color={color}
+      visible={visible}
+      toggle={() => toggle(!visible)}
+    />
+  ) : (
+    <ActionIcon
+      onPress={() => toggle(!visible)}
+      icon={icon}
+      {...openPickerProps}
+    />
+  )
 
   return (
-    <View style={variantStyles.wrapper}>
+    <View style={styles.wrapper}>
       {isPlain ? picker : (
         <>
           {openColorPickerBtn}
           <Collapse
             open={visible}
-            styles={{ wrapper: [
-              variantStyles.dropdown,
-              visible && variantStyles['dropdown:open'],
-            ] }}
+            style={[
+              styles.dropdown,
+              visible && styles['dropdown:open'],
+            ]}
           >
-            <View style={variantStyles.dropdownInnerWrapper}>
+            <View style={styles.dropdownInnerWrapper}>
               {picker}
-              {_footer}
+
+              {showFooter ? (
+                <FooterComponent
+                  color={color}
+                  handleConfirmation={() => handleConfirmation(color)}
+                  handleClear={() => handleClear(initialColor)}
+                  styles={styles}
+                  clearIcon={clearIcon}
+                  confirmIcon={confirmIcon}
+                />
+              ) : null}
             </View>
           </Collapse>
         </>
@@ -90,4 +118,23 @@ export const ColorPicker = (props: ColorPickerProps) => {
   )
 }
 
-ColorPicker.defaultProps = defaultProps
+ColorPicker.styleRegistryName = 'ColorPicker'
+ColorPicker.elements = ['wrapper', 'picker', 'dropdown', 'dropdownInnerWrapper', 'footerWrapper', 'clearIcon', 'confirmIcon']
+ColorPicker.rootElement = 'wrapper'
+
+ColorPicker.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ColorPicker as (props: StyledComponentProps<ColorPickerProps, typeof styles>) => IJSX
+}
+
+ColorPicker.defaultProps = {
+  pickerComponent: (props) => <HexColorPicker {...props} />,
+  footerComponent: DefaultFooter,
+  icon: 'edit' as AppIcon,
+  clearIcon: 'trash' as AppIcon,
+  confirmIcon: 'check' as AppIcon,
+  showFooter: true,
+  isPlain: false,
+  closeOnConfirm: true,
+} as Partial<ColorPickerProps>
+
+WebStyleRegistry.registerComponent(ColorPicker)

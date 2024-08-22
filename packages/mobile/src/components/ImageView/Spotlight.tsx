@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react'
 import { deepEqual, onUpdate, ReactState, TypeGuards, usePrevious, useUnmount } from '@codeleap/common'
-
 import uuid from 'react-native-uuid'
 import { ImageView, ImageViewProps } from './component'
 import { ImageProps } from '../Image'
@@ -166,9 +165,7 @@ export type SpotlightProps = {
 } & ImageViewProps
 
 const DefaultFooterComponent: SpootlightFooterComponent = ({ imageIndex, imagesLength }) => (
-  <View variants={['marginBottom:5', 'alignCenter']}>
-    <Text text={imageIndex + 1 + '/' + imagesLength} />
-  </View>
+  <View><Text text={imageIndex + 1 + '/' + imagesLength} /></View>
 )
 
 export const Spotlight = (props: SpotlightProps) => {

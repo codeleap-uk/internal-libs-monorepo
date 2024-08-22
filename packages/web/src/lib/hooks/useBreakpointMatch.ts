@@ -1,18 +1,19 @@
 import { useMemo } from 'react'
-import { TypeGuards, useCodeleapContext } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
+import { AppTheme, Theme, useTheme } from '@codeleap/styles'
 import { useMediaQuery } from './useMediaQuery'
 
 export type BreakpointsMatch<T extends string = string> = Record<T, any>
 
 export function useBreakpointMatch<T extends string = string>(values: Partial<BreakpointsMatch<T>>) {
-  const { Theme } = useCodeleapContext()
+  const theme = useTheme(store => store.current) as AppTheme<Theme>
 
-  const themeBreakpoints: Record<string, number> = Theme?.breakpoints
+  const themeBreakpoints: Record<string, number> = theme?.breakpoints ?? {}
 
   const breakpoints: Record<string, number> = useMemo(() => {
-    const breaks = Object.entries(themeBreakpoints)
+    let breaks = Object.entries(themeBreakpoints)
 
-    breaks?.sort((a, b) => a?.[1] - b?.[1])
+    breaks = breaks?.sort((a, b) => a?.[1] - b?.[1])
 
     const sortBreakpoints = Object.fromEntries(breaks)
 
@@ -28,8 +29,8 @@ export function useBreakpointMatch<T extends string = string>(values: Partial<Br
   const breakpointMatches = {}
 
   for (const breakpoint in breakpoints) {
-    const matchesDown = useMediaQuery(Theme.media.down(breakpoint), { getInitialValueInEffect: false })
-    const matchesUp = useMediaQuery(Theme.media.up(breakpoint), { getInitialValueInEffect: false })
+    const matchesDown = useMediaQuery(theme?.media?.down(breakpoint as never), { getInitialValueInEffect: false })
+    const matchesUp = useMediaQuery(theme?.media?.up(breakpoint as never), { getInitialValueInEffect: false })
 
     breakpointMatches[breakpoint] = !matchesUp && matchesDown
   }

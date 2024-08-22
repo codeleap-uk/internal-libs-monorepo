@@ -1,42 +1,24 @@
-import { ProgressBarPresets } from './styles'
-import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { Root, Indicator } from '@radix-ui/react-progress'
 import { Icon, Text, View } from '../../components'
 import { ProgressBarProps } from './types'
 import { formatProgress as _formatProgress } from '../utils'
+import { WebStyleRegistry } from '../../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+import { useStylesFor } from '../../../lib/hooks/useStylesFor'
 
 export * from './types'
 export * from './styles'
 
-const defaultProps: Partial<ProgressBarProps> = {
-  progress: 0,
-  variants: [],
-  responsiveVariants: {},
-  styles: {},
-  textProps: {},
-  progressIndicatorProps: {},
-  progressRootProps: {},
-  showProgress: false,
-  formatProgress: _formatProgress,
-}
-
 export const ProgressBar = (props: ProgressBarProps) => {
-  const allProps = {
-    ...ProgressBar.defaultProps,
-    ...props,
-  }
-
   const {
     progress,
-    variants,
-    responsiveVariants,
-    styles,
+    style,
     debugName,
     formatProgress,
     progressIndicatorProps,
     progressRootProps,
     showProgress,
-
     leftIcon,
     leftIconProps,
     rightIcon,
@@ -48,75 +30,88 @@ export const ProgressBar = (props: ProgressBarProps) => {
     rightText,
     rightTextProps,
     ...rest
-  } = allProps
+  } = {
+    ...ProgressBar.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<
-    'u:ProgressBar',
-    typeof ProgressBarPresets
-  >('u:ProgressBar', {
-    variants,
-    responsiveVariants,
-    styles,
-  })
+  const styles = useStylesFor(ProgressBar.styleRegistryName, style)
+
+  const leftIconStyles = mergeStyles([styles.icon, styles.leftIcon])
+  const rightIconStyles = mergeStyles([styles.icon, styles.rightIcon])
+
+  const leftTextStyles = mergeStyles([styles.text, styles.leftText])
+  const rightTextStyles = mergeStyles([styles.text, styles.rightText])
 
   return (
-    <View css={variantStyles.wrapper} debugName={debugName} {...rest}>
+    <View debugName={debugName} {...rest} style={styles.wrapper}>
       {!TypeGuards.isNil(leftIcon) ? (
         <Icon
           name={leftIcon}
-          style={{ ...variantStyles.icon, ...variantStyles.leftIcon }}
           debugName={`leftIcon-${debugName}`}
           {...leftIconProps}
+          style={leftIconStyles}
         />
       ) : null}
       {TypeGuards.isString(leftText) ? (
         <Text
           text={leftText}
-          css={[variantStyles.text, variantStyles.leftText]}
           {...leftTextProps}
+          style={leftTextStyles}
         />
-      ) : (
-        leftText
-      )}
+      ) : leftText}
+
       <Root
-        css={variantStyles.progress}
+        // @ts-expect-error
+        css={styles.progress}
         value={progress}
         {...progressRootProps}
       >
         <Indicator
-          css={[
-            variantStyles.indicator,
-            { transform: `translateX(-${100 - progress}%)` },
-          ]}
+          css={{ ...styles.indicator, transform: `translateX(-${100 - progress}%)` }}
           {...progressIndicatorProps}
         />
       </Root>
+
       {TypeGuards.isString(text) || showProgress ? (
         <Text
-          style={variantStyles.text}
           text={showProgress ? formatProgress(progress) : text}
           {...textProps}
+          style={styles.text}
         />
       ) : text}
+
       {!TypeGuards.isNil(rightIcon) ? (
         <Icon
           name={rightIcon}
-          style={{ ...variantStyles.icon, ...variantStyles.rightIcon }}
           debugName={`rightIcon-${debugName}`}
           {...rightIconProps}
+          style={rightIconStyles}
         />
       ) : null}
       {TypeGuards.isString(rightText) ? (
         <Text
           text={rightText}
-          css={[variantStyles.text, variantStyles.rightText]}
           {...rightTextProps}
+          style={rightTextStyles}
         />
-      ) : (
-        rightText
-      )}
+      ) : rightText}
     </View>
   )
 }
 
-ProgressBar.defaultProps = defaultProps
+ProgressBar.styleRegistryName = 'ProgressBar'
+ProgressBar.elements = ['wrapper', 'progress', 'indicator', 'text', 'icon', 'leftIcon', 'leftText', 'rightIcon', 'rightText']
+ProgressBar.rootElement = 'wrapper'
+
+ProgressBar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ProgressBar as (props: StyledComponentProps<ProgressBarProps, typeof styles>) => IJSX
+}
+
+ProgressBar.defaultProps = {
+  progress: 0,
+  showProgress: false,
+  formatProgress: _formatProgress,
+} as Partial<ProgressBarProps>
+
+WebStyleRegistry.registerComponent(ProgressBar)

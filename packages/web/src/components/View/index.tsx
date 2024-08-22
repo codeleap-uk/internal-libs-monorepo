@@ -1,25 +1,19 @@
-/** @jsx jsx */
-import { jsx, CSSObject } from '@emotion/react'
-import { useDefaultComponentStyle, useCodeleapContext, useMemo, TypeGuards } from '@codeleap/common'
-import React, { forwardRef, Ref } from 'react'
-import { ViewPresets } from './styles'
+import { useMemo, TypeGuards } from '@codeleap/common'
+import React, { ElementType, forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
-import { NativeHTMLElement } from '../../types'
 import { motion } from 'framer-motion'
 import { ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
-export const ViewCP = (
-  viewProps: ViewProps<'div'>,
-  ref: React.Ref<any>,
-) => {
+export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
   const {
-    responsiveVariants = {},
-    variants = [],
-    component = 'div',
+    component,
     children,
     is,
     not,
@@ -27,32 +21,28 @@ export const ViewCP = (
     onHover,
     debugName,
     down,
-    scroll = false,
-    debug = false,
     style,
-    animated = false,
-    animatedProps = {},
-    css = [],
+    animated,
+    animatedProps,
     ...props
-  } = viewProps
+  } = {
+    ...View.defaultProps,
+    ...viewProps,
+  }
 
-  const Component = animated ? (motion?.[component] || motion.div) : (component || 'div')
+  const styles = useStylesFor(View.styleRegistryName, style)
 
-  const variantStyles = useDefaultComponentStyle<'u:View', typeof ViewPresets>('u:View', {
-    responsiveVariants,
-    variants,
-    styles: { wrapper: style },
-    rootElement: 'wrapper',
-  })
+  const Component: ElementType = animated ? (motion?.[component as string] || motion.div) : (component || 'div')
 
-  const { Theme, logger } = useCodeleapContext()
+  const theme = useTheme(store => store.current)
 
   function handleHover(isMouseOverElement: boolean) {
     onHover?.(isMouseOverElement)
   }
 
   const platformMediaQuery = useMemo(() => {
-    return Theme.media.renderToPlatformQuery({
+    // @ts-expect-error theme type
+    return theme?.media?.renderToPlatformQuery({
       is,
       not,
       up,
@@ -62,42 +52,38 @@ export const ViewCP = (
 
   const matches = useMediaQuery(platformMediaQuery)
 
-  const componentStyles = useMemo(() => {
-    return [
-      variantStyles.wrapper,
-      scroll && { overflowY: 'scroll' },
-      matches && { display: 'none' },
-      style,
-      css,
-    ]
-  }, [variantStyles, scroll, matches, css])
-
-  const onHoverProps = TypeGuards.isFunction(onHover) && {
+  const hoverProps = TypeGuards.isFunction(onHover) && {
     onMouseEnter: () => handleHover(true),
     onMouseLeave: () => handleHover(false),
-  }
-
-  if (debug) {
-    logger.log(debugName, { componentStyles, platformMediaQuery, matches })
   }
 
   const testId = getTestId(viewProps)
 
   return (
     <Component
-      css={componentStyles}
-      // @ts-expect-error
-      ref={ref}
-      {...onHoverProps}
+      {...hoverProps}
       {...props}
       {...animatedProps}
+      ref={ref}
       data-testid={testId}
+      css={[styles.wrapper, matches && { display: 'none' }]}
     >
       {children}
     </Component>
   )
+}) as StyledComponentWithProps<ViewProps>
+
+View.styleRegistryName = 'View'
+View.elements = ['wrapper']
+View.rootElement = 'wrapper'
+
+View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return View as <T extends ElementType = 'div'>(props: StyledComponentProps<ViewProps<T>, typeof styles>) => IJSX
 }
 
-export const View = forwardRef(ViewCP) as unknown as <T extends NativeHTMLElement = 'div'>(
-  props: ViewProps<T>
-) => JSX.Element
+View.defaultProps = {
+  component: 'div',
+  animated: false,
+} as Partial<ViewProps>
+
+WebStyleRegistry.registerComponent(View)

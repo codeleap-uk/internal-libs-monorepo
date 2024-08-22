@@ -1,94 +1,93 @@
-import { ComponentVariants, TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
-import { ComponentCommonProps, StylesOf } from '../../types'
-import { Icon, IconProps } from '../Icon'
-import { Touchable, TouchableProps } from '../Touchable'
+import { TypeGuards } from '@codeleap/common'
+import { Icon } from '../Icon'
+import { Touchable } from '../Touchable'
 import { View } from '../View'
-import { ActionIconComposition, ActionIconParts, ActionIconPresets } from './styles'
+import { ActionIconParts } from './styles'
+import { ActionIconProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
+import { ElementType } from 'react'
 
 export * from './styles'
-
-/** IconButton */
-export type ActionIconProps = Omit<TouchableProps, 'styles' | 'variants'> & ComponentCommonProps & {
-  iconProps?: Partial<IconProps>
-  /** prop */
-  icon?: IconProps['name']
-  /** prop */
-  name?: IconProps['name']
-
-  styles?: StylesOf<ActionIconComposition>
-} & ComponentVariants<typeof ActionIconPresets>
-
-const defaultProps: Partial<ActionIconProps> = {
-  disabled: false,
-  tabIndex: 0,
-}
+export * from './types'
 
 export const ActionIcon = (props: ActionIconProps) => {
-  const allProps = {
-    ...ActionIcon.defaultProps,
-    ...props,
-  }
-
   const {
     icon,
     name,
     iconProps,
     onPress,
-    responsiveVariants = {},
-    variants = [],
-    styles = {},
+    style,
     children,
     disabled,
     debugName,
     ...touchableProps
-  } = allProps
+  } = {
+    ...ActionIcon.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'touchableWrapper',
-  })
+  const styles = useStylesFor(ActionIcon.styleRegistryName, style)
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent: any = isPressable ? Touchable : View
+  const WrapperComponent: ElementType = isPressable ? Touchable : View
 
   const handlePress = (e) => {
     if (!isPressable) return
-    if (onPress && (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter')) {
+
+    const pressed = e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter'
+
+    if (pressed) {
       onPress?.()
     }
   }
 
-  const getStyles = (key: ActionIconParts) => ({
-    ...variantStyles[key],
-    ...(disabled ? variantStyles[`${key}:disabled`] : {}),
-    ...(isPressable ? variantStyles[`${key}:pressable`] : {}),
-  })
+  const getStyles = (key: ActionIconParts) => mergeStyles([
+    styles[key],
+    disabled && styles[`${key}:disabled`],
+    isPressable && styles[`${key}:pressable`],
+  ])
+
+  const wrapperProps = isPressable ? {
+    onPress: () => handlePress({ type: 'click' }),
+    onKeyDown: handlePress,
+  } : {}
+
+  const wrapperStyles = getStyles('touchableWrapper')
+  const iconStyles = getStyles('icon')
 
   return (
     <WrapperComponent
-      css={getStyles('touchableWrapper')}
       disabled={disabled}
       debugName={debugName}
-      {
-        ...(isPressable && {
-          onPress: () => handlePress({ type: 'click' }),
-          onKeyDown: handlePress,
-        })
-      }
+      {...wrapperProps}
       {...touchableProps}
+      style={wrapperStyles}
     >
       <Icon
         debugName={debugName}
         name={icon ?? name}
-        style={getStyles('icon')}
         {...iconProps}
+        style={iconStyles}
       />
       {children}
     </WrapperComponent>
   )
 }
 
-ActionIcon.defaultProps = defaultProps
+ActionIcon.styleRegistryName = 'ActionIcon'
+ActionIcon.elements = ['touchable', 'icon']
+ActionIcon.rootElement = 'touchableWrapper'
+
+ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ActionIcon as (props: StyledComponentProps<ActionIconProps, typeof styles>) => IJSX
+}
+
+ActionIcon.defaultProps = {
+  disabled: false,
+  tabIndex: 0,
+} as Partial<ActionIconProps>
+
+WebStyleRegistry.registerComponent(ActionIcon)

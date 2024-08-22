@@ -1,38 +1,21 @@
-import { TypeGuards, useDefaultComponentStyle } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { motion } from 'framer-motion'
-import React, { ElementType } from 'react'
-import { TextPresets } from './styles'
+import React, { ElementType, forwardRef } from 'react'
 import { TextProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
 
-const defaultProps: Partial<TextProps<'p'>> = {
-  debugName: 'Text component',
-  component: 'p',
-  debounce: null,
-  pressDisabled: false,
-  animated: false,
-  animatedProps: {},
-}
-
-export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
-  const allProps = {
-    ...Text.defaultProps,
-    ...textProps,
-  }
-
+export const Text = forwardRef<HTMLParagraphElement, TextProps>((textProps, ref) => {
   const {
-    variants = [],
-    responsiveVariants = {},
-    styles = {},
-    style = {},
-    css,
-    text = null,
+    style,
+    text,
     children,
     component,
     debugName,
-    msg = null,
     onPress,
     debounce,
     pressDisabled,
@@ -40,18 +23,16 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     animated,
     animatedProps,
     ...props
-  } = allProps
+  } = {
+    ...Text.defaultProps,
+    ...textProps,
+  }
 
-  const Component = animated ? (motion?.[component] || motion.p) : (component || 'p')
+  const styles = useStylesFor(Text.styleRegistryName, style)
+
+  const Component: ElementType = animated ? (motion?.[component as string] || motion.p) : (component || 'p')
 
   const pressedRef = React.useRef(false)
-
-  const variantStyles = useDefaultComponentStyle<'u:Text', typeof TextPresets>('u:Text', {
-    responsiveVariants,
-    variants,
-    styles,
-    rootElement: 'text',
-  })
 
   const isPressable = (TypeGuards.isFunction(onPress) || TypeGuards.isFunction(onClick)) && !pressDisabled
 
@@ -80,31 +61,39 @@ export const Text = <T extends ElementType>(textProps: TextProps<T>) => {
     }
   }
 
-  const _styles = React.useMemo(() => ([
-    variantStyles.text,
-    disabled && variantStyles['text:disabled'],
-    css,
-    style,
-  ]), [css, style, disabled])
-
   const pressProps = isPressable ? {
     onClick: disabled ? null : _onPress,
   } : {}
 
-  const componentProps: any = {
+  const componentProps: AnyRecord = {
     ...props,
     ...pressProps,
-    ...animatedProps
+    ...animatedProps,
   }
 
   return (
-    <Component
-      css={_styles}
-      {...componentProps}
-    >
+    <Component {...componentProps} ref={ref} css={[styles.text, disabled && styles['text:disabled']]}>
       {text || children}
     </Component>
   )
+}) as StyledComponentWithProps<TextProps>
+
+Text.styleRegistryName = 'Text'
+Text.elements = ['text']
+Text.rootElement = 'text'
+
+Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Text as <T extends ElementType = 'p'>(props: StyledComponentProps<TextProps<T>, typeof styles>) => IJSX
 }
 
-Text.defaultProps = defaultProps
+Text.defaultProps = {
+  debugName: 'Text component',
+  component: 'p',
+  text: null,
+  debounce: null,
+  pressDisabled: false,
+  animated: false,
+  animatedProps: {},
+} as Partial<TextProps>
+
+WebStyleRegistry.registerComponent(Text)

@@ -1,8 +1,6 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common";
-import { ViewComposition } from "../View";
 
-export type OverlayComposition = ViewComposition
+type OverlayState = 'visible'
 
-const createOverlayStyle = createDefaultVariantFactory<OverlayComposition>()
+type OverlayParts = 'wrapper'
 
-export const OverlayPresets = includePresets((styles) => createOverlayStyle(() => ({ wrapper: styles })))
+export type OverlayComposition = OverlayParts | `${OverlayParts}:${OverlayState}`

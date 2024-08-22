@@ -1,0 +1,8 @@
+node_modules
+.turbo
+tsconfig.json
+.eslintignore
+.eslintrc.js
+README.md
+yarn*
+docs

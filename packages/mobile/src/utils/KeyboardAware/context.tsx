@@ -11,11 +11,9 @@ type TKeyboardCtx = {
  * @deprecated useKeyboard does not need to be wrapped in a provider
  */
 export const KeyboardProvider = ({ children }) => {
-
   return <>
     {children}
   </>
-
 }
 
 export const useKeyboard = (): TKeyboardCtx => {

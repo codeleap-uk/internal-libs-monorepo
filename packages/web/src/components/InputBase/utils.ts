@@ -1,27 +1,15 @@
-import { StylesOf } from '@codeleap/common'
-import { ActionIconComposition } from '../ActionIcon'
-import { InputBaseProps } from './types'
+import { IconState, IconStyles, InputBaseKey, InputBaseProps, OmitDiff } from './types'
 
-type OmitDiff<T1, T2> = {
-  [K in Exclude<keyof T1, keyof T2>]: T1[K]
-} & {
-  [K in keyof T2]: T2[K]
-}
-
-type InputBaseKey = keyof InputBaseProps
-
-export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
+export function selectInputBaseProps<T extends Omit<InputBaseProps, 'style'>>(props: T): {
   inputBaseProps: InputBaseProps
   others: OmitDiff<T, T>
 } {
   const varList:InputBaseKey[] = [
     'label',
-
     'error',
     'innerWrapper',
     'leftIcon',
     'rightIcon',
-    // 'styles',
     'description',
     'wrapper',
     'children',
@@ -40,14 +28,6 @@ export function selectInputBaseProps<T extends InputBaseProps>(props: T): {
   }, {} as InputBaseProps)
 
   return { inputBaseProps: result, others: copy as OmitDiff<T, T> }
-}
-
-type IconStyles = StylesOf<ActionIconComposition>
-
-type IconState = {
-  focused: boolean
-  hasError: boolean
-  disabled: boolean
 }
 
 export const getIconStyles = (obj: IconStyles, state: IconState) => ({
@@ -100,5 +80,5 @@ export const iconStylesOf = (baseStyles: IconStyles, styles: IconStyles) => ({
   'touchableWrapper:disabled': {
     ...baseStyles['touchableWrapper:disabled'],
     ...styles['touchableWrapper:disabled'],
-  }
+  },
 })

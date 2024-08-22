@@ -1,50 +1,18 @@
 import React from 'react'
-import { ReactNode, ComponentPropsWithoutRef } from 'react'
-
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
-import {
-  ComponentVariants,
-  FormTypes,
-  getNestedStylesByKey,
-  StylesOf,
-  TypeGuards,
-  useDefaultComponentStyle,
-} from '@codeleap/common'
+import { TypeGuards } from '@codeleap/common'
 import { View } from '../View'
-import { RadioInputComposition, RadioInputPresets } from './styles'
-import { InputLabel } from '../InputLabel'
-import { StyleSheet } from 'react-native'
-import { InputBase, InputBaseDefaultOrder, InputBaseProps, selectInputBaseProps } from '../InputBase'
+import { InputBase, selectInputBaseProps } from '../InputBase'
+import { RadioGroupProps, RadioOptionProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
+
 export * from './styles'
+export * from './types'
 
-type WrapperProps = InputBaseProps
-
-type RadioOption<T> = FormTypes.Options<T>[number] & {
-  disabled?: boolean
-}
-export type RadioGroupProps<T extends string|number> = WrapperProps & {
-  options: RadioOption<T>[]
-  value: T
-  onValueChange(value: T): void
-  label: ReactNode
-  styles?: StylesOf<RadioInputComposition>
-  variants?: ComponentVariants<typeof RadioInputPresets>['variants']
-  radioOnRight?: boolean
-}
-
-type OptionProps<T extends string|number> = {
-  item: RadioOption<T>
-  selected: boolean
-  onSelect(): void
-  styles?: StylesOf<RadioInputComposition>
-  debugName?: string
-  disabled?: boolean
-  separator?: boolean
-  reverseOrder?: boolean
-}
-
-const Option = <T extends string|number>(props: OptionProps<T>) => {
+const Option = <T extends string | number>(props: RadioOptionProps<T>) => {
   const {
     debugName,
     item,
@@ -90,7 +58,6 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       onPress={onSelect}
       disabled={isDisabled}
     >
-
       {reverseOrder ? (
         <>
           {label}
@@ -128,41 +95,38 @@ const Option = <T extends string|number>(props: OptionProps<T>) => {
       )}
 
     </Touchable>
-    {separator && <View style={styles.optionSeparator} />}
+    {separator ? <View style={styles.optionSeparator} /> : null}
   </>
 }
 
-export const RadioGroup = <T extends string|number>(
-  props: RadioGroupProps<T>,
-) => {
+export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>) => {
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps(props)
+  } = selectInputBaseProps({
+    ...RadioGroup.defaultProps,
+    ...props,
+  })
 
   const {
     options,
     value,
     onValueChange,
-    variants,
-    styles,
     disabled,
     debugName,
     radioOnRight,
+    style,
   } = others
 
-  const variantStyles = useDefaultComponentStyle<'u:RadioInput', typeof RadioInputPresets>('u:RadioInput', {
-    variants,
-    styles,
-    transform: StyleSheet.flatten,
-  })
+  const styles = useStylesFor(RadioGroup.styleRegistryName, style)
 
-  const _radioOnRight = radioOnRight ?? variantStyles.__props?.radioOnRight
+  // @ts-expect-error icss type
+  const _radioOnRight = radioOnRight ?? styles?.__props?.radioOnRight
 
   return <InputBase
     {...inputBaseProps}
     disabled={disabled}
-    styles={variantStyles}
+    style={styles}
     debugName={debugName}
   >
     {options?.map((item, idx) => (
@@ -171,7 +135,7 @@ export const RadioGroup = <T extends string|number>(
         item={item}
         key={idx}
         disabled={disabled}
-        styles={variantStyles}
+        styles={styles}
         selected={value === item.value}
         onSelect={() => onValueChange(item.value)}
         separator={idx < options.length - 1}
@@ -179,5 +143,16 @@ export const RadioGroup = <T extends string|number>(
       />
     ))}
   </InputBase>
-
 }
+
+RadioGroup.styleRegistryName = 'RadioGroup'
+RadioGroup.elements = [...InputBase.elements, 'option', '__props']
+RadioGroup.rootElement = 'wrapper'
+
+RadioGroup.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return RadioGroup as (<T extends string | number>(props: StyledComponentProps<RadioGroupProps<T>, typeof styles>) => IJSX)
+}
+
+RadioGroup.defaultProps = {} as Partial<RadioGroupProps<string | number>>
+
+MobileStyleRegistry.registerComponent(RadioGroup)

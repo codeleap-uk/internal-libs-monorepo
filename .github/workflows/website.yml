@@ -31,9 +31,13 @@ jobs:
         cache: 'yarn'
         registry-url: 'https://registry.npmjs.org'
 
-    - name: Yarn Install
+    - name: Install dependencies
       run: |
         yarn install
+        yarn global add turbo
+
+    - name: Build libraries
+      run: |
         yarn build
 
     - name: Production Build
@@ -51,7 +55,6 @@ jobs:
         AWS_REGION: ${{ secrets.AWS_REGION }}
         SOURCE_DIR: "apps/web/public"
 
-    
     - name: Slack Notification Success
       if: ${{ success() }}
       uses: rtCamp/action-slack-notify@v2

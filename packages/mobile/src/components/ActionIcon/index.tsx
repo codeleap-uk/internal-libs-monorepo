@@ -1,45 +1,63 @@
-import { ComponentVariants, getNestedStylesByKey, useDefaultComponentStyle } from '@codeleap/common'
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { StylesOf } from '../../types'
-import { Badge, BadgeComponentProps } from '../Badge'
-import { Icon, IconProps } from '../Icon'
-import { Touchable, TouchableProps } from '../Touchable'
-import { ActionIconComposition, ActionIconPresets } from './styles'
+import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { Badge } from '../Badge'
+import { Icon } from '../Icon'
+import { Touchable } from '../Touchable'
+import { ActionIconProps } from './types'
+import { useStylesFor } from '../../hooks'
 
-/** * IconButton */
-export type ActionIconProps= {
-    iconProps?: Partial<IconProps>
-    /** prop */
-    icon?: IconProps['name']
-    /** prop */
-    name?: IconProps['name']
-    styles?: StylesOf<ActionIconComposition> | StylesOf<ActionIconComposition>[]
-} & Omit<TouchableProps, 'styles' | 'variants'> & ComponentVariants<typeof ActionIconPresets> & BadgeComponentProps
+export * from './styles'
+export * from './types'
 
 export const ActionIcon = (props: ActionIconProps) => {
-  const { name, icon, iconProps, variants, styles, children, badge = false, badgeProps = {}, ...touchableProps } = props
-  const variantStyles = useDefaultComponentStyle<'u:ActionIcon', typeof ActionIconPresets>('u:ActionIcon', {
-    variants, styles, transform: StyleSheet.flatten,
-  })
-  const touchableStyles = getNestedStylesByKey('touchable', variantStyles)
+  const {
+    name,
+    icon,
+    iconProps,
+    children,
+    badge,
+    badgeProps = {},
+    style,
+    ...touchableProps
+  } = {
+    ...ActionIcon.defaultProps,
+    ...props,
+  }
 
-  const badgeStyles = getNestedStylesByKey('badge', variantStyles)
+  const styles = useStylesFor(ActionIcon.styleRegistryName, style)
 
-  return <Touchable styles={touchableStyles} {...touchableProps}>
-    <Icon name={icon ?? name} style={
-      [
-        variantStyles.icon,
-        touchableProps?.disabled && variantStyles['icon:disabled'],
-      ]} {...iconProps}/>
-    {children}
+  const compositionStyles = useCompositionStyles(['badge', 'touchable'], styles)
 
-    <Badge badge={badge} style={badgeStyles} {...badgeProps} />
-  </Touchable>
+  return (
+    <Touchable {...touchableProps} style={compositionStyles?.touchable}>
+      <Icon
+        name={icon ?? name}
+        {...iconProps}
+        style={[
+          styles.icon,
+          touchableProps?.disabled && styles['icon:disabled'],
+        ]}
+      />
+
+      {children}
+
+      <Badge badge={badge} {...badgeProps} style={compositionStyles?.badge} />
+    </Touchable>
+  )
+}
+
+ActionIcon.styleRegistryName = 'ActionIcon'
+ActionIcon.elements = ['icon', 'touchable', 'badge']
+ActionIcon.rootElement = 'touchableWrapper'
+
+ActionIcon.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return ActionIcon as (props: StyledComponentProps<ActionIconProps, typeof styles>) => IJSX
 }
 
 ActionIcon.defaultProps = {
   hitSlop: 10,
-}
+  badge: false,
+} as Partial<ActionIconProps>
 
-export * from './styles'
+MobileStyleRegistry.registerComponent(ActionIcon)

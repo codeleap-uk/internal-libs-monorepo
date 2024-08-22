@@ -1,8 +1,5 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common"
-import { ViewComposition } from "../View"
+type CollapseState = 'open' | 'closed'
 
-export type CollapseComposition = ViewComposition
+type CollapseParts = 'wrapper'
 
-const createCollapseStyle = createDefaultVariantFactory<CollapseComposition>()
-
-export const CollapsePresets = includePresets((styles) => createCollapseStyle(() => ({ wrapper: styles })))
+export type CollapseComposition = CollapseParts | `${CollapseParts}:${CollapseState}`

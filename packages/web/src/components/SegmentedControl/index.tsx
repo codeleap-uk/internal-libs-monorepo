@@ -1,80 +1,80 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { View } from '../View'
-import { SegmentedControlOption } from './SegmentedControlOption'
-import { ComponentVariants, useDefaultComponentStyle, PropsOf, IconPlaceholder, StylesOf, useRef, TypeGuards } from '@codeleap/common'
-import { SegmentedControlPresets } from './styles'
+import { useRef, TypeGuards } from '@codeleap/common'
 import { Text } from '../Text'
-import { Touchable } from '../Touchable'
-import { SegmentedControlComposition } from './styles'
-import { motion, MotionProps, AnimationProps, ForwardRefComponent } from 'framer-motion'
+import { motion, AnimationProps } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'
-import { IconProps } from '../Icon'
+import { SegmentedControlOptionProps, SegmentedControlProps } from './types'
+import { Touchable } from '../Touchable'
+import { Icon } from '../Icon'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 
-export type SegmentedControlOptionProps<T = string> = {
-  label: string
-  value: T
-  icon?: IconPlaceholder
-}
+export * from './styles'
+export * from './types'
 
-export type SegmentedControlProps<T = string> = ComponentVariants<typeof SegmentedControlPresets> & {
+const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props, ref) => {
+  const {
+    selected,
+    onPress,
+    styles,
+    iconProps = {},
+    label,
+    icon,
+    largestWidth,
+    textProps,
+    disabled,
+    ...touchableProps
+  } = props
 
-  /** options that the segmented control will receive */
-  options : SegmentedControlOptionProps[]
+  const iconStyles = mergeStyles([
+    styles.icon,
+    (selected ? styles['icon:selected'] : null),
+    (disabled ? styles['icon:disabled'] : null),
+  ])
 
-  /** the value of the segmented control */
-  value?: T
-
-  /**  all styles from the segmented control */
-  styles?: StylesOf<SegmentedControlComposition>
-
-  /**  view style */
-  style?: PropsOf<typeof View>['style']
-
-  /**  prop to control when te value of the segmented control changes */
-  onValueChange?: (v: any) => void
-
-  /**  motion div props */
-  bubbleProps?: React.HTMLAttributes<HTMLDivElement> & MotionProps
-
-  /** label that will be shown above the segmented control */
-  label?: string
-
-  /** * all the touchable props */
-  touchableProps?: Partial<PropsOf<typeof Touchable>>
-
-  debugName?: string
-  disabled?: boolean
-  animationProps?: AnimationProps
-  transitionDuration?: number
-  RenderAnimatedView?: ForwardRefComponent<HTMLDivElement, any>
-  textProps?: Omit<PropsOf<typeof Text>, 'key'>
-  iconProps?: Partial<IconProps>
-  debounce?: number
-  debounceEnabled?: boolean
-}
-
-const defaultProps: Partial<SegmentedControlProps> = {
-  animationProps: {},
-  transitionDuration: 0.2,
-  disabled: false,
-  RenderAnimatedView: motion.div,
-  debounce: 1000,
-  debounceEnabled: true,
-}
+  return (
+    <Touchable
+      key={touchableProps.key}
+      ref={ref as unknown as React.Ref<HTMLButtonElement>}
+      onPress={onPress}
+      disabled={disabled}
+      {...touchableProps}
+      style={{
+        ...styles.button,
+        ...(selected ? styles['button:selected'] : {}),
+        ...(disabled ? styles['button:disabled'] : {}),
+        width: largestWidth?.width,
+      }}
+    >
+      {!!icon ? (
+        <Icon
+          debugName={touchableProps?.debugName}
+          name={icon}
+          {...iconProps}
+          style={iconStyles}
+        />
+      ) : null}
+      <Text
+        text={label}
+        debugName={touchableProps?.debugName}
+        {...textProps}
+        style={{
+          ...styles.text,
+          ...(selected ? styles['text:selected'] : {}),
+          ...(disabled ? styles['text:disabled'] : {}),
+        }}
+      />
+    </Touchable>
+  )
+})
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
-  const allProps = {
-    ...SegmentedControl.defaultProps,
-    ...props,
-  }
-
   const {
     label,
     options,
-    styles = {},
     value,
-    variants = [],
-    responsiveVariants = {},
     onValueChange,
     style,
     bubbleProps,
@@ -82,22 +82,18 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
     transitionDuration,
     disabled,
     RenderAnimatedView: Bubble,
-    textProps = {},
-    iconProps = {},
+    textProps,
+    iconProps,
     debugName,
     debounce,
     debounceEnabled,
     ...rest
-  } = allProps
+  } = {
+    ...SegmentedControl.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:SegmentedControl', typeof SegmentedControlPresets>(
-    'u:SegmentedControl',
-    {
-      variants,
-      responsiveVariants,
-      styles,
-    },
-  )
+  const styles = useStylesFor(SegmentedControl.styleRegistryName, style)
 
   const currentOptionIdx = React.useMemo(() => {
     return options?.findIndex(o => o?.value === value) || 0
@@ -113,7 +109,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   }, [maxDivWidthRef.current])
 
   const bubbleAnimation = useAnimatedVariantStyles({
-    variantStyles,
+    variantStyles: styles,
     animatedProperties: [],
     updater: () => {
       'worklet'
@@ -130,21 +126,21 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   })
 
   const selectedBubbleStyles = [
-    variantStyles.selectedBubble,
-    disabled && variantStyles['selectedBubble:disabled'],
+    styles.selectedBubble,
+    disabled && styles['selectedBubble:disabled'],
     largestWidth,
   ]
 
   const onSelectTab = (option: SegmentedControlOptionProps, e?: React.KeyboardEvent<HTMLButtonElement>) => {
     if (!e || e?.keyCode === 13 || e?.key === 'Enter') {
       if (!debounceEnabled || !TypeGuards.isNumber(debounce)) {
-        onValueChange(option.value)
+        onValueChange?.(option?.value)
         return
       }
 
       if (sectionPressedRef.current !== null) return
 
-      onValueChange(option.value)
+      onValueChange?.(option?.value)
       sectionPressedRef.current = setTimeout(() => {
         clearTimeout(sectionPressedRef.current)
         sectionPressedRef.current = null
@@ -155,17 +151,18 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   }
 
   return (
-    <View css={[variantStyles.wrapper, style]} {...rest}>
-      {label && <Text text={label} css={[variantStyles.label, disabled && variantStyles['label:disabled']]} />}
-      <View css={[variantStyles.innerWrapper, disabled && variantStyles['innerWrapper:disabled']]}>
+    <View {...rest} style={styles.wrapper}>
+      {label ? <Text text={label} style={[styles.label, disabled && styles['label:disabled']]} /> : null}
+      <View style={[styles.innerWrapper, disabled && styles['innerWrapper:disabled']]}>
         <Bubble
+          // @ts-expect-error
           css={selectedBubbleStyles}
           animate={bubbleAnimation}
           initial={false}
           {...bubbleProps}
         />
         {options.map((o, idx) => (
-          <SegmentedControlOption
+          <Option
             ref={(ref) => {
               if (ref && ref.offsetWidth > maxDivWidthRef.current) {
                 maxDivWidthRef.current = ref.offsetWidth
@@ -179,11 +176,11 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
             key={idx}
             icon={o.icon}
             selected={value === o.value}
-            variantStyles={variantStyles}
-            style={largestWidth}
+            styles={styles}
             disabled={disabled}
             textProps={textProps}
             iconProps={iconProps}
+            largestWidth={largestWidth}
             tabIndex={0}
             {...props?.touchableProps}
           />
@@ -193,6 +190,31 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
   )
 }
 
-export * from './styles'
+SegmentedControl.styleRegistryName = 'SegmentedControl'
 
-SegmentedControl.defaultProps = defaultProps
+SegmentedControl.elements = [
+  'wrapper',
+  'innerWrapper',
+  'selectedBubble',
+  'text',
+  'icon',
+  'button',
+  'label',
+]
+
+SegmentedControl.rootElement = 'wrapper'
+
+SegmentedControl.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return SegmentedControl as (props: StyledComponentProps<SegmentedControlProps, typeof styles>) => IJSX
+}
+
+SegmentedControl.defaultProps = {
+  animationProps: {},
+  transitionDuration: 0.2,
+  disabled: false,
+  RenderAnimatedView: motion.div,
+  debounce: 1000,
+  debounceEnabled: true,
+} as Partial<SegmentedControlProps>
+
+WebStyleRegistry.registerComponent(SegmentedControl)

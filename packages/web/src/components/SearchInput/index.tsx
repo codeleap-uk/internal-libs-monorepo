@@ -1,14 +1,14 @@
-import { AnyFunction, IconPlaceholder, TypeGuards } from '@codeleap/common'
 import React, { useState } from 'react'
 import { TextInput, TextInputProps } from '../TextInput'
-import { ComponentWithDefaultProps } from '../../types/utility'
+import { AnyFunction, TypeGuards } from '@codeleap/common'
+import { AppIcon } from '@codeleap/styles'
 
 export type SearchInputProps = {
   placeholder: string
   clearable?: boolean
   debugName: string
-  clearIcon?: IconPlaceholder
-  searchIcon?: IconPlaceholder
+  clearIcon?: AppIcon
+  searchIcon?: AppIcon
   debounce?: number
   onSearchChange: (search: string) => void
   onTypingChange?: (isTyping: boolean) => void
@@ -17,7 +17,7 @@ export type SearchInputProps = {
   defaultValue?: string
 } & Partial<TextInputProps>
 
-export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
+export const SearchInput = (props: SearchInputProps) => {
   const {
     debugName,
     onSearchChange,
@@ -30,7 +30,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     debounce,
     value,
     onValueChange,
-    defaultValue = '',
+    defaultValue,
     ...rest
   } = {
     ...SearchInput.defaultProps,
@@ -44,7 +44,6 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 
   const handleChangeSearch = (value: string) => {
     setSearch(value)
-
     if (TypeGuards.isNil(debounce)) {
       onSearchChange?.(value)
     } else {
@@ -92,6 +91,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
 SearchInput.defaultProps = {
   debounce: null,
   clearable: true,
-  clearIcon: 'x' as IconPlaceholder,
-  searchIcon: 'search' as IconPlaceholder,
-}
+  clearIcon: 'x' as AppIcon,
+  searchIcon: 'search' as AppIcon,
+  defaultValue: '',
+} as Partial<SearchInputProps>

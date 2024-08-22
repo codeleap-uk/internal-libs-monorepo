@@ -1,120 +1,104 @@
-import * as React from 'react'
-import { forwardRef, useState } from 'react'
-import {
-  deepEqual,
-  onUpdate,
-  useDefaultComponentStyle,
-  usePrevious,
-} from '@codeleap/common'
-import { ScrollView, StyleSheet } from 'react-native'
-import { ViewProps } from '../View'
-import { RefreshControl, RefreshControlProps } from '../RefreshControl'
-import { ComponentWithDefaultProps, StylesOf } from '../../types'
-import { ScrollComposition, ScrollPresets } from './styles'
-import { GetKeyboardAwarePropsOptions, useKeyboardPaddingStyle } from '../../utils'
-import { KeyboardAwareScrollView, KeyboardAwareScrollViewProps } from 'react-native-keyboard-aware-scroll-view'
-import { useSoftInputState } from 'react-native-avoid-softinput'
-import { useMemo } from 'react'
-export type ScrollProps = KeyboardAwareScrollViewProps &
-  ViewProps & {
-    onRefresh?: () => void
-    refreshTimeout?: number
-    changeData?: any
-    keyboardAware?: boolean
-    refreshing?: boolean
-    styles?: StylesOf<ScrollComposition>
-    refreshControlProps?: Partial<RefreshControlProps>
-    debugName?: string
+import React, { forwardRef, useState } from 'react'
+import { deepEqual, onUpdate, usePrevious } from '@codeleap/common'
+import { ScrollView } from 'react-native'
+import { RefreshControl } from '../RefreshControl'
+import { useKeyboardPaddingStyle } from '../../utils'
+import { ScrollProps, ScrollRef } from './types'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
+
+export * from './styles'
+export * from './types'
+
+export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
+  const {
+    style,
+    refreshTimeout,
+    children,
+    changeData,
+    refreshControlProps = {},
+    contentContainerStyle,
+    keyboardAware,
+    animated,
+    ...props
+  } = {
+    ...Scroll.defaultProps,
+    ...scrollProps,
   }
 
-export type ScrollRef = KeyboardAwareScrollView
+  const hasRefresh = !!props.onRefresh
+  const [refreshingState, setRefreshing] = useState(false)
+  const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshingState
 
-const defaultProps: Partial<ScrollProps> = {
-  keyboardShouldPersistTaps: 'handled',
-}
+  const timer = React.useRef(null)
+  const previousData = usePrevious(changeData)
 
-export const Scroll = forwardRef<ScrollRef, ScrollProps>(
-  (scrollProps, ref) => {
-    const {
-      variants = [],
-      style,
-      refreshTimeout = 3000,
-      children,
-      changeData,
-      styles = {},
-      refreshControlProps = {},
-      contentContainerStyle,
-      keyboardAware = true,
-      animated = true,
-      ...props
-    } = {
-      ...defaultProps,
-      ...scrollProps,
+  const onRefresh = () => {
+    if (timer.current) {
+      clearTimeout(timer.current)
     }
-    const hasRefresh = !!props.onRefresh
-    const [refreshingState, setRefreshing] = useState(false)
-    const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshingState
 
-    const timer = React.useRef(null)
-    const previousData = usePrevious(changeData)
+    setRefreshing(true)
 
-    const onRefresh = () => {
+    props.onRefresh()
+
+    timer.current = setTimeout(() => {
+      setRefreshing(false)
+    }, refreshTimeout)
+  }
+
+  onUpdate(() => {
+    if (refreshingDisplay && !deepEqual(previousData, changeData)) {
+      setRefreshing(false)
       if (timer.current) {
         clearTimeout(timer.current)
       }
-
-      setRefreshing(true)
-
-      props.onRefresh()
-
-      timer.current = setTimeout(() => {
-        setRefreshing(false)
-      }, refreshTimeout)
     }
-    onUpdate(() => {
-      if (refreshingDisplay && !deepEqual(previousData, changeData)) {
-        setRefreshing(false)
-        if (timer.current) {
-          clearTimeout(timer.current)
-        }
+  }, [refreshingDisplay, changeData])
+
+  const styles = useStylesFor(Scroll.styleRegistryName, style)
+
+  const Component = ScrollView
+
+  const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
+
+  return (
+    <Component
+      showsVerticalScrollIndicator={false}
+      // @ts-ignore
+      ref={ref}
+      refreshControl={
+        hasRefresh && (
+          <RefreshControl
+            refreshing={refreshingDisplay}
+            onRefresh={onRefresh}
+            {...refreshControlProps}
+          />
+        )
       }
-    }, [refreshingDisplay, changeData])
+      {...props}
+      style={styles?.wrapper}
+      contentContainerStyle={keyboardStyle}
+    >
+      {children}
+    </Component>
+  )
+}) as StyledComponentWithProps<ScrollProps>
 
-    const variantStyles = useDefaultComponentStyle<'u:Scroll', typeof ScrollPresets>('u:Scroll', {
-      variants,
-      styles,
-      transform: StyleSheet.flatten,
-      rootElement: 'content',
-    })
+Scroll.styleRegistryName = 'Scroll'
+Scroll.elements = ['wrapper', 'content']
+Scroll.rootElement = 'wrapper'
 
-    const Component = ScrollView
+Scroll.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Scroll as (props: StyledComponentProps<ScrollProps, typeof styles>) => IJSX
+}
 
-    const keyboardStyle = useKeyboardPaddingStyle([variantStyles.content, contentContainerStyle], keyboardAware)
+Scroll.defaultProps = {
+  keyboardShouldPersistTaps: 'handled',
+  refreshTimeout: 3000,
+  keyboardAware: true,
+  animated: true,
+} as Partial<ScrollProps>
 
-    return (
-      <Component
-        style={[variantStyles.wrapper, style]}
-        contentContainerStyle={keyboardStyle}
-        showsVerticalScrollIndicator={false}
-        // @ts-ignore
-        ref={ref}
-        refreshControl={
-          hasRefresh && (
-            <RefreshControl
-              refreshing={refreshingDisplay}
-              onRefresh={onRefresh}
-              {...refreshControlProps}
-            />
-          )
-        }
-        {...props}
-      >
-        {children}
-      </Component>
-    )
-  },
-) as unknown as ComponentWithDefaultProps<ScrollProps>
-
-Scroll.defaultProps = defaultProps
-
-export * from './styles'
+MobileStyleRegistry.registerComponent(Scroll)

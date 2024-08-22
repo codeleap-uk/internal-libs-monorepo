@@ -1,6 +1,10 @@
-import { React, variantProvider } from '@/app'
-import { View, Text, Icon } from '@/components'
+import { React, theme } from '@/app'
+import { View, Text, Icon, ActionIcon } from '@/components'
+import { createStyles } from '@codeleap/styles'
+import { useMediaQuery } from '@codeleap/web'
 import { useLocation, WindowLocation } from '@reach/router'
+import { useState } from 'react'
+import { Collapse } from '../Collapse'
 import { Link } from '../Link'
 
 type Node = {
@@ -22,9 +26,9 @@ const SectionText = (props: SectionTextProps) => {
   const isSelected = location?.href?.includes(node?.url)
 
   return (
-    <View variants={['column', 'gap:2']}>
+    <View style={['column', 'gap:2']}>
       <Link 
-        variants={['p3', 'noUnderline', subContent && 'marginLeft:1', isSelected && 'primary3']} 
+        style={['p3', 'noUnderline', subContent && 'marginLeft:1', isSelected && 'primary3']} 
         text={node?.title} 
         to={pathOrigin + node?.url} 
       />
@@ -37,26 +41,37 @@ const SectionText = (props: SectionTextProps) => {
 
 export const SectionMap = ({ content = [] }) => {
   const location = useLocation()
+  const [open, setOpen] = useState(false)
+
+  const mediaQuery = theme.media.down('tabletSmall')
+  const isMobile = useMediaQuery(mediaQuery, { getInitialValueInEffect: false })
 
   const pathOrigin = location?.origin + location?.pathname
 
+  const sections = content?.map((node, idx) => (
+    <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />
+  ))
+
   return (
-    <View css={styles.wrapper}>
-      <View variants={['alignCenter', 'gap:2']}>
-        <Icon debugName='table content' name='layers' size={20} />
-        <Text variants={['h4', 'primary']} text={'Table of contents'} />
+    <View style={styles.wrapper}>
+      <View style={['alignCenter', 'gap:2']}>
+        {isMobile ? (
+          <ActionIcon debugName='table content' name='layers' onPress={() => setOpen(!open)} />
+        ): (
+          <Icon debugName='table content' name='layers' size={20} />
+        )}
+
+        <Text style={['h4', 'color:primary3']} text={'Table of contents'} />
       </View>
 
-      {content?.map((node, idx) => (
-        <SectionText location={location} node={node} key={idx} pathOrigin={pathOrigin} />
-      ))}
+      {isMobile ? <Collapse open={open}>{sections}</Collapse> : sections}
     </View>
   )
 }
 
 const SECTION_WIDTH = 280
 
-const styles = variantProvider.createComponentStyle((theme) => ({
+const styles = createStyles((theme) => ({
   wrapper: {
     backgroundColor: theme.colors.background,
     position: 'sticky',
@@ -76,10 +91,10 @@ const styles = variantProvider.createComponentStyle((theme) => ({
     maxWidth: SECTION_WIDTH,
     borderLeft: `1px solid ${theme.colors.neutral3}`,
 
-    [theme.media.down('mid')]: {
+    [theme.media.down('tabletSmall')]: {
       minWidth: '100vw',
       maxWidth: '100vw',
       minHeight: 'unset',
     },
   },
-}), true)
+}))

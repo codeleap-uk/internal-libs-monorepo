@@ -1,49 +1,65 @@
 import { range, useMemo, useUncontrolled } from '@codeleap/common'
 
-export interface PaginationParams {
-  /** Page selected on initial render, defaults to 1 */
+export type PaginationParams = {
   initialPage?: number
-
-  /** Controlled active page number */
   page?: number
-
-  /** Total amount of pages */
   total: number
-
-  /** Siblings amount on left/right side of selected page, defaults to 1 */
-  siblings?: number
-
-  /** Amount of elements visible on left/right edges, defaults to 1  */
   boundaries?: number
-
-  /** Callback fired after change of each page */
-  onChange?: (page: number) => void
+  onChangePage?: (page: number) => void
+  shouldAbbreviate?: boolean
+  abbreviationMinimumAmount?: number
+  displayLeftArrow?: boolean
+  displayRightArrow?: boolean
+  isMobile?: boolean
+  abbreviationSymbol?: any
 }
 
-export function usePagination({
-  total,
-  siblings = 1,
-  boundaries = 1,
-  page,
-  initialPage = 1,
-  onChange,
-}: PaginationParams) {
+export function usePagination(props: PaginationParams) {
+
+  const { isMobile } = props
+
+  const {
+    total,
+    boundaries = 2,
+    initialPage = 1,
+    page,
+    onChangePage,
+    shouldAbbreviate = true,
+    abbreviationMinimumAmount = isMobile ? 5 : 10,
+    displayLeftArrow = true,
+    displayRightArrow = true,
+    abbreviationSymbol,
+  } = props
+
   const [activePage, setActivePage] = useUncontrolled({
     value: page,
-    onChange,
+    onChange: onChangePage,
     defaultValue: initialPage,
     finalValue: initialPage,
     rule: (_page) => typeof _page === 'number' && _page <= total,
   })
 
+  const _boundaries = isMobile ? 2 : boundaries
+
+  const canAbreviateItems = (shouldAbbreviate || isMobile) && total > abbreviationMinimumAmount
+  const displayLastNumbers = activePage + _boundaries + (isMobile ? 0 : 2) >= total
+  const isCenterSelected = canAbreviateItems && activePage > _boundaries && !displayLastNumbers
+
+  const dotsDisplay = isCenterSelected ? abbreviationSymbol : null
+
   const setPage = (pageNumber: number) => {
-    if (pageNumber <= 0) {
-      setActivePage(1)
-    } else if (pageNumber > total) {
-      setActivePage(total)
-    } else {
-      setActivePage(pageNumber)
-    }
+
+    const isPreviousArrow = pageNumber === 0
+    const isNextArrow = pageNumber === total + 1
+
+    const nonSelectableItems = [
+      displayLeftArrow && isPreviousArrow,
+      displayRightArrow && isNextArrow,
+    ].some(x => x)
+
+    if (nonSelectableItems) return activePage
+
+    setActivePage(pageNumber)
   }
 
   const next = () => setPage(activePage + 1)
@@ -51,54 +67,54 @@ export function usePagination({
   const first = () => setPage(1)
   const last = () => setPage(total)
 
-  const DOTS = 'dots'
-
-  const paginationRange = useMemo((): (number | 'dots')[] => {
-    // Pages count is determined as siblings (left/right) + boundaries(left/right) + currentPage + 2*DOTS
-    const totalPageNumbers = siblings * 2 + 3 + boundaries * 2
-
-    /*
-       * If the number of pages is less than the page numbers we want to show in our
-       * paginationComponent, we return the range [1..total]
-       */
-    if (totalPageNumbers >= total) {
-      return range(1, total)
+  const status = useMemo(() => {
+    if (isCenterSelected) {
+      return 'abreviated'
     }
 
-    const leftSiblingIndex = Math.max(activePage - siblings, boundaries)
-    const rightSiblingIndex = Math.min(activePage + siblings, total - boundaries)
-
-    /*
-       * We do not want to show dots if there is only one position left
-       * after/before the left/right page count as that would lead to a change if our Pagination
-       * component size which we do not want
-       */
-    const shouldShowLeftDots = leftSiblingIndex > boundaries + 2
-    const shouldShowRightDots = rightSiblingIndex < total - (boundaries + 1)
-
-    if (!shouldShowLeftDots && shouldShowRightDots) {
-      const leftItemCount = siblings * 2 + boundaries + 2
-      return [...range(1, leftItemCount), DOTS, ...range(total - (boundaries - 1), total)]
+    if (displayLastNumbers) {
+      return 'end'
     }
 
-    if (shouldShowLeftDots && !shouldShowRightDots) {
-      const rightItemCount = boundaries + 1 + 2 * siblings
-      return [...range(1, boundaries), DOTS, ...range(total - rightItemCount, total)]
+    return 'initial'
+  }, [isCenterSelected, displayLastNumbers])
+
+  const paginationRange = useMemo((): (number | string | '...')[] => {
+
+    if (!canAbreviateItems) {
+      return [
+        ...range(1, total),
+      ].filter(Boolean)
+    }
+
+    if (displayLastNumbers) {
+
+      const extraItems = [
+        1,
+        abbreviationSymbol,
+      ]
+
+      return [
+        ...extraItems,
+        ...range(total - (_boundaries + extraItems?.length - (isMobile ? 2 : 0)), total),
+      ].filter(Boolean)
     }
 
     return [
-      ...range(1, boundaries),
-      DOTS,
-      ...range(leftSiblingIndex, rightSiblingIndex),
-      DOTS,
-      ...range(total - boundaries + 1, total),
-    ]
-  }, [total, siblings, activePage])
+      ...range(1, isCenterSelected ? _boundaries - 1 : _boundaries),
+      dotsDisplay,
+      isCenterSelected ? activePage : abbreviationSymbol,
+      dotsDisplay,
+      ...range(total - _boundaries + (isCenterSelected ? 2 : 1), total),
+    ].filter(Boolean)
+
+  }, [total, activePage, displayLastNumbers, isCenterSelected, canAbreviateItems])
 
   return {
     range: paginationRange,
-    active: activePage,
+    page: Number(activePage),
     setPage,
+    status,
     next,
     previous,
     first,

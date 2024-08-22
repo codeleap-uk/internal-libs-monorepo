@@ -1,135 +1,103 @@
-import * as React from 'react'
-import { forwardRef } from 'react'
-import {
-  useDefaultComponentStyle,
-  ComponentVariants,
-  useCallback,
-  useCodeleapContext,
-} from '@codeleap/common'
-
-import { StyleSheet, ListRenderItemInfo } from 'react-native'
+import React, { useCallback, forwardRef, ComponentType } from 'react'
+import { ListRenderItemInfo } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { RefreshControl } from '../RefreshControl'
-import { List } from '../List'
-import { GridPresets } from './styles'
-import { FlatListProps, AugmentedRenderItemInfo } from '../List'
+import { List, ListItem } from '../List'
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
+import { GridProps } from './types'
+import { AnyRecord, AppTheme, IJSX, StyledComponentProps, StyledComponentWithProps, Theme, useTheme } from '@codeleap/styles'
+import { MobileStyleRegistry } from '../../Registry'
+import { useStylesFor } from '../../hooks'
 
 export * from './styles'
-
-export type DataboundFlatGridPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'getItemLayout'
-
-export type GridAugmentedRenderItemInfo<T> = AugmentedRenderItemInfo<T> & {
-  isFirstInRow: boolean
-  isLastInRow: boolean
-  isOnlyInRow: boolean
-}
-
-export type GridProps<
-  T = any[],
-  Data = T extends Array<infer D> ? D : never
-> = Omit<FlatListProps<T, Data>, 'variants' | 'renderItem'> & ComponentVariants<typeof GridPresets> & {
-  spacing?: number
-  itemDimension?: number
-  renderItem: (data: GridAugmentedRenderItemInfo<T>) => React.ReactElement
-}
+export * from './types'
 
 const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
-  return (
-    <View style={props.separatorStyles}></View>
-  )
+  return <View style={props.separatorStyles} />
 }
 
-const defaultProps: Partial<GridProps> = {
-  keyboardShouldPersistTaps: 'handled',
-  refreshControlProps: {},
-}
+export const Grid = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref) => {
+  const {
+    style,
+    onRefresh,
+    refreshing,
+    placeholder,
+    refreshControlProps = {},
+    spacing,
+    numColumns,
+    renderItem: RenderItem,
+    ...props
+  } = {
+    ...Grid.defaultProps,
+    ...flatGridProps,
+  }
 
-const GridCP = forwardRef<KeyboardAwareFlatList, GridProps>(
-  (flatGridProps, ref) => {
-    const {
-      variants = [],
-      style,
-      styles = {},
-      onRefresh,
-      refreshing,
-      placeholder,
-      refreshControlProps = {},
-      spacing,
-      numColumns,
-      ...props
-    } = {
-      ...defaultProps,
-      ...flatGridProps,
-    }
+  const themeSpacing = useTheme(store => (store.current as AppTheme<Theme>)?.spacing)
 
-    const { Theme } = useCodeleapContext()
-    const variantStyles = useDefaultComponentStyle<'u:Grid', typeof GridPresets>('u:Grid', {
-      variants,
-      styles,
-      transform: StyleSheet.flatten,
-    })
+  const styles = useStylesFor(Grid.styleRegistryName, style)
 
-    const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
-      if (!props?.renderItem) return null
-      const listLength = props?.data?.length || 0
+  const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
+    if (!RenderItem) return null
 
-      const isFirst = data.index === 0
-      const isLast = data.index === listLength - 1
-      const isOnly = isFirst && isLast
+    const listLength = props?.data?.length || 0
 
-      const idx = data.index + 1
-      const isLastInRow = !isFirst && idx % (numColumns) === 0
-      const isFirstInRow = isFirst || data.index % numColumns === 0
-      const isOnlyInRow = !isFirstInRow && !isLastInRow
+    const isFirst = data.index === 0
+    const isLast = data.index === listLength - 1
+    const isOnly = isFirst && isLast
 
-      let gap = Theme.spacing.marginRight(spacing / 2)
-      if (isLastInRow) gap = Theme.spacing.marginLeft(spacing / 2)
-      else if (isOnlyInRow) gap = Theme.spacing.marginHorizontal(spacing / 2)
+    const idx = data.index + 1
+    const isLastInRow = !isFirst && idx % (numColumns) === 0
+    const isFirstInRow = isFirst || data.index % numColumns === 0
+    const isOnlyInRow = !isFirstInRow && !isLastInRow
 
-      const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
-      const RenderItem = props?.renderItem
+    let gap = themeSpacing?.marginRight?.(spacing / 2)
+    if (isLastInRow) gap = themeSpacing?.marginLeft?.(spacing / 2)
+    else if (isOnlyInRow) gap = themeSpacing?.marginHorizontal?.(spacing / 2)
 
-      return (
-        <View style={{ ...variantStyles.itemWrapper, ...gap }}>
-          <RenderItem {...data} {..._itemProps} />
-        </View>
-      )
-    }, [props?.renderItem, props?.data?.length])
-
-    const separatorStyles = { height: Theme.spacing.value(spacing), ...variantStyles.separator }
-    const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
-    const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
-    const _gridProps = {
-      ...props,
-      ref: ref,
-      ListEmptyComponent: <EmptyPlaceholder {...placeholder} />,
-      ListHeaderComponentStyle: variantStyles.header,
-      ListFooterComponentStyle: variantStyles.footer,
-      ItemSeparatorComponent: separator,
-      refreshControl,
-      style: [variantStyles.wrapper, style],
-      contentContainerStyle: [variantStyles.content, props?.contentContainerStyle],
-      showsVerticalScrollIndicator: false,
-      numColumns,
-      renderItem,
-    }
+    const _itemProps = { isFirst, isLast, isOnly, isFirstInRow, isLastInRow, isOnlyInRow }
 
     return (
-      // @ts-ignore
-      <List
-        {..._gridProps}
-      />
+      <View style={[styles.itemWrapper, gap]}>
+        <RenderItem {...data} {..._itemProps} />
+      </View>
     )
-  },
-)
+  }, [RenderItem, props?.data?.length])
 
-export type GridComponentType = (<T extends any[] = any[]>(props: GridProps<T>) => JSX.Element) & {
-  defaultProps?: Partial<GridProps>
+  const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
+  const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
+  const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
+
+  return (
+    <List
+      // @ts-expect-error
+      ref={ref}
+      {...props}
+      ListEmptyComponent={<EmptyPlaceholder {...placeholder} />}
+      ListHeaderComponentStyle={styles.header}
+      ListFooterComponentStyle={styles.footer}
+      ItemSeparatorComponent={separator as unknown as ComponentType}
+      refreshControl={refreshControl}
+      style={styles.wrapper}
+      contentContainerStyle={[styles.content, props?.contentContainerStyle]}
+      showsVerticalScrollIndicator={false}
+      numColumns={numColumns}
+      renderItem={renderItem}
+    />
+  )
+}) as StyledComponentWithProps<GridProps>
+
+Grid.styleRegistryName = 'Grid'
+Grid.elements = ['wrapper', 'content', 'separator', 'header', 'refreshControl', 'itemWrapper', 'footer']
+Grid.rootElement = 'wrapper'
+
+Grid.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Grid as (<T extends ListItem>(props: StyledComponentProps<GridProps<T>, typeof styles>) => IJSX)
 }
 
-export const Grid = GridCP as unknown as GridComponentType
+Grid.defaultProps = {
+  keyboardShouldPersistTaps: 'handled',
+  refreshControlProps: {},
+} as Partial<GridProps>
 
-Grid.defaultProps = defaultProps
-
+MobileStyleRegistry.registerComponent(Grid)

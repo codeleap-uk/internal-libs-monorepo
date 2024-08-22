@@ -1,4 +1,3 @@
-import { createDefaultVariantFactory, includePresets } from "@codeleap/common"
 import { ActionIconComposition } from '../ActionIcon'
 
 export type DrawerComposition =
@@ -10,7 +9,3 @@ export type DrawerComposition =
   | 'body'
   | 'box'
   | 'title'
-
-const createDrawerStyle = createDefaultVariantFactory<DrawerComposition>()
-
-export const DrawerPresets = includePresets((styles) => createDrawerStyle(() => ({ wrapper: styles })))

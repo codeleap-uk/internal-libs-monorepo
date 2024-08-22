@@ -1,22 +1,21 @@
-import { BaseViewProps, BreakpointPlaceholder, ComponentVariants } from '@codeleap/common'
-import { HTMLProps, NativeHTMLElement } from '../../types'
 import { AnimationProps, MotionProps } from 'framer-motion'
-import { ViewPresets } from './styles'
+import { AnyRecord, StyledProp } from '@codeleap/styles'
+import { ViewComposition } from './styles'
+import { ComponentPropsWithRef, ElementType } from 'react'
 
-export type ViewProps<T extends NativeHTMLElement> =
-  HTMLProps<T> &
-  ComponentVariants<typeof ViewPresets> &
-  Omit<AnimationProps, 'variants'> &
+export type ViewProps<T extends ElementType = 'div'> =
+  Omit<ComponentPropsWithRef<T>, 'style'> &
+  Omit<AnimationProps, 'style'> &
   {
-    component?: T
-    scroll?: boolean
+    component?: ElementType<AnyRecord>
     debugName?: string
-    debug?: boolean
-    is?: BreakpointPlaceholder
-    not?: BreakpointPlaceholder
-    up?: BreakpointPlaceholder
-    down?: BreakpointPlaceholder
+    is?: any
+    not?: any
+    up?: any
+    down?: any
     onHover?: (isMouseOverElement: boolean) => void
     animated?: boolean
     animatedProps?: Partial<MotionProps>
-  } & BaseViewProps
+    style?: StyledProp<ViewComposition>
+    children?: React.ReactNode
+  }

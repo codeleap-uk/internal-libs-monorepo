@@ -1,11 +1,12 @@
-import { Button, ButtonComposition } from '../Button'
-import { ComponentVariants, PropsOf, StylesOf } from '@codeleap/common'
-import { SectionFiltersComposition, SectionFilterPresets } from './styles'
+import { ButtonComposition, ButtonProps } from '../Button'
+import { StylesOf } from '@codeleap/common'
+import { SectionFiltersComposition } from './styles'
+import { StyledProp } from '@codeleap/styles'
 
 export type ItemOptionProps = {
-  label?: string
+  label?: string | number
   value: string | number
-  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<ButtonProps, 'debugName'>
 }
 
 export type OnPressOptionProps = {
@@ -17,13 +18,13 @@ export type OnPressOptionProps = {
 
 export type ItemProps = {
   id: string | number
-  label?: string
+  label?: string | number
   canSelectMultiple?: boolean
   descriptionLabel?: string
   showDescriptionLabel?: boolean
   options?: ItemOptionProps[]
-  itemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-  selectedItemProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  itemProps?: Omit<ButtonProps, 'debugName'>
+  selectedItemProps?: Omit<ButtonProps, 'debugName'>
 }
 
 export type onSelectItemProps = {
@@ -52,18 +53,18 @@ export type SectionFiltersProps = {
   onClearItems?: ClearFunction
   onApplyItems?: ApplyFunction
   renderFooterComponent?: (props: SectionFilterFooterProps) => JSX.Element
-  applyFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
-  clearFilterButtonProps?: Omit<PropsOf<typeof Button>, 'debugName'>
+  applyFilterButtonProps?: Omit<ButtonProps, 'debugName'>
+  clearFilterButtonProps?: Omit<ButtonProps, 'debugName'>
   filterOnOptionPress?: boolean
   applyButtonText?: string
   clearButtonText?: string
-  styles?: StylesOf<SectionFiltersComposition>
-} & ComponentVariants<typeof SectionFilterPresets>
+  style?: StyledProp<SectionFiltersComposition>
+}
 
 export type OptionProps = {
   option: ItemOptionProps
   item: ItemProps
-  styles: Partial<StylesOf<ButtonComposition>>
+  styles: StylesOf<ButtonComposition>
   selectedItems: object
   onPress: () => void
   canSelectMultiple: boolean

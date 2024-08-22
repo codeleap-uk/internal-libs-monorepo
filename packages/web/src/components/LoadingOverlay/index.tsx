@@ -1,49 +1,47 @@
-import { ComponentVariants, getNestedStylesByKey, useDefaultComponentStyle } from '@codeleap/common'
 import React from 'react'
-import { StylesOf } from '../..'
-import { LoadingOverlayComposition, LoadingOverlayPresets } from './styles'
-import { View, ViewProps } from '../View'
-import { ActivityIndicator, ActivityIndicatorProps } from '../ActivityIndicator'
-import { ComponentCommonProps } from '../../types/utility'
+import { View } from '../View'
+import { ActivityIndicator } from '../ActivityIndicator'
+import { LoadingOverlayProps } from './types'
+import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 
-export type LoadingOverlayProps = Partial<ViewProps<'div'>> & {
-  visible?: boolean
-  styles?: StylesOf<LoadingOverlayComposition>
-  style?: React.CSSProperties
-  indicatorProps?: ActivityIndicatorProps
-  children?: React.ReactNode
-} & ComponentVariants<typeof LoadingOverlayPresets> & ComponentCommonProps
+export * from './styles'
+export * from './types'
 
 export const LoadingOverlay = (props: LoadingOverlayProps) => {
-  const { 
+  const {
     visible,
     children,
-    styles = {},
-    variants = [],
-    responsiveVariants = {},
-    style = {},
+    style,
     indicatorProps,
     debugName,
-    ...rest 
-  } = props
+    ...rest
+  } = {
+    ...LoadingOverlay.defaultProps,
+    ...props,
+  }
 
-  const variantStyles = useDefaultComponentStyle<'u:LoadingOverlay', typeof LoadingOverlayPresets>('u:LoadingOverlay', {
-    variants, 
-    styles, 
-    responsiveVariants, 
-    rootElement: 'wrapper',
-  })
+  const styles = useStylesFor(LoadingOverlay.styleRegistryName, style)
 
-  const indicatorStyles = React.useMemo(() => {
-    return getNestedStylesByKey('indicator', variantStyles)
-  }, [variantStyles])
+  const indicatorStyles = useNestedStylesByKey('indicator', styles)
 
   return (
-    <View css={[variantStyles.wrapper, visible && variantStyles['wrapper:visible'], style]} {...rest}>
-      <ActivityIndicator debugName={debugName} {...indicatorProps} styles={indicatorStyles} />
+    <View {...rest} style={[styles.wrapper, visible && styles['wrapper:visible']]}>
+      <ActivityIndicator debugName={debugName} {...indicatorProps} style={indicatorStyles} />
       {children}
     </View>
   )
 }
 
-export * from './styles'
+LoadingOverlay.styleRegistryName = 'LoadingOverlay'
+LoadingOverlay.elements = ['wrapper', 'indicator']
+LoadingOverlay.rootElement = 'wrapper'
+
+LoadingOverlay.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return LoadingOverlay as (props: StyledComponentProps<LoadingOverlayProps, typeof styles>) => IJSX
+}
+
+LoadingOverlay.defaultProps = {} as Partial<LoadingOverlayProps>
+
+WebStyleRegistry.registerComponent(LoadingOverlay)

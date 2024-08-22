@@ -1,4 +1,4 @@
-import { PropsOf, useCodeleapContext, TypeGuards } from '@codeleap/common'
+import { PropsOf, TypeGuards } from '@codeleap/common'
 import { ScrollView, Platform, StyleSheet, Dimensions, EasingFunction, Easing } from 'react-native'
 import { TransitionConfig } from '../../types'
 import { useKeyboard } from './context'
@@ -26,7 +26,6 @@ type UseKeyboardAwareViewParams = {
 
 export const useKeyboardAwareView = (params?: UseKeyboardAwareViewParams) => {
   const keyboard = useKeyboard()
-  const { logger } = useCodeleapContext()
   const options = params || {}
 
   const _options:GetKeyboardAwarePropsOptions = {

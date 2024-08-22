@@ -151,3 +151,15 @@ export function objectPickBy<K extends string = string, P = any>(obj: Record<K, 
 
   return result
 }
+
+export function transformObject<K extends string = string, T extends string = string>(obj: Record<K, T>, predicate: (value: T, key: K) => [K, T]): Record<string, any> {
+  const result = {}
+
+  for (const key in obj) {
+    const [newKey, newValue] = predicate?.(obj?.[key], key)
+
+    result[newKey as string] = newValue
+  }
+
+  return result
+}
