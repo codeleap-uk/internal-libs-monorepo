@@ -420,6 +420,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           backspaceRemovesValue={true}
           // escapeRemoves={true}
           // deleteRemoves={true}
+          menuPortalTarget={innerWrapperRef.current}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
@@ -434,7 +435,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           defaultOptions={loadOptionsOnMount}
           ref={innerInputRef}
           closeMenuOnSelect={closeOnSelect}
-          menuPortalTarget={innerWrapperRef.current}
           placeholder={(loadOptionsOnMount && !loadedOptions) ? loadingMessage : placeholder}
           isDisabled={isDisabled}
           isClearable={clearable}
