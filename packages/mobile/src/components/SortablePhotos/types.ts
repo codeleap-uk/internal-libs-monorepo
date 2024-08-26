@@ -4,6 +4,7 @@ import { SortablePhotosComposition } from './styles'
 
 export type SortablePhoto = {
   filename: string | null
+  file: string | null
 }
 
 export type SortableItemProps<T extends SortablePhoto> = {
@@ -51,4 +52,5 @@ export type SortablePhotosProps<T extends SortablePhoto> = {
   modalLibraryText?: string
   modalCameraText?: string
   modalDeleteText?: string
+  getFilename?: (file: string) => string
 }

@@ -5,15 +5,16 @@ import { SortablePhoto, SortablePhotosProps } from './types'
 const SortableAlert = CreateOSAlert()
 
 export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
-  const { 
-    photos, 
-    onChangePhotos, 
+  const {
+    photos,
+    onChangePhotos,
     onPressPhoto,
     modalBody,
     modalTitle,
     modalCameraText,
     modalDeleteText,
     modalLibraryText,
+    getFilename,
   } = props
 
   const input = useFileInput()
@@ -76,18 +77,24 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       for (const fileIndex in files) {
         const file = files?.[fileIndex]
         const order = emptyIndexes[fileIndex]
+        const uri = file?.file?.uri
+        const filename = getFilename(uri)
 
         newPhotos[order] = {
           ...newPhotos[order],
-          filename: file?.file?.uri
+          filename,
+          file: uri,
         } as T
       }
     } else {
       const file = files?.[0]
+      const uri = file?.file?.uri
+      const filename = getFilename(uri)
 
       newPhotos[order] = {
         ...newPhotos[order],
-        filename: file?.file?.uri
+        filename,
+        file: uri,
       } as T
     }
 
@@ -102,6 +109,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     newPhotos[order] = {
       ...newPhotos[order],
       filename: null,
+      file: null,
     } as T
 
     const photosSorted = sortPhotos(newPhotos)

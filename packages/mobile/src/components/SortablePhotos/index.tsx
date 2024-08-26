@@ -19,11 +19,23 @@ const DefaultItem = <T extends SortablePhoto>(props: SortableItemProps<T>) => {
     <View style={[{ width, height }, styles.photoWrapper]}>
       {
         !!photo?.filename
-          ? <Image resizeMode='cover' source={{ uri: photo?.filename }} style={styles.photoImage} />
+          ? <Image resizeMode='cover' source={{ uri: photo?.file }} style={styles.photoImage} />
           : <Icon name={emptyIcon} style={styles.photoEmptyIcon} />
       }
     </View>
   )
+}
+
+const defaultGetFilename = (file: string) => {
+  if (!file) return null
+
+  const filenameWithExtension = file?.split?.('/').pop()
+  
+  if (filenameWithExtension) {
+    return filenameWithExtension?.split('.').slice(0, -1).join('.')
+  }
+
+  return new Date().toISOString()
 }
 
 const screenWidth = Dimensions.get('screen').width
@@ -132,6 +144,7 @@ SortablePhotos.defaultProps = {
   modalLibraryText: 'Choose from gallery',
   modalCameraText: 'Take a photo',
   modalDeleteText: 'Remove photo',
+  getFilename: defaultGetFilename,
   pickerConfig: {
     cropping: true,
     showCropFrame: true,
