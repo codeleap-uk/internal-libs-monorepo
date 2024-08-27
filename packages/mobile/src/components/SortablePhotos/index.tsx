@@ -1,4 +1,4 @@
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
 import { FileInput } from '../FileInput'
 import { Icon } from '../Icon'
 import { Image } from '../Image'
@@ -8,6 +8,7 @@ import { SortableItemProps, SortablePhoto, SortablePhotosProps } from './types'
 import { useSortablePhotos } from './useSortablePhotos'
 import { useStylesFor } from '../../hooks'
 import { MobileStyleRegistry } from '../../Registry'
+import { ActivityIndicator } from '../ActivityIndicator'
 
 export * from './styles'
 export * from './types'
@@ -30,7 +31,7 @@ const defaultGetFilename = (file: string) => {
   if (!file) return null
 
   const filenameWithExtension = file?.split?.('/').pop()
-  
+
   if (filenameWithExtension) {
     return filenameWithExtension?.split('.').slice(0, -1).join('.')
   }
@@ -49,7 +50,6 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
   const {
     numColumns,
     renderPhoto: RenderItem,
-    photos,
     gap,
     multiple,
     pickerConfig,
@@ -59,10 +59,13 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     itemHeight: _itemHeight,
     width: _parentWidth,
     style,
+    loading,
     ...rest
   } = allProps
 
   const styles = useStylesFor(SortablePhotos.styleRegistryName, style)
+
+  const loaderStyles = useNestedStylesByKey('loader', styles)
 
   const {
     input,
@@ -70,6 +73,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     numberPhotosMissing,
     emptyIndexes,
     onChangePhotosOrder,
+    data,
   } = useSortablePhotos<T>(allProps)
 
   const defaultParentWidth = screenWidth - (gap * 2)
@@ -88,6 +92,14 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     maxFiles: numberPhotosMissing,
   }
 
+  if (loading) {
+    return (
+      <View style={[styles.wrapper, styles['wrapper:loading']]}>
+        <ActivityIndicator style={loaderStyles} />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.wrapper}>
       <FileInput
@@ -97,7 +109,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
       />
 
       <DragSortableView
-        dataSource={photos}
+        dataSource={data}
         childrenHeight={itemHeight}
         childrenWidth={itemWidth}
         parentWidth={parentWidth}
@@ -125,7 +137,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
 }
 
 SortablePhotos.styleRegistryName = 'SortablePhotos'
-SortablePhotos.elements = ['wrapper', 'photo']
+SortablePhotos.elements = ['wrapper', 'photo', 'loader']
 SortablePhotos.rootElement = 'wrapper'
 
 SortablePhotos.withVariantTypes = <S extends AnyRecord>(styles: S) => {
@@ -133,6 +145,7 @@ SortablePhotos.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 SortablePhotos.defaultProps = {
+  numPhotos: 9,
   numColumns: 3,
   renderPhoto: DefaultItem,
   multiple: true,

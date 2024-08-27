@@ -26,6 +26,7 @@ export type SortablePhotosPickerConfig = {
 
 export type SortablePhotosProps<T extends SortablePhoto> = {
   numColumns?: number
+  numPhotos?: number
   renderPhoto?: (props: SortableItemProps<T>) => ReactElement
   photos: T[]
   onChangePhotos: (newPhotos: T[]) => void
@@ -53,4 +54,5 @@ export type SortablePhotosProps<T extends SortablePhoto> = {
   modalCameraText?: string
   modalDeleteText?: string
   getFilename?: (file: string) => string
+  loading?: boolean
 }

@@ -1,4 +1,4 @@
-import { CreateOSAlert, useGlobalContext, useMemo } from '@codeleap/common'
+import { CreateOSAlert, useEffect, useGlobalContext, useMemo, useState } from '@codeleap/common'
 import { FileInputImageSource, useFileInput } from '../FileInput'
 import { SortablePhoto, SortablePhotosProps } from './types'
 
@@ -6,7 +6,6 @@ const SortableAlert = CreateOSAlert()
 
 export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const {
-    photos,
     onChangePhotos,
     onPressPhoto,
     modalBody,
@@ -15,13 +14,38 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     modalDeleteText,
     modalLibraryText,
     getFilename,
+    numPhotos,
+    loading,
+    photos: currentPhotos
   } = props
 
   const input = useFileInput()
   const { logger } = useGlobalContext()
 
+  const [data, setData] = useState<T[]>([])
+
+  const onChange = (photos: T[]) => {
+    const { newPhotos, sortedPhotos } = sortPhotos(photos)
+
+    setData(sortedPhotos)
+    onChangePhotos(newPhotos)
+  }
+
+  useEffect(() => {
+    if (!loading && data?.length < numPhotos) {
+      const currentLength = currentPhotos?.length ?? 0
+      const length = Math.abs(numPhotos - currentLength)
+      const fillPhotos = Array(length).fill({ filename: null, file: null }) as T[]
+
+      const newPhotos = currentPhotos.concat(fillPhotos)
+
+      setData(newPhotos)
+      onChangePhotos(currentPhotos)
+    }
+  }, [loading])
+
   const { emptyIndexes, numberPhotosMissing } = useMemo(() => {
-    const copyPhotos = [...photos]
+    const copyPhotos = [...data]
 
     const emptyIndexes = copyPhotos.reduce((indexes, photo, index) => {
       if (!photo?.filename) {
@@ -36,9 +60,9 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       emptyIndexes,
       numberPhotosMissing,
     }
-  }, [JSON.stringify(photos)])
+  }, [JSON.stringify(data)])
 
-  const sortPhotos = (_unorderedPhotos: T[]): T[] => {
+  const sortPhotos = (_unorderedPhotos: T[]) => {
     const unorderedPhotos = [..._unorderedPhotos]
 
     const [newPhotos, emptyPhotos] = unorderedPhotos.reduce(
@@ -49,9 +73,12 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       [[], []] as [T[], T[]]
     )
 
-    const photosSorted = newPhotos.concat(emptyPhotos)
+    const sortedPhotos: T[] = newPhotos.concat(emptyPhotos)
 
-    return photosSorted
+    return {
+      sortedPhotos,
+      newPhotos,
+    }
   }
 
   const handleOpenPicker = async (pickerType: FileInputImageSource, photo: T, order: number) => {
@@ -71,7 +98,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
 
     const isMultiple = files?.length > 1 && !isEdit
 
-    const newPhotos = [...photos]
+    const newPhotos = [...data]
 
     if (isMultiple) {
       for (const fileIndex in files) {
@@ -98,13 +125,11 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       } as T
     }
 
-    const photosSorted = sortPhotos(newPhotos)
-
-    onChangePhotos(photosSorted)
+    onChange(newPhotos)
   }
 
   const handleDeletePhoto = (photo: T, order: number) => {
-    const newPhotos = [...photos]
+    const newPhotos = [...data]
 
     newPhotos[order] = {
       ...newPhotos[order],
@@ -112,9 +137,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       file: null,
     } as T
 
-    const photosSorted = sortPhotos(newPhotos)
-
-    onChangePhotos(photosSorted)
+    onChange(newPhotos)
   }
 
   const handlePressPhoto = (currentData: T[], photo: T, order: number) => {
@@ -134,9 +157,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   }
 
   const onChangePhotosOrder = (newData: T[]) => {
-    const photosSorted = sortPhotos(newData)
-
-    onChangePhotos(photosSorted)
+    onChange(newData)
   }
 
   return {
@@ -148,5 +169,6 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     numberPhotosMissing,
     onChangePhotosOrder,
     emptyIndexes,
+    data,
   }
 }

@@ -1,6 +1,9 @@
+import { ActivityIndicatorComposition } from '../ActivityIndicator'
 
 export type SortablePhotosComposition = 
   'wrapper' |
+  'wrapper:loading' |
   'photoWrapper' |
   'photoEmptyIcon' |
-  'photoImage'
+  'photoImage' |
+  `loader${Capitalize<ActivityIndicatorComposition>}`
