@@ -29,7 +29,9 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
     debugName,
   } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.style ?? {}) })
+  const optionProps = props?.data?.itemProps
+
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (optionProps?.style ?? itemProps?.style ?? {}) })
 
   let _Component = null
 
@@ -41,6 +43,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
+        {...optionProps}
         style={styles}
       />
     )
@@ -162,7 +165,7 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
- <T extends string | number = string, Multi extends boolean = false>
+  <T extends string | number = string, Multi extends boolean = false>
   (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
 
     type Option = FormTypes.Option<T>
@@ -468,7 +471,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         />
       </InputBase>
     )
- }) as StyledComponentWithProps<SelectProps>
+  }) as StyledComponentWithProps<SelectProps>
 
 Select.styleRegistryName = 'Select'
 
