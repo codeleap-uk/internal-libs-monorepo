@@ -1,10 +1,10 @@
-import { FormTypes, PropsOf, yup } from '@codeleap/common'
+import { FormTypes, yup } from '@codeleap/common'
 import { CSSInterpolation } from '@emotion/css'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
 import { ComponentCommonProps } from '../../types'
-import { Button, ButtonProps } from '../Button'
+import { ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
 import { SelectComposition, OptionState } from './styles'
 import { StyledProp } from '@codeleap/styles'
@@ -27,7 +27,7 @@ type DynamicSelectProps<T, Multi extends boolean> =
   >)
 
 export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'style'> & {
-  options: FormTypes.Options<T> & { itemProps?: PropsOf<typeof Button> }
+  options: FormTypes.Options<T> & { itemProps?: ButtonProps }
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
@@ -45,7 +45,7 @@ export type ComponentPartProps = {
 export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonProps & {
   optionsStyles: (state: OptionState) => OptionState['baseStyles']
   selectedIcon?: string
-  data: OptionProps['data'] & { itemProps?: PropsOf<typeof Button>}
+  data: OptionProps['data'] & { itemProps?: ButtonProps}
   itemProps?: ButtonProps
   styles?: OptionState['baseStyles']
 }
