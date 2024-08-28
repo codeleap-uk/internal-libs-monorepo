@@ -25,6 +25,7 @@
     "mobile": "yarn workspace mobile-template",
     "p:web": "yarn workspace @codeleap/web",
     "p:mobile": "yarn workspace @codeleap/mobile",
+    "p:common": "yarn workspace @codeleap/common",
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "release": "standard-version",
