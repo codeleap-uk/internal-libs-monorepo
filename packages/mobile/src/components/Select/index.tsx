@@ -6,7 +6,7 @@ import {
   onUpdate,
   usePrevious,
   useSearch,
-  useBooleanToggle,
+  useConditionalState,
 } from '@codeleap/common'
 import React, { useCallback, useMemo } from 'react'
 import { List } from '../List'
@@ -140,7 +140,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     onLoadOptionsError,
   })
 
-  const [visible, toggle] = TypeGuards.isBoolean(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
+  const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
 
   const currentValueLabel = useMemo(() => {
     const _options = (multiple ? labelOptions : labelOptions?.[0]) as Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]
@@ -334,7 +334,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
     </ModalManager.Modal>
   </>
 }
-
 
 Select.styleRegistryName = 'Select'
 Select.elements = [...Modal.elements, 'input', 'list', 'item', 'searchInput']
