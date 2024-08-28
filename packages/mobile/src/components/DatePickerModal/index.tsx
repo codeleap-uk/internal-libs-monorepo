@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { TypeGuards, useBooleanToggle, useI18N } from '@codeleap/common'
+import { TypeGuards, useConditionalState, useI18N } from '@codeleap/common'
 import DatePicker from 'react-native-date-picker'
 import Modal from '../Modal'
 import { TextInput } from '../TextInput'
@@ -116,7 +116,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const styles = useStylesFor(DatePickerModal.styleRegistryName, style)
 
-  const [visible, toggle] = !TypeGuards.isNil(_visible) && !!_toggle ? [_visible, _toggle] : useBooleanToggle(false)
+  const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
+
   const [value, setValue] = [_value, onValueChange]
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
