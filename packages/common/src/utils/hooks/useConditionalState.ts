@@ -1,22 +1,27 @@
 import { useState, SetStateAction, Dispatch } from 'react'
+import { AnyFunction } from '../../types'
 import * as TypeGuards from '../typeGuards'
+import { useBooleanToggle } from './useBooleanToggle'
 
 type UseConditionalStateOptions<T> = {
   initialValue?: T
+  isBooleanToggle?: boolean
 }
 
-type UseConditionalState = <T>(
-  value: T | undefined,
-  setter: Dispatch<SetStateAction<T>> | ((value: T) => void),
-  options?: UseConditionalStateOptions<T>
-) => [T, Dispatch<SetStateAction<T>> | ((value: T) => void)]
+type SetState<T> = Dispatch<SetStateAction<T>> & ((value: T) => void) & (() => void)
 
-export const useConditionalState: UseConditionalState = (value, setter, options) => {
-  const state = useState(options?.initialValue)
+export const useConditionalState = <T>(
+  value: T | undefined,
+  setter: AnyFunction,
+  options: UseConditionalStateOptions<T> = {}
+): [T, SetState<T>] => {
+  const state = options?.isBooleanToggle
+    ? useBooleanToggle(options?.initialValue as boolean)
+    : useState(options?.initialValue)
 
   if (!TypeGuards.isNil(value) && TypeGuards.isFunction(setter)) {
     return [value, setter]
   }
 
-  return state
+  return state as unknown as [T, SetState<T>]
 }
