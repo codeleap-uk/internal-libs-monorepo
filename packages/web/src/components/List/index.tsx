@@ -33,7 +33,7 @@ export function List(props: ListProps) {
     reloadTimeout,
     showFooter,
     style,
-    layoutWrapperProps = {},
+    layoutWrapperProps,
   } = allProps
 
   const styles = useStylesFor(List.styleRegistryName, style)

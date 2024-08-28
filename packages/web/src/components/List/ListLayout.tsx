@@ -56,7 +56,7 @@ export const ListLayout = (props: ListLayoutProps) => {
     ListLoadingIndicatorComponent,
     scrollableRef,
     showFooter = true,
-    wrapperProps = {},
+    wrapperProps,
   } = props
 
   const getKeyStyle = (key: ListParts) => mergeStyles([

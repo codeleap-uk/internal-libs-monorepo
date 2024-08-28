@@ -1,6 +1,6 @@
-import { PropsOf, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/common'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
-import { View, ViewProps } from '../View'
+import { ViewProps } from '../View'
 import { MotionProps } from 'framer-motion'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
@@ -12,7 +12,7 @@ export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollR
   styles: StylesOf<ListComposition>
   children?: React.ReactNode
   showFooter?: boolean
-  wrapperProps?: Partial<PropsOf<typeof View>>
+  wrapperProps?: Partial<ViewProps>
 }
 
 export type ListRefreshControlComponent = Partial<ListLayoutProps> & {
@@ -65,5 +65,5 @@ export type ListProps<T extends ListItem = ListItem> =
     masonryProps?: Partial<ListMasonryProps<T>>
     reloadTimeout?: number
     showFooter?: boolean
-    layoutWrapperProps?: Partial<PropsOf<typeof View>>
+    layoutWrapperProps?: Partial<ViewProps>
   }
