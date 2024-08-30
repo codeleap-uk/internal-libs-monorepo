@@ -12,6 +12,7 @@ export type ListLayoutProps = Omit<ListProps, 'renderItem'> & UseInfiniteScrollR
   styles: StylesOf<ListComposition>
   children?: React.ReactNode
   showFooter?: boolean
+  wrapperProps?: Partial<ViewProps>
 }
 
 export type ListRefreshControlComponent = Partial<ListLayoutProps> & {
@@ -64,4 +65,5 @@ export type ListProps<T extends ListItem = ListItem> =
     masonryProps?: Partial<ListMasonryProps<T>>
     reloadTimeout?: number
     showFooter?: boolean
+    layoutWrapperProps?: Partial<ViewProps>
   }

@@ -22,6 +22,11 @@ export type ElementMap = {
   'section': WithChildren<JSX.IntrinsicElements['section']>
   'header': WithChildren<JSX.IntrinsicElements['header']>
   'footer': WithChildren<JSX.IntrinsicElements['footer']>
+  'nav': WithChildren<JSX.IntrinsicElements['nav']>
+  'article': WithChildren<JSX.IntrinsicElements['article']>
+  'ul': WithChildren<JSX.IntrinsicElements['ul']>
+  'ol': WithChildren<JSX.IntrinsicElements['ol']>
+  'aside': WithChildren<JSX.IntrinsicElements['aside']>
 }
 
 export type NativeHTMLElement = keyof ElementMap

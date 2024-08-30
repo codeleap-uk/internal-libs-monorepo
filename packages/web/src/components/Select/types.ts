@@ -27,7 +27,7 @@ type DynamicSelectProps<T, Multi extends boolean> =
   >)
 
 export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'style'> & {
-  options: FormTypes.Options<T>
+  options: FormTypes.Options<T> & { itemProps?: ButtonProps }
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
@@ -45,6 +45,7 @@ export type ComponentPartProps = {
 export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonProps & {
   optionsStyles: (state: OptionState) => OptionState['baseStyles']
   selectedIcon?: string
+  data: OptionProps['data'] & { itemProps?: ButtonProps}
   itemProps?: ButtonProps
   styles?: OptionState['baseStyles']
 }
