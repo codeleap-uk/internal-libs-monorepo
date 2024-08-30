@@ -8,7 +8,7 @@ export type FileInputImageSource = 'camera' | 'library' | 'fs'
 export type FileResult = FormTypes.AnyFile
 
 export type FileInputRef = {
-  openFilePicker: (string?: FileInputImageSource) => Promise<FileResult[]>
+  openFilePicker: (source?: FileInputImageSource, options?: Partial<Options>) => Promise<FileResult[]>
 }
 
 export type FileInputProps = {
