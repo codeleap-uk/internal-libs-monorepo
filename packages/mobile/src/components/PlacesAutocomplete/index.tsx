@@ -1,24 +1,19 @@
-import React from 'react'
-import { AnyRecord, ICSS, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import React, { useCallback } from 'react'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { useStylesFor } from '../../hooks'
 import { Text } from '../Text'
 import { View } from '../View'
-import { PlacesAutocompleteProps, Predictions } from './types'
+import { PlacesAutocompleteProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { PlacesAutocompleteComposition } from './styles'
 import { TextInput } from '../TextInput'
 import { List } from '../List'
 import { Touchable } from '../Touchable'
+import { EmptyPlaceholder } from '../EmptyPlaceholder'
 
-type PlaceRowProps = {
-  // TODO - type this later
-  item?: Predictions
-  styles?: Record<PlacesAutocompleteComposition, ICSS>
-  onPress?: PlacesAutocompleteProps['onPress']
-}
-
-const _PlaceRow = (props: PlaceRowProps) => {
+const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const { item, onPress, styles } = props
+
+  console.log('item', item)
 
   const primaryText = item?.structured_formatting?.secondary_text ? `${item?.structured_formatting?.main_text},` : item?.structured_formatting?.main_text
   const secondaryText = item?.structured_formatting?.secondary_text ? `${item?.structured_formatting?.secondary_text}` : ''
@@ -32,22 +27,27 @@ const _PlaceRow = (props: PlaceRowProps) => {
   )
 }
 
-// TODO - add default props
 export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   const {
     style,
     itemRow,
-    textInputProps,
-    listProps,
-    data,
+    data = [],
     onPress,
     onValueChange,
-    // TODO - default prop
-    showClearIcon = false,
+    showClearIcon,
+    showEmptyPlaceholder,
+    clearIcon,
+    textInputProps,
+    listProps,
+    emptyPlaceholderProps,
+    placeRow = null,
+    renderPlaceRow,
     ...rest
   } = props
 
   const [address, setAddress] = React.useState('')
+
+  // console.log('teste', teste)
 
   const styles = useStylesFor(PlacesAutocomplete.styleRegistryName, style)
   const compositionStyles = useCompositionStyles(['input', 'list'], styles)
@@ -67,39 +67,44 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     onValueChange?.('')
   }
 
-  const PlaceRow = _PlaceRow
+  const PlaceRow = renderPlaceRow || DefaultPlaceRow
+
+  const _showEmptyPlaceholder = address && data?.length === 0 && showEmptyPlaceholder
+  const _showClearIcon = showClearIcon && !!address?.trim?.()
+  const hasRightIcon = !!textInputProps?.rightIcon
+
+  const rightIcon = _showClearIcon && hasRightIcon ? {
+    name: clearIcon,
+    onPress: handleClearAddress,
+  } : textInputProps?.rightIcon
+
+  const renderItem = useCallback((props) => {
+    return (
+      placeRow ? placeRow : <PlaceRow onPress={handlePressAddress} {...props} />
+    )
+  }, [placeRow])
 
   return (
     // <View style={styles.wrapper}>
     <View style={['fullWidth']} {...rest}>
+      {/* TODO - mudar isso para poder aceitar vários componentes, tipo um select */}
       <TextInput
         style={compositionStyles.input}
         // TODO - change this
-        rightIcon={showClearIcon && !!address?.trim?.() && !textInputProps?.rightIcon ? {
-          name: 'x',
-          onPress: handleClearAddress,
-        } : {
-          ...textInputProps?.rightIcon,
-        }}
         onChangeText={(value) => handleChangeAddress(value)}
         value={address}
         {...textInputProps}
+        rightIcon={rightIcon}
+
       />
       {/* TODO - mudar o comportamento, tipo se fosse uma lista flutuante */}
       {/* TODO - esquema do usuário conseguir alterar o componente, talvez dê pra fazer pra trocar por um select */}
       <List
         data={data}
-        // TODO - change this to render outside components
-        renderItem={(props) => {
-          const { item } = props
-          console.log('printing everything', props)
-
-          return (
-            <PlaceRow onPress={handlePressAddress} item={item} />
-          )
-        }}
-        // TODO - change this to a better way to handle empty lists
-        ListEmptyComponent={() => null}
+        renderItem={renderItem}
+        ListEmptyComponent={
+          _showEmptyPlaceholder ? <EmptyPlaceholder {...emptyPlaceholderProps} /> : null
+        }
         // style={compositionStyles.list}
         // TODO - put this into the stylesheet
         style={[{ flexGrow: 0 }]}
@@ -113,6 +118,12 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
 PlacesAutocomplete.styleRegistryName = 'PlacesAutocomplete'
 PlacesAutocomplete.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return PlacesAutocomplete as (props: StyledComponentProps<PlacesAutocompleteProps, typeof styles>) => IJSX
+}
+PlacesAutocomplete.defaultProps = {
+  showClearIcon: false,
+  showEmptyPlaceholder: true,
+  clearIcon: 'x' as AppIcon,
+  placeRowComponent: DefaultPlaceRow,
 }
 
 MobileStyleRegistry.registerComponent(PlacesAutocomplete)
