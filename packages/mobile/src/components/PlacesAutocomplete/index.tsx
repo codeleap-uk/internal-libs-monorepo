@@ -13,7 +13,9 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const { item, onPress, styles } = props
 
-  console.log('item', item)
+  if (item?.content) {
+    return item.content
+  }
 
   const primaryText = item?.structured_formatting?.secondary_text ? `${item?.structured_formatting?.main_text},` : item?.structured_formatting?.main_text
   const secondaryText = item?.structured_formatting?.secondary_text ? `${item?.structured_formatting?.secondary_text}` : ''
@@ -32,6 +34,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     style,
     itemRow,
     data = [],
+    customData = [],
     onPress,
     onValueChange,
     showClearIcon,
@@ -78,6 +81,8 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     onPress: handleClearAddress,
   } : textInputProps?.rightIcon
 
+  const _data = !!customData && address ? [...customData, ...data] : data
+
   const renderItem = useCallback((props) => {
     return (
       placeRow ? placeRow : <PlaceRow onPress={handlePressAddress} {...props} />
@@ -87,20 +92,15 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   return (
     // <View style={styles.wrapper}>
     <View style={['fullWidth']} {...rest}>
-      {/* TODO - mudar isso para poder aceitar vários componentes, tipo um select */}
       <TextInput
         style={compositionStyles.input}
-        // TODO - change this
         onChangeText={(value) => handleChangeAddress(value)}
         value={address}
         {...textInputProps}
         rightIcon={rightIcon}
-
       />
-      {/* TODO - mudar o comportamento, tipo se fosse uma lista flutuante */}
-      {/* TODO - esquema do usuário conseguir alterar o componente, talvez dê pra fazer pra trocar por um select */}
       <List
-        data={data}
+        data={_data}
         renderItem={renderItem}
         ListEmptyComponent={
           _showEmptyPlaceholder ? <EmptyPlaceholder {...emptyPlaceholderProps} /> : null

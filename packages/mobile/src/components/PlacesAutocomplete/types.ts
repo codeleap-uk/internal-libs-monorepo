@@ -28,6 +28,7 @@ export type Predictions = {
   structured_formatting?: StructureFormatting
   terms?: Term[]
   types?: string[]
+  content?: JSX.Element
 }
 
 type PlaceRowProps = {
@@ -43,7 +44,7 @@ export type PlacesAutocompleteProps = {
   emptyPlaceholderProps?: EmptyPlaceholderProps
   listProps?: FlatListProps
   data: Predictions[]
-  customData?: Predictions[]
+  customData?: Predictions['structured_formatting'][] & { content?: JSX.Element }[]
   onPress?: (address: string) => void
   onValueChange?: (address: string) => void
   showClearIcon?: boolean
