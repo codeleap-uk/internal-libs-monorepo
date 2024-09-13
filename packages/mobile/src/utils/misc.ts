@@ -1,4 +1,4 @@
-import { MobileFile, MobileInputFile, parseFilePathData, FileWithPreview } from '@codeleap/common'
+import { MobileFile, MobileInputFile, parseFilePathData, FileWithPreview, TypeGuards } from '@codeleap/common'
 
 export const stringToFile = (str: string): MobileInputFile => {
   if (!str) {
@@ -62,7 +62,7 @@ export function isFile(param:any): param is MobileInputFile {
   }
 }
 
-export function toMultipart(body) {
+export function toMultipart(body, defaultFileValue = 'null') {
   const form = new FormData()
 
   for (const [key, value] of Object.entries(body)) {
@@ -72,10 +72,16 @@ export function toMultipart(body) {
     } else if (isFile(value)) {
       formValue = toMultipartFile(value)
     } else if (key === 'files' && typeof value === 'object') {
-      for (const [filename, file] of Object.entries(value)) {
-        form.append(filename, toMultipartFile(file))
+
+      if (TypeGuards.isNil(value)) {
+        form.append(key, defaultFileValue)
+      } else {
+
+        for (const [filename, file] of Object.entries(value)) {
+          form.append(filename, toMultipartFile(file))
+        }
       }
-      continue
+
     } else if (typeof value === 'object') {
       formValue = JSON.stringify(value)
     } else {
@@ -111,6 +117,6 @@ export function getFileInfo(uri: string) {
   return {
     name: fileName,
     type: fileType,
-    uri: uri
+    uri: uri,
   }
 }
