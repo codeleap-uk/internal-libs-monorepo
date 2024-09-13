@@ -45,8 +45,9 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
 
       return <ImageComponent
         {...imageProps}
+        // @ts-ignore
         source={image as HTMLImageElement['src']}
-        // @ts-expect-error
+
         css={styles.image}
       />
     }
