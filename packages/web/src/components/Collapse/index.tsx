@@ -26,12 +26,9 @@ export const Collapse = (props: CollapseProps) => {
       animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
       transition={{ duration: 0.2 }}
       {...rest}
-      css={[
-        // @ts-expect-error
-        styles.wrapper,
-
-      ]}
       style={open ? styles?.['wrapper:open'] : styles?.['wrapper:closed']}
+      // @ts-expect-error css type
+      css={[styles.wrapper, open ? styles?.['wrapper:open'] : styles?.['wrapper:closed']]}
     >
       {children}
     </motion.div>

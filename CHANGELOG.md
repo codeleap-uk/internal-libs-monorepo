@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.0.1...v4.0.2) (2024-08-06)
+
+### [4.0.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.25.0...v4.0.1) (2024-08-02)
+
+## [3.25.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.24.3...v3.25.0) (2024-08-02)
+
+
+### Features
+
+* **styles:** improve caching and typing ([032d6bd](https://github.com/codeleap-uk/internal-libs-monorepo/commit/032d6bd764aafd20e40e53bfef0bf514f8536109))
+* **styles:** new style system works ([6987129](https://github.com/codeleap-uk/internal-libs-monorepo/commit/69871290535ffb799b1921304b6335b11df52c1d))
+
+
+### Bug Fixes
+
+* **styles:** baseKey change ([c3d8640](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c3d86406efa12c160ebb40fc086ef19e2b3b722a))
+
 ### [3.24.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.24.2...v3.24.3) (2024-07-25)
 
 ### [3.24.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.24.1...v3.24.2) (2024-06-14)
