@@ -11,7 +11,7 @@
   },
   "scripts": {
     "postinstall": "node ./scripts/postInstall.js && yarn patch-package",
-    "build": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
