@@ -35,10 +35,11 @@ const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) 
 
 const defaultGetLabel = (option) => {
   if (TypeGuards.isArray(option)) {
-    if (option.length === 0) return null
+    if (option?.length === 0) return null
 
-    return option.map(o => o.label).join(', ')
-
+    const labels = option?.map(option => option?.label)?.filter(value => !!value)
+    
+    return labels?.join(', ')
   } else {
     if (!option) return null
     return option?.label
@@ -174,19 +175,15 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const select = useCallback((selectedValue) => {
     let newValue = null
-
     let newOption = null
     let removedIndex = null
 
     if (multiple && isValueArray) {
-
       if (value.includes(selectedValue)) {
         removedIndex = value.findIndex(v => v === selectedValue)
 
         newValue = value.filter((v, i) => i !== removedIndex)
-
       } else {
-
         if (TypeGuards.isNumber(limit) && value.length >= limit) {
           return
         }
@@ -195,7 +192,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
         newValue = [...value, selectedValue]
       }
-
     } else {
       newValue = selectedValue
       newOption = currentOptions.find(o => o.value === selectedValue)
@@ -209,7 +205,8 @@ export const Select = <T extends string | number = string, Multi extends boolean
         newOptions.splice(removedIndex, 1)
         setLabelOptions(newOptions)
       } else {
-        setLabelOptions([...labelOptions, newOption])
+        const newLabels = [...labelOptions, newOption]
+        setLabelOptions(newLabels)
       }
     } else {
       setLabelOptions([newOption])
@@ -218,7 +215,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     if (closeOnSelect) {
       close?.()
     }
-  }, [isValueArray, (isValueArray ? value : [value]), limit, multiple])
+  }, [isValueArray, (isValueArray ? value : [value]), limit, multiple, labelOptions, currentOptions])
 
   const renderListItem = useCallback(({ item, index }) => {
     let selected = false

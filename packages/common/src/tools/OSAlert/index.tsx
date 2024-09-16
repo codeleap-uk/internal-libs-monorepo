@@ -150,8 +150,8 @@ export function CreateOSAlert<T extends object = {}>(options: CreateOSAlertOptio
 
   function custom(args: OSAlertArgs & Partial<T>) {
     const {
-      title = 'Hang on',
-      body = 'Are you sure?',
+      title,
+      body,
       type,
       ...rest
     } = args

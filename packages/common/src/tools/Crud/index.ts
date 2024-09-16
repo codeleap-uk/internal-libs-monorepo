@@ -346,11 +346,11 @@ export class QueryManager<
     return [...this.queryKeys.list, filters]
   }
 
-  useList(options?: ListOptions<T, ExtraArgs>) {
+  useList(options: ListOptions<T, ExtraArgs> = {}) {
     const [isRefreshing, setRefreshing] = useState(false)
 
     const {
-      filter,
+      filter = {} as ExtraArgs,
       queryOptions,
     } = options
 

@@ -1,4 +1,4 @@
-import { MobileFile, MobileInputFile, parseFilePathData, FileWithPreview } from '@codeleap/common'
+import { MobileFile, MobileInputFile, parseFilePathData, FileWithPreview, TypeGuards } from '@codeleap/common'
 
 export const stringToFile = (str: string): MobileInputFile => {
   if (!str) {
@@ -62,7 +62,7 @@ export function isFile(param:any): param is MobileInputFile {
   }
 }
 
-export function toMultipart(body) {
+export function toMultipart(body, defaultFileValue = 'null') {
   const form = new FormData()
 
   for (const [key, value] of Object.entries(body)) {
@@ -71,6 +71,17 @@ export function toMultipart(body) {
       formValue = value.map((file) => form.append(key, toMultipartFile(file)))
     } else if (isFile(value)) {
       formValue = toMultipartFile(value)
+    } else if (key === 'files' && typeof value === 'object') {
+
+      if (TypeGuards.isNil(value)) {
+        form.append(key, defaultFileValue)
+      } else {
+
+        for (const [filename, file] of Object.entries(value)) {
+          form.append(filename, toMultipartFile(file))
+        }
+      }
+
     } else if (typeof value === 'object') {
       formValue = JSON.stringify(value)
     } else {
@@ -80,4 +91,32 @@ export function toMultipart(body) {
   }
 
   return form
+}
+
+export function getFileMimeType(uri: string) {
+  const extension = uri.split('.').pop().toLowerCase()
+
+  const mimeTypes = {
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
+    pdf: 'application/pdf',
+    txt: 'text/plain',
+    mp4: 'video/mp4',
+  }
+
+  return mimeTypes[extension] || 'application/octet-stream'
+}
+
+export function getFileInfo(uri: string) {
+  const fileName = uri.split('/').pop()
+  const fileType = getFileMimeType(fileName)
+
+  return {
+    name: fileName,
+    type: fileType,
+    uri: uri,
+  }
 }
