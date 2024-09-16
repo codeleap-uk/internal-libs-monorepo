@@ -1,5 +1,5 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
-import { FormTypes, useValidate, useState, TypeGuards, onUpdate, useEffect } from '@codeleap/common'
+import { FormTypes, useValidate, useState, TypeGuards, onUpdate, useEffect, useIsomorphicEffect, useForceRender } from '@codeleap/common'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -267,7 +267,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
-      parentWidth: innerWrapperRef?.current?.clientWidth
+      parentWidth: innerWrapperRef?.current?.clientWidth,
     })
 
     useImperativeHandle(inputRef, () => {
@@ -387,6 +387,14 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       return <CustomMenuList {...props} defaultStyles={menuWrapperStyles} />
     }, [])
 
+    const bodyRef = useRef<HTMLElement>(null)
+    const forceRender = useForceRender()
+    useIsomorphicEffect(() => {
+      bodyRef.current = document.body
+      forceRender()
+
+    }, [])
+
     return (
       <InputBase
         {...inputBaseProps}
@@ -414,7 +422,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
-          menuPortalTarget={document.body}
+          menuPortalTarget={bodyRef.current}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
