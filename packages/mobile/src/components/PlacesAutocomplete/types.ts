@@ -5,6 +5,7 @@ import { FlatListProps } from '../List'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 
+// TODO - put these types into common together with the usePlaces hook
 export type AddressComponent = {
   long_name: string
   short_name: string
@@ -103,8 +104,9 @@ export type PlaceLatLng = {
   detauls?: PlaceLatLngDetails
 }
 
+// component types
 export type CustomData = {
-  item: Partial<PlaceAddress> & Partial<PlaceLatLng>
+  item?: Partial<PlaceAddress> & Partial<PlaceLatLng>
   content?: JSX.Element
 }
 
@@ -132,4 +134,6 @@ export type PlacesAutocompleteProps = {
   placeRow?: React.ReactElement
   debounce?: number
   activityIndicatorProps?: ActivityIndicatorProps
+  persistResultsOnBlur?: boolean
+  isLoading?: boolean
 }
