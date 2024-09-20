@@ -29,7 +29,9 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
     debugName,
   } = props
 
-  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (itemProps?.style ?? {}) })
+  const optionProps = props?.data?.itemProps
+
+  const styles = optionsStyles({ isSelected, isFocused, baseStyles: (optionProps?.style ?? itemProps?.style ?? {}) })
 
   let _Component = null
 
@@ -41,6 +43,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
         rightIcon={isSelected && selectedIcon}
         debugName={debugName}
         {...itemProps}
+        {...optionProps}
         style={styles}
       />
     )
@@ -162,7 +165,7 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
 }
 
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
- <T extends string | number = string, Multi extends boolean = false>
+  <T extends string | number = string, Multi extends boolean = false>
   (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
 
     type Option = FormTypes.Option<T>
@@ -221,7 +224,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const _innerInputRef = useRef<any>(null)
     const innerInputRef = selectRef || _innerInputRef
-    const innerWrapperRef = useRef(null)
+    const innerWrapperRef = useRef<HTMLDivElement>(null)
 
     const hasSelectedOptionState = !TypeGuards.isNil(_selectedOption) && TypeGuards.isFunction(_setSelectedOption)
 
@@ -259,11 +262,12 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadingStyles,
       inputMultiValueStyles,
       menuWrapperStyles,
-      // @ts-expect-error @verify
+      // @ts-expect-error
     } = useSelectStyles({ ...props, styleRegistryName: Select.styleRegistryName }, {
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
+      parentWidth: innerWrapperRef?.current?.clientWidth
     })
 
     useImperativeHandle(inputRef, () => {
@@ -410,6 +414,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           tabSelectsValue={false}
           tabIndex={0}
           backspaceRemovesValue={true}
+          menuPortalTarget={typeof document === 'undefined' ? undefined : document.body}
           {...otherProps}
           {..._props}
           onKeyDown={isFocused ? handleKeyDown : null}
@@ -424,7 +429,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
           defaultOptions={loadOptionsOnMount}
           ref={innerInputRef}
           closeMenuOnSelect={closeOnSelect}
-          menuPortalTarget={innerWrapperRef.current}
           placeholder={(loadOptionsOnMount && !loadedOptions) ? loadingMessage : placeholder}
           isDisabled={isDisabled}
           isClearable={clearable}
@@ -467,7 +471,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
         />
       </InputBase>
     )
- }) as StyledComponentWithProps<SelectProps>
+  }) as StyledComponentWithProps<SelectProps>
 
 Select.styleRegistryName = 'Select'
 
