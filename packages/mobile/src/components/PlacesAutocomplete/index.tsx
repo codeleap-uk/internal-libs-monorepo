@@ -15,8 +15,6 @@ import { ActivityIndicator } from '../ActivityIndicator'
 const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const { item, onPress, styles } = props
 
-  // console.log('printing item item item details true true', JSON.stringify(item, null, 2))
-
   if (item?.content) {
     return item.content
   }
@@ -26,9 +24,8 @@ const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const mainTitle = isLatLng ? item?.formatted_address : item?.description
 
   return (
-    <Touchable onPress={() => onPress(mainTitle)} debugName={`PlaceRow ${item?.place_id}`}>
-      {/* TODO - stylesheet */}
-      <Text text={`${mainTitle}`} style={['color:neutral8', 'wrap', 'padding:1.5']} />
+    <Touchable onPress={() => onPress(mainTitle)} debugName={`PlaceRow ${item?.place_id}`} style={styles.placeRowWrapper}>
+      <Text text={`${mainTitle}`} style={styles.placeRowText} />
     </Touchable>
   )
 }
@@ -51,11 +48,14 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     renderPlaceRow,
     activityIndicatorProps,
     debounce = 250,
+    isLoading,
+    persistResultsOnBlur,
     ...rest
   } = props
 
   const [address, setAddress] = React.useState('')
   const [isTyping, setIsTyping] = React.useState(false)
+  const [isFocused, setIsFocused] = React.useState(false)
 
   const styles = useStylesFor(PlacesAutocomplete.styleRegistryName, style)
   const compositionStyles = useCompositionStyles(['input', 'list'], styles)
@@ -78,11 +78,10 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
         setIsTyping(false)
       }, debounce ?? 0)
     }
-
   }
 
   const handlePressAddress = (address: string) => {
-    setAddress(address)
+    setAddress(textInputProps?.value ? textInputProps?.value : address)
     onPress?.(address)
   }
 
@@ -93,10 +92,9 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
 
   const PlaceRow = renderPlaceRow || DefaultPlaceRow
 
-  const _showEmptyPlaceholder = address && data?.length === 0 && !isTyping && showEmptyPlaceholder
+  const _showEmptyPlaceholder = !!address && !isTyping && showEmptyPlaceholder && !isLoading
 
-  console.log('address', address)
-  console.log('data?.length', data?.length)
+  const showResults = isFocused || persistResultsOnBlur
 
   const _showClearIcon = showClearIcon && !!address?.trim?.()
   const hasRightIcon = !!textInputProps?.rightIcon
@@ -107,47 +105,50 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   } : textInputProps?.rightIcon
 
   const _data = !!customData && address ? [...customData, ...data] : data
-  // console.log('data', data)
 
   const renderItem = useCallback((props) => {
     return (
-      placeRow ? placeRow : <PlaceRow onPress={handlePressAddress} {...props} />
+      placeRow ? placeRow : <PlaceRow onPress={handlePressAddress} styles={styles} {...props} />
     )
   }, [placeRow])
 
   return (
-    <View style={['fullWidth']} {...rest}>
+    <View style={styles.wrapper} {...rest}>
       <TextInput
         style={compositionStyles.input}
         onChangeText={(value) => {
           setIsTyping(true)
           handleChangeAddress(value)
         }}
-        // value={address}
+        onBlur={() => {
+          setIsFocused(false)
+        }}
+        onFocus={() => {
+          setIsFocused(true)
+        }}
         {...textInputProps}
         value={address}
         rightIcon={rightIcon}
       />
       {isTyping ? (
-        // TODO - put this into the stylesheet
-        <View style={['alignCenter', 'justifyCenter']}>
+        <View style={styles.loadingWrapper}>
           <ActivityIndicator {...activityIndicatorProps} />
         </View>
       ) : (
-        <List
-          data={_data}
-          renderItem={renderItem}
-          ListEmptyComponent={
-            _showEmptyPlaceholder ? <EmptyPlaceholder {...emptyPlaceholderProps} /> : null
-          }
-          // style={compositionStyles.list}
-          // TODO - put this into the stylesheet
-          style={[{ flexGrow: 0 }]}
-          separators
-          {...listProps}
-        />
-      )}
-
+        showResults ? (
+          <List
+            data={_data}
+            renderItem={renderItem}
+            ListEmptyComponent={
+              _showEmptyPlaceholder ? <EmptyPlaceholder {...emptyPlaceholderProps} /> : null
+            }
+            style={compositionStyles.list}
+            separators
+            {...listProps}
+          />
+        ) : null
+      )
+      }
     </View>
   )
 }
