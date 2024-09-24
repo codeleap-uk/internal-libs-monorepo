@@ -12,6 +12,8 @@ export type TextInputProps =
     password?: boolean
     validate?: FormTypes.ValidatorFunctionWithoutForm | yup.SchemaOf<string>
     debugName: string
+    autoAdjustSelection?: boolean
+    selectionStart?: number
     visibilityToggle?: boolean
     masking?: FormTypes.TextField['masking']
     onChangeMask?: TextInputMaskProps['onChangeText']

@@ -17,6 +17,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const innerInputRef = React.useRef<NativeTextInput>(null)
 
   const [isFocused, setIsFocused] = useState(false)
+  const [currentSelection, setCurrentSelection] = useState({ start: 0 })
 
   const {
     inputBaseProps,
@@ -38,6 +39,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     visibleIcon,
     hiddenIcon,
     style,
+    autoAdjustSelection,
+    selectionStart,
     _error = null,
     ...textInputProps
   } = others
@@ -68,12 +71,14 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation.onInputBlurred()
     setIsFocused(false)
+    if (autoAdjustSelection) setCurrentSelection({ start: selectionStart })
     props.onBlur?.(e)
   }, [validation.onInputBlurred, props.onBlur])
 
   const handleFocus = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation.onInputFocused()
     setIsFocused(true)
+    if (autoAdjustSelection) setCurrentSelection(null)
     props.onFocus?.(e)
   }, [validation.onInputFocused, props.onFocus])
 
@@ -153,6 +158,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       allowFontScaling={false}
       editable={!isPressable && !isDisabled}
       {...buttonModeProps}
+      selection={autoAdjustSelection ? currentSelection : undefined}
       placeholderTextColor={placeholderTextColor}
       value={value}
       selectionColor={selectionColor}
@@ -188,6 +194,8 @@ TextInput.defaultProps = {
   hiddenIcon: 'input-visiblity:hidden' as AppIcon,
   visibleIcon: 'input-visiblity:visible' as AppIcon,
   visibilityToggle: false,
+  autoAdjustSelection: false,
+  selectionStart: 0,
 } as Partial<TextInputProps>
 
 MobileStyleRegistry.registerComponent(TextInput)
