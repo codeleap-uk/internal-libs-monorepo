@@ -53,10 +53,15 @@ export const mergeStyles = (styles: Array<any>) => {
   return deepmerge({ all: true })(...style)
 }
 
+// @note these words are reserved by css
 export const ignoredStyleKeys = [
   'textAlign',
   'textDecoration',
-  'textOverflow'
+  'textOverflow',
+  'left',
+  'top',
+  'right',
+  'bottom',
 ]
 
 export const concatStyles = <T extends string>(styles: Array<StyledProp<T>>): StyledProp<T> => {
