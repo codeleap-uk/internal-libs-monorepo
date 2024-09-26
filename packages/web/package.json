@@ -33,7 +33,7 @@
     "react-dropzone": "^14.2.3",
     "react-image-crop": "^10.1.8",
     "react-input-mask": "^2.0.4",
-    "react-number-format": "^5.2.1",
+    "react-number-format": "^5.4.2",
     "react-select": "^5.7.3",
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
