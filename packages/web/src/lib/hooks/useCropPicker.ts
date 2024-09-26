@@ -16,6 +16,8 @@ export type UseCropPickerProps = Partial<ReactCropProps> & {
   ref: React.MutableRefObject<FileInputRef> | React.Ref<FileInputRef>
 }
 
+type ImageType = 'png' | 'jpeg' | 'webp'
+
 export function readImage(file: File | Blob): Promise<ImageReading> {
   const reader = new FileReader()
   return new Promise<ImageReading>((resolve) => {
@@ -28,7 +30,7 @@ export function readImage(file: File | Blob): Promise<ImageReading> {
   })
 }
 
-export function cropImage(image: ImageReading, crop: Crop): Promise<[string, Blob]> {
+export function cropImage(image: ImageReading, crop: Crop, type: ImageType): Promise<[string, Blob]> {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d', { alpha: true })
 
@@ -61,7 +63,7 @@ export function cropImage(image: ImageReading, crop: Crop): Promise<[string, Blo
       readImage(blob).then(cropped => {
         resolve([cropped.src, blob])
       }).catch(reject)
-    }, 'image/png')
+    }, `image/${type}`)
   })
 }
 
@@ -93,9 +95,9 @@ export function useCropPicker({
     setTimeout(() => setImage(null), 500)
   }
 
-  const onConfirmCrop = async () => {
+  const onConfirmCrop = async (imageType: ImageType = 'jpeg') => {
     setIsLoading(true)
-    const [preview, croppedFile] = await cropImage(image, relativeCrop)
+    const [preview, croppedFile] = await cropImage(image, relativeCrop, imageType)
     onResolved([
       {
         file: new File([croppedFile], 'cropped.jpg'),
