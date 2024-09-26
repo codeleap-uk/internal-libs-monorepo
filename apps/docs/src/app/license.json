@@ -1,14 +1,8 @@
 {
-    "@mdx-js/react@1.6.22": {
+    "@sentry/browser@7.48.0": {
         "licenses": "MIT",
-        "repository": "https://github.com/mdx-js/mdx",
-        "licenseUrl": "https://github.com/mdx-js/mdx/raw/master/license",
-        "parents": "codeleap-docs"
-    },
-    "gatsby-plugin-mdx@5.8.0": {
-        "licenses": "MIT",
-        "repository": "https://github.com/gatsbyjs/gatsby",
-        "licenseUrl": "https://github.com/gatsbyjs/gatsby/raw/master/LICENSE",
+        "repository": "https://github.com/getsentry/sentry-javascript",
+        "licenseUrl": "https://github.com/getsentry/sentry-javascript/raw/master/LICENSE",
         "parents": "codeleap-docs"
     }
 }

@@ -267,7 +267,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       error: !!hasError,
       focused: isFocused,
       disabled: isDisabled,
-      parentWidth: innerWrapperRef?.current?.clientWidth
+      parentWidth: innerWrapperRef?.current?.clientWidth,
     })
 
     useImperativeHandle(inputRef, () => {

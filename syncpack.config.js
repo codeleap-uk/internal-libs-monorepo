@@ -5,9 +5,15 @@ module.exports = {
   "versionGroups": [
     {
       "label": "React",
-      "dependencies": ["react", "react-dom"],
+      "dependencies": ["react-dom"],
       packages: ["**"],
       pinVersion: "18.2.0"
+    },
+    {
+      "label": "React",
+      "dependencies": ["react"],
+      packages: ["**"],
+      pinVersion: "18.1.0"
     },
     {
       "label": "Typescript",

@@ -29,4 +29,5 @@ export type EmptyPlaceholderProps =
     wrapperProps?: ViewProps
     imageWrapperProps?: ViewProps
     indicatorProps?: Partial<ActivityIndicatorProps>
+    ImageComponent?: React.ComponentType
   }
