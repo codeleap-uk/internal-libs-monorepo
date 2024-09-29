@@ -104,7 +104,7 @@ Text.elements = ['text', 'pressFeedback']
 Text.rootElement = 'text'
 
 Text.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Text as (props: StyledComponentProps<TextProps & { ref?: React.MutableRefObject<NativeText> }, typeof styles>) => IJSX
+  return Text as (props: StyledComponentProps<TextProps, typeof styles>) => IJSX
 }
 
 Text.defaultProps = {
