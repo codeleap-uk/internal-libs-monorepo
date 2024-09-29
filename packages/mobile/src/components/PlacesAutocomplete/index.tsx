@@ -12,6 +12,9 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicator } from '../ActivityIndicator'
 
+export * from './styles'
+export * from './types'
+
 const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const { item, onPress, styles } = props
 
