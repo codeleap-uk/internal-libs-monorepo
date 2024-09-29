@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
 import { useStylesFor } from '../../hooks'
 import { Text } from '../Text'
 import { View } from '../View'
@@ -45,9 +45,9 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     listProps,
     emptyPlaceholderProps,
     placeRow = null,
-    renderPlaceRow,
+    renderPlaceRow: PlaceRow,
     activityIndicatorProps,
-    debounce = 250,
+    debounce,
     isLoading,
     persistResultsOnBlur,
     ...rest
@@ -59,6 +59,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
 
   const styles = useStylesFor(PlacesAutocomplete.styleRegistryName, style)
   const compositionStyles = useCompositionStyles(['input', 'list'], styles)
+  const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 
   const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
 
@@ -90,8 +91,6 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     onValueChange?.('')
   }
 
-  const PlaceRow = renderPlaceRow || DefaultPlaceRow
-
   const _showEmptyPlaceholder = !!address && !isTyping && showEmptyPlaceholder && !isLoading
 
   const showResults = isFocused || persistResultsOnBlur
@@ -104,7 +103,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     onPress: handleClearAddress,
   } : textInputProps?.rightIcon
 
-  const _data = !!customData && address ? [...customData, ...data] : data
+  const _data = customData?.length > 0 && address ? [...customData, ...data] : data
 
   const renderItem = useCallback((props) => {
     return (
@@ -132,7 +131,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
       />
       {isTyping ? (
         <View style={styles.loadingWrapper}>
-          <ActivityIndicator {...activityIndicatorProps} />
+          <ActivityIndicator style={activityIndicatorStyles} {...activityIndicatorProps} />
         </View>
       ) : (
         showResults ? (
@@ -154,14 +153,18 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
 }
 
 PlacesAutocomplete.styleRegistryName = 'PlacesAutocomplete'
+PlacesAutocomplete.elements = ['wrapper', 'input', 'list', 'loader', 'placeRow', 'loadingWrapper']
 PlacesAutocomplete.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return PlacesAutocomplete as (props: StyledComponentProps<PlacesAutocompleteProps, typeof styles>) => IJSX
 }
+
 PlacesAutocomplete.defaultProps = {
   showClearIcon: false,
   showEmptyPlaceholder: true,
   clearIcon: 'x' as AppIcon,
   placeRowComponent: DefaultPlaceRow,
+  renderPlaceRow: DefaultPlaceRow,
+  debounce: 250,
 }
 
 MobileStyleRegistry.registerComponent(PlacesAutocomplete)

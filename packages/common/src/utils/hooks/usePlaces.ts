@@ -7,34 +7,41 @@ const BASE_URL_GEOCODING = 'https://maps.googleapis.com/maps/api/geocode/json'
 
 const latLngRegex = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/
 
-export const retrievePlaceDetails = async (placeId, apiKey) => {
+type UsePlacesParams = {
+  input: string
+  key: string
+  showDetails?: boolean
+}
+
+export const retrievePlaceDetails = async (placeId: string, apiKey: string) => {
   const response = await axios.get(BASE_URL_DETAILS, {
     params: {
       place_id: placeId,
       key: apiKey,
     },
   })
-  return response.data.result
+
+  return response?.data?.result
 }
 
-export const retrievePlaces = async (params) => {
+export const retrievePlaces = async (params: UsePlacesParams) => {
   let response
-  const inputWithoutSpaces = params.input.replace(/\s/g, '')
-  const isLatLng = latLngRegex.test(inputWithoutSpaces)
+  const inputWithoutSpaces = params?.input?.replace(/\s/g, '')
+  const isLatLng = latLngRegex?.test(inputWithoutSpaces)
 
   if (isLatLng) {
-    response = await axios.get(BASE_URL_GEOCODING, { params: { latlng: params.input, key: params.key } })
+    response = await axios?.get(BASE_URL_GEOCODING, { params: { latlng: params?.input, key: params?.key } })
   } else {
-    response = await axios.get(BASE_URL, { params })
+    response = await axios?.get(BASE_URL, { params })
   }
 
-  let places = response.data.results || response.data.predictions
+  let places = response?.data?.results || response?.data?.predictions
 
   if (params?.showDetails) {
-    const apiKey = params.key
+    const apiKey = params?.key
     places = await Promise.all(
-      places.map(async (place) => {
-        const placeId = place.place_id
+      places?.map(async (place) => {
+        const placeId = place?.place_id
         const details = await retrievePlaceDetails(placeId, apiKey)
         return { ...place, details }
       }),
