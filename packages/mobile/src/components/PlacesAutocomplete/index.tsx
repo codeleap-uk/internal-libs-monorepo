@@ -9,17 +9,18 @@ import { TextInput } from '../TextInput'
 import { List } from '../List'
 import { Touchable } from '../Touchable'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
-import { TypeGuards } from '@codeleap/common'
 import { ActivityIndicator } from '../ActivityIndicator'
+import { usePlacesAutocompleteUtils } from './usePlacesAutocompleteUtils'
 
 export * from './styles'
 export * from './types'
+export * from './usePlacesAutocompleteUtils'
 
 const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const { item, onPress, styles } = props
 
   if (item?.content) {
-    return item.content
+    return item?.content
   }
 
   const isLatLng = !!item?.formatted_address
@@ -56,57 +57,39 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     ...rest
   } = props
 
-  const [address, setAddress] = React.useState('')
-  const [isTyping, setIsTyping] = React.useState(false)
   const [isFocused, setIsFocused] = React.useState(false)
 
   const styles = useStylesFor(PlacesAutocomplete.styleRegistryName, style)
   const compositionStyles = useCompositionStyles(['input', 'list'], styles)
   const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
 
-  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
-
-  const handleChangeAddress = (address: string) => {
-    setAddress(address)
-
-    if (TypeGuards.isNil(debounce)) {
-      onValueChange?.(address)
-    } else {
-      if (setSearchTimeout.current) {
-        clearTimeout(setSearchTimeout.current)
-      }
-
-      setSearchTimeout.current = setTimeout(() => {
-
-        onValueChange(address)
-        setIsTyping(false)
-      }, debounce ?? 0)
-    }
-  }
-
-  const handlePressAddress = (address: string) => {
-    setAddress(textInputProps?.value ? textInputProps?.value : address)
-    onPress?.(address)
-  }
-
-  const handleClearAddress = () => {
-    setAddress('')
-    onValueChange?.('')
-  }
+  const {
+    handleChangeAddress,
+    handlePressAddress,
+    handleClearAddress,
+    address,
+    isTyping,
+    setIsTyping,
+  } = usePlacesAutocompleteUtils(
+    {
+      onValueChange,
+      onPress,
+    },
+  )
 
   const _showEmptyPlaceholder = !!address && !isTyping && showEmptyPlaceholder && !isLoading
 
   const showResults = isFocused || persistResultsOnBlur
 
   const _showClearIcon = showClearIcon && !!address?.trim?.()
-  const hasRightIcon = !!textInputProps?.rightIcon
 
-  const rightIcon = _showClearIcon && hasRightIcon ? {
+  const rightIcon = _showClearIcon ? {
     name: clearIcon,
     onPress: handleClearAddress,
   } : textInputProps?.rightIcon
 
   const _data = customData?.length > 0 && address ? [...customData, ...data] : data
+  const hasCustomValue = !!textInputProps?.value
 
   const renderItem = useCallback((props) => {
     return (
@@ -129,7 +112,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
           setIsFocused(true)
         }}
         {...textInputProps}
-        value={address}
+        value={hasCustomValue ? textInputProps?.value : address}
         rightIcon={rightIcon}
       />
       {isTyping ? (
