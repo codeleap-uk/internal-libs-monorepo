@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles, useNestedStylesByKey } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { useStylesFor } from '../../hooks'
 import { Text } from '../Text'
 import { View } from '../View'
@@ -10,11 +10,10 @@ import { List } from '../List'
 import { Touchable } from '../Touchable'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { ActivityIndicator } from '../ActivityIndicator'
-import { usePlacesAutocompleteUtils } from './usePlacesAutocompleteUtils'
+import { usePlacesAutocompleteUtils } from '@codeleap/common'
 
 export * from './styles'
 export * from './types'
-export * from './usePlacesAutocompleteUtils'
 
 const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const { item, onPress, styles } = props
@@ -60,8 +59,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   const [isFocused, setIsFocused] = React.useState(false)
 
   const styles = useStylesFor(PlacesAutocomplete.styleRegistryName, style)
-  const compositionStyles = useCompositionStyles(['input', 'list'], styles)
-  const activityIndicatorStyles = useNestedStylesByKey('loader', styles)
+  const compositionStyles = useCompositionStyles(['input', 'list', 'loader'], styles)
 
   const {
     handleChangeAddress,
@@ -70,12 +68,10 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     address,
     isTyping,
     setIsTyping,
-  } = usePlacesAutocompleteUtils(
-    {
-      onValueChange,
-      onPress,
-    },
-  )
+  } = usePlacesAutocompleteUtils({
+    onValueChange,
+    onPress,
+  })
 
   const _showEmptyPlaceholder = !!address && !isTyping && showEmptyPlaceholder && !isLoading
 
@@ -117,7 +113,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
       />
       {isTyping ? (
         <View style={styles.loadingWrapper}>
-          <ActivityIndicator style={activityIndicatorStyles} {...activityIndicatorProps} />
+          <ActivityIndicator style={compositionStyles.loader} {...activityIndicatorProps} />
         </View>
       ) : (
         showResults ? (

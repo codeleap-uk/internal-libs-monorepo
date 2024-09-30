@@ -10,4 +10,3 @@ export type PlacesAutocompleteComposition =
   'placeRowText' |
   'wrapper' |
   'loadingWrapper'
-

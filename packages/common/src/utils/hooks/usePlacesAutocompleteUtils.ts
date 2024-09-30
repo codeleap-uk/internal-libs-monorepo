@@ -1,7 +1,7 @@
 import React from 'react'
-import { TypeGuards } from '@codeleap/common'
+import * as TypeGuards from '../typeGuards'
 
-type UsePlacesAutocompleteUtilsProps = {
+export type UsePlacesAutocompleteUtilsProps = {
   debounce?: number
   onValueChange?: (address: string) => void
   onPress?: (address: string) => void
@@ -30,7 +30,6 @@ export const usePlacesAutocompleteUtils = (props: UsePlacesAutocompleteUtilsProp
       }
 
       setSearchTimeout.current = setTimeout(() => {
-
         onValueChange?.(address)
         setIsTyping(false)
       }, debounce ?? 0)
