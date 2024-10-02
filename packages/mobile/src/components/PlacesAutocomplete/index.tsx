@@ -3,7 +3,7 @@ import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } 
 import { useStylesFor } from '../../hooks'
 import { Text } from '../Text'
 import { View } from '../View'
-import { PlacesAutocompleteProps } from './types'
+import { PlaceItem, PlacesAutocompleteProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { TextInput } from '../TextInput'
 import { List } from '../List'
@@ -27,7 +27,7 @@ const DefaultPlaceRow: PlacesAutocompleteProps['renderPlaceRow'] = (props) => {
   const mainTitle = isLatLng ? item?.formatted_address : item?.description
 
   return (
-    <Touchable onPress={() => onPress(mainTitle)} debugName={`PlaceRow ${item?.place_id}`} style={styles.placeRowWrapper}>
+    <Touchable onPress={() => onPress(mainTitle, item)} debugName={`PlaceRow ${item?.place_id}`} style={styles.placeRowWrapper}>
       <Text text={`${mainTitle}`} style={styles.placeRowText} />
     </Touchable>
   )
@@ -68,7 +68,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     address,
     isTyping,
     setIsTyping,
-  } = usePlacesAutocompleteUtils({
+  } = usePlacesAutocompleteUtils<PlaceItem>({
     onValueChange,
     onPress,
   })

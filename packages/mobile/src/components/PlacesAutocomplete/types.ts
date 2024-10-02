@@ -11,8 +11,10 @@ export type CustomData = {
   content?: JSX.Element
 }
 
+export type PlaceItem = PlaceAddress & PlaceLatLng & { content?: JSX.Element }
+
 export type PlaceRowProps = {
-  item?: PlaceAddress & PlaceLatLng & { content?: JSX.Element }
+  item?: PlaceItem
   styles?: Record<PlacesAutocompleteComposition, ICSS>
   onPress?: PlacesAutocompleteProps['onPress']
 }
@@ -25,7 +27,7 @@ export type PlacesAutocompleteProps = {
   listProps?: FlatListProps
   data: PlaceAddress[] | PlaceLatLng[]
   customData?: CustomData[]
-  onPress?: (address: string) => void
+  onPress?: (address: string, place: PlaceItem) => void
   onValueChange?: (address: string) => void
   showClearIcon?: boolean
   showEmptyPlaceholder?: boolean

@@ -1,13 +1,13 @@
 import React from 'react'
 import * as TypeGuards from '../typeGuards'
 
-export type UsePlacesAutocompleteUtilsProps = {
+export type UsePlacesAutocompleteUtilsProps<T extends Record<string, any>> = {
   debounce?: number
   onValueChange?: (address: string) => void
-  onPress?: (address: string) => void
+  onPress?: (address: string, item: T) => void
 }
 
-export const usePlacesAutocompleteUtils = (props: UsePlacesAutocompleteUtilsProps) => {
+export const usePlacesAutocompleteUtils = <T extends Record<string, any>>(props: UsePlacesAutocompleteUtilsProps<T>) => {
   const {
     debounce = 250,
     onValueChange,
@@ -36,9 +36,9 @@ export const usePlacesAutocompleteUtils = (props: UsePlacesAutocompleteUtilsProp
     }
   }
 
-  const handlePressAddress = (address: string) => {
+  const handlePressAddress = (address: string, item: T) => {
     setAddress(address)
-    onPress?.(address)
+    onPress?.(address, item)
   }
 
   const handleClearAddress = () => {
