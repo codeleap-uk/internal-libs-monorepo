@@ -22,4 +22,5 @@ export type PagerProps<T = any> = Omit<TCarouselProps<T>, 'data' | 'renderItem'>
   initialPage?: number
   style?: StyledProp<PagerComposition>
   showDots?: boolean
+  footer?: ReactNode
 }
