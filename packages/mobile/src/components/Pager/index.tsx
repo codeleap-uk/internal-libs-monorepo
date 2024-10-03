@@ -67,16 +67,8 @@ export const Pager = (pagerProps: PagerProps) => {
   const carouselRef = useRef<ICarouselInstance>(null)
 
   onUpdate(() => {
-    carouselRef.current?.scrollTo({
-      index: page,
-      animated: true,
-    })
+    carouselRef.current?.scrollTo({ index: page, animated: true })
   }, [currentPage])
-
-  const goToPage = (page: number) => {
-
-    setCurrentPage(page)
-  }
 
   const _renderItem = useCallback(({ item, index, animationValue }: CarouselRenderItemInfo<any>) => {
     const itemProps: PageProps = {
@@ -92,7 +84,7 @@ export const Pager = (pagerProps: PagerProps) => {
     }
     if (TypeGuards.isFunction(renderItem)) return renderItem(itemProps)
     if (TypeGuards.isFunction(item)) return item(itemProps)
-  }, [])
+  }, [renderItem, pages, currentPage])
 
   return (
     <View>
@@ -106,7 +98,7 @@ export const Pager = (pagerProps: PagerProps) => {
         ref={carouselRef}
         windowSize={8}
         defaultIndex={initialPage}
-        onSnapToItem={goToPage}
+        onSnapToItem={setCurrentPage}
         maxScrollDistancePerSwipe={theme.values.width}
         renderItem={_renderItem}
         {...props}
@@ -117,7 +109,7 @@ export const Pager = (pagerProps: PagerProps) => {
             <PageDot
               key={`${uuid.v1}-index-${i}`}
               index={i}
-              onPress={() => goToPage(i)}
+              onPress={() => setCurrentPage(i)}
               isActive={i === currentPage}
               styles={getNestedStylesByKey('dot', styles)}
             />
