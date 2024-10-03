@@ -73,8 +73,6 @@ export const Pager = (pagerProps: PagerProps) => {
     })
   }, [currentPage])
 
-  console.log(currentPage)
-
   const goToPage = (page: number) => {
 
     setCurrentPage(page)
