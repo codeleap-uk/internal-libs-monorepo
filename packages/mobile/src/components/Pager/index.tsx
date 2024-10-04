@@ -59,7 +59,7 @@ export const Pager = (pagerProps: PagerProps) => {
   )
 
   return (
-    <View>
+    <View style={styles.wrapper}>
       <Carousel
         data={pages}
         withAnimation={{
