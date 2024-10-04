@@ -27,11 +27,12 @@ export const Pager = (pagerProps: PagerProps) => {
     ...Pager.defaultProps,
     ...pagerProps,
   }
+
   const [currentPage, setCurrentPage] = useConditionalState(page, setPage, { initialValue: initialPage })
   const carouselRef = useRef<ICarouselInstance>(null)
+
   const theme = useTheme((store) => store.current) as AppTheme<Theme>
   const styles = useStylesFor(Pager.styleRegistryName, style)
-
   const { dot } = useCompositionStyles(['dot'], styles)
 
   onUpdate(() => {
@@ -68,7 +69,8 @@ export const Pager = (pagerProps: PagerProps) => {
         }}
         autoPlay={false}
         ref={carouselRef}
-        windowSize={8}
+        style={styles.carousel}
+        loop={false}
         defaultIndex={initialPage}
         onSnapToItem={setCurrentPage}
         maxScrollDistancePerSwipe={theme.values.width}
@@ -84,7 +86,7 @@ export const Pager = (pagerProps: PagerProps) => {
 }
 
 Pager.styleRegistryName = 'Pager'
-Pager.elements = ['page', 'wrapper']
+Pager.elements = ['carousel', 'wrapper', 'innerWrapper', 'dotWrapper', 'dotTouchable', 'dotDot']
 Pager.rootElement = 'wrapper'
 
 Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
