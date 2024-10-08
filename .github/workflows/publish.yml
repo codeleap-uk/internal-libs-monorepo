@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - template-v3-old-styles
     paths:
       - "packages/**/*"
       - .github/workflows/publish.yml
