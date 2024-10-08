@@ -19,12 +19,12 @@ export type OverlayProps<T extends NativeHTMLElement = 'div'> = {
 export * from './styles'
 
 export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T>) => {
-  const { 
-    visible, 
-    responsiveVariants, 
-    variants, 
-    styles, 
-    ...props 
+  const {
+    visible,
+    responsiveVariants,
+    variants,
+    styles,
+    ...props
   } = overlayProps
 
   const variantStyles = useDefaultComponentStyle('Overlay', {
@@ -37,14 +37,26 @@ export const Overlay = <T extends NativeHTMLElement>(overlayProps:OverlayProps<T
 
   const Component = props.onClick || props.onPress ? Touchable : View
 
+  if (!visible) return null
   return (
     // @ts-ignore
     <Component
+      animated
+      initial={variantStyles['wrapper:animation:hidden']}
+      exit={variantStyles['wrapper:animation:hidden']}
+      animate={variantStyles['wrapper:animation:visible']}
       css={[
-        { transition: 'opacity 0.2s ease' },
+
         variantStyles.wrapper,
-        visible ? variantStyles['wrapper:visible'] : {},
+        visible ? variantStyles['wrapper:visible'] : variantStyles['wrapper:hidden'],
+        { pointerEvents: 'none' },
       ]}
+      transition={{
+
+        type: 'tween',
+        duration: 0.5,
+        ease: 'easeIn',
+      }}
       {...props}
     />
   )

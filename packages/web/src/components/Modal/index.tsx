@@ -14,7 +14,7 @@ import {
   useIsomorphicEffect,
 } from '@codeleap/common'
 
-import React, { useId, useRef } from 'react'
+import React, { useCallback, useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
 import { View } from '../View'
@@ -26,6 +26,7 @@ import { Scroll } from '../Scroll'
 import { ComponentCommonProps } from '../../types'
 import { Touchable, TouchableProps } from '../Touchable'
 import { modalScrollLock, ModalStore } from '../../lib/tools/modal'
+import { AnimatePresence } from 'framer-motion'
 
 export * from './styles'
 
@@ -190,6 +191,7 @@ export const ModalContent = (
     ...props
   } = modalProps
 
+  // const mountedVisible = useRef(visible).current
   const index = ModalStore(store => (store.indexes?.[modalId] ?? 0))
 
   const id = useId()
@@ -200,7 +202,7 @@ export const ModalContent = (
     styles,
   })
 
-  const toggleAndReturn = () => {
+  const toggleAndReturn = useCallback(() => {
     toggle?.()
 
     if (alterHistory) {
@@ -208,7 +210,7 @@ export const ModalContent = (
     }
 
     if (TypeGuards.isFunction(onClose)) onClose()
-  }
+  }, [toggle, onClose, alterHistory])
 
   function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
     if (!closeOnEscape) return null
@@ -256,7 +258,12 @@ export const ModalContent = (
     if (modal) modal.focus()
   }, [id])
 
-  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => { }
+  const close = useCallback(() => {
+    console.log('close')
+    if (closable && dismissOnBackdrop) {
+      toggleAndReturn()
+    }
+  }, [closable, dismissOnBackdrop, toggleAndReturn])
 
   const ModalBody = renderModalBody || (scroll ? Scroll : View)
 
@@ -266,79 +273,89 @@ export const ModalContent = (
     return TypeGuards.isNumber(zIndex) ? { zIndex } : {}
   }, [zIndex])
 
+  const _ModalContent = useCallback(({ children, footer }) => {
+    return <ModalArea css={variantStyles.innerWrapper}>
+      <Touchable
+        css={variantStyles.backdropPressable}
+
+        {...backdropProps}
+        onPress={close}
+        debounce={1000}
+      />
+
+      <View
+        component='section'
+        animated
+        initial={variantStyles['box:hidden:animation']}
+        exit={variantStyles['box:hidden:animation']}
+        animate={variantStyles['box:visible:animation']}
+        transition={variantStyles['box:transition']}
+        css={[
+          variantStyles.box,
+          variantStyles['box:visible'],
+          style,
+        ]}
+        className='content'
+        tabIndex={0}
+        id={id}
+        aria-modal={true}
+        role='dialog'
+        aria-describedby={`${id}-title`}
+        aria-label='Close the modal by pressing Escape key'
+
+        {...props}
+      >
+        <ModalHeader
+          {...modalProps}
+          variantStyles={variantStyles}
+          id={id}
+          onPressClose={toggleAndReturn}
+          debugName={debugName}
+        />
+
+        <ModalBody
+          css={variantStyles.body}
+          variantStyles={variantStyles}
+          id={id}
+        >
+          {children}
+        </ModalBody>
+
+        {footer && (
+          <View component='footer' css={variantStyles.footer}>
+            {footer}
+          </View>
+        )}
+      </View>
+    </ModalArea>
+  }, [close])
+
   return (
     <View
+
       ref={modalRef}
       aria-hidden={!visible}
       css={[
         variantStyles.wrapper,
-        visible
-          ? variantStyles['wrapper:visible']
-          : variantStyles['wrapper:hidden'],
+        visible ? variantStyles['wrapper:visible'] : variantStyles['wrapper:hidden'],
         autoIndex ? { zIndex: index } : {},
         _zIndex,
       ]}
     >
-      <Overlay
-        debugName={debugName}
-        visible={withOverlay ? visible : false}
-        css={[
-          variantStyles.backdrop,
-          visible
-            ? variantStyles['backdrop:visible']
-            : variantStyles['backdrop:hidden'],
-        ]}
-        {...overlayProps}
-      />
-
-      <ModalArea css={variantStyles.innerWrapper}>
-        <Touchable
-          css={variantStyles.backdropPressable}
-          onPress={close}
-          debounce={1000}
-          {...backdropProps}
-        />
-        <View
-          component='section'
+      <AnimatePresence>
+        <Overlay
+          debugName={debugName}
+          visible={withOverlay ? visible : false}
           css={[
-            variantStyles.box,
-            visible
-              ? variantStyles['box:visible']
-              : variantStyles['box:hidden'],
-            style,
+            variantStyles.backdrop,
           ]}
-          className='content'
-          tabIndex={0}
-          id={id}
-          aria-modal={true}
-          role='dialog'
-          aria-describedby={`${id}-title`}
-          aria-label='Close the modal by pressing Escape key'
-          {...props}
-        >
-          <ModalHeader
-            {...modalProps}
-            variantStyles={variantStyles}
-            id={id}
-            onPressClose={toggleAndReturn}
-            debugName={debugName}
-          />
-
-          <ModalBody
-            css={variantStyles.body}
-            variantStyles={variantStyles}
-            id={id}
-          >
-            {children}
-          </ModalBody>
-
-          {footer && (
-            <View component='footer' css={variantStyles.footer}>
-              {footer}
-            </View>
-          )}
-        </View>
-      </ModalArea>
+          transition={variantStyles['backdrop:transition']}
+          {...overlayProps}
+        />
+      </AnimatePresence>
+      <AnimatePresence>
+        {visible && <_ModalContent footer={footer}>{children}</_ModalContent>}
+      </AnimatePresence>
     </View>
   )
 }
@@ -380,7 +397,7 @@ export const Modal = (props) => {
     }
 
     if (scrollLock) modalScrollLock(visible, modalId.current)
-    
+
     if (autoIndex) {
       setTimeout(() => {
         setIndex(visible, modalId.current)
