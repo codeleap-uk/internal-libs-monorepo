@@ -33,19 +33,9 @@ export const I18NProvider = (props: I18NContextProps) => {
 
   const [locale, _setLocale] = React.useState<string>(() => {
     let _locale = initialLocale
-    let isPromise = false
     if (persistor) {
-      const persistedLocale = persistor.getLocale()
-
-      // @ts-expect-error - TS doesn't know that a Promise has a then method
-      isPromise = persistedLocale instanceof Promise || !!persistedLocale.then
-
-      if (!isPromise) {
-        // @ts-expect-error - TS doesn't know that a Promise has a then method
-        _locale = persistedLocale
-      }
+      _locale = persistor.getLocale()
     }
-    if (!isPromise) callSubscribers(_locale)
     return _locale
   })
 
@@ -71,15 +61,7 @@ export const I18NProvider = (props: I18NContextProps) => {
   onMount(() => {
     if (persistor) {
       const persistedLocale = persistor.getLocale()
-      // @ts-expect-error - TS doesn't know that a Promise has a then method
-      const isPromise = persistedLocale instanceof Promise || TypeGuards.isFunction(persistedLocale.then)
-
-      if (isPromise) {
-        // @ts-expect-error - TS doesn't know that a Promise has a then method
-        persistedLocale.then((newLocale) => {
-          setLocale(newLocale || initialLocale)
-        })
-      }
+      setLocale(persistedLocale || initialLocale)
     }
   })
 
