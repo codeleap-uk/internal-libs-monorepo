@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.26.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.3...v3.26.0) (2024-10-08)
+
+
+### Features
+
+* **web:** Navigation ([e9ea572](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e9ea57254b8c193b482c55e9b99b43e11def9af4))
+
+
+### Bug Fixes
+
+* **mobile:** number increment icon disabled ([0a98078](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0a98078b37758cd58977a1d3d3ea42224fe5ef12))
+* **web:** build ([2f1129c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/2f1129c884c33212f6db61a06c60886e33dfa294))
+* **web:** infinite loading when uploading large images on Firefox ([f5568cf](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f5568cfc7ffafd811d0a96789f29313e815a2a24))
+* **web:** modal scroll lock unmount, select load value ([0071663](https://github.com/codeleap-uk/internal-libs-monorepo/commit/007166361e14e473ef39de9c611eb22c92ddda43))
+* **web:** textInput mask focus ([e46181d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e46181d26f4a3f37d4db3d272d1d62fa0c02adee))
+
 ### [3.25.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.25.5...v3.25.6) (2024-08-22)
 
 ### [3.25.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.25.4...v3.25.5) (2024-08-22)
