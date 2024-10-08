@@ -19,7 +19,6 @@
   "peerDependencies": {
     "@codeleap/common": "*",
     "@codeleap/styles": "*",
-    "@react-native-community/async-storage": "1.12.1",
     "@react-native-firebase/messaging": "14.4.0",
     "@react-navigation/bottom-tabs": "6.5.3",
     "@react-navigation/drawer": "6.5.7",
@@ -27,7 +26,7 @@
     "@react-navigation/native-stack": "6.9.8",
     "@react-navigation/stack": "6.3.11",
     "react": "18.1.0",
-    "react-native": "0.74.5",
+    "react-native": "0.75.4",
     "react-native-avoid-softinput": "3.1.5",
     "react-native-calendars": "1.1293.0",
     "react-native-date-picker": "4.2.13",
