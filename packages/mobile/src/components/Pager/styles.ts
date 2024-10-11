@@ -1,4 +1,7 @@
-export type DotStates = '' | ':active'
-export type DotParts = 'wrapper' | `touchable${DotStates}` | `dot${DotStates}`
+export type DotStates = '' | 'active'
 
-export type PagerComposition = 'carousel' | 'wrapper' | 'innerWrapper' | `dot${Capitalize<DotParts>}`
+export type DotParts = 'wrapper' | `touchable` | `dot`
+
+export type DotComposition = DotParts | `${DotParts}:${DotStates}`
+
+export type PagerComposition = 'carousel' | 'wrapper' | 'footerWrapper' | `dot${Capitalize<DotParts>}`

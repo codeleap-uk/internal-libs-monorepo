@@ -1,9 +1,17 @@
+import { AnyFunction, StylesOf } from '@codeleap/common'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
-import { Touchable } from '../../Touchable'
-import { View } from '../../View'
-import { uuid } from '../../..'
+import { Touchable } from '../Touchable'
+import { View } from '../View'
+import { DotComposition } from './styles'
 
-function Dot({ onPress, isActive, index, styles }) {
+export type PagerDot = {
+  onPress: AnyFunction
+  isActive: boolean
+  index: number
+  styles: StylesOf<DotComposition>
+}
+
+function Dot({ onPress, isActive, index, styles }: PagerDot) {
   const animation = useAnimatedStyle(() => {
     const scale = isActive ? 1 : 0.6
     return {
@@ -14,7 +22,7 @@ function Dot({ onPress, isActive, index, styles }) {
 
   return (
     <Touchable
-      debugName={`dot-touchable-${index}`}
+      debugName={`default-pager-dot-touchable-${index}`}
       onPress={onPress}
       noFeedback
       style={[styles.touchable, isActive && styles['touchable:active']]}
@@ -24,12 +32,19 @@ function Dot({ onPress, isActive, index, styles }) {
   )
 }
 
-export function PagerDots({ styles, currentPage, setCurrentPage, pages }) {
+export type PagerDots = {
+  styles: StylesOf<DotComposition>
+  currentPage: number
+  setCurrentPage: (page: number) => void
+  pages: Array<any>
+}
+
+export function PagerDots({ styles, currentPage, setCurrentPage, pages }: PagerDots) {
   return (
     <View style={styles.wrapper}>
       {pages?.map((_, i) => (
         <Dot
-          key={`${uuid.v1}-index-${i}`}
+          key={`default-pager-dots-index-${i}`}
           index={i}
           onPress={() => setCurrentPage(i)}
           isActive={i === currentPage}
