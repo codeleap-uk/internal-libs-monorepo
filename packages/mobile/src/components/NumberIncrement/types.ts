@@ -26,6 +26,7 @@ export type NumberIncrementProps =
     suffix?: MaskOptions['suffixUnit']
     separator?: MaskOptions['separator']
     delimiter?: MaskOptions['delimiter']
+    precision?: number
     mask?: MaskOptions['mask']
     formatter?: (value: string | number) => string
     parseValue?: (value: string) => number

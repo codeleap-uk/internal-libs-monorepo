@@ -1,207 +1,119 @@
-import React, { useCallback, useRef } from 'react'
-import { onUpdate, TypeGuards } from '@codeleap/common'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { Dimensions, ScrollView } from 'react-native'
+import React, { useCallback, useRef, useState } from 'react'
+import { ReduceMotion } from 'react-native-reanimated'
+import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel'
+import { CarouselRenderItemInfo, TCarouselProps } from 'react-native-reanimated-carousel/lib/typescript/types'
+import { Dimensions, LayoutChangeEvent } from 'react-native'
+import { onUpdate, TypeGuards, useConditionalState } from '@codeleap/common'
+import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { useStylesFor } from '../../hooks'
 import { MobileStyleRegistry } from '../../Registry'
 import { View } from '../View'
-import { PageProps, PagerProps, ScrollEvent } from './types'
-import { useStylesFor } from '../../hooks'
+import { PageProps, PagerProps } from './types'
+import { PagerDots } from './PagerDots'
 
 export * from './styles'
 export * from './types'
+export * from './PagerDots'
 
-export const Pager = (pagerProps: PagerProps) => {
+const window = Dimensions.get('window')
+
+export const Pager = <T extends unknown>(props: PagerProps<T>) => {
   const {
-    width: widthProp,
+    pages,
     page,
+    onChangePage,
+    initialPage,
     style,
-    returnEarly,
-    renderPageWrapper,
-    pageWrapperProps = {},
-    children,
-    windowing,
-    setPage,
-    scrollEnabled,
-    scrollLeftEnabled,
-    scrollRightEnabled,
-    onScroll,
-    scrollDirectionThrottle,
-    onSwipeLastPage,
-    waitEventDispatchTimeout,
+    showDots,
+    renderItem: RenderItem,
+    footer,
+    width: carouselWidth,
+    height: carouselHeight,
+    autoCalculateFooterHeight,
+    ...rest
   } = {
     ...Pager.defaultProps,
-    ...pagerProps,
+    ...props,
   }
 
-  const childArr = React.Children.toArray(children)
-  const scrollRef = useRef<ScrollView>(null)
-  const [positionX, setPositionX] = React.useState(0)
-  const [scrollPositionX, setScrollPositionX] = React.useState(0)
-  const [_scrollEnabled, setScrollEnabled] = React.useState(true)
-  const waitEventDispatch = useRef(false)
+  const [currentPage, setCurrentPage] = useConditionalState(page, onChangePage, { initialValue: initialPage })
+  const carouselRef = useRef<ICarouselInstance>(null)
+  const [footerHeight, setFooterHeight] = useState(0)
 
   const styles = useStylesFor(Pager.styleRegistryName, style)
-
-  const windowWidth = Dimensions.get('window').width
-
-  // @ts-expect-error
-  let width = widthProp ?? styles?.wrapper?.width
-
-  const validWidth = TypeGuards.isNumber(width)
-
-  if (!validWidth) {
-    width = windowWidth
-  }
-
-  const nChildren = React.Children.count(children)
-
-  const lastPage = nChildren - 1
-
-  const WrapperComponent = renderPageWrapper || View
-
-  const hasScrollDirectionDisabled = !scrollLeftEnabled || !scrollRightEnabled
-
-  const handleScrollEnd = useCallback((event: ScrollEvent) => {
-    if (!scrollEnabled) return null
-
-    if (waitEventDispatch.current === true) return null
-
-    waitEventDispatch.current = true
-
-    const x = event?.nativeEvent.contentOffset.x
-    const toPage = Math.floor(((Math.round(x)) / Math.round(width)))
-
-    const length = childArr.length - 1
-
-    if (toPage >= length && TypeGuards.isFunction(onSwipeLastPage) && page >= length) {
-      onSwipeLastPage?.(event)
-    } else if (toPage !== page && toPage <= length) {
-      setPage(toPage)
-      setPositionX(toPage * width)
-    }
-
-    setTimeout(() => {
-      waitEventDispatch.current = false
-    }, waitEventDispatchTimeout)
-  }, [childArr, page, setPage, waitEventDispatch.current])
-
-  const handleScroll = (event: ScrollEvent) => {
-    const scrollX = event?.nativeEvent?.contentOffset?.x
-
-    if (!scrollEnabled) {
-      if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { x: scrollX })
-      return null
-    }
-
-    if (!_scrollEnabled) {
-      setScrollPositionX(scrollX)
-      return null
-    }
-
-    const isRight = scrollX < scrollPositionX
-    const isLeft = scrollX > scrollPositionX
-
-    if (TypeGuards.isFunction(onScroll)) onScroll?.(event, { isLeft, isRight, x: scrollX })
-
-    if (hasScrollDirectionDisabled) {
-      if (isRight && !scrollRightEnabled || isLeft && !scrollLeftEnabled) {
-        setScrollEnabled(false)
-
-        setTimeout(() => {
-          scrollRef.current.scrollTo({
-            x: positionX,
-            animated: true,
-          })
-
-          setTimeout(() => {
-            setScrollEnabled(true)
-          }, scrollDirectionThrottle)
-        })
-      }
-    }
-
-    setScrollPositionX(scrollX)
-  }
+  const dotStyles = useNestedStylesByKey('dot', styles)
 
   onUpdate(() => {
-    const x = width * page
-    if (scrollRef.current && x !== positionX) {
-      scrollRef.current.scrollTo({
-        x,
-        animated: true,
-      })
-      setPositionX(x)
+    carouselRef.current?.scrollTo({ index: currentPage, animated: true })
+  }, [currentPage])
+
+  const renderItem = useCallback(({ item, index, animationValue }: CarouselRenderItemInfo<any>) => {
+    const itemProps: Omit<PageProps<T>, 'item'> = {
+      isFirst: index === 0,
+      isLast: index === pages?.length - 1,
+      isOnly: pages?.length === 1,
+      isActive: index === currentPage,
+      isNext: index === currentPage + 1,
+      isPrevious: index === currentPage - 1,
+      index,
+      animationValue,
     }
-  }, [page])
+
+    if (TypeGuards.isFunction(item)) {
+      const ItemComponent = item
+      return <ItemComponent {...itemProps} />
+    }
+
+    return <RenderItem {...itemProps} item={item} />
+  }, [RenderItem, pages?.length, currentPage])
 
   return (
-    <ScrollView
-      ref={scrollRef}
-      horizontal
-      pagingEnabled
-      onMomentumScrollEnd={handleScrollEnd}
-      scrollEventThrottle={hasScrollDirectionDisabled ? 2000 : 300}
-      showsHorizontalScrollIndicator={false}
-      {...pagerProps}
-      style={styles?.wrapper}
-      onScroll={handleScroll}
-      scrollEnabled={childArr.length > 1 && scrollEnabled && _scrollEnabled}
-    >
-      {childArr.map((child: PagerProps['children'][number], index) => {
-        const isActive = index === page
-        const isLast = index === lastPage
-        const isFirst = index === 0
-        const isNext = index === page + 1
-        const isPrevious = index === page - 1
+    <View style={styles.wrapper}>
+      <Carousel
+        data={pages}
+        withAnimation={{
+          type: 'timing',
+          config: {
+            reduceMotion: ReduceMotion.Never
+          },
+        }}
+        autoPlay={false}
+        ref={carouselRef}
+        loop={false}
+        defaultIndex={initialPage}
+        onSnapToItem={setCurrentPage}
+        maxScrollDistancePerSwipe={carouselWidth}
+        width={carouselWidth}
+        height={carouselHeight - (autoCalculateFooterHeight ? footerHeight : 0)}
+        renderItem={renderItem}
+        {...rest as TCarouselProps<T>}
+        style={styles.carousel}
+      />
 
-        const shouldRender = windowing ? (isActive || isNext || isPrevious) : true
-
-        if (!shouldRender && returnEarly) {
-          return <View style={{ height: '100%', width }} />
-        }
-
-        const pageProps: PageProps = {
-          isLast,
-          isActive,
-          isFirst,
-          isNext,
-          isPrevious,
-          index,
-          page,
-        }
-
-        const content = typeof child === 'function' ? child(pageProps) : child
-
-        const wrapperProps = {
-          key: index,
-          ...pageWrapperProps,
-          style: [{ height: '100%', width }, styles?.page],
-        }
-
-        return <WrapperComponent {...wrapperProps}>{content}</WrapperComponent>
-      })}
-    </ScrollView>
+      <View onLayout={(event: LayoutChangeEvent) => setFooterHeight(event.nativeEvent.layout.height)} style={styles.footerWrapper}>
+        {footer}
+        {showDots ? (
+          <PagerDots currentPage={currentPage} pages={pages} setCurrentPage={setCurrentPage} styles={dotStyles} />
+        ) : null}
+      </View>
+    </View>
   )
 }
 
 Pager.styleRegistryName = 'Pager'
-Pager.elements = ['page', 'wrapper']
+Pager.elements = ['carousel', 'wrapper', 'footerWrapper', 'dot']
 Pager.rootElement = 'wrapper'
 
 Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Pager as (props: StyledComponentProps<PagerProps, typeof styles>) => IJSX
+  return Pager as <T extends unknown>(props: StyledComponentProps<PagerProps<T>, typeof styles>) => IJSX
 }
 
 Pager.defaultProps = {
-  page: 0,
-  returnEarly: true,
-  windowing: false,
-  keyboardShouldPersistTaps: 'handled',
-  scrollEnabled: true,
-  scrollRightEnabled: true,
-  scrollLeftEnabled: true,
-  scrollDirectionThrottle: 650,
-  waitEventDispatchTimeout: 250,
-} as Partial<PagerProps>
+  width: window.width,
+  height: window.height,
+  showDots: true,
+  autoCalculateFooterHeight: true,
+  initialPage: 0,
+} as Partial<PagerProps<unknown>>
 
 MobileStyleRegistry.registerComponent(Pager)

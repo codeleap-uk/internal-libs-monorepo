@@ -1,37 +1,27 @@
+import React, { ReactNode } from 'react'
 import { StyledProp } from '@codeleap/styles'
-import { ReactNode } from 'react'
-import { NativeScrollEvent, NativeSyntheticEvent, ScrollViewProps } from 'react-native'
 import { PagerComposition } from './styles'
+import { TCarouselProps } from 'react-native-reanimated-carousel'
+import { CarouselRenderItemInfo } from 'react-native-reanimated-carousel/lib/typescript/types'
 
-export type PageProps = {
+export type PageProps<T extends unknown> = CarouselRenderItemInfo<T> & {
   isLast: boolean
   isFirst: boolean
   isActive: boolean
+  isOnly: boolean
   isNext: boolean
-  page: number
   index: number
   isPrevious: boolean
 }
 
-export type ScrollEvent = NativeSyntheticEvent<NativeScrollEvent>
-
-export type PagerProps =
-  Omit<ScrollViewProps, 'style'> &
-  {
-    children?: (((pageData: PageProps) => ReactNode) | ReactNode)[]
-    page?: number
-    setPage?: (page: number) => void
-    returnEarly?: boolean
-    renderPageWrapper?: React.FC<PageProps>
-    pageWrapperProps?: any
-    width?: number
-    onScroll?: (event: ScrollEvent, args: { isLeft?: boolean; isRight?: boolean; x?: number }) => void
-    /** If TRUE render page, nextPage and prevPage only */
-    windowing?: boolean
-    scrollRightEnabled?: boolean
-    scrollLeftEnabled?: boolean
-    scrollDirectionThrottle?: number
-    onSwipeLastPage?: (event: ScrollEvent) => void
-    waitEventDispatchTimeout?: number
-    style?: StyledProp<PagerComposition>
-  }
+export type PagerProps<T extends unknown> = Partial<Omit<TCarouselProps<T>, 'data' | 'renderItem'>> & {
+  pages: TCarouselProps<T>['data']
+  renderItem?: (props: PageProps<T>) => JSX.Element
+  page?: number
+  onChangePage?: (page: number) => void
+  initialPage?: number
+  style?: StyledProp<PagerComposition>
+  showDots?: boolean
+  footer?: ReactNode
+  autoCalculateFooterHeight?: boolean
+}
