@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - nextjs
     paths: 
       - apps/web
       - .github/workflows/website.yml
