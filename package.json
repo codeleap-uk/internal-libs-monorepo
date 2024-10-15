@@ -11,7 +11,7 @@
   },
   "scripts": {
     "postinstall": "node ./scripts/postInstall.js && yarn patch-package",
-    "build": "turbo run build --filter='./packages/*'",
+    "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
@@ -48,7 +48,7 @@
     "ts-node-dev": "^1.1.8",
     "typedoc": "0.25.1",
     "typescript": "5.0.4",
-    "openai": "^4.6.0",
+    "openai": "4.33.0",
     "typedoc-json-parser": "^8.2.0",
     "patch-package": "8.0.0"
   },
