@@ -30,6 +30,8 @@ export * from './useToggle'
 export * from './useBooleanToggle'
 export * from './useModal'
 export * from './usePartialState'
+export * from './usePlaces'
+export * from './usePlacesAutocompleteUtils'
 
 export { default as useUnmount } from 'react-use/lib/useUnmount'
 

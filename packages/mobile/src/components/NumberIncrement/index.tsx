@@ -11,6 +11,7 @@ import { NumberIncrementProps } from './types'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import CurrencyInput from 'react-native-currency-input'
 
 export * from './styles'
 export * from './types'
@@ -58,6 +59,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     timeoutActionFocus,
     mask,
     actionDebounce,
+    precision,
     ...textInputProps
   } = others
 
@@ -73,11 +75,13 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const isFormatted = TypeGuards.isFunction(formatter)
 
-  const hasMaskProps = [masking, prefix, suffix, delimiter, separator, mask].some(v => !!v)
+  const hasMaskProps = [masking, mask].some(v => !!v)
+  const hasCurrencyProps = [prefix, suffix, delimiter, separator, precision].some(v => !!v)
 
-  const isMasked = hasMaskProps && !isFormatted
+  const isCurrency = hasCurrencyProps
+  const isMasked = hasMaskProps && !isFormatted && !isCurrency
 
-  const InputElement = isMasked ? MaskedTextInput : NativeTextInput
+  const InputElement: any = isMasked ? MaskedTextInput : isCurrency ? CurrencyInput : NativeTextInput
 
   // @ts-expect-error - React's ref type system is weird
   useImperativeHandle(inputRef, () => {
@@ -219,6 +223,19 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     },
   } : {}
 
+  const currencyExtraProps = isCurrency ? {
+    value,
+    onChangeText: null,
+    onChangeValue: onChange,
+    prefix: prefix,
+    separator: separator ?? '.',
+    suffix: suffix,
+    delimiter: delimiter ?? ',',
+    minValue: min,
+    maxValue: max,
+    precision,
+  } : {}
+
   const onPressInnerWrapper = () => {
     handleFocus()
     if (editable) innerInputRef.current?.focus?.()
@@ -270,6 +287,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           style={inputTextStyle}
           ref={innerInputRef}
           {...maskingExtraProps}
+          {...currencyExtraProps}
         />
       ) : (
         <Text
