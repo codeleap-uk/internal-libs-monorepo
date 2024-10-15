@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - nextjs
     paths: 
       - apps/web
       - .github/workflows/website.yml
@@ -15,7 +16,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [18.16.0]
+        node-version: [20.15.0]
         
     steps:
     - name: Clone current repo
@@ -42,7 +43,7 @@ jobs:
 
     - name: Production Build
       run: |
-        yarn web gatsby build
+        yarn web build_website
 
     - name: Deploy to S3
       uses: jakejarvis/s3-sync-action@master
@@ -53,7 +54,7 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
         AWS_REGION: ${{ secrets.AWS_REGION }}
-        SOURCE_DIR: "apps/web/public"
+        SOURCE_DIR: "apps/web/out"
 
     - name: Slack Notification Success
       if: ${{ success() }}
