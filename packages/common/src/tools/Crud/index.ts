@@ -190,7 +190,7 @@ export class QueryManager<
             ],
           }
         }
-        
+
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
 
         if (args.to === 'end') {
@@ -338,8 +338,8 @@ export class QueryManager<
     return this.options.queryClient
   }
 
-  queryKeyFor(itemId: T['id']) {
-    return [this.name, this.keySuffixes.retrieve, itemId]
+  queryKeyFor(itemId: T['id'], args?: ExtraArgs) {
+    return [this.name, this.keySuffixes.retrieve, itemId, args]
   }
 
   filteredQueryKey(filters?: ExtraArgs) {
@@ -418,7 +418,7 @@ export class QueryManager<
     }
 
     const listEffect = useListEffect({
-      query, 
+      query,
       refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
       cancelQuery: () => this.queryClient.cancelQueries({ queryKey, exact: true }),
     })
@@ -446,12 +446,12 @@ export class QueryManager<
 
     const query = useQuery({
       ...options?.queryOptions,
-      queryKey: this.queryKeyFor(itemId),
+      queryKey: this.queryKeyFor(itemId, options.filter),
       initialData: () => {
         return this.itemMap[itemId]
       },
       queryFn: () => {
-        return this.options.retrieveItem(itemId)
+        return this.options.retrieveItem(itemId, options?.filter)
       },
       onSuccess: (data) => {
         this.updateItems(data)

@@ -33,9 +33,10 @@ export type DeleteOptions<T extends QueryManagerItem> = {
 
 }
 
-export type RetrieveOptions<T extends QueryManagerItem> = {
+export type RetrieveOptions<T extends QueryManagerItem, ExtraArgs = any> = {
   queryOptions?: Partial<UseQueryOptions<T, unknown, T>>
   id?: T['id']
+  filter?: ExtraArgs
 }
 
 export type ListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
@@ -65,7 +66,7 @@ export type QueryManagerActions<
 export type UseListEffect<T extends QueryManagerItem = any> = (
   listQuery: {
     query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>,
-    refreshQuery: (silent?: boolean) => void,
+    refreshQuery: (silent?: boolean) => void
     cancelQuery: () => void
   }
 ) => void
@@ -84,7 +85,7 @@ export type QueryManagerOptions<
   createItem?: (data: Partial<T>, args?: ExtraArgs) => Promise<T>
   updateItem?: (data: Partial<T>, args?: ExtraArgs) => Promise<T>
   deleteItem?: (data: T, args?: ExtraArgs) => Promise<T>
-  retrieveItem?: (id: T['id']) => Promise<T>
+  retrieveItem?: (id: T['id'], args?: ExtraArgs) => Promise<T>
 
   useListEffect?: UseListEffect<T>
 
