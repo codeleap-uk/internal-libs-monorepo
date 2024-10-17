@@ -61,6 +61,8 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   const styles = useStylesFor(PlacesAutocomplete.styleRegistryName, style)
   const compositionStyles = useCompositionStyles(['input', 'list', 'loader'], styles)
 
+  const hasCustomValue = !!textInputProps?.value
+
   const {
     handleChangeAddress,
     handlePressAddress,
@@ -71,6 +73,7 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   } = usePlacesAutocompleteUtils<PlaceItem>({
     onValueChange,
     onPress,
+    debounce: hasCustomValue ? null : 250
   })
 
   const _showEmptyPlaceholder = !!address && !isTyping && showEmptyPlaceholder && !isLoading
@@ -85,7 +88,6 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
   } : textInputProps?.rightIcon
 
   const _data = customData?.length > 0 && address ? [...customData, ...data] : data
-  const hasCustomValue = !!textInputProps?.value
 
   const renderItem = useCallback((props) => {
     return (

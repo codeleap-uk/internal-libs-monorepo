@@ -24,9 +24,11 @@ export const usePlacesAutocompleteUtils = <T extends Record<string, any>>(props:
 
     if (TypeGuards.isNil(debounce)) {
       onValueChange?.(address)
+      setTimeout(() => setIsTyping(false), 250)
     } else {
       if (setSearchTimeout.current) {
         clearTimeout(setSearchTimeout.current)
+        setSearchTimeout.current = null
       }
 
       setSearchTimeout.current = setTimeout(() => {
