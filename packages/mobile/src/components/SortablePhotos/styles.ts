@@ -1,6 +1,6 @@
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
 
-export type SortablePhotosComposition = 
+export type SortablePhotosComposition =
   'wrapper' |
   'wrapper:loading' |
   'photoWrapper' |

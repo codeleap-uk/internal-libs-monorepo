@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.1.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.0.2...v4.1.0) (2024-10-16)
+
+
+### Features
+
+* **common:** add more tags, add types to List component ([43f2a1f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/43f2a1f4d17cdd2ad1b2432b954ca703d5607ec9))
+* **common:** add nav to view elementmap ([7d2d8c1](https://github.com/codeleap-uk/internal-libs-monorepo/commit/7d2d8c1fad834cc1c94ac304bf739c7e1ef70d0e))
+* **mobile:** placesAutocomplete start ([0cab59c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0cab59c705d46d010f07c1ff1471b6cc800cdf00))
+
+
+### Bug Fixes
+
+* **mobile:** Text ref ts ([34b020f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/34b020f21466efec117d1c52628de4ed6292a1e6))
+* **web:** infinite loading when uploading large images on Firefox ([06186cd](https://github.com/codeleap-uk/internal-libs-monorepo/commit/06186cdae89c3fc07469aa851f5af00b3bb64ebd))
+* **web:** select portal position ([f72391c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f72391cb79548b89602e990dfc114e673721e71e))
+
 ### [4.0.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.0.1...v4.0.2) (2024-08-06)
 
 ### [4.0.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.25.0...v4.0.1) (2024-08-02)
