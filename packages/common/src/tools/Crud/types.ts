@@ -1,4 +1,4 @@
-import { InfiniteData, QueryKey, UseInfiniteQueryOptions, UseInfiniteQueryResult, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
+import { InfiniteData, QueryKey, QueryOptions, UseInfiniteQueryOptions, UseInfiniteQueryResult, UseMutationOptions, useQueryClient, UseQueryOptions, UseQueryResult } from '@tanstack/react-query'
 import { QueryManager } from './index'
 
 export type PaginationResponse<T> = {
@@ -44,6 +44,16 @@ export type ListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
     UseInfiniteQueryOptions<PaginationResponse<T>>
   >
   filter?: ExtraArgs
+  limit?: number
+}
+
+export type PaginatedListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
+  queryOptions?: Partial<
+    QueryOptions<PaginationResponse<T>>
+  >
+  filter?: ExtraArgs
+  page?: number
+  limit?: number
 }
 
 export type QueryManagerAction<
@@ -65,7 +75,7 @@ export type QueryManagerActions<
 
 export type UseListEffect<T extends QueryManagerItem = any> = (
   listQuery: {
-    query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>,
+    query: UseInfiniteQueryResult<PaginationResponse<T>, unknown> | UseQueryResult<PaginationResponse<T>, unknown>
     refreshQuery: (silent?: boolean) => void
     cancelQuery: () => void
   }
@@ -115,14 +125,19 @@ export type InfinitePaginationData<T> = InfiniteData<PaginationResponse<T>>
 export type UseManagerArgs<T extends QueryManagerItem, ExtraArgs = any> = {
   filter?: ExtraArgs
   limit?: number
-  offset?: number
 
   creation?: CreateOptions<T>
   update?: UpdateOptions<T>
   deletion?: DeleteOptions<T>
 
+} & ({
+  pagination?: 'paginated'
+  page?: number
+  listOptions?: Pick<PaginatedListOptions<T, ExtraArgs>, 'queryOptions'>
+} | {
+  pagination?: 'infiniteScroll'
   listOptions?: Pick<ListOptions<T, ExtraArgs>, 'queryOptions'>
-}
+})
 
 export type QueryManagerItem = {
   id: string | number

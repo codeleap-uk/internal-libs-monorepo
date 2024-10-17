@@ -30,6 +30,7 @@ import {
   RetrieveOptions,
   OptionChangeListener,
   QueryManagerActionTriggers,
+  PaginatedListOptions,
 } from './types'
 
 export * from './types'
@@ -342,8 +343,92 @@ export class QueryManager<
     return [this.name, this.keySuffixes.retrieve, itemId, args]
   }
 
-  filteredQueryKey(filters?: ExtraArgs) {
+  filteredQueryKey(filters?: ExtraArgs, modifier?: string) {
+    if (modifier) return [...this.queryKeys.list, modifier, filters]
     return [...this.queryKeys.list, filters]
+  }
+
+  paginatedPageKey(page: number, filter: ExtraArgs) {
+    return this.filteredQueryKey(filter, `paginated-${page}`)
+  }
+
+  prefetchPage(page: number, limit: number, filter: ExtraArgs) {
+
+    return this.queryClient.prefetchQuery(this.paginatedPageKey(page, filter), async () => {
+      return this.options.listItems(limit, page * limit, filter)
+    })
+  }
+
+  usePaginatedList(options?: PaginatedListOptions<T, ExtraArgs>) {
+    const {
+      filter,
+      page = 1,
+      queryOptions,
+      limit = this.standardLimit,
+    } = options
+
+    const [isRefreshing, setRefreshing] = useState(false)
+
+    const queryKey = this.filteredQueryKey(filter, `paginated-${page}`)
+
+    const useListEffect = this.options?.useListEffect ?? (() => null)
+
+    const offset = (page - 1) * limit
+
+    const query = useQuery({
+      ...queryOptions,
+      queryKey,
+      queryFn: async () => {
+        return this.options.listItems(limit, offset, filter)
+      },
+      keepPreviousData: true,
+      select: (data) => {
+
+        this.transformData({
+          pageParams: [{ limit, offset }],
+          pages: [data],
+        }, queryKey)
+
+        return data
+      },
+    })
+
+    const totalPages = query.data?.count ? Math.ceil(query.data.count / limit) : 0
+
+    function refresh() {
+      setRefreshing(true)
+      this.refresh(filter)
+      setRefreshing(false)
+    }
+
+    const listEffect = useListEffect({
+      query,
+      refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
+      cancelQuery: () => this.queryClient.cancelQueries({ queryKey, exact: true }),
+    })
+
+    function prefetchPage(page: number) {
+      return this.prefetchPage(page, limit, filter)
+    }
+
+    return {
+      items: query.data?.results ?? [],
+      query,
+      totalPages,
+      page,
+      refresh,
+      itemMap: this.itemMap,
+      isRefreshing,
+      prefetchPage,
+      getNextPage: () => {
+        return prefetchPage(page + 1)
+      },
+      getPreviousPage: () => {
+        return prefetchPage(page - 1)
+      },
+
+    }
+
   }
 
   useList(options?: ListOptions<T, ExtraArgs>) {
@@ -352,6 +437,7 @@ export class QueryManager<
     const {
       filter,
       queryOptions,
+      limit = this.standardLimit,
     } = options
 
     const queryKey = this.filteredQueryKey(filter)
@@ -366,7 +452,7 @@ export class QueryManager<
 
       queryFn: async (query) => {
 
-        return this.options.listItems(this.standardLimit, query.pageParam?.offset ?? 0, filter)
+        return this.options.listItems(limit, query.pageParam?.offset ?? 0, filter)
       },
       refetchOnMount: (query) => {
 
@@ -382,7 +468,7 @@ export class QueryManager<
           return undefined
         }
         return {
-          limit: this.standardLimit,
+          limit: limit,
           offset: currentTotal,
         }
       },
@@ -393,7 +479,7 @@ export class QueryManager<
           return undefined
         }
         return {
-          limit: this.standardLimit,
+          limit: limit,
           offset: currentTotal,
         }
       },
@@ -436,10 +522,12 @@ export class QueryManager<
       itemMap: this.itemMap,
       pagesById: this.queryStates[hashedKey]?.pagesById ?? {},
       itemIndexes: this.queryStates[hashedKey]?.itemIndexes ?? {},
+      totalPages: query.data?.pages?.length ?? 0,
+      page: query.data?.pages?.length ?? 0,
     }
   }
 
-  useRetrieve(options?: RetrieveOptions<T>) {
+  useRetrieve(options?: RetrieveOptions<T, ExtraArgs>) {
     const [isRefreshing, setRefreshing] = useState(false)
 
     const itemId = options?.id
@@ -755,9 +843,9 @@ export class QueryManager<
     return newItem
   }
 
-  async refresh(filters?: ExtraArgs) {
-    if (!!filters) {
-      const key = this.filteredQueryKey(filters)
+  async refresh(filters?: ExtraArgs, modifier?: string) {
+    if (!!filters || !!modifier) {
+      const key = this.filteredQueryKey(filters, modifier)
       this.queryClient.removeQueries(key)
       this.queryClient.invalidateQueries(this.queryKeys.list)
     } else {
@@ -771,11 +859,6 @@ export class QueryManager<
   }
 
   use(options?: UseManagerArgs<T, ExtraArgs>) {
-
-    const list = this.useList({
-      filter: options?.filter,
-      queryOptions: options?.listOptions?.queryOptions,
-    })
     const create = this.useCreate(options?.creation)
     const update = this.useUpdate(options?.update)
     const del = this.useDelete(options?.deletion)
@@ -785,6 +868,38 @@ export class QueryManager<
       update,
       del,
     }
+
+    if (options.pagination === 'paginated') {
+      const list = this.usePaginatedList({
+        filter: options?.filter,
+        queryOptions: options?.listOptions?.queryOptions,
+        limit: options?.limit,
+        page: options?.page,
+      })
+
+      return {
+        items: list.items,
+        list,
+        itemMap: list.itemMap,
+        create: create.create,
+        update: update.update,
+        delete: del.delete,
+
+        refreshItem: this.refreshItem.bind(this),
+        setItem: this.setItem.bind(this),
+        refresh: list.refresh,
+        isRefreshing: list.isRefreshing,
+        actions: this.actions,
+        updatedAt: list.query.dataUpdatedAt,
+        queries,
+      }
+    }
+
+    const list = this.useList({
+      filter: options?.filter,
+      queryOptions: options?.listOptions?.queryOptions,
+      limit: options?.limit,
+    })
 
     return {
       items: list.items,
