@@ -2,7 +2,6 @@ import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useStat
 import { Animated, AppState, AppStateStatus, Platform, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
 import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { PressableRippleProps } from '../modules/PressableRipple/type'
-import { useSoftInputState } from 'react-native-avoid-softinput'
 import { useMemo } from 'react'
 import { mergeStyles } from '@codeleap/styles'
 
@@ -305,6 +304,8 @@ export function useBackButton(cb: () => boolean|void, deps = []) {
 }
 
 export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {
+  return {}
+
   const { isSoftInputShown, softInputHeight } = useSoftInputState()
 
   const propStyle = useMemo(() => {

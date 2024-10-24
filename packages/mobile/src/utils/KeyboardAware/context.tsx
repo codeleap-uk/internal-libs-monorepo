@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSoftInputState } from 'react-native-avoid-softinput'
 
 type TKeyboardCtx = {
   isVisible: boolean
@@ -17,6 +16,10 @@ export const KeyboardProvider = ({ children }) => {
 }
 
 export const useKeyboard = (): TKeyboardCtx => {
+  return {
+    isVisible: false,
+    height: 0,
+  }
   const state = useSoftInputState()
   return {
     isVisible: state.isSoftInputShown,

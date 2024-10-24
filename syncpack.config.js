@@ -25,7 +25,7 @@ module.exports = {
       "label": "React native",
       "dependencies": ["react-native"],
       packages: ["**"],
-      pinVersion: "0.75.4"
+      pinVersion: "0.76.0"
 
     },
     {
