@@ -1,5 +1,5 @@
 import { LoadingOverlayProps } from '../LoadingOverlay'
-import FastImage, { Source } from 'react-native-fast-image'
+import FastImage, { Source } from '@d11/react-native-fast-image'
 import { ImageProps as RNImageProps } from 'react-native'
 import { ImageComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
