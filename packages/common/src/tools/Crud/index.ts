@@ -447,7 +447,7 @@ export class QueryManager<
     const useListEffect = this.options?.useListEffect ?? (() => null)
 
     const query = useInfiniteQuery({
-      ...queryOptions,
+
       queryKey,
 
       queryFn: async (query) => {
@@ -495,6 +495,7 @@ export class QueryManager<
 
       },
       keepPreviousData: true,
+      ...queryOptions,
     })
 
     const refresh = async () => {
@@ -533,7 +534,6 @@ export class QueryManager<
     const itemId = options?.id
 
     const query = useQuery({
-      ...options?.queryOptions,
       queryKey: this.queryKeyFor(itemId, options.filter),
       initialData: () => {
         return this.itemMap[itemId]
@@ -545,6 +545,7 @@ export class QueryManager<
         this.updateItems(data)
 
       },
+      ...options?.queryOptions,
     })
 
     const refresh = async () => {
