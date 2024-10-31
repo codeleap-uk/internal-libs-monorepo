@@ -6138,6 +6138,33 @@
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.29.14.tgz#569de51719a0f4445fabff775012d5c09a173b96"
   integrity sha512-ElEAahtLWA7Y7c2Haw10KdEf2tx+XZl/Z8dmyWxZehxWK3TPL5qtXtb7kUEhvt/8u2cSP62fLxgh2qqzMMGnDQ==
 
+"@tanstack/query-core@5.59.16":
+  version "5.59.16"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.59.16.tgz#aa4616e8a9c12afeef4cfbf3ed0f55f404d66e67"
+  integrity sha512-crHn+G3ltqb5JG0oUv6q+PMz1m1YkjpASrXTU+sYWW9pLk0t2GybUHNRqYPZWhxgjPaVGC4yp92gSFEJgYEsPw==
+
+"@tanstack/query-persist-client-core@5.59.16", "@tanstack/query-persist-client-core@^5.59.16":
+  version "5.59.16"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-persist-client-core/-/query-persist-client-core-5.59.16.tgz#366b4550cf880cd5067894529a8006f83186e89e"
+  integrity sha512-UXu9GEOXAlH4pROhct+zBuMeTXUIvHh9ECfKs8Ux2RgBFBs4hwUqlhUNjb/ezji4lxF+F0Dqtg48O60ii3DArg==
+  dependencies:
+    "@tanstack/query-core" "5.59.16"
+
+"@tanstack/query-sync-storage-persister@^5.59.16":
+  version "5.59.16"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-sync-storage-persister/-/query-sync-storage-persister-5.59.16.tgz#3e395f39327e20c96576092db97f3a22b3fc319f"
+  integrity sha512-5GRazdusJaH1lKTQmfQxXmhP9do+2smPazrZfYTvZBSabGdp3ZEf7J67IIG+ZrkYDW5jJj9lVulVHU8COvt47A==
+  dependencies:
+    "@tanstack/query-core" "5.59.16"
+    "@tanstack/query-persist-client-core" "5.59.16"
+
+"@tanstack/react-query-persist-client@^5.59.16":
+  version "5.59.16"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-persist-client/-/react-query-persist-client-5.59.16.tgz#ba96295bb95bc2615af9b495a562936c50251b20"
+  integrity sha512-JtcCHtGyRmwuSf/wzWfRqbTbq3C+fffaOZsSSWm/AXybql/Q+iA6TCqSS+vXX8s40o2yN4aKstr+W8pfn2qfsg==
+  dependencies:
+    "@tanstack/query-persist-client-core" "5.59.16"
+
 "@tanstack/react-query@4.29.14":
   version "4.29.14"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.29.14.tgz#5e836d470c1c85d1aa3e53a6fc64f788dddb2ee5"
@@ -21112,6 +21139,11 @@ react-native-render-html@6.3.4:
     ramda "^0.27.2"
     stringify-entities "^3.1.0"
     urijs "^1.19.6"
+
+react-native-restart@^0.0.27:
+  version "0.0.27"
+  resolved "https://registry.yarnpkg.com/react-native-restart/-/react-native-restart-0.0.27.tgz#43aa8210312c9dfa5ec7bd4b2f35238ad7972b19"
+  integrity sha512-8KScVICrXwcTSJ1rjWkqVTHyEKQIttm5AIMGSK1QG1+RS5owYlE4z/1DykOTdWfVl9l16FIk0w9Xzk9ZO6jxlA==
 
 react-native-safe-area-context@4.11.0:
   version "4.11.0"
