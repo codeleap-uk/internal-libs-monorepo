@@ -1,12 +1,11 @@
-import { Platform, Dimensions, StatusBar, StyleSheet } from 'react-native'
+import { Platform, Dimensions, StyleSheet } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-type AppValues = {
-  headerHeight: number
-  tabBarHeight: number
+type Options = {
+  getStatusBarHeight?: () => number
 }
 
-export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
+export function getMobileThemeValues(initialWindowMetrics, options: Options = {}) {
   const screenDimensions = Dimensions.get('screen')
 
   const hasNotch = DeviceInfo.hasNotch()
@@ -15,7 +14,9 @@ export function getMobileThemeValues(initialWindowMetrics, values: AppValues) {
 
   const prefersConstantNavigationBar = bottomNavHeight > 0
 
-  const safeAreaTop = Platform.OS === 'ios' ? (hasNotch ? 34 + (hasIsland ? 12 : 0) : 20) : StatusBar.currentHeight
+  const safeAreaTop = Platform.OS === 'ios' ? (hasNotch ? 34 + (hasIsland ? 12 : 0) : 20) : (options?.getStatusBarHeight?.() || 0)
+
+  console.log({ safeAreaTop })
 
   const safeAreaBottom = (hasNotch && !prefersConstantNavigationBar ? 20 : 0)
   return {

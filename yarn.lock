@@ -22222,6 +22222,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-native-avoid-softinput@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-avoid-softinput/-/react-native-avoid-softinput-6.0.2.tgz#329ed2a48d49db662967f361e9c634a3badffa49"
+  integrity sha512-0kdDy6QHDZyM37OQtZQhS8biW1P2h0WvQKOfOXGepn9KME+r4GSV4iYC4A2ltHaYVy5PDGwhSLEUh7J3zCU6Mg==
+
 react-native-background-timer@2.4.1:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/react-native-background-timer/-/react-native-background-timer-2.4.1.tgz#a3bc1cafa8c1e3aeefd0611de120298b67978a0f"
