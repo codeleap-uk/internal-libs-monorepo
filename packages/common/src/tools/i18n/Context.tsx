@@ -34,7 +34,7 @@ export const I18NProvider = (props: I18NContextProps) => {
   const [locale, _setLocale] = React.useState<string>(() => {
     let _locale = initialLocale
     if (persistor) {
-      _locale = persistor.getLocale()
+      _locale = persistor.getLocale() || initialLocale
     }
     return _locale
   })
