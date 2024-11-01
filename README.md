@@ -16,7 +16,7 @@ Both the web and mobile templates include examples of API usage for their respec
 
 ## Contributing
 
-This repository utilizes `yarn workspaces` along with `turborepo` for package/build management. The templates are tracked through git submodules, to allow simple cloning for new projects.
+This repository utilizes `workspaces` along with `turborepo` for package/build management. The templates are tracked through git submodules, to allow simple cloning for new projects.
 
 ### Setup
 
@@ -28,28 +28,25 @@ cd internal-libs-monorepo
 # Pulls git submodules for templates
 git submodule update --init --recursive
 
-# Install turborepo for running commands with caching
-yarn global add turbo
-
 # Must use node 18+
 nvm use 18.15.0
 
 # Install dependencies
-yarn
+bun install
 
 # Builds local versions of libraries
-yarn build
+bun run build
 
 # To build the app for android. Substitute android for 'ios' to run on apple devices
-yarn mobile android
+bun run mobile android
 # To run the mobile template
-yarn mobile dev
+bun run mobile dev
 
 # To run the web template
-yarn web dev
+bun run web dev
 ```
 
-Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save](https://marketplace.visualstudio.com/items?itemName=pucelle.run-on-save) extension for a smoother development experience. You can also just run `yarn build` again.
+Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save](https://marketplace.visualstudio.com/items?itemName=pucelle.run-on-save) extension for a smoother development experience. You can also just run `bun run build` again.
 
 ### Updating the documentation
 
@@ -72,7 +69,7 @@ This repository uses [cz-customizable](https://github.com/leoforfree/cz-customiz
 
 > It's advised to commit using a command line instead of a GUI tool such as VSCode's git feature or Github desktop, to ensure commit's follow the standard and are correctly displayed in changelogs for releases
 
-There is no simple way to make git hooks interactive across windows and unix, so use `yarn commit` instead of `git commit`. 
+There is no simple way to make git hooks interactive across windows and unix, so use `bun run commit` instead of `git commit`. 
 
 These conventions are established to make tracking of changes to our libraries easier through changelogs.
 ### Submitting your changes
