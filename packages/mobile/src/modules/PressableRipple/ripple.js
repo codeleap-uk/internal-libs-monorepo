@@ -39,7 +39,7 @@ export default class Ripple extends PureComponent {
 
   constructor(props) {
     super(props)
-    this.test = props
+
     this.onLayout = this.onLayout.bind(this)
     this.onPress = this.onPress.bind(this)
     this.onPressIn = this.onPressIn.bind(this)
