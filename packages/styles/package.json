@@ -10,7 +10,7 @@
     "directory": "packages/styles"
   },
   "devDependencies": {
-    "@codeleap/config": "*",
+    "@codeleap/config": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {

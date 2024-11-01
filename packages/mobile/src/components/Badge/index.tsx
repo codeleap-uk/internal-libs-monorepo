@@ -43,13 +43,13 @@ export const Badge = (props: BadgeProps) => {
   const styles = useStylesFor(Badge.styleRegistryName, style)
 
   if (!visible) return null
-  
-  const wrapperStyles: ViewProps['style'] = [
+
+  const wrapperStyles = [
     styles?.wrapper,
     (disabled && styles?.['wrapper:disabled']),
   ]
 
-  const innerWrapperStyles: ViewProps['style'] = [
+  const innerWrapperStyles = [
     styles?.innerWrapper,
     (disabled && styles?.['innerWrapper:disabled']),
     innerWrapperProps?.style,

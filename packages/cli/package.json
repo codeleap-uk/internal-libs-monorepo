@@ -10,8 +10,8 @@
     "codeleap-cli": "./dist/index.js"
   },
   "devDependencies": {
-    "@codeleap/common": "*",
-    "@codeleap/config": "*",
+    "@codeleap/common": "workspace:*",
+    "@codeleap/config": "workspace:*",
     "@types/inquirer": "^8.2.0",
     "@types/libsodium-wrappers": "^0.7.10",
     "cross-env": "^7.0.3"
