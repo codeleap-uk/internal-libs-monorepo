@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "module": "commonjs", /* Specify what module code is generated. */
+    "moduleResolution": "node", /* Specify how TypeScript looks up a file from a given module specifier. */
+    "target": "es5",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "jsx": "react", /* Specify what JSX code is generated. */
+    /* Modules */
+    // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
+    "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */
+    "allowJs": true, /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
+    "isolatedModules": true, /* Ensure that each file can be safely transpiled without relying on other imports. */
+    "allowSyntheticDefaultImports": true, /* Allow 'import x from y' when a module doesn't have a default export. */
+    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
+    // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
+    "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+    /* Type Checking */
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "downlevelIteration": true,
+    // "baseUrl": "./",
+    "paths": {
+      "react": [
+        "../../apps/mobile/node_modules/@types/react/index.d.ts",
+        "../../@types/react/index.d.ts"
+      ],
+    }
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.js",
+  ],
+  "exclude": [
+    "node_modules",
+    "../../node_modules",
+    "dist",
+    "./src/tests/**/*"
+  ]
+}

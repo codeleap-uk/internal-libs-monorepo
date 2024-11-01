@@ -1,0 +1,32 @@
+{
+  "name": "@codeleap/modals",
+  "version": "4.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "UNLICENSED",
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "packages/modals"
+  },
+  "devDependencies": {
+    "@codeleap/config": "*",
+    "ts-node-dev": "1.1.8",
+    "nanostores": "0.11.3",
+    "@nanostores/react": "0.8.0"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
+    "test": "./node_modules/.bin/mocha --require ts-node/register src/tests/**/*.spec.ts",
+    "run-sc": "tsnd --transpile-only",
+    "test:watch": "./node_modules/.bin/mocha --require ts-node/register ./src/tests/**/*.spec.ts -w --watch-files ./src/tests/**/*.spec.ts",
+    "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
+  },
+  "peerDependencies": {
+    "typescript": "5.0.4",
+    "react": "18.1.0",
+    "nanostores": "*",
+    "@nanostores/react": "*"
+  }
+}

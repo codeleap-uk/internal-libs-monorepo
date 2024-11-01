@@ -27,6 +27,10 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
   )
 }
 
+View.Animated = (props: ViewProps<typeof Animated.View>) => {
+  return <View {...props} animated />
+}
+
 View.styleRegistryName = 'View'
 View.elements = ['wrapper']
 View.rootElement = 'wrapper'

@@ -12,6 +12,7 @@ import { ModalHeaderProps, ModalProps } from './types'
 import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme, AppTheme, Theme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { useLayoutAnimation } from '../../utils'
 
 export * from './styles'
 export * from './types'
@@ -99,6 +100,9 @@ export const Modal = (modalProps: ModalProps) => {
     dependencies: [visible],
   })
 
+  const boxEntering = useLayoutAnimation(styles['box:visible'], styles['box:hidden'], styles['box:transition'], 'modalbox enter')
+  const boxExiting = useLayoutAnimation(styles['box:hidden'], styles['box:visible'], styles['box:transition'], 'modalbox exit')
+
   const ScrollComponent = scroll ? Scroll : View
   const scrollStyle = scroll ? styles?.scroll : styles?.innerWrapper
 
@@ -127,12 +131,14 @@ export const Modal = (modalProps: ModalProps) => {
     props?.onLayout?.(event)
   }
 
+  if (!visible) return null
+
   return (
     <View
       style={[
         styles?.wrapper,
         // @ts-expect-error
-        { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : styles?.wrapper?.zIndex, ...topSpacing }
+        { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : styles?.wrapper?.zIndex, ...topSpacing },
       ]}
       pointerEvents={visible ? 'auto' : 'none'}
     >
@@ -143,11 +149,9 @@ export const Modal = (modalProps: ModalProps) => {
           'wrapper:hidden': styles['backdrop:hidden'],
           'wrapper:visible': styles['backdrop:visible'],
           'wrapper': styles?.backdrop,
-        }}
-        wrapperProps={{
-          // @ts-expect-error
           transition: styles['backdrop:transition'],
         }}
+
       />
 
       <ScrollComponent
@@ -168,12 +172,14 @@ export const Modal = (modalProps: ModalProps) => {
             noFeedback
           />) : null}
 
-        <View
-          animated
-          animatedStyle={boxAnimationStyles}
+        <View.Animated
+
+          // animatedStyle={boxAnimationStyles}
           {...props}
           onLayout={onModalLayout}
           style={styles?.box}
+          entering={boxEntering}
+          exiting={boxExiting}
         >
           {header ? header : <Header {...headerProps} />}
 
@@ -184,7 +190,7 @@ export const Modal = (modalProps: ModalProps) => {
               {typeof footer === 'string' ? <Text text={footer} /> : footer}
             </View>
           ) : null}
-        </View>
+        </View.Animated>
       </ScrollComponent>
     </View >
   )
