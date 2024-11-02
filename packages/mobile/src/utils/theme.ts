@@ -16,8 +16,6 @@ export function getMobileThemeValues(initialWindowMetrics, options: Options = {}
 
   const safeAreaTop = Platform.OS === 'ios' ? (hasNotch ? 34 + (hasIsland ? 12 : 0) : 20) : (options?.getStatusBarHeight?.() || 0)
 
-  console.log({ safeAreaTop })
-
   const safeAreaBottom = (hasNotch && !prefersConstantNavigationBar ? 20 : 0)
   return {
     ...screenDimensions,
