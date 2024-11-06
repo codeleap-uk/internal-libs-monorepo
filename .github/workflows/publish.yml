@@ -21,8 +21,6 @@ jobs:
           token: ${{ secrets.GH_PAT }}
       
       - uses: oven-sh/setup-bun@v2
-        with:
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: |
