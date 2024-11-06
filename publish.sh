@@ -8,4 +8,4 @@ else
   TAG="rc-latest"
 fi
 
-bunx @morlay/bunpublish --tag $TAG
+npm_token=$1 bunx @morlay/bunpublish --tag $TAG

@@ -1,2 +1,0 @@
-[install.scopes]
-codeleap = { token = "$NODE_AUTH_TOKEN", url = "https://registry.npmjs.org" }

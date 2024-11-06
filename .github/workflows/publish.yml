@@ -44,8 +44,7 @@ jobs:
       - name: Publish
         run: |
           chmod +x ./publish.sh
-          ./publish.sh
+          ./publish.sh ${{ secrets.NPM_TOKEN }}
           bun run notifyVersion
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }} 
