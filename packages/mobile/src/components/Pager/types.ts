@@ -4,7 +4,7 @@ import { PagerComposition } from './styles'
 import { TCarouselProps } from 'react-native-reanimated-carousel'
 import { CarouselRenderItemInfo } from 'react-native-reanimated-carousel/lib/typescript/types'
 
-export type PageProps<T extends unknown> = CarouselRenderItemInfo<T> & {
+export type PageProps<T> = CarouselRenderItemInfo<T> & {
   isLast: boolean
   isFirst: boolean
   isActive: boolean
@@ -14,7 +14,7 @@ export type PageProps<T extends unknown> = CarouselRenderItemInfo<T> & {
   isPrevious: boolean
 }
 
-export type PagerProps<T extends unknown> = Partial<Omit<TCarouselProps<T>, 'data' | 'renderItem'>> & {
+export type PagerProps<T> = Partial<Omit<TCarouselProps<T>, 'data' | 'renderItem'>> & {
   pages: TCarouselProps<T>['data']
   renderItem?: (props: PageProps<T>) => JSX.Element
   page?: number

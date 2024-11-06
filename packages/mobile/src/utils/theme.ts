@@ -3,6 +3,7 @@ import DeviceInfo from 'react-native-device-info'
 
 type Options = {
   getStatusBarHeight?: () => number
+  getAndroidNavbarHeight?: () => number
 }
 
 export function getMobileThemeValues(initialWindowMetrics, options: Options = {}) {
@@ -10,13 +11,17 @@ export function getMobileThemeValues(initialWindowMetrics, options: Options = {}
 
   const hasNotch = DeviceInfo.hasNotch()
   const hasIsland = DeviceInfo.hasDynamicIsland()
-  const bottomNavHeight = Platform.OS === 'android' ? initialWindowMetrics?.insets?.bottom : 0
+  const bottomNavHeight = Platform.OS === 'android' ? options?.getAndroidNavbarHeight?.() ?? 0 : 0
 
   const prefersConstantNavigationBar = bottomNavHeight > 0
 
   const safeAreaTop = Platform.OS === 'ios' ? (hasNotch ? 34 + (hasIsland ? 12 : 0) : 20) : (options?.getStatusBarHeight?.() || 0)
 
-  const safeAreaBottom = (hasNotch && !prefersConstantNavigationBar ? 20 : 0)
+  const safeAreaBottom = Platform.select({
+    ios: hasNotch && !prefersConstantNavigationBar ? 20 : 0,
+    android: bottomNavHeight ?? initialWindowMetrics?.insets.bottom ?? 0,
+  })
+
   return {
     ...screenDimensions,
     pixel: StyleSheet.hairlineWidth,
@@ -29,7 +34,7 @@ export function getMobileThemeValues(initialWindowMetrics, options: Options = {}
     bottomNavHeight,
     get window() {
       return {
-        height: screenDimensions.height - (bottomNavHeight + safeAreaTop),
+        height: screenDimensions.height - (safeAreaBottom + safeAreaTop),
         width: screenDimensions.width,
       }
     },
