@@ -17,7 +17,7 @@ export * from './PagerDots'
 
 const window = Dimensions.get('window')
 
-export const Pager = <T extends unknown>(props: PagerProps<T>) => {
+export function Pager<T>(props: PagerProps<T>) {
   const {
     pages,
     page,
@@ -74,7 +74,7 @@ export const Pager = <T extends unknown>(props: PagerProps<T>) => {
         withAnimation={{
           type: 'timing',
           config: {
-            reduceMotion: ReduceMotion.Never
+            reduceMotion: ReduceMotion.Never,
           },
         }}
         autoPlay={false}
@@ -91,7 +91,7 @@ export const Pager = <T extends unknown>(props: PagerProps<T>) => {
       />
 
       <View onLayout={(event: LayoutChangeEvent) => setFooterHeight(event.nativeEvent.layout.height)} style={styles.footerWrapper}>
-        {footer}
+        {/* {footer} */}
         {showDots ? (
           <PagerDots currentPage={currentPage} pages={pages} setCurrentPage={setCurrentPage} styles={dotStyles} />
         ) : null}
@@ -105,7 +105,7 @@ Pager.elements = ['carousel', 'wrapper', 'footerWrapper', 'dot']
 Pager.rootElement = 'wrapper'
 
 Pager.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Pager as <T extends unknown>(props: StyledComponentProps<PagerProps<T>, typeof styles>) => IJSX
+  return Pager as <T >(props: StyledComponentProps<PagerProps<T>, typeof styles>) => IJSX
 }
 
 Pager.defaultProps = {

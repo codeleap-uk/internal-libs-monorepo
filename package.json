@@ -3,29 +3,30 @@
   "version": "0.0.2",
   "private": true,
   "repository": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ]
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "postinstall": "node ./scripts/postInstall.js && yarn patch-package",
+    "postinstall": "node ./scripts/postInstall.js && bun run patch-package",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
     "clear:dist": "rm -rf packages/*/dist",
-    "docs": "yarn workspace codeleap-docs",
-    "web": "yarn workspace web-template",
-    "common": "yarn workspace @codeleap/common",
-    "styles": "yarn workspace @codeleap/styles",
-    "cli": "yarn workspace @codeleap/cli",
-    "config": "yarn workspace @codeleap/config",
-    "mobile": "yarn workspace mobile-template",
-    "p:web": "yarn workspace @codeleap/web",
-    "p:mobile": "yarn workspace @codeleap/mobile",
-    "p:common": "yarn workspace @codeleap/common",
+     
+    "web": "cd apps/web && bun run",
+    "mobile": "cd apps/mobile && bun run",
+
+    "common": "cd packages/common && bun run",
+    "styles": "cd packages/styles && bun run",
+    "cli": "cd packages/cli && bun run",
+    "config": "cd packages/config && bun run",
+    
+    "p:web": "cd packages/web && bun run",
+    "p:mobile": "cd packages/mobile && bun run",
+    "p:common": "cd packages/common && bun run",
+    
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "release": "standard-version",
@@ -42,19 +43,19 @@
     "husky": "^8.0.2",
     "install": "^0.13.0",
     "npm-license-crawler": "^0.2.1",
+    "openai": "^4.6.0",
+    "patch-package": "8.0.0",
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
     "syncpack": "^9.8.4",
     "ts-node-dev": "^1.1.8",
     "typedoc": "0.25.1",
-    "typescript": "5.0.4",
-    "openai": "4.33.0",
     "typedoc-json-parser": "^8.2.0",
-    "patch-package": "8.0.0"
+    "typescript": "5.0.4"
   },
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "yarn@1.22.17"
+  "packageManager": "bun@1.1.33"
 }

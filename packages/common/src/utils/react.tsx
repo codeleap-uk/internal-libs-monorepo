@@ -69,26 +69,24 @@ export const simplifyChildren = children => {
   )
 }
 
-
 export function getRenderedComponent<P = any>(
-  ComponentOrProps: React.FC<P> | P | React.ReactNode | null | undefined,  
-  DefaultComponent: React.FC<P>, 
-  props?: P
+  ComponentOrProps: React.ComponentType<P> | P | React.ReactNode | null | undefined,
+  DefaultComponent: React.ComponentType<P>,
+  props?: P,
 ): React.ReactNode {
-  if(TypeGuards.isNil(ComponentOrProps) || Object.keys(ComponentOrProps).length === 0 ) {
+  if (TypeGuards.isNil(ComponentOrProps) || Object.keys(ComponentOrProps).length === 0) {
     return null
   }
-  
+
   if (TypeGuards.isFunction(ComponentOrProps)) {
     return <ComponentOrProps {...props}/>
   }
 
-  if(React.isValidElement(ComponentOrProps)) {
+  if (React.isValidElement(ComponentOrProps)) {
     return ComponentOrProps
   }
 
   const _props = ComponentOrProps as P
-
 
   return <DefaultComponent {...props} {..._props}/>
 }

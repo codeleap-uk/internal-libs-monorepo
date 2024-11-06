@@ -1,8 +1,6 @@
 import { onMount, onUpdate, shadeColor, TypeGuards, usePrevious, useRef, useState } from '@codeleap/common'
-import { Animated, AppState, AppStateStatus, Platform, PressableAndroidRippleConfig, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
-
-import AsyncStorage from '@react-native-community/async-storage'
-import { AnimatedStyleProp, Easing, EasingFn, interpolateColor, runOnJS, useAnimatedRef, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { Animated, AppState, AppStateStatus, Platform, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
+import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { PressableRippleProps } from '../modules/PressableRipple/type'
 import { useSoftInputState } from 'react-native-avoid-softinput'
 import { useMemo } from 'react'
@@ -304,53 +302,6 @@ export function useBackButton(cb: () => boolean|void, deps = []) {
       subscription.remove()
     }
   }, deps)
-}
-type StateSetter<T> = T | ((prev:T) => T)
-
-export function useAsyncStorageState<T>(key:string, defaultValue?: T) {
-  const [value, _setValue] = useState<T>(undefined)
-
-  onMount(() => {
-    AsyncStorage.getItem(key).then(val => {
-      let storedValue = defaultValue
-
-      if (val) {
-        storedValue = JSON.parse(val)
-      }
-
-      _setValue(storedValue)
-    })
-  })
-
-  const setValue = (to: StateSetter<T>) => {
-    return new Promise<void>((resolve, reject) => {
-      _setValue((prev) => {
-        let newValue = prev
-        try {
-
-          if (typeof to !== 'function') {
-            newValue = to
-          } else {
-            const fn = to as ((prev:T) => T)
-            newValue = fn(value)
-          }
-
-          const jsonVal = JSON.stringify(newValue)
-
-          AsyncStorage.setItem(key, jsonVal).then(resolve).catch(reject)
-          resolve()
-          return newValue
-        } catch (e) {
-          reject(e)
-          return newValue
-        }
-
-      })
-    })
-
-  }
-
-  return [value, setValue] as [T, typeof setValue]
 }
 
 export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {

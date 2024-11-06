@@ -9,17 +9,17 @@
     "directory": "packages/mobile"
   },
   "devDependencies": {
-    "@codeleap/common": "*",
-    "@codeleap/config": "*"
+    "@codeleap/common": "workspace:*",
+    "@codeleap/config": "workspace:*"
   },
   "scripts": {
     "build": "tsc --build",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "peerDependencies": {
-    "@codeleap/common": "*",
-    "@codeleap/styles": "*",
-    "@react-native-community/async-storage": "1.12.1",
+    "@codeleap/common": "workspace:*",
+    "@codeleap/styles": "workspace:*",
+    "@d11/react-native-fast-image": "8.8.0",
     "@react-native-firebase/messaging": "14.4.0",
     "@react-navigation/bottom-tabs": "6.5.3",
     "@react-navigation/drawer": "6.5.7",
@@ -27,12 +27,11 @@
     "@react-navigation/native-stack": "6.9.8",
     "@react-navigation/stack": "6.3.11",
     "react": "18.1.0",
-    "react-native": "0.73.8",
-    "react-native-avoid-softinput": "3.1.5",
+    "react-native": "0.76.1",
+    "react-native-avoid-softinput": "6.0.2",
     "react-native-calendars": "1.1293.0",
     "react-native-date-picker": "4.2.13",
     "react-native-device-info": "10.3.0",
-    "react-native-fast-image": "8.6.3",
     "react-native-gesture-handler": "2.9.0",
     "react-native-image-crop-picker": "0.37.2",
     "react-native-image-viewing": "0.2.2",
