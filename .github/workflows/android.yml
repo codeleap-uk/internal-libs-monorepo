@@ -33,20 +33,18 @@ jobs:
         run: |
           mv keystores-android/* apps/mobile/android/app/keystores
       
-      - name: Set up node
-        uses: actions/setup-node@v3
-        with: 
-          node-version: 20.15.0
-          cache: 'yarn'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: |
-          yarn
-          yarn global add turbo
+          bun
+          bun install -g turbo
 
       - name: Build libraries
         run: |
-          yarn build
+          bun run build
 
       - name: Set up JDK 17
         uses: actions/setup-java@v2
@@ -68,7 +66,7 @@ jobs:
 
           export GPLAY=$(google-play get-latest-build-number --package-name uk.co.codeleap.template --credentials @file:apps/mobile/android/app/keystores/playstore-credentials.json)
           
-          yarn mobile updatePlayStoreVersion $GPLAY
+          bun mobile updatePlayStoreVersion $GPLAY
           cat apps/mobile/android/app/version.json
       
       - name: New internal version
