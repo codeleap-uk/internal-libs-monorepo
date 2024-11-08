@@ -10,6 +10,7 @@
     "directory": "packages/modals"
   },
   "devDependencies": {
+    "@codeleap/common": "workspace:*",
     "@codeleap/config": "workspace:*",
     "ts-node-dev": "1.1.8",
     "nanostores": "0.11.3",
