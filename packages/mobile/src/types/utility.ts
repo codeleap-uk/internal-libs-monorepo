@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { StyleProp } from 'react-native'
-import { EasingFn } from 'react-native-reanimated'
+import { EasingFn, EntryAnimationsValues, ExitAnimationsValues, LayoutAnimation, StyleProps } from 'react-native-reanimated'
 
 export type StylesOf<C extends string> = Partial<Record<C, StyleProp<any>>>
 type TransitionBase = {
@@ -10,7 +10,10 @@ type TransitionBase = {
 }
 export type TransitionConfig = TransitionBase | {
   [p: string] : TransitionBase
-} 
-
+}
 
 export type ChildrenProp = ReactNode | ReactNode[] | undefined
+
+export type ReanimatedExitingAnimation = (values: ExitAnimationsValues) => LayoutAnimation
+export type ReanimatedEnteringAnimation = (values: EntryAnimationsValues) => LayoutAnimation
+

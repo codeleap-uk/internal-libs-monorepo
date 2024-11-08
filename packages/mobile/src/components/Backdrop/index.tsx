@@ -17,6 +17,8 @@ export const Backdrop = (props: BackdropProps) => {
     children,
     wrapperProps = {},
     style,
+    entering,
+    exiting,
     ...rest
   } = {
     ...Backdrop.defaultProps,
@@ -33,8 +35,8 @@ export const Backdrop = (props: BackdropProps) => {
     <View.Animated
       pointerEvents={visible ? 'auto' : 'none'}
 
-      entering={FadeIn}
-      exiting={FadeOut}
+      entering={entering}
+      exiting={exiting}
       {...wrapperProps}
       style={styles.wrapper}
 
@@ -56,6 +58,9 @@ Backdrop.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Backdrop as (props: StyledComponentProps<BackdropProps, typeof styles>) => IJSX
 }
 
-Backdrop.defaultProps = {} as Partial<BackdropProps>
+Backdrop.defaultProps = {
+  entering: FadeIn.build(),
+  exiting: FadeOut.build(),
+} as Partial<BackdropProps>
 
 MobileStyleRegistry.registerComponent(Backdrop)

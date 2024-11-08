@@ -75,6 +75,8 @@ export const Modal = (modalProps: ModalProps) => {
     scrollProps = {},
     closeOnHardwareBackPress,
     style,
+    boxExiting,
+    boxEntering,
     ...props
   } = {
     ...Modal.defaultProps,
@@ -172,8 +174,9 @@ export const Modal = (modalProps: ModalProps) => {
           visible ? (
             <View
               animated
-              entering={SlideInDown}
-              exiting={SlideOutDown}
+              // @ts-ignore
+              entering={boxEntering}
+              exiting={boxExiting}
               {...props}
               onLayout={onModalLayout}
               style={styles?.box}
@@ -209,6 +212,8 @@ Modal.defaultProps = {
   dismissOnBackdrop: true,
   scroll: true,
   closeOnHardwareBackPress: true,
+  boxEntering: SlideInDown.build(),
+  boxExiting: SlideOutDown.build(),
 } as Partial<ModalProps>
 
 MobileStyleRegistry.registerComponent(Modal)

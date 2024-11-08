@@ -4,6 +4,7 @@ import { ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'
 import { ViewProps } from '../View'
 import { ModalComposition } from './styles'
+import { ReanimatedEnteringAnimation, ReanimatedExitingAnimation } from '../../types'
 
 export type ModalProps =
   Omit<ViewProps, 'style'> &
@@ -30,6 +31,8 @@ export type ModalProps =
     style?: StyledProp<ModalComposition>
     id?: string
     absolute?: boolean
+    boxEntering?: ReanimatedEnteringAnimation
+    boxExiting?: ReanimatedExitingAnimation
   }
 
 export type ModalHeaderProps =
