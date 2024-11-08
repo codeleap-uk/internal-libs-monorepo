@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleProp, VariantStyleSheet } from '../types'
+import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleAggregator, StyleProp, VariantStyleSheet } from '../types'
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
@@ -14,6 +14,8 @@ export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
 
   commonVariants: Record<string, ICSS | MultiplierFunction> = {}
+
+  aggregators: Record<string, StyleAggregator> = {}
 
   components: Record<string, AnyStyledComponent> = {}
 
@@ -91,8 +93,9 @@ export class CodeleapStyleRegistry {
     const component = _component ?? rootElement
 
     const stylesheet = minifier.decompress(this.stylesheets[componentName])
+    const aggregator = this.aggregators[componentName]
 
-    const cache = this.styleCache.keyFor('variants', { componentName, component, stylesheet, variants })
+    const cache = this.styleCache.keyFor('variants', { componentName, component, stylesheet, variants, aggregator })
 
     if (!!cache.value) {
       return cache.value
@@ -102,6 +105,7 @@ export class CodeleapStyleRegistry {
 
     const variantStyles = variants.map((variant) => {
       if (!!stylesheet[variant]) {
+
         return stylesheet[variant]
       }
 
@@ -122,7 +126,11 @@ export class CodeleapStyleRegistry {
       return this.computeCommonVariantStyle(componentName, variant, component)
     }).filter(variantStyle => !!variantStyle)
 
-    const variantStyle = deepmerge({ all: true })(...variantStyles)
+    let variantStyle = deepmerge({ all: true })(...variantStyles)
+
+    if (!!aggregator) {
+      variantStyle = aggregator(theme, variantStyle)
+    }
 
     this.styleCache.cacheFor('variants', cache.key, variantStyle)
 
@@ -467,10 +475,11 @@ export class CodeleapStyleRegistry {
     this.commonVariants = commonVariants
   }
 
-  registerVariants(componentName: string, variants: VariantStyleSheet) {
+  registerVariants<Composition extends string = any>(componentName: string, variants: VariantStyleSheet, aggregator?: StyleAggregator<Composition>) {
     if (this.stylesheets[componentName]) {
       throw new Error(`Variants for ${componentName} already registered`)
     }
+    this.aggregators[componentName] = aggregator
 
     this.stylesheets[componentName] = minifier.compress(variants)
   }
@@ -507,7 +516,7 @@ export class CodeleapStyleRegistry {
     if (Array.isArray(style)) {
       copiedStyle = [...style]
     } else if (typeof style == 'object') {
-      copiedStyle = {...style}
+      copiedStyle = { ...style }
     } else {
       copiedStyle = style
     }

@@ -1,7 +1,7 @@
 import { DynamicVariants } from '../lib/dynamicVariants'
 import { Queries } from '../lib/mediaQuery'
 import { DefaultVariants } from '../lib/defaultVariants'
-import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects } from './core'
+import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects, ITheme } from './core'
 import { Multiplier, Spacing } from './spacing'
 
 type Inset =
@@ -39,3 +39,5 @@ export type StyleProp<
 export type VariantStyleSheet = Record<string, any>
 
 export type StyledProp<T extends string> = StyleProp<Record<T, ICSS>>
+
+export type StyleAggregator<T extends string = any> = (theme: ITheme, style: Record< T, ICSS>) => Record< T, ICSS>
