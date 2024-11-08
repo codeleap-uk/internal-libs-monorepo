@@ -10,7 +10,7 @@
     "directory": "packages/modals"
   },
   "devDependencies": {
-    "@codeleap/config": "*",
+    "@codeleap/config": "workspace:*",
     "ts-node-dev": "1.1.8",
     "nanostores": "0.11.3",
     "@nanostores/react": "0.8.0"
@@ -24,6 +24,7 @@
     "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
+    "@codeleap/common": "workspace:*",
     "typescript": "5.0.4",
     "react": "18.1.0",
     "nanostores": "*",
