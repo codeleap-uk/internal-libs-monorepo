@@ -410,40 +410,50 @@ export class CodeleapStyleRegistry {
     if (isStyleArray) {
       const filteredStyle = (style as Array<any>)?.filter(s => !!s)
 
-      const variants: string[] = []
+      let variants: string[] = []
       const styles: ICSS[] = [defaultStyle]
       let idx = 0
 
       for (const s of filteredStyle) {
+
         if (typeof s === 'string') {
+
           variants.push(s)
         }
 
-        if (typeof s === 'object') {
-          const { isComposition, composition } = this.isCompositionStyle(registeredComponent, s)
+        const isObj = typeof s === 'object'
 
-          if (isComposition) {
+        if (variants.length > 0 && (idx === filteredStyle.length - 1 || isObj)) {
+          const computedVariantStyle = this.computeVariantStyle(componentName, variants)
+
+          styles.push(computedVariantStyle)
+
+          variants = []
+        }
+
+        if (isObj) {
+          const { isComposition, composition } = this.isCompositionStyle(registeredComponent, s)
+          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(s)
+
+          if (Array.isArray(s)) {
+            const styleComposition = this.styleFor(componentName, s, false)
+
+            styles.push(styleComposition)
+          } else if (isComposition) {
             const compositionStyles = this.getCompositionStyle(componentName, composition, s)
 
             styles.push(...compositionStyles)
-          }
-
-          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(s)
-
-          if (isResponsive) {
+          } else if (isResponsive) {
             const responsiveStyles = this.getResponsiveStyle(componentName, responsiveStyleKey, s)
 
             styles.push(responsiveStyles)
 
             delete s[responsiveStyleKey]
+          } else {
+
+            styles.push({ [rootElement]: s })
           }
 
-          styles.push({ [rootElement]: s })
-        }
-
-        if (idx === filteredStyle.length - 1 && variants.length > 0) {
-          const computedVariantStyle = this.computeVariantStyle(componentName, variants)
-          styles.push(computedVariantStyle)
         }
 
         idx++
