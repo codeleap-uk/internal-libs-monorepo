@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Touchable } from '../Touchable'
 import { View } from '../View'
-import { useAnimatedVariantStyles, useLayoutAnimation } from '../../utils'
+import { } from '../../utils'
 import { BackdropProps } from './types'
-import { AnyRecord, ICSS, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
-import { withTiming } from 'react-native-reanimated'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 
 export * from './styles'
 export * from './types'
@@ -25,30 +25,18 @@ export const Backdrop = (props: BackdropProps) => {
 
   const styles = useStylesFor(Backdrop.styleRegistryName, style)
 
-  // const animation = useAnimatedVariantStyles({
-  //   variantStyles: styles,
-  //   animatedProperties: ['wrapper:hidden', 'wrapper:visible'],
-  //   updater: (s) => {
-  //     'worklet'
-  //     return visible ? s['wrapper:visible'] : s['wrapper:hidden']
-  //   },
-  //   dependencies: [visible],
-  //   transition: styles.transition,
-  // })
-
   const isPressable = !!props?.onPress
 
-  const entering = useLayoutAnimation(styles['wrapper:visible'], styles['wrapper:hidden'], styles.transition)
-  const exiting = useLayoutAnimation(styles['wrapper:hidden'], styles['wrapper:visible'], styles.transition)
+  if (!visible) return null
 
   return (
     <View.Animated
       pointerEvents={visible ? 'auto' : 'none'}
-      // animatedStyle={animation}
+
+      entering={FadeIn}
+      exiting={FadeOut}
       {...wrapperProps}
       style={styles.wrapper}
-      // entering={entering}
-      // exiting={exiting}
 
     >
       {isPressable
