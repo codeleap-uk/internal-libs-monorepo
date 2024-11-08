@@ -4,6 +4,8 @@ import { Prev } from './pathMapping'
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any
 
+export type AnyRecord = Record<string, any>
+
 export type ReadOnly<T> = {
   readonly [Property in keyof T]: T[Property];
 }

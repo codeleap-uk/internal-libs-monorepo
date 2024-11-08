@@ -19,18 +19,16 @@ jobs:
           submodules: 'recursive'
           token: ${{ secrets.GH_PAT }}
           
-      - uses: actions/setup-node@v3
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: '20.15.0'
-          cache: 'yarn'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: |
-          yarn
-          yarn global add turbo
+          bun install
+          bun install -g turbo
 
       - name: Build libraries
         run: |
-          yarn build
+          bun run build
       

@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleProp, VariantStyleSheet } from '../types'
+import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleAggregator, StyleProp, VariantStyleSheet } from '../types'
 import { ThemeStore, themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
@@ -14,6 +14,8 @@ export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
 
   commonVariants: Record<string, ICSS | MultiplierFunction> = {}
+
+  aggregators: Record<string, StyleAggregator> = {}
 
   components: Record<string, AnyStyledComponent> = {}
 
@@ -91,8 +93,9 @@ export class CodeleapStyleRegistry {
     const component = _component ?? rootElement
 
     const stylesheet = minifier.decompress(this.stylesheets[componentName])
+    const aggregator = this.aggregators[componentName]
 
-    const cache = this.styleCache.keyFor('variants', { componentName, component, stylesheet, variants })
+    const cache = this.styleCache.keyFor('variants', { componentName, component, stylesheet, variants, aggregator })
 
     if (!!cache.value) {
       return cache.value
@@ -102,6 +105,7 @@ export class CodeleapStyleRegistry {
 
     const variantStyles = variants.map((variant) => {
       if (!!stylesheet[variant]) {
+
         return stylesheet[variant]
       }
 
@@ -122,7 +126,11 @@ export class CodeleapStyleRegistry {
       return this.computeCommonVariantStyle(componentName, variant, component)
     }).filter(variantStyle => !!variantStyle)
 
-    const variantStyle = deepmerge({ all: true })(...variantStyles)
+    let variantStyle = deepmerge({ all: true })(...variantStyles)
+
+    if (!!aggregator) {
+      variantStyle = aggregator(theme, variantStyle)
+    }
 
     this.styleCache.cacheFor('variants', cache.key, variantStyle)
 
@@ -402,40 +410,50 @@ export class CodeleapStyleRegistry {
     if (isStyleArray) {
       const filteredStyle = (style as Array<any>)?.filter(s => !!s)
 
-      const variants: string[] = []
+      let variants: string[] = []
       const styles: ICSS[] = [defaultStyle]
       let idx = 0
 
       for (const s of filteredStyle) {
+
         if (typeof s === 'string') {
+
           variants.push(s)
         }
 
-        if (typeof s === 'object') {
-          const { isComposition, composition } = this.isCompositionStyle(registeredComponent, s)
+        const isObj = typeof s === 'object'
 
-          if (isComposition) {
+        if (variants.length > 0 && (idx === filteredStyle.length - 1 || isObj)) {
+          const computedVariantStyle = this.computeVariantStyle(componentName, variants)
+
+          styles.push(computedVariantStyle)
+
+          variants = []
+        }
+
+        if (isObj) {
+          const { isComposition, composition } = this.isCompositionStyle(registeredComponent, s)
+          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(s)
+
+          if (Array.isArray(s)) {
+            const styleComposition = this.styleFor(componentName, s, false)
+
+            styles.push(styleComposition)
+          } else if (isComposition) {
             const compositionStyles = this.getCompositionStyle(componentName, composition, s)
 
             styles.push(...compositionStyles)
-          }
-
-          const { isResponsive, responsiveStyleKey } = this.isResponsiveStyle(s)
-
-          if (isResponsive) {
+          } else if (isResponsive) {
             const responsiveStyles = this.getResponsiveStyle(componentName, responsiveStyleKey, s)
 
             styles.push(responsiveStyles)
 
             delete s[responsiveStyleKey]
+          } else {
+
+            styles.push({ [rootElement]: s })
           }
 
-          styles.push({ [rootElement]: s })
-        }
-
-        if (idx === filteredStyle.length - 1 && variants.length > 0) {
-          const computedVariantStyle = this.computeVariantStyle(componentName, variants)
-          styles.push(computedVariantStyle)
         }
 
         idx++
@@ -467,10 +485,11 @@ export class CodeleapStyleRegistry {
     this.commonVariants = commonVariants
   }
 
-  registerVariants(componentName: string, variants: VariantStyleSheet) {
+  registerVariants<Composition extends string = any>(componentName: string, variants: VariantStyleSheet, aggregator?: StyleAggregator<Composition>) {
     if (this.stylesheets[componentName]) {
       throw new Error(`Variants for ${componentName} already registered`)
     }
+    this.aggregators[componentName] = aggregator
 
     this.stylesheets[componentName] = minifier.compress(variants)
   }
@@ -507,7 +526,7 @@ export class CodeleapStyleRegistry {
     if (Array.isArray(style)) {
       copiedStyle = [...style]
     } else if (typeof style == 'object') {
-      copiedStyle = {...style}
+      copiedStyle = { ...style }
     } else {
       copiedStyle = style
     }

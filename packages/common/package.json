@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "4.1.0",
+  "version": "4.2.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",
@@ -10,7 +10,7 @@
     "directory": "packages/common"
   },
   "devDependencies": {
-    "@codeleap/config": "*",
+    "@codeleap/config": "workspace:*",
     "@emotion/css": "11.9.0",
     "@sentry/types": "^7.48.0",
     "@tanstack/react-query": "4.29.14",
@@ -27,7 +27,7 @@
     "test": "./node_modules/.bin/mocha --require ts-node/register src/tests/**/*.spec.ts",
     "run-sc": "tsnd --transpile-only",
     "test:watch": "./node_modules/.bin/mocha --require ts-node/register ./src/tests/**/*.spec.ts -w --watch-files ./src/tests/**/*.spec.ts",
-    "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
+    "createStyleSheets": "bun run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
     "@sentry/browser": "*",

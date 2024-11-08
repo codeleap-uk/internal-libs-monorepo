@@ -1,0 +1,5 @@
+[install]
+registry = { token = "$npm_token", url = "https://registry.npmjs.org" }
+
+[install.scopes]
+codeleap = { token = "$npm_token", url = "https://registry.npmjs.org" }

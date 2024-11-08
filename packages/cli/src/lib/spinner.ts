@@ -1,6 +1,6 @@
-import { createSpinner, Options } from 'nanospinner'
+import { createSpinner } from 'nanospinner'
 
-type SpinWhileNotCompletedOpts = Options & {
+type SpinWhileNotCompletedOpts = Parameters<typeof createSpinner>[1] & {
   name: string
 }
 

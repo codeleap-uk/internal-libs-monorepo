@@ -11,8 +11,8 @@ export type I18NContextType<Keys extends string = string> = {
 }
 
 export type Persistor = {
-  getLocale: () => Promise<string> | string
-  setLocale: (locale: string) => Promise<void> | void
+  getLocale: () => string
+  setLocale: (locale: string) => void
 }
 export type LanguageDictRecord = Record<string, string | object>
 

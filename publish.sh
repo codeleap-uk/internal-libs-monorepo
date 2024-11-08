@@ -8,9 +8,4 @@ else
   TAG="rc-latest"
 fi
 
-for i in 'common' 'mobile' 'web' 'config' 'cli' 'styles'
-do
-cd packages/$i
-npm publish --tag $TAG
-cd ../..
-done
+npm_token=$1 bunx @morlay/bunpublish --tag $TAG

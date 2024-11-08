@@ -9,11 +9,15 @@ export class StyleCache {
   baseKey: string
 
   styles = new Cache('styles')
+
   compositions = new Cache('compositions')
+
   responsive = new Cache('responsive')
 
   variants: Cache
+
   common: Cache
+
   components: Cache
 
   constructor(storage: StateStorage) {
@@ -44,7 +48,15 @@ export class StyleCache {
   keyFor(type: CacheType, keyData: Array<any> | any) {
     const cache = this[type]
 
-    const values = [this.baseKey, keyData]
+    const withFunctionsHash = Object.values(keyData).map((value) => {
+      if (typeof value === 'function') {
+        return value.toString()
+      }
+
+      return value
+    })
+
+    const values = [this.baseKey, ...withFunctionsHash]
 
     const cacheKey = hashKey(values)
     const cachedValue = minifier.decompress(cache.cache[cacheKey] ?? null)

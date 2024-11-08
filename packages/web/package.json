@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "4.1.0",
+  "version": "4.2.1",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -9,27 +9,27 @@
   },
   "license": "UNLICENSED",
   "devDependencies": {
-    "@codeleap/config": "*",
-    "@codeleap/common": "*",
-    "@emotion/react": "link:../../apps/web/node_modules/@emotion/react",
-    "@types/react-slick": "^0.23.10",
-    "react": "link:../../apps/web/node_modules/react"
+    "@codeleap/common": "workspace:*",
+    "@codeleap/config": "workspace:*",
+    "@codeleap/styles": "workspace:*",
+    "@types/react-slick": "^0.23.10"
   },
   "scripts": {
     "build": "rm -rf ./dist && tsc --build",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
-    "@radix-ui/react-progress": "1.1.0",
+    "@fastify/deepmerge": "1.3.0",
+    "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-slider": "1.1.1",
     "@radix-ui/react-tooltip": "^1.0.6",
     "@tiptap/react": "2.1.16",
     "framer-motion": "^10.10.0",
     "masonic": "^3.7.0",
     "react-autosize-textarea": "^7.1.0",
+    "react-circular-progressbar": "^2.1.0",
     "react-colorful": "^5.6.1",
     "react-datepicker": "^4.20.0",
-    "react-circular-progressbar": "^2.1.0",
     "react-dropzone": "^14.2.3",
     "react-image-crop": "^10.1.8",
     "react-input-mask": "^2.0.4",
@@ -38,12 +38,11 @@
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
     "uuid": "^8.3.2",
-    "zustand": "^4.4.1",
-    "@fastify/deepmerge": "1.3.0"
+    "zustand": "^4.4.1"
   },
   "peerDependencies": {
-    "@codeleap/common": "*",
-    "@codeleap/styles": "*",
+    "@codeleap/common": "workspace:*",
+    "@codeleap/styles": "workspace:*",
     "@emotion/react": "11.10.6",
     "@reach/router": "^1.3.4",
     "axios": "1.3.5",
