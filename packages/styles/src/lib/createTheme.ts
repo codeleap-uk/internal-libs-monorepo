@@ -36,8 +36,11 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       const colorScheme = themeStore.getState().colorScheme
 
       if (colorScheme === 'default') return colors
-
-      return theme.alternateColors?.[colorScheme]
+      const scheme = theme.alternateColors?.[colorScheme]
+      if (!scheme) {
+        console.warn(`Color scheme ${colorScheme} not found in theme`)
+      }
+      return scheme ?? colors
     },
 
     setColorScheme(colorScheme: ColorScheme<Theme>) {
