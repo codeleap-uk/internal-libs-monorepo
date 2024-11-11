@@ -41,7 +41,13 @@ type StyleAtom<Composition = AnyRecord, Variants = string, HasBreakpoints = stri
       >>
       : null
   )
-  | StyleAtom<Composition, Variants, string, string>[]
+  | Array<Variants | ICSS | Partial<
+    Record<
+      keyof Composition,
+      StyleAtom<AnyRecord, Variants, boolean, boolean> |
+      StyleAtom<AnyRecord, Variants, boolean, boolean>[]
+    >
+  >>
 
 export type StyleProp<
   Composition = AnyRecord,

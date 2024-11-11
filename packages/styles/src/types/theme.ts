@@ -20,8 +20,8 @@ type EffectsMap = {
   [key: string]: IEffect
 }
 
-export type SpacingMap = 
-  Spacings<'margin'> & 
+export type SpacingMap =
+  Spacings<'margin'> &
   Spacings<'padding'> &
   Spacings<'m', string> &
   Spacings<'p', string> &
@@ -29,7 +29,7 @@ export type SpacingMap =
     gap: MultiplierFunction
   }
 
-export type InsetMap = 
+export type InsetMap =
   {
     bottom: MultiplierFunction
     top: MultiplierFunction
@@ -56,22 +56,29 @@ export type DefaultColorSchemeName = 'default'
 
 export type ColorScheme<T extends Theme = Theme> = DefaultColorSchemeName | keyof T['alternateColors']
 
-export type AppTheme<T extends Theme> = {
+type PredefinedThemeDerivedValues<T extends Theme> = {
   colors: T['colors']
   breakpoints: T['breakpoints']
-  setColorScheme: (colorScheme: ColorScheme<T>) => void
-  currentColorScheme: ColorScheme<T>
-  spacing: SpacingMap
   presets: DefaultVariants & T['presets']
   borderRadius: T['borderRadius']
-  media: MediaQueries
   effects: T['effects']
-  border: BorderCreator
   typography: T['typography']
   icons: T['icons']
   values: T['values']
+}
+
+type PredefinedAppTheme<T extends Theme> = PredefinedThemeDerivedValues<T> & {
+  setColorScheme: (colorScheme: ColorScheme<T>) => void
+  currentColorScheme: ColorScheme<T>
+  spacing: SpacingMap
+  media: MediaQueries
+  border: BorderCreator
   inset: InsetMap
   baseSpacing: number
   value: (multiplier: number) => number
   sized: (size: number | string) => ICSS
+}
+
+export type AppTheme<T extends Theme> = PredefinedAppTheme<T> & {
+  [P in Exclude<keyof T, keyof PredefinedThemeDerivedValues<T>>]: T[P]
 }

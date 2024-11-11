@@ -12,18 +12,31 @@ type ColorSchemaPersistor = {
 }
 
 export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: ColorSchemaPersistor): AppTheme<T> => {
+  const {
+    colors,
+    breakpoints,
+    presets,
+    borderRadius,
+    effects,
+    typography,
+    icons,
+    values,
+    ...otherThemeValues
+  } = theme
+
   const themeObj:AppTheme<T> = {
+    ...otherThemeValues,
     get currentColorScheme(): string {
       return themeStore.getState().colorScheme
     },
 
-    breakpoints: theme.breakpoints ?? {},
+    breakpoints: breakpoints ?? {},
 
     get colors() {
       const colorScheme = themeStore.getState().colorScheme
 
-      if (colorScheme === 'default') return theme.colors
-      
+      if (colorScheme === 'default') return colors
+
       return theme.alternateColors?.[colorScheme]
     },
 
@@ -48,31 +61,31 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       top: multiplierProperty(theme.baseSpacing, 'top'),
       bottom: multiplierProperty(theme.baseSpacing, 'bottom'),
       left: multiplierProperty(theme.baseSpacing, 'left'),
-      right: multiplierProperty(theme.baseSpacing, 'right')
+      right: multiplierProperty(theme.baseSpacing, 'right'),
     },
 
     presets: {
       ...defaultVariants,
-      ...theme.presets,
+      ...presets,
     },
 
-    borderRadius: theme.borderRadius ?? {},
+    borderRadius: borderRadius ?? {},
 
-    effects: theme.effects ?? {},
+    effects: effects ?? {},
 
-    media: createMediaQueries(theme.breakpoints),
+    media: createMediaQueries(breakpoints),
 
     border: borderCreator,
 
-    typography: theme.typography ?? {},
+    typography: typography ?? {},
 
-    icons: theme.icons,
+    icons: icons,
 
-    values: theme.values ?? {},
+    values: values ?? {},
 
     sized: (size) => {
       const value = typeof size == 'number' ? size * theme.baseSpacing : size
-      
+
       return {
         width: value,
         height: value,
@@ -80,9 +93,9 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     },
   }
 
-  themeStore.setState({ 
-    current: themeObj, 
-    colorScheme: colorSchemaPersistor.get() ?? 'default'
+  themeStore.setState({
+    current: themeObj,
+    colorScheme: colorSchemaPersistor.get() ?? 'default',
   })
 
   return themeObj
