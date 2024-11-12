@@ -7,7 +7,8 @@ type Updater<Prev, Next> = Next | ((prev: Prev) => Next)
 type StaticQueryKeyClient<Data = any> = {
     key: ReactQuery.QueryKey
     getData(): Data
-    refresh(): void
+    refresh(): Promise<void>
+    invalidate(): void
     setData(updater: Updater<Data, Data>): Data
   }
 type QueryKeyBuilder<Args extends any[] = any[]> = (...args:Args) => ReactQuery.QueryKey
@@ -16,7 +17,8 @@ type DynamicQueryKeyClient<Data = any, BuilderParams extends any[] = any[]> = {
     key(...args: BuilderParams): ReactQuery.QueryKey
     getData(...args: BuilderParams): Data
     setData(keyParams: BuilderParams, updater: Updater<Data, Data>): Data
-    refresh(...args: BuilderParams): void
+    refresh(...args: BuilderParams): Promise<void>
+    invalidate(...args: BuilderParams): void
   }
 
 export class CodeleapQueryClient {
@@ -39,13 +41,21 @@ export class CodeleapQueryClient {
         }
         return this.client.setQueryData(k, _updater)
       },
-      refresh: () => {
+      invalidate: () => {
         return this.client.invalidateQueries({
           exact: true,
           queryKey: k,
           refetchPage: () => true,
         })
       },
+      refresh: () => {
+        return this.client.refetchQueries({
+          exact: true,
+          queryKey: k,
+          refetchPage: () => true,
+        })
+      },
+
     }
   }
 
@@ -67,6 +77,13 @@ export class CodeleapQueryClient {
         return this.client.setQueryData(k(...params), _updater)
       },
       refresh: (...params) => {
+        return this.client.refetchQueries({
+          exact: true,
+          queryKey: k(...params),
+          refetchPage: () => true,
+        })
+      },
+      invalidate: (...params) => {
         return this.client.invalidateQueries({
           exact: true,
           queryKey: k(...params),
