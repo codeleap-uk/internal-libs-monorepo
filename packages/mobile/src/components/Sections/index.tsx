@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { TypeGuards, useCallback } from '@codeleap/common'
 import { SectionList, SectionListProps as RNSectionProps } from 'react-native'
 import { View, ViewProps } from '../View'
 import { RefreshControl } from '../RefreshControl'
 import { useKeyboardPaddingStyle } from '../../utils'
-import { AugmentedSectionRenderItemInfo, SectionComponentProps, SectionListProps } from './types'
+import { AugmentedSectionRenderItemInfo, SectionComponentProps, SectionProps, SectionRenderComponentProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
@@ -17,7 +17,7 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props.separatorStyles} />
 }
 
-export const Sections = <T extends any>(sectionsProps: SectionListProps<T>) => {
+export const Sections = <T extends any>(sectionsProps: SectionProps<T>) => {
   const {
     style,
     onRefresh,
@@ -31,7 +31,7 @@ export const Sections = <T extends any>(sectionsProps: SectionListProps<T>) => {
     contentContainerStyle,
     refreshControl,
     renderItem: RenderItem,
-    sections,
+    sections: data,
     renderSectionHeader: RenderSectionHeader,
     renderSectionFooter: RenderSectionFooter,
     ...props
@@ -40,6 +40,13 @@ export const Sections = <T extends any>(sectionsProps: SectionListProps<T>) => {
     ...sectionsProps,
   }
 
+  const sections = useMemo(() => {
+    return data?.map((section, index) => ({
+      ...section,
+      index,
+    }))
+  }, [JSON.stringify(data)])
+
   const styles = useStylesFor(Sections.styleRegistryName, style)
 
   const separator = useCallback(() => {
@@ -47,31 +54,32 @@ export const Sections = <T extends any>(sectionsProps: SectionListProps<T>) => {
     return <RenderSeparator separatorStyles={styles.separator} />
   }, [])
 
-  const getSectionProps = (data: SectionComponentProps<T>) => {
+  const getSectionProps = (data: SectionRenderComponentProps<T>) => {
     const listLength = sections?.length || 0
 
-    const isFirst = data?.section?.title === sections?.[0]?.title
-    const isLast = data?.section?.title === sections?.[listLength - 1]?.title
+    const isFirst = data?.section?.index === sections?.[0]?.index
+    const isLast = data?.section?.index === sections?.[listLength - 1]?.index
     const isOnly = isFirst && isLast
     const title = data?.section?.title
+    const index = data?.section?.index
 
-    return { isFirst, isLast, isOnly, title }
+    return { isFirst, isLast, isOnly, title, index }
   }
 
-  const renderSectionHeader = useCallback((data: SectionComponentProps<T>) => {
+  const renderSectionHeader = useCallback((data: SectionRenderComponentProps<T>) => {
     if (!RenderSectionHeader) return null
 
     const positionProps = getSectionProps(data)
 
-    return <RenderSectionHeader {...data} {...positionProps} />
+    return <RenderSectionHeader {...data.section} {...positionProps} />
   }, [RenderSectionHeader, sections?.length])
 
-  const renderSectionFooter = useCallback((data: SectionComponentProps<T>) => {
+  const renderSectionFooter = useCallback((data: SectionRenderComponentProps<T>) => {
     if (!RenderSectionFooter) return null
 
     const positionProps = getSectionProps(data)
 
-    return <RenderSectionFooter {...data} {...positionProps} />
+    return <RenderSectionFooter {...data.section} {...positionProps} />
   }, [RenderSectionFooter, sections?.length])
 
   const renderItem = useCallback((data: AugmentedSectionRenderItemInfo<T>) => {
@@ -139,7 +147,7 @@ Sections.elements = ['wrapper', 'content', 'separator', 'header', 'refreshContro
 Sections.rootElement = 'wrapper'
 
 Sections.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Sections as <T>(props: StyledComponentProps<SectionListProps<T>, typeof styles>) => IJSX
+  return Sections as <T>(props: StyledComponentProps<SectionProps<T>, typeof styles>) => IJSX
 }
 
 Sections.defaultProps = {
@@ -147,6 +155,6 @@ Sections.defaultProps = {
   fakeEmpty: false,
   loading: false,
   keyboardAware: true,
-} as Partial<SectionListProps>
+} as Partial<SectionProps>
 
 MobileStyleRegistry.registerComponent(Sections)

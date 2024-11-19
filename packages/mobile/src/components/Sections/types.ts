@@ -5,7 +5,7 @@ import { ViewProps } from '../View'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { RefreshControlProps } from '../RefreshControl'
 
-export type DataboundSectionListPropsTypes = 'data' | 'renderItem' | 'keyExtractor' | 'style' | 'renderSectionFooter' | 'renderSectionHeader'
+export type DataboundSectionListPropsTypes = 'sections' | 'renderItem' | 'keyExtractor' | 'style' | 'renderSectionFooter' | 'renderSectionHeader'
 
 export type SectionInfo = {
   isFirst: boolean
@@ -15,8 +15,18 @@ export type SectionInfo = {
 
 export type AugmentedSectionRenderItemInfo<T> = SectionListRenderItemInfo<T> & SectionInfo
 
-export type SectionComponentProps<T> = SectionListData<T> & SectionInfo & {
+export type SectionComponentProps<T> = SectionInfo & {
   title: string
+  index: number
+  data: T[]
+}
+
+export type SectionRenderComponentProps<T> = {
+  section: {
+    title: string
+    index: number
+    data: T[]
+  }
 }
 
 export type ReplaceSectionListProps<P, T> =
@@ -24,7 +34,7 @@ export type ReplaceSectionListProps<P, T> =
   {
     sections: Array<{ title: string; data: T[] }>
     keyExtractor?: (item: T, index: number) => string
-    renderItem: (data: AugmentedSectionRenderItemInfo<T>) => React.ReactElement
+    renderItem: (props: AugmentedSectionRenderItemInfo<T>) => React.ReactElement
     onRefresh?: () => void
     fakeEmpty?: boolean
     loading?: boolean
@@ -32,7 +42,7 @@ export type ReplaceSectionListProps<P, T> =
     renderSectionFooter?: (props: SectionComponentProps<T>) => React.ReactElement
   }
 
-export type SectionListProps<T = any> =
+export type SectionProps<T = any> =
   ReplaceSectionListProps<RNSectionListProps<T>, T> &
   Omit<ViewProps, 'style'> &
   {
