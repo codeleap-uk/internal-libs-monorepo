@@ -1,28 +1,39 @@
-import React, { forwardRef } from 'react'
-import { useCallback } from '@codeleap/common'
-import { RefreshControl, SectionList } from 'react-native'
-import { View } from '../View'
+import React from 'react'
+import { TypeGuards, useCallback } from '@codeleap/common'
+import { SectionList, SectionListProps as RNSectionProps } from 'react-native'
+import { View, ViewProps } from '../View'
+import { RefreshControl } from '../RefreshControl'
 import { useKeyboardPaddingStyle } from '../../utils'
-import { SectionListProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { AugmentedSectionRenderItemInfo, SectionComponentProps, SectionListProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { EmptyPlaceholder } from '../EmptyPlaceholder'
 
 export * from './styles'
 export * from './types'
 
-export const Sections = forwardRef<SectionList, SectionListProps>((sectionsProps, ref) => {
+const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
+  return <View style={props.separatorStyles} />
+}
+
+export const Sections = <T extends any>(sectionsProps: SectionListProps<T>) => {
   const {
     style,
     onRefresh,
     component,
     refreshing,
     placeholder,
-    keyboardAware,
     refreshControlProps,
+    loading,
+    keyboardAware,
+    fakeEmpty = loading,
     contentContainerStyle,
-    fakeEmpty,
     refreshControl,
+    renderItem: RenderItem,
+    sections,
+    renderSectionHeader: RenderSectionHeader,
+    renderSectionFooter: RenderSectionFooter,
     ...props
   } = {
     ...Sections.defaultProps,
@@ -31,87 +42,110 @@ export const Sections = forwardRef<SectionList, SectionListProps>((sectionsProps
 
   const styles = useStylesFor(Sections.styleRegistryName, style)
 
-  const renderSeparator = useCallback(() => {
-    return <View style={styles?.separator} />
-  }, [styles?.separator])
+  const separator = useCallback(() => {
+    if (!props?.separators) return null
+    return <RenderSeparator separatorStyles={styles.separator} />
+  }, [])
 
-  const getItemPosition = (section, itemIdx) => {
-    const listLength = section?.length || 0
+  const getSectionProps = (data: SectionComponentProps<T>) => {
+    const listLength = sections?.length || 0
 
-    const isFirst = itemIdx === 0
-    const isLast = itemIdx === listLength - 1
+    const isFirst = data?.section?.title === sections?.[0]?.title
+    const isLast = data?.section?.title === sections?.[listLength - 1]?.title
     const isOnly = isFirst && isLast
+    const title = data?.section?.title
 
-    return { isFirst, isLast, isOnly }
+    return { isFirst, isLast, isOnly, title }
   }
 
-  const getSectionPosition = (data) => {
-    const listLength = props.sections?.length || 0
+  const renderSectionHeader = useCallback((data: SectionComponentProps<T>) => {
+    if (!RenderSectionHeader) return null
 
-    const isFirst = data.section.key === props.sections[0].key
-    const isLast = data.section.key === props.sections[listLength - 1].key
+    const positionProps = getSectionProps(data)
+
+    return <RenderSectionHeader {...data} {...positionProps} />
+  }, [RenderSectionHeader, sections?.length])
+
+  const renderSectionFooter = useCallback((data: SectionComponentProps<T>) => {
+    if (!RenderSectionFooter) return null
+
+    const positionProps = getSectionProps(data)
+
+    return <RenderSectionFooter {...data} {...positionProps} />
+  }, [RenderSectionFooter, sections?.length])
+
+  const renderItem = useCallback((data: AugmentedSectionRenderItemInfo<T>) => {
+    if (!RenderItem) return null
+
+    const listLength = data?.section?.data?.length || 0
+
+    const isFirst = data?.index === 0
+    const isLast = data?.index === listLength - 1
     const isOnly = isFirst && isLast
 
-    return { isFirst, isLast, isOnly }
+    return (
+      <RenderItem
+        {...data}
+        isFirst={isFirst}
+        isLast={isLast}
+        isOnly={isOnly}
+      />
+    )
+  }, [RenderItem])
+
+  const isEmpty = !sections || !sections?.length
+
+  const _placeholder = {
+    ...placeholder,
+    loading: TypeGuards.isBoolean(placeholder?.loading) ? placeholder.loading : loading,
   }
 
-  const renderSectionHeader = useCallback((data) => {
-    if (!props?.renderSectionHeader) return null
+  const keyboardStyle = useKeyboardPaddingStyle([
+    styles.content,
+    contentContainerStyle,
+    isEmpty && styles['content:empty'],
+    loading && styles['content:loading'],
+  ], keyboardAware && !props.horizontal)
 
-    return props?.renderSectionHeader({ ...data, ...getSectionPosition(data) })
-  }, [props?.renderSectionHeader, props?.sections?.length])
-
-  const renderSectionFooter = useCallback((data) => {
-    if (!props?.renderSectionFooter) return null
-
-    return props?.renderSectionFooter({ ...data, ...getSectionPosition(data) })
-  }, [props?.renderSectionFooter, props?.sections?.length])
-
-  const renderItem = useCallback((data) => {
-    if (!props?.renderItem) return null
-
-    return props?.renderItem({ ...data, ...getItemPosition(data.section?.data, data?.index) })
-
-  }, [props?.renderItem, props?.sections?.length])
-
-  const separatorProp = props.separators
-  const isEmpty = !props.sections || !props.sections.length
-  const separator = !isEmpty && separatorProp == true && renderSeparator
-
-  const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
+  const wrapperStyle = [styles.wrapper, isEmpty && styles['wrapper:empty'], loading && styles['wrapper:loading']]
 
   return (
     <SectionList
-      contentContainerStyle={keyboardStyle}
-      showsVerticalScrollIndicator={false}
-      // @ts-ignore
-      ref={ref}
       ItemSeparatorComponent={separator}
+      refreshControl={!!onRefresh && (
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          {...refreshControlProps}
+        />
+      )}
+      ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       {...props}
-      style={styles?.wrapper}
-      refreshControl={
-        !!onRefresh && (
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        )
-      }
+      ListHeaderComponentStyle={styles.header}
+      style={wrapperStyle}
+      contentContainerStyle={keyboardStyle}
+      sections={sections}
       renderItem={renderItem}
-      renderSectionHeader={renderSectionHeader}
-      renderSectionFooter={renderSectionFooter}
+      renderSectionHeader={renderSectionHeader as unknown as RNSectionProps<T>['renderSectionHeader']}
+      renderSectionFooter={renderSectionFooter as unknown as RNSectionProps<T>['renderSectionHeader']}
     />
   )
-},
-) as StyledComponentWithProps<SectionListProps>
+}
 
 Sections.styleRegistryName = 'Sections'
-Sections.elements = ['wrapper', 'content', 'separator']
+Sections.elements = ['wrapper', 'content', 'separator', 'header', 'refreshControl']
 Sections.rootElement = 'wrapper'
 
 Sections.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Sections as (props: StyledComponentProps<SectionListProps, typeof styles>) => IJSX
+  return Sections as <T>(props: StyledComponentProps<SectionListProps<T>, typeof styles>) => IJSX
 }
 
 Sections.defaultProps = {
   keyboardShouldPersistTaps: 'handled',
+  fakeEmpty: false,
+  loading: false,
   keyboardAware: true,
 } as Partial<SectionListProps>
 

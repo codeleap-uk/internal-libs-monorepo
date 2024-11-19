@@ -1,2 +1,7 @@
+import { ScrollComposition } from '../Scroll/styles'
 
-export type SectionsComposition = 'wrapper' |'content' | 'separator'
+type SectionsStates = 'empty' | 'loading' 
+
+type SectionsParts = ScrollComposition | 'separator' | 'header' | 'refreshControl'
+
+export type SectionsComposition = `${SectionsParts}:${SectionsStates}` | SectionsParts
