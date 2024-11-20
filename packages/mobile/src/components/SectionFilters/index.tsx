@@ -32,6 +32,7 @@ export function SectionFilters<T extends TSectionFilterItem = TSectionFilterItem
     renderItem: RenderItem,
     renderSectionHeader,
     renderSectionFooter,
+    children,
     ...rest
   } = {
     ...SectionFilters.defaultProps,
@@ -70,6 +71,7 @@ export function SectionFilters<T extends TSectionFilterItem = TSectionFilterItem
         renderSectionHeader={(props) => <SectionComponent {...props} renderWith={renderSectionHeader} />}
         renderSectionFooter={(props) => <SectionComponent {...props} renderWith={renderSectionFooter} />}
       />
+      {children}
     </SectionsFilterContext.Provider>
   )
 }
