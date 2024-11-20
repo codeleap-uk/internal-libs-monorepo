@@ -79,7 +79,7 @@ export function getRenderedComponent<P = any>(
   }
 
   if (TypeGuards.isFunction(ComponentOrProps)) {
-    return <ComponentOrProps {...props}/>
+    return <ComponentOrProps {...props} />
   }
 
   if (React.isValidElement(ComponentOrProps)) {
@@ -88,9 +88,26 @@ export function getRenderedComponent<P = any>(
 
   const _props = ComponentOrProps as P
 
-  return <DefaultComponent {...props} {..._props}/>
+  return <DefaultComponent {...props} {..._props} />
 }
 
 export function memoize<P extends object>(ComponentToMemoize: React.FunctionComponent<P>): React.NamedExoticComponent<P> {
   return React.memo(ComponentToMemoize, () => true)
+}
+
+export function memoChecker<P>(prop: keyof P, prevProps: P, nextProps: P): boolean {
+  const nextItem = nextProps[prop]
+  const prevItem = prevProps[prop]
+
+  return equals(nextItem, prevItem)
+}
+
+export function memoBy<P extends object>(
+  ComponentToMemoize: React.FunctionComponent<P>,
+  check: keyof P | Array<keyof P>
+): React.NamedExoticComponent<P> {
+  return React.memo(ComponentToMemoize, (prevProps, nextProps) => {
+    const checks = Array.isArray(check) ? check : [check]
+    return checks.every((key) => memoChecker(key, prevProps, nextProps))
+  })
 }
