@@ -32,7 +32,7 @@ export class SentryService {
     }
   }
 
-  captureBreadcrumb(type: LogType, content: LogFunctionArgs | string) {
+  captureBreadcrumb(type: LogType, content: LogFunctionArgs) {
     if (!this.use) return
 
     const [message, data, category] = content

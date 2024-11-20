@@ -1,4 +1,4 @@
-import { TypeGuards, onMount, onUpdate, useIsomorphicEffect } from '@codeleap/common'
+import { TypeGuards, onMount, onUpdate } from '@codeleap/common'
 import React, { useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
@@ -12,6 +12,7 @@ import { ModalHeaderProps, ModalProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useNestedStylesByKey } from '@codeleap/styles'
+import { useIsomorphicEffect } from '../../lib'
 
 export * from './styles'
 export * from './types'

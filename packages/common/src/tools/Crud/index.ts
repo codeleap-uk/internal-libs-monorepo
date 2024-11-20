@@ -3,11 +3,12 @@ import {
   useQuery,
   useMutation,
   useInfiniteQuery,
-  hashQueryKey,
+  hashKey,
   QueryKey,
+  keepPreviousData,
 } from '@tanstack/react-query'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { TypeGuards, deepMerge, usePromise } from '../..'
 import { isArray } from '../../utils/typeGuards'
 import {
@@ -31,7 +32,11 @@ import {
   OptionChangeListener,
   QueryManagerActionTriggers,
   UseActionOptions,
+  PaginationResponse,
+  UseListSelector,
+  PageParam,
 } from './types'
+import { Draft, produce } from 'immer'
 
 export * from './types'
 
@@ -62,7 +67,7 @@ export class QueryManager<
     this.optionListeners = []
 
     this.queryStates = {
-      [hashQueryKey(this.filteredQueryKey())]: {
+      [hashKey(this.filteredQueryKey())]: {
         itemIndexes: {},
         pagesById: {},
         key: this.queryKeys.list,
@@ -141,7 +146,7 @@ export class QueryManager<
 
       let withNewId = i
 
-      if (setIdsTo[idx]) {
+      if (setIdsTo?.[idx]) {
         newId = setIdsTo[idx]
 
         withNewId = {
@@ -205,8 +210,8 @@ export class QueryManager<
     return i
   }
 
-  addItem: AppendToPagination<T> = async (args) => {
-    const updateOnList = TypeGuards.isUndefined(args?.onListsWithFilters) ? undefined : hashQueryKey(
+  addItem: AppendToPagination<T, ExtraArgs> = async (args) => {
+    const updateOnList = TypeGuards.isUndefined(args?.onListsWithFilters) ? undefined : hashKey(
       this.filteredQueryKey(args.onListsWithFilters),
     )
 
@@ -217,76 +222,79 @@ export class QueryManager<
         }
       }
 
-      this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
-        if (!old?.pages?.length || (old?.pages?.length > 1 && old?.pages?.every(page => page.results.length <= 0))) {
-          old = {
-            pageParams: [],
-            pages: [
-              {
-                results: [],
-                count: 0,
-                next: null,
-                previous: null,
-              },
-            ],
-          }
-        }
-
-        const itemsToAppend = isArray(args.item) ? args.item : [args.item]
-
-        if (args.to === 'end') {
-          const idx = old.pages.length - 1
-          old.pages[idx].results.push(...itemsToAppend)
-          old.pages[idx].count += itemsToAppend.length
-
-          if (old.pageParams[idx]) {
-            // @ts-ignore
-            old.pageParams[idx].limit += itemsToAppend.length
-          } else {
-            old.pageParams[idx] = {
-              limit: this.options?.limit ?? itemsToAppend.length,
-              offset: 0,
+      this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (_old) => {
+        const newData = produce(_old, (old) => {
+          if (!old?.pages?.length || (old?.pages?.length > 1 && old?.pages?.every(page => page.results.length <= 0))) {
+            old = {
+              pageParams: [],
+              pages: [
+                {
+                  results: [],
+                  count: 0,
+                  next: null,
+                  previous: null,
+                },
+              ],
             }
           }
 
-        } else if (args.to === 'start') {
-          old.pages[0].results.unshift(...itemsToAppend)
-          // @ts-ignore
+          const itemsToAppend = (isArray(args.item) ? args.item : [args.item]) as Draft<T>[]
 
-          if (old.pageParams[0]) {
+          if (args.to === 'end') {
+            const idx = old.pages.length - 1
+            old.pages[idx].results.push(...itemsToAppend)
+
+            old.pages[idx].count += itemsToAppend.length
+
+            if (old.pageParams[idx]) {
+              // @ts-ignore
+              old.pageParams[idx].limit += itemsToAppend.length
+            } else {
+              old.pageParams[idx] = {
+                limit: this.options?.limit ?? itemsToAppend.length,
+                offset: 0,
+              }
+            }
+
+          } else if (args.to === 'start') {
+            old.pages[0].results.unshift(...itemsToAppend)
             // @ts-ignore
-            old.pageParams[0].offset -= itemsToAppend.length
-            // @ts-ignore
-            old.pageParams[0].limit += itemsToAppend.length
-          } else {
-            old.pageParams[0] = {
-              limit: itemsToAppend.length,
-              offset: -itemsToAppend.length,
+
+            if (old.pageParams[0]) {
+              // @ts-ignore
+              old.pageParams[0].offset -= itemsToAppend.length
+              // @ts-ignore
+              old.pageParams[0].limit += itemsToAppend.length
+            } else {
+              old.pageParams[0] = {
+                limit: itemsToAppend.length,
+                offset: -itemsToAppend.length,
+              }
+            }
+
+          } else if (!!args.to) {
+            const appendTo = isArray(args.to) ? args.to : args.to[hashedKey]
+
+            const [pageIdx, itemIdx] = appendTo
+            old.pages[pageIdx].results.splice(itemIdx, 0, ...itemsToAppend)
+
+            if (old.pageParams[pageIdx]) {
+              // @ts-ignore
+              old.pageParams[pageIdx].offset -= itemsToAppend.length
+              // @ts-ignore
+              old.pageParams[pageIdx].limit += itemsToAppend.length
+            } else {
+              old.pageParams[pageIdx] = {
+                limit: itemsToAppend.length,
+                offset: -itemsToAppend.length,
+              }
             }
           }
+        })
 
-        } else if (!!args.to) {
-          const appendTo = isArray(args.to) ? args.to : args.to[hashedKey]
+        this.transformData(newData, key)
 
-          const [pageIdx, itemIdx] = appendTo
-          old.pages[pageIdx].results.splice(itemIdx, 0, ...itemsToAppend)
-
-          if (old.pageParams[pageIdx]) {
-            // @ts-ignore
-            old.pageParams[pageIdx].offset -= itemsToAppend.length
-            // @ts-ignore
-            old.pageParams[pageIdx].limit += itemsToAppend.length
-          } else {
-            old.pageParams[pageIdx] = {
-              limit: itemsToAppend.length,
-              offset: -itemsToAppend.length,
-            }
-          }
-        }
-
-        this.transformData(old, key)
-
-        return old
+        return newData
       })
     })
 
@@ -334,7 +342,7 @@ export class QueryManager<
     const flatItems = [] as T[]
     const itemIndexes = {} as Record<T['id'], number>
 
-    const hashedKey = hashQueryKey(key)
+    const hashedKey = hashKey(key)
 
     let pageIdx = 0
 
@@ -447,13 +455,29 @@ export class QueryManager<
 
     const queryKey = this.filteredQueryKey(filter)
 
-    const hashedKey = hashQueryKey(queryKey)
+    const hashedKey = hashKey(queryKey)
 
     const useListEffect = this.options?.useListEffect ?? (() => null)
 
-    const query = useInfiniteQuery({
+    const select:ListOptions<T, ExtraArgs>['queryOptions']['select'] = useCallback((data) => {
+
+      const { itemList } = this.transformData(data, queryKey)
+
+      return {
+        pageParams: data.pageParams,
+        pages: data?.pages ?? [],
+        flatItems: itemList,
+      }
+
+    }, [])
+
+    const query = useInfiniteQuery<PaginationResponse<T>, Error, UseListSelector<T>, QueryKey, PageParam>({
       queryKey,
 
+      initialPageParam: {
+        limit,
+        offset: 0,
+      },
       queryFn: async (query) => {
 
         return this.options.listItems(limit, query.pageParam?.offset ?? 0, filter)
@@ -487,19 +511,10 @@ export class QueryManager<
           offset: currentTotal,
         }
       },
-      select: (data: InfinitePaginationData<T>) => {
-
-        const { itemList } = this.transformData(data, queryKey)
-
-        return {
-          pageParams: data.pageParams,
-          pages: data?.pages ?? [],
-          flatItems: itemList,
-        }
-
-      },
-      keepPreviousData: true,
+      select,
+      placeholderData: keepPreviousData,
       ...queryOptions,
+
     })
 
     const refresh = async () => {
@@ -540,8 +555,12 @@ export class QueryManager<
 
     const itemId = options?.id
 
+    const select:RetrieveOptions<T>['queryOptions']['select'] = useCallback((data) => {
+      this.updateItems(data)
+      return data
+    }, [])
+
     const query = useQuery({
-      ...options?.queryOptions,
       queryKey: this.queryKeyFor(itemId),
       initialData: () => {
         return this.itemMap[itemId]
@@ -549,10 +568,9 @@ export class QueryManager<
       queryFn: () => {
         return this.options.retrieveItem(itemId)
       },
-      onSuccess: (data) => {
-        this.updateItems(data)
+      select,
 
-      },
+      ...options?.queryOptions,
     })
 
     const refresh = async () => {
@@ -854,12 +872,15 @@ export class QueryManager<
   async refresh(filters?: ExtraArgs) {
     if (!!filters) {
       const key = this.filteredQueryKey(filters)
-      this.queryClient.refetchQueries(key)
+      this.queryClient.refetchQueries({
+        queryKey: key,
+      })
 
     } else {
 
-      this.queryClient.refetchQueries(this.queryKeys.list, {
-        refetchPage: () => true,
+      this.queryClient.refetchQueries({
+        queryKey: this.queryKeys.list,
+
       })
     }
   }

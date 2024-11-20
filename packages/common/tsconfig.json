@@ -20,7 +20,7 @@
     /* Type Checking */
     "skipLibCheck": true,
     "outDir": "./dist",
-    "declaration": true,
+ 
     "downlevelIteration": true,
     "baseUrl": "./"
   

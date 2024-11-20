@@ -1,4 +1,5 @@
-import { AnyFunction, useIsomorphicEffect, useUnmount } from '@codeleap/common'
+import { AnyFunction, useUnmount } from '@codeleap/common'
+import { useIsomorphicEffect } from './useIsomorphicEffect'
 
 export const usePopState = (dependence: boolean, handler: AnyFunction) => {
   useIsomorphicEffect(() => {

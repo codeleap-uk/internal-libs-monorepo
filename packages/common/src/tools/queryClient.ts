@@ -1,6 +1,6 @@
 import * as ReactQuery from '@tanstack/react-query'
-import { TypeGuards } from '../../utils'
-import { QueryManager, QueryManagerOptions, QueryManagerItem } from '../Crud'
+import { TypeGuards } from '../utils'
+import { QueryManager, QueryManagerOptions, QueryManagerItem } from './Crud'
 
 type Updater<Prev, Next> = Next | ((prev: Prev) => Next)
 
@@ -45,14 +45,14 @@ export class CodeleapQueryClient {
         return this.client.invalidateQueries({
           exact: true,
           queryKey: k,
-          refetchPage: () => true,
+
         })
       },
       refresh: () => {
         return this.client.refetchQueries({
           exact: true,
           queryKey: k,
-          refetchPage: () => true,
+
         })
       },
 
@@ -80,14 +80,14 @@ export class CodeleapQueryClient {
         return this.client.refetchQueries({
           exact: true,
           queryKey: k(...params),
-          refetchPage: () => true,
+
         })
       },
       invalidate: (...params) => {
         return this.client.invalidateQueries({
           exact: true,
           queryKey: k(...params),
-          refetchPage: () => true,
+
         })
       },
     }

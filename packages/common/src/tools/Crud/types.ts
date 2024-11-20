@@ -1,5 +1,7 @@
-import { InfiniteData, QueryKey, UseInfiniteQueryOptions, UseInfiniteQueryResult, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
+import { DefinedInitialDataInfiniteOptions, InfiniteData, QueryKey, UseInfiniteQueryResult, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
 import { QueryManager } from './index'
+
+export type PageParam = {limit: number; offset: number}
 
 export type PaginationResponse<T> = {
   count: number
@@ -40,7 +42,7 @@ export type RetrieveOptions<T extends QueryManagerItem> = {
 
 export type ListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
   queryOptions?: Partial<
-    UseInfiniteQueryOptions<PaginationResponse<T>>
+  DefinedInitialDataInfiniteOptions<PaginationResponse<T>, Error, UseListSelector<T>, QueryKey, PageParam>
   >
   filter?: ExtraArgs
   limit?: number
@@ -65,7 +67,7 @@ export type QueryManagerActions<
 
 export type UseListEffect<T extends QueryManagerItem = any> = (
   listQuery: {
-    query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>
+    query: UseInfiniteQueryResult<UseListSelector<T>, Error>
     refreshQuery: (silent?: boolean) => void
     cancelQuery: () => void
   }
@@ -110,7 +112,7 @@ export type QueryManagerActionTriggers<
   [K in keyof Actions]: QueryManagerActionTrigger<Actions[K]>
 }
 
-export type InfinitePaginationData<T> = InfiniteData<PaginationResponse<T>>
+export type InfinitePaginationData<T> = InfiniteData<PaginationResponse<T>, PageParam>
 
 export type UseManagerArgs<T extends QueryManagerItem, ExtraArgs = any> = {
   filter?: ExtraArgs
@@ -128,16 +130,16 @@ export type QueryManagerItem = {
   id: string | number
 }
 
-export type AppendToPaginationParams<TItem extends QueryManagerItem, Filters=any> = {
+export type AppendToPaginationParams<TItem extends QueryManagerItem, Filters = any> = {
   item: TItem|TItem[]
   to?: CreateOptions<TItem>['appendTo']
-  refreshKey?: string
-  onListsWithFilters?: any
+  refreshKey?: QueryKey
+  onListsWithFilters?: Filters
 }
 
 export type AppendToPaginationReturn<TItem = any> = InfiniteData<TItem>
 
-export type AppendToPagination<TItem extends QueryManagerItem> = (params: AppendToPaginationParams<TItem>) => Promise<void>
+export type AppendToPagination<TItem extends QueryManagerItem, ExtraArgs = any> = (params: AppendToPaginationParams<TItem, ExtraArgs>) => Promise<void>
 
 export type MutationCtx<T extends QueryManagerItem> = null | {
   previousData?: InfinitePaginationData<T>
@@ -188,3 +190,10 @@ export type UseActionOptions<T extends QueryManagerAction<any, any, any>> = UseM
   unknown,
   Parameters<T>[1]
 >
+
+export type UseListSelector<T> = {
+  pageParams: PageParam[]
+  pages: PaginationResponse<T>[]
+  flatItems: T[]
+}
+
