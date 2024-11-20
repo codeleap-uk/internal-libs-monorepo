@@ -7,7 +7,7 @@ import {
   QueryKey,
 } from '@tanstack/react-query'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { TypeGuards, deepMerge, usePromise } from '../..'
 import { isArray } from '../../utils/typeGuards'
 import {
@@ -30,6 +30,7 @@ import {
   RetrieveOptions,
   OptionChangeListener,
   QueryManagerActionTriggers,
+  UseActionOptions,
 } from './types'
 
 export * from './types'
@@ -59,6 +60,14 @@ export class QueryManager<
     this.meta = options?.initialMeta
 
     this.optionListeners = []
+
+    this.queryStates = {
+      [hashQueryKey(this.filteredQueryKey())]: {
+        itemIndexes: {},
+        pagesById: {},
+        key: this.queryKeys.list,
+      } as unknown as QueryStateValue<T>,
+    }
   }
 
   extractKey(item:T) {
@@ -95,7 +104,7 @@ export class QueryManager<
   }
 
   generateId() {
-    return this.options.generateId?.() ?? Date.now().toString()
+    return this.options.generateId?.() ?? this.knownItemCount()?.count + 1
 
   }
 
@@ -118,16 +127,45 @@ export class QueryManager<
     return [options, meta] as const
   }
 
-  async updateItems(items: T | T[]) {
+  async updateItems(items: T | T[], settingIds?: T['id'] | T['id'][]) {
     const itemArr = Array.isArray(items) ? items : [items]
 
-    const ids = itemArr.map((i) => {
+    const setIdsTo = TypeGuards.isNil(settingIds) ? settingIds : TypeGuards.isArray(settingIds) ? settingIds : [settingIds]
+
+    const newItems = []
+
+    const ids = itemArr.map((i, idx) => {
       const id = this.extractKey(i)
-      this.itemMap[id] = i
+
+      let newId = id
+
+      let withNewId = i
+
+      if (setIdsTo[idx]) {
+        newId = setIdsTo[idx]
+
+        withNewId = {
+          ...(this.itemMap[id] ?? {}),
+          ...i,
+          id: newId,
+        }
+
+        delete this.itemMap[id]
+      }
+
+      this.itemMap[withNewId.id] = withNewId
+
       this.queryClient.setQueryData<T>(this.queryKeyFor(id), (old) => {
 
-        return i
+        return withNewId
       })
+
+      if (!TypeGuards.isNil(newId)) {
+        this.queryClient.setQueryData<T>(this.queryKeyFor(newId), (old) => {
+          return withNewId
+        })
+      }
+      newItems.push(withNewId)
       return id
     })
 
@@ -136,14 +174,17 @@ export class QueryManager<
       this.queryClient.setQueryData<InfinitePaginationData<T>>(key, (old) => {
         if (!old) return old
 
-        ids.forEach((id) => {
+        ids.forEach((id, idx) => {
           if (!pagesById[id]) return
           const [pageIdx, itemIdx] = pagesById[id]
 
-          old.pages[pageIdx].results[itemIdx] = this.itemMap[id]
+          const newItem = newItems[idx]
+
+          old.pages[pageIdx].results[itemIdx] = newItem
 
         })
 
+        this.transformData(old, key)
         return old
       })
 
@@ -156,7 +197,7 @@ export class QueryManager<
   async getItem(itemId: T['id'], options?: GetItemOptions<T>) {
     const i = this.itemMap[itemId]
 
-    if ((!i && !!options.fetchOnNotFoud) || options.forceRefetch) {
+    if ((!i && !!options?.fetchOnNotFoud) || options?.forceRefetch) {
       const item = await this.options.retrieveItem(itemId)
       this.updateItems(item)
       return item
@@ -190,7 +231,7 @@ export class QueryManager<
             ],
           }
         }
-        
+
         const itemsToAppend = isArray(args.item) ? args.item : [args.item]
 
         if (args.to === 'end') {
@@ -243,11 +284,26 @@ export class QueryManager<
           }
         }
 
+        this.transformData(old, key)
+
         return old
       })
     })
 
     await Promise.all(promises)
+  }
+
+  useAction<T extends keyof Actions>(
+    action: T,
+    options?: UseActionOptions<Actions[T]>,
+  ) {
+    const mut = useMutation({
+      mutationKey: [this.name, action, options?.mutationKey],
+      mutationFn: (vars) => this.options.actions[action](this, vars),
+      ...options,
+    })
+
+    return mut
   }
 
   async removeItem(itemId: T['id']) {
@@ -338,11 +394,45 @@ export class QueryManager<
     return this.options.queryClient
   }
 
+  getList(forFilters?: ExtraArgs) {
+    return this.queryClient.getQueryData<InfinitePaginationData<T>>(this.filteredQueryKey(forFilters))
+  }
+
+  getListState(forFilters?: ExtraArgs) {
+    return this.queryClient.getQueryState<InfinitePaginationData<T>>(this.filteredQueryKey(forFilters))
+  }
+
+  getItemCount(forFilters?: ExtraArgs) {
+    return this.getList(forFilters)?.pages.reduce((acc, p) => Math.max(p.count, acc), 0)
+  }
+
+  knownItemCount() {
+    const res = Object.values(this.queryStates).reduce<{ count: number; lastDatetime?: number }>((acc, { key }) => {
+      const state = this.queryClient.getQueryState<InfinitePaginationData<T>>(key)
+
+      const lastDatetime = acc.lastDatetime ?? 0
+
+      if (state?.dataUpdatedAt > lastDatetime) {
+        acc.lastDatetime = state.dataUpdatedAt
+        const totals = state.data?.pages.reduce((acc, p) => Math.max(p.count, acc), 0)
+
+        acc.count = totals
+      }
+
+      return acc
+    }, {
+      count: 0,
+      lastDatetime: null,
+    })
+
+    return res
+  }
+
   queryKeyFor(itemId: T['id']) {
     return [this.name, this.keySuffixes.retrieve, itemId]
   }
 
-  filteredQueryKey(filters?: ExtraArgs) {
+  filteredQueryKey(filters = {} as ExtraArgs) {
     return [...this.queryKeys.list, filters]
   }
 
@@ -352,6 +442,7 @@ export class QueryManager<
     const {
       filter = {} as ExtraArgs,
       queryOptions,
+      limit = this.standardLimit,
     } = options
 
     const queryKey = this.filteredQueryKey(filter)
@@ -361,12 +452,11 @@ export class QueryManager<
     const useListEffect = this.options?.useListEffect ?? (() => null)
 
     const query = useInfiniteQuery({
-      ...queryOptions,
       queryKey,
 
       queryFn: async (query) => {
 
-        return this.options.listItems(this.standardLimit, query.pageParam?.offset ?? 0, filter)
+        return this.options.listItems(limit, query.pageParam?.offset ?? 0, filter)
       },
       refetchOnMount: (query) => {
 
@@ -382,7 +472,7 @@ export class QueryManager<
           return undefined
         }
         return {
-          limit: this.standardLimit,
+          limit: limit,
           offset: currentTotal,
         }
       },
@@ -393,7 +483,7 @@ export class QueryManager<
           return undefined
         }
         return {
-          limit: this.standardLimit,
+          limit: limit,
           offset: currentTotal,
         }
       },
@@ -409,6 +499,7 @@ export class QueryManager<
 
       },
       keepPreviousData: true,
+      ...queryOptions,
     })
 
     const refresh = async () => {
@@ -418,13 +509,17 @@ export class QueryManager<
     }
 
     const listEffect = useListEffect({
-      query, 
+      query,
       refreshQuery: (silent = true) => silent ? this.refresh(filter) : refresh(),
-      cancelQuery: () => this.queryClient.cancelQueries({ queryKey, exact: true }),
+      cancelQuery: () => this.queryClient.cancelQueries({ queryKey }),
     })
 
+    const itemCount = useMemo(() => {
+      return query.data?.pages.reduce((acc, p) => Math.max(p.count, acc), 0)
+    }, [query.data])
+
     // @ts-ignore
-    const items = query.data?.flatItems
+    const items = query.data?.flatItems ?? []
 
     return {
       items: items as T[],
@@ -436,6 +531,7 @@ export class QueryManager<
       itemMap: this.itemMap,
       pagesById: this.queryStates[hashedKey]?.pagesById ?? {},
       itemIndexes: this.queryStates[hashedKey]?.itemIndexes ?? {},
+      itemCount,
     }
   }
 
@@ -758,11 +854,13 @@ export class QueryManager<
   async refresh(filters?: ExtraArgs) {
     if (!!filters) {
       const key = this.filteredQueryKey(filters)
-      this.queryClient.removeQueries(key)
-      this.queryClient.invalidateQueries(this.queryKeys.list)
+      this.queryClient.refetchQueries(key)
+
     } else {
 
-      this.queryClient.removeQueries(this.queryKeys.list)
+      this.queryClient.refetchQueries(this.queryKeys.list, {
+        refetchPage: () => true,
+      })
     }
   }
 
@@ -775,6 +873,7 @@ export class QueryManager<
     const list = this.useList({
       filter: options?.filter,
       queryOptions: options?.listOptions?.queryOptions,
+      limit: options?.limit,
     })
     const create = this.useCreate(options?.creation)
     const update = this.useUpdate(options?.update)

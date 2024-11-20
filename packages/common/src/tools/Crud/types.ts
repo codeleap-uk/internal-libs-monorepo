@@ -43,6 +43,7 @@ export type ListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
     UseInfiniteQueryOptions<PaginationResponse<T>>
   >
   filter?: ExtraArgs
+  limit?: number
 }
 
 export type QueryManagerAction<
@@ -64,8 +65,8 @@ export type QueryManagerActions<
 
 export type UseListEffect<T extends QueryManagerItem = any> = (
   listQuery: {
-    query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>,
-    refreshQuery: (silent?: boolean) => void,
+    query: UseInfiniteQueryResult<PaginationResponse<T>, unknown>
+    refreshQuery: (silent?: boolean) => void
     cancelQuery: () => void
   }
 ) => void
@@ -181,3 +182,9 @@ export type OptionChangeListener<O extends QueryManagerOptions<any, any, any, an
   options: O,
   meta: O['initialMeta'],
 ) => any
+
+export type UseActionOptions<T extends QueryManagerAction<any, any, any>> = UseMutationOptions<
+  Awaited<ReturnType<T>>,
+  unknown,
+  Parameters<T>[1]
+>
