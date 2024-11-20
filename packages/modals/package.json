@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/modals",
-  "version": "4.2.7",
+  "version": "4.2.8",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "UNLICENSED",

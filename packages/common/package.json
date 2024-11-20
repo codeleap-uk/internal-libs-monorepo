@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "4.2.7",
+  "version": "4.2.8",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -12,7 +12,6 @@
     "@codeleap/config": "workspace:*",
     "@emotion/css": "11.9.0",
     "@sentry/types": "^7.48.0",
-     
     "@types/chai": "^4.3.0",
     "@types/mocha": "^9.0.0",
     "@types/tinycolor2": "^1.4.3",
