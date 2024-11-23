@@ -1,4 +1,5 @@
 import { IColors, ICSS } from '../types'
+import { StyleConstants } from './constants'
 import { borderDirection } from './dynamicVariants'
 import { themeStore } from './themeStore'
 import { capitalize } from './utils'
@@ -18,12 +19,13 @@ export const borderCreator: BorderCreator = (args) => {
     color: colorKey,
     width = 1,
     style = 'solid',
-    directions = ['left', 'top', 'bottom', 'right']
+    directions = ['left', 'top', 'bottom', 'right'],
   } = args
 
   const theme = themeStore.getState().current
 
-  const color = theme?.['colors']?.[colorKey] ?? colorKey
+  // @ts-expect-error
+  const color = theme?.colors?.[colorKey] ?? colorKey
 
   const borderStyles: ICSS = {}
 
@@ -33,7 +35,7 @@ export const borderCreator: BorderCreator = (args) => {
     borderStyles[`${property}Color`] = color
     borderStyles[`${property}Width`] = width
 
-    if (typeof localStorage !== 'undefined') {
+    if (StyleConstants.IS_BROWSER) {
       borderStyles[`${property}Style`] = style
     }
   }

@@ -1,4 +1,4 @@
-import { ButtonComposition } from '@codeleap/common'
+import { ButtonComposition } from '../Button'
 
 export type SectionFiltersComposition =
   'wrapper' |

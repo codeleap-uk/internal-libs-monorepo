@@ -8,5 +8,5 @@ export * from './file'
 export * from './string'
 export * from './obfuscate'
 export * as TypeGuards from './typeGuards'
-export * from './styles'
+
 export * from './faker'

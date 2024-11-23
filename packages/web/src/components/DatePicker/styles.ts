@@ -1,5 +1,5 @@
-import { TextInputComposition } from '@codeleap/common'
 import { ActionIconComposition } from '../ActionIcon'
+import { TextInputComposition } from '../TextInput'
 
 export type DatePickerStates = ':selected' | ':disabled' | ''
 

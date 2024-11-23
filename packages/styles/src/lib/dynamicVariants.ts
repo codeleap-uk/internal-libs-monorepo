@@ -35,6 +35,7 @@ export type DynamicVariants =
   `scale:${Value}`
 
 export const createDynamicVariants = () => {
+
   const dynamicVariants = {}
 
   function createVariant(variantName: string, variantReturn: any) {
@@ -80,7 +81,7 @@ export const createDynamicVariants = () => {
   createVariant('effect', (theme, effect: keyof IEffects) => theme.effects[effect])
 
   createVariant('scale', (theme, value: any) => ({
-    transform: typeof localStorage !== 'undefined' ? `scale(${value})` : [{ 'scale': Number(value) }],
+    transform: theme.isBrowser ? `scale(${value})` : [{ 'scale': Number(value) }],
   }))
 
   createVariant('br', (theme, value: keyof IBorderRadius) => ({

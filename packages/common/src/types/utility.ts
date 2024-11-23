@@ -1,5 +1,3 @@
-import { EnhancedTheme } from '../styles/types'
-import { CommonVariantObject, ResponsiveVariantsProp, VariantProp } from '../styles/variants/types'
 import { Prev } from './pathMapping'
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any
@@ -17,20 +15,6 @@ export type NestedKeys<T> = {
 export type FunctionType<Args extends any[], Return> = (
   ...args: Args
 ) => Return
-
-export type ComponentVariants<
-  Styles extends Record<string, any>,
-  Theme extends EnhancedTheme<any> = EnhancedTheme<any>
-> = {
-  variants?: VariantProp<Styles>
-  responsiveVariants?: ResponsiveVariantsProp<Theme, Styles, VariantProp<Styles>>
-}
-
-export type ComponentWithVariants<
-  Styles extends CommonVariantObject<any, any> = CommonVariantObject<any, any>,
-  Theme extends EnhancedTheme<any> = EnhancedTheme<any>,
-  P = Record<string, unknown>
-> = React.FC<ComponentVariants<Styles, Theme> & P>
 
 export type DeepPartial<T> = Partial<{
   [Property in keyof T]: T[Property] extends Record<string, any>
@@ -120,10 +104,6 @@ export type ReactStateProps<Name extends string, T = any, State extends ReactSta
 } & {
   [P in Name ]: State[0]
 }
-
-export type ExtractVariants<O extends VariantProp> = O extends VariantProp<infer X> ? keyof X : never
-
-export type MergeVariants<A extends VariantProp, B extends VariantProp> = (ExtractVariants<A> | ExtractVariants<B>)[]
 
 export type AnyRef<T> = React.Ref<T> | React.MutableRefObject<T> | ((instance: T | null) => void) | null | React.ForwardedRef<T> | React.LegacyRef<T>
 

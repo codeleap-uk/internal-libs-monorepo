@@ -218,7 +218,15 @@ Slider.styleRegistryName = 'Slider'
 Slider.rootElement = 'wrapper'
 Slider.elements = [
   ...InputBase.elements,
-  'thumb', 'track', 'selectedTrack', 'unselectedTrack', 'firstTrackMark', 'lastTrackMark', 'sliderContainer', 'labelBtn', 'descriptionBtn'
+  'thumb',
+  'track',
+  'selectedTrack',
+  'unselectedTrack',
+  'firstTrackMark',
+  'lastTrackMark',
+  'sliderContainer',
+  'labelBtn',
+  'descriptionBtn',
 ]
 
 Slider.withVariantTypes = <S extends AnyRecord>(styles: S) => {

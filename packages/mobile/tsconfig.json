@@ -1,12 +1,28 @@
 {
   "compilerOptions": {
-    "module": "commonjs", /* Specify what module code is generated. */
-    "moduleResolution": "node", /* Specify how TypeScript looks up a file from a given module specifier. */
-    "target": "ES5",
+    "module": "ES2015", /* Specify what module code is generated. */
+    "moduleResolution": "bundler",
+    "target": "ESNext",
     "lib": [
-      "ESNext",
+ 
+      "es2019",
+      "es2020.bigint",
+      "es2020.date",
+      "es2020.number",
+      "es2020.promise",
+      "es2020.string",
+      "es2020.symbol.wellknown",
+      "es2021.promise",
+      "es2021.string",
+      "es2021.weakref",
+      "es2022.array",
+      "es2022.object",
+      "es2022.string"
     ],
     "jsx": "react-native",
+    "customConditions": [
+      "react-native"
+    ],
     /* Modules */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
     "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */
