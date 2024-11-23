@@ -1,5 +1,5 @@
 import { deepEqual, TypeGuards } from '@codeleap/common'
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 
 export type TSectionFilterItem = {
   value?: string | number
@@ -43,6 +43,26 @@ export function useSectionFilters<T = TSectionFilterItem>(props: UseSectionFilte
 
     return initialSelectedItems ?? {}
   })
+
+  const changed = useCallback(() => {
+    return Object.entries(selectedItems).some(([sectionIndex, items]) => {
+      const initialItems = initialSelectedItems[sectionIndex] ?? []
+
+      if (!initialItems) {
+        return items.length > 0
+      }
+
+      if (items.length !== initialItems.length) {
+        return true
+      }
+
+      return items.some((item) => !initialItems.some((i) => areItemsEqual(i, item)))
+    })
+  }, [selectedItems, initialSelectedItems])
+
+  const getAllItems = () => {
+    return sections?.flatMap((section) => section.data) ?? []
+  }
 
   const findItemSection = (item: T) => {
     if (!sections) {
@@ -96,6 +116,13 @@ export function useSectionFilters<T = TSectionFilterItem>(props: UseSectionFilte
       limit = section.selectionLimit ?? selectionLimit
     } else {
       sectionIndex = 0
+    }
+
+    if (selectionLimit === 1) {
+      setSelectedItems({
+        [sectionIndex]: [item],
+      })
+      return
     }
 
     const currentItems = selectedItems[sectionIndex] ?? []
@@ -162,5 +189,8 @@ export function useSectionFilters<T = TSectionFilterItem>(props: UseSectionFilte
     limitReached,
     disableItemsOnLimitReached,
     clearSelectedItemsWithSection,
+    changed,
+    areItemsEqual,
+    getAllItems,
   }
 }

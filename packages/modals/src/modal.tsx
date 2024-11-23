@@ -176,7 +176,6 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
   }
 
   open(params?: Params) {
-    this.visible.set(true)
 
     if (params) {
       this.params.set({
@@ -184,6 +183,8 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
         ...params,
       })
     }
+
+    this.visible.set(true)
 
     return awaitTransition()
   }

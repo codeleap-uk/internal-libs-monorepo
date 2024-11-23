@@ -16,7 +16,7 @@
     "@nanostores/react": "0.8.0"
   },
   "scripts": {
-    "build": "tsc --build",
+ 
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "test": "./node_modules/.bin/mocha --require ts-node/register src/tests/**/*.spec.ts",
     "run-sc": "tsnd --transpile-only",

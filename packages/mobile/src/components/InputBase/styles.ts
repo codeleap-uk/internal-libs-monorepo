@@ -1,6 +1,6 @@
-import { TypeGuards } from "@codeleap/common"
-import { ActionIconParts } from "../ActionIcon"
-import { InputBaseProps } from "./types"
+import { TypeGuards } from '@codeleap/common'
+import { ActionIconParts } from '../ActionIcon'
+import { InputBaseProps } from './types'
 import { mergeStyles, useCompositionStyles } from '@codeleap/styles'
 import { useMemo } from 'react'
 
@@ -10,16 +10,17 @@ type IconParts = ActionIconParts
 
 export type InputIconComposition = `${InputIcons}${Capitalize<IconParts>}`
 
-export type InputBaseStates = 'error' | 'focus' | 'disabled'
+export type InputBaseStates = 'error' | 'focus' | 'disabled' | 'typed'
 
-export type InputBaseParts = 
+export type InputBaseParts =
   'wrapper' |
   'innerWrapper' |
   'label' |
   'errorMessage' |
   'description' |
   'labelRow'|
-  InputIconComposition 
+
+  InputIconComposition
 
 export type IconLessInputBaseParts = Exclude<InputBaseParts, InputIconComposition>
 
@@ -27,23 +28,26 @@ export type InputBaseComposition = `${InputBaseParts}:${InputBaseStates}` | Inpu
 
 const getIconStyles = (obj, state) => ({
   icon: mergeStyles([
-    obj.icon, 
+    obj.icon,
     state.focused && obj['icon:focus'],
-    state.hasError && obj['icon:error'], 
-    state.disabled && obj['icon:disabled']
+    state.hasError && obj['icon:error'],
+    state.disabled && obj['icon:disabled'],
+    state.hasValue && obj['icon:typed'],
   ]),
   'icon:disabled': mergeStyles([
-    state.disabled && obj['icon:disabled']
+    state.disabled && obj['icon:disabled'],
   ]),
   touchableWrapper: mergeStyles([
-    obj.touchableWrapper, 
+    obj.touchableWrapper,
     state.focused && obj['touchableWrapper:focus'],
-    state.hasError && obj['touchableWrapper:error'], 
-    state.disabled && obj['touchableWrapper:disabled']
+    state.hasError && obj['touchableWrapper:error'],
+    state.disabled && obj['touchableWrapper:disabled'],
+    state.hasValue && obj['touchableWrapper:typed'],
   ]),
   'touchableWrapper:disabled': mergeStyles([
-    state.disabled && obj['touchableWrapper:disabled']
-  ])
+    state.disabled && obj['touchableWrapper:disabled'],
+  ]),
+
 })
 
 const useIconStyles = (styles, iconStyles, states) => {
@@ -59,7 +63,9 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused,
     disabled,
     error,
+
     style: styles,
+    hasValue,
   } = props
 
   const hasError = !TypeGuards.isNil(error)
@@ -68,14 +74,14 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
 
   const generalIconStyles = getIconStyles(compositionStyles?.icon, { hasError, disabled })
 
-  const leftIconStyles = useIconStyles(generalIconStyles, compositionStyles?.leftIcon, { 
+  const leftIconStyles = useIconStyles(generalIconStyles, compositionStyles?.leftIcon, {
     // @ts-expect-error
-    hasError, disabled: (disabled || props?.leftIcon?.disabled), focused 
+    hasError, disabled: (disabled || props?.leftIcon?.disabled), focused,
   })
 
-  const rightIconStyles = useIconStyles(generalIconStyles, compositionStyles?.rightIcon, { 
+  const rightIconStyles = useIconStyles(generalIconStyles, compositionStyles?.rightIcon, {
     // @ts-expect-error
-    hasError, disabled: (disabled || props?.rightIcon?.disabled), focused
+    hasError, disabled: (disabled || props?.rightIcon?.disabled), focused, hasValue,
   })
 
   const labelStyle = [
@@ -83,6 +89,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused && styles['label:focus'],
     hasError && styles['label:error'],
     disabled && styles['label:disabled'],
+    hasValue && styles['label:typed'],
   ]
 
   const errorStyle = [
@@ -90,6 +97,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused && styles['errorMessage:focus'],
     hasError && styles['errorMessage:error'],
     disabled && styles['errorMessage:disabled'],
+    hasValue && styles['errorMessage:typed'],
   ]
 
   const descriptionStyle = [
@@ -97,6 +105,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused && styles['description:focus'],
     hasError && styles['description:error'],
     disabled && styles['description:disabled'],
+    hasValue && styles['description:typed'],
   ]
 
   const wrapperStyle = [
@@ -104,6 +113,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused && styles['wrapper:focus'],
     error && styles['wrapper:error'],
     disabled && styles['wrapper:disabled'],
+    hasValue && styles['wrapper:typed'],
   ]
 
   const innerWrapperStyle = [
@@ -111,6 +121,7 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused && styles['innerWrapper:focus'],
     hasError && styles['innerWrapper:error'],
     disabled && styles['innerWrapper:disabled'],
+    hasValue && styles['innerWrapper:typed'],
   ]
 
   const labelRowStyle = [
@@ -118,9 +129,10 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     focused && styles['labelRow:focus'],
     hasError && styles['labelRow:error'],
     disabled && styles['labelRow:disabled'],
+    hasValue && styles['labelRow:typed'],
   ]
 
- return {
+  return {
     wrapperStyle,
     innerWrapperStyle,
     leftIconStyles,
@@ -128,6 +140,6 @@ export const useInputBaseStyles = (props: InputBaseProps) => {
     labelStyle,
     errorStyle,
     descriptionStyle,
-    labelRowStyle
- }
+    labelRowStyle,
+  }
 }

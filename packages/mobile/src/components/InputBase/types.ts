@@ -24,4 +24,5 @@ export type InputBaseProps = React.PropsWithChildren<{
   style?: StylesOf<InputBaseComposition>
   labelAsRow?: boolean
   hideErrorMessage?: boolean
+  hasValue?: boolean
 }>

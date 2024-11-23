@@ -132,6 +132,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const hasMultipleLines = isMultiline && value?.includes('\n')
 
+  const hasValue = value?.length > 0
+
   return <InputBase
     {...inputBaseProps}
     innerWrapper={isPressable ? Touchable : undefined}
@@ -153,6 +155,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     }}
     rightIcon={rightIcon}
     focused={isFocused}
+    hasValue={hasValue}
   >
     <InputElement
       allowFontScaling={false}
@@ -174,6 +177,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
         !validation.isValid && styles['input:error'],
         isDisabled && styles['input:disabled'],
         hasMultipleLines && styles['input:hasMultipleLines'],
+        hasValue && styles['input:typed'],
+
       ]}
       ref={innerInputRef}
       pointerEvents={isPressable ? 'none' : undefined}

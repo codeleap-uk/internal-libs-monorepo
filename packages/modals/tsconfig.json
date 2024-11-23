@@ -19,8 +19,7 @@
     "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
     /* Type Checking */
     "skipLibCheck": true,
-    "outDir": "./dist",
-    "declaration": true,
+ 
     "downlevelIteration": true,
     // "baseUrl": "./",
     "paths": {

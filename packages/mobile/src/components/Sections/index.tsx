@@ -17,7 +17,7 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props.separatorStyles} />
 }
 
-export const Sections = <T extends any>(sectionsProps: SectionProps<T>) => {
+export function Sections<T>(sectionsProps: SectionProps<T>) {
   const {
     style,
     onRefresh,
@@ -132,6 +132,7 @@ export const Sections = <T extends any>(sectionsProps: SectionProps<T>) => {
       showsHorizontalScrollIndicator={false}
       {...props}
       ListHeaderComponentStyle={styles.header}
+      ListFooterComponentStyle={styles.footer}
       style={wrapperStyle}
       contentContainerStyle={keyboardStyle}
       sections={sections}
@@ -143,7 +144,7 @@ export const Sections = <T extends any>(sectionsProps: SectionProps<T>) => {
 }
 
 Sections.styleRegistryName = 'Sections'
-Sections.elements = ['wrapper', 'content', 'separator', 'header', 'refreshControl']
+Sections.elements = ['wrapper', 'content', 'separator', 'header', 'footer', 'refreshControl']
 Sections.rootElement = 'wrapper'
 
 Sections.withVariantTypes = <S extends AnyRecord>(styles: S) => {

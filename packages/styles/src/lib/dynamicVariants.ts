@@ -11,18 +11,18 @@ export const borderDirection = [...borderYDirection, ...borderXDirection, ''] as
 export const borderProperties = ['color', 'radius', 'width'] as const
 
 export const cursorTypes = [
-  'not-allowed', 
-  'help', 
-  'pointer', 
-  'wait', 
-  ''
+  'not-allowed',
+  'help',
+  'pointer',
+  'wait',
+  '',
 ] as const
 
 export type Value =
   | number
   | ''
 
-export type DynamicVariants = 
+export type DynamicVariants =
   `${typeof colorVariants[number]}:${keyof IColors}` |
   `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
@@ -30,6 +30,8 @@ export type DynamicVariants =
   `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}` |
   `cursor:${typeof cursorTypes[number]}` |
   `bg:${keyof IColors}` |
+  `br:${keyof IBorderRadius}` |
+  `cl:${keyof IColors}` |
   `scale:${Value}`
 
 export const createDynamicVariants = () => {
@@ -41,7 +43,7 @@ export const createDynamicVariants = () => {
 
   colorVariants.forEach(variant => {
     createVariant(variant, (theme, color: keyof IColors) => ({
-      [variant]: theme['colors'][color]
+      [variant]: theme.colors[color],
     }))
   })
 
@@ -51,7 +53,7 @@ export const createDynamicVariants = () => {
         const variant = `border${capitalize(direction)}${capitalize(y)}Radius`
 
         createVariant(variant, (theme, value: keyof IBorderRadius) => ({
-          [variant]: theme['borderRadius'][value]
+          [variant]: theme.borderRadius[value],
         }))
       })
     }
@@ -60,21 +62,33 @@ export const createDynamicVariants = () => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
       createVariant(variant, (theme, value: string) => ({
-        [variant]: property == 'color' ? theme['colors'][value] : theme['borderRadius'][value]
+        [variant]: property == 'color' ? theme.colors[value] : theme.borderRadius[value],
       }))
     })
   })
 
   createVariant('cursor', (theme, cursor: typeof cursorTypes[number]) => ({ cursor }))
 
-  createVariant('bg', (theme, color: keyof IColors) => ({ 
-    backgroundColor: theme['colors'][color] 
+  createVariant('bg', (theme, color: keyof IColors) => ({
+    backgroundColor: theme.colors[color],
   }))
 
-  createVariant('effect', (theme, effect: keyof IEffects) => theme['effects'][effect])
+  createVariant('cl', (theme, color: keyof IColors) => ({
+    color: theme.colors[color],
+  }))
+
+  createVariant('effect', (theme, effect: keyof IEffects) => theme.effects[effect])
 
   createVariant('scale', (theme, value: any) => ({
-    transform: typeof localStorage !== 'undefined' ? `scale(${value})` : [{ 'scale': Number(value) }]
+    transform: typeof localStorage !== 'undefined' ? `scale(${value})` : [{ 'scale': Number(value) }],
+  }))
+
+  createVariant('br', (theme, value: keyof IBorderRadius) => ({
+    borderRadius: theme.borderRadius[value],
+  }))
+
+  createVariant('borderRadius', (theme, value: keyof IBorderRadius) => ({
+    borderRadius: theme.borderRadius[value],
   }))
 
   return dynamicVariants

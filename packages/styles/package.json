@@ -1,8 +1,8 @@
 {
   "name": "@codeleap/styles",
   "version": "4.2.9",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -14,7 +14,7 @@
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
-    "build": "tsc --build",
+    "build": "echo \"No build script specified\"",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "test": "./node_modules/.bin/mocha --require ts-node/register src/tests/**/*.spec.ts",
     "run-sc": "tsnd --transpile-only",

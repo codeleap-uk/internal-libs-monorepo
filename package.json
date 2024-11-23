@@ -15,17 +15,17 @@
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
     "clear:dist": "rm -rf packages/*/dist",
      
-    "web": "cd apps/web && bun run",
-    "mobile": "cd apps/mobile && bun run",
+    "web": "cd apps/web && bun",
+    "mobile": "cd apps/mobile && bun",
 
-    "common": "cd packages/common && bun run",
-    "styles": "cd packages/styles && bun run",
-    "cli": "cd packages/cli && bun run",
-    "config": "cd packages/config && bun run",
+    "common": "cd packages/common && bun",
+    "styles": "cd packages/styles && bun",
+    "cli": "cd packages/cli && bun",
+    "config": "cd packages/config && bun",
     
-    "p:web": "cd packages/web && bun run",
-    "p:mobile": "cd packages/mobile && bun run",
-    "p:common": "cd packages/common && bun run",
+    "p:web": "cd packages/web && bun",
+    "p:mobile": "cd packages/mobile && bun",
+    "p:common": "cd packages/common && bun",
     
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
