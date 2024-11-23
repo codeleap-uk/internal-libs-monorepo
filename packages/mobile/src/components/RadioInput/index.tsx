@@ -123,11 +123,14 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
   // @ts-expect-error icss type
   const _radioOnRight = radioOnRight ?? styles?.__props?.radioOnRight
 
+  const hasValue = !TypeGuards.isNil(value)
+
   return <InputBase
     {...inputBaseProps}
     disabled={disabled}
     style={styles}
     debugName={debugName}
+    hasValue={hasValue}
   >
     {options?.map((item, idx) => (
       <Option
@@ -140,6 +143,7 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
         onSelect={() => onValueChange(item.value)}
         separator={idx < options.length - 1}
         reverseOrder={_radioOnRight}
+
       />
     ))}
   </InputBase>

@@ -9,10 +9,10 @@ type Masking = FormTypes.TextField['masking']
 type MaskOptions = Masking['options']
 
 export type NumberIncrementProps =
-  Omit<InputBaseProps, 'style'> &
-  Omit<RNTextInputProps, 'style'> &
+  Omit<InputBaseProps, 'style'|'value'> &
+  Omit<RNTextInputProps, 'style'|'value'> &
   {
-    value: number
+    value: number | string
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
     max?: number
     min?: number

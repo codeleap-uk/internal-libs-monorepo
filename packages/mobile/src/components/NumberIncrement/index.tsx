@@ -83,6 +83,8 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
 
   const InputElement: any = isMasked ? MaskedTextInput : isCurrency ? CurrencyInput : NativeTextInput
 
+  const hasValue = TypeGuards.isString(value) ? value.length > 0 : !TypeGuards.isNil(value)
+
   // @ts-expect-error - React's ref type system is weird
   useImperativeHandle(inputRef, () => {
     return {
@@ -115,12 +117,14 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     isFocused && styles['input:focus'],
     hasError && styles['input:error'],
     disabled && styles['input:disabled'],
+    hasValue && styles['input:typed'],
   ]), [disabled, isFocused, hasError])
 
   const placeholderTextColor = [
     [disabled, styles['placeholder:disabled']],
     [hasError, styles['placeholder:error']],
     [isFocused, styles['placeholder:focus']],
+    [hasValue, styles['placeholder:typed']],
     [true, styles.placeholder],
     // @ts-expect-error
   ].find(([x]) => x)?.[1]?.color
@@ -129,6 +133,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     [disabled, styles['selection:disabled']],
     [!validation.isValid, styles['selection:error']],
     [isFocused, styles['selection:focus']],
+    [hasValue, styles['selection:typed']],
     [true, styles.selection],
     // @ts-expect-error
   ].find(([x]) => x)?.[1]?.color
@@ -168,9 +173,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   }, [value])
 
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    if (TypeGuards.isNumber(max) && (value >= max)) {
+    if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
       onChange(max)
-    } else if (TypeGuards.isNumber(min) && (value <= min) || !value || String(value)?.length <= 0) {
+    } else if (TypeGuards.isNumber(min) && (Number(value) <= min) || TypeGuards.isNil(value) || String(value)?.length <= 0) {
       onChange(min)
     }
 
@@ -269,6 +274,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
         rippleDisabled: true,
         onPress: onPressInnerWrapper,
       }}
+      hasValue={hasValue}
     >
       {editable && !disabled ? (
         <InputElement
