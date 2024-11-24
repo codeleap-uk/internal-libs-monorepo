@@ -1,6 +1,6 @@
 import { capitalize, FormTypes } from '@codeleap/common'
-import { useNestedStylesByKey } from '@codeleap/styles'
-import { CSSInterpolation } from '@emotion/css'
+import { ICSS, useNestedStylesByKey } from '@codeleap/styles'
+
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
@@ -88,7 +88,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: UseSelectStyles
     }
   }
 
-  const optionsStyles = (state: OptionState): Record<ButtonParts, CSSInterpolation> => ({
+  const optionsStyles = (state: OptionState): Record<ButtonParts, ICSS> => ({
     wrapper: optionStyleKey('wrapper', state),
     rightIcon: optionStyleKey('rightIcon', state),
     text: optionStyleKey('text', state),
@@ -126,7 +126,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: UseSelectStyles
     return {
       ...baseStyles,
       width: parentWidth,
-      left: `calc(${baseStyles.left}px - ((${parentWidth}px - ${baseStyles.width}px) / 2))`
+      left: `calc(${baseStyles.left}px - ((${parentWidth}px - ${baseStyles.width}px) / 2))`,
     }
   }
 

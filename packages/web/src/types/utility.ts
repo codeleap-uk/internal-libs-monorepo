@@ -1,7 +1,7 @@
+import { ICSS } from '@codeleap/styles'
 import React from 'react'
-import { CSSInterpolation } from '@emotion/css'
 
-export type StylesOf<C extends string> = Partial<Record<C, CSSInterpolation>>
+export type StylesOf<C extends string> = Partial<Record<C, ICSS>>
 
 type WithChildren<T> = T & { children?: React.ReactNode }
 

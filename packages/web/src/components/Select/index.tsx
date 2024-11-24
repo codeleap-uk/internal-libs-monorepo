@@ -9,10 +9,9 @@ import { Button, ButtonProps } from '../Button'
 import { Text } from '../Text'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
-import { CSSInterpolation } from '@emotion/css'
 import { Icon } from '../Icon'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { AnyRecord, AppIcon, ICSS, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -94,28 +93,25 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     }
   }
 
-  const _Image = () => {
-    if (TypeGuards.isNil(_IconPlaceholder) && TypeGuards.isNil(image)) return null
+  let imageContent = null
 
-    if (TypeGuards.isString(image)) {
-      return <img src={image} css={defaultStyles.icon} />
-    }
-
-    if (TypeGuards.isString(_IconPlaceholder)) {
-      return <Icon debugName={debugName} name={_IconPlaceholder as AppIcon} forceStyle={defaultStyles.icon as React.CSSProperties} />
-    } else if (React.isValidElement(_IconPlaceholder)) {
-      // @ts-ignore
-      return <View style={defaultStyles.icon}>
-        {_IconPlaceholder}
-      </View>
-    } else if (TypeGuards.isFunction(_IconPlaceholder)) {
-      return <_IconPlaceholder {...props} />
-    }
+  if (React.isValidElement(image)) {
+    // @ts-ignore
+    imageContent = <img src={image} css={defaultStyles.icon} />
+  } else if (TypeGuards.isString(_IconPlaceholder)) {
+    imageContent = <Icon debugName={debugName} name={_IconPlaceholder as AppIcon} forceStyle={defaultStyles.icon as React.CSSProperties} />
+  } else if (React.isValidElement(_IconPlaceholder)) {
+    // @ts-ignore
+    imageContent = <View style={defaultStyles.icon}>
+      {_IconPlaceholder}
+    </View>
+  } else if (TypeGuards.isFunction(_IconPlaceholder)) {
+    imageContent = <_IconPlaceholder {...props} />
   }
 
   return (
     <View style={defaultStyles.wrapper as React.CSSProperties}>
-      <_Image />
+      {imageContent}
       <_Text />
     </View>
   )
@@ -147,7 +143,7 @@ const getMultiValue = (values: { label: string }[], separator: string, state: { 
   return value
 }
 
-const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: CSSInterpolation }; separator: string }) => {
+const CustomMultiValue = (props: MultiValueProps & { defaultStyles: { text: ICSS }; separator: string }) => {
   const { selectProps, index, defaultStyles, separator } = props
 
   const searchable = selectProps?.isSearchable

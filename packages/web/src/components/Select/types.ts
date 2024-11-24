@@ -1,5 +1,5 @@
 import { FormTypes, yup } from '@codeleap/common'
-import { CSSInterpolation } from '@emotion/css'
+
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
@@ -7,7 +7,7 @@ import { ComponentCommonProps } from '../../types'
 import { ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
 import { SelectComposition, OptionState } from './styles'
-import { StyledProp } from '@codeleap/styles'
+import { ICSS, StyledProp } from '@codeleap/styles'
 
 type SelectValue<T, Multi extends boolean> = Multi extends true ? T[] : T
 
@@ -55,16 +55,16 @@ type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Eleme
 export type PlaceholderProps = NoticeProps & ComponentPartProps & {
   text: SelectPlaceholderElement
   defaultStyles: {
-    wrapper: CSSInterpolation
-    text: CSSInterpolation
-    icon: CSSInterpolation
+    wrapper: ICSS
+    text: ICSS
+    icon: ICSS
   }
   icon: SelectPlaceholderElement
   image: HTMLImageElement['src']
 } & ComponentCommonProps
 
 export type LoadingIndicatorProps = NoticeProps & {
-  defaultStyles: { wrapper: CSSInterpolation }
+  defaultStyles: { wrapper: ICSS }
   size?: number
 } & ComponentCommonProps
 
