@@ -22,6 +22,7 @@ export type UseSectionFilters<T = TSectionFilterItem> = {
   sectionSelectionLimit?: number
   disableItemsOnLimitReached?: boolean
   initialSelectedItems?: SelectedItemsPerSection<T>
+  onToggleItem?: (item: T, section: Section<T>) => boolean
 }
 
 export function useSectionFilters<T = TSectionFilterItem>(props: UseSectionFilters<T>) {
@@ -32,6 +33,7 @@ export function useSectionFilters<T = TSectionFilterItem>(props: UseSectionFilte
     sectionSelectionLimit = null,
     disableItemsOnLimitReached = selectionLimit > 1 && !sectionSelectionLimit,
     initialSelectedItems = [],
+    onToggleItem,
   } = props
 
   const [selectedItems, setSelectedItems] = React.useState<SelectedItemsPerSection<T>>(() => {
@@ -116,6 +118,12 @@ export function useSectionFilters<T = TSectionFilterItem>(props: UseSectionFilte
       limit = section.selectionLimit ?? selectionLimit
     } else {
       sectionIndex = 0
+    }
+
+    const handled = onToggleItem?.(item, sections[sectionIndex]) ?? false
+
+    if (handled) {
+      return
     }
 
     if (selectionLimit === 1) {
