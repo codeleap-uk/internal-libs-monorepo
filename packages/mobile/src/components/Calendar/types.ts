@@ -1,5 +1,5 @@
-import { FilterKeys } from '@codeleap/common'
-import { Paths } from '@codeleap/common/dist/types/pathMapping'
+import { FilterKeys, Paths } from '@codeleap/common'
+
 import { TextStyle, ViewStyle } from 'react-native'
 
 type CalendarTheme = {
@@ -26,7 +26,7 @@ type CalendarTheme = {
     arrowColor?: string
     textDisabledColor?: string
     textInactiveColor?: string
-    backgroundColor?: string; //TODO: remove in V2
+    backgroundColor?: string //TODO: remove in V2
     dotColor?: string
     selectedDotColor?: string
     disabledArrowColor?: string
