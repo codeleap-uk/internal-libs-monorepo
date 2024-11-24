@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/common",
-  "version": "4.2.9",
+  "version": "4.2.10",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -10,15 +10,11 @@
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
-   
     "@sentry/types": "8.40.0",
     "@types/tinycolor2": "^1.4.3"
-  
   },
   "scripts": {
-   
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
- 
   },
   "peerDependencies": {
     "@sentry/browser": "*",
