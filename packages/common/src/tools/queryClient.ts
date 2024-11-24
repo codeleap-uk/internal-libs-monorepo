@@ -27,6 +27,7 @@ interface EnhancedQuery<T> extends ReactQuery.Query<T> {
   poll<R>(
     options: PollQueryOptions<T, R>
   ): Promise<R>
+  getData(): T
   key: ReactQuery.QueryKey
 }
 
@@ -143,6 +144,10 @@ export class CodeleapQueryClient {
           case 'poll':
             return (options: PollQueryOptions<T, any>) => {
               return client.pollQuery(key, options)
+            }
+          case 'getData':
+            return () => {
+              return client.client.getQueryData<T>(key)
             }
           default:
             return Reflect.get(query, p, receiver)
