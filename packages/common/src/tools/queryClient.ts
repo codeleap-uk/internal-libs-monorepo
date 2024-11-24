@@ -108,10 +108,20 @@ export class CodeleapQueryClient {
 
     return new Proxy<EnhancedQuery<T>>({} as EnhancedQuery<T>, {
       get(target, p, receiver) {
-        if (p === 'key') {
-          return key
-        }
+
         const client = getClient()
+
+        // these don't need the actual query
+        switch (p) {
+          case 'key':
+            return key
+          case 'getData':
+            return () => {
+              return client.client.getQueryData<T>(key)
+            }
+          default:
+            break
+        }
 
         const cache = client.client.getQueryCache()
 
@@ -144,10 +154,6 @@ export class CodeleapQueryClient {
           case 'poll':
             return (options: PollQueryOptions<T, any>) => {
               return client.pollQuery(key, options)
-            }
-          case 'getData':
-            return () => {
-              return client.client.getQueryData<T>(key)
             }
           default:
             return Reflect.get(query, p, receiver)
