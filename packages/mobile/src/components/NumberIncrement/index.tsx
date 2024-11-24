@@ -252,14 +252,14 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
       {...inputBaseProps}
       error={hasError ? errorMessage : null}
       style={styles}
-      rightIcon={{
+      rightIcon={TypeGuards.isComponentOrElement(inputBaseProps.rightIcon) ? inputBaseProps.rightIcon : {
         name: 'plus' as AppIcon,
         disabled: disabled || incrementDisabled || !editable,
         onPress: () => handleChange('increment'),
         debounce: actionDebounce,
         ...inputBaseProps.rightIcon,
       }}
-      leftIcon={{
+      leftIcon={TypeGuards.isComponentOrElement(inputBaseProps.leftIcon) ? inputBaseProps.leftIcon : {
         name: 'minus' as AppIcon,
         disabled: disabled || decrementDisabled || !editable,
         onPress: () => handleChange('decrement'),
