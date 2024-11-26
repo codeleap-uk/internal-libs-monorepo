@@ -512,7 +512,7 @@ export class QueryManager<
         }
       },
       select,
-      placeholderData: keepPreviousData,
+
       ...queryOptions,
 
     })
