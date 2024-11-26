@@ -200,7 +200,11 @@ export class CodeleapQueryClient {
 
   }
 
-  queryKey<Data>(k: ReactQuery.QueryKey) {
+  queryKey<Data>(k: ReactQuery.QueryKey, options?: ReactQuery.QueryOptions<Data>) {
+
+    if(options){
+      this.client.setQueryDefaults(k, options)
+    }
 
     return this.queryProxy<Data>(k)
   }
