@@ -5,5 +5,5 @@ export type ComponentWithDefaultProps<P = any> = ((props: P) => JSX.Element) & {
 }
 
 export type ForwardRefComponentWithDefaultProps<P = any, R = any> = ((props: P, ref: R) => JSX.Element) & {
-  defaultProps: Partial<P>
+  defaultProps?: Partial<P>
 }

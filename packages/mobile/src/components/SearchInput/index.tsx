@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { AppIcon } from '@codeleap/styles'
-import { ComponentWithDefaultProps } from '../../types'
+import { ComponentWithDefaultProps, ForwardRefComponentWithDefaultProps } from '../../types'
 import { TextInputProps, TextInput } from '../TextInput'
 import { TypeGuards } from '@codeleap/common'
+import { TextInput  as RNTextInput } from 'react-native'
 
 export type SearchInputProps = {
   onTypingChange: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
   onValueChange?: (search: string) => void
   onClear?: () => void
+  showClear?: (search: string) => boolean
   debugName: string
   debounce?: number
   clearIcon?: AppIcon
@@ -16,7 +18,7 @@ export type SearchInputProps = {
   placeholder: string
 } & Partial<TextInputProps>
 
-export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) => {
+export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, RNTextInput> = forwardRef((props, ref) => {
   const {
     debugName,
     onClear,
@@ -28,6 +30,7 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
     placeholder,
     value,
     onValueChange,
+    showClear,
     ...others
   } = {
     ...SearchInput.defaultProps,
@@ -71,20 +74,22 @@ export const SearchInput: ComponentWithDefaultProps<SearchInputProps> = (props) 
       }}
       placeholder={placeholder}
       debugName={`Search ${debugName}`}
-      rightIcon={!!search?.trim?.() && {
+      rightIcon={(showClear?.(search) ?? true) && {
         name: clearIcon,
         onPress: handleClear,
       }}
       leftIcon={{
         name: searchIcon,
       }}
+      ref={ref}
       {...others}
     />
   )
-}
+})
 
 SearchInput.defaultProps = {
   debounce: null,
   clearIcon: 'x' as AppIcon,
   searchIcon: 'search' as AppIcon,
+  showClear: (s) => !!s?.trim?.()
 } as Partial<SearchInputProps>

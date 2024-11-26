@@ -1,5 +1,5 @@
 import { InputBaseProps } from '../InputBase'
-import { TextInputProps as RNTextInputProps } from 'react-native'
+import { TextInputProps as RNTextInputProps, TextInput as RNTextInput } from 'react-native'
 import { AnyFunction, FormTypes, yup } from '@codeleap/common'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { TextInputMaskProps } from '../../modules/textInputMask'
@@ -22,4 +22,5 @@ export type TextInputProps =
     _error?: string
     onPress?: AnyFunction
     style?: StyledProp<TextInputComposition>
+    ref?: React.Ref<RNTextInput>
   }
