@@ -15,7 +15,7 @@ export type SearchInputProps = {
   debounce?: number
   clearIcon?: AppIcon
   searchIcon?: AppIcon
-  placeholder: string
+  placeholder?: string
 } & Partial<TextInputProps>
 
 export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, RNTextInput> = forwardRef((props, ref) => {
