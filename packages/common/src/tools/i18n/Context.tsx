@@ -13,7 +13,6 @@ if (!I18NRef.current) I18NRef.current = {} as I18NContextType
 
 export const I18NProvider = (props: I18NContextProps) => {
   const subscribers = useRef([])
-  const [isSettingLocale, setIsSettingsLocale] = React.useState(false)
 
   const subscribe = React.useCallback((callback) => {
     subscribers.current.push(callback)
@@ -31,30 +30,17 @@ export const I18NProvider = (props: I18NContextProps) => {
     subscribers.current.forEach((cb) => cb(locale))
   }, [])
 
-  const [locale, _setLocale] = React.useState<string>(() => {
-    let _locale = initialLocale
-    if (persistor) {
-      _locale = persistor.getLocale() || initialLocale
-    }
-    return _locale
-  })
+  const [locale, _setLocale] = React.useState<string>(initialLocale)
 
   I18NRef.current.locale = locale
   i18n.setLocale(locale)
 
-  const setLocale = React.useCallback(
-    async (newLocale: string) => {
-      setIsSettingsLocale(true)
-      I18NRef.current.locale = newLocale
-      callSubscribers(newLocale)
-      _setLocale(newLocale)
-      persistor?.setLocale?.(newLocale)
-      setTimeout(() => {
-        setIsSettingsLocale(false)
-      })
-    },
-    [callSubscribers],
-  )
+  const setLocale = React.useCallback((newLocale: string) => {
+    I18NRef.current.locale = newLocale
+    callSubscribers(newLocale)
+    _setLocale(newLocale)
+    persistor?.setLocale?.(newLocale)
+  }, [callSubscribers])
 
   I18NRef.current.setLocale = setLocale
 
@@ -79,7 +65,6 @@ export const I18NProvider = (props: I18NContextProps) => {
         locale,
         setLocale,
         subscribe,
-        isSettingLocale,
       }}
     >
       {children}
@@ -95,10 +80,8 @@ export const useI18N = <Keys extends string = string>() => {
       locale: 'en',
       setLocale: () => { },
       t: (key: Keys) => key,
-      isSettingLocale: false,
     }
   }
 
   return ctx as I18NContextType<Keys>
 }
-

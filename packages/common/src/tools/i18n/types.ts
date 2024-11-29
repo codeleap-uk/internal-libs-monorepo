@@ -7,7 +7,6 @@ export type I18NContextType<Keys extends string = string> = {
   setLocale: (locale: string) => void
   t: TFunction<Keys>
   subscribe: (callback: I18NSubscriber) => () => void
-  isSettingLocale: boolean
 }
 
 export type Persistor = {
