@@ -34,12 +34,10 @@ jobs:
           mv keystores-android/* apps/mobile/android/app/keystores
       
       - uses: oven-sh/setup-bun@v2
-        with:
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: |
-          bun
+          bun install
           bun install -g turbo
 
       - name: Build libraries
@@ -60,7 +58,7 @@ jobs:
       - name: Get latest google play version
         run: |
           pip install codemagic-cli-tools
-          pip3 install pyOpenSSL --upgrade
+          pip3 install pyOpenSSL==24.2.1 --upgrade
 
           echo "update version code"
 
