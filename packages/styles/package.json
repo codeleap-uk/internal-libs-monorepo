@@ -13,7 +13,7 @@
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
-    "build": "echo \"No build script specified\"",
+    "build": "echo 'No build needed'",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
     "test": "./node_modules/.bin/mocha --require ts-node/register src/tests/**/*.spec.ts",
     "run-sc": "tsnd --transpile-only",

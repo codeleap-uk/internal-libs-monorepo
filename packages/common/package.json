@@ -14,6 +14,7 @@
     "@types/tinycolor2": "^1.4.3"
   },
   "scripts": {
+    "build": "echo 'No build needed'",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "peerDependencies": {
