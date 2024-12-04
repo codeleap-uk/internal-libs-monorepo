@@ -28,6 +28,7 @@ interface EnhancedQuery<T> extends ReactQuery.Query<T> {
     options: PollQueryOptions<T, R>
   ): Promise<R>
   getData(): T
+  ensureData(options?: Partial<ReactQuery.EnsureQueryDataOptions<T, Error, T, ReactQuery.QueryKey, never>>): Promise<T>
   key: ReactQuery.QueryKey
 }
 
@@ -142,6 +143,13 @@ export class CodeleapQueryClient {
             return (callback: (e: ReactQuery.QueryCacheNotifyEvent) => void) => {
               return client.listenToQuery(key, callback)
             }
+          case 'ensureData':
+            return (options) => {
+              return client.client.ensureQueryData<T>({
+                queryKey: key,
+                ...options
+              })
+            }
           case 'refresh':
             return async () => {
               client.client.refetchQueries({
@@ -203,7 +211,19 @@ export class CodeleapQueryClient {
   queryKey<Data>(k: ReactQuery.QueryKey, options?: ReactQuery.QueryOptions<Data>) {
 
     if(options){
+      
       this.client.setQueryDefaults(k, options)
+
+      const cache = this.client.getQueryCache()
+      
+      const q = new ReactQuery.Query({
+        cache,
+        queryKey: k,
+        queryHash: ReactQuery.hashKey(k),
+        ...options,
+      })
+      
+      cache.add(q)
     }
 
     return this.queryProxy<Data>(k)
