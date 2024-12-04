@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/modals",
-  "version": "4.2.17",
+  "version": "4.2.18",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
