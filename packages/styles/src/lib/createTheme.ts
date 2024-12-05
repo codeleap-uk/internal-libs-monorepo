@@ -24,9 +24,10 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     ...otherThemeValues
   } = theme
 
-  const themeObj:AppTheme<T> = {
+  const themeObj: AppTheme<T> = {
     ...otherThemeValues,
-    get currentColorScheme(): string {
+
+    currentColorScheme() {
       return themeStore.getState().colorScheme
     },
 

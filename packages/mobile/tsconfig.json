@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "module": "ES2015", /* Specify what module code is generated. */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "target": "ESNext",
     "lib": [
  
@@ -20,9 +20,6 @@
       "es2022.string"
     ],
     "jsx": "react-native",
-    "customConditions": [
-      "react-native"
-    ],
     /* Modules */
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
     "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */

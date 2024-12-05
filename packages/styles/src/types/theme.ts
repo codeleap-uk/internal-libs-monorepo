@@ -69,7 +69,7 @@ type PredefinedThemeDerivedValues<T extends Theme> = {
 
 type PredefinedAppTheme<T extends Theme> = PredefinedThemeDerivedValues<T> & {
   setColorScheme: (colorScheme: ColorScheme<T>) => void
-  currentColorScheme: ColorScheme<T>
+  currentColorScheme: () => ColorScheme<T>
   spacing: SpacingMap
   media: MediaQueries
   border: BorderCreator

@@ -30,7 +30,7 @@ export class CodeleapStyleRegistry {
 
     this.registerCommonVariants()
 
-    const currentColorScheme = this.theme?.current?.['currentColorScheme'] ?? this.theme?.colorScheme ?? 'default'
+    const currentColorScheme = this.theme?.current?.['currentColorScheme']?.() ?? this.theme?.colorScheme ?? 'default'
 
     this.styleCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariants])
   }
@@ -515,7 +515,7 @@ export class CodeleapStyleRegistry {
   update() {
     this.theme = themeStore.getState()
 
-    const currentColorScheme = this.theme?.current?.['currentColorScheme'] ?? this.theme?.colorScheme ?? 'default'
+    const currentColorScheme = this.theme?.current?.['currentColorScheme']?.() ?? this.theme?.colorScheme ?? 'default'
 
     this.styleCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariants])
   }

@@ -26,9 +26,9 @@ export function useNestedStylesByKey<T extends string>(match: string, componentS
   }, [styles])
 }
 
-type ThemeSelector<T extends Record<string, any>> = (store: ThemeStore) => T
+type ThemeSelector<T = Record<string, any>> = (store: ThemeStore) => T
 
-export const useTheme = <T extends Record<string, any>>(selector: ThemeSelector<T>): T => {
+export const useTheme = <T = Record<string, any>>(selector: ThemeSelector<T>): T => {
   return themeStore(useShallow(selector))
 }
 
