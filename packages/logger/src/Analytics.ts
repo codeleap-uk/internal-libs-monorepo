@@ -1,6 +1,5 @@
 import { obfuscate } from './obfuscate'
-import { AppSettings } from '@codeleap/common'
-import { FunctionType, AnyFunction } from '@codeleap/types'
+import { FunctionType, AnyFunction, AppSettings } from '@codeleap/types'
 
 export type AnalyticsObject = {
   name: string

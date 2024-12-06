@@ -112,3 +112,7 @@ export type Indices<T extends readonly any[]> = Exclude<Partial<T>['length'], T[
 export type Replace<Object, Keys extends keyof Object, With = any> = Omit<Object, Keys> & {
   [P in Keys]: With
 }
+
+export type Matcher<T> = string | Partial<RegExp> | FunctionType<[valueOrKey: any, type: T], boolean>
+
+export type LogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'silent'

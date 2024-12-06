@@ -1,4 +1,5 @@
-import { ConsoleColor, LogType } from './types'
+import { ConsoleColor } from './types'
+import { LogType } from '@codeleap/types'
 
 export const foregroundColors = {
   Black: '\x1b[30m',

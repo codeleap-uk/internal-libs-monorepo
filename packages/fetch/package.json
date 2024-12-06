@@ -9,7 +9,6 @@
     "directory": "packages/fetch"
   },
   "devDependencies": {
-    "@codeleap/common": "workspace:*",
     "@codeleap/config": "workspace:*",
     "@codeleap/logger": "workspace:*",
     "@codeleap/types": "workspace:*",
@@ -19,7 +18,6 @@
     "build": "echo 'No build needed'"
   },
   "peerDependencies": {
-    "@codeleap/common": "workspace:*",
     "@codeleap/logger": "workspace:*",
     "@codeleap/types": "workspace:*",
     "typescript": "5.0.4"

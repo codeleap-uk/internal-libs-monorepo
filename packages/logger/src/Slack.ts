@@ -1,6 +1,5 @@
 import { inspect } from 'util'
-import { AppSettings } from '@codeleap/common'
-import { TypeGuards } from '@codeleap/types'
+import { TypeGuards, AppSettings } from '@codeleap/types'
 
 type EchoSlackConfig = AppSettings['Slack']['echo']
 

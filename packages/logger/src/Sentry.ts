@@ -1,5 +1,5 @@
 import type { Breadcrumb, ClientOptions } from '@sentry/types'
-import { AppSettings } from '@codeleap/common'
+import { AppSettings } from '@codeleap/types'
 import {
   LogFunctionArgs,
   LogType,
@@ -21,7 +21,6 @@ export class SentryService {
       const initObj:ClientOptions = {
         dsn: settings.Sentry.dsn,
         debug: isDebug,
-        // @ts-expect-error - These are provided by platform specific Sentry providers and plugins
         integrations: [],
         ...settings?.Sentry?.initArgs,
       }

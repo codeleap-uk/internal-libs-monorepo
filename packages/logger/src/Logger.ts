@@ -1,16 +1,9 @@
 import { inspect } from 'util'
-import { AppSettings } from '@codeleap/common'
-import { TypeGuards } from '@codeleap/types'
+import { TypeGuards, LogType, AppSettings } from '@codeleap/types'
 import { Analytics } from './Analytics'
 import { SentryService } from './Sentry'
 import { SlackService } from './Slack'
-import {
-  LogToTerminal,
-  LogFunctionArgs,
-  LogType,
-  LogToTerminalArgs,
-  LoggerMiddleware,
-} from './types'
+import { LogToTerminal, LogFunctionArgs, LogToTerminalArgs, LoggerMiddleware } from './types'
 
 const logLevels: LogType[] = ['debug', 'info', 'log', 'warn', 'error']
 
@@ -86,7 +79,6 @@ export class Logger {
     const shouldStringify = stringify && !!logValue && TypeGuards.isObject(logValue) && !(logValue instanceof Error)
     const inspectOptions = Logger?.settings?.Logger?.inspect || {}
 
-    // @ts-expect-error interface merging sucks
     const displayValue = shouldStringify ? inspect(logValue, {
       depth: 5,
       showHidden: true,

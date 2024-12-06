@@ -1,4 +1,4 @@
-import { AppSettings } from '@codeleap/common'
+import { AppSettings } from '@codeleap/types'
 import { RequestClientConfig } from './types'
 import { RequestClient } from './RequestClient'
 import { AxiosHeaders } from 'axios'

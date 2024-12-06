@@ -1,9 +1,7 @@
 import { cloneDeep } from '@codeleap/common'
-import { FunctionType } from '@codeleap/types'
+import { Matcher } from '@codeleap/types'
 import { inspect } from 'util'
 import parse from 'url-parse'
-
-export type Matcher<T> = string | Partial<RegExp> | FunctionType<[valueOrKey: any, type: T], boolean>
 
 type ObfuscateArgs = {
   object: any
