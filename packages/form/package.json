@@ -1,17 +1,19 @@
 {
-  "name": "@codeleap/hooks",
+  "name": "@codeleap/form",
   "version": "4.2.18",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
     "type": "git",
-    "directory": "packages/hooks"
+    "directory": "packages/form"
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
@@ -20,9 +22,10 @@
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
-    "axios": "^1.7.9",
-    "typescript": "5.0.4",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
     "react": "18.1.0",
-    "@tanstack/react-query": "5.60.6"
+    "typescript": "5.0.4",
+    "yup": "^0.32.11"
   }
 }
