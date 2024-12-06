@@ -1,5 +1,5 @@
 import { DefinedInitialDataInfiniteOptions, InfiniteData, QueryKey, UseInfiniteQueryResult, UseMutationOptions, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
-import { QueryManager } from './index'
+import { QueryManager } from './QueryManager'
 
 export type PageParam = {limit: number; offset: number}
 

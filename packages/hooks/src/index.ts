@@ -29,6 +29,7 @@ export * from './usePlaces'
 export * from './usePlacesAutocompleteUtils'
 export * from './useEffectOnce'
 export * from './useUnmount'
+export * from './useSearch'
 
 export {
   useEffect,
