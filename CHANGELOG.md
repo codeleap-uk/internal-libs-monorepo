@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.3.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v3.21.3...v4.3.0) (2024-12-06)
+
+
+### Features
+
+* **common:** add more tags, add types to List component ([43f2a1f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/43f2a1f4d17cdd2ad1b2432b954ca703d5607ec9))
+* **common:** add nav to view elementmap ([7d2d8c1](https://github.com/codeleap-uk/internal-libs-monorepo/commit/7d2d8c1fad834cc1c94ac304bf739c7e1ef70d0e))
+* **mobile:** placesAutocomplete start ([0cab59c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0cab59c705d46d010f07c1ff1471b6cc800cdf00))
+* **styles:** improve caching and typing ([032d6bd](https://github.com/codeleap-uk/internal-libs-monorepo/commit/032d6bd764aafd20e40e53bfef0bf514f8536109))
+* **styles:** new style system works ([6987129](https://github.com/codeleap-uk/internal-libs-monorepo/commit/69871290535ffb799b1921304b6335b11df52c1d))
+* **web:** Navigation ([e9ea572](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e9ea57254b8c193b482c55e9b99b43e11def9af4))
+
+
+### Bug Fixes
+
+* **mobile:** number increment icon disabled ([0a98078](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0a98078b37758cd58977a1d3d3ea42224fe5ef12))
+* **mobile:** Text ref ts ([34b020f](https://github.com/codeleap-uk/internal-libs-monorepo/commit/34b020f21466efec117d1c52628de4ed6292a1e6))
+* **styles:** baseKey change ([c3d8640](https://github.com/codeleap-uk/internal-libs-monorepo/commit/c3d86406efa12c160ebb40fc086ef19e2b3b722a))
+* **web:** build ([2f1129c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/2f1129c884c33212f6db61a06c60886e33dfa294))
+* **web:** infinite loading when uploading large images on Firefox ([06186cd](https://github.com/codeleap-uk/internal-libs-monorepo/commit/06186cdae89c3fc07469aa851f5af00b3bb64ebd))
+* **web:** modal scroll lock unmount, select load value ([0071663](https://github.com/codeleap-uk/internal-libs-monorepo/commit/007166361e14e473ef39de9c611eb22c92ddda43))
+* **web:** select portal position ([f72391c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/f72391cb79548b89602e990dfc114e673721e71e))
+* **web:** textInput mask focus ([e46181d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e46181d26f4a3f37d4db3d272d1d62fa0c02adee))
+
 ### [4.2.18](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.2.16...v4.2.18) (2024-12-04)
 
 ### [4.2.17](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.2.6...v4.2.17) (2024-11-29)
