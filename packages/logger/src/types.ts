@@ -1,4 +1,4 @@
-import { FunctionType } from '@codeleap/common'
+import { FunctionType } from '@codeleap/types'
 import { colors, foregroundColors } from './constants'
 
 import type { SeverityLevel, Client, ClientOptions, Breadcrumb } from '@sentry/types'

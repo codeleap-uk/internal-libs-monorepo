@@ -1,4 +1,5 @@
-import { FunctionType, cloneDeep } from '@codeleap/common'
+import { cloneDeep } from '@codeleap/common'
+import { FunctionType } from '@codeleap/types'
 import { inspect } from 'util'
 import parse from 'url-parse'
 

@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@codeleap/common": "workspace:*",
+    "@codeleap/types": "workspace:*",
     "@codeleap/config": "workspace:*",
     "ts-node-dev": "1.1.8",
     "@sentry/types": "8.40.0"
@@ -19,6 +20,7 @@
   },
   "peerDependencies": {
     "@codeleap/common": "workspace:*",
+    "@codeleap/types": "workspace:*",
     "typescript": "5.0.4"
   },
   "dependencies": {
