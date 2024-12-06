@@ -22,6 +22,7 @@
     "styles": "cd packages/styles && bun",
     "cli": "cd packages/cli && bun",
     "config": "cd packages/config && bun",
+    "fetch": "cd packages/fetch && bun",
     
     "p:web": "cd packages/web && bun",
     "p:mobile": "cd packages/mobile && bun",
