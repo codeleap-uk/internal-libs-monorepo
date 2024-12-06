@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { useModalContext } from '../ModalManager/context'
-import { deepEqual, onMount, onUpdate, PermissionManager, PermissionTypes, useDebounce, usePrevious } from '@codeleap/common'
+import { deepEqual, onMount, onUpdate, useDebounce, usePrevious } from '@codeleap/common'
 import { AppState, Linking } from 'react-native'
 import { PermissionConfig, PermissionModalsConfig } from './types'
+import { PermissionManager, PermissionTypes } from '../MobilePermissionManager'
 
 type TPermissionContext = {
   state: Record<string, PermissionTypes.PermissionStatus>
