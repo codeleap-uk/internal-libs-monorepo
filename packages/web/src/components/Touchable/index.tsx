@@ -1,4 +1,5 @@
-import { onMount, useGlobalContext } from '@codeleap/hooks'
+import { onMount } from '@codeleap/hooks'
+import { useGlobalContext } from '@codeleap/common'
 import { TypeGuards } from '@codeleap/types'
 import React, { ComponentType, ElementType, forwardRef, HTMLAttributes } from 'react'
 import { stopPropagation } from '../../lib'

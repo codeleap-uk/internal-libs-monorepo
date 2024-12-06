@@ -16,7 +16,8 @@
     "@codeleap/i18n": "workspace:*",
     "@codeleap/query": "workspace:*",
     "@codeleap/logger": "workspace:*",
-    "@codeleap/config": "workspace:*"
+    "@codeleap/config": "workspace:*",
+    "@codeleap/common": "workspace:*"
   },
   "scripts": {
     "build": "tsc --build",
@@ -31,6 +32,7 @@
     "@codeleap/query": "workspace:*",
     "@codeleap/logger": "workspace:*",
     "@codeleap/styles": "workspace:*",
+    "@codeleap/common": "workspace:*",
     "@d11/react-native-fast-image": "8.8.0",
     "@react-native-firebase/messaging": "21.4.0",
     "@react-navigation/bottom-tabs": "6.5.3",
