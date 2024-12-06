@@ -9,7 +9,6 @@ export type GlobalState<T> = Omit<WritableAtom<T>, 'set'> & {
 }
 
 export type GlobalStateConfig = {
-  persist?: boolean
   persistKey?: string
 }
 

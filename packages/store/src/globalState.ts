@@ -5,20 +5,17 @@ import { GlobalState, GlobalStateConfig, StateSelector } from './types'
 import { stateAssign, useStateSelector } from './utils'
 
 const defaultConfig: GlobalStateConfig = {
-  persist: false,
   persistKey: null,
 }
 
 export const setGlobalStatePersistor = setPersistentEngine
 
 export function globalState<T>(value: T, config: GlobalStateConfig = defaultConfig): GlobalState<T> {
-  const { persistKey, persist } = config
+  const { persistKey } = config
 
-  if (persist && !persistKey) {
-    throw new Error('Atom persist invalid configuration: "persistKey" is required when "persist" is enabled.')
-  }
+  const isPersistState = typeof persistKey === 'string'
 
-  const store = persist ? persistentAtom<T>(persistKey, value, {
+  const store = isPersistState ? persistentAtom<T>(persistKey, value, {
     encode: JSON.stringify,
     decode: JSON.parse,
   }) : atom(value)
