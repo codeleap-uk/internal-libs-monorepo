@@ -1,4 +1,4 @@
-import { AnyFunction } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
 import { PaginationButtonsComposition } from './styles'
 import { ButtonProps } from '../Button'
 import { PaginationParams } from '../../lib'

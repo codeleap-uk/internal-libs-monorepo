@@ -1,4 +1,5 @@
-import { TypeGuards, useMemo } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useMemo } from '@codeleap/hooks'
 import { Overlay } from '../Overlay'
 import { View } from '../View'
 import { Text } from '../Text'

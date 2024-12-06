@@ -1,4 +1,4 @@
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ViewProps } from '../View'
 import { MotionProps } from 'framer-motion'

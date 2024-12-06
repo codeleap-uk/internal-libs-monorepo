@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { create } from 'zustand'
 
 type TModalStore = { 

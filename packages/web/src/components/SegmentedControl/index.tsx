@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react'
 import { View } from '../View'
-import { useRef, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useRef } from '@codeleap/hooks'
+
 import { Text } from '../Text'
 import { motion, AnimationProps } from 'framer-motion'
 import { useAnimatedVariantStyles } from '../../lib'

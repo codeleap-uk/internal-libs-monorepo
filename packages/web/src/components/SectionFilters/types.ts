@@ -1,5 +1,5 @@
 import { ButtonComposition, ButtonProps } from '../Button'
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { SectionFiltersComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 

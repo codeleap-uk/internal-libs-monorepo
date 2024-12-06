@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import React, { useEffect, useRef, useCallback } from 'react'
 
 type HandlerClickOutside = (clickedOutside: boolean) => void

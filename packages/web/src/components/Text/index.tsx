@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { motion } from 'framer-motion'
 import React, { ElementType, forwardRef } from 'react'
 import { TextProps } from './types'

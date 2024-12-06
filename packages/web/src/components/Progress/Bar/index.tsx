@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { Root, Indicator } from '@radix-ui/react-progress'
 import { Icon, Text, View } from '../../components'
 import { ProgressBarProps } from './types'

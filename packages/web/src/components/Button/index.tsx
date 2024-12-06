@@ -1,5 +1,5 @@
 import React from 'react'
-import { TypeGuards, StylesOf } from '@codeleap/common'
+import { TypeGuards, StylesOf } from '@codeleap/types'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'

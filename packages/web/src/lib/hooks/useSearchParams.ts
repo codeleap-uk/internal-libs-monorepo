@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePrevious } from '@codeleap/common'
+import { usePrevious } from '@codeleap/hooks'
 
 export type UseSearchParamsReturn<T> = [
   T,

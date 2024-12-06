@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { Icon } from '../Icon'
 import { Touchable } from '../Touchable'
 import { View } from '../View'

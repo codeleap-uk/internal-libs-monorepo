@@ -1,5 +1,6 @@
 import { RefObject } from 'react'
-import { AnyFunction, FormTypes, yup } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
+import { FormTypes, yup } from '@codeleap/form'
 import { StyledProp } from '@codeleap/styles'
 import { BubbleMenuProps, Editor, FloatingMenuProps } from '@tiptap/react'
 import { FileInputRef } from '../FileInput'

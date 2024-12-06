@@ -1,5 +1,7 @@
 import React from 'react'
-import { onMount, TypeGuards, useRef } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { onMount, useRef } from '@codeleap/hooks'
+
 import { View } from '../View'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'

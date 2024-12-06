@@ -1,8 +1,5 @@
-import {
-  TypeGuards,
-  useCallback,
-  useConditionalState,
-} from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useCallback, useConditionalState } from '@codeleap/hooks'
 import { Text, View } from '../components'
 import { DatePickerProps, DayComponentProps } from './types'
 import ReactDatePicker from 'react-datepicker'

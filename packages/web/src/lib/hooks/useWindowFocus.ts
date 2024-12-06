@@ -1,4 +1,4 @@
-import { AnyFunction, TypeGuards } from '@codeleap/common'
+import { AnyFunction, TypeGuards } from '@codeleap/types'
 import { useEffect, useState } from 'react'
 
 type UseWindowFocusOptions = {
