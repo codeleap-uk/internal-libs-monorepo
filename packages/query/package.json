@@ -1,16 +1,18 @@
 {
-  "name": "@codeleap/utils",
+  "name": "@codeleap/query",
   "version": "4.2.18",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
     "type": "git",
-    "directory": "packages/utils"
+    "directory": "packages/query"
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
@@ -18,13 +20,12 @@
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
-    "axios": "^1.7.9",
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
     "typescript": "5.0.4",
-    "react": "18.1.0",
     "@tanstack/react-query": "5.60.6"
   },
   "dependencies": {
-    "tinycolor2": "^1.4.2",
-    "deep-equal": "^2.0.5"
+    "immer": "10.1.1"
   }
 }
