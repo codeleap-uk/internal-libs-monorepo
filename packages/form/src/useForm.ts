@@ -51,7 +51,6 @@ export function useForm<
   }, [form.staticFieldProps])
 
   const [formValues, setFormValues] = usePartialState<Values>(getInitialState)
-  // const { logger, isBrowser } = useGlobalContext()
   const [fieldErrors, setFieldErrors] = usePartialState(getInitialErrors)
   // @ts-ignore
   function setFieldValue(...args: FieldPaths) {
