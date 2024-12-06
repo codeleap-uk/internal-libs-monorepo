@@ -1,4 +1,4 @@
-import { PropsOf, TypeGuards } from '@codeleap/common'
+import { PropsOf, TypeGuards } from '@codeleap/types'
 import { ScrollView, Platform, StyleSheet, Dimensions, EasingFunction, Easing } from 'react-native'
 import { TransitionConfig } from '../../types'
 import { useKeyboard } from './context'

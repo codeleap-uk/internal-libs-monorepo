@@ -1,4 +1,4 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
 import { AppIcon, ICSS, StyledProp } from '@codeleap/styles'
 import { ButtonProps } from '../Button'
 import { Scroll } from '../Scroll'

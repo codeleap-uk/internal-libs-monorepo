@@ -1,5 +1,7 @@
 import React from 'react'
-import { onUpdate, PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
+import { onUpdate } from '@codeleap/hooks'
+
 import _ImageView from 'react-native-image-viewing'
 import { StatusBar } from 'react-native'
 

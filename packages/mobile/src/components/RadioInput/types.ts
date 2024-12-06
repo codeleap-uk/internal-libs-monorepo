@@ -1,4 +1,5 @@
-import { FormTypes, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
+import { FormTypes } from '@codeleap/form'
 import { StyledProp } from '@codeleap/styles'
 import { ReactNode } from 'react'
 import { RadioInputComposition } from './styles'

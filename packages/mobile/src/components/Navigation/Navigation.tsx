@@ -2,7 +2,7 @@
 import * as React from 'react'
 import {
   TypeGuards,
-} from '@codeleap/common'
+} from '@codeleap/types'
 import { Icon } from '../Icon'
 import { NavigationProps, NavigatorType, PropTypes, TNavigators } from './types'
 import { Navigators } from './constants'

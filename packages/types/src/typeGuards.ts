@@ -1,4 +1,5 @@
 import { AnyFunction } from './utility'
+import React from 'react'
 
 export function isNumber(x): x is number {
   return typeof x === 'number'
@@ -45,4 +46,12 @@ type Class<T = any> = Abstract<T> | Constructor<T>
 
 export function isInstance<T extends Class, X = T extends Class<infer X> ? X : never>(x, cls: T): x is X {
   return x instanceof cls
+}
+
+export function isElement(x): x is React.ReactElement {
+  return React.isValidElement(x)
+}
+
+export function isComponentOrElement<P>(x: any): x is React.ComponentType<P> | React.ReactElement {
+  return isFunction(x) || isElement(x)
 }

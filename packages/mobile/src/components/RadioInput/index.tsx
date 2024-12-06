@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { View } from '../View'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { RadioGroupProps, RadioOptionProps } from './types'

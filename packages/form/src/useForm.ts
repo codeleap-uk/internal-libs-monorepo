@@ -8,7 +8,16 @@ import { useI18N } from '@codeleap/i18n'
 
 export * as FormTypes from './types'
 
-const isBrowser = typeof window !== 'undefined'
+function testBrowser() {
+  try {
+    // @ts-ignore
+    return typeof localStorage !== 'undefined'
+  } catch {
+    return false
+  }
+}
+
+const isBrowser = testBrowser()
 
 const SCOPE = 'useForm'
 

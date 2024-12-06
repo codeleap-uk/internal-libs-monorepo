@@ -1,4 +1,4 @@
-import { AnyFunction } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
 import * as PermissionTypes from './types'
 
 const SCOPE = 'Permissions'

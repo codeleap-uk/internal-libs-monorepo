@@ -1,4 +1,5 @@
-import { yup, FormTypes, AnyFunction } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
+import { yup, FormTypes } from '@codeleap/form'
 import { NumberIncrementComposition } from './styles'
 import { TextInputMaskProps } from '../../modules/textInputMask'
 import { TextInputProps as RNTextInputProps } from 'react-native'

@@ -1,5 +1,6 @@
 import React from 'react'
-import { usePrevious, onMount, onUpdate, PropsOf } from '@codeleap/common'
+import { usePrevious, onMount, onUpdate } from '@codeleap/hooks'
+import { PropsOf } from '@codeleap/types'
 import { useModalContext } from './context'
 import { Portal } from '@gorhom/portal'
 import { Modal as _Modal } from '../../components/Modal'

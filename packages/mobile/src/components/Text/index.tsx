@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { Animated, Platform, Text as NativeText } from 'react-native'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
 import { TextProps } from './types'

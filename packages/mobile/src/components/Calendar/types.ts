@@ -1,5 +1,4 @@
-import { FilterKeys, Paths } from '@codeleap/common'
-
+import { FilterKeys, Paths } from '@codeleap/types'
 import { TextStyle, ViewStyle } from 'react-native'
 
 type CalendarTheme = {

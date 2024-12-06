@@ -1,5 +1,6 @@
 import React from 'react'
-import { FormTypes, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
+import { FormTypes } from '@codeleap/form'
 import { DatePickerModalButtonCompositions, DatePickerModalComposition } from './styles'
 import { DatePickerProps } from 'react-native-date-picker'
 import { ButtonProps } from '../Button'

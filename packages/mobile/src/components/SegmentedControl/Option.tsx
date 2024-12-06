@@ -1,5 +1,5 @@
 import React from 'react'
-import { PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
 import { StylesOf } from '../../types'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'

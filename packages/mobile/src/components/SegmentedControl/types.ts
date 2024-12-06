@@ -3,7 +3,7 @@ import { SegmentedControlOptionProps } from './Option'
 import { TransitionConfig } from '../../utils'
 import { TextProps } from '../Text'
 import { TouchableProps } from '../Touchable'
-import { FormTypes } from '@codeleap/common'
+import { FormTypes } from '@codeleap/form'
 import { StyledProp } from '@codeleap/styles'
 import { SegmentedControlComposition } from '../components'
 

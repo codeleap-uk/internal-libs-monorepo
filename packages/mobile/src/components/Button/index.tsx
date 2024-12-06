@@ -1,5 +1,5 @@
 import React, { forwardRef, useState } from 'react'
-import { GetRefType } from '@codeleap/common'
+import { GetRefType } from '@codeleap/types'
 import { ButtonParts } from './styles'
 import { Text } from '../Text'
 import { Touchable, TouchableProps } from '../Touchable'

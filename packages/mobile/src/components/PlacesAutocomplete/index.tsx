@@ -10,7 +10,7 @@ import { List } from '../List'
 import { Touchable } from '../Touchable'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { ActivityIndicator } from '../ActivityIndicator'
-import { usePlacesAutocompleteUtils } from '@codeleap/common'
+import { usePlacesAutocompleteUtils } from '@codeleap/hooks'
 
 export * from './styles'
 export * from './types'

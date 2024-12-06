@@ -1,4 +1,4 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
 import { StyledProp } from '@codeleap/styles'
 import { ImageStyle, TextStyle, View as RNView, ViewStyle } from 'react-native'
 import { AnimatedStyleProp } from 'react-native-reanimated'

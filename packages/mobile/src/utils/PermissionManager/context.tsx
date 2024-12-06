@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useModalContext } from '../ModalManager/context'
-import { deepEqual, onMount, onUpdate, useDebounce, usePrevious } from '@codeleap/common'
+import { onMount, onUpdate, useDebounce, usePrevious } from '@codeleap/hooks'
+import { deepEqual } from '@codeleap/utils'
 import { AppState, Linking } from 'react-native'
 import { PermissionConfig, PermissionModalsConfig } from './types'
 import { PermissionManager, PermissionTypes } from '../MobilePermissionManager'

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
-import { TypeGuards, useValidate } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useValidate } from '@codeleap/form'
 import { forwardRef, useImperativeHandle } from 'react'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'

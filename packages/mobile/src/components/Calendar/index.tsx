@@ -1,5 +1,5 @@
 import React from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { format } from 'date-fns'
 // @ts-ignore
 import { Calendar as RNCalendar, CalendarProps as RNCalendarProps, DateData } from 'react-native-calendars'

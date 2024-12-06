@@ -1,6 +1,6 @@
 // @ts-ignore
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
-import { FunctionType } from '@codeleap/common'
+import { FunctionType } from '@codeleap/types'
 
 export type Message = FirebaseMessagingTypes.RemoteMessage
 

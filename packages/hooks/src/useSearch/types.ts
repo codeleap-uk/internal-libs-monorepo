@@ -1,6 +1,6 @@
 export type AutocompleteValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
-type Options<T> = { label: string; value: T }[]
+type Options<T> = { label: any; value: T }[]
 
 export type useSearchParams<T, Multi extends boolean = false> = {
   value: AutocompleteValue<T, Multi>

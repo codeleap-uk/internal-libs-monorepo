@@ -1,4 +1,4 @@
-import { Logger } from '@codeleap/common'
+import { Logger } from '@codeleap/logger'
 import { Permission } from './Permission'
 import * as PermissionTypes from './types'
 

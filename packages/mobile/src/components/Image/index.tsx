@@ -1,5 +1,6 @@
 import React from 'react'
-import { arePropsEqual, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { arePropsEqual } from '@codeleap/utils'
 import { Image as NativeImage } from 'react-native'
 import { useImageSpotlight } from '../ImageView/Spotlight'
 import { Touchable } from '../Touchable'

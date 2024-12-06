@@ -1,4 +1,5 @@
-import { CreateOSAlert, useEffect, useMemo, useState } from '@codeleap/common'
+import { CreateOSAlert } from '@codeleap/modals'
+import { useEffect, useMemo, useState } from '@codeleap/hooks'
 import { FileInputImageSource, useFileInput } from '../FileInput'
 import { SortablePhoto, SortablePhotosProps } from './types'
 
