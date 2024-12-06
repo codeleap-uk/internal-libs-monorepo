@@ -9,14 +9,15 @@
   },
   "license": "UNLICENSED",
   "devDependencies": {
+    "@codeleap/config": "workspace:*",
+    "@codeleap/form": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
+    "@codeleap/logger": "workspace:*",
+    "@codeleap/query": "workspace:*",
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
-    "@codeleap/hooks": "workspace:*",
-    "@codeleap/form": "workspace:*",
-    "@codeleap/i18n": "workspace:*",
-    "@codeleap/query": "workspace:*",
-    "@codeleap/logger": "workspace:*",
-    "@codeleap/config": "workspace:*"
+    "@types/react-slick": "^0.23.13"
   },
   "scripts": {
     "build": "tsc --build",
