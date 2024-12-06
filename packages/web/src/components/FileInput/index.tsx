@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import { WebInputFile, useCallback, TypeGuards } from '@codeleap/common'
+import { TypeGuards, WebInputFile } from '@codeleap/types'
+import { useCallback } from '@codeleap/hooks'
 import { FileInputProps, FileInputRef } from './types'
 
 export * from './types'

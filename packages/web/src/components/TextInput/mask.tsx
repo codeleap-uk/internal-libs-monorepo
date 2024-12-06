@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { FormatChar, InputMaskProps, MaskProps, TextInputMaskTypeProp } from './types'
 
 export const getMaskInputProps = ({ masking }: InputMaskProps): MaskProps & { notSaveFormatted: boolean } => {

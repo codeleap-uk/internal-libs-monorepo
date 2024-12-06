@@ -4,7 +4,7 @@ import { TextInputProps } from '../TextInput'
 import { FlatListProps } from '../List'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
-import { PlaceAddress, PlaceLatLng } from '@codeleap/common'
+import { PlaceAddress, PlaceLatLng } from '@codeleap/types'
 
 export type CustomData = {
   item?: Partial<PlaceAddress> & Partial<PlaceLatLng>

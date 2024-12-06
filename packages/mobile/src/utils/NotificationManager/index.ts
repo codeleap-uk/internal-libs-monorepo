@@ -1,4 +1,5 @@
-import { AnyFunction, silentLogger } from '@codeleap/common' // @ts-ignore
+import { AnyFunction } from '@codeleap/types'
+import { silentLogger } from '@codeleap/logger' // @ts-ignore
 import messaging from '@react-native-firebase/messaging'
 import { Subscriber, Subscription } from '../Subscription'
 import { Message, NotificationInitializeCallback, NotificationManagerOptions, NotificationType, TNotification } from './types'

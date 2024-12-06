@@ -1,4 +1,4 @@
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { Settings } from 'react-slick'
 import { PagerComposition } from './styles'
 import React, { ReactNode, ReactElement } from 'react'

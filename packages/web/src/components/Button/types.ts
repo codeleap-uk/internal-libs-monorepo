@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnyFunction } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { TouchableProps } from '../Touchable'
 import { ActivityIndicatorProps } from '../ActivityIndicator'

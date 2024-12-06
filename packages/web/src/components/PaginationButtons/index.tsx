@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { View } from '../View'
 import { Button } from '../Button'
 import { useMediaQuery, usePagination, useStylesFor, WebStyleRegistry } from '../../lib'

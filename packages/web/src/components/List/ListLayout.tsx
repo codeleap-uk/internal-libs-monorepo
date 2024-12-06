@@ -4,7 +4,7 @@ import { ListLayoutProps, ListRefreshControlComponent } from './types'
 import { mergeStyles } from '@codeleap/styles'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { ListParts } from './styles'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { motion } from 'framer-motion'
 
 const DefaultRefreshIndicator = (props: ListRefreshControlComponent) => {

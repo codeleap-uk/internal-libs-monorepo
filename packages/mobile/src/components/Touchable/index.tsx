@@ -1,5 +1,7 @@
 import React, { forwardRef } from 'react'
-import { TypeGuards, onMount, useGlobalContext } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { onMount } from '@codeleap/hooks'
+import { useGlobalContext } from '@codeleap/common'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'

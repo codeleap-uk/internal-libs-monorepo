@@ -1,5 +1,5 @@
 import React from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { ActivityIndicator } from '../ActivityIndicator'
 import { Text } from '../Text'
 import { View } from '../View'

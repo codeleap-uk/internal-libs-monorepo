@@ -1,5 +1,5 @@
 import React from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { TagParts } from './styles'
 import { TagProps } from './types'
 import { Icon } from '../Icon'

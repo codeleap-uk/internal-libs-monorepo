@@ -1,5 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
-import { parseFilePathData, MobileFile } from '@codeleap/common'
+import { MobileFile } from '@codeleap/types'
+import { parseFilePathData } from '@codeleap/utils'
 import { OSAlert } from '../../utils'
 import ImageCropPicker, { ImageOrVideo, Options } from 'react-native-image-crop-picker'
 import DocumentPicker from 'react-native-document-picker'

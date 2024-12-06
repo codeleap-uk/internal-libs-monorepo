@@ -1,6 +1,7 @@
 import { InputBaseProps } from '../InputBase'
 import { TextInputProps as RNTextInputProps, TextInput as RNTextInput } from 'react-native'
-import { AnyFunction, FormTypes, yup } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
+import { FormTypes, yup } from '@codeleap/form'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { TextInputMaskProps } from '../../modules/textInputMask'
 import { TextInputComposition } from './styles'

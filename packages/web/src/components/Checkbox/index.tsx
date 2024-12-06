@@ -7,7 +7,7 @@ import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, AppIcon, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { CheckboxParts } from './styles'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 
 export * from './styles'
 export * from './types'

@@ -1,4 +1,5 @@
-import { TypeGuards, onMount, onUpdate } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { onMount, onUpdate } from '@codeleap/hooks'
 import React, { useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'

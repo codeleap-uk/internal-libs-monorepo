@@ -1,4 +1,4 @@
-import { AnyFunction } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
 import { ComponentPropsWithRef, ElementType } from 'react'
 import { TouchableComposition } from './styles'
 import { AnyRecord, StyledProp } from '@codeleap/styles'

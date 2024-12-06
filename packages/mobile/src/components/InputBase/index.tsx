@@ -1,5 +1,6 @@
 import React from 'react'
-import { TypeGuards, getRenderedComponent } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { getRenderedComponent } from '@codeleap/utils'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
 import { View } from '../View'
 import { useInputBaseStyles } from './styles'

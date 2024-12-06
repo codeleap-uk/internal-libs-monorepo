@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { TextInput, TextInputProps } from '../TextInput'
-import { AnyFunction, TypeGuards } from '@codeleap/common'
+import { AnyFunction, TypeGuards } from '@codeleap/types'
 import { AppIcon } from '@codeleap/styles'
 
 export type SearchInputProps = {

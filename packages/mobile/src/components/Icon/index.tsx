@@ -1,5 +1,6 @@
 import React from 'react'
-import { arePropsEqual, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { arePropsEqual } from '@codeleap/utils'
 import { Badge } from '../Badge'
 import { View } from '../View'
 import { IconProps } from './types'

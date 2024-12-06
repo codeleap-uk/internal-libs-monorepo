@@ -1,5 +1,6 @@
 import React, { forwardRef, useState } from 'react'
-import { deepEqual, onUpdate, usePrevious } from '@codeleap/common'
+import { onUpdate, usePrevious } from '@codeleap/hooks'
+import { deepEqual } from '@codeleap/utils'
 import { ScrollView } from 'react-native'
 import { RefreshControl } from '../RefreshControl'
 import { useKeyboardPaddingStyle } from '../../utils'

@@ -1,4 +1,4 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
 import { StyledProp } from '@codeleap/styles'
 import { ActivityIndicator as RNActivityIndicator } from 'react-native'
 import { ActivityIndicatorComposition } from './styles'

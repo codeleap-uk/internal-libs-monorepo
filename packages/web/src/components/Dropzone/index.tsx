@@ -1,5 +1,6 @@
 import { DropzoneFilePreviewProps, DropzoneInnerFilePreviewProps, DropzoneProps, DropzoneRef } from './types'
-import { PropsOf, TypeGuards, onUpdate, useCallback } from '@codeleap/common'
+import { PropsOf, TypeGuards } from '@codeleap/types'
+import { onUpdate, useCallback } from '@codeleap/hooks'
 import { FileRejection, useDropzone } from 'react-dropzone'
 import { View, ViewProps } from '../View'
 import { Text } from '../Text'

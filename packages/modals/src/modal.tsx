@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { atom, onMount, task } from 'nanostores'
 import { useStore } from '@nanostores/react'
-import { PropsOf, TypeGuards } from '@codeleap/common'
+import { PropsOf, TypeGuards } from '@codeleap/types'
 import { ModalFlow } from './modalFlow'
 import { awaitTransition, randomId } from './utils'
 import { ModalOverrides } from './types'

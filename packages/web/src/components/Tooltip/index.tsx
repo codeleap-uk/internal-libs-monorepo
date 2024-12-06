@@ -7,7 +7,8 @@ import {
   Content as TooltipContent,
   Arrow as TooltipArrow,
 } from '@radix-ui/react-tooltip'
-import { TypeGuards, useConditionalState } from '@codeleap/common'
+import { useConditionalState } from '@codeleap/hooks'
+import { TypeGuards } from '@codeleap/types'
 import { View } from '../View'
 import { useClickOutsideElement } from '../../lib'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'

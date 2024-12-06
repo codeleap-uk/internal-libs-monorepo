@@ -1,4 +1,5 @@
-import { MobileFile, MobileInputFile, parseFilePathData, FileWithPreview, TypeGuards } from '@codeleap/common'
+import { MobileFile, MobileInputFile, FileWithPreview, TypeGuards } from '@codeleap/types'
+import { parseFilePathData } from '@codeleap/utils'
 
 export const stringToFile = (str: string): MobileInputFile => {
   if (!str) {

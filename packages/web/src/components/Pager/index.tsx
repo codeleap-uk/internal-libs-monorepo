@@ -1,4 +1,4 @@
-import { onUpdate } from '@codeleap/common'
+import { onUpdate } from '@codeleap/hooks'
 import Slider from 'react-slick'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { View } from '../View'

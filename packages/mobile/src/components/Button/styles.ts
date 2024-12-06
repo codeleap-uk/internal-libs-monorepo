@@ -1,4 +1,4 @@
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
 import { BadgeComposition } from '../Badge'
 import { TouchableStylesGen } from '../Touchable'

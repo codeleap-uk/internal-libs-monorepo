@@ -1,7 +1,9 @@
 import React from 'react'
-import { AnyFunction, onMount, onUpdate, useBooleanToggle, usePrevious } from '@codeleap/common'
+import { onMount, onUpdate, useBooleanToggle, usePrevious } from '@codeleap/hooks'
+import { AnyFunction } from '@codeleap/types'
 import ReactDOM from 'react-dom'
 import { v4 as uuid } from 'uuid'
+
 type AlertButton = {
   text: string
   onPress: AnyFunction

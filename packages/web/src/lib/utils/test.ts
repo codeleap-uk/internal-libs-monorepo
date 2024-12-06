@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 
 export const getTestId = (props: Record<string, any>) => {
   let id = props?.testId || props?.['data-testid'] || props?.id || props?.debugName

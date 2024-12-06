@@ -1,4 +1,5 @@
-import { AnyRef, FormTypes } from '@codeleap/common'
+import { AnyRef } from '@codeleap/types'
+import { FormTypes } from '@codeleap/form'
 import { DocumentPickerOptions } from 'react-native-document-picker'
 import { Options } from 'react-native-image-crop-picker'
 import { OSAlert } from '../../utils'

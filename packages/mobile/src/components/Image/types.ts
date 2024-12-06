@@ -3,7 +3,7 @@ import FastImage, { Source } from '@d11/react-native-fast-image'
 import { ImageProps as RNImageProps } from 'react-native'
 import { ImageComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
-import { FormTypes } from '@codeleap/common'
+import { FormTypes } from '@codeleap/form'
 
 export type ImageProps =
   Omit<RNImageProps, 'source' | 'style'> &

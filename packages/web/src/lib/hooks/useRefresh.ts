@@ -1,5 +1,6 @@
 import React from 'react'
-import { AnyFunction, useEffect } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
+import { useEffect } from '@codeleap/hooks'
 
 type UseRefreshOptions = {
     threshold: number

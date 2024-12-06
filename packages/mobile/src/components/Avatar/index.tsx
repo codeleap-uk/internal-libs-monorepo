@@ -1,5 +1,7 @@
 import React from 'react'
-import { TypeGuards, matchInitialToColor, useMemo } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useMemo } from '@codeleap/hooks'
+import { matchInitialToColor } from '@codeleap/utils'
 import { Image } from '../Image'
 import { Touchable } from '../Touchable'
 import { Text } from '../Text'

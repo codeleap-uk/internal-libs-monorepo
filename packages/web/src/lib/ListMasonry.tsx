@@ -1,6 +1,6 @@
 import React from 'react'
 import { useWindowSize } from '@react-hook/window-size'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { EmptyPlaceholder } from '../components/EmptyPlaceholder'
 
 import {

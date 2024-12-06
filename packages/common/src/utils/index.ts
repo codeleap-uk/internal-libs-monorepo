@@ -10,3 +10,4 @@ export * from './obfuscate'
 export * as TypeGuards from './typeGuards'
 
 export * from './faker'
+export * from './cloneDeep'

@@ -1,4 +1,5 @@
-import { FormTypes, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
+import { FormTypes } from '@codeleap/form'
 import { InputBaseProps } from '../InputBase'
 import { ReactNode } from 'react'
 import { StyledProp } from '@codeleap/styles'

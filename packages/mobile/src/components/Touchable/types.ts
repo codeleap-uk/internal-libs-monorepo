@@ -1,4 +1,4 @@
-import { AnyFunction } from '@codeleap/common'
+import { AnyFunction } from '@codeleap/types'
 import { StyledProp } from '@codeleap/styles'
 import { View as RNView, PressableProps } from 'react-native'
 import { TouchableComposition } from './styles'

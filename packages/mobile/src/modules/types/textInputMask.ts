@@ -1,4 +1,4 @@
-import { FormTypes } from '@codeleap/common'
+import { FormTypes } from '@codeleap/form'
 import { TextInputProps } from 'react-native'
 
 import { TextInputMaskProps as RNTextInputMaskProps } from 'react-native-masked-text'

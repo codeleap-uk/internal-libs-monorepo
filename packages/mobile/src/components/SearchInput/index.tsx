@@ -2,7 +2,7 @@ import React, { forwardRef, useState } from 'react'
 import { AppIcon } from '@codeleap/styles'
 import { ComponentWithDefaultProps, ForwardRefComponentWithDefaultProps } from '../../types'
 import { TextInputProps, TextInput } from '../TextInput'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { TextInput  as RNTextInput } from 'react-native'
 
 export type SearchInputProps = {

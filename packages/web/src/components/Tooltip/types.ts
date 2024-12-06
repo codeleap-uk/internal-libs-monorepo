@@ -7,7 +7,7 @@ import {
   TooltipTriggerProps,
   TooltipProviderProps,
 } from '@radix-ui/react-tooltip'
-import { AnyFunction, StylesOf } from '@codeleap/common'
+import { AnyFunction, StylesOf } from '@codeleap/types'
 import { TooltipComposition } from './styles'
 import { ViewProps } from '../View'
 import { StyledProp } from '@codeleap/styles'

@@ -1,4 +1,5 @@
-import { FormTypes, PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
+import { FormTypes } from '@codeleap/form'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'

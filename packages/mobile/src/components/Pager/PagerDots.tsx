@@ -1,4 +1,4 @@
-import { AnyFunction, StylesOf } from '@codeleap/common'
+import { AnyFunction, StylesOf } from '@codeleap/types'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { Touchable } from '../Touchable'
 import { View } from '../View'

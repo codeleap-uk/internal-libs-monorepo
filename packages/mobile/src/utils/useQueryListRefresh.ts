@@ -1,6 +1,7 @@
 import React from 'react'
 import { useFocusEffect } from '@react-navigation/native'
-import { AnyFunction, TypeGuards, UseListEffect } from '@codeleap/common'
+import { AnyFunction, TypeGuards } from '@codeleap/types'
+import { UseListEffect } from '@codeleap/query'
 
 type useQueryListRefresh = (
   listQuery: Parameters<UseListEffect>[0],

@@ -1,5 +1,5 @@
 import React from 'react'
-import { AnyFunction, TypeGuards } from '@codeleap/common'
+import { AnyFunction, TypeGuards } from '@codeleap/types'
 import { LoadMoreItemsCallback, UseInfiniteLoaderOptions, useInfiniteLoader } from 'masonic'
 import { ListProps } from '../../components/List'
 import { GridProps } from '../../components/Grid'

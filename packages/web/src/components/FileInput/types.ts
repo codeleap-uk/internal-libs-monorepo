@@ -1,4 +1,4 @@
-import { WebInputFile } from '@codeleap/common'
+import { WebInputFile } from '@codeleap/types'
 import { HTMLProps } from '../../types'
 
 export type FileInputRef = {

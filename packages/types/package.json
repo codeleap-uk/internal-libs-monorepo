@@ -1,0 +1,22 @@
+{
+  "name": "@codeleap/types",
+  "version": "4.2.18",
+  "main": "src/index.ts",
+  "license": "UNLICENSED",
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "packages/types"
+  },
+  "devDependencies": {
+    "@codeleap/config": "workspace:*",
+    "ts-node-dev": "1.1.8"
+  },
+  "scripts": {
+    "build": "echo 'No build needed'"
+  },
+  "peerDependencies": {
+    "typescript": "5.0.4",
+    "react": "18.1.0"
+  }
+}

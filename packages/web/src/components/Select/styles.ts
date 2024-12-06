@@ -1,6 +1,6 @@
-import { capitalize, FormTypes } from '@codeleap/common'
+import { FormTypes } from '@codeleap/form'
+import { capitalize } from '@codeleap/utils'
 import { ICSS, useNestedStylesByKey } from '@codeleap/styles'
-
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
 import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
