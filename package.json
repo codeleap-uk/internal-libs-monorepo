@@ -23,6 +23,7 @@
     "cli": "cd packages/cli && bun",
     "config": "cd packages/config && bun",
     "fetch": "cd packages/fetch && bun",
+    "logger": "cd packages/logger && bun",
     
     "p:web": "cd packages/web && bun",
     "p:mobile": "cd packages/mobile && bun",

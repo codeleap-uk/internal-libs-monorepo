@@ -1,5 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import { Logger } from '@codeleap/common'
+import { Logger } from '@codeleap/logger'
 import { APIError } from './APIError'
 
 export type FetchFailure =

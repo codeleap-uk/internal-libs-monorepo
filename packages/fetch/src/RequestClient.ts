@@ -3,7 +3,8 @@ import { ExternalRequestClientConfig, InternalRequestClientConfig, RequestQueueI
 import { APIError } from './APIError'
 import { IRequestClient, RequestClientConfig } from './types'
 import { getRequestId, parseFailedRequest, toMultipart } from './utils'
-import { Logger, silentLogger, CancellablePromise } from '@codeleap/common'
+import { CancellablePromise } from '@codeleap/common'
+import { Logger, silentLogger } from '@codeleap/logger'
 
 export class RequestClient implements IRequestClient {
   queue: IRequestClient['queue']
