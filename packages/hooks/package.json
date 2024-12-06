@@ -12,6 +12,7 @@
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
+    "@codeleap/logger": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
@@ -20,6 +21,7 @@
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
+    "@codeleap/logger": "workspace:*",
     "axios": "^1.7.9",
     "typescript": "5.0.4",
     "react": "18.1.0",

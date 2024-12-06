@@ -31,6 +31,7 @@ export * from './useEffectOnce'
 export * from './useUnmount'
 export * from './useSearch'
 export * from './usePartialState'
+export * from './GlobalContext'
 
 export {
   useEffect,
