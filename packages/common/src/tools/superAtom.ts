@@ -44,7 +44,7 @@ function atomAssign<T>(newValue: Partial<T>, stateValue: T): T {
   }
 }
 
-type AtomPersistor = {
+export type AtomPersistor = {
   set: (key: string, value: string) => void
   get: (key: string) => string
   remove: (key: string) => void
