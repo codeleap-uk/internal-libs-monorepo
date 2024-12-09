@@ -1,4 +1,5 @@
 import { AnyFunction, TypeGuards } from '@codeleap/types'
+import { useStore } from '@nanostores/react'
 import { map } from 'nanostores'
 
 // @todo - this should be refactored for the modal system
@@ -38,6 +39,8 @@ export const OSAlertStore = map<TOSAlertStore>({
   visible: false,
   props: {},
 })
+
+export const useOSAlert = () => useStore(OSAlertStore)
 
 export const OSAlertActions = {
   open: () => OSAlertStore.setKey('visible', true),
