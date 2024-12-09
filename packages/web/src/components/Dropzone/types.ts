@@ -1,4 +1,4 @@
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { DropzoneComposition } from './styles'
 import { DropzoneOptions, FileRejection, DropzoneRef as ReactDropzoneRef } from 'react-dropzone'
 import { ActionIconComposition } from '../ActionIcon'

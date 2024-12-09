@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { AppTheme, Theme, useTheme } from '@codeleap/styles'
 import { useMediaQuery } from './useMediaQuery'
 

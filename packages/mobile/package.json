@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "4.2.18",
+  "version": "4.3.0",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -9,16 +9,30 @@
     "directory": "packages/mobile"
   },
   "devDependencies": {
-    "@codeleap/common": "workspace:*",
-    "@codeleap/config": "workspace:*"
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/form": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
+    "@codeleap/query": "workspace:*",
+    "@codeleap/logger": "workspace:*",
+    "@codeleap/config": "workspace:*",
+    "@codeleap/common": "workspace:*"
   },
   "scripts": {
     "build": "tsc --build",
     "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\""
   },
   "peerDependencies": {
-    "@codeleap/common": "workspace:*",
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/form": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
+    "@codeleap/query": "workspace:*",
+    "@codeleap/logger": "workspace:*",
     "@codeleap/styles": "workspace:*",
+    "@codeleap/common": "workspace:*",
     "@d11/react-native-fast-image": "8.8.0",
     "@react-native-firebase/messaging": "21.4.0",
     "@react-navigation/bottom-tabs": "6.5.3",

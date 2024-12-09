@@ -1,4 +1,5 @@
-import { FormTypes, StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
+import { FormTypes } from '@codeleap/form'
 import { ReactDatePickerCustomHeaderProps, ReactDatePickerProps } from 'react-datepicker'
 import { ActionIconProps, TextInputProps } from '../components'
 import { DatePickerComposition, DatePickerHeaderComposition } from './styles'

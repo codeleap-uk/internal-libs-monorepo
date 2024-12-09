@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 
 export type LocalStorageHandler<T> = (key: T, event: StorageEvent, value: any) => void
 export type Key<T> = keyof T

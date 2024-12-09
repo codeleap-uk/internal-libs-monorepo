@@ -1,5 +1,5 @@
-import { PermissionTypes } from '@codeleap/common'
 import { ImageProps } from '../../components/Image'
+import { PermissionTypes } from '../MobilePermissionManager'
 type NonGrantedPermissionTypes = Exclude<PermissionTypes.PermissionStatus, 'granted'>
 
 export type BasePermissionConfig = {

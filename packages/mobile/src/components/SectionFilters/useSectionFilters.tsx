@@ -1,4 +1,5 @@
-import { deepEqual, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { deepEqual } from '@codeleap/utils'
 import React, { useCallback, useMemo } from 'react'
 
 export type TSectionFilterItem = {

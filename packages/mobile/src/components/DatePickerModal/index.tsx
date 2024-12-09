@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
-import { TypeGuards, useConditionalState, useI18N } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useConditionalState } from '@codeleap/hooks'
+import { useI18N } from '@codeleap/i18n'
 import DatePicker from 'react-native-date-picker'
 import Modal from '../Modal'
 import { TextInput } from '../TextInput'

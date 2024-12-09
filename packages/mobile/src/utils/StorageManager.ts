@@ -1,5 +1,5 @@
 import { MMKV } from 'react-native-mmkv'
-import { AnyFunction, AnyRecord } from '@codeleap/common'
+import { AnyFunction, AnyRecord } from '@codeleap/types'
 
 type StorageKey<T extends Record<string, any>> = keyof T | (string & {}) | ((allKeys: T) => string) | [keyof T, any]
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { Text } from '../Text'
 import { View } from '../View'
 import { BadgeContent, BadgeProps } from './types'

@@ -1,5 +1,6 @@
 import React from 'react'
-import { onUpdate, useCallback, useState, useValidate } from '@codeleap/common'
+import { onUpdate, useCallback, useState } from '@codeleap/hooks'
+import { useValidate } from '@codeleap/form'
 import { BubbleMenu, FloatingMenu, EditorContent } from '@tiptap/react'
 import { FileInput, Text, View } from '../components'
 import { TextEditorProps } from './types'

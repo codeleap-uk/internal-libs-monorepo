@@ -1,5 +1,5 @@
 import React from 'react'
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { TextProps } from '../Text'
 import { TouchableProps } from '../Touchable'
 import { SegmentedControlComposition } from './styles'

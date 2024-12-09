@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { useEffect } from 'react'
 
 export const keydownDefaultKeyOptions = {

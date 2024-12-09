@@ -1,4 +1,4 @@
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { FeedbackConfig } from '../../utils'
 
 export type TextComposition = 'text' | 'pressFeedback' | 'text:disabled'

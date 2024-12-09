@@ -1,4 +1,4 @@
-import { PropsOf, StylesOf } from '@codeleap/common'
+import { PropsOf, StylesOf } from '@codeleap/types'
 import { InputBaseComposition } from './styles'
 import { ActionIcon } from '../ActionIcon'
 

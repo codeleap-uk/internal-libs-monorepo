@@ -1,5 +1,4 @@
-import { FormTypes, yup } from '@codeleap/common'
-
+import { FormTypes, yup } from '@codeleap/form'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'

@@ -1,4 +1,4 @@
-import { yup, FormTypes } from '@codeleap/common'
+import { yup, FormTypes } from '@codeleap/form'
 import { NumberIncrementComposition } from './styles'
 import { InputBaseProps } from '../InputBase'
 import { PatternFormatProps as PFProps, NumericFormatProps as NFProps } from 'react-number-format'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from '../View'
 import { Scroll } from '../Scroll'
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { Backdrop } from '../Backdrop'
 import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
 import { Text } from '../Text'

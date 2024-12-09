@@ -1,12 +1,12 @@
 import {
-  WebInputFile,
   useBooleanToggle,
   useCallback,
   useImperativeHandle,
   usePromise,
   useRef,
   useState,
-} from '@codeleap/common'
+} from '@codeleap/hooks'
+import { WebInputFile } from '@codeleap/types'
 import { ImageReading } from '../../components/CropPicker'
 import { FileInputProps, FileInputRef } from '../../components/FileInput'
 import { Crop, ReactCropProps } from 'react-image-crop'

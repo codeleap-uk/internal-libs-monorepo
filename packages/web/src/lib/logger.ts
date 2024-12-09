@@ -1,4 +1,4 @@
-import { Logger } from '@codeleap/common'
+import { Logger } from '@codeleap/logger'
 
 export const logger = new Logger({
   Environment: {

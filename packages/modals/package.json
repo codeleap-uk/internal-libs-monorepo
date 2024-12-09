@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/modals",
-  "version": "4.2.18",
+  "version": "4.3.0",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -9,8 +9,9 @@
     "directory": "packages/modals"
   },
   "devDependencies": {
-    "@codeleap/common": "workspace:*",
+    "@codeleap/types": "workspace:*",
     "@codeleap/config": "workspace:*",
+    "@codeleap/utils": "workspace:*",
     "ts-node-dev": "1.1.8",
     "nanostores": "0.11.3",
     "@nanostores/react": "0.8.0"
@@ -24,7 +25,8 @@
     "createStyleSheets": "yarn run-sc src/scripts/createStyleSheets.ts"
   },
   "peerDependencies": {
-    "@codeleap/common": "workspace:*",
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
     "typescript": "5.0.4",
     "react": "18.1.0",
     "nanostores": "*",

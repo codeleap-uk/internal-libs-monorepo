@@ -2,7 +2,7 @@ import React, { ImgHTMLAttributes } from 'react'
 import { ViewProps } from '../View'
 import { ActivityIndicatorComposition, ActivityIndicatorProps } from '../ActivityIndicator'
 import { EmptyPlaceholderComposition } from './styles'
-import { StylesOf } from '@codeleap/common'
+import { StylesOf } from '@codeleap/types'
 import { ComponentCommonProps } from '../../types'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 

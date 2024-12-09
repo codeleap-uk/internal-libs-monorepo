@@ -1,4 +1,3 @@
-// import { waitFor } from '@codeleap/common'
 import { cwd, USER_CONFIG } from '../constants'
 import { fs, git, path } from '../lib'
 import { codeleapCommand } from '../lib/Command'

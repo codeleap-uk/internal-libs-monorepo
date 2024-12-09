@@ -1,4 +1,5 @@
-import { CreateOSAlert, useEffect, useGlobalContext, useMemo, useState } from '@codeleap/common'
+import { CreateOSAlert } from '@codeleap/modals'
+import { useEffect, useMemo, useState } from '@codeleap/hooks'
 import { FileInputImageSource, useFileInput } from '../FileInput'
 import { SortablePhoto, SortablePhotosProps } from './types'
 
@@ -20,7 +21,6 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   } = props
 
   const input = useFileInput()
-  const { logger } = useGlobalContext()
 
   const [data, setData] = useState<T[]>([])
 
@@ -91,7 +91,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
         multiple: isEdit ? false : props?.multiple
       })
     } catch (error) {
-      logger.error('Error opening file picker:', error)
+      console.error('Error opening file picker:', error)
     }
 
     if (files?.length <= 0) return null

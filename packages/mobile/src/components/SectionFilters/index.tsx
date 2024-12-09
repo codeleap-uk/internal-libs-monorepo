@@ -1,4 +1,5 @@
-import { memoBy, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { memoBy } from '@codeleap/utils'
 import { Button } from '../Button'
 import { AugmentedSectionRenderItemInfo, SectionComponentProps, Sections } from '../Sections'
 import { Text } from '../Text'

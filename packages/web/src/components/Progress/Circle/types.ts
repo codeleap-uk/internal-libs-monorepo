@@ -1,4 +1,4 @@
-import { PropsOf } from '@codeleap/common'
+import { PropsOf } from '@codeleap/types'
 import { IconProps, ProgressCircleComposition, ViewProps, TextProps } from '../../components'
 import { ProgressPropsRoot } from '..'
 import { CircularProgressbarWithChildren, buildStyles } from 'react-circular-progressbar'

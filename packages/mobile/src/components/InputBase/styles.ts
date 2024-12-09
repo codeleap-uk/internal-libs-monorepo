@@ -1,4 +1,4 @@
-import { TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
 import { ActionIconParts } from '../ActionIcon'
 import { InputBaseProps } from './types'
 import { mergeStyles, useCompositionStyles } from '@codeleap/styles'

@@ -1,0 +1,31 @@
+{
+  "name": "@codeleap/logger",
+  "version": "4.3.0",
+  "main": "src/index.ts",
+  "license": "UNLICENSED",
+  "repository": {
+    "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
+    "type": "git",
+    "directory": "packages/logger"
+  },
+  "devDependencies": {
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/config": "workspace:*",
+    "ts-node-dev": "1.1.8",
+    "@sentry/types": "8.40.0"
+  },
+  "scripts": {
+    "build": "echo 'No build needed'"
+  },
+  "peerDependencies": {
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "typescript": "5.0.4",
+    "react": "18.1.0"
+  },
+  "dependencies": {
+    "util": "0.12.5",
+    "url-parse": "^1.5.10"
+  }
+}

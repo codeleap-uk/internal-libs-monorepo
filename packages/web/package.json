@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "4.2.18",
+  "version": "4.3.0",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -9,10 +9,15 @@
   },
   "license": "UNLICENSED",
   "devDependencies": {
-    "@codeleap/common": "workspace:*",
     "@codeleap/config": "workspace:*",
-    "@codeleap/styles": "workspace:*",
-    "@types/react-slick": "^0.23.10"
+    "@codeleap/form": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
+    "@codeleap/logger": "workspace:*",
+    "@codeleap/query": "workspace:*",
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "@types/react-slick": "^0.23.13"
   },
   "scripts": {
     "build": "tsc --build",
@@ -41,7 +46,13 @@
     "zustand": "^4.4.1"
   },
   "peerDependencies": {
-    "@codeleap/common": "workspace:*",
+    "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/hooks": "workspace:*",
+    "@codeleap/form": "workspace:*",
+    "@codeleap/i18n": "workspace:*",
+    "@codeleap/query": "workspace:*",
+    "@codeleap/logger": "workspace:*",
     "@codeleap/styles": "workspace:*",
     "@emotion/react": "11.10.6",
     "@reach/router": "^1.3.4",

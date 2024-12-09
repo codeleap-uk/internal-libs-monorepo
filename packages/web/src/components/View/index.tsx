@@ -1,4 +1,5 @@
-import { useMemo, TypeGuards } from '@codeleap/common'
+import { TypeGuards } from '@codeleap/types'
+import { useMemo } from '@codeleap/hooks'
 import React, { ElementType, forwardRef } from 'react'
 import { useMediaQuery } from '../../lib/hooks'
 import { motion } from 'framer-motion'

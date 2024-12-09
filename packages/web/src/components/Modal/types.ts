@@ -1,4 +1,4 @@
-import { AnyFunction, PropsOf } from '@codeleap/common'
+import { AnyFunction, PropsOf } from '@codeleap/types'
 import React from 'react'
 import { OverlayProps } from '../Overlay'
 import { ModalComposition } from './styles'

@@ -1,4 +1,5 @@
-import { range, useMemo, useUncontrolled } from '@codeleap/common'
+import { useMemo, useUncontrolled } from '@codeleap/hooks'
+import { range } from '@codeleap/utils'
 
 export type PaginationParams = {
   initialPage?: number
