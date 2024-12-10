@@ -1,13 +1,11 @@
 import { TypeGuards } from '@codeleap/types'
-import { useMemo } from '@codeleap/hooks'
 import React, { ElementType, forwardRef } from 'react'
-import { useMediaQuery } from '../../lib/hooks'
 import { motion } from 'framer-motion'
 import { ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -35,23 +33,9 @@ export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
 
   const Component: ElementType = animated ? (motion?.[component as string] || motion.div) : (component || 'div')
 
-  const theme = useTheme(store => store.current)
-
   function handleHover(isMouseOverElement: boolean) {
     onHover?.(isMouseOverElement)
   }
-
-  const platformMediaQuery = useMemo(() => {
-    // @ts-expect-error theme type
-    return theme?.media?.renderToPlatformQuery({
-      is,
-      not,
-      up,
-      down,
-    })
-  }, [is, not, up, down])
-
-  const matches = useMediaQuery(platformMediaQuery)
 
   const hoverProps = TypeGuards.isFunction(onHover) && {
     onMouseEnter: () => handleHover(true),
@@ -67,7 +51,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
       {...animatedProps}
       ref={ref}
       data-testid={testId}
-      css={[styles.wrapper, matches && { display: 'none' }]}
+      css={styles.wrapper}
     >
       {children}
     </Component>

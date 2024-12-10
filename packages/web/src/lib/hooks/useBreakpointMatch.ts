@@ -29,8 +29,8 @@ export function useBreakpointMatch<T extends string = string>(values: Partial<Br
   const breakpointMatches = {}
 
   for (const breakpoint in breakpoints) {
-    const matchesDown = useMediaQuery(theme?.media?.down(breakpoint as never), { getInitialValueInEffect: false })
-    const matchesUp = useMediaQuery(theme?.media?.up(breakpoint as never), { getInitialValueInEffect: false })
+    const matchesDown = useMediaQuery(theme?.media?.down(breakpoint as never))
+    const matchesUp = useMediaQuery(theme?.media?.up(breakpoint as never))
 
     breakpointMatches[breakpoint] = !matchesUp && matchesDown
   }

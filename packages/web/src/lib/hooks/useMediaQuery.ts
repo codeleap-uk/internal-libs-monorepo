@@ -6,23 +6,13 @@ export interface UseMediaQueryOptions {
   initialValue?: boolean
 }
 
-export function useMediaQuery(
-  query: string,
-  queryOptions: UseMediaQueryOptions = {},
-) {
-  const {
-    initialValue = false,
-    getInitialValueInEffect = true,
-  } = queryOptions
-
-  const _query = useMemo(() => {
+export function useMediaQuery(query: string) {
+  const mediaQuery = useMemo(() => {
     if (!query) return ''
     return query?.trim()?.replace('@media screen and ', '')
   }, [query])
 
-  const [matches, setMatches] = useState(
-    (getInitialValueInEffect || !query) ? initialValue : isMediaQuery(query, initialValue),
-  )
+  const [matches, setMatches] = useState(isMediaQuery(query))
 
   const queryRef = useRef<MediaQueryList>()
 
@@ -30,13 +20,13 @@ export function useMediaQuery(
     if (query?.trim() === '' || !query) return
 
     if ('matchMedia' in window) {
-      queryRef.current = window.matchMedia(_query)
+      queryRef.current = window.matchMedia(mediaQuery)
       setMatches(queryRef.current.matches)
       return attachMediaListener(queryRef.current, (event) => setMatches(event.matches))
     }
 
     return undefined
-  }, [_query])
+  }, [mediaQuery])
 
   return matches
 }
