@@ -1,29 +1,16 @@
 import { TypeGuards } from '@codeleap/types'
-import { create } from 'zustand'
+import { globalState } from '@codeleap/store'
 
-type TModalStore = { 
-  identifier: string | null
-  indexes: Record<string, number>
-  modals: Record<string, boolean>
-  setIndex: (visible: boolean, modalIdentifier: string) => void
-  toggle: (id: string, to?: boolean) => void
-}
+const overlapIndex = 99
 
-const INDEX = 99
+export const modalsState = globalState({ currentModal: null, indexes: {} })
 
-export const ModalStore = create<TModalStore>((set) => ({ 
-  identifier: null,
-  indexes: {},
-  modals: {},
-  setIndex: (visible: boolean, modalIdentifier: string) => set(store => {
-    const indexes = store.indexes
+export function modalInferIndexes(visible: boolean, id: string) {
+  const indexes = { ...modalsState.value.indexes }
 
-    if (!visible) {
-      indexes[modalIdentifier] = INDEX
-
-      return { indexes }
-    }
-
+  if (!visible) {
+    indexes[id] = overlapIndex
+  } else {
     let currentIndex = 0
 
     for (const key in indexes) {
@@ -32,38 +19,24 @@ export const ModalStore = create<TModalStore>((set) => ({
       }
     }
 
-    indexes[modalIdentifier] = currentIndex + INDEX
+    indexes[id] = currentIndex + overlapIndex
+  }
 
-    return { indexes }
-  }),
-  toggle: (id: string, to = null) => set(store => {
-    const modals = store.modals
-
-    const hasModal = TypeGuards.isBoolean(modals?.[id])
-    const visible = TypeGuards.isBoolean(to) ? to : (hasModal ? !modals?.[id] : true)
-
-    modals[id] = visible
-
-    return { modals }
-  })
-}))
-
-export function toggleModal(id: string, to: boolean = null) {
-  ModalStore.getState().toggle(id, to)
+  modalsState.set({ indexes })
 }
 
 export function modalScrollLock(to: boolean, modalIdentifier: string) {
-  let modalId = ModalStore.getState().identifier
+  let modalId = modalsState.value.currentModal
 
   const alreadyDifferentOpenedModal = !TypeGuards.isNil(modalId) && modalIdentifier !== modalId
-  
+
   if (alreadyDifferentOpenedModal) return
 
   if (TypeGuards.isNil(modalId) && to === true) {
-    ModalStore.setState({ identifier: modalIdentifier })
+    modalsState.set({ currentModal: modalIdentifier })
     modalId = modalIdentifier
   } else if (!TypeGuards.isNil(modalId) && to === false) {
-    ModalStore.setState({ identifier: null })
+    modalsState.set({ currentModal: null })
   }
 
   const htmlStyle = document?.documentElement?.style

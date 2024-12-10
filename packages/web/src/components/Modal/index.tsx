@@ -8,7 +8,7 @@ import { Text } from '../Text'
 import { Overlay } from '../Overlay'
 import { ActionIcon } from '../ActionIcon'
 import { Touchable } from '../Touchable'
-import { modalScrollLock, ModalStore } from '../../lib/tools/modal'
+import { modalScrollLock, modalInferIndexes, modalsState } from '../../lib/tools/modal'
 import { ModalHeaderProps, ModalProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
@@ -107,7 +107,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
 
   const styles = useStylesFor(Modal.styleRegistryName, style)
 
-  const index = ModalStore(store => (store.indexes?.[modalId] ?? 0))
+  const index = modalsState.use(state => state.indexes?.[modalId] ?? 0)
 
   const id = useId()
   const modalRef = useRef(null)
@@ -252,18 +252,14 @@ export const Modal = (props: ModalProps) => {
 
   const {
     accessible,
-    visible: _visible,
+    visible,
     scrollLock,
     modalId: _modalId,
     autoIndex,
-    toggle: _toggle,
+    toggle,
   } = allProps
 
   const modalId = useRef(_modalId ?? v4())
-  const setIndex = ModalStore(store => store.setIndex)
-
-  const visible = TypeGuards.isBoolean(_visible) ? _visible : ModalStore(store => (store.modals?.[_modalId] ?? false))
-  const toggle = TypeGuards.isFunction(_toggle) ? _toggle : ModalStore(store => () => store.toggle(_modalId))
 
   onMount(() => {
     if (accessible) {
@@ -284,7 +280,7 @@ export const Modal = (props: ModalProps) => {
 
     if (autoIndex) {
       setTimeout(() => {
-        setIndex(visible, modalId.current)
+        modalInferIndexes(visible, modalId.current)
       }, visible ? 0 : 500)
     }
 
