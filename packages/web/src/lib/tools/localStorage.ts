@@ -64,7 +64,7 @@ export class LocalStorage<T extends Record<string, string>> {
     return serializedValue
   }
 
-  public getItem(key: Key<T>, parseValue = true): string | null {
+  public getItem<V = string>(key: Key<T>, parseValue = true): V | null {
     const storageKey = this.getStorageKey(key)
     const storage = this.getLocalStorage()
 
@@ -74,7 +74,7 @@ export class LocalStorage<T extends Record<string, string>> {
       value = this.parseValue(value)
     }
 
-    return value
+    return value as V
   }
 
   public removeItem(key: Key<T>): void {
