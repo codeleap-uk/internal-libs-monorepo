@@ -14,8 +14,13 @@ export function attachMediaListener(query: MediaQueryList, callback: MediaQueryC
   }
 }
 
+export function getMediaQuery(query: string) {
+  if (!query) return ''
+  return query?.trim()?.replace('@media screen and ', '')
+}
+
 export function isMediaQuery(query: string, initialValue = false) {
-  const media = query.trim().replace('@media screen and ', '')
+  const media = getMediaQuery(query)
 
   if (typeof window !== 'undefined' && 'matchMedia' in window) {
     return window.matchMedia(media).matches

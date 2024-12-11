@@ -1,44 +1,109 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { TypeGuards } from '@codeleap/types'
-import { AppTheme, Theme, useTheme } from '@codeleap/styles'
-import { useMediaQuery } from './useMediaQuery'
+import { AppTheme, Theme, themeStore, Breakpoint } from '@codeleap/styles'
+import { getMediaQuery, isMediaQuery } from '../tools'
 
-export type BreakpointsMatch<T extends string = string> = Record<T, any>
+const getTheme = () => themeStore.getState().current as AppTheme<Theme>
 
-export function useBreakpointMatch<T extends string = string>(values: Partial<BreakpointsMatch<T>>) {
-  const theme = useTheme(store => store.current) as AppTheme<Theme>
+function validateBreakpoint(currentTheme: AppTheme<Theme>, breakpoint: string) {
+  const matchesDown = isMediaQuery(currentTheme.media.down(breakpoint as never))
+  const matchesUp = isMediaQuery(currentTheme.media.up(breakpoint as never))
 
-  const themeBreakpoints: Record<string, number> = theme?.breakpoints ?? {}
+  return !matchesUp && matchesDown
+}
 
-  const breakpoints: Record<string, number> = useMemo(() => {
-    let breaks = Object.entries(themeBreakpoints)
+function useBreakpointMatches() {
+  return useState<Record<string, boolean>>(() => {
+    const currentTheme = getTheme()
 
-    breaks = breaks?.sort((a, b) => a?.[1] - b?.[1])
+    const breakpointMatches: Record<string, boolean> = {}
 
-    const sortBreakpoints = Object.fromEntries(breaks)
+    for (const breakpoint in currentTheme.breakpoints) {
+      breakpointMatches[breakpoint] = validateBreakpoint(currentTheme, breakpoint)
+    }
 
-    return sortBreakpoints
-  }, [])
+    return breakpointMatches
+  })
+}
 
-  const breakpointValues: Array<string> = useMemo(() => {
-    const _breakpoints = Object.keys(breakpoints)
+function useBreakpointListeners() {
+  const [breakpointMatches, setBreakpointMatches] = useBreakpointMatches()
+  const loaded = useRef(false)
+  const mediaQueries = useRef<Record<string, MediaQueryList>>({})
 
-    return _breakpoints.sort((a, b) => breakpoints?.[a] - breakpoints?.[b])
-  }, [])
+  function callback(event: MediaQueryListEvent, breakpoint: string) {
+    const currentTheme = getTheme()
 
-  const breakpointMatches = {}
+    setBreakpointMatches((prevState) => {
+      const updatedMatches = { ...prevState }
 
-  for (const breakpoint in breakpoints) {
-    const matchesDown = useMediaQuery(theme?.media?.down(breakpoint as never))
-    const matchesUp = useMediaQuery(theme?.media?.up(breakpoint as never))
+      updatedMatches[breakpoint] = validateBreakpoint(currentTheme, breakpoint)
 
-    breakpointMatches[breakpoint] = !matchesUp && matchesDown
+      return updatedMatches
+    })
   }
 
-  const currentBreakpoint = Object.keys(breakpointMatches)?.find((key) => breakpointMatches?.[key])
+  useEffect(() => {
+    if (loaded.current) return
+
+    loaded.current = true
+
+    const currentTheme = getTheme()
+
+    for (const breakpoint in currentTheme.breakpoints) {
+      const queryUp = getMediaQuery(currentTheme.media.up(breakpoint as never))
+
+      const matchUp = window.matchMedia(queryUp)
+
+      mediaQueries.current[breakpoint] = matchUp
+
+      try {
+        matchUp.addEventListener('change', (event) => callback(event, breakpoint))
+      } catch {
+        matchUp.addListener((event) => callback(event, breakpoint))
+      }
+    }
+
+    return () => {
+      for (const breakpoint in mediaQueries.current) {
+        const matchUp = mediaQueries.current[breakpoint]
+
+        try {
+          matchUp.removeEventListener('change', (event) => callback(event, breakpoint))
+        } catch {
+          matchUp.removeListener((event) => callback(event, breakpoint))
+        }
+      }
+
+      mediaQueries.current = {}
+    }
+  }, [])
+
+  return breakpointMatches
+}
+
+export function useBreakpointMatch<T = string>(values: Partial<Record<Breakpoint, T>>): T {
+  const breakpointMatches = useBreakpointListeners()
+
+  const breakpoints = useMemo(() => {
+    return Object.entries(getTheme().breakpoints)
+      .sort(([, a], [, b]) => a - b)
+      .reduce((acc, [key, value]) => {
+        acc[key] = value
+        return acc
+      }, {} as Record<string, number>)
+  }, [])
+
+  const breakpointValues = useMemo(() => {
+    return Object.keys(breakpoints).sort((a, b) => breakpoints?.[a] - breakpoints?.[b])
+  }, [])
+
+  const currentBreakpoint = useMemo(() => {
+    return Object.keys(breakpointMatches).find((key) => breakpointMatches[key])
+  }, [breakpointMatches])
 
   const breakpoint = useMemo(() => {
-    const validBreakpointIndex = breakpointValues?.findIndex(_breakpoint => _breakpoint === currentBreakpoint)
+    const validBreakpointIndex = breakpointValues?.findIndex(key => key === currentBreakpoint)
 
     const validBreakpoints = breakpointValues?.slice(validBreakpointIndex, 100)
 
@@ -51,11 +116,13 @@ export function useBreakpointMatch<T extends string = string>(values: Partial<Br
     })
 
     if (TypeGuards.isNil(validBreakpoint)) {
-      validBreakpoint = breakpointValues?.reverse()?.find(_breakpoint => !!values?.[_breakpoint])
+      validBreakpoint = breakpointValues?.reverse()?.find(key => !!values?.[key])
     }
 
     return validBreakpoint
   }, [currentBreakpoint])
 
-  return values?.[breakpoint]
+  const value = useMemo(() => values?.[breakpoint], [breakpoint])
+
+  return value
 }
