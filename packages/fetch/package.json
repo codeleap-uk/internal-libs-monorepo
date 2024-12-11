@@ -20,7 +20,7 @@
   "peerDependencies": {
     "@codeleap/logger": "workspace:*",
     "@codeleap/types": "workspace:*",
-    "typescript": "5.0.4"
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "axios": "^1.7.9",

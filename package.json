@@ -14,10 +14,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
     "clear:dist": "rm -rf packages/*/dist",
-     
     "web": "cd apps/web && bun",
     "mobile": "cd apps/mobile && bun",
-
     "common": "cd packages/common && bun",
     "styles": "cd packages/styles && bun",
     "cli": "cd packages/cli && bun",
@@ -34,10 +32,8 @@
     "types": "cd packages/types && bun",
     "utils": "cd packages/utils && bun",
     "store": "cd packages/store && bun",
-    
     "p:web": "cd packages/web && bun",
     "p:mobile": "cd packages/mobile && bun",
-    
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "release": "standard-version",
@@ -62,11 +58,14 @@
     "ts-node-dev": "^1.1.8",
     "typedoc": "0.25.1",
     "typedoc-json-parser": "^8.2.0",
-    "typescript": "5.0.4"
+    "typescript": "5.5.2"
   },
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "bun@1.1.33"
+  "packageManager": "bun@1.1.33",
+  "patchedDependencies": {
+    "@react-navigation/native-stack@7.1.14": "patches/@react-navigation%2Fnative-stack@7.1.14.patch"
+  }
 }

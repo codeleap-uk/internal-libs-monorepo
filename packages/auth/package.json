@@ -18,6 +18,6 @@
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
-    "typescript": "5.0.4"
+    "typescript": "5.5.2"
   }
 }

@@ -25,7 +25,7 @@
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
     "react": "18.1.0",
-    "typescript": "5.0.4",
+    "typescript": "5.5.2",
     "yup": "^0.32.11"
   }
 }
