@@ -14,16 +14,23 @@
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
+    "zod": "3.23.8",
+    "nanostores": "0.11.3",
+    "@nanostores/react": "0.8.2",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
-    "build": "echo 'No build needed'"
+    "build": "echo 'No build needed'",
+    "playground": "bun src/test.ts"
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
+    "zod": "*",
+    "nanostores": "*",
+    "@nanostores/react": "*",
     "react": "18.1.0",
     "typescript": "5.0.4",
     "yup": "^0.32.11"
