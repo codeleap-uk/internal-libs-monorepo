@@ -1,23 +1,25 @@
 {
-  "name": "@codeleap/auth",
+  "name": "@codeleap/store",
   "version": "4.3.2",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
     "type": "git",
-    "directory": "packages/auth"
+    "directory": "packages/store"
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
-    "@codeleap/types": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
     "build": "echo 'No build needed'"
   },
   "peerDependencies": {
-    "@codeleap/types": "workspace:*",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "react": "18.1.0",
+    "nanostores": "*",
+    "@nanostores/react": "*",
+    "@nanostores/persistent": "*"
   }
 }

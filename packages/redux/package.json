@@ -1,16 +1,17 @@
 {
-  "name": "@codeleap/auth",
+  "name": "@codeleap/redux",
   "version": "4.3.2",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
     "type": "git",
-    "directory": "packages/auth"
+    "directory": "packages/redux"
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
+    "@codeleap/utils": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
@@ -18,6 +19,11 @@
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
-    "typescript": "5.0.4"
+    "@codeleap/utils": "workspace:*",
+    "typescript": "5.0.4",
+    "react": "18.1.0"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.7.1"
   }
 }

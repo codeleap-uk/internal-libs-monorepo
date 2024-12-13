@@ -36,7 +36,7 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
 
   const query = theme?.media?.down('tabletSmall' as never)
 
-  const _isMobile = useMediaQuery(query, { getInitialValueInEffect: false })
+  const _isMobile = useMediaQuery(query)
   const isMobileQuery = TypeGuards.isBoolean(isMobile) ? isMobile : _isMobile
 
   const centeredElementIndex = isMobileQuery ? 3 : boundaries + 1

@@ -14,3 +14,4 @@ export * from './Subscription'
 export * from './useQueryListRefresh'
 
 export * from './StorageManager'
+export * from './MobilePermissionManager'

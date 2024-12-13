@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "4.3.0",
+  "version": "4.3.2",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -16,8 +16,7 @@
     "@codeleap/i18n": "workspace:*",
     "@codeleap/query": "workspace:*",
     "@codeleap/logger": "workspace:*",
-    "@codeleap/config": "workspace:*",
-    "@codeleap/common": "workspace:*"
+    "@codeleap/config": "workspace:*"
   },
   "scripts": {
     "build": "tsc --build",
@@ -32,7 +31,6 @@
     "@codeleap/query": "workspace:*",
     "@codeleap/logger": "workspace:*",
     "@codeleap/styles": "workspace:*",
-    "@codeleap/common": "workspace:*",
     "@d11/react-native-fast-image": "8.8.0",
     "@react-native-firebase/messaging": "21.4.0",
     "@react-navigation/bottom-tabs": "6.5.3",
