@@ -1,8 +1,9 @@
 import { useStore } from '@nanostores/react'
 import { setPersistentEngine, persistentAtom } from '@nanostores/persistent'
-import { atom } from 'nanostores'
+import { atom, WritableAtom } from 'nanostores'
 import { GlobalState, GlobalStateConfig, StateSelector } from './types'
 import { stateAssign, useStateSelector } from './utils'
+import { arrayHandler, arrayOps } from './array'
 
 const defaultConfig: GlobalStateConfig = {
   persistKey: null,
@@ -34,6 +35,22 @@ export function globalState<T>(value: T, config: GlobalStateConfig = defaultConf
           const value = stateAssign(newValue, target.get())
           target.set(value)
         }
+      }
+
+      if(prop == 'reset'){
+        return Reflect.get(target, 'set', receiver)
+      }
+      
+      if(arrayOps.includes(prop as string)){
+        const currentValue = target.get()
+        
+        if(!Array.isArray(currentValue)) {
+          throw new Error('Cannot call array methods on a non array store')
+        }
+
+        const handle =  arrayHandler(target as WritableAtom<any[]>)
+
+        return Reflect.get(handle, prop, receiver)
       }
 
       return Reflect.get(target, prop, receiver)

@@ -3,10 +3,15 @@ import { PersistentStore, PersistentEvents, PersistentEvent } from '@nanostores/
 
 export type StateSelector<S, R> = (state: S) => R
 
-export type GlobalState<T> = Omit<WritableAtom<T>, 'set'> & {
+export type GlobalState<T> = Omit<WritableAtom<T>,'set'> & {
   use: <Selected = T>(selector?: StateSelector<T, Selected>) => Selected
-  set: (newValue: Partial<T>) => T
-}
+  
+  set: T extends Record<string, any> ?  (newValue: Partial<T>) => T : WritableAtom<T>['set']
+  
+  reset: WritableAtom<T>['set']
+} & (
+  T extends any[] ? Array<T[number]> : {}
+)
 
 export type GlobalStateConfig = {
   persistKey?: string
