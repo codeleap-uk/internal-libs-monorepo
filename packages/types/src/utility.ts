@@ -116,3 +116,5 @@ export type Replace<Object, Keys extends keyof Object, With = any> = Omit<Object
 export type Matcher<T> = string | Partial<RegExp> | FunctionType<[valueOrKey: any, type: T], boolean>
 
 export type LogType = 'info' | 'debug' | 'warn' | 'error' | 'log' | 'silent'
+
+export type SecondToLastArguments<T extends AnyFunction> = T extends ((...args: [infer _, ...infer Rest]) => any) ? Rest : never
