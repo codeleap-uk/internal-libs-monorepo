@@ -1,4 +1,4 @@
-import { atom } from 'nanostores'
+import { atom, WritableStore } from 'nanostores'
 import { z } from 'zod'
 
 export type ValidationResult<Result, Err> = {
@@ -11,15 +11,15 @@ export type ValidatorFunction<Value, Result, Err> = (value: Value, form: any) =>
 
 export type Validator<Value, Result, Err> = ValidatorFunction<Value, Result, Err>
 
-export type Atom<T> = ReturnType<typeof atom<T>>
+export type FieldState<T> = WritableStore<T>
 
 export type FieldOptions<
   T, 
   Validate extends Validator<T, any, any>
 > = {
-  name: string
+  name?: string
   defaultValue?: T | null
-  state?: Atom<T>
+  state?: FieldState<T>
   
   validate?: Validate
   
@@ -36,4 +36,9 @@ export interface IFieldRef<T> {
   focus(): void
   blur(): void
   emit(event: string, ...args: any[]): void
+}
+
+
+export interface IFieldProps {
+  
 }

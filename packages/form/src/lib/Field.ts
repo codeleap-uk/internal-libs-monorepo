@@ -1,4 +1,4 @@
-import { Atom, FieldOptions, IFieldRef, ValidationResult, Validator } from '../newtypes';
+import { FieldState, FieldOptions, IFieldRef, ValidationResult, Validator, IFieldProps } from '../newtypes';
 import { atom }  from 'nanostores'
 import { SecondToLastArguments, TypeGuards } from '@codeleap/types';
 import { formLogger } from '../logger';
@@ -25,11 +25,19 @@ export class Field<
 > {
   _type: string
 
-  state: Atom<T>
+  deep: boolean
+
+  state: FieldState<T>
 
   options: FieldOptions<T, Validate>
 
   ref?: React.RefObject<IFieldRef<T>>
+
+  __validationRes: ValidationResult<Result, Err>
+
+  static getProps = (field: Field<any,any>) => {
+    throw new Error('Field.getProps not implemented')
+  }
 
   constructor(options: FieldOptions<T, Validate>) {
     this.options = options
@@ -47,6 +55,20 @@ export class Field<
 
   get value(){
     return this.state.get()
+  }
+
+  get isValid(){
+    const res = this.validate()
+
+    return res.isValid
+  }
+
+  attach(to: FieldState<T>) {
+    const val = this.value
+
+    this.state = to
+
+    this.setValue(val)
   }
 
   setValue(to: T) {
@@ -173,5 +195,9 @@ export class Field<
 
   toRepresentation(v: T) {
     return v as any
+  }
+
+  props(): IFieldProps {
+    return Field.getProps(this)
   }
 }

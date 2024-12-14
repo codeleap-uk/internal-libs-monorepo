@@ -8,9 +8,9 @@ export function fieldFactory<
   Value = T extends FieldBuilder<infer V, any> ? V : never, 
   Validator = T extends FieldBuilder<infer VL, any> ? VL : never,
 >(cls: T) {
-  return <A extends ConstructorParameters<T>[0]>(options: A): Field<Value, A['validate']>  => {
+  return <A extends ConstructorParameters<T>[0]>(options?: A): Field<Value, A['validate']>  => {
     
     // @ts-expect-error
-    return new cls(options)
+    return new cls(options ?? {})
   }
 }
