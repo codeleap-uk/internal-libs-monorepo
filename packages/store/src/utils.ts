@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { atom, Store, WritableStore } from 'nanostores'
+import { atom, Store, WritableAtom} from 'nanostores'
 import { useMemo } from 'react'
 
 
@@ -19,9 +19,9 @@ export function stateAssign<T>(newValue: Partial<T>, stateValue: T): T {
 
 
 export const createStateSlice = <T, R>(
-  store: WritableStore<T>,
+  store: WritableAtom<T>,
   selector: (state: T) => R,
-  deselector?: (result: R) => T extends Record<string, any> ? Partial<T> : T
+  deselector?: (result: R) => Partial<T>  
 ) => ({
   get: () => selector(store.get()),
   listen: (listener: (value: R) => void) => {
@@ -41,10 +41,10 @@ export const createStateSlice = <T, R>(
 
     store.set(newValue)
   }
-} as WritableStore<R>)
+} as WritableAtom<R>)
 
 export function useStateSelector<T, R>(
-  store: WritableStore<T>,
+  store: WritableAtom<T>,
   selector: (state: T) => R
 ): R {
   const slice = useMemo(() => createStateSlice(store, selector), [selector])
