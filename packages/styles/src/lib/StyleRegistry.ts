@@ -5,10 +5,13 @@ import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
 import { defaultVariants } from './defaultVariants'
 import { dynamicVariants } from './dynamicVariants'
-import { ignoredStyleKeys, isSpacingKey } from './utils'
+import { capitalize, ignoredStyleKeys, isSpacingKey } from './utils'
 import { StyleCache } from './StyleCache'
 import { minifier } from './minifier'
 import { StateStorage } from 'zustand/middleware'
+import rfdc from 'rfdc'
+
+const deepClone = rfdc()
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}
@@ -369,8 +372,6 @@ export class CodeleapStyleRegistry {
       return this.mergeStylesWithCache([defaultStyle], cache.key)
     }
 
-    const isStyleObject = typeof style === 'object' && !isStyleArray
-
     if (typeof style === 'string') {
       const computedVariantStyle = this.computeVariantStyle(componentName, [style])
 
@@ -379,6 +380,8 @@ export class CodeleapStyleRegistry {
         cache.key,
       )
     }
+
+    const isStyleObject = typeof style === 'object' && !isStyleArray
 
     if (isStyleObject) {
       const { isComposition, composition } = this.isCompositionStyle(registeredComponent, style)
@@ -521,17 +524,7 @@ export class CodeleapStyleRegistry {
   }
 
   private copyStyle(style: any) {
-    let copiedStyle = null
-
-    if (Array.isArray(style)) {
-      copiedStyle = [...style]
-    } else if (typeof style == 'object') {
-      copiedStyle = { ...style }
-    } else {
-      copiedStyle = style
-    }
-
-    return copiedStyle
+    return deepClone(style)
   }
 
   createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
@@ -564,5 +557,17 @@ export class CodeleapStyleRegistry {
         return compute()[prop as string]
       },
     })
+  }
+
+  prefixStyle(prefix: string, style: any) {
+    const entries = Object.entries(style).map(e => {
+      const [key, value] = e
+      
+      const elementKey = capitalize(key)
+      
+      return [`${prefix}${elementKey}`, value]
+    })
+  
+    return Object.fromEntries(entries)
   }
 }

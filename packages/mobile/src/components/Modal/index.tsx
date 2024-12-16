@@ -199,7 +199,7 @@ export const Modal = (modalProps: ModalProps) => {
 }
 
 Modal.styleRegistryName = 'Modal'
-Modal.elements = ['box', 'backdrop', 'innerWrapper', 'scroll', 'body', 'footer', 'header', 'title', 'description', 'closeButton', 'topSpacing']
+Modal.elements = ['wrapper', 'box', 'backdrop', 'innerWrapper', 'scroll', 'body', 'footer', 'header', 'title', 'description', 'closeButton', 'topSpacing']
 Modal.rootElement = 'wrapper'
 
 Modal.withVariantTypes = <S extends AnyRecord>(styles: S) => {
