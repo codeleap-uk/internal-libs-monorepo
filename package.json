@@ -14,10 +14,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clear": "rm -rf node_modules apps/*/node_modules packages/*/node_modules packages/*/dist",
     "clear:dist": "rm -rf packages/*/dist",
-     
     "web": "cd apps/web && bun",
     "mobile": "cd apps/mobile && bun",
-
     "common": "cd packages/common && bun",
     "styles": "cd packages/styles && bun",
     "cli": "cd packages/cli && bun",
@@ -34,10 +32,8 @@
     "types": "cd packages/types && bun",
     "utils": "cd packages/utils && bun",
     "store": "cd packages/store && bun",
-    
     "p:web": "cd packages/web && bun",
     "p:mobile": "cd packages/mobile && bun",
-    
     "prepare": "husky install",
     "commit": "node ./node_modules/cz-customizable/standalone.js",
     "release": "standard-version",
@@ -50,6 +46,7 @@
     "doc:fullcycle": "yarn doc:generate && yarn doc:process"
   },
   "devDependencies": {
+    "@types/bun": "^1.1.14",
     "cz-customizable": "^7.0.0",
     "husky": "^8.0.2",
     "install": "^0.13.0",
