@@ -1,7 +1,6 @@
 import { useStore } from '@nanostores/react'
-import { atom, Store, WritableStore } from 'nanostores'
+import { WritableStore } from 'nanostores'
 import { useMemo } from 'react'
-
 
 export function stateAssign<T>(newValue: Partial<T>, stateValue: T): T {
   if (
@@ -16,7 +15,6 @@ export function stateAssign<T>(newValue: Partial<T>, stateValue: T): T {
   return newValue as T
   
 }
-
 
 export const createStateSlice = <T, R>(
   store: WritableStore<T>,
@@ -51,5 +49,3 @@ export function useStateSelector<T, R>(
 
   return useStore(slice)
 }
-
- 

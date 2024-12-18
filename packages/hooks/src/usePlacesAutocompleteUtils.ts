@@ -17,7 +17,7 @@ export const usePlacesAutocompleteUtils = <T extends Record<string, any>>(props:
   const [address, setAddress] = React.useState('')
   const [isTyping, setIsTyping] = React.useState(false)
 
-  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
+  const setSearchTimeout = React.useRef<NodeJS.Timer | null>(null)
 
   const handleChangeAddress = (address: string) => {
     setAddress(address)
