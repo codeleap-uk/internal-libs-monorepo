@@ -16,7 +16,6 @@
     "clear:dist": "rm -rf packages/*/dist",
     "web": "cd apps/web && bun",
     "mobile": "cd apps/mobile && bun",
-    "common": "cd packages/common && bun",
     "styles": "cd packages/styles && bun",
     "cli": "cd packages/cli && bun",
     "config": "cd packages/config && bun",
