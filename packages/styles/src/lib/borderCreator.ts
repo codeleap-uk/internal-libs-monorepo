@@ -1,5 +1,4 @@
-import { IColors, ICSS } from '../types'
-import { StyleConstants } from './constants'
+import { AppTheme, IColors, ICSS, Theme } from '../types'
 import { borderDirection } from './dynamicVariants'
 import { themeStore } from './themeStore'
 import { capitalize } from './utils'
@@ -22,22 +21,18 @@ export const borderCreator: BorderCreator = (args) => {
     directions = ['left', 'top', 'bottom', 'right'],
   } = args
 
-  const theme = themeStore.getState().current
+  const theme = themeStore.getState().current as AppTheme<Theme>
 
-  // @ts-expect-error
   const color = theme?.colors?.[colorKey] ?? colorKey
 
-  const borderStyles: ICSS = {}
+  let borderStyles: ICSS = {}
 
   for (const direction of directions) {
     const property = `border${capitalize(direction)}`
 
     borderStyles[`${property}Color`] = color
     borderStyles[`${property}Width`] = width
-
-    if (StyleConstants.IS_BROWSER) {
-      borderStyles[`${property}Style`] = style
-    }
+    if (theme?.isBrowser) borderStyles[`${property}Style`] = style
   }
 
   return borderStyles
