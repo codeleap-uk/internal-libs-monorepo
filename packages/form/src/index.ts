@@ -7,4 +7,6 @@ export * as yup from 'yup'
 
 
 export * from './fields'
+export { Field } from './lib/Field'
+export { form, useForm } from './lib/Form'
 export * from './validators'

@@ -75,15 +75,15 @@ export class Field<
     return this.state.set(to)
   }
 
-  use(...args: SecondToLastArguments<typeof useFieldBinding<T>>){
+  use(impl?: Partial<IFieldRef<T>>, deps?: any[]){
     const value = useStore(this.state)
 
     const validation = this.validate(value)
 
     
     // Yes, this is dangerous and doesn't follow the rules, but not passing an implementation to imperative handle after passing it once would break the app anyway
-    if(args?.length) { 
-      this.useBinding(...args)
+    if(impl) { 
+      this.useBinding(impl, deps)
     }
    
 
@@ -201,3 +201,6 @@ export class Field<
     return Field.getProps(this)
   }
 }
+
+
+ 

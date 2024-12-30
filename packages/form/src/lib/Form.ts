@@ -1,38 +1,10 @@
 import { createStateSlice, GlobalState, globalState } from "@codeleap/store"
-import { ValidationResult } from "../newtypes"
-import { Field } from "./Field"
+ 
 import { TypeGuards } from "@codeleap/types"
 import { useMemo } from "react"
-
-type FormDef = Record<string,  Field<any,any>>
-
-type NarrowKeyof<T> = Extract<keyof T, string>
-
-type FormValues<T extends FormDef> = {
-  [K in NarrowKeyof<T>]:  T[K]['value']
-}
-
-type FormErrors<T extends FormDef> = {
-  [K in NarrowKeyof<T>]:  ReturnType<T[K]['validate']> extends ValidationResult<any, infer E> ? E : never 
-}
-
-type FormResults<T extends FormDef> = {
-  [K in NarrowKeyof<T>]:  ReturnType<T[K]['validate']> extends ValidationResult<infer R, any> ? R : never 
-}
-
-type FieldTuples<T extends FormDef> = {
-  [K in NarrowKeyof<T>]: [K, T[K]]
-}[NarrowKeyof<T>]
-
-type FieldPropertyTuples<T extends FormDef, Property extends keyof Field<any,any>> = {
-  [K in NarrowKeyof<T>]: [K, T[K][Property]]
-}[NarrowKeyof<T>]
+import { FieldPaths, FieldPropertyTuples, FieldTuples, FormDef, FormValues } from "../newtypes"
 
 
-
-type FieldPaths<T extends FormDef> = ({
-  [K in NarrowKeyof<T>]: K
-})[NarrowKeyof<T>]
 
 
 function buildState<T extends FormDef>(def: T) {
@@ -145,4 +117,8 @@ export function useForm<T extends FormDef>(name: string, def: T) {
 
   
   return form
+}
+
+export function form<Def extends FormDef>(...args: ConstructorParameters<typeof Form<Def>>) {
+  return new Form(...args)
 }

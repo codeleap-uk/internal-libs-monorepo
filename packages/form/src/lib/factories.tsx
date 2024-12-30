@@ -1,4 +1,5 @@
-import { Validator } from "../newtypes"
+ 
+import { FormDef, Validator } from "../newtypes"
 import { Field } from "./Field"
 
 type FieldBuilder<T, Validate extends Validator<any,any,any>> = typeof Field<T, Validate>
@@ -14,3 +15,5 @@ export function fieldFactory<
     return new cls(options ?? {})
   }
 }
+
+ 
