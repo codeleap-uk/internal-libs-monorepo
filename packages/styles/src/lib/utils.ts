@@ -77,11 +77,3 @@ export const concatStyles = <T extends string>(styles: Array<StyledProp<T>>): St
 
   return results as unknown as StyledProp<T>
 }
-
-export function testBrowserSupport() {
-  try {
-    return typeof window !== 'undefined'
-  } catch {
-    return false
-  }
-}
