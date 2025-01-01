@@ -18,7 +18,7 @@ export const useConditionalState = <T>(
     ? useBooleanToggle(options?.initialValue as boolean)
     : useState(options?.initialValue)
 
-  if (!value && typeof setter === 'function') {
+  if (typeof value !== 'undefined' && typeof setter === 'function') {
     return [value, setter]
   }
 
