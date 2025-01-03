@@ -15,7 +15,7 @@ export type FileInputRef = {
 export type FileInputProps = {
   mode: 'hidden' | 'button'
   onFileSelect?: (files: FileResult[]) => void
-  options?: DocumentPickerOptions<any>
+  options?: DocumentPickerOptions
   ref?: AnyRef<FileInputRef>
   type?: 'image' | 'anyFile'
   alertProps?: Parameters<typeof OSAlert.ask>[0]

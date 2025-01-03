@@ -14,7 +14,7 @@
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
-    "ts-node-dev": "1.1.8"
+    "ts-node-dev": "^1.1.8"
   },
   "scripts": {
     "build": "echo 'No build needed'"
@@ -24,8 +24,8 @@
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
-    "react": "18.1.0",
+    "react": "18.2.0",
     "typescript": "5.0.4",
-    "yup": "^0.32.11"
+    "yup": "1.6.1"
   }
 }

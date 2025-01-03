@@ -1,10 +1,10 @@
 import React, { useCallback, forwardRef, ComponentType } from 'react'
-import { ListRenderItemInfo } from 'react-native'
+import { FlatList, ListRenderItemInfo } from 'react-native'
 import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { RefreshControl } from '../RefreshControl'
 import { List, ListItem } from '../List'
-import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view'
+
 import { GridProps } from './types'
 import { AnyRecord, AppTheme, IJSX, StyledComponentProps, StyledComponentWithProps, Theme, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
@@ -17,7 +17,7 @@ const RenderSeparator = (props: { separatorStyles: ViewProps['style'] }) => {
   return <View style={props.separatorStyles} />
 }
 
-export const Grid = forwardRef<KeyboardAwareFlatList, GridProps>((flatGridProps, ref) => {
+export const Grid = forwardRef<FlatList, GridProps>((flatGridProps, ref) => {
   const {
     style,
     onRefresh,

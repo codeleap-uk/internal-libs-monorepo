@@ -1,11 +1,12 @@
 import { StyledProp } from '@codeleap/styles'
-import { KeyboardAwareScrollView, KeyboardAwareScrollViewProps } from 'react-native-keyboard-aware-scroll-view'
+
 import { ScrollComposition } from './styles'
 import { RefreshControlProps } from '../RefreshControl'
 import { ViewProps } from '../View'
+import { ScrollView, ScrollViewProps } from 'react-native'
 
 export type ScrollProps =
-  Omit<KeyboardAwareScrollViewProps, 'style'> &
+  Omit<ScrollViewProps, 'style'> &
   Omit<ViewProps, 'style'> &
   {
     onRefresh?: () => void
@@ -18,4 +19,4 @@ export type ScrollProps =
     style?: StyledProp<ScrollComposition>
   }
 
-export type ScrollRef = KeyboardAwareScrollView
+export type ScrollRef = ScrollView

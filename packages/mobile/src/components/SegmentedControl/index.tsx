@@ -60,7 +60,12 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
   function scrollTo(idx: number) {
     if (!scrollRef.current) return
     setTimeout(() => {
-      scrollRef.current?.scrollToPosition?.(widthStyle.width * idx, 0, true)
+      scrollRef.current?.scrollTo({
+        x: widthStyle.width * idx, 
+        y: 0,
+        animated: true
+      })
+
     })
   }
 
