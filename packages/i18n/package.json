@@ -11,7 +11,7 @@
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
-    "ts-node-dev": "1.1.8"
+    "ts-node-dev": "^1.1.8"
   },
   "scripts": {
     "build": "echo 'No build needed'"
@@ -19,6 +19,6 @@
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "typescript": "5.0.4",
-    "react": "18.1.0"
+    "react": "18.2.0"
   }
 }

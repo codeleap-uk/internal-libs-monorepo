@@ -12,7 +12,7 @@
     "@codeleap/types": "workspace:*",
     "@codeleap/config": "workspace:*",
     "@codeleap/utils": "workspace:*",
-    "ts-node-dev": "1.1.8",
+    "ts-node-dev": "^1.1.8",
     "nanostores": "0.11.3",
     "@nanostores/react": "0.8.0"
   },
@@ -28,7 +28,7 @@
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "typescript": "5.0.4",
-    "react": "18.1.0",
+    "react": "18.2.0",
     "nanostores": "*",
     "@nanostores/react": "*"
   }

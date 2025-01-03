@@ -11,7 +11,7 @@
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
-    "ts-node-dev": "1.1.8"
+    "ts-node-dev": "^1.1.8"
   },
   "scripts": {
     "build": "echo 'No build needed'"
@@ -20,7 +20,7 @@
     "@codeleap/types": "workspace:*",
     "axios": "^1.7.9",
     "typescript": "5.0.4",
-    "react": "18.1.0",
+    "react": "18.2.0",
     "@tanstack/react-query": "5.60.6"
   },
   "dependencies": {

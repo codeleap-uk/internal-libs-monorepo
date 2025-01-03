@@ -12,7 +12,7 @@
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
-    "ts-node-dev": "1.1.8"
+    "ts-node-dev": "^1.1.8"
   },
   "scripts": {
     "build": "echo 'No build needed'"
@@ -21,7 +21,7 @@
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "typescript": "5.0.4",
-    "react": "18.1.0"
+    "react": "18.2.0"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1"

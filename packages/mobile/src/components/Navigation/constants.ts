@@ -5,9 +5,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 type X = TypedNavigator<
   any,
-  any,
-  any,
-  any,
   any
 >
 
