@@ -12,7 +12,7 @@ export function createStyles<K extends string, P extends AnyRecord = AnyRecord>(
     const current = themeStore.getState().current
 
     if (typeof styles === 'function') {
-      styleObj = styles(current)
+      styleObj = !current ? {} : styles(current)
     } else {
       styleObj = styles
     }
