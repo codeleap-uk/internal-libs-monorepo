@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.8](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.3.7...v4.3.8) (2025-01-21)
+
+
+### Bug Fixes
+
+* **styles:** createStyles types ([0ed5ff8](https://github.com/codeleap-uk/internal-libs-monorepo/commit/0ed5ff828882be459dffd05d6d0646429fb82234))
+
 ### [4.3.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.3.5...v4.3.7) (2025-01-21)
 
 
