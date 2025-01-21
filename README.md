@@ -2,17 +2,24 @@
 
 This repository contains component and utility abstractions to make our work on projects easier, as well as templates for getting started with new projects or for reference on how to use a certain feature.
 
-Read the docs at [docs.codeleap.co.uk](http://docs.codeleap.co.uk/)
-
 ## Libraries
 
-- @codeleap/common: Includes the styling system, redux, api, form and permission APIs as well as some miscellaneous utilities.
 - @codeleap/mobile: Components for react-native, along with some systems specific to mobile platforms such as the permission and OSAlert modules.
 - @codeleap/web: Components for websites, with various APIs for DOM manipulation and simplifying the process of making a Gatsby website.
-
-## Templates and examples
-
-Both the web and mobile templates include examples of API usage for their respective library and the @codeleap/common package.
+- @codeleap/auth: Authentication utilities.
+- @codeleap/analytics: Integration with analytics tools for tracking user actions and events.
+- @codeleap/fetch: Provides API fetch wrappers.
+- @codeleap/form: Form validation, handling, and submission.
+- @codeleap/hooks: Custom React hooks for handling different state and side effects.
+- @codeleap/i18n: Internationalization utilities for translating content.
+- @codeleap/logger: Provides logging mechanisms for debugging and tracking events.
+- @codeleap/modals: Handles modal dialogs and overlays.
+- @codeleap/query: Integration with TanStack React Query, providing hooks and utilities for managing server state, caching, pagination, and background fetching.
+- @codeleap/styles: Style system with themes, variants, caching and intelligent style management for any environment.
+- @codeleap/redux: Redux state management integration for global state.
+- @codeleap/store: Centralized state store for application data.
+- @codeleap/types: TypeScript types and interfaces for type-safety.
+- @codeleap/utils: Miscellaneous utilities for general purpose tasks.
 
 ## Contributing
 
@@ -47,21 +54,6 @@ bun run web dev
 ```
 
 Changes made to the packages must be rebuilt to take effect inside template apps. It's recommended to configure the [Run on Save](https://marketplace.visualstudio.com/items?itemName=pucelle.run-on-save) extension for a smoother development experience. You can also just run `bun run build` again.
-
-### Updating the documentation
-
-All pages for the docs website use mdx, a mix between markdown and react's jsx. The articles themselves are located at `apps/docs/src/articles`. The frontmatter at the start of each file defines it's metadata, such as which module it belongs to (common,mobile,web), the path it will have under the respective module's url, and the title among other things such as the category (used for sidebar).
-
-```mdx
----
-path: 'permissions/solution'
-title: 'Our current solution'
-date: '2022-06-30'
-category: Permissions
-module: mobile
-index: 1
----
-```
 
 ## Commit standard
 

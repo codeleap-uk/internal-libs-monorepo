@@ -50,6 +50,7 @@ export type Theme = {
   typography: AnyMap
   icons: AnyMap
   values?: AnyMap
+  isBrowser?: boolean
 }
 
 export type DefaultColorSchemeName = 'default'
