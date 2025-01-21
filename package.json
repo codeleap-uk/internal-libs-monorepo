@@ -64,5 +64,8 @@
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "bun@1.1.33"
+  "packageManager": "bun@1.1.33",
+  "patchedDependencies": {
+    "react-native-drag-sort@2.4.4": "patches/react-native-drag-sort@2.4.4.patch"
+  }
 }
