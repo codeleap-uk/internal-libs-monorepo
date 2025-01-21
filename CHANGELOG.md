@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.3.7](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.3.5...v4.3.7) (2025-01-21)
+
+
+### Bug Fixes
+
+* conditional state check ([2b3c7de](https://github.com/codeleap-uk/internal-libs-monorepo/commit/2b3c7deacfc2802b1591925d9ff3573b449f2920))
+* **styles:** undefined theme ([1fa62d7](https://github.com/codeleap-uk/internal-libs-monorepo/commit/1fa62d76c79d59147b1cf6a12c4d77be529dfd87))
+
 ### [4.3.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.2.18...v4.3.6) (2025-01-01)
 
 
