@@ -55,13 +55,15 @@ export const Slider = (props: SliderProps) => {
     trackMarks,
     trackMarksClickable,
     labelClickable,
+    updateImmediately = false,
     trackMarkComponent: SliderTrackMark,
     ...sliderProps
   } = others
 
-  const [_value, _setValue] = React.useState(value)
+  const [_value, _setValue] = updateImmediately ? [value, onValueChange] : React.useState(value)
 
   onUpdate(() => {
+    if(updateImmediately) return
     if (value !== _value) {
       _setValue(value)
     }
@@ -163,6 +165,7 @@ export const Slider = (props: SliderProps) => {
         minimumValue={minimumValue}
         maximumValue={maximumValue}
         onSlidingComplete={() => {
+          if(updateImmediately) return
           onValueChange(_value)
         }}
         disabled={disabled}
