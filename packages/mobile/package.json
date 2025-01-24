@@ -60,6 +60,7 @@
     "react-native-drag-sort": "^2.4.4",
     "react-native-masked-text": "1.13.0",
     "react-native-reanimated-carousel": "^3.5.1",
-    "react-native-uuid": "2.0.1"
+    "react-native-uuid": "2.0.1",
+    "react-native-video": "^6.9.0"
   }
 }
