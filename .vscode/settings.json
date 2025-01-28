@@ -16,12 +16,12 @@
       {
         "match": "packages\\\\.*",
         "isAsync": true,
-        "cmd": "yarn build"
+        "cmd": "bun run build"
       },
       {
         "match": "packages//.*",
         "isAsync": true,
-        "cmd": "yarn build"
+        "cmd": "bun run build"
       }
     ]
   },
