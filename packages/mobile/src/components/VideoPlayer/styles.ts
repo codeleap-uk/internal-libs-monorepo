@@ -6,5 +6,5 @@ export type VideoPlayerComposition =
   'player' |
   `subtitle${Capitalize<keyof SubtitleStyle>}` |
   `controls${Capitalize<keyof ControlsStyles>}` |
-  `playIcon${Capitalize<ActionIconComposition>}` |
-  `closeIcon${Capitalize<ActionIconComposition>}`
+  `play${Capitalize<ActionIconComposition>}` |
+  `close${Capitalize<ActionIconComposition>}`
