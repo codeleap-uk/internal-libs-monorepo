@@ -64,5 +64,5 @@
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "bun@1.1.33"
+  "packageManager": "bun@1.2.1"
 }

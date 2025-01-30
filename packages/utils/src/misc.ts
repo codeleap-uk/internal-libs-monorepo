@@ -132,3 +132,19 @@ export function throttle(func, ref, delay) {
     throttleTimerId[ref] = undefined
   }, delay)
 }
+
+export const ensureHttps = (url: string, safe = false) => {
+  if (!url?.trim?.()) return url ?? ''
+  // Check if the URL already has "http://" or "https://"
+  const unsafeRegExp = /^https?:\/\//
+  const safeRegExp = /^https:\/\//
+
+  const regExp = safe ? safeRegExp : unsafeRegExp
+
+  if (regExp.test(url)) {
+    return url // URL is already valid
+  } else {
+    // URL doesn't have "http://" or "https://", so add "https://"
+    return `http${safe ? 's' : ''}://${url}`
+  }
+}
