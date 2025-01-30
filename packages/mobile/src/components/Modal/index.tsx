@@ -91,17 +91,6 @@ export const Modal = (modalProps: ModalProps) => {
 
   const buttonStyles = useNestedStylesByKey('closeButton', styles)
 
-  const boxAnimationStyles = useAnimatedVariantStyles({
-    updater: (states) => {
-      'worklet'
-      return visible ? states['box:visible'] : states['box:hidden']
-    },
-    animatedProperties: ['box:hidden', 'box:visible'],
-    variantStyles: styles,
-    transition: styles['box:transition'],
-    dependencies: [visible],
-  })
-
   const ScrollComponent = scroll ? Scroll : View
   const scrollStyle = scroll ? styles?.scroll : styles?.innerWrapper
 
