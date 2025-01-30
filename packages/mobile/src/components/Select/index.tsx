@@ -38,7 +38,7 @@ const defaultGetLabel = (option) => {
     if (option?.length === 0) return null
 
     const labels = option?.map(option => option?.label)?.filter(value => !!value)
-    
+
     return labels?.join(', ')
   } else {
     if (!option) return null
@@ -226,20 +226,22 @@ export const Select = <T extends string | number = string, Multi extends boolean
       selected = value === item.value
     }
 
-    return <Item
-      debugName={`${debugName} item ${item.value}`}
-      selected={selected}
-      text={item.label}
-      item={item}
-      onPress={() => select(item.value)}
-      // @ts-ignore
-      icon={selectedIcon}
-      // @ts-ignore
-      rightIcon={selectedIcon}
-      style={compositionStyles?.item}
-      index={index}
-      {...itemProps}
-    />
+    return (
+      <Item
+        debugName={`${debugName} item ${item.value}`}
+        selected={selected}
+        text={item.label}
+        item={item}
+        onPress={() => select(item.value)}
+        // @ts-ignore
+        icon={selectedIcon}
+        // @ts-ignore
+        rightIcon={selectedIcon}
+        style={compositionStyles?.item}
+        index={index}
+        {...itemProps}
+      />
+    )
   }, [value, select, multiple])
 
   const isEmpty = TypeGuards.isNil(value)
@@ -309,12 +311,15 @@ export const Select = <T extends string | number = string, Multi extends boolean
       debugName={`${debugName} modal`}
       style={styles}
       id={null}
+      scrollProps={{
+        scrollEnabled: false,
+      }}
       visible={visible}
       toggle={toggle}
     >
       <ListComponent
         data={searchable ? filteredOptions : options}
-        scrollEnabled={false}
+        scrollEnabled={true}
         showsHorizontalScrollIndicator={false}
         style={compositionStyles?.list}
         keyExtractor={(i: { value: any }) => i.value}
