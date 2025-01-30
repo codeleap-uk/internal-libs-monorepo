@@ -311,9 +311,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
       debugName={`${debugName} modal`}
       style={styles}
       id={null}
-      scrollProps={{
-        scrollEnabled: false,
-      }}
       visible={visible}
       toggle={toggle}
     >
