@@ -2,7 +2,8 @@ import { TypeGuards } from '@codeleap/types'
 import { ensureHttps } from '@codeleap/utils'
 
 export function isYoutubeVideo(uri: string) {
-  return uri.includes('youtube')
+  const _uri = uri.replace(/\./g, '')
+  return _uri.includes('youtube')
 }
 
 const youtubeIDLength = 11
