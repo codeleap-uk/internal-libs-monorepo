@@ -16,6 +16,7 @@ export type SliderProps =
     labelClickable?: boolean
     trackMarkComponent?: React.ComponentType<TrackMarkProps>
     style?: StyledProp<SliderComposition>
+    updateImmediately?: boolean
   }
 
 export type TrackMarkProps = {
