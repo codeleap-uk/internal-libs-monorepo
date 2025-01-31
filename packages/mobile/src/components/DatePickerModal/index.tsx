@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { useConditionalState } from '@codeleap/hooks'
 import { useI18N } from '@codeleap/i18n'
@@ -33,8 +33,9 @@ const OuterInputComponent: DatePickerModalProps['outerInputComponent'] = (props)
   />
 }
 
-const defaultFormatDate: DatePickerModalProps['formatDate'] = (date) => {
-  if (!date) return null
+const defaultFormatDate: DatePickerModalProps['formatDate'] = (_date) => {
+  if (!_date) return null
+  const date = new Date(_date)
   return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 }
 
@@ -174,6 +175,13 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     id: null,
   } : {}
 
+  const date = useMemo(() => {
+    let newValue = null
+    if (value) newValue = value
+    else if (initialDate) newValue = value
+    return new Date(newValue)
+  }, [value, initialDate])
+
   return (
     <>
       {!hideInput ? <OuterInput
@@ -192,7 +200,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           modal={!isCustomModal}
           open={visible}
           onCancel={toggle}
-          date={value ?? initialDate ?? new Date()}
+          date={date}
           onDateChange={(date) => {
             if (commitDate === 'onChange') {
               setValue(date)
