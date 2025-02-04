@@ -52,7 +52,7 @@ export function Provider({ children }) {
           visible: newVisible,
           props,
         },
-        ...Object.fromEntries(attached),
+        ...Object.fromEntries(attached ?? []),
       }
 
     })
