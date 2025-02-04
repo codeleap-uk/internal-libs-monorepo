@@ -1,91 +1,23 @@
 diff --git a/AnySizeDragSortableView.js b/AnySizeDragSortableView.js
-index 9450cbc6782441c62fcb950491eca921cce72aee..2a235c370de3767064035297b20df5e8d4dae4d0 100644
+index 9450cbc6782441c62fcb950491eca921cce72aee..c5b29f0373e727fb58f6bc4ce19a74063993dea2 100644
 --- a/AnySizeDragSortableView.js
 +++ b/AnySizeDragSortableView.js
-@@ -1,6 +1,5 @@
+@@ -1,16 +1,15 @@
  import React from 'react';
  import {
 -  NativeModules,
    StyleSheet,
    ScrollView,
    View,
-@@ -10,13 +9,7 @@ import {
+   PanResponder,
+   LayoutAnimation,
+-  Platform
++  Platform,
++  UIManager
  } from 'react-native';
  const PropTypes = require('prop-types')
  const ANIM_DURATION = 300
 -const { UIManager } = NativeModules;
  
--if (Platform.OS === 'android') {
--  if (UIManager.setLayoutAnimationEnabledExperimental) {
--    UIManager.setLayoutAnimationEnabledExperimental(true);
--  }
--}
- 
- export default class AnySizeDragSortableView extends React.PureComponent {
- 
-@@ -175,7 +168,7 @@ export default class AnySizeDragSortableView extends React.PureComponent {
-     const curLayout = this.layoutMap.get(key)
-     const firstOffsetY = (this.curScrollData && this.curScrollData.offsetY) || 0
-     const initTop = parseInt(curLayout.y - firstOffsetY + headerViewHeight + 0.5)
--    this.setState({ 
-+    this.setState({
-       scrollEnabled: false,
-       selectedItem: item,
-       selectedKey: key,
-@@ -280,7 +273,7 @@ export default class AnySizeDragSortableView extends React.PureComponent {
-         break
-       }
-       // When sliding to the end, there is no assistance
--      if (!this.isUpdating && nextLineLastLayout && 
-+      if (!this.isUpdating && nextLineLastLayout &&
-         moveX1 >= nextLineLastLayout.x + nextLineLastLayout.width && (moveY2 + moveY1) / 2 > nextLineLastLayout.y
-       ) {
-         this.move(curLayout.key, nextLineLastLayout.key, vy, curLayout.y !== nextLineLastLayout.y)
-@@ -295,7 +288,7 @@ export default class AnySizeDragSortableView extends React.PureComponent {
-     if (preLeft !== nextLeft || preTop !== nextTop) {
-       this.setState({
-         selectedPosition: {
--          ...selectedPosition, 
-+          ...selectedPosition,
-           left: nextLeft,
-           top: nextTop
-         }
-@@ -314,7 +307,7 @@ export default class AnySizeDragSortableView extends React.PureComponent {
-       return
-     }
-     if (
--      this.preMoveKeyObj && this.preMoveKeyObj.fromKey === fromKey && this.preMoveKeyObj.toKey === toKey && 
-+      this.preMoveKeyObj && this.preMoveKeyObj.fromKey === fromKey && this.preMoveKeyObj.toKey === toKey &&
-       isDiffline && ((toIndex - fromIndex > 0 && vy <= 0.01) || (toIndex - fromIndex < 0 && vy >= -0.01))
-     ) {
-       this.isUpdating = false
-@@ -417,7 +410,7 @@ export default class AnySizeDragSortableView extends React.PureComponent {
-           scrollEnabled = {scrollEnabled}
-           onScroll={this.onScrollListener}
-           style={styles.scroll}>
--          {this.props.renderHeaderView ? this.props.renderHeaderView : null} 
-+          {this.props.renderHeaderView ? this.props.renderHeaderView : null}
-           <View style={styles.container}>
-             {
-               dataSource.map((item, index) => {
-@@ -440,7 +433,7 @@ export default class AnySizeDragSortableView extends React.PureComponent {
-       </View>
-     )
-   }
--  
-+
- }
- 
- AnySizeDragSortableView.propTypes = {
-@@ -465,9 +458,9 @@ AnySizeDragSortableView.propTypes = {
-   onScrollRef: PropTypes.func,
-   areaOverlapRatio: PropTypes.number,
-   movedWrapStyle: PropTypes.object,
--  /** 
-+  /**
-    * childMarginxx: Must be greater than > 0
--   * Optimize the calculation of the size of the rectangle where the two components 
-+   * Optimize the calculation of the size of the rectangle where the two components
-    *  intersect to prevent repeated switching caused by triggering the critical point .
-    */
-   childMarginTop: PropTypes.number,
+ if (Platform.OS === 'android') {
+   if (UIManager.setLayoutAnimationEnabledExperimental) {
