@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "4.3.6",
+  "version": "4.3.9",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
@@ -61,6 +61,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-select": "*",
-    "typescript": "5.0.4"
+    "typescript": "5.5.2"
   }
 }
