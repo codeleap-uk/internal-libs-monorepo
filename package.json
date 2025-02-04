@@ -55,7 +55,7 @@
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
     "syncpack": "^9.8.4",
-    "ts-node-dev": "^1.1.8",
+    "ts-node-dev": "1.1.8",
     "typedoc": "0.25.1",
     "typedoc-json-parser": "^8.2.0",
     "typescript": "5.0.4"
