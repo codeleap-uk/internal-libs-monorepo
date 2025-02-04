@@ -179,7 +179,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     let newValue = null
     if (value) newValue = value
     else if (initialDate) newValue = value
-    return new Date(newValue)
+    return newValue instanceof Date ? newValue : new Date(newValue)
   }, [value, initialDate])
 
   return (
