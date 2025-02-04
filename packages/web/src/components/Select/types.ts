@@ -30,7 +30,7 @@ export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseP
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
-  validate?: FormTypes.ValidatorWithoutForm<SelectValue<T, Multi>> | yup.SchemaOf<SelectValue<T, Multi>>
+  validate?: FormTypes.ValidatorWithoutForm<SelectValue<T, Multi>> | yup.Schema<SelectValue<T, Multi>>
   style?: StyledProp<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 

@@ -11,7 +11,7 @@ export type TextInputProps =
   Omit<RNTextInputProps, 'style'> &
   {
     password?: boolean
-    validate?: FormTypes.ValidatorFunctionWithoutForm | yup.SchemaOf<string>
+    validate?: FormTypes.ValidatorFunctionWithoutForm | yup.Schema<string>
     debugName: string
     autoAdjustSelection?: boolean
     selectionStart?: number

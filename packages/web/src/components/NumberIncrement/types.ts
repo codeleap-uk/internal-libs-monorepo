@@ -11,7 +11,7 @@ export type NumberIncrementProps =
     value: number
     onValueChange: (value: number) => void
     onChangeText?: (value: number) => void
-    validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
+    validate?: FormTypes.ValidatorWithoutForm<string> | yup.Schema<string>
     style?: StyledProp<NumberIncrementComposition>
     max?: number
     min?: number

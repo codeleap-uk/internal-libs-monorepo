@@ -7,7 +7,7 @@ import * as yup from 'yup'
 
 const emptyValues = ['', null, undefined]
 
-export function useValidate(value: any, validator: yup.SchemaOf<any> | ValidatorFunctionWithoutForm) {
+export function useValidate(value: any, validator: yup.Schema<any> | ValidatorFunctionWithoutForm) {
 
   const isEmpty = emptyValues.includes(value)
 

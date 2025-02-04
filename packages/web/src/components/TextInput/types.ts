@@ -13,7 +13,7 @@ export type TextInputProps =
   {
     style?: StyledProp<TextInputComposition>
     password?: boolean
-    validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
+    validate?: FormTypes.ValidatorWithoutForm<string> | yup.Schema<string>
     debugName?: string
     visibilityToggle?: boolean
     value?: NativeTextInputProps['value']
