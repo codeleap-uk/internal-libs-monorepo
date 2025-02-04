@@ -22,7 +22,7 @@
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
-    "typescript": "5.0.4",
+    "typescript": "5.5.2",
     "@tanstack/react-query": "5.60.6"
   },
   "dependencies": {

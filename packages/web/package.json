@@ -61,6 +61,6 @@
     "react": "18.1.0",
     "react-dom": "18.2.0",
     "react-select": "*",
-    "typescript": "5.0.4"
+    "typescript": "5.5.2"
   }
 }
