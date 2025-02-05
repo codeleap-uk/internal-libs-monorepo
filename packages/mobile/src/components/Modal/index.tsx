@@ -12,7 +12,7 @@ import { ModalHeaderProps, ModalProps } from './types'
 import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme, AppTheme, Theme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
-import { SlideInDown, SlideOutDown } from 'react-native-reanimated'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 
 export * from './styles'
 export * from './types'
@@ -201,8 +201,8 @@ Modal.defaultProps = {
   dismissOnBackdrop: true,
   scroll: true,
   closeOnHardwareBackPress: true,
-  boxEntering: SlideInDown.build(),
-  boxExiting: SlideOutDown.build(),
+  boxEntering: FadeIn.duration(100).build(),
+  boxExiting: FadeOut.duration(100).build(),
 } as Partial<ModalProps>
 
 MobileStyleRegistry.registerComponent(Modal)
