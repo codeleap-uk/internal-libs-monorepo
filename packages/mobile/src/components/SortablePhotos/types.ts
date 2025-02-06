@@ -9,7 +9,7 @@ export type SortablePhoto = {
 }
 
 export type WithId<T extends SortablePhoto> = T & {
-  id: string
+  key: string
 }
 
 export type SortableItemProps<T extends SortablePhoto> = {

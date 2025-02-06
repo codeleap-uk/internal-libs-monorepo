@@ -37,10 +37,10 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       const length = Math.abs(numPhotos - currentLength)
       const fillPhotos = Array(length).fill({ filename: null, file: null }) as T[]
 
-      const newPhotos = currentPhotos.concat(fillPhotos).map((photo, idx) => ({ ...photo, id: idx + '-photo' }))
+      const newPhotos = currentPhotos.concat(fillPhotos).map((photo, idx) => ({ ...photo, key: idx + '-photo' }))
 
       setData(newPhotos)
-      onChangePhotos(currentPhotos)
+      onChangePhotos(assignOrder(currentPhotos))
     }
   }, [loading])
 
@@ -65,6 +65,10 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     }
   }, [JSON.stringify(data)])
 
+  const assignOrder = (photos: WithId<T>[] | T[]) => {
+    return photos.map((photo, idx) => ({ ...photo, order: idx }))
+  }
+
   const sortPhotos = (_unorderedPhotos: WithId<T>[]) => {
     const unorderedPhotos = [..._unorderedPhotos]
 
@@ -72,12 +76,12 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
 
     const sortedPhotos = unorderedPhotos.map((photo, index) => ({ 
       ...(newPhotos[index] ?? { file: null, filename: null } as T),
-      id: photo?.id 
+      key: photo?.key 
     }))
 
     return {
       sortedPhotos,
-      newPhotos,
+      newPhotos: assignOrder(newPhotos),
     }
   }
 
