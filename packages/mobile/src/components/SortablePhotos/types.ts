@@ -15,8 +15,6 @@ export type WithId<T extends SortablePhoto> = T & {
 export type SortableItemProps<T extends SortablePhoto> = {
   photo: T
   order: number
-  height: number
-  width: number
   styles: Record<SortablePhotosComposition, ICSS>
   emptyIcon: AppIcon
 }
@@ -36,14 +34,10 @@ export type SortablePhotosProps<T extends SortablePhoto> = Omit<SortableGridProp
   photos: T[]
   onChangePhotos: (newPhotos: T[]) => void
   gap?: number
-  itemHeight?: number
-  itemWidth?: number
-  width?: number
   onPressPhoto?: (data: T[], photo: T, order: number) => void
   pickerConfig?: SortablePhotosPickerConfig
   multiple?: boolean
   emptyIcon?: AppIcon
-  disableDragDropEmptyItems?: boolean
   style?: StyledProp<SortablePhotosComposition>
   modalTitle?: string
   modalBody?: string

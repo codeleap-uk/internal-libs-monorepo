@@ -2,7 +2,7 @@ import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@co
 import { FileInput } from '../FileInput'
 import { Icon } from '../Icon'
 import { Image } from '../Image'
-import { Dimensions, Pressable, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import { SortableItemProps, SortablePhoto, SortablePhotosProps, WithId } from './types'
 import { useSortablePhotos } from './useSortablePhotos'
 import { useStylesFor } from '../../hooks'
@@ -16,10 +16,10 @@ export * from './styles'
 export * from './types'
 
 const DefaultItem = <T extends SortablePhoto>(props: SortableItemProps<T>) => {
-  const { photo, width, height, styles, emptyIcon } = props
+  const { photo, styles, emptyIcon } = props
 
   return (
-    <View style={[{ width, height }, styles.photoWrapper]}>
+    <View style={styles.photoWrapper}>
       {
         !!photo?.filename
           ? <Image resizeMode='cover' source={{ uri: photo?.file }} style={styles.photoImage} />
@@ -41,8 +41,6 @@ const defaultGetFilename = (file: string) => {
   return new Date().toISOString()
 }
 
-const screenWidth = Dimensions.get('screen').width
-
 export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const allProps = {
     ...SortablePhotos.defaultProps,
@@ -56,10 +54,6 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     multiple,
     pickerConfig,
     emptyIcon,
-    disableDragDropEmptyItems,
-    itemWidth: _itemWidth,
-    itemHeight: _itemHeight,
-    width: _parentWidth,
     style,
     loading,
     ...rest
@@ -78,12 +72,6 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     data,
   } = useSortablePhotos<T>(allProps)
 
-  const defaultParentWidth = screenWidth - (gap * 2)
-  const defaultItemWidth = (defaultParentWidth / numColumns) - gap
-
-  const itemWidth = _itemWidth ?? defaultItemWidth
-  const itemHeight = _itemHeight ?? itemWidth
-
   const fileInputPickerOptions = {
     ...SortablePhotos.defaultProps.pickerConfig,
     ...pickerConfig,
@@ -92,16 +80,14 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
   }
 
   const renderItem: SortableGridRenderItem<WithId<T>> = useCallback(({ item, index }) => (
-    <Pressable onPress={() => handlePressPhoto(item, index)}>
+    <Sortable.Pressable onPress={() => handlePressPhoto(item, index)}>
       <RenderItem
-        width={itemWidth}
-        height={itemHeight}
         photo={item}
         order={index}
         styles={styles}
         emptyIcon={emptyIcon}
       />
-    </Pressable>
+    </Sortable.Pressable>
   ), [handlePressPhoto])
 
   if (loading) {
@@ -148,8 +134,7 @@ SortablePhotos.defaultProps = {
   numColumns: 3,
   renderPhoto: DefaultItem,
   multiple: true,
-  disableDragDropEmptyItems: true,
-  gap: 16,
+  gap: 8,
   emptyIcon: 'plus',
   modalTitle: 'Photos',
   modalBody: null,
