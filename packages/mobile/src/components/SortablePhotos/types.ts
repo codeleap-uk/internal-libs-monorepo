@@ -1,10 +1,15 @@
 import { AppIcon, ICSS, StyledProp } from '@codeleap/styles'
 import { ReactElement } from 'react'
 import { SortablePhotosComposition } from './styles'
+import { type SortableGridProps } from 'react-native-sortables'
 
 export type SortablePhoto = {
   filename: string | null
   file: string | null
+}
+
+export type WithId<T extends SortablePhoto> = T & {
+  id: string
 }
 
 export type SortableItemProps<T extends SortablePhoto> = {
@@ -24,7 +29,7 @@ export type SortablePhotosPickerConfig = {
   showCropFrame?: boolean
 }
 
-export type SortablePhotosProps<T extends SortablePhoto> = {
+export type SortablePhotosProps<T extends SortablePhoto> = Omit<SortableGridProps<T>, 'data' | 'columns'> & {
   numColumns?: number
   numPhotos?: number
   renderPhoto?: (props: SortableItemProps<T>) => ReactElement
@@ -35,16 +40,8 @@ export type SortablePhotosProps<T extends SortablePhoto> = {
   itemWidth?: number
   width?: number
   onPressPhoto?: (data: T[], photo: T, order: number) => void
-  onDragStart?: (fromIndex: number) => void
-  onDragEnd?: (fromIndex: number, toIndex: number) => void
-  keyExtractor?: (photo: T, order: number) => any
-  delayLongPress?: number
   pickerConfig?: SortablePhotosPickerConfig
   multiple?: boolean
-  maxScale?: number
-  minOpacity?: number
-  scaleDuration?: number
-  slideDuration?: number
   emptyIcon?: AppIcon
   disableDragDropEmptyItems?: boolean
   style?: StyledProp<SortablePhotosComposition>
