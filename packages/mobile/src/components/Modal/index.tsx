@@ -3,7 +3,7 @@ import { View } from '../View'
 import { Scroll } from '../Scroll'
 import { TypeGuards } from '@codeleap/types'
 import { Backdrop } from '../Backdrop'
-import { useAnimatedVariantStyles, useBackButton } from '../../utils/hooks'
+import { useBackButton } from '../../utils/hooks'
 import { Text } from '../Text'
 import { Touchable } from '../Touchable'
 import { ActionIcon } from '../ActionIcon'
@@ -12,7 +12,7 @@ import { ModalHeaderProps, ModalProps } from './types'
 import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, useTheme, AppTheme, Theme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
-import { SlideInDown, SlideOutDown } from 'react-native-reanimated'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 
 export * from './styles'
 export * from './types'
@@ -90,17 +90,6 @@ export const Modal = (modalProps: ModalProps) => {
   const styles = useStylesFor(Modal.styleRegistryName, style)
 
   const buttonStyles = useNestedStylesByKey('closeButton', styles)
-
-  const boxAnimationStyles = useAnimatedVariantStyles({
-    updater: (states) => {
-      'worklet'
-      return visible ? states['box:visible'] : states['box:hidden']
-    },
-    animatedProperties: ['box:hidden', 'box:visible'],
-    variantStyles: styles,
-    transition: styles['box:transition'],
-    dependencies: [visible],
-  })
 
   const ScrollComponent = scroll ? Scroll : View
   const scrollStyle = scroll ? styles?.scroll : styles?.innerWrapper
@@ -212,8 +201,8 @@ Modal.defaultProps = {
   dismissOnBackdrop: true,
   scroll: true,
   closeOnHardwareBackPress: true,
-  boxEntering: SlideInDown.build(),
-  boxExiting: SlideOutDown.build(),
+  boxEntering: FadeIn.duration(100).build(),
+  boxExiting: FadeOut.duration(100).build(),
 } as Partial<ModalProps>
 
 MobileStyleRegistry.registerComponent(Modal)

@@ -1,7 +1,7 @@
 import { CreateOSAlert } from '@codeleap/modals'
 import { useEffect, useMemo, useState } from '@codeleap/hooks'
 import { FileInputImageSource, useFileInput } from '../FileInput'
-import { SortablePhoto, SortablePhotosProps } from './types'
+import { SortablePhoto, SortablePhotosProps, WithId } from './types'
 
 const SortableAlert = CreateOSAlert()
 
@@ -22,9 +22,9 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
 
   const input = useFileInput()
 
-  const [data, setData] = useState<T[]>([])
+  const [data, setData] = useState<WithId<T>[]>([])
 
-  const onChange = (photos: T[]) => {
+  const onChange = (photos: WithId<T>[]) => {
     const { newPhotos, sortedPhotos } = sortPhotos(photos)
 
     setData(sortedPhotos)
@@ -37,14 +37,14 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       const length = Math.abs(numPhotos - currentLength)
       const fillPhotos = Array(length).fill({ filename: null, file: null }) as T[]
 
-      const newPhotos = currentPhotos.concat(fillPhotos)
+      const newPhotos = currentPhotos.concat(fillPhotos).map((photo, idx) => ({ ...photo, key: idx + '-photo' }))
 
       setData(newPhotos)
-      onChangePhotos(currentPhotos)
+      onChangePhotos(assignOrder(currentPhotos))
     }
   }, [loading])
 
-  const { emptyIndexes, numberPhotosMissing } = useMemo(() => {
+  const { emptyIndexes, numberPhotosMissing, enabledDragDrop } = useMemo(() => {
     const copyPhotos = [...data]
 
     const emptyIndexes = copyPhotos.reduce((indexes, photo, index) => {
@@ -56,28 +56,32 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
 
     const numberPhotosMissing = emptyIndexes?.length
 
+    const enabledDragDrop = numberPhotosMissing < numPhotos - 1
+
     return {
       emptyIndexes,
       numberPhotosMissing,
+      enabledDragDrop,
     }
   }, [JSON.stringify(data)])
 
-  const sortPhotos = (_unorderedPhotos: T[]) => {
+  const assignOrder = (photos: WithId<T>[] | T[]) => {
+    return photos.map((photo, idx) => ({ ...photo, order: idx }))
+  }
+
+  const sortPhotos = (_unorderedPhotos: WithId<T>[]) => {
     const unorderedPhotos = [..._unorderedPhotos]
 
-    const [newPhotos, emptyPhotos] = unorderedPhotos.reduce(
-      ([newPhotos, emptyPhotos], photo) => {
-        !!photo?.filename ? newPhotos.push(photo) : emptyPhotos.push(photo)
-        return [newPhotos, emptyPhotos]
-      },
-      [[], []] as [T[], T[]]
-    )
+    const newPhotos = unorderedPhotos.filter(photo => !!photo?.filename)
 
-    const sortedPhotos: T[] = newPhotos.concat(emptyPhotos)
+    const sortedPhotos = unorderedPhotos.map((photo, index) => ({ 
+      ...(newPhotos[index] ?? { file: null, filename: null } as T),
+      key: photo?.key 
+    }))
 
     return {
       sortedPhotos,
-      newPhotos,
+      newPhotos: assignOrder(newPhotos),
     }
   }
 
@@ -111,7 +115,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
           ...newPhotos[order],
           filename,
           file: uri,
-        } as T
+        } as WithId<T>
       }
     } else {
       const file = files?.[0]
@@ -122,7 +126,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
         ...newPhotos[order],
         filename,
         file: uri,
-      } as T
+      } as WithId<T>
     }
 
     onChange(newPhotos)
@@ -135,12 +139,12 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
       ...newPhotos[order],
       filename: null,
       file: null,
-    } as T
+    } as WithId<T>
 
     onChange(newPhotos)
   }
 
-  const handlePressPhoto = (currentData: T[], photo: T, order: number) => {
+  const handlePressPhoto = (photo: T, order: number) => {
     SortableAlert.custom({
       title: modalTitle,
       body: modalBody,
@@ -150,13 +154,14 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
         !!photo?.filename && { text: modalDeleteText, onPress: () => handleDeletePhoto(photo, order) },
       ],
       // @ts-expect-error
+      closable: true,
       isRow: false,
     })
 
-    onPressPhoto?.(currentData, photo, order)
+    onPressPhoto?.(data, photo, order)
   }
 
-  const onChangePhotosOrder = (newData: T[]) => {
+  const onChangePhotosOrder = (newData: WithId<T>[]) => {
     onChange(newData)
   }
 
@@ -170,5 +175,6 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
     onChangePhotosOrder,
     emptyIndexes,
     data,
+    enabledDragDrop,
   }
 }

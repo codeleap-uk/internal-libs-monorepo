@@ -1,5 +1,5 @@
 import { AnyFunction } from '@codeleap/types'
-import BackgroundTimer from 'react-native-background-timer'
+import BackgroundTimer from '@boterop/react-native-background-timer'
 import { uuid } from '..'
 
 const throttleTimerId = {}
