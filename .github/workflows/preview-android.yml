@@ -1,0 +1,67 @@
+name: "Internal Release"
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - apps/mobile
+      - .github/workflows/preview-android.yml
+concurrency:
+  group: android-preview-${ GIT_BRANCH_NAME }
+  cancel-in-progress: true
+env:
+  PACKAGE_NAME: uk.co.codeleap.template
+permissions:
+  contents: write
+jobs:
+  build:
+    uses: ./.github/workflows/build-android.yml
+    with:
+      build-type: preview
+      package-name: uk.co.codeleap.template
+      keystore-repository-branch: master
+    secrets:
+      personal_access_token: ${{ secrets.GH_PAT }}
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Restore Cache artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ${{ needs.build.outputs.apk-path }}
+            ${{ needs.build.outputs.aab-path }}
+          key: ${{ needs.build.outputs.cache-key }}
+          enableCrossOsArchive: true
+          restore-keys:
+            ${{ needs.build.outputs.cache-key }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          draft: false
+          name: ${{ needs.build.outputs.version-name }}
+          tag_name: ${{ needs.build.outputs.version-name }}
+          files: |
+            ${{ needs.build.outputs.apk-path }}
+            ${{ needs.build.outputs.aab-path }}
+      
+      - name: Clone credentials
+        uses: actions/checkout@v2
+        with:
+          repository: codeleap-uk/keystores-android
+          ref: master
+          token: ${{ secrets.GH_PAT }}
+          path: keystores-android
+
+      - name: Deploy to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          packageName: ${{ env.PACKAGE_NAME }}
+          serviceAccountJson: keystores-android/playstore-credentials.json
+          releaseFiles: ${{ needs.build.outputs.aab-path }}
+          track: internal
+          status: completed
