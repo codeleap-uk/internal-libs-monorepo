@@ -1,0 +1,133 @@
+name: Build Android Artifacts
+on:
+  workflow_call:
+    inputs:
+      build-type:
+        required: true
+        type: string
+      package-name:
+        required: true
+        type: string
+      keystore-repository-branch:
+        required: true
+        type: string
+    secrets:
+      personal_access_token:
+        required: true
+    outputs:
+      apk-path:
+        description: "Path of the generated APK"
+        value: ${{ jobs.build-artifacts.outputs.apk_path }}
+      aab-path:
+        description: "Path of the generated AAB"
+        value: ${{ jobs.build-artifacts.outputs.aab_path }}
+      version-name:
+        description: "Qualified name of the version in the format v{version}-{build_number}"
+        value: ${{ jobs.build-artifacts.outputs.version_name }}
+      cache-key:
+        description: "The cache key where the files were stored"
+        value: ${{ jobs.build-artifacts.outputs.cache_key }}
+permissions:
+  contents: write
+jobs:
+  build-artifacts:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version_name: ${{ steps.version.outputs.version_name }}
+      apk_path: ${{ steps.version.outputs.apk_path }}
+      aab_path: ${{ steps.version.outputs.aab_path }}
+      cache_key: ${{ steps.version.outputs.cache_key }}
+
+    steps:
+
+      - name: Cloning current repo
+        uses: actions/checkout@v2
+
+      - name: Clone credentials
+        uses: actions/checkout@v2
+        with:
+          repository: codeleap-uk/keystores-android
+          ref: ${{ inputs.keystore-repository-branch }}
+          token: ${{ secrets.personal_access_token }}
+          path: keystores-android
+
+      - name: Move credentials to apps/mobile/android/app/keystores
+        run: |
+          mv keystores-android/* apps/mobile/android/app/keystores
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: actions/setup-python@v5
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Get latest google play version
+        run: |
+          pip install -r requirements.txt
+          echo "update version code"
+          export GPLAY=$(google-play get-latest-build-number --package-name ${{ inputs.package-name }} --credentials @file:apps/mobile/android/app/keystores/playstore-credentials.json --verbose)
+          
+          bun mobile updatePlayStoreVersion $GPLAY
+          cat apps/mobile/android/app/version.json
+      
+      - name: Get version name
+        id: version
+        run: |
+          VERSION_NAME=$(cat apps/mobile/android/app/version.json | jq -r '.name')
+          VERSION_CODE=$(cat apps/mobile/android/app/version.json | jq -r '.code')
+          version_name="v${VERSION_NAME}-${VERSION_CODE}"
+          echo "version_name=$version_name" >> "$GITHUB_OUTPUT"
+          echo "apk_path="app-$version_name.apk"" >> "$GITHUB_OUTPUT"
+          echo "aab_path="app-$version_name.aab"" >> "$GITHUB_OUTPUT"
+          echo "cache_key="android-artifacts-$version_name"" >> "$GITHUB_OUTPUT"
+      
+      - name: Cache artifacts
+        id: cache-artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ steps.version.outputs.apk_path }}
+            ${{ steps.version.outputs.aab_path }}
+          key: ${{ steps.version.outputs.cache_key }}
+
+      - uses: oven-sh/setup-bun@v2
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        with:
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        run: |
+          bun install
+        
+      - name: Set up JDK 17
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - uses: actions/cache@v4
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+              ${{ runner.os }}-gradle-
+      
+      - name: Build assets
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        run: |
+          BUILD_TYPE=$( echo "${{ inputs.build-type }}"  | awk '{ $1 = toupper(substr($1, 1, 1)) substr($1, 2); print }' )
+          bun mobile run gradlew bundle$BUILD_TYPE assemble$BUILD_TYPE
+      
+      - name: Move build outputs to root
+        if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        run: |
+          mv apps/mobile/android/app/build/outputs/apk/${{ inputs.build-type }}/app-${{ inputs.build-type }}.apk ${{ steps.version.outputs.apk_path }}
+          mv apps/mobile/android/app/build/outputs/bundle/${{ inputs.build-type }}/app-${{ inputs.build-type }}.aab ${{ steps.version.outputs.aab_path }}
