@@ -5,6 +5,7 @@ import { MobileStyleRegistry } from '../../Registry'
 import Animated from 'react-native-reanimated'
 import { ViewProps } from './types'
 import { useStylesFor } from '../../hooks'
+import { useComponentTestId } from '@codeleap/hooks'
 
 export * from './types'
 export * from './styles'
@@ -20,10 +21,12 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
 
   const styles = useStylesFor(View.styleRegistryName, style)
 
+  const testId = useComponentTestId(View, props, ['style', 'component', 'children', 'animated'])
+
   const Component: React.ComponentType<AnyRecord> = animated ? Animated.View : _Component
 
   return (
-    <Component {...viewProps} style={[styles.wrapper, animatedStyle]} />
+    <Component testID={testId} {...viewProps} style={[styles.wrapper, animatedStyle]} />
   )
 }
 
