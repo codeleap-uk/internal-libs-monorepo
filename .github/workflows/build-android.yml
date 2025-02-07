@@ -43,6 +43,9 @@ jobs:
 
       - name: Cloning current repo
         uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GH_PAT }}
 
       - name: Clone credentials
         uses: actions/checkout@v2
@@ -102,6 +105,11 @@ jobs:
         if: steps.cache-artifacts.outputs.cache-hit != 'true'
         run: |
           bun install
+          bun install -g turbo
+        
+      - name: Build libraries
+        run: |
+          bun run build
         
       - name: Set up JDK 17
         if: steps.cache-artifacts.outputs.cache-hit != 'true'
