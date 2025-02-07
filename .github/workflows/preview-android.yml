@@ -19,7 +19,7 @@ jobs:
     with:
       build-type: preview
       package-name: uk.co.codeleap.template
-      keystore-repository-branch: master
+      keystore-repository-branch: template
     secrets:
       personal_access_token: ${{ secrets.GH_PAT }}
 
@@ -53,7 +53,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: codeleap-uk/keystores-android
-          ref: master
+          ref: template
           token: ${{ secrets.GH_PAT }}
           path: keystores-android
 
