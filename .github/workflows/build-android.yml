@@ -61,15 +61,11 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - uses: actions/setup-python@v5
-        if: steps.cache-artifacts.outputs.cache-hit != 'true'
-        with:
-          python-version: '3.13'
-          cache: 'pip'
-
       - name: Get latest google play version
         run: |
-          pip install -r requirements.txt
+          pip install codemagic-cli-tools
+          pip3 install pyOpenSSL==24.2.1 --upgrade
+
           echo "update version code"
           export GPLAY=$(google-play get-latest-build-number --package-name ${{ inputs.package-name }} --credentials @file:apps/mobile/android/app/keystores/playstore-credentials.json --verbose)
           
