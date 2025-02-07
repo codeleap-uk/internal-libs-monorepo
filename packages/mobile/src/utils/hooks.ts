@@ -4,9 +4,9 @@ import { TypeGuards } from '@codeleap/types'
 import { Animated, AppState, AppStateStatus, Platform, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
 import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { PressableRippleProps } from '../modules/PressableRipple/type'
-import { useSoftInputState } from 'react-native-avoid-softinput'
 import { useMemo } from 'react'
 import { mergeStyles } from '@codeleap/styles'
+import { useKeyboardController } from '../hooks'
 
 export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAnimationConfig>) {
   const iters = useRef(0)
@@ -307,7 +307,7 @@ export function useBackButton(cb: () => boolean|void, deps = []) {
 }
 
 export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {
-  const { isSoftInputShown, softInputHeight } = useSoftInputState()
+  const { isVisible, height } = useKeyboardController()
 
   const propStyle = useMemo(() => {
     return StyleSheet.flatten(styles)
@@ -315,7 +315,7 @@ export function useKeyboardPaddingStyle(styles: ViewStyle[], enabled = true) {
 
   const bottomPadding = propStyle && TypeGuards.isNumber(propStyle.paddingBottom) ? propStyle.paddingBottom : 0
 
-  const totalPadding = softInputHeight + bottomPadding
+  const totalPadding = height + bottomPadding
 
-  return isSoftInputShown && enabled ? mergeStyles([propStyle, { paddingBottom: totalPadding }]) : propStyle
+  return isVisible && enabled ? mergeStyles([propStyle, { paddingBottom: totalPadding }]) : propStyle
 }

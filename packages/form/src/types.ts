@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { Join, Paths, Prev } from '@codeleap/types'
 import * as yup from 'yup'
 import { WebInputFile, MobileInputFile, DeepPartial, RNMaskedTextTypes } from '../../types'
-import { AnyObject } from 'yup/lib/object'
+import { AnyObject } from 'yup'
 
 type ValidationReturn = { message?: Label; valid?: boolean }
 
@@ -23,7 +23,7 @@ export type Validator<T> = T extends boolean
       | ValidatorFunction<false>
       | yup.BooleanSchema<boolean, AnyObject, true>
       | yup.BooleanSchema<boolean, AnyObject, false>
-  : ValidatorFunction<T> | yup.SchemaOf<T>
+  : ValidatorFunction<T> | yup.Schema<T>
 
 export type ValidatorWithoutForm<T> = T extends boolean
   ?
@@ -31,7 +31,7 @@ export type ValidatorWithoutForm<T> = T extends boolean
       | ValidatorFunction<false>
       | yup.BooleanSchema<boolean, AnyObject, true>
       | yup.BooleanSchema<boolean, AnyObject, false>
-  : ValidatorFunctionWithoutForm<T> | yup.SchemaOf<T>
+  : ValidatorFunctionWithoutForm<T> | yup.Schema<T>
 
 export type Options<T> = { label: Label; value: T }[]
 export type Option<T> = Options<T>[number]

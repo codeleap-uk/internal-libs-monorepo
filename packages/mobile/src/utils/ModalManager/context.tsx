@@ -44,7 +44,7 @@ export function Provider({ children }) {
     const newVisible = typeof set === 'boolean' ? set : !visible
 
     setModals((current) => {
-      const attached = newVisible ? [] : current[name].attachments.map(m => [m, { ...current[m], visible: false }])
+      const attached = newVisible ? [] : current[name]?.attachments?.map?.(m => [m, { ...current[m], visible: false }])
       return {
         ...current,
         [name]: {
@@ -52,7 +52,7 @@ export function Provider({ children }) {
           visible: newVisible,
           props,
         },
-        ...Object.fromEntries(attached),
+        ...Object.fromEntries(attached ?? []),
       }
 
     })

@@ -14,7 +14,7 @@ export type NumberIncrementProps =
   Omit<RNTextInputProps, 'style'|'value'> &
   {
     value: number | string
-    validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
+    validate?: FormTypes.ValidatorWithoutForm<string> | yup.Schema<string>
     max?: number
     min?: number
     step?: number
