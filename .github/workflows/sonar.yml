@@ -2,7 +2,7 @@ name: SonarQube Analysis
 on:
   push:
     branches:
-      - master
+      - ignore
 jobs:
   sonar:
     runs-on: ubuntu-latest
