@@ -6,6 +6,7 @@ on:
     paths:
       - apps/mobile
       - .github/workflows/preview-android.yml
+      - .github/workflows/build-android.yml
 concurrency:
   group: android-preview-${ GIT_BRANCH_NAME }
   cancel-in-progress: true
