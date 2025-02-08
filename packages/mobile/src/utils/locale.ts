@@ -1,7 +1,15 @@
-import { NativeModules, Platform } from 'react-native'
+import { findBestLanguageTag, getLocales } from 'react-native-localize'
 
-export const getDeviceLocale = (): string => Platform.OS === 'ios'
-  ? NativeModules.SettingsManager.settings.AppleLocale ||
-      NativeModules.SettingsManager.settings.AppleLanguages[0]
-  : NativeModules.I18nManager.localeIdentifier
+export function getDeviceLocale(dictionary: Record<string, any>, defaultLocale: string) {
+  const deviceLocales = getLocales().map(locale => locale?.languageTag)
 
+  const dictionaryLocales = Object.keys(dictionary)
+
+  const possibleLocales = [...new Set([...dictionaryLocales, ...deviceLocales])]
+
+  const bestLocale = findBestLanguageTag(possibleLocales)
+
+  if (!bestLocale) return defaultLocale
+
+  return bestLocale?.languageTag
+}

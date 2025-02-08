@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/form",
-  "version": "4.3.2",
+  "version": "4.3.9",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -31,9 +31,8 @@
     "@codeleap/i18n": "workspace:*",
     "zod": "*",
     
-    
-    "react": "18.1.0",
-    "typescript": "5.0.4",
-    "yup": "^0.32.11"
+    "react": "18.2.0",
+    "typescript": "5.5.2",
+    "yup": "1.6.1"
   }
 }

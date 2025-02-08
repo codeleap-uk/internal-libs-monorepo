@@ -1,6 +1,6 @@
-import { expect, test } from "bun:test";
+import { expect, test } from "bun:test"
 import {globalState} from '../globalState'
-import { createStateSlice } from "../utils";
+import { createStateSlice } from "../utils"
 
 test("slice selects consistently", () => {
   const store = globalState({
@@ -23,7 +23,7 @@ test("slice selects consistently", () => {
   })
 
   expect(slice.get()).toBe(10)
-});
+})
 
 test("slice sets consistently", () => {
   const store = globalState({
@@ -45,4 +45,4 @@ test("slice sets consistently", () => {
 
   expect(slice.get()).toBe(10)
   expect(store.get().a).toBe(10)
-});
+})

@@ -40,7 +40,7 @@ export const SearchInput = (props: SearchInputProps) => {
   const hasStateProps = !TypeGuards.isNil(value) && TypeGuards.isFunction(onValueChange)
 
   const [search, setSearch] = hasStateProps ? [value, onValueChange] : useState(defaultValue)
-  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
+  const setSearchTimeout = React.useRef<NodeJS.Timer | null>(null)
 
   const handleChangeSearch = (value: string) => {
     setSearch(value)

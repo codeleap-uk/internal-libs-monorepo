@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
-import { onMount } from '@codeleap/hooks'
+import { onMount, useComponentTestId } from '@codeleap/hooks'
 import { useGlobalContext } from '@codeleap/hooks'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
@@ -50,6 +50,8 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
   const styles = useStylesFor(Touchable.styleRegistryName, style)
 
   const { logger } = useGlobalContext()
+
+  const testId = useComponentTestId(Touchable, touchableProps, ['style', 'children', 'debounce'])
 
   const press = () => {
     if (!onPress) return
@@ -187,6 +189,7 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
       {!disableRipple ? (
         <PressableRipple
           onPress={press}
+          testID={testId}
           {...props}
           style={[pressableStyle, styles?.pressable]}
           rippleFades={false}
@@ -207,6 +210,7 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
             getFeedbackStyle(pressed),
             styles?.pressable,
           ])}
+          testID={testId}
           {...props}
           ref={ref}
         >

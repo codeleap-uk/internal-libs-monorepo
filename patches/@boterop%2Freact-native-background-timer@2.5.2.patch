@@ -1,0 +1,72 @@
+diff --git a/node_modules/@boterop/react-native-background-timer/index.d.ts b/index.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3ac8a1a9aa1c2494c7409dbf7e41bdc65c2da75f
+--- /dev/null
++++ b/index.d.ts
+@@ -0,0 +1,65 @@
++import { EmitterSubscription } from 'react-native';
++
++class BackgroundTimer {
++  private uniqueId: number;
++  private callbacks: Record<
++    number,
++    { callback: () => void; interval: boolean; timeout: number }
++  >;
++  private backgroundListener?: EmitterSubscription;
++  private backgroundTimer?: number;
++
++  /**
++   * Starts the background timer with an optional delay.
++   * @param delay Time in milliseconds before the timer starts (default is 0).
++   */
++  start(delay?: number): void;
++
++  /**
++   * Stops the background timer.
++   */
++  stop(): void;
++
++  /**
++   * Runs a background timer that executes a callback after a specified delay.
++   * @param callback Function to execute.
++   * @param delay Time in milliseconds before executing the callback.
++   */
++  runBackgroundTimer(callback: () => void, delay: number): void;
++
++  /**
++   * Stops the currently running background timer.
++   */
++  stopBackgroundTimer(): void;
++
++  /**
++   * Sets a timeout that executes a callback after a specified time.
++   * @param callback Function to execute.
++   * @param timeout Time in milliseconds before executing the callback.
++   * @returns A unique timeout ID.
++   */
++  setTimeout(callback: () => void, timeout: number): number;
++
++  /**
++   * Clears a timeout using its ID.
++   * @param timeoutId ID of the timeout to clear.
++   */
++  clearTimeout(timeoutId: number): void;
++
++  /**
++   * Sets an interval that repeatedly executes a callback after a specified time.
++   * @param callback Function to execute.
++   * @param timeout Time in milliseconds between executions.
++   * @returns A unique interval ID.
++   */
++  setInterval(callback: () => void, timeout: number): number;
++
++  /**
++   * Clears an interval using its ID.
++   * @param intervalId ID of the interval to clear.
++   */
++  clearInterval(intervalId: number): void;
++}
++
++declare const backgroundTimer: BackgroundTimer;
++export default backgroundTimer;
+\ No newline at end of file

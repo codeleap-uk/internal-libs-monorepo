@@ -1,4 +1,4 @@
-import { expect, test } from "bun:test";
+import { expect, test } from "bun:test"
 import {globalState} from '../globalState'
 
 test("store.set()", () => {
@@ -7,8 +7,7 @@ test("store.set()", () => {
   store.set(4)
 
   expect(store.get()).toBe(4)
-});
-
+})
 
 test("store.set() with object", () => {
   const store = globalState({
@@ -21,7 +20,7 @@ test("store.set() with object", () => {
   })
 
   expect(store.get().a).toBe(4)
-});
+})
 
 test("store.reset() with object", () => {
   const store = globalState({
@@ -37,8 +36,7 @@ test("store.reset() with object", () => {
   const newVal = store.get()
   expect(newVal.a).toBe(4)
   expect(newVal.b).toBe('Changed')
-});
-
+})
 
 test('store array methods', () => {
   const store = globalState([] as number[])
@@ -68,4 +66,4 @@ test("store.listen()", () => {
   store.set(4)
 
   expect(store.get()).toBe(4)
-});
+})

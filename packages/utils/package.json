@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/utils",
-  "version": "4.3.2",
+  "version": "4.3.9",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -19,8 +19,8 @@
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "axios": "^1.7.9",
-    "typescript": "5.0.4",
-    "react": "18.1.0",
+    "typescript": "5.5.2",
+    "react": "18.2.0",
     "@tanstack/react-query": "5.60.6"
   },
   "dependencies": {

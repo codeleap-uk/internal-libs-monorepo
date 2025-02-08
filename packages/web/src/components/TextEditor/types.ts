@@ -19,5 +19,5 @@ export type TextEditorProps = React.PropsWithChildren<{
   toolbarComponent?: JSX.Element
   fileInputRef?: RefObject<FileInputRef>
   _error?: boolean
-  validate?: FormTypes.ValidatorWithoutForm<string> | yup.SchemaOf<string>
+  validate?: FormTypes.ValidatorWithoutForm<string> | yup.Schema<string>
 }>

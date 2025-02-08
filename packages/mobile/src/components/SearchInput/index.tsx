@@ -39,7 +39,7 @@ export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, 
 
   const [search, setSearch] = !TypeGuards.isNil(value) && !!onValueChange ? [value, onValueChange] : useState('')
 
-  const setSearchTimeout = React.useRef<NodeJS.Timeout | null>(null)
+  const setSearchTimeout = React.useRef<NodeJS.Timer | null>(null)
 
   const handleChangeSearch = (value: string) => {
     setSearch(value)

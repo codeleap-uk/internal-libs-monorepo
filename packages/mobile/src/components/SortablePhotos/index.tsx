@@ -2,22 +2,24 @@ import { AnyRecord, IJSX, StyledComponentProps, useNestedStylesByKey } from '@co
 import { FileInput } from '../FileInput'
 import { Icon } from '../Icon'
 import { Image } from '../Image'
-import { Dimensions, View } from 'react-native'
-import { DragSortableView } from 'react-native-drag-sort'
-import { SortableItemProps, SortablePhoto, SortablePhotosProps } from './types'
+import { Pressable, View } from 'react-native'
+import { SortableItemProps, SortablePhoto, SortablePhotosProps, WithId } from './types'
 import { useSortablePhotos } from './useSortablePhotos'
 import { useStylesFor } from '../../hooks'
 import { MobileStyleRegistry } from '../../Registry'
 import { ActivityIndicator } from '../ActivityIndicator'
+import Sortable, { type SortableGridRenderItem } from 'react-native-sortables'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { useCallback } from 'react'
 
 export * from './styles'
 export * from './types'
 
 const DefaultItem = <T extends SortablePhoto>(props: SortableItemProps<T>) => {
-  const { photo, width, height, styles, emptyIcon } = props
+  const { photo, styles, emptyIcon } = props
 
   return (
-    <View style={[{ width, height }, styles.photoWrapper]}>
+    <View style={styles.photoWrapper}>
       {
         !!photo?.filename
           ? <Image resizeMode='cover' source={{ uri: photo?.file }} style={styles.photoImage} />
@@ -39,8 +41,6 @@ const defaultGetFilename = (file: string) => {
   return new Date().toISOString()
 }
 
-const screenWidth = Dimensions.get('screen').width
-
 export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const allProps = {
     ...SortablePhotos.defaultProps,
@@ -54,10 +54,6 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     multiple,
     pickerConfig,
     emptyIcon,
-    disableDragDropEmptyItems,
-    itemWidth: _itemWidth,
-    itemHeight: _itemHeight,
-    width: _parentWidth,
     style,
     loading,
     ...rest
@@ -71,19 +67,10 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     input,
     handlePressPhoto,
     numberPhotosMissing,
-    emptyIndexes,
+    enabledDragDrop,
     onChangePhotosOrder,
     data,
   } = useSortablePhotos<T>(allProps)
-
-  const defaultParentWidth = screenWidth - (gap * 2)
-  const defaultItemWidth = (defaultParentWidth / numColumns) - gap
-
-  const itemWidth = _itemWidth ?? defaultItemWidth
-  const itemHeight = _itemHeight ?? itemWidth
-  const parentWidth = _parentWidth ?? defaultParentWidth
-
-  const childrenMargin = gap / 2
 
   const fileInputPickerOptions = {
     ...SortablePhotos.defaultProps.pickerConfig,
@@ -91,6 +78,17 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     multiple,
     maxFiles: numberPhotosMissing,
   }
+
+  const renderItem: SortableGridRenderItem<WithId<T>> = useCallback(({ item, index }) => (
+    <Sortable.Pressable onPress={() => handlePressPhoto(item, index)}>
+      <RenderItem
+        photo={item}
+        order={index}
+        styles={styles}
+        emptyIcon={emptyIcon}
+      />
+    </Sortable.Pressable>
+  ), [handlePressPhoto])
 
   if (loading) {
     return (
@@ -100,7 +98,7 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
     )
   }
 
-  return (
+  return <GestureHandlerRootView>
     <View style={styles.wrapper}>
       <FileInput
         mode='hidden'
@@ -108,32 +106,19 @@ export const SortablePhotos = <T extends SortablePhoto>(props: SortablePhotosPro
         pickerOptions={fileInputPickerOptions}
       />
 
-      <DragSortableView
-        dataSource={data}
-        childrenHeight={itemHeight}
-        childrenWidth={itemWidth}
-        parentWidth={parentWidth}
-        marginChildrenBottom={childrenMargin}
-        marginChildrenLeft={childrenMargin}
-        marginChildrenRight={childrenMargin}
-        marginChildrenTop={childrenMargin}
-        onDataChange={onChangePhotosOrder}
-        onClickItem={handlePressPhoto}
-        fixedItems={disableDragDropEmptyItems ? emptyIndexes : undefined}
+      <Sortable.Grid
+        columns={numColumns}
+        columnGap={gap}
+        rowGap={gap}
+        sortEnabled={enabledDragDrop}
+        showDropIndicator
         {...rest}
-        renderItem={(item, order) => (
-          <RenderItem
-            width={itemWidth}
-            height={itemHeight}
-            photo={item}
-            order={order}
-            styles={styles}
-            emptyIcon={emptyIcon}
-          />
-        )}
+        data={data}
+        renderItem={renderItem}
+        onDragEnd={({ data }) => onChangePhotosOrder(data as unknown as WithId<T>[])}
       />
     </View>
-  )
+  </GestureHandlerRootView>
 }
 
 SortablePhotos.styleRegistryName = 'SortablePhotos'
@@ -149,8 +134,7 @@ SortablePhotos.defaultProps = {
   numColumns: 3,
   renderPhoto: DefaultItem,
   multiple: true,
-  disableDragDropEmptyItems: true,
-  gap: 16,
+  gap: 8,
   emptyIcon: 'plus',
   modalTitle: 'Photos',
   modalBody: null,

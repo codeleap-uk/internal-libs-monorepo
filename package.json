@@ -16,7 +16,6 @@
     "clear:dist": "rm -rf packages/*/dist",
     "web": "cd apps/web && bun",
     "mobile": "cd apps/mobile && bun",
-    "common": "cd packages/common && bun",
     "styles": "cd packages/styles && bun",
     "cli": "cd packages/cli && bun",
     "config": "cd packages/config && bun",
@@ -56,7 +55,7 @@
     "prettier": "^2.5.1",
     "standard-version": "^9.5.0",
     "syncpack": "^9.8.4",
-    "ts-node-dev": "^1.1.8",
+    "ts-node-dev": "1.1.8",
     "typedoc": "0.25.1",
     "typedoc-json-parser": "^8.2.0",
     "typescript": "5.0.4"
@@ -65,5 +64,9 @@
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
-  "packageManager": "bun@1.1.33"
+  "packageManager": "bun@1.1.33",
+  "patchedDependencies": {
+    "@boterop/react-native-background-timer@2.5.2": "patches/@boterop%2Freact-native-background-timer@2.5.2.patch",
+    "react-native-keyboard-controller@1.16.2": "patches/react-native-keyboard-controller@1.16.2.patch"
+  }
 }
