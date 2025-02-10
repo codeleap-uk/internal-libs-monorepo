@@ -1,6 +1,6 @@
 import { Field } from "../lib/Field";
 import {z} from 'zod'
-import { FieldOptions, Validator } from "../newtypes";
+import { FieldOptions, Validator } from "../types";
 import { zodValidator } from "../validators";
 
 type VALUE = string

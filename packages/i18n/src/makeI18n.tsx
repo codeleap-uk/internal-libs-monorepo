@@ -4,9 +4,24 @@ import { formatStrWithArgs, getNestedValues, replaceVariables } from './utils'
 
 let locale: string
 
+
+
+
 export function make18n<KeyPaths extends string = string>(props: MakeI18nProps): I18nType<KeyPaths> {
   const { initialLocale, persistor, languageDictionary } = props
   locale = initialLocale
+
+  function translated<T>(value: T, getter: (locale: string) => T) {
+    return new Proxy({ value }, {
+      get(target, property, receiver) {
+        const locale = persistor.getLocale()
+
+        const val = getter(locale)
+
+        return val
+      }
+    })
+  } 
 
   const t = (key: string, args?: any, customLocale?: string): string => {
     const dict = languageDictionary?.[customLocale || locale]
@@ -30,12 +45,19 @@ export function make18n<KeyPaths extends string = string>(props: MakeI18nProps):
     return replaceVariables(value, args)
   }
 
+  const lazy = (key: string, args?: any, customLocale?: string) => {
+    return translated(key, (locale) => {
+      return t(key, args, customLocale ?? locale)
+    })
+  }
+
   const setLocale = (newLocale: string) => {
     locale = newLocale
   }
 
   return {
     t,
+    lazy,
     setLocale,
     persistor,
     languageDictionary,

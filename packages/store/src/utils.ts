@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react'
-import { WritableStore } from 'nanostores'
+import { WritableAtom } from 'nanostores'
 import { useMemo } from 'react'
 
 export function stateAssign<T>(newValue: Partial<T>, stateValue: T): T {

@@ -21,6 +21,10 @@ export type FieldTuples<T extends FormDef> = {
   [K in NarrowKeyof<T>]: [K, T[K]]
 }[NarrowKeyof<T>]
 
+export type PropertyForKeys<T extends FormDef, Keys extends FieldPaths<T>,  Property extends keyof Field<any,any>> = {
+  [K in Keys]: T[K][Property]
+}
+
 export type FieldPropertyTuples<T extends FormDef, Property extends keyof Field<any,any>> = {
   [K in NarrowKeyof<T>]: [K, T[K][Property]]
 }[NarrowKeyof<T>]

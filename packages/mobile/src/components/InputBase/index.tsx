@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { getRenderedComponent } from '@codeleap/utils'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -6,6 +6,9 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
+
+import {View as RNView} from 'react-native'
+import { StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './utils'
@@ -22,7 +25,7 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <>{props.children}</>
 }
 
-export const InputBase = (props: InputBaseProps) => {
+export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBaseProps, ref) => {
   const {
     children,
     error = null,
@@ -91,6 +94,7 @@ export const InputBase = (props: InputBaseProps) => {
     {...otherProps}
     {...wrapperProps}
     style={styles.wrapperStyle}
+    ref={ref}
   >
     {
       order.map((key) => <KeyPassthrough key={key}>
@@ -99,7 +103,7 @@ export const InputBase = (props: InputBaseProps) => {
 
     }
   </WrapperComponent>
-}
+}) as StyledComponentWithProps<InputBaseProps>
 
 InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
 

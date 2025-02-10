@@ -5,6 +5,10 @@ import { Validator } from './validation'
 
 export type FieldState<T> = WritableStore<T>
 
+export interface ExtraFieldOptions {
+
+}
+
 export type FieldOptions<
   T, 
   Validate extends Validator<T, any, any>
@@ -19,6 +23,6 @@ export type FieldOptions<
     Omit<FieldOptions<T, Validate >, 'loader'>
   >
 
-}
+} & ExtraFieldOptions
 
 

@@ -1,5 +1,5 @@
 import { useImperativeHandle } from "react"
-import { IFieldRef } from "../newtypes"
+import { IFieldRef } from "../types"
 
 export function useFieldBinding<T>(ref: React.Ref<IFieldRef<T>>, impl: Partial<IFieldRef<T>>, deps = []){
 
@@ -24,6 +24,15 @@ export function useFieldBinding<T>(ref: React.Ref<IFieldRef<T>>, impl: Partial<I
     },
     scrollIntoView: async () => {
       notImplemented('scrollIntoView')
+    },
+    hideValue() {
+      notImplemented('hideValue')
+    },
+    revealValue(){
+      notImplemented('revealValue')
+    },
+    toggleValueVisibility(){
+      notImplemented('toggleValueVisibility')
     },
     ...impl
   }), deps)

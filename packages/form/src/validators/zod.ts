@@ -1,5 +1,5 @@
 import { z, ZodIssue } from 'zod'
-import { ValidationResult } from '../newtypes'
+import { ValidationResult } from '../types'
 import { TypeGuards } from '@codeleap/types'
 
 type ZodValidationResult<T extends z.ZodType> = ValidationResult<z.infer<T>, z.ZodError['issues']>

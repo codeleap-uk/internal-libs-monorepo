@@ -1,5 +1,5 @@
  
-import { FormDef, Validator } from "../newtypes"
+import { FormDef, Validator } from "../types"
 import { Field } from "./Field"
 
 type FieldBuilder<T, Validate extends Validator<any,any,any>> = typeof Field<T, Validate>

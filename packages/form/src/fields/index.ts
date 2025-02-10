@@ -7,3 +7,8 @@ export const fields = {
   text: fieldFactory(TextField),
   list: fieldFactory(ListField)
 }
+
+export {
+  TextField,
+  ListField
+}

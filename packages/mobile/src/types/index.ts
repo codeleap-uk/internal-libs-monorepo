@@ -1,5 +1,6 @@
 export * from './utility'
 
+
 export type ComponentWithDefaultProps<P = any> = ((props: P) => JSX.Element) & {
   defaultProps: Partial<P>
 }

@@ -1,8 +1,9 @@
 import { createStateSlice, GlobalState, globalState } from "@codeleap/store"
  
 import { TypeGuards } from "@codeleap/types"
-import { useMemo } from "react"
-import { FieldPaths, FieldPropertyTuples, FieldTuples, FormDef, FormValues } from "../newtypes"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { FieldPaths, FieldPropertyTuples, FieldTuples, FormDef, FormValues, PropertyForKeys } from "../types"
+import { useUnmount } from "@codeleap/hooks"
 
 
 
@@ -16,6 +17,11 @@ function buildState<T extends FormDef>(def: T) {
 
   return stateArg as FormValues<T>
 }
+
+
+type FormSelector<T extends FormDef, S> = (form: Form<T>) =>  S
+
+
 
 class Form<T extends FormDef> {
   id: string
@@ -86,7 +92,18 @@ class Form<T extends FormDef> {
     })
   }
 
-  validate(fields?: FieldPaths<T>){
+  firstInvalid() {
+    for(const [fieldName, field] of Object.entries(this.fields)){
+      const validation = field.validate()
+
+      if(!validation.isValid) return {
+        field,
+        validation,
+      }
+    }
+  }
+
+  validate<Fields extends FieldPaths<T>[] = FieldPaths<T>[]>(fields?: Fields): PropertyForKeys<T, Fields[number], '__validationRes'> {
 
     const validateFields = fields ?? Object.keys(this.fields)
 
@@ -103,9 +120,42 @@ class Form<T extends FormDef> {
     return resultMap
   }
 
+  
+
   register(field: FieldPaths<T>) {
+    if(!this.fields[field]){
+      throw new Error(`Field "${field}" not found in "${this.id}" form`)
+    } 
     return this.fields[field].props()
   }
+ 
+
+  use<Selected>(selector: FormSelector<T, Selected>): Selected {
+
+   
+    const [selected, setSelected] = useState(() => selector(this))
+
+    
+    const reselect = useCallback(() => {
+      setSelected(selector(this))
+    }, [selector])
+
+    useEffect(() => {
+      return this.state.listen((value, previous) => {
+        console.log('Change value', value, previous, value != previous)
+        if(value != previous){
+          reselect()
+        }
+      })      
+    }, [reselect])
+
+    
+
+    return selected
+  }
+
+
+ 
 
 }
 

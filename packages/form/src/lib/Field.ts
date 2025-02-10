@@ -1,10 +1,12 @@
-import { FieldState, FieldOptions, IFieldRef, ValidationResult, Validator, IFieldProps } from '../newtypes';
+import { FieldState, FieldOptions,  } from '../types/field';
+import { ValidationResult, Validator } from '../types/validation';
+import { IFieldRef,  IFieldProps } from '../types/globals';
 import { atom }  from 'nanostores'
 import { SecondToLastArguments, TypeGuards } from '@codeleap/types';
-import { formLogger } from '../logger';
+ 
 import { useStore } from '@nanostores/react'
 import { useFieldBinding } from './useFieldBinding';
-import { createRef } from 'react';
+import { createRef, useRef, useState } from 'react';
 
 class ValidationError extends Error {
   data: any
@@ -34,6 +36,8 @@ export class Field<
   ref?: React.RefObject<IFieldRef<T>>
 
   __validationRes: ValidationResult<Result, Err>
+
+  private initialValue: T
 
   static getProps = (field: Field<any,any>) => {
     throw new Error('Field.getProps not implemented')
@@ -75,22 +79,31 @@ export class Field<
     return this.state.set(to)
   }
 
-  use(impl?: Partial<IFieldRef<T>>, deps?: any[]){
+  useValue(){
     const value = useStore(this.state)
 
-    const validation = this.validate(value)
+    return value
+  }
+
+  use(impl?: Partial<IFieldRef<T>>, deps?: any[]){
+    const value = this.useValue()    
+
+    const validation = this.useValidation()
 
     
     // Yes, this is dangerous and doesn't follow the rules, but not passing an implementation to imperative handle after passing it once would break the app anyway
     if(impl) { 
       this.useBinding(impl, deps)
     }
-   
+    
+    const changed = value != this.initialValue
 
+    // console.log(validation, value)
     return {
       validation,
       value,
       setValue: this.setValue,
+      changed,
       representation: this.toRepresentation(value)
     }
   }
@@ -98,6 +111,10 @@ export class Field<
   useBinding(...args: SecondToLastArguments<typeof useFieldBinding<T>>){
     useFieldBinding(this.ref, ...args)
 
+  }
+
+  changed() {
+    return this.state.get() != this.initialValue
   }
 
   // If we make this async, the js engine will not delay further execution while the funcion is not done. This way we wait until we know wheter there's a promise or not
@@ -125,12 +142,17 @@ export class Field<
 
     this.state = this?.options?.state ?? atom(defaultValue)
 
+    if(!defaultValuePromise) {
+      this.initialValue = defaultValue
+    }
+
     if(!!defaultValuePromise) {
       this.log('debug', 'Waiting for initial value')
 
       return defaultValuePromise
         .then((v) => {
           this.state.set(v)
+          this.initialValue = v
           this.log('debug', `Got initial value`, v)
         })
         .catch(e => {
@@ -185,8 +207,54 @@ export class Field<
     
   }
 
+  useValidation() {
+    const value = this.useValue()
+    
+    const isUnset = typeof value === 'undefined'
+
+    const startedUnset = useRef(isUnset).current
+
+    const isSet = !isUnset
+
+    const validation = this.validate(value)
+
+    const isValid = validation.isValid
+
+    const isInvalid = !isValid
+
+    const hasChanged = this.initialValue != value
+    
+    const message = validation.readableError
+
+    const errorDisplayRequiresBlur = startedUnset
+
+    
+    const [hasBlurred, setHasBlurred] = useState(false)
+
+    const showError = isInvalid && (errorDisplayRequiresBlur ? hasBlurred : true)
+
+    
+
+    return {
+      onInputBlurred(){
+        setHasBlurred(true)
+      },
+      hasBlurred,
+      hasChanged,
+      startedUnset,
+      isSet,
+      isInvalid,
+      isValid,
+      message,
+      showError,
+      isUnset,
+      validation,
+      value
+    }
+  }
+
   log(level, ...args: any[]){
-    formLogger[level](...this.formatLog(...args))
+    // formLogger[level](...this.formatLog(...args))
   }
   
   toInternalValue(v: any) {
@@ -203,4 +271,3 @@ export class Field<
 }
 
 
- 

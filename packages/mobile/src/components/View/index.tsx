@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { View as RNView } from 'react-native'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
@@ -10,12 +10,13 @@ import { useComponentTestId } from '@codeleap/hooks'
 export * from './types'
 export * from './styles'
 
-export const View = <T extends React.ComponentType = typeof RNView>(props: ViewProps<T>) => {
+export const View = forwardRef((props: ViewProps<T>, ref) => {
   const {
     style,
     component: _Component = RNView,
     animated = false,
     animatedStyle,
+    // ref,
     ...viewProps
   } = props
 
@@ -26,9 +27,9 @@ export const View = <T extends React.ComponentType = typeof RNView>(props: ViewP
   const Component: React.ComponentType<AnyRecord> = animated ? Animated.View : _Component
 
   return (
-    <Component testID={testId} {...viewProps} style={[styles.wrapper, animatedStyle]} />
+    <Component testID={testId} {...viewProps} style={[styles.wrapper, animatedStyle]} ref={ref}/>
   )
-}
+})
 
 View.Animated = (props: ViewProps<typeof Animated.View>) => {
   return <View {...props} animated />

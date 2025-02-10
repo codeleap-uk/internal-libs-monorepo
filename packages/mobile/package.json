@@ -2,6 +2,7 @@
   "name": "@codeleap/mobile",
   "version": "4.3.9",
   "main": "src/index.ts",
+  
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",

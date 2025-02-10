@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { onUpdate, usePrevious } from '@codeleap/hooks'
 import { deepEqual } from '@codeleap/utils'
 import { ScrollView } from 'react-native'
@@ -8,6 +8,7 @@ import { ScrollProps, ScrollRef } from './types'
 import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { ScrollProvider, useScrollPubSub } from '../../modules/scroll'
 
 export * from './styles'
 export * from './types'
@@ -64,26 +65,40 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
 
   const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
 
+  const _scrollRef = useRef<ScrollView>()
+
+  const { ref: scrollRef, emit } = useScrollPubSub(_scrollRef)
+  
+
+  useImperativeHandle(ref, () => scrollRef.current as unknown as  ScrollView, [])
+
+
   return (
-    <Component
-      showsVerticalScrollIndicator={false}
-      // @ts-ignore
-      ref={ref}
-      refreshControl={
-        hasRefresh && (
-          <RefreshControl
-            refreshing={refreshingDisplay}
-            onRefresh={onRefresh}
-            {...refreshControlProps}
-          />
-        )
-      }
-      {...props}
-      style={styles?.wrapper}
-      contentContainerStyle={keyboardStyle}
-    >
-      {children}
-    </Component>
+    <ScrollProvider ref={scrollRef}>
+      <Component
+        showsVerticalScrollIndicator={false}
+        // @ts-ignore
+        ref={_scrollRef}
+        refreshControl={
+          hasRefresh && (
+            <RefreshControl
+              refreshing={refreshingDisplay}
+              onRefresh={onRefresh}
+              {...refreshControlProps}
+            />
+          )
+        }
+        {...props}
+        style={styles?.wrapper}
+        contentContainerStyle={keyboardStyle}
+        onMomentumScrollEnd={(e) => {
+          emit('onMomentumScrollEnd', e)
+          props?.onMomentumScrollEnd?.(e)
+        }}
+      >
+        {children}
+      </Component>
+    </ScrollProvider>
   )
 }) as StyledComponentWithProps<ScrollProps>
 
