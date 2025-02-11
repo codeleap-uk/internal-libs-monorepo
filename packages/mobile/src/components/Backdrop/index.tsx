@@ -34,7 +34,6 @@ export const Backdrop = (props: BackdropProps) => {
   return (
     <View.Animated
       pointerEvents={visible ? 'auto' : 'none'}
-
       entering={entering}
       exiting={exiting}
       {...wrapperProps}

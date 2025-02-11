@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react'
-
-import { useBooleanToggle } from '@codeleap/hooks'
 import { TypeGuards } from '@codeleap/types'
-import { forwardRef, useImperativeHandle } from 'react'
-import { TextInput as NativeTextInput, NativeSyntheticEvent, TextInputFocusEventData, StatusBar } from 'react-native'
+import { forwardRef } from 'react'
+import { TextInput as NativeTextInput, NativeSyntheticEvent, TextInputFocusEventData, StatusBar, View } from 'react-native'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Touchable } from '../Touchable'
 import { MaskedTextInput } from '../../modules/textInputMask'
@@ -32,8 +30,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   })
 
   const {
-    
-    validate,
     debugName,
     visibilityToggle,
     masking,
@@ -52,14 +48,14 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   } = others
 
   const [secureTextEntry, setSecureTextEntry] = useState(secure)
-  
+
   const toggleSecureTextEntry = () => setSecureTextEntry(s => !s)
 
   const isMasked = !!masking
 
   const InputElement = isMasked ? MaskedTextInput : NativeTextInput
 
-  const wrapperRef = useRef()
+  const wrapperRef = useRef<View>()
 
   const styles = useStylesFor(TextInput.styleRegistryName, style)
 
@@ -70,54 +66,41 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       blur() {
         innerInputRef.current.blur()
       },
-      focus(){
+      focus() {
         innerInputRef.current.focus()
       },
       getValue() {
-        return innerInputRef.current.value
+        return innerInputRef.current.state as string
       },
-      revealValue(){
+      revealValue() {
         setSecureTextEntry(false)
       },
-      hideValue(){
+      hideValue() {
         setSecureTextEntry(true)
       },
-      toggleValueVisibility(){
+      toggleValueVisibility() {
         toggleSecureTextEntry()
       },
       scrollIntoView() {
         return new Promise((resolve, reject) => {
           wrapperRef.current.measure(
             (x, y, width, height, pageX, pageY) => {
-
               const target = pageY - StatusBar.currentHeight - 16
-
-              console.log('SCROOl', target, StatusBar.currentHeight)
 
               const unsub = scrollable.current.subscribe('onMomentumScrollEnd', e => {
                 const diff = Math.abs(e.nativeEvent.contentOffset.y - target)
 
-           
                 resolve()
                 unsub()
-                 
               })
-              
-              console.log(scrollable.current)
 
-               scrollable.current.scrollTo({
-                 y: target,
-                 animated: true
-               })
-
-
-
-              
+              scrollable.current.scrollTo({
+                y: target,
+                animated: true
+              })
             }
-           )
+          )
         })
-        
-        
       },
     },
     [setSecureTextEntry]
@@ -125,10 +108,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const validation = fieldHandle.validation
 
-
   const isPressable = TypeGuards.isFunction(onPress)
-
- 
 
   const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     validation.onInputBlurred()
@@ -138,7 +118,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   }, [validation.onInputBlurred, props.onBlur])
 
   const handleFocus = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    
     setIsFocused(true)
     if (autoAdjustSelection) setCurrentSelection(null)
     props.onFocus?.(e)
@@ -146,7 +125,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const handleMaskChange = (masked, unmasked) => {
     fieldHandle.setValue(masking?.saveFormatted ? masked : masked)
-    // if (onChangeText) textInputProps.onChangeText(masking?.saveFormatted ? masked : masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
   }
 

@@ -22,7 +22,6 @@ export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => 
   const {
     style,
     onRefresh,
-    component,
     refreshing,
     placeholder,
     refreshControlProps,

@@ -1,13 +1,13 @@
-import { Field } from "../lib/Field";
-import {z} from 'zod'
-import { FieldOptions, Validator } from "../types";
-import { zodValidator } from "../validators";
+import { Field } from "../lib/Field"
+import { z } from 'zod'
+import { FieldOptions, Validator } from "../types"
+import { zodValidator } from "../validators"
 
 type VALUE = string
 
 export type TextValidator<R = any, Err = any> = Validator<VALUE, R, Err>
 
-type TextFieldOptions<Validate extends TextValidator> = FieldOptions<VALUE, Validate>  & {
+type TextFieldOptions<Validate extends TextValidator> = FieldOptions<VALUE, Validate> & {
   secure?: boolean
 }
 
@@ -17,16 +17,8 @@ export class TextField<Validate extends TextValidator> extends Field<string, Val
 
   constructor(options: TextFieldOptions<Validate>) {
     super({
-      validate: zodValidator(z.string()),
+      validate: zodValidator(z.string()) as unknown as Validate,
       ...options
     })
   }
 }
-
-
-
- 
-
-
- 
-

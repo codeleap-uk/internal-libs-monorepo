@@ -2,7 +2,7 @@ import { createStateSlice, GlobalState, globalState } from "@codeleap/store"
  
 import { TypeGuards } from "@codeleap/types"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { FieldPaths, FieldPropertyTuples, FieldTuples, FormDef, FormValues, PropertyForKeys } from "../types"
+import { FieldPaths, FieldPropertyTuples, FieldTuples, FormDef, FormValues, PropertyForKeys, ValidationResult } from "../types"
 import { useUnmount } from "@codeleap/hooks"
 
 
@@ -48,7 +48,7 @@ class Form<T extends FormDef> {
   get isValid(){
     const res = this.validate()
 
-    return Object.values(res).every(result => result.isValid)
+    return Object.values(res).every((result: ValidationResult<any, any>) => result.isValid)
   }
 
   slice<K extends FieldPaths<T>>(field: K) {
@@ -117,7 +117,7 @@ class Form<T extends FormDef> {
       results.filter(v => !TypeGuards.isNil(v))
     )
 
-    return resultMap
+    return resultMap as unknown as PropertyForKeys<T, Fields[number], '__validationRes'>
   }
 
   

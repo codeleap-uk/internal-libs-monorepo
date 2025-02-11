@@ -3,11 +3,6 @@ import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, ScrollViewProps } 
 
 const scrollProperties = [
    'scrollTo',
-   'scrollToEnd',
-   'getScrollableNode',
-   'getInnerViewNode',
-   'getScrollResponder',
- 
 ] satisfies (keyof ScrollView)[]
 
 type ScrollProperty = (typeof scrollProperties)[number]
@@ -38,8 +33,6 @@ const noOpScrollable = {
 }  as Scrollable
 
 const ScrollContext = React.createContext({} as ScrollContextValue)
-
-
 
 export const useScrollPubSub = (ref: MutableRefObject<Omit<Scrollable,'subscribe'>>) => {
   const listeners = useRef(new Map())
@@ -78,7 +71,6 @@ export const useScrollPubSub = (ref: MutableRefObject<Omit<Scrollable,'subscribe
 
 
 export const ScrollProvider = React.forwardRef<Scrollable, React.PropsWithChildren>(({children}, ref) => {
-
   return <ScrollContext.Provider value={{ ref: ref as ScrollRef }}>
     {children}
   </ScrollContext.Provider>

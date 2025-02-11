@@ -1,38 +1,41 @@
 import React, { forwardRef } from 'react'
 import { View as RNView } from 'react-native'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import Animated from 'react-native-reanimated'
-import { ViewProps } from './types'
+import { ViewAnimatedProps, ViewProps } from './types'
 import { useStylesFor } from '../../hooks'
 import { useComponentTestId } from '@codeleap/hooks'
 
 export * from './types'
 export * from './styles'
 
-export const View = forwardRef((props: ViewProps<T>, ref) => {
+export const View = forwardRef<RNView, ViewProps>((props, ref) => {
   const {
     style,
-    component: _Component = RNView,
     animated = false,
     animatedStyle,
-    // ref,
     ...viewProps
   } = props
 
   const styles = useStylesFor(View.styleRegistryName, style)
 
-  const testId = useComponentTestId(View, props, ['style', 'component', 'children', 'animated'])
+  const testId = useComponentTestId(View, props, ['style', 'children', 'animated'])
 
-  const Component: React.ComponentType<AnyRecord> = animated ? Animated.View : _Component
+  const Component: React.ComponentType<AnyRecord> = animated ? Animated.View : RNView
 
   return (
-    <Component testID={testId} {...viewProps} style={[styles.wrapper, animatedStyle]} ref={ref}/>
+    <Component
+      testID={testId}
+      {...viewProps}
+      style={[styles.wrapper, animatedStyle]}
+      ref={ref}
+    />
   )
-})
+}) as StyledComponentWithProps<ViewProps> & { Animated?: (props: ViewAnimatedProps) => JSX.Element }
 
-View.Animated = (props: ViewProps<typeof Animated.View>) => {
-  return <View {...props} animated />
+View.Animated = (props: ViewAnimatedProps) => {
+  return <View {...props} />
 }
 
 View.styleRegistryName = 'View'
@@ -40,7 +43,7 @@ View.elements = ['wrapper']
 View.rootElement = 'wrapper'
 
 View.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return View as (<T extends React.ComponentType = typeof RNView>(props: StyledComponentProps<ViewProps<T>, typeof styles>) => IJSX)
+  return View as (props: StyledComponentProps<ViewProps, typeof styles>) => IJSX
 }
 
 MobileStyleRegistry.registerComponent(View)
