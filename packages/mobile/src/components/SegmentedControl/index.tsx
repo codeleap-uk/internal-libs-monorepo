@@ -35,9 +35,9 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
     animation = {},
     scrollProps = {},
     getItemWidth = () => (themeValues?.width - themeSpacing?.value?.(4)) / options.length,
-    renderBubble,
+    renderBubble: BubbleView,
     scrollToCurrentOptionOnMount,
-    renderOption,
+    renderOption: Option,
     touchableProps,
     style,
     ...viewProps
@@ -113,9 +113,6 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
     scrollTo(currentOptionIdx)
     hasScrolledInitially.current = true
   }
-
-  const BubbleView = renderBubble
-  const Option = renderOption
 
   const bubbleAnimation = useAnimatedVariantStyles({
     variantStyles: styles,
