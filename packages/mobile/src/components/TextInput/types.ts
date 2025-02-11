@@ -20,7 +20,7 @@ export type TextInputProps =
     masking?: TextInputMaskProps['masking']
     visibleIcon?: AppIcon
     hiddenIcon?: AppIcon
-    _error?: string
+    forceError?: string
     onPress?: AnyFunction
     style?: StyledProp<TextInputComposition>
     ref?: React.Ref<RNTextInput>

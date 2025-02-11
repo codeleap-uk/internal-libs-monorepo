@@ -42,7 +42,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     style,
     autoAdjustSelection,
     selectionStart,
-    _error = null,
+    forceError,
     onChangeText,
     ...textInputProps
   } = others
@@ -133,7 +133,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const placeholderTextColor = [
     [isDisabled, styles['placeholder:disabled']],
-    [!validation.isValid, styles['placeholder:error']],
+    [validation.showError, styles['placeholder:error']],
     [isFocused, styles['placeholder:focus']],
     [true, styles?.placeholder],
     // @ts-expect-error
@@ -141,7 +141,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const selectionColor = [
     [isDisabled, styles['selection:disabled']],
-    [!validation.isValid, styles['selection:error']],
+    [validation.showError, styles['selection:error']],
     [isFocused, styles['selection:focus']],
     [true, styles?.selection],
     // @ts-expect-error
@@ -182,7 +182,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     ref={wrapperRef}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
-    error={(validation.isValid && !_error) ? null : _error || validation.message}
+    error={validation.showError ? forceError || validation.message : null}
     style={{
       ...styles,
       innerWrapper: [
@@ -218,7 +218,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
         styles?.input,
         isMultiline && styles['input:multiline'],
         isFocused && styles['input:focused'],
-        !validation.isValid && styles['input:error'],
+        validation.showError && styles['input:error'],
         isDisabled && styles['input:disabled'],
         hasMultipleLines && styles['input:hasMultipleLines'],
         hasValue && styles['input:typed'],

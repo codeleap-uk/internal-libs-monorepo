@@ -224,7 +224,7 @@ export class Field<
 
     const hasChanged = this.initialValue != value
     
-    const message = validation.readableError
+    const message = validation.readableError ?? validation.error?.[0]?.message
 
     const errorDisplayRequiresBlur = startedUnset
 

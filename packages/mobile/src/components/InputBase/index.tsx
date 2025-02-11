@@ -6,7 +6,7 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
-
+import RNAnimated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import {View as RNView} from 'react-native'
 import { StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
@@ -85,9 +85,11 @@ export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBasePro
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
-    error: hideErrorMessage ? null : (
-      _error || <Text text={''} style={styles.errorStyle} />
-    ),
+    error: hideErrorMessage || !error ? null : (
+      <RNAnimated.View exiting={FadeOut.duration(100)} entering={FadeIn.duration(200)}>
+        {_error}
+      </RNAnimated.View>
+    ) ,
   }
 
   return <WrapperComponent
