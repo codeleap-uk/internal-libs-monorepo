@@ -100,7 +100,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     cancelButtonProps = {},
     confirmButtonProps = {},
     outerInputComponent: OuterInput,
-    footer,
     datePickerProps,
     mode,
     label,
@@ -110,7 +109,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     style,
     minimumDate,
     maximumDate,
-    initialDate,
+    initialDate = minimumDate,
     footerComponent: Footer,
     toggleOnConfirm,
     onConfirm: _onConfirm,
@@ -130,7 +129,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const formattedDate = value ? formatDate(value) : ''
   const { locale } = useI18N()
 
-  const tempDate = useRef<Date | null>(null)
+  const tempDate = useRef<Date | null>(initialDate instanceof Date ? initialDate : new Date(initialDate))
 
   const onConfirm = () => {
     if (commitDate == 'onConfirm' && !!tempDate.current) {
@@ -146,7 +145,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     }
   }
 
-  const modalFooter = footer || <Footer
+  const modalFooter = <Footer
     {...allProps}
     confirm={onConfirm}
     doneStyles={compositionStyles?.doneButton}
@@ -176,9 +175,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   } : {}
 
   const date = useMemo(() => {
-    let newValue = null
-    if (value) newValue = value
-    else if (initialDate) newValue = value
+    const newValue = value ?? initialDate
     return newValue instanceof Date ? newValue : new Date(newValue)
   }, [value, initialDate])
 
@@ -201,13 +198,12 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           open={visible}
           onCancel={toggle}
           date={date}
-          onDateChange={(date) => {
-            if (commitDate === 'onChange') {
-              setValue(date)
-              return
-            }
+          onDateChange={(currentDate) => {
+            tempDate.current = currentDate
 
-            tempDate.current = date
+            if (commitDate === 'onChange') {
+              setValue(currentDate)
+            }
           }}
           locale={locale}
           // @ts-expect-error

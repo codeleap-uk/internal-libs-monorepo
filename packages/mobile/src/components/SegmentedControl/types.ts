@@ -5,7 +5,7 @@ import { TextProps } from '../Text'
 import { TouchableProps } from '../Touchable'
 import { FormTypes } from '@codeleap/form'
 import { StyledProp } from '@codeleap/styles'
-import { SegmentedControlComposition } from '../components'
+import { SegmentedControlComposition, ViewProps } from '../components'
 
 export type SegmentedControlRef = ScrollRef & {
   scrollTo: (index: number) => void
@@ -20,6 +20,8 @@ export type SegmentedControlProps<T = string> =
     value: T
     debugName: string
     animation?: TransitionConfig
+    animated?: boolean
+    animatedStyle?: ViewProps['animatedStyle']
     textProps?: Partial<TextProps>
     touchableProps?: Partial<TouchableProps>
     label?: FormTypes.Label
