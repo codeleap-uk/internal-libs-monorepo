@@ -1,13 +1,11 @@
-import React, { forwardRef, useState } from 'react'
-import { onUpdate, usePrevious } from '@codeleap/hooks'
-import { deepEqual } from '@codeleap/utils'
+import React, { forwardRef, useCallback, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { RefreshControl } from '../RefreshControl'
-import { useKeyboardPaddingStyle } from '../../utils'
 import { ScrollProps, ScrollRef } from './types'
 import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
 
 export * from './styles'
 export * from './types'
@@ -17,52 +15,40 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
     style,
     refreshTimeout,
     children,
-    changeData,
     refreshControlProps = {},
     contentContainerStyle,
     keyboardAware,
-    animated,
+    onRefresh: onRefresh,
     ...props
   } = {
     ...Scroll.defaultProps,
     ...scrollProps,
   }
 
-  const hasRefresh = !!props.onRefresh
-  const [refreshingState, setRefreshing] = useState(false)
-  const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshingState
+  const hasRefresh = !!onRefresh
+  const [refreshing, setRefreshing] = useState(false)
+  const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshing
 
   const timer = React.useRef(null)
-  const previousData = usePrevious(changeData)
 
-  const onRefresh = () => {
-    if (timer.current) {
+  const refresh = useCallback(() => {
+    if (timer.current !== null) {
       clearTimeout(timer.current)
+      timer.current = null
     }
 
     setRefreshing(true)
 
-    props.onRefresh()
+    onRefresh?.()
 
     timer.current = setTimeout(() => {
       setRefreshing(false)
     }, refreshTimeout)
-  }
-
-  onUpdate(() => {
-    if (refreshingDisplay && !deepEqual(previousData, changeData)) {
-      setRefreshing(false)
-      if (timer.current) {
-        clearTimeout(timer.current)
-      }
-    }
-  }, [refreshingDisplay, changeData])
+  }, [onRefresh])
 
   const styles = useStylesFor(Scroll.styleRegistryName, style)
 
-  const Component = ScrollView
-
-  const keyboardStyle = useKeyboardPaddingStyle([styles?.content, contentContainerStyle], keyboardAware)
+  const Component = keyboardAware ? KeyboardAwareScrollView : ScrollView
 
   return (
     <Component
@@ -73,14 +59,15 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
         hasRefresh && (
           <RefreshControl
             refreshing={refreshingDisplay}
-            onRefresh={onRefresh}
+            onRefresh={refresh}
             {...refreshControlProps}
           />
         )
       }
+      bottomOffset={30}
       {...props}
       style={styles?.wrapper}
-      contentContainerStyle={keyboardStyle}
+      contentContainerStyle={[styles?.content, contentContainerStyle]}
     >
       {children}
     </Component>
@@ -99,7 +86,6 @@ Scroll.defaultProps = {
   keyboardShouldPersistTaps: 'handled',
   refreshTimeout: 3000,
   keyboardAware: true,
-  animated: true,
 } as Partial<ScrollProps>
 
 MobileStyleRegistry.registerComponent(Scroll)
