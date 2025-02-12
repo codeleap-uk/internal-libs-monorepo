@@ -10,7 +10,7 @@ export type BooleanValidator<R = any, Err = any> = Validator<VALUE, R, Err>
 type BooleanFieldOptions<Validate extends BooleanValidator> = FieldOptions<VALUE, Validate>
 
 export class BooleanField<Validate extends BooleanValidator> extends Field<boolean, Validate> {
-  _type = "NUMBER"
+  _type = "BOOLEAN"
 
   constructor(options: BooleanFieldOptions<Validate>) {
     super({
