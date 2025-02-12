@@ -11,6 +11,7 @@ import { DatePickerModalProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { DateField, fields, useField } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -89,12 +90,11 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   }
 
   const {
+    field,
     isCustomModal,
     hideInput,
     visible: _visible,
     toggle: _toggle,
-    value: _value,
-    onValueChange,
     formatDate,
     debugName,
     cancelButtonProps = {},
@@ -120,7 +120,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
 
-  const [value, setValue] = [_value, onValueChange]
+  const fieldHandle = useField(field, [], fields.date as () => DateField<any>)
+
+  const [value, setValue] = [fieldHandle?.value, fieldHandle.setValue]
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
 
@@ -154,11 +156,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     confirmButtonProps={confirmButtonProps}
     cancelButtonProps={cancelButtonProps}
     showDoneButton={showDoneButton}
-    value={value}
     debugName={debugName}
     visible={visible}
     toggle={toggle}
-    onValueChange={setValue}
     valueLabel={formattedDate}
   />
 

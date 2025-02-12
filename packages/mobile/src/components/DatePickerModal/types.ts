@@ -5,9 +5,12 @@ import { DatePickerProps } from 'react-native-date-picker'
 import { ButtonProps } from '../Button'
 import { ModalProps } from '../Modal'
 import { StyledProp } from '@codeleap/styles'
+import { DateField } from '@codeleap/form'
 
-export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent'> & {
+export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'field'> & {
   valueLabel: string
+  value: Date
+  onValueChange: (date: Date) => void
 }
 
 type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'style'> & {
@@ -21,12 +24,11 @@ type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponen
 export type DatePickerModalProps =
   Omit<ModalProps, 'style' | 'ref'> &
   {
+    field?: DateField<any>
     hideInput?: boolean
     debugName: string
-    value: Date
     label?: string
     placeholder?: string
-    onValueChange: (date: Date) => void
     isCustomModal?: boolean
     mode?: DatePickerProps['mode']
     cancelButtonProps?: Partial<ButtonProps>
