@@ -105,6 +105,7 @@ export class Field<
       setValue: this.setValue,
       changed,
       representation: this.toRepresentation(value),
+      options: this.options,
     }
   }
 

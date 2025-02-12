@@ -3,7 +3,7 @@ import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native/type
 import { useInputBase } from '../InputBase/useInputBase'
 import { NumberIncrementProps } from './types'
 import { TypeGuards } from '@codeleap/types'
-import { fields } from '@codeleap/form'
+import { FieldOptions, fields } from '@codeleap/form'
 
 export const MAX_VALID_DIGITS = 1000000000000000 // maximum number of digits that the input supports to perform operations
 
@@ -15,8 +15,6 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     actionPressAutoFocus,
     timeoutActionFocus,
     onChangeMask,
-    min,
-    max,
     forceError,
     editable,
     step,
@@ -31,6 +29,11 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     innerInputRef,
     wrapperRef,
   } = useInputBase(field, fields.number)
+
+  const options = fieldHandle.options as FieldOptions<any, any> & { min: number; max: number }
+
+  const max = props?.max ?? options?.max
+  const min = props?.min ?? options?.min
 
   const actionTimeoutRef = useRef(null)
 
@@ -80,11 +83,6 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     onFocus?.(e)
   }, [onFocus])
 
-  const handleMaskChange = useCallback((masked, unmasked) => {
-    handleChangeInput?.(masked)
-    if (onChangeMask) onChangeMask(masked, unmasked)
-  }, [onChangeMask])
-
   const handleChangeInput = useCallback((text) => {
     const value = parseValue(text)
 
@@ -97,6 +95,11 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
 
     return value
   }, [])
+
+  const handleMaskChange = useCallback((masked, unmasked) => {
+    handleChangeInput?.(masked)
+    if (onChangeMask) onChangeMask(masked, unmasked)
+  }, [onChangeMask])
 
   const incrementDisabled = useMemo(() => {
     const maxLimit = TypeGuards.isNumber(max) && (Number(fieldHandle?.value) >= max)
@@ -129,5 +132,7 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     hasError,
     incrementDisabled,
     decrementDisabled,
+    min,
+    max,
   }
 }

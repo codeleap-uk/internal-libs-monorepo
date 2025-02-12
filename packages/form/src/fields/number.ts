@@ -16,12 +16,14 @@ export class NumberField<Validate extends NumberValidator> extends Field<number,
   _type = "NUMBER"
 
   constructor(options: NumberFieldOptions<Validate>) {
+    const { min = 0, max = 100000, ...others } = options
+
     super({
-      validate: zodValidator(z.number().min(0).max(100000)) as unknown as Validate,
+      validate: zodValidator(z.number().min(min).max(max)) as unknown as Validate,
       defaultValue: 0,
-      min: 0,
-      max: 100000,
-      ...options
-    })
+      min,
+      max,
+      ...others
+    } as NumberFieldOptions<Validate>)
   }
 }

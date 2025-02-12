@@ -12,7 +12,7 @@ import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import CurrencyInput from 'react-native-currency-input'
 import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
-import { MAX_VALID_DIGITS, useNumberIncrement } from './useNumberIncrement'
+import { useNumberIncrement } from './useNumberIncrement'
 
 export * from './styles'
 export * from './types'
@@ -40,8 +40,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     style,
     disabled,
     onChangeMask,
-    max,
-    min,
     step,
     editable,
     onPress,
@@ -67,6 +65,8 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const {
     fieldHandle,
     validation,
+    min,
+    max,
     innerInputRef,
     wrapperRef,
     isFocused,
@@ -209,8 +209,6 @@ NumberIncrement.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 NumberIncrement.defaultProps = {
-  max: MAX_VALID_DIGITS,
-  min: 0,
   step: 1,
   editable: true,
   separator: null,
