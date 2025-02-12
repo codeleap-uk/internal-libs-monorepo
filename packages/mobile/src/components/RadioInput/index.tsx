@@ -97,6 +97,8 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
     wrapperRef,
   } = useInputBase<T, SelectableField<T, any>>(field as SelectableField<T, any>, fields.selectable as () => SelectableField<T, any>)
 
+  const { items } = field.getProps()
+
   // @ts-expect-error icss type
   const _radioOnRight = radioOnRight ?? styles?.__props?.radioOnRight
 
@@ -110,7 +112,7 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
     debugName={debugName}
     hasValue={hasValue}
   >
-    {fieldHandle?.items?.map((item, idx) => (
+    {items?.map((item, idx) => (
       <Option
         debugName={debugName}
         item={item}
@@ -119,7 +121,7 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
         styles={styles}
         selected={fieldHandle?.value === item.value}
         onSelect={() => fieldHandle.setValue(item.value)}
-        separator={idx < fieldHandle?.items?.length - 1}
+        separator={idx < items?.length - 1}
         reverseOrder={_radioOnRight}
       />
     ))}

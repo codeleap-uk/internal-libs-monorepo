@@ -3,7 +3,7 @@ import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native/type
 import { useInputBase } from '../InputBase/useInputBase'
 import { NumberIncrementProps } from './types'
 import { TypeGuards } from '@codeleap/types'
-import { Field, FieldOptions, fields } from '@codeleap/form'
+import { Field, fields } from '@codeleap/form'
 
 export const MAX_VALID_DIGITS = 1000000000000000 // maximum number of digits that the input supports to perform operations
 
@@ -30,10 +30,10 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     wrapperRef,
   } = useInputBase(field as Field<number, any, any>, fields.number as () => Field<number, any, any>)
 
-  const options = fieldHandle.options as FieldOptions<any, any> & { min: number; max: number }
+  const fieldProps = field.getProps()
 
-  const max = props?.max ?? options?.max
-  const min = props?.min ?? options?.min
+  const max = props?.max ?? fieldProps?.max
+  const min = props?.min ?? fieldProps?.min
 
   const actionTimeoutRef = useRef(null)
 

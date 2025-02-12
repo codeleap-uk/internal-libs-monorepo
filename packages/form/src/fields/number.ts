@@ -5,13 +5,17 @@ import { zodValidator } from "../validators"
 
 export type NumberValidator<R = any, Err = any> = Validator<number | number[], R, Err>
 
-type NumberFieldOptions<Validate extends NumberValidator> = FieldOptions<number | number[], Validate> & {
+type Props = {
   min?: number
   max?: number
 }
 
+type NumberFieldOptions<Validate extends NumberValidator> = FieldOptions<number | number[], Validate> & Props
+
 export class NumberField<Validate extends NumberValidator> extends Field<number | number[], Validate> {
   _type = "NUMBER"
+
+  properties = {} as Props
 
   constructor(options: NumberFieldOptions<Validate>) {
     const { min = 0, max = 100000, defaultValue, ...others } = options
@@ -27,5 +31,14 @@ export class NumberField<Validate extends NumberValidator> extends Field<number 
       defaultValue,
       ...others
     } as NumberFieldOptions<Validate>)
+
+    this.properties = {
+      min,
+      max,
+    }
+  }
+
+  getProps() {
+    return this.properties
   }
 }

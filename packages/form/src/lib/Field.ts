@@ -37,7 +37,7 @@ export class Field<
 
   __validationRes: ValidationResult<Result, Err>
 
-  initialValue: T
+  private initialValue: T
 
   static getProps = (field: Field<any,any>) => {
     throw new Error('Field.getProps not implemented')

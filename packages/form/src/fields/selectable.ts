@@ -1,6 +1,6 @@
 import { Field } from "../lib/Field"
 import { z } from 'zod'
-import { FieldOptions, IFieldRef, Validator } from "../types"
+import { FieldOptions, Validator } from "../types"
 import { zodValidator } from "../validators"
 
 type VALUE = string | number
@@ -20,7 +20,7 @@ type SelectableFieldOptions<V extends VALUE, Validate extends SelectableValidato
 export class SelectableField<V extends VALUE, Validate extends SelectableValidator<V>> extends Field<V, Validate> {
   _type = "SELECTABLE"
 
-  items = []
+  items = [] as Option<V>[]
 
   constructor(options: SelectableFieldOptions<V, Validate>) {
     super({
@@ -31,25 +31,8 @@ export class SelectableField<V extends VALUE, Validate extends SelectableValidat
     this.items = options.options
   }
 
-  use(impl?: Partial<IFieldRef<V>>, deps?: any[]){
-    const value = this.useValue()    
-
-    const validation = this.useValidation()
-    
-    // Yes, this is dangerous and doesn't follow the rules, but not passing an implementation to imperative handle after passing it once would break the app anyway
-    if(impl) { 
-      this.useBinding(impl, deps)
-    }
-    
-    const changed = value != this.initialValue
-
+  getProps() {
     return {
-      validation,
-      value,
-      setValue: this.setValue,
-      changed,
-      representation: this.toRepresentation(value),
-      options: this.options,
       items: this.items,
     }
   }

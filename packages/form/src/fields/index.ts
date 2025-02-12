@@ -4,6 +4,7 @@ import { ListField } from "./list"
 import { NumberField } from "./number"
 import { BooleanField } from "./bool"
 import { SelectableField } from "./selectable"
+import { DateField } from "./date"
 
 export const fields = {
   text: fieldFactory(TextField),
@@ -11,6 +12,7 @@ export const fields = {
   number: fieldFactory(NumberField),
   boolean: fieldFactory(BooleanField),
   selectable: fieldFactory(SelectableField),
+  date: fieldFactory(DateField),
 }
 
 export {
@@ -19,4 +21,5 @@ export {
   NumberField,
   BooleanField,
   SelectableField,
+  DateField,
 }
