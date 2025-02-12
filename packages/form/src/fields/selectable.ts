@@ -19,7 +19,7 @@ export class SelectableField<V extends VALUE, Validate extends SelectableValidat
 
   constructor(options: SelectableFieldOptions<V, Validate>) {
     super({
-      validate: zodValidator(z.null()) as unknown as Validate,
+      validate: zodValidator(z.string().or(z.number())) as unknown as Validate,
       ...options
     })
 

@@ -142,7 +142,6 @@ class Form<T extends FormDef> {
 
     useEffect(() => {
       return this.state.listen((value, previous) => {
-        console.log('Change value', value, previous, value != previous)
         if(value != previous){
           reselect()
         }

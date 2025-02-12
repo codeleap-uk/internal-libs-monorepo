@@ -23,6 +23,8 @@ export type FieldOptions<
     Omit<FieldOptions<T, Validate >, 'loader'>
   >
 
+  onValueChange?: (newValue: T) => void
+
 } & ExtraFieldOptions
 
 

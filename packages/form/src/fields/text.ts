@@ -9,6 +9,7 @@ export type TextValidator<R = any, Err = any> = Validator<VALUE, R, Err>
 
 type TextFieldOptions<Validate extends TextValidator> = FieldOptions<VALUE, Validate> & {
   secure?: boolean
+  multiline?: boolean
 }
 
 

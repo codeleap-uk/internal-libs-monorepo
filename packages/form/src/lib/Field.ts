@@ -76,6 +76,7 @@ export class Field<
   }
 
   setValue(to: T) {
+    if (this.options.onValueChange) this.options.onValueChange(to)
     return this.state.set(to)
   }
 

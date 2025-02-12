@@ -23,7 +23,7 @@ export class DateField<Validate extends DateValidator> extends Field<Date, Valid
     super({
       validate: zodValidator(z.date()) as unknown as Validate,
       ...others
-    } as DateFieldOptions<Validate>)
+    })
 
     this.properties = {
       minimumDate,
