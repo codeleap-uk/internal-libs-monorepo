@@ -4,9 +4,9 @@ import { useWrappingScrollable } from '../../modules/scroll'
 import { Field, IFieldRef, fields, useField } from '@codeleap/form'
 
 export function useInputBase(
-  field: Field<string|number, any, any>, 
-  defaultField: () => Field<string | number, any, any, unknown> = fields.text,
-  params: Partial<IFieldRef<string | number>> = {}, 
+  field: Field<string|number|boolean, any, any>, 
+  defaultField: () => Field<string | number | boolean, any, any, unknown> = fields.text,
+  params: Partial<IFieldRef<string | number | boolean>> = {}, 
   deps: any[] = []
 ) {
   const wrapperRef = useRef<View>()
