@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useMemo } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { forwardRef } from 'react'
-import { TextInput as NativeTextInput, NativeSyntheticEvent, TextInputFocusEventData, StatusBar, View } from 'react-native'
+import { TextInput as NativeTextInput } from 'react-native'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Touchable } from '../Touchable'
 import { MaskedTextInput } from '../../modules/textInputMask'
@@ -9,31 +9,27 @@ import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProp
 import { TextInputProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
-import { fields, useField } from '@codeleap/form'
-import { useWrappingScrollable } from '../../modules/scroll'
+import { useTextInput } from './useTextInput'
 
 export * from './styles'
 export * from './types'
 
 export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
-  const innerInputRef = React.useRef<NativeTextInput>(null)
-
-  const [isFocused, setIsFocused] = useState(false)
-  const [currentSelection, setCurrentSelection] = useState({ start: 0 })
+  const allProps = {
+    ...TextInput.defaultProps,
+    ...props,
+  }
 
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps({
-    ...TextInput.defaultProps,
-    ...props,
-  })
+  } = selectInputBaseProps(allProps)
 
   const {
     debugName,
     visibilityToggle,
     masking,
-    secure = false,
+    secure,
     field,
     onChangeMask,
     onPress,
@@ -44,108 +40,49 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     selectionStart,
     forceError,
     onChangeText,
+    multiline,
     ...textInputProps
   } = others
 
-  const [secureTextEntry, setSecureTextEntry] = useState(secure)
-
-  const toggleSecureTextEntry = () => setSecureTextEntry(s => !s)
-
-  const isMasked = !!masking
-
-  const InputElement = isMasked ? MaskedTextInput : NativeTextInput
-
-  const wrapperRef = useRef<View>()
-
   const styles = useStylesFor(TextInput.styleRegistryName, style)
 
-  const scrollable = useWrappingScrollable()
-
-  const fieldHandle = useField(field, [
-    {
-      blur() {
-        innerInputRef.current.blur()
-      },
-      focus() {
-        innerInputRef.current.focus()
-      },
-      getValue() {
-        return innerInputRef.current.state as string
-      },
-      revealValue() {
-        setSecureTextEntry(false)
-      },
-      hideValue() {
-        setSecureTextEntry(true)
-      },
-      toggleValueVisibility() {
-        toggleSecureTextEntry()
-      },
-      scrollIntoView() {
-        return new Promise((resolve, reject) => {
-          wrapperRef.current.measure(
-            (x, y, width, height, pageX, pageY) => {
-              const target = pageY - StatusBar.currentHeight - 16
-
-              const unsub = scrollable.current.subscribe('onMomentumScrollEnd', e => {
-                const diff = Math.abs(e.nativeEvent.contentOffset.y - target)
-
-                resolve()
-                unsub()
-              })
-
-              scrollable.current.scrollTo({
-                y: target,
-                animated: true
-              })
-            }
-          )
-        })
-      },
-    },
-    [setSecureTextEntry]
-  ], fields.text)
-
-  const validation = fieldHandle.validation
+  const {
+    fieldHandle,
+    validation,
+    innerInputRef,
+    wrapperRef,
+    isFocused, 
+    secureTextEntry,
+    currentSelection,
+    hasMultipleLines,
+    hasValue,
+    hasError,
+    toggleSecureTextEntry,
+    handleMaskChange,
+    handleBlur,
+    handleFocus,
+  } = useTextInput(allProps)
+  
+  const InputElement = masking ? MaskedTextInput : NativeTextInput
 
   const isPressable = TypeGuards.isFunction(onPress)
 
-  const handleBlur = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    validation.onInputBlurred()
-    setIsFocused(false)
-    if (autoAdjustSelection) setCurrentSelection({ start: selectionStart })
-    props.onBlur?.(e)
-  }, [validation.onInputBlurred, props.onBlur])
-
-  const handleFocus = React.useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    setIsFocused(true)
-    if (autoAdjustSelection) setCurrentSelection(null)
-    props.onFocus?.(e)
-  }, [props.onFocus])
-
-  const handleMaskChange = (masked, unmasked) => {
-    fieldHandle.setValue(masking?.saveFormatted ? masked : masked)
-    if (onChangeMask) onChangeMask(masked, unmasked)
-  }
-
-  const isMultiline = textInputProps.multiline
   const isDisabled = !!inputBaseProps.disabled
 
-  const placeholderTextColor = [
-    [isDisabled, styles['placeholder:disabled']],
-    [validation.showError, styles['placeholder:error']],
-    [isFocused, styles['placeholder:focus']],
-    [true, styles?.placeholder],
-    // @ts-expect-error
-  ].find(([x]) => x)?.[1]?.color
-
-  const selectionColor = [
-    [isDisabled, styles['selection:disabled']],
-    [validation.showError, styles['selection:error']],
-    [isFocused, styles['selection:focus']],
-    [true, styles?.selection],
-    // @ts-expect-error
-  ].find(([x]) => x)?.[1]?.color
+  const [placeholderTextColor, selectionColor] = useMemo(() => ([
+    [
+      [isDisabled, styles['placeholder:disabled']],
+      [hasError, styles['placeholder:error']],
+      [isFocused, styles['placeholder:focus']],
+      [true, styles?.placeholder], // @ts-expect-error
+    ].find(([x]) => x)?.[1]?.color,
+    [
+      [isDisabled, styles['selection:disabled']],
+      [hasError, styles['selection:error']],
+      [isFocused, styles['selection:focus']],
+      [true, styles?.selection], // @ts-expect-error
+    ].find(([x]) => x)?.[1]?.color,
+  ]), [isDisabled, hasError, isFocused])
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
@@ -155,13 +92,11 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const rightIcon = inputBaseProps?.rightIcon ?? visibilityToggleProps
 
-  const maskingExtraProps = isMasked ? {
+  const maskingExtraProps = masking ? {
     onChangeText: handleMaskChange,
     ref: null,
     refInput: (inputRef) => {
-      if (!!inputRef) {
-        innerInputRef.current = inputRef
-      }
+      if (!!inputRef) innerInputRef.current = inputRef
     },
     ...masking,
   } : {
@@ -173,21 +108,17 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     caretHidden: true,
   } : {}
 
-  const hasMultipleLines = isMultiline && fieldHandle?.value?.includes('\n')
-
-  const hasValue = fieldHandle?.value?.length > 0
-
   return <InputBase
     {...inputBaseProps}
     ref={wrapperRef}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
-    error={validation.showError ? forceError || validation.message : null}
+    error={hasError ? validation.message || forceError : null}
     style={{
       ...styles,
       innerWrapper: [
         styles?.innerWrapper,
-        isMultiline && styles['innerWrapper:multiline'],
+        multiline && styles['innerWrapper:multiline'],
         hasMultipleLines && styles['innerWrapper:hasMultipleLines'],
       ],
     }}
@@ -210,19 +141,19 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       value={fieldHandle?.value}
       selectionColor={selectionColor}
       secureTextEntry={secure && secureTextEntry}
-      textAlignVertical={isMultiline ? 'top' : undefined}
+      textAlignVertical={multiline ? 'top' : undefined}
+      multiline={multiline}
       {...textInputProps}
       onBlur={handleBlur}
       onFocus={handleFocus}
       style={[
         styles?.input,
-        isMultiline && styles['input:multiline'],
+        multiline && styles['input:multiline'],
         isFocused && styles['input:focused'],
-        validation.showError && styles['input:error'],
+        hasError && styles['input:error'],
         isDisabled && styles['input:disabled'],
         hasMultipleLines && styles['input:hasMultipleLines'],
         hasValue && styles['input:typed'],
-
       ]}
       ref={innerInputRef}
       pointerEvents={isPressable ? 'none' : undefined}
@@ -245,6 +176,7 @@ TextInput.defaultProps = {
   visibilityToggle: false,
   autoAdjustSelection: false,
   selectionStart: 0,
+  secure: false,
 } as Partial<TextInputProps>
 
 MobileStyleRegistry.registerComponent(TextInput)
