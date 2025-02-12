@@ -20,7 +20,6 @@ export class NumberField<Validate extends NumberValidator> extends Field<number,
 
     super({
       validate: zodValidator(z.number().min(min).max(max)) as unknown as Validate,
-      defaultValue: 0,
       min,
       max,
       ...others

@@ -179,7 +179,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           allowFontScaling={false}
           editable={!disabled}
           placeholderTextColor={partialStyles?.placeholder?.color}
-          value={isFormatted ? formatter(fieldHandle?.value) : String(fieldHandle?.value)}
+          value={isFormatted ? formatter(fieldHandle?.value ?? min) : String(fieldHandle?.value ?? min)}
           selectionColor={partialStyles?.selection?.color}
           onChangeText={handleChangeInput}
           {...textInputProps}

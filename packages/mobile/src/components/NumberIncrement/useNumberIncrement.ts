@@ -63,15 +63,31 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     }
   }, [fieldHandle?.value])
 
-  const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    const value = fieldHandle?.value
+  const checkValue = useCallback((newValue: number = null, withLimits = true) => {
+    const value = newValue ?? fieldHandle?.value
 
-    if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
-      fieldHandle.setValue(max)
-    } else if (TypeGuards.isNumber(min) && (Number(value) <= min) || TypeGuards.isNil(value) || String(value)?.length <= 0) {
-      fieldHandle.setValue(min)
+    if (withLimits) {
+      if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
+        return max
+      } else if (TypeGuards.isNumber(min) && (Number(value) <= min) || TypeGuards.isNil(value) || String(value)?.length <= 0) {
+        return min
+      }
     }
 
+    if (!value) {
+      return min
+    }
+
+    if (value >= MAX_VALID_DIGITS) {
+      fieldHandle.setValue(MAX_VALID_DIGITS)
+      return MAX_VALID_DIGITS
+    }
+
+    return value
+  }, [])
+
+  const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    fieldHandle.setValue(checkValue())
     validation.onInputBlurred()
     setIsFocused(false)
     onBlur?.(e)
@@ -83,13 +99,8 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     onFocus?.(e)
   }, [onFocus])
 
-  const handleChangeInput = useCallback((text) => {
-    const value = parseValue(text)
-
-    if (value >= MAX_VALID_DIGITS) {
-      fieldHandle.setValue(MAX_VALID_DIGITS)
-      return MAX_VALID_DIGITS
-    }
+  const handleChangeInput = useCallback((text: string) => {
+    const value = checkValue(parseValue(text), false)
 
     fieldHandle.setValue(value)
 
