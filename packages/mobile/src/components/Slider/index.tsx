@@ -64,7 +64,6 @@ export const Slider = (props: SliderProps) => {
   const {
     fieldHandle,
     wrapperRef,
-    validation,
   } = useInputBase(field, fields.multi as unknown as () => MultiField<number, any>)
 
   const [_value, _setValue] = updateImmediately ? [fieldHandle?.value, fieldHandle.setValue] : React.useState<number | Array<number>>(0)
@@ -97,7 +96,6 @@ export const Slider = (props: SliderProps) => {
     <InputBase
       {..._inputBaseProps}
       ref={wrapperRef}
-      error={validation.showError ? validation.message : null}
       disabled={disabled}
       style={styles}
       labelAsRow
