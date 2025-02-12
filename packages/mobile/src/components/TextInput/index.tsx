@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { forwardRef } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
@@ -10,6 +10,7 @@ import { TextInputProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { useTextInput } from './useTextInput'
+import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
 
 export * from './styles'
 export * from './types'
@@ -69,20 +70,11 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   const isDisabled = !!inputBaseProps.disabled
 
-  const [placeholderTextColor, selectionColor] = useMemo(() => ([
-    [
-      [isDisabled, styles['placeholder:disabled']],
-      [hasError, styles['placeholder:error']],
-      [isFocused, styles['placeholder:focus']],
-      [true, styles?.placeholder], // @ts-expect-error
-    ].find(([x]) => x)?.[1]?.color,
-    [
-      [isDisabled, styles['selection:disabled']],
-      [hasError, styles['selection:error']],
-      [isFocused, styles['selection:focus']],
-      [true, styles?.selection], // @ts-expect-error
-    ].find(([x]) => x)?.[1]?.color,
-  ]), [isDisabled, hasError, isFocused])
+  const partialStyles = useInputBasePartialStyles(styles, ['placeholder', 'selection'], {
+    disabled: isDisabled,
+    error: !!hasError,
+    focus: isFocused,
+  })
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
@@ -137,9 +129,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       editable={!isPressable && !isDisabled}
       {...buttonModeProps}
       selection={autoAdjustSelection ? currentSelection : undefined}
-      placeholderTextColor={placeholderTextColor}
+      placeholderTextColor={partialStyles?.placeholder?.color}
       value={fieldHandle?.value}
-      selectionColor={selectionColor}
+      selectionColor={partialStyles?.selection?.color}
       secureTextEntry={secure && secureTextEntry}
       textAlignVertical={multiline ? 'top' : undefined}
       multiline={multiline}

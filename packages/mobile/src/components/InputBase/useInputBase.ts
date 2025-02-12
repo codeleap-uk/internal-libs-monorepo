@@ -5,7 +5,7 @@ import { Field, IFieldRef, fields, useField } from '@codeleap/form'
 
 export function useInputBase(
   field: Field<string|number, any, any>, 
-  params: Partial<IFieldRef<string | number>>, 
+  params: Partial<IFieldRef<string | number>> = {}, 
   deps: any[] = []
 ) {
   const wrapperRef = useRef<View>()
