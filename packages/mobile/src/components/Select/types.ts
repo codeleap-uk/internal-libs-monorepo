@@ -1,5 +1,4 @@
-import { PropsOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
+import { Option, Options, PropsOf } from '@codeleap/types'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
@@ -17,7 +16,7 @@ export type SelectRenderFNProps<T> = {
   style: StylesOf<SelectComposition>
   onPress: () => void
   selected?: boolean
-  item: FormTypes.Options<T>[number]
+  item: Option<T>
   touchableProps?: Partial<PropsOf<typeof Touchable>>
   textProps?: Partial<PropsOf<typeof Text>>
   iconProps?: Partial<PropsOf<typeof Icon>>
@@ -37,7 +36,7 @@ type SelectHeaderProps = {
 }
 
 export type SelectOuterInputProps<T = any, Multi extends boolean = false> = SelectProps<T, Multi> & {
-  currentValueLabel: FormTypes.Label
+  currentValueLabel: string
   styles?: StylesOf<TextInputComposition>
   clearIcon?: Partial<ActionIconProps>
 }
@@ -48,16 +47,16 @@ export type ValueBoundSelectProps<
   T,
   Multi extends boolean = false
 > = {
-  options?: FormTypes.Options<T>
-  defaultOptions?: FormTypes.Options<T>
-  loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
+  options?: Options<T>
+  defaultOptions?: Options<T>
+  loadOptions?: (search: string) => Promise<Options<T>>
   value: SelectValue<T, Multi>
   renderItem?: SelectRenderFN<SelectValue<T, Multi>>
   onValueChange: (value: SelectValue<T, Multi>) => void
-  filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
+  filterItems?: (search: string, items: Options<T>) => Options<T>
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
-  getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
+  getLabel?: (forOption: Multi extends true ? Options<T> : Option<T>) => string
   outerInputComponent?: OuterInputComponent<T, Multi>
   inputProps?: Partial<SelectOuterInputProps<T, Multi>>
   disabled?: boolean
@@ -72,8 +71,8 @@ export type SelectProps<T = any, Multi extends boolean = false> =
   SelectModalProps &
   ValueBoundSelectProps<T, Multi> &
   {
-    placeholder?: FormTypes.Label
-    label?: FormTypes.Label
+    placeholder?: string
+    label?: string
     hideInput?: boolean
     selectedIcon?: AppIcon
     arrowIconName?: AppIcon
