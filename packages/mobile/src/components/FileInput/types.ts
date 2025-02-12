@@ -1,12 +1,11 @@
-import { AnyRef } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
+import { AnyRef, MobileInputFile } from '@codeleap/types'
 import { DocumentPickerOptions } from 'react-native-document-picker'
 import { Options } from 'react-native-image-crop-picker'
 import { OSAlert } from '../../utils'
 
 export type FileInputImageSource = 'camera' | 'library' | 'fs'
 
-export type FileResult = FormTypes.AnyFile
+export type FileResult = MobileInputFile | string | number
 
 export type FileInputRef = {
   openFilePicker: (source?: FileInputImageSource, options?: Partial<Options>) => Promise<FileResult[]>

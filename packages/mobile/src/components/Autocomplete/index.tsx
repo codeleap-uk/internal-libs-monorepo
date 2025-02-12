@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import { TypeGuards } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
+import { Options, TypeGuards } from '@codeleap/types'
 import { onMount, useSearch } from '@codeleap/hooks'
 import { List } from '../List'
 import { SearchInput } from '../SearchInput'
@@ -14,7 +13,7 @@ import { useStylesFor } from '../../hooks'
 export * from './styles'
 export * from './types'
 
-const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
+const defaultFilterFunction = (search: string, options: Options<any>) => {
   return options.filter((option) => {
     if (TypeGuards.isString(option.label)) {
       return option.label.toLowerCase().includes(search.toLowerCase())

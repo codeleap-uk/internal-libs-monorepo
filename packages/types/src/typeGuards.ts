@@ -55,3 +55,7 @@ export function isElement(x): x is React.ReactElement {
 export function isComponentOrElement<P>(x: any): x is React.ComponentType<P> | React.ReactElement {
   return isFunction(x) || isElement(x)
 }
+
+export function isPromise(x): x is Promise<any> {
+  return isFunction(x?.then) && isFunction(x?.catch)
+}

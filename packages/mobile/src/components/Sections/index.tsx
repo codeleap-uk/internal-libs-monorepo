@@ -22,7 +22,6 @@ export function Sections<T>(sectionsProps: SectionProps<T>) {
   const {
     style,
     onRefresh,
-    component,
     refreshing,
     placeholder,
     refreshControlProps,

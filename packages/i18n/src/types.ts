@@ -23,6 +23,7 @@ export type I18NContextProps = React.PropsWithChildren<{
 
 export type I18nType<KeyPaths = string> = {
   t: TFunction<KeyPaths>
+  lazy: (key: KeyPaths, ...args: any[]) => { value: string }
   setLocale: (locale: string) => void
   locale: string
   persistor: Persistor

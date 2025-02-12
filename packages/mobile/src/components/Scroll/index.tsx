@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useState } from 'react'
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { RefreshControl } from '../RefreshControl'
 import { ScrollProps, ScrollRef } from './types'
@@ -6,6 +6,7 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { ScrollProvider, useScrollPubSub } from '../../modules/scroll'
 
 export * from './styles'
 export * from './types'
@@ -50,27 +51,39 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
 
   const Component = keyboardAware ? KeyboardAwareScrollView : ScrollView
 
+  const _scrollRef = useRef<ScrollView>()
+
+  const { ref: scrollRef, emit } = useScrollPubSub(_scrollRef)
+
+  useImperativeHandle(ref, () => scrollRef.current as unknown as  ScrollView, [])
+
   return (
-    <Component
-      showsVerticalScrollIndicator={false}
-      // @ts-ignore
-      ref={ref}
-      refreshControl={
-        hasRefresh && (
-          <RefreshControl
-            refreshing={refreshingDisplay}
-            onRefresh={refresh}
-            {...refreshControlProps}
-          />
-        )
-      }
-      bottomOffset={30}
-      {...props}
-      style={styles?.wrapper}
-      contentContainerStyle={[styles?.content, contentContainerStyle]}
-    >
-      {children}
-    </Component>
+    <ScrollProvider ref={scrollRef}>
+      <Component
+        showsVerticalScrollIndicator={false}
+        // @ts-ignore
+        ref={_scrollRef}
+        refreshControl={
+          hasRefresh && (
+            <RefreshControl
+              refreshing={refreshingDisplay}
+              onRefresh={refresh}
+              {...refreshControlProps}
+            />
+          )
+        }
+        bottomOffset={30}
+        {...props}
+        style={styles?.wrapper}
+        contentContainerStyle={[styles?.content, contentContainerStyle]}
+        onMomentumScrollEnd={(e) => {
+          emit('onMomentumScrollEnd', e)
+          props?.onMomentumScrollEnd?.(e)
+        }}
+      >
+        {children}
+      </Component>
+    </ScrollProvider>
   )
 }) as StyledComponentWithProps<ScrollProps>
 
