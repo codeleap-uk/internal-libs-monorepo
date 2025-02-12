@@ -5,6 +5,7 @@ import { Field, IFieldRef, fields, useField } from '@codeleap/form'
 
 export function useInputBase(
   field: Field<string|number, any, any>, 
+  defaultField: () => Field<string | number, any, any, unknown> = fields.text,
   params: Partial<IFieldRef<string | number>> = {}, 
   deps: any[] = []
 ) {
@@ -49,7 +50,7 @@ export function useInputBase(
       ...params,
     },
     deps
-  ], fields.text)
+  ], defaultField)
 
   const validation = fieldHandle.validation
 

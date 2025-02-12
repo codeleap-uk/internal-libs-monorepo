@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { TextInputProps } from './types'
 import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native/types'
 import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
 
 export function useTextInput(props: Partial<TextInputProps>) {
   const { 
@@ -30,7 +31,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     validation,
     innerInputRef,
     wrapperRef,
-  } = useInputBase(field, {
+  } = useInputBase(field, fields.text, {
     revealValue() {
       setSecureTextEntry(false)
     },
