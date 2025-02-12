@@ -5,7 +5,7 @@ import { TextInputProps as RNTextInputProps } from 'react-native'
 import { InputBaseProps } from '../InputBase'
 import { StyledProp } from '@codeleap/styles'
 import { TextInputProps } from '../TextInput'
-import { Field } from '@codeleap/form'
+import { NumberField } from '@codeleap/form'
 
 type Masking = TextInputProps['masking']
 type MaskOptions = Masking['options']
@@ -35,5 +35,5 @@ export type NumberIncrementProps =
     actionDebounce?: number | null
     onPress?: AnyFunction
     style?: StyledProp<NumberIncrementComposition>
-    field?: Field<number, any, any>
+    field?: NumberField<any>
   }

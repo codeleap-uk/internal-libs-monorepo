@@ -1,9 +1,8 @@
 import { StyledProp } from '@codeleap/styles'
-import { ReactNode } from 'react'
 import { RadioInputComposition } from './styles'
 import { InputBaseProps } from '../InputBase'
 import { ViewStyle } from 'react-native'
-import { Field, SelectableField } from '@codeleap/form'
+import { SelectableField } from '@codeleap/form'
 
 type RadioOption<T extends string | number> = {
   value: T

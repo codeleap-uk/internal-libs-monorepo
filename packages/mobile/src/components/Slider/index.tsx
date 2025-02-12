@@ -11,7 +11,7 @@ import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { useInputBase } from '../InputBase/useInputBase'
-import { MultiField, fields } from '@codeleap/form'
+import { fields } from '@codeleap/form'
 import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
 
 export * from './styles'
@@ -64,7 +64,7 @@ export const Slider = (props: SliderProps) => {
   const {
     fieldHandle,
     wrapperRef,
-  } = useInputBase(field, fields.multi as unknown as () => MultiField<number, any>)
+  } = useInputBase(field, fields.number)
 
   const [_value, _setValue] = updateImmediately ? [fieldHandle?.value, fieldHandle.setValue] : React.useState<number | Array<number>>(0)
 

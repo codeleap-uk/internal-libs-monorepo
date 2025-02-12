@@ -2,7 +2,7 @@ import { SliderComposition } from './styles'
 import { SliderProps as RNSliderProps } from '@miblanchard/react-native-slider/lib/types'
 import { InputBaseProps } from '../InputBase'
 import { ICSS, StyledProp } from '@codeleap/styles'
-import { MultiField } from '@codeleap/form'
+import { MultiField, NumberField } from '@codeleap/form'
 
 export type SliderProps =
   Partial<Omit<RNSliderProps, 'value' | 'onValueChange' | 'style'>> &
@@ -16,7 +16,7 @@ export type SliderProps =
     trackMarkComponent?: React.ComponentType<TrackMarkProps>
     style?: StyledProp<SliderComposition>
     updateImmediately?: boolean
-    field?: MultiField<number, any>
+    field?: NumberField<any>
   }
 
 export type TrackMarkProps = {
