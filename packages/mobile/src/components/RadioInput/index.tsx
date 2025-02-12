@@ -95,7 +95,7 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
   const {
     fieldHandle,
     wrapperRef,
-  } = useInputBase<T, SelectableField<T, any>>(field as SelectableField<T, any>, fields.selectable as () => SelectableField<T, any>)
+  } = useInputBase(field as SelectableField<T, any>, fields.selectable as () => SelectableField<T, any>)
 
   const { items } = field.getProps()
 

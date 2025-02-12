@@ -18,6 +18,7 @@ import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
 import { useStylesFor } from '../../hooks'
+import { SelectableField, fields, useField } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -78,11 +79,10 @@ export const Select = <T extends string | number = string, Multi extends boolean
   const allProps = {
     ...Select.defaultProps,
     ...selectProps,
+    ...selectProps?.field?.getProps(),
   }
 
   const {
-    value,
-    onValueChange,
     label,
     options = [],
     style,
@@ -116,8 +116,13 @@ export const Select = <T extends string | number = string, Multi extends boolean
     searchInputProps,
     outerInputComponent,
     disabled,
+    field,
     ...modalProps
   } = allProps
+
+  const fieldHandle = useField(field, [], fields.selectable as () => SelectableField<T, any>)
+
+  const value = fieldHandle.value
 
   const isValueArray = TypeGuards.isArray(value) && multiple
 
@@ -196,7 +201,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       newOption = currentOptions.find(o => o.value === selectedValue)
     }
 
-    onValueChange(newValue)
+    fieldHandle.setValue(newValue)
 
     if (isValueArray) {
       if (removedIndex !== null) {
@@ -250,7 +255,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const onPressInputIcon = () => {
     if (showClearIcon) {
-      onValueChange(null)
+      fieldHandle.setValue(null)
     } else {
       close?.()
     }
