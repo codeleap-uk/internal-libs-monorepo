@@ -1,5 +1,5 @@
 import { InputBaseProps } from '../InputBase'
-import { TextInputProps as RNTextInputProps, TextInput as RNTextInput, View } from 'react-native'
+import { TextInputProps as RNTextInputProps, TextInput as RNTextInput } from 'react-native'
 import { AnyFunction } from '@codeleap/types'
 
 import { AppIcon, StyledProp } from '@codeleap/styles'
