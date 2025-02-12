@@ -41,7 +41,7 @@ export const Checkbox = (props: CheckboxProps) => {
     fieldHandle,
     validation,
     wrapperRef,
-  } = useInputBase(field, fields.boolean)
+  } = useInputBase<boolean>(field, fields.boolean)
 
   const boxAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

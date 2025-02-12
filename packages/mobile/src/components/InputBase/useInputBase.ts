@@ -3,10 +3,10 @@ import { View, TextInput, StatusBar } from 'react-native'
 import { useWrappingScrollable } from '../../modules/scroll'
 import { Field, IFieldRef, fields, useField } from '@codeleap/form'
 
-export function useInputBase(
-  field: Field<string|number|boolean, any, any>, 
-  defaultField: () => Field<string | number | boolean, any, any, unknown> = fields.text,
-  params: Partial<IFieldRef<string | number | boolean>> = {}, 
+export function useInputBase<V,  T extends Field<V, any, any, unknown> = Field<V, any, any, unknown>>(
+  field: T,
+  defaultField: () => T = fields.text as () => T,
+  params: Partial<IFieldRef<V>> = {}, 
   deps: any[] = []
 ) {
   const wrapperRef = useRef<View>()
@@ -15,7 +15,7 @@ export function useInputBase(
 
   const scrollable = useWrappingScrollable()
 
-  const fieldHandle = useField(field, [
+  const fieldHandle = useField<V, T>(field as T, [
     {
       blur() {
         innerInputRef.current.blur()
@@ -24,7 +24,7 @@ export function useInputBase(
         innerInputRef.current.focus()
       },
       getValue() {
-        return innerInputRef.current.state as string
+        return innerInputRef.current.state as V
       },
       scrollIntoView() {
         return new Promise((resolve, reject) => {
@@ -33,9 +33,7 @@ export function useInputBase(
               const target = pageY - StatusBar.currentHeight - 16
 
               const unsub = scrollable.current.subscribe('onMomentumScrollEnd', e => {
-                const diff = Math.abs(e.nativeEvent.contentOffset.y - target)
-
-                resolve()
+                resolve(null)
                 unsub()
               })
 
@@ -50,7 +48,7 @@ export function useInputBase(
       ...params,
     },
     deps
-  ], defaultField)
+  ] as unknown as Parameters<T['use']>, defaultField)
 
   const validation = fieldHandle.validation
 

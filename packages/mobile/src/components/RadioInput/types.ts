@@ -1,23 +1,22 @@
-import { StylesOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
 import { StyledProp } from '@codeleap/styles'
 import { ReactNode } from 'react'
 import { RadioInputComposition } from './styles'
 import { InputBaseProps } from '../InputBase'
+import { ViewStyle } from 'react-native'
+import { Field, SelectableField } from '@codeleap/form'
 
-type RadioOption<T> = FormTypes.Options<T>[number] & {
+type RadioOption<T extends string | number> = {
+  value: T
+  label: string
   disabled?: boolean
 }
 
 export type RadioGroupProps<T extends string | number> =
   Omit<InputBaseProps, 'style'> &
   {
-    options: RadioOption<T>[]
-    value: T
-    onValueChange(value: T): void
-    label: ReactNode
     radioOnRight?: boolean
     style?: StyledProp<RadioInputComposition>
+    field?: SelectableField<T, any>
   }
 
 export type RadioOptionProps<T extends string | number> = {
@@ -28,5 +27,5 @@ export type RadioOptionProps<T extends string | number> = {
   disabled?: boolean
   separator?: boolean
   reverseOrder?: boolean
-  styles?: StylesOf<RadioInputComposition>
+  styles?: Record<RadioInputComposition, ViewStyle>
 }

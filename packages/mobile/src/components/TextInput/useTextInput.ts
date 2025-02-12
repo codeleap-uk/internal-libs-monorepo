@@ -31,7 +31,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     validation,
     innerInputRef,
     wrapperRef,
-  } = useInputBase(field, fields.text, {
+  } = useInputBase<string>(field, fields.text, {
     revealValue() {
       setSecureTextEntry(false)
     },

@@ -1,6 +1,5 @@
 import React from 'react'
 import { StylesOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
 import { DatePickerModalButtonCompositions, DatePickerModalComposition } from './styles'
 import { DatePickerProps } from 'react-native-date-picker'
 import { ButtonProps } from '../Button'
@@ -8,11 +7,11 @@ import { ModalProps } from '../Modal'
 import { StyledProp } from '@codeleap/styles'
 
 export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent'> & {
-  valueLabel: FormTypes.Label
+  valueLabel: string
 }
 
 type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'style'> & {
-  valueLabel: FormTypes.Label
+  valueLabel: string
   confirm: () => void
   cancelStyles: StylesOf<DatePickerModalButtonCompositions>
   confirmStyles: StylesOf<DatePickerModalButtonCompositions>
@@ -25,8 +24,8 @@ export type DatePickerModalProps =
     hideInput?: boolean
     debugName: string
     value: Date
-    label?: FormTypes.Label
-    placeholder?: FormTypes.Label
+    label?: string
+    placeholder?: string
     onValueChange: (date: Date) => void
     isCustomModal?: boolean
     mode?: DatePickerProps['mode']
@@ -34,7 +33,7 @@ export type DatePickerModalProps =
     confirmButtonProps?: Partial<ButtonProps>
     datePickerProps?: Partial<DatePickerProps>
     outerInputComponent?: React.ComponentType<DatePickerModalOuterInputProps>
-    formatDate?: (date: Date) => FormTypes.Label
+    formatDate?: (date: Date) => string
     commitDate?: 'onConfirm' | 'onChange'
     showDoneButton?: boolean
     footerComponent?: React.ComponentType<DatePickerModalFooterProps>

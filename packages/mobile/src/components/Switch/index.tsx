@@ -39,7 +39,7 @@ export const Switch = (props: SwitchProps) => {
     fieldHandle,
     validation,
     wrapperRef,
-  } = useInputBase(field, fields.boolean)
+  } = useInputBase<boolean>(field, fields.boolean)
 
   const trackAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

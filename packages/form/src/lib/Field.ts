@@ -37,7 +37,7 @@ export class Field<
 
   __validationRes: ValidationResult<Result, Err>
 
-  private initialValue: T
+  initialValue: T
 
   static getProps = (field: Field<any,any>) => {
     throw new Error('Field.getProps not implemented')
@@ -89,7 +89,6 @@ export class Field<
     const value = this.useValue()    
 
     const validation = this.useValidation()
-
     
     // Yes, this is dangerous and doesn't follow the rules, but not passing an implementation to imperative handle after passing it once would break the app anyway
     if(impl) { 
@@ -98,7 +97,6 @@ export class Field<
     
     const changed = value != this.initialValue
 
-    // console.log(validation, value)
     return {
       validation,
       value,

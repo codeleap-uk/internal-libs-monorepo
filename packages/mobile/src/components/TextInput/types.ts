@@ -24,5 +24,5 @@ export type TextInputProps =
     onPress?: AnyFunction
     style?: StyledProp<TextInputComposition>
     ref?: React.Ref<RNTextInput>
-    field?: Field<string|number, any, any>
+    field?: Field<string, any, any>
   }

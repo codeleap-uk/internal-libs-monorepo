@@ -28,7 +28,7 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     validation,
     innerInputRef,
     wrapperRef,
-  } = useInputBase(field, fields.number)
+  } = useInputBase<number>(field, fields.number)
 
   const options = fieldHandle.options as FieldOptions<any, any> & { min: number; max: number }
 
@@ -123,7 +123,7 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
   }, [fieldHandle?.value])
 
   const hasValue = TypeGuards.isString(fieldHandle?.value)
-    ? fieldHandle?.value.length > 0
+    ? (fieldHandle?.value as string).length > 0
     : !TypeGuards.isNil(fieldHandle?.value)
 
   const hasError = validation.showError || forceError
