@@ -16,6 +16,8 @@ export function useTextInput(props: Partial<TextInputProps>) {
     onChangeMask,
     multiline,
     forceError,
+    value,
+    onValueChange,
   } = props
 
   const [isFocused, setIsFocused] = useState(false)
@@ -31,7 +33,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     validation,
     innerInputRef,
     wrapperRef,
-  } = useInputBase<string>(field, fields.text, {
+  } = useInputBase<string>(field, fields.text, [value, onValueChange], {
     revealValue() {
       setSecureTextEntry(false)
     },
