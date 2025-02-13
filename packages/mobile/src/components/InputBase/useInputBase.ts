@@ -31,22 +31,8 @@ export function useInputBase<V,  T extends Field<V, any, any, unknown> = Field<V
         return innerInputRef.current.state as V
       },
       scrollIntoView() {
-        return new Promise((resolve, reject) => {
-          wrapperRef.current.measure(
-            (x, y, width, height, pageX, pageY) => {
-              const target = pageY - StatusBar.currentHeight - 16
-
-              const unsub = scrollable.current.subscribe('onMomentumScrollEnd', e => {
-                resolve(null)
-                unsub()
-              })
-
-              scrollable.current.scrollTo({
-                y: target,
-                animated: true
-              })
-            }
-          )
+        return field.measurePosition(wrapperRef).then((measureResult) => {
+          field.scrollTo(scrollable, measureResult)
         })
       },
       ...params,

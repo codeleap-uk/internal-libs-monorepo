@@ -1,4 +1,4 @@
-import { FieldState, FieldOptions,  } from '../types/field';
+import { FieldState, FieldOptions, FieldMeasureResult } from '../types/field';
 import { ValidationResult, Validator } from '../types/validation';
 import { IFieldRef,  IFieldProps } from '../types/globals';
 import { atom }  from 'nanostores'
@@ -45,6 +45,18 @@ export class Field<
 
   static getProps = (field: Field<any,any>) => {
     throw new Error('Field.getProps not implemented')
+  }
+  
+  static methodMeasurePosition = (field: Field<any,any>, wrapperRef: any): Promise<FieldMeasureResult> => {
+    throw new Error('Field.measurePosition not implemented')
+  }
+
+  static methodScrollTo = (field: Field<any,any>, scrollRef: any, measure: FieldMeasureResult): Promise<void> => {
+    throw new Error('Field.scrollTo not implemented')
+  }
+
+  static methodGetPadding = (field: Field<any,any>): number => {
+    throw new Error('Field.getPadding not implemented')
   }
 
   constructor(options: FieldOptions<T, Validate>) {
@@ -283,6 +295,16 @@ export class Field<
   props(): IFieldProps {
     return this.properties
   }
+
+  measurePosition<T>(wrapperRef: T): Promise<FieldMeasureResult> {
+    return Field.methodMeasurePosition(this, wrapperRef)
+  }
+
+  scrollTo<T>(scrollRef: T, measure: FieldMeasureResult): Promise<void>{
+    return Field.methodScrollTo(this, scrollRef, measure)
+  }
+
+  getPadding(): number {
+    return Field.methodGetPadding(this)
+  }
 }
-
-

@@ -9,7 +9,7 @@ type ScrollProperty = (typeof scrollProperties)[number]
 
 type ScrollEvents = Pick<ScrollViewProps, 'onMomentumScrollEnd'>
 
-type Scrollable = Pick<ScrollView, ScrollProperty> & {
+export type Scrollable = Pick<ScrollView, ScrollProperty> & {
   subscribe<T extends keyof ScrollEvents>(e: T, cb: ScrollEvents[T]): () => void
 }
 
