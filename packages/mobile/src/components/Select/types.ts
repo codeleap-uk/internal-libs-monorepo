@@ -91,4 +91,6 @@ export type SelectProps<T extends string | number = any, Multi extends boolean =
     loadOptionsOnOpen?: boolean
     style?: StyledProp<SelectComposition>
     field?: SelectableField<T, any>
+    value?: T
+    onValueChange?: (value: T) => void
   }

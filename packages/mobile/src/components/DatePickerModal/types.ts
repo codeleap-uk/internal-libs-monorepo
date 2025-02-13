@@ -9,8 +9,8 @@ import { DateField } from '@codeleap/form'
 
 export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'field'> & {
   valueLabel: string
-  value: Date
-  onValueChange: (date: Date) => void
+  value: any
+  onValueChange: (date: any) => void
 }
 
 type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'style'> & {
@@ -45,4 +45,6 @@ export type DatePickerModalProps =
     toggleOnConfirm?: boolean
     onConfirm?: (value: Date) => void
     style?: StyledProp<DatePickerModalComposition>
+    value?: Date
+    onValueChange?: (value: Date) => void
   }

@@ -18,7 +18,8 @@ import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
 import { useStylesFor } from '../../hooks'
-import { SelectableField, fields, useField } from '@codeleap/form'
+import { SelectableField, fields } from '@codeleap/form'
+import { useInputBase } from '../InputBase/useInputBase'
 
 export * from './styles'
 export * from './types'
@@ -116,10 +117,12 @@ export const Select = <T extends string | number = string, Multi extends boolean
     outerInputComponent,
     disabled,
     field,
+    value: _value,
+    onValueChange: _onValueChange,
     ...modalProps
   } = allProps
 
-  const fieldHandle = useField(field, [], fields.selectable as () => SelectableField<T, any>)
+  const { fieldHandle } = useInputBase(field, fields.selectable as () => SelectableField<T, any>, [_value, _onValueChange])
 
   const value = fieldHandle.value
 

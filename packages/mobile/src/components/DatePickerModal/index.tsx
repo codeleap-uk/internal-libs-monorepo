@@ -11,7 +11,8 @@ import { DatePickerModalProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
-import { DateField, fields, useField } from '@codeleap/form'
+import { DateField, fields } from '@codeleap/form'
+import { useInputBase } from '../InputBase/useInputBase'
 
 export * from './styles'
 export * from './types'
@@ -113,6 +114,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     footerComponent: Footer,
     toggleOnConfirm,
     onConfirm: _onConfirm,
+    value: _value,
+    onValueChange: _onValueChange,
     ...modalProps
   } = allProps
 
@@ -120,7 +123,9 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
 
   const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
 
-  const fieldHandle = useField(field, [], fields.date as () => DateField<any>)
+  const {
+    fieldHandle,
+  } = useInputBase(field, fields.date as () => DateField<any>, [_value, _onValueChange])
 
   const [value, setValue] = [fieldHandle?.value, fieldHandle.setValue]
 
