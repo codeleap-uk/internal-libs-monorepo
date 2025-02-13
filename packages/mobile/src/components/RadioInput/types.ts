@@ -3,6 +3,7 @@ import { RadioInputComposition } from './styles'
 import { InputBaseProps } from '../InputBase'
 import { ViewStyle } from 'react-native'
 import { SelectableField } from '@codeleap/form'
+import { Options } from '@codeleap/types'
 
 type RadioOption<T extends string | number> = {
   value: T
@@ -16,6 +17,7 @@ export type RadioGroupProps<T extends string | number> =
     radioOnRight?: boolean
     style?: StyledProp<RadioInputComposition>
     field?: SelectableField<T, any>
+    options: Options<T>
   }
 
 export type RadioOptionProps<T extends string | number> = {

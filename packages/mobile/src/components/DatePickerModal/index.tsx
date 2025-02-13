@@ -87,7 +87,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const allProps = {
     ...DatePickerModal.defaultProps,
     ...props,
-    ...props?.field?.getProps(),
   }
 
   const {

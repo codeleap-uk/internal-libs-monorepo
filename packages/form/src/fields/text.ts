@@ -12,7 +12,6 @@ type TextFieldOptions<Validate extends TextValidator> = FieldOptions<VALUE, Vali
   multiline?: boolean
 }
 
-
 export class TextField<Validate extends TextValidator> extends Field<string, Validate> {
   _type = "TEXT"
 

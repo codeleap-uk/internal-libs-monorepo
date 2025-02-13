@@ -19,6 +19,8 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     editable,
     step,
     parseValue,
+    min,
+    max,
   } = props
 
   const [isFocused, setIsFocused] = useState(false)
@@ -29,11 +31,6 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     innerInputRef,
     wrapperRef,
   } = useInputBase(field as Field<number, any, any>, fields.number as () => Field<number, any, any>)
-
-  const fieldProps = field.getProps()
-
-  const max = props?.max ?? fieldProps?.max
-  const min = props?.min ?? fieldProps?.min
 
   const actionTimeoutRef = useRef(null)
 

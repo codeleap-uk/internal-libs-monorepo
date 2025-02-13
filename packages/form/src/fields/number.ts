@@ -15,8 +15,6 @@ type NumberFieldOptions<Validate extends NumberValidator> = FieldOptions<number 
 export class NumberField<Validate extends NumberValidator> extends Field<number | number[], Validate> {
   _type = "NUMBER"
 
-  properties = {} as Props
-
   constructor(options: NumberFieldOptions<Validate>) {
     const { min = 0, max = 100000, defaultValue, ...others } = options
 
@@ -31,14 +29,5 @@ export class NumberField<Validate extends NumberValidator> extends Field<number 
       defaultValue,
       ...others
     } as NumberFieldOptions<Validate>)
-
-    this.properties = {
-      min,
-      max,
-    }
-  }
-
-  getProps() {
-    return this.properties
   }
 }

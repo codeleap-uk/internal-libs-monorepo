@@ -11,12 +11,8 @@
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
-    "@codeleap/utils": "workspace:*",
-    "@codeleap/hooks": "workspace:*",
-    "@codeleap/i18n": "workspace:*",
     "@codeleap/store": "workspace:*",
     "zod": "3.23.8",
-    
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
@@ -25,12 +21,8 @@
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
-    "@codeleap/utils": "workspace:*",
-    "@codeleap/hooks": "workspace:*",
     "@codeleap/store": "workspace:*",
-    "@codeleap/i18n": "workspace:*",
     "zod": "*",
-    
     "react": "18.2.0",
     "typescript": "5.5.2",
     "yup": "1.6.1"

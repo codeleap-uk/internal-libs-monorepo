@@ -2,7 +2,7 @@ import { FieldState, FieldOptions,  } from '../types/field';
 import { ValidationResult, Validator } from '../types/validation';
 import { IFieldRef,  IFieldProps } from '../types/globals';
 import { atom }  from 'nanostores'
-import { SecondToLastArguments, TypeGuards } from '@codeleap/types';
+import { AnyRecord, SecondToLastArguments, TypeGuards } from '@codeleap/types';
  
 import { useStore } from '@nanostores/react'
 import { useFieldBinding } from './useFieldBinding';
@@ -31,6 +31,8 @@ export class Field<
 
   state: FieldState<T>
 
+  properties: AnyRecord = {}
+
   options: FieldOptions<T, Validate>
 
   ref?: React.RefObject<IFieldRef<T>>
@@ -38,6 +40,8 @@ export class Field<
   __validationRes: ValidationResult<Result, Err>
 
   private initialValue: T
+
+  static enableLogs = false
 
   static getProps = (field: Field<any,any>) => {
     throw new Error('Field.getProps not implemented')
@@ -51,6 +55,8 @@ export class Field<
     this.setValue = this.setValue.bind(this)
     this.use = this.use.bind(this)
     this.useBinding = this.useBinding.bind(this)
+
+    this.properties = this.toInternalProperties(options)
   }
 
   get name(){
@@ -65,6 +71,15 @@ export class Field<
     const res = this.validate()
 
     return res.isValid
+  }
+
+  private toInternalProperties(options: FieldOptions<T, Validate>) {
+    const internalKeys = new Set(['name', 'defaultValue', 'state', 'validate', 'loader', 'onValueChange'])
+
+    return Object.assign(
+      { field: this },
+      Object.fromEntries(Object.entries(options).filter(([key]) => !internalKeys.has(key)))
+    )
   }
 
   attach(to: FieldState<T>) {
@@ -253,8 +268,8 @@ export class Field<
     }
   }
 
-  log(level, ...args: any[]){
-    // formLogger[level](...this.formatLog(...args))
+  log(level = 'log', ...args: any[]){
+    if (Field.enableLogs) console[level](...this.formatLog(...args))
   }
   
   toInternalValue(v: any) {
@@ -266,7 +281,7 @@ export class Field<
   }
 
   props(): IFieldProps {
-    return Field.getProps(this)
+    return this.properties
   }
 }
 

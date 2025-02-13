@@ -79,7 +79,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
   const allProps = {
     ...Select.defaultProps,
     ...selectProps,
-    ...selectProps?.field?.getProps(),
   }
 
   const {

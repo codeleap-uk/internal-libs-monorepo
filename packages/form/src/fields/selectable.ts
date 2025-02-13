@@ -15,21 +15,10 @@ type SelectableFieldOptions<V extends VALUE, Validate extends SelectableValidato
 export class SelectableField<V extends VALUE, Validate extends SelectableValidator<V>> extends Field<V, Validate> {
   _type = "SELECTABLE"
 
-  items = [] as Options<V>
-
   constructor(options: SelectableFieldOptions<V, Validate>) {
     super({
       validate: zodValidator(z.string().or(z.number())) as unknown as Validate,
       ...options
     })
-
-    this.items = options.options
-  }
-
-  getProps() {
-    return {
-      items: this.items,
-      options: this.items,
-    }
   }
 }
