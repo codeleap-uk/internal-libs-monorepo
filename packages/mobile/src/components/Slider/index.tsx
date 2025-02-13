@@ -58,13 +58,15 @@ export const Slider = (props: SliderProps) => {
     labelClickable,
     updateImmediately = false,
     trackMarkComponent: SliderTrackMark,
+    value,
+    onValueChange,
     ...sliderProps
   } = others
 
   const {
     fieldHandle,
     wrapperRef,
-  } = useInputBase(field, fields.number)
+  } = useInputBase(field, fields.number, [value, onValueChange])
 
   const [_value, _setValue] = updateImmediately ? [fieldHandle?.value, fieldHandle.setValue] : React.useState<number | Array<number>>(0)
 

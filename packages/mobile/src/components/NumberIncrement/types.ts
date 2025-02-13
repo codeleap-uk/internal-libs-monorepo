@@ -36,4 +36,6 @@ export type NumberIncrementProps =
     onPress?: AnyFunction
     style?: StyledProp<NumberIncrementComposition>
     field?: NumberField<any>
+    value?: number
+    onValueChange?: (value: number) => void
   }

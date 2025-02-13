@@ -17,7 +17,9 @@ export type RadioGroupProps<T extends string | number> =
     radioOnRight?: boolean
     style?: StyledProp<RadioInputComposition>
     field?: SelectableField<T, any>
-    options: Options<T>
+    options?: Options<T>
+    value?: T
+    onValueChange?: (value: T) => void
   }
 
 export type RadioOptionProps<T extends string | number> = {

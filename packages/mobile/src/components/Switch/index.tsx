@@ -31,6 +31,8 @@ export const Switch = (props: SwitchProps) => {
     switchOnLeft,
     field,
     forceError,
+    value,
+    onValueChange,
   } = others
 
   const styles = useStylesFor(Switch.styleRegistryName, style)
@@ -39,7 +41,7 @@ export const Switch = (props: SwitchProps) => {
     fieldHandle,
     validation,
     wrapperRef,
-  } = useInputBase<boolean>(field, fields.boolean)
+  } = useInputBase<boolean>(field, fields.boolean, [value, onValueChange])
 
   const trackAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

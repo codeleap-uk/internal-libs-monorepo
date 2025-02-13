@@ -11,4 +11,6 @@ export type CheckboxProps =
     checkboxOnLeft?: boolean
     checkIcon?: AppIcon
     forceError?: boolean
+    value?: boolean
+    onValueChange?: (value: boolean) => void
   }

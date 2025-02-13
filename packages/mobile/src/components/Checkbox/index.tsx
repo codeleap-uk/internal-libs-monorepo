@@ -33,6 +33,8 @@ export const Checkbox = (props: CheckboxProps) => {
     checkIcon,
     field,
     forceError,
+    value,
+    onValueChange,
   } = others
 
   const styles = useStylesFor(Checkbox.styleRegistryName, style)
@@ -41,7 +43,7 @@ export const Checkbox = (props: CheckboxProps) => {
     fieldHandle,
     validation,
     wrapperRef,
-  } = useInputBase<boolean>(field, fields.boolean)
+  } = useInputBase<boolean>(field, fields.boolean, [value, onValueChange])
 
   const boxAnimation = useAnimatedVariantStyles({
     variantStyles: styles,

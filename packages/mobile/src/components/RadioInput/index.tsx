@@ -89,6 +89,8 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
     style,
     field,
     options,
+    value,
+    onValueChange,
   } = others
 
   const styles = useStylesFor(RadioGroup.styleRegistryName, style)
@@ -96,7 +98,11 @@ export const RadioGroup = <T extends string | number>(props: RadioGroupProps<T>)
   const {
     fieldHandle,
     wrapperRef,
-  } = useInputBase(field as SelectableField<T, any>, fields.selectable as () => SelectableField<T, any>)
+  } = useInputBase(
+    field as SelectableField<T, any>,
+    fields.selectable as () => SelectableField<T, any>,
+    [value, onValueChange]
+  )
 
   // @ts-expect-error icss type
   const _radioOnRight = radioOnRight ?? styles?.__props?.radioOnRight

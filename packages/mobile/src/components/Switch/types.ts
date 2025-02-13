@@ -10,4 +10,6 @@ export type SwitchProps =
     style?: StyledProp<SwitchComposition>
     switchOnLeft?: boolean
     forceError?: boolean
+    value?: boolean
+    onValueChange?: (value: boolean) => void
   }
