@@ -1,4 +1,4 @@
-import { FormTypes, yup } from '@codeleap/form'
+import { FormTypes, yup } from '@codeleap/deprecated'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
@@ -31,7 +31,6 @@ export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseP
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
   validate?: FormTypes.ValidatorWithoutForm<SelectValue<T, Multi>> | yup.Schema<SelectValue<T, Multi>>
-  style?: StyledProp<SelectComposition>
 } & DynamicSelectProps<T, Multi>
 
 export type ComponentPartProps = {
@@ -69,7 +68,7 @@ export type LoadingIndicatorProps = NoticeProps & {
 
 export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWithChildren<
   {
-    debugName?: string
+    debugName: string
     clearable?: boolean
     closeOnSelect?: boolean
     focused?: boolean
@@ -101,6 +100,7 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     selectedOption?: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>
     selectRef?: MutableRefObject<any>
     setSelectedOption?: (value: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>) => void
+    style?: StyledProp<SelectComposition>
   } & Omit<
     ReactSelectProps<T, Multi>,
     'isSearchable' | 'isClearable' | 'isDisabled' | 'loadingMessage' | 'filterOption' |

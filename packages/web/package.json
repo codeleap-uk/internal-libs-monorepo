@@ -10,7 +10,7 @@
   "license": "UNLICENSED",
   "devDependencies": {
     "@codeleap/config": "workspace:*",
-    "@codeleap/form": "workspace:*",
+    "@codeleap/deprecated": "workspace:*",
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
     "@codeleap/logger": "workspace:*",
@@ -49,7 +49,7 @@
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
-    "@codeleap/form": "workspace:*",
+    "@codeleap/deprecated": "workspace:*",
     "@codeleap/i18n": "workspace:*",
     "@codeleap/query": "workspace:*",
     "@codeleap/logger": "workspace:*",

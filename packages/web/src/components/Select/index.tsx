@@ -1,7 +1,7 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import { useState, onUpdate, useEffect } from '@codeleap/hooks'
 import { TypeGuards } from '@codeleap/types'
-import { FormTypes, useValidate } from '@codeleap/form'
+import { FormTypes, useValidate } from '@codeleap/deprecated'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -260,7 +260,6 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadingStyles,
       inputMultiValueStyles,
       menuWrapperStyles,
-      // @ts-expect-error
     } = useSelectStyles({ ...props, styleRegistryName: Select.styleRegistryName }, {
       error: !!hasError,
       focused: isFocused,
@@ -515,6 +514,6 @@ Select.defaultProps = {
   options: [],
   loadInitialValue: false,
   loadingMessage: 'loading...',
-} as Partial<SelectProps>
+} as unknown as Partial<SelectProps>
 
 WebStyleRegistry.registerComponent(Select)

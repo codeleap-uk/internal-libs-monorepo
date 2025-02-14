@@ -1,4 +1,4 @@
-import { FormTypes } from '@codeleap/form'
+import { FormTypes } from '@codeleap/deprecated'
 import { capitalize } from '@codeleap/utils'
 import { ICSS, useNestedStylesByKey } from '@codeleap/styles'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'

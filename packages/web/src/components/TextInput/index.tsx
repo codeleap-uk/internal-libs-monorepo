@@ -1,6 +1,6 @@
 import { useBooleanToggle } from '@codeleap/hooks'
 import { TypeGuards } from '@codeleap/types'
-import { useValidate } from '@codeleap/form'
+import { useValidate } from '@codeleap/deprecated'
 import React, {
   forwardRef,
   useImperativeHandle,
