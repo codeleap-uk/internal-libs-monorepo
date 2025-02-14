@@ -1,7 +1,6 @@
 import { createStateSlice, GlobalState, globalState } from "@codeleap/store"
- 
 import { TypeGuards } from "@codeleap/types"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { DependencyList, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { FieldPaths, FieldPropertyTuples, FieldTuples, FormDef, FormValues, PropertyForKeys, ValidationResult } from "../types"
 
 
@@ -81,6 +80,19 @@ class Form<T extends FormDef> {
     return results
   }
 
+  setValues(values: Partial<FormValues<T>>) {
+    this.iterFields(([name, field]) => {
+      const value = values?.[name]
+      if (value) field.setValue(value)
+    })
+  }
+
+  resetValues() {
+    this.iterFields(([name, field]) => {
+      field.resetValue()
+    })
+  }
+
   attachState(){
     this.iterFields(([name, field]) => {
       field.options.name = name
@@ -127,13 +139,15 @@ class Form<T extends FormDef> {
     } 
     return this.fields[field].props()
   }
- 
+
+  useSetValues(formValues?: Partial<FormValues<T>>, deps: DependencyList = []) {
+    useLayoutEffect(() => {
+      if (formValues) this.setValues(formValues)
+    }, deps)
+  }
 
   use<Selected>(selector: FormSelector<T, Selected>): Selected {
-
-   
     const [selected, setSelected] = useState(() => selector(this))
-
     
     const reselect = useCallback(() => {
       setSelected(selector(this))
@@ -147,14 +161,8 @@ class Form<T extends FormDef> {
       })      
     }, [reselect])
 
-    
-
     return selected
   }
-
-
- 
-
 }
 
 

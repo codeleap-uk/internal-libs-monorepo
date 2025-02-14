@@ -113,6 +113,10 @@ export class Field<
     return value
   }
 
+  resetValue() {
+    this.setValue(this.initialValue)
+  }
+
   use(impl?: Partial<IFieldRef<T>>, deps?: any[]){
     const value = this.useValue()    
 
