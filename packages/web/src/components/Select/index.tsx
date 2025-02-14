@@ -260,6 +260,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       loadingStyles,
       inputMultiValueStyles,
       menuWrapperStyles,
+      // @ts-ignore
     } = useSelectStyles({ ...props, styleRegistryName: Select.styleRegistryName }, {
       error: !!hasError,
       focused: isFocused,
