@@ -7,6 +7,8 @@ import { SwitchProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -24,14 +26,22 @@ export const Switch = (props: SwitchProps) => {
 
   const {
     style,
-    value,
     disabled,
     debugName,
-    onValueChange,
     switchOnLeft,
+    field,
+    forceError,
+    value,
+    onValueChange,
   } = others
 
   const styles = useStylesFor(Switch.styleRegistryName, style)
+
+  const {
+    fieldHandle,
+    validation,
+    wrapperRef,
+  } = useInputBase<boolean>(field, fields.boolean, [value, onValueChange])
 
   const trackAnimation = useAnimatedVariantStyles({
     variantStyles: styles,
@@ -41,16 +51,16 @@ export const Switch = (props: SwitchProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? styles['track:disabled-on'] : styles['track:disabled-off']
+        disabledStyle = fieldHandle?.value ? styles['track:disabled-on'] : styles['track:disabled-off']
       }
-      const style = value ? styles['track:on'] : styles['track:off']
+      const style = fieldHandle?.value ? styles['track:on'] : styles['track:off']
 
       return {
         ...style,
         ...disabledStyle,
       }
     },
-    dependencies: [value, disabled],
+    dependencies: [fieldHandle?.value, disabled],
   })
 
   const thumbAnimation = useAnimatedVariantStyles({
@@ -61,29 +71,33 @@ export const Switch = (props: SwitchProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
+        disabledStyle = fieldHandle?.value ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
       }
-      const style = value ? styles['thumb:on'] : styles['thumb:off']
+      const style = fieldHandle?.value ? styles['thumb:on'] : styles['thumb:off']
       return {
         ...style,
         ...disabledStyle,
       }
 
     },
-    dependencies: [value, disabled],
+    dependencies: [fieldHandle?.value, disabled],
   })
 
   // @ts-expect-error
   const _switchOnLeft = switchOnLeft ?? styles?.__props?.switchOnLeft
 
+  const hasError = validation.showError || forceError
+
   return <InputBase
     {...inputBaseProps}
+    ref={wrapperRef}
     debugName={debugName}
     wrapper={Touchable}
+    error={hasError ? validation.message || forceError : null}
     style={styles}
     wrapperProps={{
       onPress: () => {
-        onValueChange(!value)
+        fieldHandle.setValue(!fieldHandle?.value)
       },
       disabled,
       rippleDisabled: true,

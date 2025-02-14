@@ -30,4 +30,3 @@ export const changeEventNames: Partial<Record<Form.FormField['type'], string>> =
     switch: 'onValueChange',
     date: 'onValueChange',
   }
-

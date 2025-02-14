@@ -1,5 +1,4 @@
-import { PropsOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
+import { Option, Options, PropsOf } from '@codeleap/types'
 import { StylesOf } from '../../types/utility'
 import { GetKeyboardAwarePropsOptions } from '../../utils'
 import { Icon } from '../Icon'
@@ -15,7 +14,7 @@ export type AutocompleteRenderFNProps<T> = {
   style?: StylesOf<AutocompleteComposition>
   onPress: () => void
   isSelected?: boolean
-  item: FormTypes.Options<T>[number]
+  item: Option<T>
   touchableProps?: Partial<PropsOf<typeof Touchable>>
   textProps?: Partial<PropsOf<typeof Text>>
   iconProps?: Partial<PropsOf<typeof Icon>>
@@ -26,17 +25,17 @@ export type AutocompleteRenderFN<T> = (props: AutocompleteRenderFNProps<T>) => J
 export type AutocompleteValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 
 export type ValueBoundAutocompleteProps<T, Multi extends boolean = false> = {
-  options?: FormTypes.Options<T>
-  defaultOptions?: FormTypes.Options<T>
-  loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
+  options?: Options<T>
+  defaultOptions?: Options<T>
+  loadOptions?: (search: string) => Promise<Options<T>>
   value: AutocompleteValue<T, Multi>
   renderItem?: AutocompleteRenderFN<AutocompleteValue<T, Multi>>
   onValueChange: (value: AutocompleteValue<T, Multi>) => void
-  filterItems?: (search: string, items: FormTypes.Options<T>) => FormTypes.Options<T>
+  filterItems?: (search: string, items: Options<T>) => Options<T>
   onLoadOptionsError?: (error: any) => void
   multiple?: Multi
-  getLabel?: (forOption: Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]) => FormTypes.Label
-  onItemPressed?: (item: FormTypes.Options<T>[number]) => any
+  getLabel?: (forOption: Multi extends true ? Options<T> : Options<T>[number]) => string
+  onItemPressed?: (item: Options<T>[number]) => any
 }
 
 export type ReplaceAutocompleteProps<Props, T, Multi extends boolean = false> = Omit<
@@ -49,7 +48,7 @@ export type AutocompleteProps<T = any, Multi extends boolean = false> =
   ValueBoundAutocompleteProps<T, Multi> &
   {
     placeholder?: string
-    label?: FormTypes.Label
+    label?: string
     closeOnSelect?: boolean
     style?: StyledProp<AutocompleteComposition>
     keyboardAware?: GetKeyboardAwarePropsOptions

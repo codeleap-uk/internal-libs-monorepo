@@ -52,4 +52,3 @@ export function useValidate(value: any, validator: yup.Schema<any> | ValidatorFu
   }
 
 }
-

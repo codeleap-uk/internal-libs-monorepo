@@ -2,7 +2,7 @@ import * as FormTypes from './types'
 import { TypeGuards } from '@codeleap/types'
 import { deepGet, deepSet, deepMerge } from '@codeleap/utils'
 import { usePartialState, useMemo } from '@codeleap/hooks'
-import { FunctionType } from '../../types'
+import { FunctionType } from '@codeleap/types'
 import { createRef, useCallback, useRef } from 'react'
 import { useI18N } from '@codeleap/i18n'
 

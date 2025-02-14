@@ -1,4 +1,4 @@
-import { FormTypes, yup } from '@codeleap/form'
+import { FormTypes, yup } from '@codeleap/deprecated'
 import { TouchableProps } from '../Touchable'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { InputBaseProps } from '../InputBase'

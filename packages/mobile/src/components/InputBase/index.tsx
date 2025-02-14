@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { getRenderedComponent } from '@codeleap/utils'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -6,6 +6,9 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
+import RNAnimated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import { View as RNView } from 'react-native'
+import { StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './utils'
@@ -22,7 +25,7 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <>{props.children}</>
 }
 
-export const InputBase = (props: InputBaseProps) => {
+export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBaseProps, ref) => {
   const {
     children,
     error = null,
@@ -82,24 +85,27 @@ export const InputBase = (props: InputBaseProps) => {
       {children}
       {_rightIcon}
     </InnerWrapperComponent>,
-    error: hideErrorMessage ? null : (
-      _error || <Text text={''} style={styles.errorStyle} />
-    ),
   }
 
   return <WrapperComponent
     {...otherProps}
     {...wrapperProps}
     style={styles.wrapperStyle}
+    ref={ref}
   >
     {
       order.map((key) => <KeyPassthrough key={key}>
         {parts[key]}
       </KeyPassthrough>)
-
     }
+
+    {hideErrorMessage || !error ? null : (
+      <RNAnimated.View exiting={FadeOut.duration(100)} entering={FadeIn.duration(200)}>
+        {_error}
+      </RNAnimated.View>
+    )}
   </WrapperComponent>
-}
+}) as StyledComponentWithProps<InputBaseProps>
 
 InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
 

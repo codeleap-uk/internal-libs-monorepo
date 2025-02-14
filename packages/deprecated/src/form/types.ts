@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Join, Paths, Prev } from '@codeleap/types'
 import * as yup from 'yup'
-import { WebInputFile, MobileInputFile, DeepPartial, RNMaskedTextTypes } from '../../types'
+import { WebInputFile, MobileInputFile, DeepPartial, RNMaskedTextTypes } from '@codeleap/types'
 import { AnyObject } from 'yup'
 
 type ValidationReturn = { message?: Label; valid?: boolean }

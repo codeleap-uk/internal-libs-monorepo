@@ -10,27 +10,27 @@ type InputBaseKey = keyof InputBaseProps
 
 type BaseProps = Omit<InputBaseProps, 'style'>
 
+const varList:InputBaseKey[] = [
+  'label',
+  'style',
+  'error',
+  'innerWrapper',
+  'leftIcon',
+  'rightIcon',
+  'description',
+  'wrapper',
+  'children',
+  'innerWrapperProps',
+  'wrapperProps',
+  'disabled',
+  'hideErrorMessage',
+  'style',
+]
+
 export function selectInputBaseProps<T extends BaseProps>(props: T): {
   inputBaseProps: BaseProps
   others: OmitDiff<T, T>
 } {
-  const varList:InputBaseKey[] = [
-    'label',
-    'style',
-    'error',
-    'innerWrapper',
-    'leftIcon',
-    'rightIcon',
-    'description',
-    'wrapper',
-    'children',
-    'innerWrapperProps',
-    'wrapperProps',
-    'disabled',
-    'hideErrorMessage',
-    'style',
-  ]
-
   const copy = { ...props }
 
   const result = varList.reduce((acc, key) => {

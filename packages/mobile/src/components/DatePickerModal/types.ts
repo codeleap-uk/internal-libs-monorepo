@@ -1,18 +1,20 @@
 import React from 'react'
 import { StylesOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
 import { DatePickerModalButtonCompositions, DatePickerModalComposition } from './styles'
 import { DatePickerProps } from 'react-native-date-picker'
 import { ButtonProps } from '../Button'
 import { ModalProps } from '../Modal'
 import { StyledProp } from '@codeleap/styles'
+import { DateField } from '@codeleap/form'
 
-export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent'> & {
-  valueLabel: FormTypes.Label
+export type DatePickerModalOuterInputProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'field'> & {
+  valueLabel: string
+  value: any
+  onValueChange: (date: any) => void
 }
 
 type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponent' | 'style'> & {
-  valueLabel: FormTypes.Label
+  valueLabel: string
   confirm: () => void
   cancelStyles: StylesOf<DatePickerModalButtonCompositions>
   confirmStyles: StylesOf<DatePickerModalButtonCompositions>
@@ -22,19 +24,18 @@ type DatePickerModalFooterProps = Omit<DatePickerModalProps, 'outerInputComponen
 export type DatePickerModalProps =
   Omit<ModalProps, 'style' | 'ref'> &
   {
+    field?: DateField<any>
     hideInput?: boolean
     debugName: string
-    value: Date
-    label?: FormTypes.Label
-    placeholder?: FormTypes.Label
-    onValueChange: (date: Date) => void
+    label?: string
+    placeholder?: string
     isCustomModal?: boolean
     mode?: DatePickerProps['mode']
     cancelButtonProps?: Partial<ButtonProps>
     confirmButtonProps?: Partial<ButtonProps>
     datePickerProps?: Partial<DatePickerProps>
     outerInputComponent?: React.ComponentType<DatePickerModalOuterInputProps>
-    formatDate?: (date: Date) => FormTypes.Label
+    formatDate?: (date: Date) => string
     commitDate?: 'onConfirm' | 'onChange'
     showDoneButton?: boolean
     footerComponent?: React.ComponentType<DatePickerModalFooterProps>
@@ -44,4 +45,6 @@ export type DatePickerModalProps =
     toggleOnConfirm?: boolean
     onConfirm?: (value: Date) => void
     style?: StyledProp<DatePickerModalComposition>
+    value?: Date
+    onValueChange?: (value: Date) => void
   }

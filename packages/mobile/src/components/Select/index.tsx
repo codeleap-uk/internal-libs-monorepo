@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
-import { TypeGuards } from '@codeleap/types'
-import { FormTypes } from '@codeleap/form'
+import { Option, Options, TypeGuards } from '@codeleap/types'
 import {
   onMount,
   onUpdate,
@@ -19,11 +18,13 @@ import Modal from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
 import { useStylesFor } from '../../hooks'
+import { SelectableField, fields } from '@codeleap/form'
+import { useInputBase } from '../InputBase/useInputBase'
 
 export * from './styles'
 export * from './types'
 
-const defaultFilterFunction = (search: string, options: FormTypes.Options<any>) => {
+const defaultFilterFunction = (search: string, options: Options<any>) => {
   return options.filter((option) => {
     if (TypeGuards.isString(option.label)) {
       return option.label.toLowerCase().includes(search.toLowerCase())
@@ -82,8 +83,6 @@ export const Select = <T extends string | number = string, Multi extends boolean
   }
 
   const {
-    value,
-    onValueChange,
     label,
     options = [],
     style,
@@ -117,8 +116,15 @@ export const Select = <T extends string | number = string, Multi extends boolean
     searchInputProps,
     outerInputComponent,
     disabled,
+    field,
+    value: _value,
+    onValueChange: _onValueChange,
     ...modalProps
   } = allProps
+
+  const { fieldHandle } = useInputBase(field, fields.selectable as () => SelectableField<T, any>, [_value, _onValueChange])
+
+  const value = fieldHandle.value
 
   const isValueArray = TypeGuards.isArray(value) && multiple
 
@@ -144,7 +150,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
   const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
 
   const currentValueLabel = useMemo(() => {
-    const _options = (multiple ? labelOptions : labelOptions?.[0]) as Multi extends true ? FormTypes.Options<T> : FormTypes.Options<T>[number]
+    const _options = (multiple ? labelOptions : labelOptions?.[0]) as Multi extends true ? Options<T> : Option<T>
 
     const label = getLabel(_options)
 
@@ -197,7 +203,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       newOption = currentOptions.find(o => o.value === selectedValue)
     }
 
-    onValueChange(newValue)
+    fieldHandle.setValue(newValue)
 
     if (isValueArray) {
       if (removedIndex !== null) {
@@ -251,7 +257,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
 
   const onPressInputIcon = () => {
     if (showClearIcon) {
-      onValueChange(null)
+      fieldHandle.setValue(null)
     } else {
       close?.()
     }

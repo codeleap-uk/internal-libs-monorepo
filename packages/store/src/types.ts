@@ -1,4 +1,4 @@
-import { WritableAtom } from 'nanostores'
+import {   WritableAtom } from 'nanostores'
 import { PersistentStore, PersistentEvents, PersistentEvent } from '@nanostores/persistent'
 
 export type StateSelector<S, R> = (state: S) => R

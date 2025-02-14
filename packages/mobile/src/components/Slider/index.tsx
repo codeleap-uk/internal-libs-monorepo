@@ -1,6 +1,5 @@
 import React from 'react'
 import { Slider as RNSlider } from '@miblanchard/react-native-slider'
-import { StyleSheet } from 'react-native'
 import { TypeGuards } from '@codeleap/types'
 import { onUpdate } from '@codeleap/hooks'
 import { SliderProps, TrackMarkProps } from './types'
@@ -11,6 +10,9 @@ import { Touchable } from '../Touchable'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
+import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
 
 export * from './styles'
 export * from './types'
@@ -45,8 +47,7 @@ export const Slider = (props: SliderProps) => {
 
   const {
     debounce = null,
-    onValueChange,
-    value,
+    field,
     label,
     description,
     debugName,
@@ -57,54 +58,32 @@ export const Slider = (props: SliderProps) => {
     labelClickable,
     updateImmediately = false,
     trackMarkComponent: SliderTrackMark,
+    value,
+    onValueChange,
     ...sliderProps
   } = others
 
-  const [_value, _setValue] = updateImmediately ? [value, onValueChange] : React.useState(value)
+  const {
+    fieldHandle,
+    wrapperRef,
+  } = useInputBase(field, fields.number, [value, onValueChange])
+
+  const [_value, _setValue] = updateImmediately ? [fieldHandle?.value, fieldHandle.setValue] : React.useState<number | Array<number>>(0)
 
   onUpdate(() => {
-    if(updateImmediately) return
-    if (value !== _value) {
-      _setValue(value)
+    if (updateImmediately) return
+    if (fieldHandle?.value !== _value) {
+      _setValue(fieldHandle?.value)
     }
-  }, [value])
+  }, [fieldHandle?.value])
 
   const styles = useStylesFor(Slider.styleRegistryName, style)
 
-  const thumbStyle = React.useMemo(() => {
-    return StyleSheet.flatten([
-      styles?.thumb,
-      disabled && styles['thumb:disabled'],
-    ])
-  }, [])
-
-  const trackStyle = React.useMemo(() => {
-    return StyleSheet.flatten([
-      styles?.track,
-      disabled && styles['track:disabled'],
-    ])
-  }, [disabled])
-
-  const selectedTrackStyle = React.useMemo(() => {
-    return StyleSheet.flatten([
-      styles?.selectedTrack,
-      disabled && styles['selectedTrack:disabled'],
-    ])
-  }, [disabled])
-
-  const unselectedTrackStyle = React.useMemo(() => {
-    return StyleSheet.flatten([
-      styles?.unselectedTrack,
-      disabled && styles['unselectedTrack:disabled'],
-    ])
-  }, [disabled])
-
-  const containerStyle = React.useMemo(() => {
-    return StyleSheet.flatten([
-      styles?.sliderContainer,
-      disabled && styles['sliderContainer:disabled'],
-    ])
-  }, [disabled])
+  const partialStyles = useInputBasePartialStyles(
+    styles,
+    ['thumb', 'track', 'selectedTrack', 'unselectedTrack', 'sliderContainer', 'trackMark'],
+    { disabled }
+  )
 
   const trackMarksHaveContent = !(TypeGuards.isArray(trackMarks) || TypeGuards.isNil(trackMarks))
 
@@ -115,16 +94,10 @@ export const Slider = (props: SliderProps) => {
     return Object.keys(trackMarks).map((key) => Number(key))
   }, [trackMarksHaveContent])
 
-  const trackMarkStyle = React.useMemo(() => {
-    return StyleSheet.flatten([
-      styles?.trackMark,
-      disabled && styles['trackMark:disabled'],
-    ])
-  }, [disabled])
-
   return (
     <InputBase
       {..._inputBaseProps}
+      ref={wrapperRef}
       disabled={disabled}
       style={styles}
       labelAsRow
@@ -133,7 +106,7 @@ export const Slider = (props: SliderProps) => {
         <View style={styles.labelRow}>
           {label ? (
             <Touchable
-              onPress={() => labelClickable ? onValueChange(sliderProps?.minimumValue || minimumValue) : null}
+              onPress={() => labelClickable ? fieldHandle.setValue(sliderProps?.minimumValue || minimumValue) : null}
               style={styles.labelBtn}
               debugName='slider title'
             >
@@ -142,7 +115,7 @@ export const Slider = (props: SliderProps) => {
           ) : null}
           {description ? (
             <Touchable
-              onPress={() => labelClickable ? onValueChange(sliderProps?.maximumValue || maximumValue) : null}
+              onPress={() => labelClickable ? fieldHandle.setValue(sliderProps?.maximumValue || maximumValue) : null}
               style={styles?.descriptionBtn}
               debugName='slider description'
             >
@@ -155,18 +128,16 @@ export const Slider = (props: SliderProps) => {
       <RNSlider
         value={_value}
         onValueChange={_setValue}
-        // @ts-ignore
-        thumbStyle={thumbStyle}
-        // @ts-ignore
-        trackStyle={trackStyle}
-        minimumTrackStyle={selectedTrackStyle}
-        maximumTrackStyle={unselectedTrackStyle}
-        containerStyle={containerStyle}
+        thumbStyle={partialStyles?.thumb}
+        trackStyle={partialStyles?.track}
+        minimumTrackStyle={partialStyles?.selectedTrack}
+        maximumTrackStyle={partialStyles?.unselectedTrack}
+        containerStyle={partialStyles?.sliderContainer}
         minimumValue={minimumValue}
         maximumValue={maximumValue}
         onSlidingComplete={() => {
-          if(updateImmediately) return
-          onValueChange(_value)
+          if (updateImmediately) return
+          fieldHandle.setValue(_value)
         }}
         disabled={disabled}
         {...sliderProps}
@@ -185,17 +156,14 @@ export const Slider = (props: SliderProps) => {
                   idxStyle = styles?.lastTrackMark
                 }
 
-                const style = [
-                  trackMarkStyle,
-                  idxStyle,
-                ]
+                const style = [partialStyles?.trackMark, idxStyle]
 
                 if (!trackMarksHaveContent) {
                   return <SliderTrackMark
                     index={idx}
                     style={style}
                     key={idx}
-                    onPress={() => trackMarksClickable ? onValueChange(trackMarksProp[idx]) : null}
+                    onPress={() => trackMarksClickable ? fieldHandle.setValue(trackMarksProp[idx]) : null}
                   />
                 }
 
@@ -207,7 +175,7 @@ export const Slider = (props: SliderProps) => {
                   content={content}
                   style={style}
                   key={idx}
-                  onPress={() => trackMarksClickable ? onValueChange(trackMarksProp[idx]) : null}
+                  onPress={() => trackMarksClickable ? fieldHandle.setValue(trackMarksProp[idx]) : null}
                 />
               })
             }

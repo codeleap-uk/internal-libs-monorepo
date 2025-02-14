@@ -1,7 +1,7 @@
 import { defaultFieldValues } from './constants'
 import * as Form from './types'
 import * as yup from 'yup'
-import { humanizeCamelCase } from '../../utils'
+import { humanizeCamelCase } from '@codeleap/utils'
 import { changeEventNames } from './constants'
 
 function getDefaultValue(field: Partial<Form.FormField>) {
