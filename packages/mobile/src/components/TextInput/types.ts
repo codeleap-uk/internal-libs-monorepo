@@ -7,11 +7,11 @@ import { TextInputComposition } from './styles'
 import { Field } from '@codeleap/form'
 
 export type TextInputProps =
-  Omit<InputBaseProps, 'style' | 'ref'> &
+  Omit<InputBaseProps, 'style' | 'ref' | 'debugName'> &
   Omit<RNTextInputProps, 'style'> &
   {
     secure?: boolean
-    debugName: string
+    debugName?: string
     autoAdjustSelection?: boolean
     selectionStart?: number
     visibilityToggle?: boolean

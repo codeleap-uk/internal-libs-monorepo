@@ -18,7 +18,7 @@ export type InputBaseProps = React.PropsWithChildren<{
   innerWrapper?: React.FC<any>
   innerWrapperProps?: any
   description?: React.ReactNode
-  debugName: string
+  debugName?: string
   focused?: boolean
   disabled?: boolean
   order?: OrderedParts[]
