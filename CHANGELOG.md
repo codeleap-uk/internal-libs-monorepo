@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v1.0.0-45...v5.0.1) (2025-02-14)
+
 ### [4.3.9](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v4.3.6...v4.3.9) (2025-01-22)
 
 
