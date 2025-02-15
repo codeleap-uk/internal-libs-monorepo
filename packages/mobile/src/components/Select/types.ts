@@ -93,4 +93,5 @@ export type SelectProps<T extends string | number = any, Multi extends boolean =
     field?: SelectableField<T, any>
     value?: T
     onValueChange?: (value: T) => void
+    onSelect?: (value: T) => void
   }

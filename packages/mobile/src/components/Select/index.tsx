@@ -119,6 +119,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     field,
     value: _value,
     onValueChange: _onValueChange,
+    onSelect,
     ...modalProps
   } = allProps
 
@@ -204,6 +205,8 @@ export const Select = <T extends string | number = string, Multi extends boolean
     }
 
     fieldHandle.setValue(newValue)
+
+    onSelect?.(newValue)
 
     if (isValueArray) {
       if (removedIndex !== null) {
