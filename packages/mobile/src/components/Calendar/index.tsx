@@ -1,6 +1,6 @@
 import React from 'react'
 import { TypeGuards } from '@codeleap/types'
-import { format } from 'date-fns'
+import dayjs from 'dayjs'
 // @ts-ignore
 import { Calendar as RNCalendar, CalendarProps as RNCalendarProps, DateData } from 'react-native-calendars'
 import { View, ViewProps } from '../View'
@@ -32,7 +32,7 @@ export const Calendar = (props: CalendarProps) => {
   const styles = useStylesFor(Calendar.styleRegistryName, style)
 
   const isDateObject = TypeGuards.isInstance(value, Date)
-  const stringValue: string = isDateObject ? format(value, 'yyyy/MM/dd') : value
+  const stringValue: string = isDateObject ? dayjs(value).format('YYYY/MM/DD') : value
 
   function handleChange(date: DateData) {
     if (!onValueChange) return
