@@ -67,6 +67,6 @@
   "packageManager": "bun@1.1.33",
   "patchedDependencies": {
     "@boterop/react-native-background-timer@2.5.2": "patches/@boterop%2Freact-native-background-timer@2.5.2.patch",
-    "react-native-keyboard-controller@1.16.2": "patches/react-native-keyboard-controller@1.16.2.patch"
+    "react-native-keyboard-controller@1.16.5": "patches/react-native-keyboard-controller@1.16.5.patch"
   }
 }
