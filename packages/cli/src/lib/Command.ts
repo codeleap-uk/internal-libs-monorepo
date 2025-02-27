@@ -1,7 +1,7 @@
 import { command } from 'cleye'
 import figlet from 'figlet'
 import chalk from 'chalk'
-import { fs } from './utils'
+import { fs, path } from './utils'
 import { cliConfigPath } from '../constants'
 
 export const codeleapCommand: typeof command = (opts, callback) => {
