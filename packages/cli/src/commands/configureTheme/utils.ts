@@ -6,7 +6,13 @@ import { ThemeShape, ThemeValue } from './types'
 const isNil = (x) => x === null || typeof x === 'undefined'
 
 function normalizeKey(key: string | number) {
-  return String(key).replace(/[\/\s\:]/g, '_').replaceAll('__', '_').toLowerCase()
+  const forbiddenWords = ['graphics']
+
+  return String(key)
+    .split(/[\/\s\:]+/)
+    .filter(word => !forbiddenWords.includes(word.toLowerCase()))
+    .map((word, index) => index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1))
+    .join('')
 }
 
 export const replaceDoubleQuotesWithSingle = (str: string) => str.replace(/"/g, "'")
@@ -16,7 +22,7 @@ export const transformObj = (obj) => replaceDoubleQuotesWithSingle(JSON.stringif
 export function createThemeFile<T extends Record<string, any>>(
   name: string,
   content: T,
-  render: (name: string, content: T) => string = (name, content) => `export const ${name} = ${transformObj(content)}`
+  render: (name: string, content: T) => string = (name, content) => `export default ${transformObj(content)}`
 ) {
   const TSContent = render(name, content)
 

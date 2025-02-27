@@ -35,7 +35,7 @@ export const configureThemeCommand = codeleapCommand(
       createThemeFile(modeName, colors, (name, content) => {
         const colors = Object.entries(content).map(([key, value]) => `  ${key}: colors.${value},`).join(`\n`)
   
-        return `import { colors } from './colors'\n\nexport const ${name} = {\n${colors}\n}`
+        return `import colors from './colors'\n\nexport default {\n${colors}\n}`
       })
     }
 
