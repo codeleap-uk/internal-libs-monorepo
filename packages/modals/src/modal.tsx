@@ -274,6 +274,7 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
       {...wrapperProps}
       visible={visible}
       toggle={this.toggle}
+      zIndex={this.stackIndex}
     >
       <Content
         visible={visible}
