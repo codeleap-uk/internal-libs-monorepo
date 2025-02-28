@@ -19,23 +19,33 @@ export const configureThemeCommand = codeleapCommand(
   async (argv) => {
     const { flags, _ } = argv
 
-    const measures = createThemeFile('measures', resolveMeasure())
+    const measures = createThemeFile({
+      fileName: 'measures',
+      content: resolveMeasure(),
+    })
 
     logObj(measures)
 
-    const globalColors = createThemeFile('colors', resolveGlobalColors())
+    const globalColors = createThemeFile({
+      fileName: 'baseColors',
+      content: resolveGlobalColors(),
+      folder: 'colors',
+    })
 
     logObj(globalColors)
 
     const contextColors = resolveContextColors()
 
     for (const modeName in contextColors) {
-      const colors = contextColors[modeName]
+      createThemeFile({
+        fileName: modeName,
+        content: contextColors[modeName],
+        folder: 'colors',
+        render: (name, content) => {
+          const colors = Object.entries(content).map(([key, value]) => `  ${key}: colors.${value},`).join(`\n`)
 
-      createThemeFile(modeName, colors, (name, content) => {
-        const colors = Object.entries(content).map(([key, value]) => `  ${key}: colors.${value},`).join(`\n`)
-  
-        return `import colors from './colors'\n\nexport default {\n${colors}\n}`
+          return `import colors from './baseColors'\n\nexport default {\n${colors}\n}`
+        }
       })
     }
 

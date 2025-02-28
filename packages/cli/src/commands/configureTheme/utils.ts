@@ -19,14 +19,26 @@ export const replaceDoubleQuotesWithSingle = (str: string) => str.replace(/"/g, 
 
 export const transformObj = (obj) => replaceDoubleQuotesWithSingle(JSON.stringify(obj, null, 2))
 
-export function createThemeFile<T extends Record<string, any>>(
-  name: string,
-  content: T,
-  render: (name: string, content: T) => string = (name, content) => `export default ${transformObj(content)}`
-) {
-  const TSContent = render(name, content)
+type CreateFileOptions<T extends Record<string, any>> = {
+  fileName: string
+  content: T
+  folder?: string
+  render?: (name: string, content: T) => string
+}
 
-  fs.writeFileSync(path.resolve(cliDir + USER_CONFIG.theme.configure.output, `${name}.ts`), TSContent)
+export function createThemeFile<T extends Record<string, any>>(options: CreateFileOptions<T>) {
+  const {
+    fileName,
+    content,
+    folder = '',
+    render = (name, content) => `export default ${transformObj(content)}`
+  } = options
+  
+  const TSContent = render(fileName, content)
+
+  const basePath = path.join(cliDir, USER_CONFIG.theme.configure.output, folder)
+
+  fs.writeFileSync(path.resolve(basePath, `${fileName}.ts`), TSContent)
 
   return content
 }
