@@ -34,7 +34,6 @@ export type DynamicVariants =
   `scale:${Value}`
 
 export const createDynamicVariants = () => {
-
   const dynamicVariants = {}
 
   function createVariant(variantName: string, variantReturn: any) {
@@ -53,7 +52,7 @@ export const createDynamicVariants = () => {
         const variant = `border${capitalize(direction)}${capitalize(y)}Radius`
 
         createVariant(variant, (theme, value: keyof IBorderRadius) => ({
-          [variant]: theme.borderRadius[value],
+          [variant]: theme.radius[value],
         }))
       })
     }
@@ -62,7 +61,7 @@ export const createDynamicVariants = () => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
       createVariant(variant, (theme, value: string) => ({
-        [variant]: property == 'color' ? theme.baseColors[value] : theme.borderRadius[value],
+        [variant]: property == 'color' ? theme.baseColors[value] : theme.radius[value],
       }))
     })
   })
@@ -80,11 +79,11 @@ export const createDynamicVariants = () => {
   }))
 
   createVariant('br', (theme, value: keyof IBorderRadius) => ({
-    borderRadius: theme.borderRadius[value],
+    borderRadius: theme.radius[value],
   }))
 
   createVariant('borderRadius', (theme, value: keyof IBorderRadius) => ({
-    borderRadius: theme.borderRadius[value],
+    borderRadius: theme.radius[value],
   }))
 
   return dynamicVariants

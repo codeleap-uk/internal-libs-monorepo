@@ -16,7 +16,9 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     colors,
     breakpoints,
     presets,
-    borderRadius,
+    radius,
+    stroke,
+    size,
     effects,
     typography,
     icons,
@@ -40,7 +42,7 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       const colorScheme = themeStore.getState().colorScheme
 
       if (colorScheme === 'default') return colors
-      
+
       const scheme = theme.alternateColors?.[colorScheme]
 
       if (!scheme) {
@@ -79,7 +81,11 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       ...presets,
     },
 
-    borderRadius: borderRadius ?? {},
+    radius: radius ?? {},
+
+    stroke: stroke ?? {},
+
+    size: size ?? {},
 
     effects: effects ?? {},
 

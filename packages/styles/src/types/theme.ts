@@ -46,7 +46,9 @@ export type Theme = {
   breakpoints?: BreakpointMap
   baseSpacing?: number
   presets?: AnyMap
-  borderRadius?: AnyMap
+  radius?: AnyMap
+  stroke?: AnyMap
+  size?: AnyMap
   effects?: EffectsMap
   typography: AnyMap
   icons: AnyMap
@@ -63,7 +65,9 @@ type PredefinedThemeDerivedValues<T extends Theme> = {
   colors: T['colors']
   breakpoints: T['breakpoints']
   presets: DefaultVariants & T['presets']
-  borderRadius: T['borderRadius']
+  radius: T['radius']
+  stroke: T['stroke']
+  size: T['size']
   effects: T['effects']
   typography: T['typography']
   icons: T['icons']
