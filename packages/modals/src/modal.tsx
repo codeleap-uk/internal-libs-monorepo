@@ -46,7 +46,7 @@ const DefaultWrapper = () => {
 }
 
 type WrapperComponentProps = Partial<PropsOf<typeof Modal.WrapperComponent>>
-
+const registeredIds = atom([])
 export class Modal<Params = {}, Result = {}, Metadata = {}> {
 
   id: string
@@ -154,6 +154,7 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
     }
 
     Modal.registry[this.id] = this
+    registeredIds.set([ ...registeredIds.get(), this.id])
 
     this.visible.subscribe((visible, wasVisible) => {
       this.onVisibilityChanged(visible, wasVisible)
@@ -327,6 +328,7 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
   }
 
   static GlobalOutlet() {
+    const ids = useStore(registeredIds)
     const modals = Object.values(Modal.registry).filter(m => !m._config.independent)
 
     return <>
