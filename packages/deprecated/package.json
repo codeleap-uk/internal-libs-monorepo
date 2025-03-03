@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/deprecated",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
