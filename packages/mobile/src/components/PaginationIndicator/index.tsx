@@ -7,6 +7,9 @@ import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { PaginationIndicatorProps } from './types'
 
+export * from './styles'
+export * from './types'
+
 export const PaginationIndicator = (props: PaginationIndicatorProps) => {
   const {
     hasMore,
