@@ -103,8 +103,6 @@ export function resolveMeasure() {
 // Context Colors
 
 function transformContextColors(shape: ThemeShape) {
-  // logObj(shape)
-
   const colors = shape.variables.reduce((acc, variable) => {
     const key = normalizeKey(variable.name)
 

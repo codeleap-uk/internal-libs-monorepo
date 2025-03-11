@@ -10,7 +10,7 @@ export const configureThemeCommand = codeleapCommand(
     settingsRequired: true,
     parameters: [],
     help: {
-      description: 'Command for easily convertor to webp, compression and resize images.',
+      description: 'Command to set application theme using figma files.',
       examples: [
         `codeleap ${commandName}`,
       ],

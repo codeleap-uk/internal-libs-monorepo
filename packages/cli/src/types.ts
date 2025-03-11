@@ -25,21 +25,3 @@ export type CodeleapCLIUserConfig = {
     }
   }
 }
-
-export type CodeleapCLISettings = {
-  'convertor-webp': {
-    input: string
-    output: string
-    convertor: {
-      compressionQuality: number
-      resizeWidth: number
-      processColorChannels: boolean
-      inputFormats: string[]
-      ignoreFiles: string[]
-    }
-    mode: 'multi' | 'single'
-  }
-  'theme': {
-    assetsPath: string
-  }
-}

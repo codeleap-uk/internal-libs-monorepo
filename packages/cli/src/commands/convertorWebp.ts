@@ -4,8 +4,8 @@ import path from 'path'
 import sharp from 'sharp'
 import { inquirer } from '../lib'
 import '../lib/firebase'
-import { CodeleapCLISettings } from '../types'
-import { CODELEAP_CLI_SETTINGS_PATH } from '../constants'
+import { CodeleapCLIUserConfig } from '../types'
+import { USER_CONFIG } from '../constants'
 
 const commandName = 'convertor-webp'
 
@@ -23,17 +23,7 @@ export const convertorWebpCommand = codeleapCommand(
   async (argv) => {
     const { flags, _ } = argv
     
-    const settingsPath = CODELEAP_CLI_SETTINGS_PATH
-
-    if (!fs.existsSync(settingsPath)) {
-      console.error('Settings not found, check path:', settingsPath)
-      process.exit(1)
-      return
-    }
-
-    const settingsJSON = fs.readFileSync(settingsPath).toString()
-
-    let settings: CodeleapCLISettings['convertor-webp'] = JSON.parse(settingsJSON)['convertor-webp']
+    let settings: CodeleapCLIUserConfig['convertor-webp'] = USER_CONFIG['convertor-webp']
 
     const isMultipleConversion = settings.mode === 'multi'
     const isSingleConversion = settings.mode === 'single'
@@ -62,7 +52,6 @@ export const convertorWebpCommand = codeleapCommand(
           error: e,
         })
         process.exit(1)
-        return
       }
     }
     
@@ -89,13 +78,11 @@ export const convertorWebpCommand = codeleapCommand(
         } else {
           console.error('File not found, check filename', filename)
           process.exit(1)
-          return
         }
       }
     } else {
       console.error('Input folder not found, check settings', settings)
       process.exit(1)
-      return
     }
 
     console.log('Files to convert', files)
