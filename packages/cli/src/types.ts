@@ -1,10 +1,8 @@
 export type CodeleapCLIUserConfig = {
   GITHUB_TOKEN: string
   SHELL?: string
-}
 
-export type CodeleapCLISettings = {
-  'convertor-webp': {
+  'convertor-webp'?: {
     input: string
     output: string
     convertor: {
@@ -15,5 +13,15 @@ export type CodeleapCLISettings = {
       ignoreFiles: string[]
     }
     mode: 'multi' | 'single'
+  }
+  theme?: {
+    assets: {
+      contextColors: string
+      globalColors: string
+      measureTokens: string
+    }
+    configure: {
+      output: string
+    }
   }
 }

@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { View, TextInput, StatusBar } from 'react-native'
+import { useMemo, useRef } from 'react'
+import { View, TextInput } from 'react-native'
 import { useWrappingScrollable } from '../../modules/scroll'
 import { Field, IFieldRef, fields, useField } from '@codeleap/form'
 import { AnyRecord } from '@codeleap/types'
@@ -11,7 +11,7 @@ export function useInputBase<V,  T extends Field<V, any, any, unknown> = Field<V
   params: Partial<IFieldRef<V>> = {}, 
   deps: any[] = []
 ) {
-  const hasState = customState?.length === 2
+  const hasState = useMemo(() => customState.filter(Boolean)?.length >= 1, [])
 
   const wrapperRef = useRef<View>()
 

@@ -3,12 +3,18 @@ export { default as chalk } from 'chalk'
 export { default as inquirer } from 'inquirer'
 
 import { Octokit } from 'octokit'
-import simpleGit from 'simple-git'
+
 import { cwd, USER_CONFIG } from '../constants'
 
-export const git = simpleGit({
-  baseDir: cwd,
-})
+import simpleGit from 'simple-git'
+
+export let git = null
+
+try {
+  git = simpleGit({
+    baseDir: cwd,
+  })
+} catch {}
 
 export const octokit = new Octokit({
   auth: USER_CONFIG.GITHUB_TOKEN,

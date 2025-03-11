@@ -16,16 +16,21 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     colors,
     breakpoints,
     presets,
-    borderRadius,
+    radius,
+    stroke,
+    size,
     effects,
     typography,
     icons,
+    baseColors,
     values,
     ...otherThemeValues
   } = theme
 
   const themeObj: AppTheme<T> = {
     ...otherThemeValues,
+
+    baseColors,
 
     currentColorScheme() {
       return themeStore.getState().colorScheme
@@ -37,10 +42,13 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       const colorScheme = themeStore.getState().colorScheme
 
       if (colorScheme === 'default') return colors
+
       const scheme = theme.alternateColors?.[colorScheme]
+
       if (!scheme) {
         console.warn(`Color scheme ${colorScheme} not found in theme`)
       }
+
       return scheme ?? colors
     },
 
@@ -73,7 +81,11 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       ...presets,
     },
 
-    borderRadius: borderRadius ?? {},
+    radius: radius ?? {},
+
+    stroke: stroke ?? {},
+
+    size: size ?? {},
 
     effects: effects ?? {},
 

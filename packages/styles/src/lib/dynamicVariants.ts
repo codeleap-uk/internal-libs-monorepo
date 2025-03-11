@@ -23,7 +23,7 @@ export type Value =
   | ''
 
 export type DynamicVariants =
-  `${typeof colorVariants[number]}:${keyof IColors}` |
+  `color:${keyof IColors}` |
   `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
   `borderRadius:${keyof IBorderRadius}` |
@@ -31,11 +31,9 @@ export type DynamicVariants =
   `cursor:${typeof cursorTypes[number]}` |
   `bg:${keyof IColors}` |
   `br:${keyof IBorderRadius}` |
-  `cl:${keyof IColors}` |
   `scale:${Value}`
 
 export const createDynamicVariants = () => {
-
   const dynamicVariants = {}
 
   function createVariant(variantName: string, variantReturn: any) {
@@ -44,7 +42,7 @@ export const createDynamicVariants = () => {
 
   colorVariants.forEach(variant => {
     createVariant(variant, (theme, color: keyof IColors) => ({
-      [variant]: theme.colors[color],
+      [variant]: theme.baseColors[color],
     }))
   })
 
@@ -54,7 +52,7 @@ export const createDynamicVariants = () => {
         const variant = `border${capitalize(direction)}${capitalize(y)}Radius`
 
         createVariant(variant, (theme, value: keyof IBorderRadius) => ({
-          [variant]: theme.borderRadius[value],
+          [variant]: theme.radius[value],
         }))
       })
     }
@@ -63,7 +61,7 @@ export const createDynamicVariants = () => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
       createVariant(variant, (theme, value: string) => ({
-        [variant]: property == 'color' ? theme.colors[value] : theme.borderRadius[value],
+        [variant]: property == 'color' ? theme.baseColors[value] : theme.radius[value],
       }))
     })
   })
@@ -71,11 +69,7 @@ export const createDynamicVariants = () => {
   createVariant('cursor', (theme, cursor: typeof cursorTypes[number]) => ({ cursor }))
 
   createVariant('bg', (theme, color: keyof IColors) => ({
-    backgroundColor: theme.colors[color],
-  }))
-
-  createVariant('cl', (theme, color: keyof IColors) => ({
-    color: theme.colors[color],
+    backgroundColor: theme.baseColors[color],
   }))
 
   createVariant('effect', (theme, effect: keyof IEffects) => theme.effects[effect])
@@ -85,11 +79,11 @@ export const createDynamicVariants = () => {
   }))
 
   createVariant('br', (theme, value: keyof IBorderRadius) => ({
-    borderRadius: theme.borderRadius[value],
+    borderRadius: theme.radius[value],
   }))
 
   createVariant('borderRadius', (theme, value: keyof IBorderRadius) => ({
-    borderRadius: theme.borderRadius[value],
+    borderRadius: theme.radius[value],
   }))
 
   return dynamicVariants

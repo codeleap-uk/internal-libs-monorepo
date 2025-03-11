@@ -38,6 +38,7 @@ export type InsetMap =
   }
 
 export type Theme = {
+  baseColors: ColorMap
   colors: ColorMap
   alternateColors?: {
     [key: string]: ColorMap
@@ -45,7 +46,9 @@ export type Theme = {
   breakpoints?: BreakpointMap
   baseSpacing?: number
   presets?: AnyMap
-  borderRadius?: AnyMap
+  radius?: AnyMap
+  stroke?: AnyMap
+  size?: AnyMap
   effects?: EffectsMap
   typography: AnyMap
   icons: AnyMap
@@ -58,10 +61,13 @@ export type DefaultColorSchemeName = 'default'
 export type ColorScheme<T extends Theme = Theme> = DefaultColorSchemeName | keyof T['alternateColors']
 
 type PredefinedThemeDerivedValues<T extends Theme> = {
+  baseColors: T['baseColors']
   colors: T['colors']
   breakpoints: T['breakpoints']
   presets: DefaultVariants & T['presets']
-  borderRadius: T['borderRadius']
+  radius: T['radius']
+  stroke: T['stroke']
+  size: T['size']
   effects: T['effects']
   typography: T['typography']
   icons: T['icons']
