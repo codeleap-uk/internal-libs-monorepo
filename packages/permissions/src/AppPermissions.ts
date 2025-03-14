@@ -1,12 +1,14 @@
 import { AnyRecord } from '@codeleap/types'
-import { Permission, PermissionOptions, PermissionStatus } from './Permission'
+import { Permission } from './Permission'
+import { PermissionOptions } from './types'
+import { PermissionStatus, PermissionConfig } from './globals'
 
 type AppPermissionsConfig<C extends AnyRecord> = {
   request: (permission: Permission<C>) => Promise<PermissionStatus>
 }
 
-export class AppPermissions<P extends string, C extends AnyRecord> {
-  permissions: Record<P, Permission<C>> = {} as Record<P, Permission<C>>
+export class AppPermissions<P extends string> {
+  permissions: Record<P, Permission<PermissionConfig>> = {} as Record<P, Permission<PermissionConfig>>
 
   get values() {
     const values = {}
@@ -20,8 +22,8 @@ export class AppPermissions<P extends string, C extends AnyRecord> {
   }
   
   constructor(
-    private config: AppPermissionsConfig<C>,
-    permissions: Record<P, Omit<PermissionOptions<C>, 'name'>>
+    private config: AppPermissionsConfig<PermissionConfig>,
+    permissions: Record<P, Omit<PermissionOptions<PermissionConfig>, 'name'>>
   ) {
     for (const permission in permissions) {
       const permissionConfig = permissions[permission]
@@ -65,26 +67,3 @@ export class AppPermissions<P extends string, C extends AnyRecord> {
     return status
   }
 }
-
-const appPermissions = new AppPermissions(
-  {
-    async request(permission) {
-      return 'blocked'
-    },
-  },
-  {
-  camera: {
-    config: {
-      title: 'title'
-    },
-    check: async () => 'blocked',
-    request: async () => 'blocked'
-  },
-  library: {
-    config: {
-      title: {}
-    },
-    check: async () => 'blocked',
-    request: async () => 'blocked'
-  }
-})

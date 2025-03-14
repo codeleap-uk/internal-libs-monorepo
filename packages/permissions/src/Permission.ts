@@ -1,14 +1,7 @@
 import { GlobalState, globalState } from '@codeleap/store'
 import { AnyRecord } from '@codeleap/types'
-
-export type PermissionStatus = 'unavailable' | 'denied' | 'limited' | 'granted' | 'blocked'
-
-export type PermissionOptions<Config extends AnyRecord> = {
-  name: string,
-  config: Config,
-  check: () => Promise<PermissionStatus>
-  request: () => Promise<PermissionStatus>
-}
+import { PermissionOptions } from './types'
+import { PermissionStatus } from './globals'
 
 export class Permission<
   Config extends AnyRecord
@@ -41,9 +34,9 @@ export class Permission<
 
   constructor(options: PermissionOptions<Config>) {
     const { name, config, check, request } = options
-    
-    this.state = globalState('denied', { persistKey: 'permissions-' + name })
-    
+
+    this.state = globalState(null as PermissionStatus, { persistKey: 'permissions-' + name })
+
     this.name = name
     this.config = config
     this.checkStatus = check
@@ -57,9 +50,9 @@ export class Permission<
   async check() {
     const status = await this.checkStatus()
     const update = status != this.value
-    
+
     if (update) {
-      this.state.set(status as never)
+      this.state.set(status as PermissionStatus)
     }
 
     return status
@@ -68,9 +61,9 @@ export class Permission<
   async request() {
     const status = await this.requestStatus()
     const update = status != this.value
-    
+
     if (update) {
-      this.state.set(status as never)
+      this.state.set(status as PermissionStatus)
     }
 
     return status
