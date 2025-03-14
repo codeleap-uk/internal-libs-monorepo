@@ -14,6 +14,7 @@ export type CodeleapCLIUserConfig = {
     }
     mode: 'multi' | 'single'
   }
+
   theme?: {
     assets: {
       contextColors: string
@@ -23,5 +24,10 @@ export type CodeleapCLIUserConfig = {
     configure: {
       output: string
     }
+  }
+
+  translate?: {
+    localesDir: string
+    baseLanguage: string
   }
 }

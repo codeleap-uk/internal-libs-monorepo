@@ -30,6 +30,7 @@
     "chalk": "4.1.2",
     "chalk-animation": "^1.6.0",
     "cleye": "^1.1.0",
+    "cli-progress": "^3.12.0",
     "dive": "^0.5.0",
     "figlet": "^1.5.2",
     "firebase-admin": "^11.4.1",
