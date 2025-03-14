@@ -1,13 +1,10 @@
-import { AnyRecord } from '@codeleap/types'
 import { Permission } from './Permission'
 import { PermissionOptions } from './types'
 import { PermissionStatus, PermissionConfig } from './globals'
 
-type AppPermissionsConfig<C extends AnyRecord> = {
-  request: (permission: Permission<C>) => Promise<PermissionStatus>
-}
+export class PermissionsManager<P extends string> {
+  private requester: (permission: Permission<PermissionConfig>) => Promise<PermissionStatus>
 
-export class AppPermissions<P extends string> {
   permissions: Record<P, Permission<PermissionConfig>> = {} as Record<P, Permission<PermissionConfig>>
 
   get values() {
@@ -20,9 +17,9 @@ export class AppPermissions<P extends string> {
 
     return values
   }
-  
+
   constructor(
-    private config: AppPermissionsConfig<PermissionConfig>,
+    requester: (permission: Permission<PermissionConfig>) => Promise<PermissionStatus>,
     permissions: Record<P, Omit<PermissionOptions<PermissionConfig>, 'name'>>
   ) {
     for (const permission in permissions) {
@@ -35,19 +32,21 @@ export class AppPermissions<P extends string> {
 
       this.permissions[permission as unknown as P] = permissionClass
     }
+
+    this.requester = requester
   }
 
   async request(permissionName: P) {
     const permission = this.permissions[permissionName]
-    
-    return this.config.request(permission)
+
+    return this.requester(permission)
   }
 
   async check(permissionName: P) {
     return this.permissions[permissionName].check()
   }
 
-  async manyRequest(permissionsNames: P[]) {
+  async requestMany(permissionsNames: P[]) {
     const status = {} as Record<P, PermissionStatus>
 
     for (const permissionName of permissionsNames) {
@@ -57,7 +56,7 @@ export class AppPermissions<P extends string> {
     return status
   }
 
-  async manyCheck(permissionsNames: P[]) {
+  async checkMany(permissionsNames: P[]) {
     const status = {} as Record<P, PermissionStatus>
 
     for (const permissionName of permissionsNames) {
