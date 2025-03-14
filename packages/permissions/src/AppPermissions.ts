@@ -2,15 +2,22 @@ import { AnyRecord } from '@codeleap/types'
 import { Permission, PermissionOptions, PermissionStatus } from './Permission'
 
 type AppPermissionsConfig<C extends AnyRecord> = {
-  request: (
-    config: C,
-    req: () => Promise<PermissionStatus>,
-    check: () => Promise<PermissionStatus>,
-  ) => Promise<PermissionStatus>
+  request: (permission: Permission<C>) => Promise<PermissionStatus>
 }
 
-class AppPermissions<P extends string, C extends AnyRecord> {
-  permissions: Record<P, Permission<C>>
+export class AppPermissions<P extends string, C extends AnyRecord> {
+  permissions: Record<P, Permission<C>> = {} as Record<P, Permission<C>>
+
+  get values() {
+    const values = {}
+
+    for (const permissionName in this.permissions) {
+      const permission = this.permissions[permissionName]
+      values[permission.name] = permission.value
+    }
+
+    return values
+  }
   
   constructor(
     private config: AppPermissionsConfig<C>,
@@ -19,20 +26,19 @@ class AppPermissions<P extends string, C extends AnyRecord> {
     for (const permission in permissions) {
       const permissionConfig = permissions[permission]
 
-      this.permissions[permission as unknown as P] = new Permission({
+      const permissionClass = new Permission({
         ...permissionConfig,
         name: permission,
       })
+
+      this.permissions[permission as unknown as P] = permissionClass
     }
   }
 
   async request(permissionName: P) {
     const permission = this.permissions[permissionName]
-    return this.config.request(
-      permission.config,
-      this.permissions[permissionName].request,
-      this.permissions[permissionName].check,
-    )
+    
+    return this.config.request(permission)
   }
 
   async check(permissionName: P) {
@@ -62,7 +68,7 @@ class AppPermissions<P extends string, C extends AnyRecord> {
 
 const appPermissions = new AppPermissions(
   {
-    async request(config, req, check) {
+    async request(permission) {
       return 'blocked'
     },
   },
