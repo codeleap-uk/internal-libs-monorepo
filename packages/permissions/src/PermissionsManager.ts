@@ -48,8 +48,6 @@ export class PermissionsManager<P extends string> {
     }
 
     this.requester = requester
-
-    this.checkAll()
   }
 
   private log(msg: string, obj?: any) {
