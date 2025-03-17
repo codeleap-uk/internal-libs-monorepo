@@ -1,6 +1,7 @@
 import { GlobalState, globalState } from '@codeleap/store'
 import { PermissionOptions } from './types'
 import { PermissionConfig, PermissionStatus } from './globals'
+import { TypeGuards } from '@codeleap/types'
 
 export class Permission {
   /** The name of the permission. */
@@ -96,7 +97,7 @@ export class Permission {
 
     const update = status != this.value
 
-    if (update && status !== null) {
+    if (update && TypeGuards.isString(status)) {
       this.set(status as PermissionStatus)
     }
 
@@ -113,7 +114,7 @@ export class Permission {
     const status = await this.requestStatus()
     const update = status != this.value
 
-    if (update && status !== null) {
+    if (update && TypeGuards.isString(status)) {
       this.set(status as PermissionStatus)
     }
 
