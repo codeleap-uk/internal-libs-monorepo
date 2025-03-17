@@ -16,7 +16,7 @@ export class PermissionsManager<P extends string> {
    * @returns An object mapping permission names to their statuses.
    */
   get values() {
-    const values = {}
+    const values = {} as Record<P, PermissionStatus>
 
     this.forEach(permission => {
       values[permission.name] = permission.value
@@ -48,11 +48,21 @@ export class PermissionsManager<P extends string> {
     }
 
     this.requester = requester
+
+    this.checkAll()
   }
 
   private log(msg: string, obj?: any) {
     if (!Permission.logsEnabled) return
     console.log(`[Permissions] -> ${msg}`, obj)
+  }
+
+  /**
+   * React hook for consuming the permission state.
+   * @returns The current permission status state.
+   */
+  use(permissionName: P) {
+    return this.permissions[permissionName].use()
   }
 
   /**
