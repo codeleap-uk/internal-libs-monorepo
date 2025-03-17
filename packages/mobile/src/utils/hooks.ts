@@ -1,7 +1,7 @@
-import { onMount, onUpdate, usePrevious, useRef, useState } from '@codeleap/hooks'
+import { onUpdate, usePrevious, useRef, useState } from '@codeleap/hooks'
 import { shadeColor } from '@codeleap/utils'
 import { TypeGuards } from '@codeleap/types'
-import { Animated, AppState, AppStateStatus, Platform, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
+import { Animated, Platform, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
 import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { PressableRippleProps } from '../modules/PressableRipple/type'
 import { useMemo } from 'react'
@@ -39,22 +39,6 @@ export function useAnimateColor(value: string, opts?: Partial<Animated.TimingAni
 
   return color
 
-}
-
-export function useAppState(filter?: AppStateStatus[]) {
-  const [appState, setAppState] = useState(() => AppState.currentState)
-
-  onMount(() => {
-    AppState.addEventListener('change', s => {
-      if (!filter || filter.includes(s)) {
-        setAppState(s)
-      }
-    })
-  })
-
-  return {
-    appState,
-  }
 }
 
 type SelectProperties<T extends Record<string|number|symbol, any>, K extends keyof T> = {

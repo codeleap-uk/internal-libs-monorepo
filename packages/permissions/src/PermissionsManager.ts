@@ -3,23 +3,37 @@ import { PermissionOptions } from './types'
 import { PermissionStatus, PermissionConfig } from './globals'
 
 export class PermissionsManager<P extends string> {
-  private requester: (permission: Permission<PermissionConfig>) => Promise<PermissionStatus>
+  private requester: (permission: Permission) => Promise<PermissionStatus>
 
-  permissions: Record<P, Permission<PermissionConfig>> = {} as Record<P, Permission<PermissionConfig>>
+  permissions: Record<P, Permission> = {} as Record<P, Permission>
 
+  private get keys() {
+    return Object.keys(this.permissions) as P[]
+  }
+
+  /**
+   * Retrieves the current status values of all permissions.
+   * @returns An object mapping permission names to their statuses.
+   */
   get values() {
     const values = {}
 
-    for (const permissionName in this.permissions) {
-      const permission = this.permissions[permissionName]
+    this.forEach(permission => {
       values[permission.name] = permission.value
-    }
+    })
 
     return values
   }
 
+  private async forEach(callbackFn: (permission: Permission) => void) {
+    for (const permissionName in this.permissions) {
+      const permission = this.permissions[permissionName]
+      callbackFn(permission)
+    }
+  }
+
   constructor(
-    requester: (permission: Permission<PermissionConfig>) => Promise<PermissionStatus>,
+    requester: (permission: Permission) => Promise<PermissionStatus>,
     permissions: Record<P, Omit<PermissionOptions<PermissionConfig>, 'name'>>
   ) {
     for (const permission in permissions) {
@@ -34,18 +48,35 @@ export class PermissionsManager<P extends string> {
     }
 
     this.requester = requester
+
+    this.checkAll()
   }
 
+  /**
+   * Requests a specific permission.
+   * @param {P} permissionName - The name of the permission to request.
+   * @returns The updated permission status.
+   */
   async request(permissionName: P) {
     const permission = this.permissions[permissionName]
 
     return this.requester(permission)
   }
 
+  /**
+   * Checks the status of a specific permission.
+   * @param {P} permissionName - The name of the permission to check.
+   * @returns The current permission status.
+   */
   async check(permissionName: P) {
     return this.permissions[permissionName].check()
   }
 
+  /**
+   * Requests multiple permissions at once.
+   * @param {P[]} permissionsNames - An array of permission names to request.
+   * @returns A record of updated permission statuses.
+   */
   async requestMany(permissionsNames: P[]) {
     const status = {} as Record<P, PermissionStatus>
 
@@ -56,6 +87,11 @@ export class PermissionsManager<P extends string> {
     return status
   }
 
+  /**
+   * Checks the status of multiple permissions at once.
+   * @param {P[]} permissionsNames - An array of permission names to check.
+   * @returns A record of current permission statuses.
+   */
   async checkMany(permissionsNames: P[]) {
     const status = {} as Record<P, PermissionStatus>
 
@@ -64,5 +100,13 @@ export class PermissionsManager<P extends string> {
     }
 
     return status
+  }
+
+  /**
+   * Checks the status of all managed permissions.
+   * @returns A record of all current permission statuses.
+   */
+  async checkAll() {
+    return await this.checkMany(this.keys)
   }
 }
