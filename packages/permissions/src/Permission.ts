@@ -14,6 +14,16 @@ export class Permission {
 
   static logsEnabled: boolean = false
 
+  static is(status: PermissionStatus) {
+    return {
+      value: status,
+      isGranted: status === 'granted',
+      isLimited: status === 'limited',
+      isDenied: status === 'denied',
+      isBlocked: status === 'blocked',
+    }
+  }
+
   /** Configuration object associated with the permission. */
   public config: PermissionConfig
 
@@ -26,19 +36,19 @@ export class Permission {
   }
 
   get isGranted() {
-    return ['granted', 'limited'].includes(this.value)
+    return Permission.is(this.value).isGranted
   }
 
   get isLimited() {
-    return this.value === 'limited'
+    return Permission.is(this.value).isLimited
   }
 
   get isDenied() {
-    return this.value === 'denied'
+    return Permission.is(this.value).isDenied
   }
 
   get isBlocked() {
-    return this.value === 'blocked'
+    return Permission.is(this.value).isBlocked
   }
 
   constructor(options: PermissionOptions<PermissionConfig>) {

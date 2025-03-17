@@ -64,8 +64,8 @@ export class PermissionsManager<P extends string> {
    */
   async request(permissionName: P) {
     const permission = this.permissions[permissionName]
-
-    return this.requester(permission)
+    const status = await this.requester(permission)
+    return Permission.is(status)
   }
 
   /**
@@ -74,7 +74,9 @@ export class PermissionsManager<P extends string> {
    * @returns The current permission status.
    */
   async check(permissionName: P) {
-    return this.permissions[permissionName].check()
+    const permission = this.permissions[permissionName]
+    const status = await permission.check()
+    return Permission.is(status)
   }
 
   /**
@@ -82,8 +84,8 @@ export class PermissionsManager<P extends string> {
    * @param {P[]} permissionsNames - An array of permission names to request.
    * @returns A record of updated permission statuses.
    */
-  async requestMany(permissionsNames: P[]) {
-    const status = {} as Record<P, PermissionStatus>
+  async requestMany<K extends P>(permissionsNames: K[]): Promise<Record<K, ReturnType<typeof Permission.is>>> {
+    const status = {} as Record<K, ReturnType<typeof Permission.is>>
 
     for (const permissionName of permissionsNames) {
       status[permissionName] = await this.request(permissionName)
@@ -97,8 +99,8 @@ export class PermissionsManager<P extends string> {
    * @param {P[]} permissionsNames - An array of permission names to check.
    * @returns A record of current permission statuses.
    */
-  async checkMany(permissionsNames: P[]) {
-    const status = {} as Record<P, PermissionStatus>
+  async checkMany<K extends P>(permissionsNames: K[]): Promise<Record<K, ReturnType<typeof Permission.is>>> {
+    const status = {} as Record<K, ReturnType<typeof Permission.is>>
 
     for (const permissionName of permissionsNames) {
       status[permissionName] = await this.check(permissionName)
