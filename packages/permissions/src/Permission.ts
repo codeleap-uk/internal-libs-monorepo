@@ -78,7 +78,12 @@ export class Permission {
    * @returns The checked permission status.
    */
   async check() {
-    const status = await this.checkStatus()
+    let status = await this.checkStatus()
+
+    if (status === 'denied' && this.value === 'blocked') {
+      status = this.value
+    }
+
     const update = status != this.value
 
     if (update && status !== null) {

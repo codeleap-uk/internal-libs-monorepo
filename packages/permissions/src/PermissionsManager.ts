@@ -52,6 +52,11 @@ export class PermissionsManager<P extends string> {
     this.checkAll()
   }
 
+  private log(msg: string, obj?: any) {
+    if (!Permission.logsEnabled) return
+    console.log(`[Permissions] -> ${msg}`, obj)
+  }
+
   /**
    * Requests a specific permission.
    * @param {P} permissionName - The name of the permission to request.
@@ -107,6 +112,7 @@ export class PermissionsManager<P extends string> {
    * @returns A record of all current permission statuses.
    */
   async checkAll() {
+    this.log('checkAll')
     return await this.checkMany(this.keys)
   }
 }
