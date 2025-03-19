@@ -13,6 +13,7 @@ import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps, u
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { Portal } from '@gorhom/portal'
 
 export * from './styles'
 export * from './types'
@@ -120,70 +121,72 @@ export const Modal = (modalProps: ModalProps) => {
   }
 
   return (
-    <View
-      style={[
-        styles?.wrapper,
-        // @ts-expect-error
-        { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : styles?.wrapper?.zIndex, ...topSpacing },
-      ]}
-      pointerEvents={visible ? 'auto' : 'none'}
-    >
-      <Backdrop
-        visible={visible}
-        debugName={`Modal ${debugName} backdrop`}
-        style={{
-          'wrapper:hidden': styles['backdrop:hidden'],
-          'wrapper:visible': styles['backdrop:visible'],
-          'wrapper': styles?.backdrop,
-        }}
-        wrapperProps={{
+    <Portal>
+      <View
+        style={[
+          styles?.wrapper,
           // @ts-expect-error
-          transition: styles['backdrop:transition'],
-        }}
-      />
-
-      <ScrollComponent
-        contentContainerStyle={styles?.scrollContent}
-        showsVerticalScrollIndicator={false}
-        keyboardAware
-        animated
-        {...scrollProps}
-        style={scrollStyle}
+          { zIndex: TypeGuards.isNumber(zIndex) ? zIndex : styles?.wrapper?.zIndex, ...topSpacing },
+        ]}
+        pointerEvents={visible ? 'auto' : 'none'}
       >
-        {dismissOnBackdrop ? (
-          <Touchable
-            onPress={closable && visible ? toggle : (() => { })}
-            debounce={400}
-            debugName={'Modal backdrop touchable'}
-            style={styles?.backdropTouchable}
-            android_ripple={null}
-            noFeedback
-          />) : null}
-        {
-          visible ? (
-            <View
-              animated
-              // @ts-ignore
-              entering={boxEntering}
-              exiting={boxExiting}
-              {...props}
-              onLayout={onModalLayout}
-              style={styles?.box}
-            >
-              {header ? header : <Header {...headerProps} />}
+        <Backdrop
+          visible={visible}
+          debugName={`Modal ${debugName} backdrop`}
+          style={{
+            'wrapper:hidden': styles['backdrop:hidden'],
+            'wrapper:visible': styles['backdrop:visible'],
+            'wrapper': styles?.backdrop,
+          }}
+          wrapperProps={{
+            // @ts-expect-error
+            transition: styles['backdrop:transition'],
+          }}
+        />
 
-              <View style={styles?.body}>{children}</View>
+        <ScrollComponent
+          contentContainerStyle={styles?.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardAware
+          animated
+          {...scrollProps}
+          style={scrollStyle}
+        >
+          {dismissOnBackdrop ? (
+            <Touchable
+              onPress={closable && visible ? toggle : (() => { })}
+              debounce={400}
+              debugName={'Modal backdrop touchable'}
+              style={styles?.backdropTouchable}
+              android_ripple={null}
+              noFeedback
+            />) : null}
+          {
+            visible ? (
+              <View
+                animated
+                // @ts-ignore
+                entering={boxEntering}
+                exiting={boxExiting}
+                {...props}
+                onLayout={onModalLayout}
+                style={styles?.box}
+              >
+                {header ? header : <Header {...headerProps} />}
 
-              {footer ? (
-                <View style={styles?.footer}>
-                  {typeof footer === 'string' ? <Text text={footer} /> : footer}
-                </View>
-              ) : null}
-            </View>
-          ) : null
-        }
-      </ScrollComponent>
-    </View >
+                <View style={styles?.body}>{children}</View>
+
+                {footer ? (
+                  <View style={styles?.footer}>
+                    {typeof footer === 'string' ? <Text text={footer} /> : footer}
+                  </View>
+                ) : null}
+              </View>
+            ) : null
+          }
+        </ScrollComponent>
+      </View>
+    </Portal>
   )
 }
 
@@ -201,10 +204,8 @@ Modal.defaultProps = {
   dismissOnBackdrop: true,
   scroll: true,
   closeOnHardwareBackPress: true,
-  boxEntering: FadeIn.duration(100).build(),
+  boxEntering: FadeIn.duration(100).delay(150).build(),
   boxExiting: FadeOut.duration(100).build(),
 } as Partial<ModalProps>
 
 MobileStyleRegistry.registerComponent(Modal)
-
-export default Modal

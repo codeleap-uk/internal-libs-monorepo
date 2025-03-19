@@ -11,10 +11,9 @@ import React, { useCallback, useMemo } from 'react'
 import { List } from '../List'
 import { TextInput } from '../TextInput'
 import { SelectProps, ValueBoundSelectProps } from './types'
-import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
-import Modal from '../Modal'
+import { Modal } from '../Modal'
 import { MobileStyleRegistry } from '../../Registry'
 import { SearchInput } from '../SearchInput'
 import { useStylesFor } from '../../hooks'
@@ -313,7 +312,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
       ) : null
     }
 
-    <ModalManager.Modal
+    <Modal
       title={label}
       description={description}
       {...modalProps}
@@ -339,7 +338,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
           loading,
         }}
       />
-    </ModalManager.Modal>
+    </Modal>
   </>
 }
 
