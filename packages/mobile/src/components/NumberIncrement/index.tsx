@@ -12,7 +12,7 @@ import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import CurrencyInput from 'react-native-currency-input'
 import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
-import { useNumberIncrement } from './useNumberIncrement'
+import { MAX_VALID_DIGITS, useNumberIncrement } from './useNumberIncrement'
 
 export * from './styles'
 export * from './types'
@@ -179,10 +179,10 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           allowFontScaling={false}
           editable={!disabled}
           placeholderTextColor={partialStyles?.placeholder?.color}
-          value={isFormatted ? formatter(fieldHandle?.value ?? min) : String(fieldHandle?.value ?? min)}
           selectionColor={partialStyles?.selection?.color}
-          onChangeText={handleChangeInput}
           {...textInputProps}
+          onChangeText={handleChangeInput}
+          value={isFormatted ? formatter(fieldHandle?.value ?? min) : String(fieldHandle?.value ?? min)}
           onBlur={handleBlur}
           onFocus={handleFocus}
           style={[styles.input, partialStyles.input]}
@@ -220,6 +220,8 @@ NumberIncrement.defaultProps = {
   timeoutActionFocus: 300,
   actionPressAutoFocus: true,
   actionDebounce: null,
+  min: 0,
+  max: MAX_VALID_DIGITS
 } as Partial<NumberIncrementProps>
 
 MobileStyleRegistry.registerComponent(NumberIncrement)

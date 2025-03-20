@@ -11,6 +11,8 @@ export function useInputBase<V,  T extends Field<V, any, any, unknown> = Field<V
   params: Partial<IFieldRef<V>> = {}, 
   deps: any[] = []
 ) {
+  const [value, onValueChange] = customState
+
   const hasState = useMemo(() => customState.filter(Boolean)?.length >= 1, [])
 
   const wrapperRef = useRef<View>()
@@ -38,15 +40,7 @@ export function useInputBase<V,  T extends Field<V, any, any, unknown> = Field<V
       ...params,
     },
     deps
-  ] as unknown as Parameters<T['use']>, () => defaultField(hasState ? {
-    state: {
-      get: () => customState[0],
-      set: (val: V) => customState[1](val),
-      value: customState[0],
-      listen: () => {},
-    },
-    validate: () => ({ isValid: true })
-  } : {}))
+  ] as unknown as Parameters<T['use']>, () => defaultField(hasState ? { onValueChange, defaultValue: value } : {}))
 
   const validation = fieldHandle.validation
 

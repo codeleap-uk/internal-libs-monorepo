@@ -12,11 +12,13 @@ type Props = {
 
 type NumberFieldOptions<Validate extends NumberValidator> = FieldOptions<number | number[], Validate> & Props
 
+const MAX_VALID_DIGITS = 1000000000000000 // maximum number of digits that the input supports to perform operations
+
 export class NumberField<Validate extends NumberValidator> extends Field<number | number[], Validate> {
   _type = "NUMBER"
 
   constructor(options: NumberFieldOptions<Validate>) {
-    const { min = 0, max = 100000, defaultValue, ...others } = options
+    const { min = 0, max = MAX_VALID_DIGITS, defaultValue, ...others } = options
 
     const isMultiple = Array.isArray(defaultValue)
 
