@@ -38,6 +38,16 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     [value, onValueChange]
   )
 
+  const incrementDisabled = useMemo(() => {
+    const maxLimit = TypeGuards.isNumber(max) && (Number(fieldHandle?.value) >= max)
+    return maxLimit
+  }, [fieldHandle?.value])
+
+  const decrementDisabled = useMemo(() => {
+    const minLimit = TypeGuards.isNumber(min) && (Number(fieldHandle?.value) <= min)
+    return minLimit
+  }, [fieldHandle?.value])
+
   const actionTimeoutRef = useRef(null)
 
   const clearActionTimeoutRef = useCallback(() => {
@@ -64,7 +74,7 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
         setIsFocused(false)
       }, timeoutActionFocus)
     }
-  }, [fieldHandle?.value])
+  }, [fieldHandle?.value, incrementDisabled, decrementDisabled])
 
   const checkValue = useCallback((newValue: number = null, withLimits = true) => {
     const value = newValue ?? fieldHandle?.value
@@ -87,14 +97,14 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     }
 
     return value
-  }, [])
+  }, [fieldHandle?.value])
 
   const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     fieldHandle.setValue(checkValue())
     validation.onInputBlurred()
     setIsFocused(false)
     onBlur?.(e)
-  }, [validation.onInputBlurred, onBlur])
+  }, [validation.onInputBlurred, onBlur, checkValue])
 
   const handleFocus = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     clearActionTimeoutRef()
@@ -108,22 +118,12 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     fieldHandle.setValue(value)
 
     return value
-  }, [])
+  }, [checkValue])
 
   const handleMaskChange = useCallback((masked, unmasked) => {
     handleChangeInput?.(masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
-  }, [onChangeMask])
-
-  const incrementDisabled = useMemo(() => {
-    const maxLimit = TypeGuards.isNumber(max) && (Number(fieldHandle?.value) >= max)
-    return maxLimit
-  }, [fieldHandle?.value])
-
-  const decrementDisabled = useMemo(() => {
-    const minLimit = TypeGuards.isNumber(min) && (Number(fieldHandle?.value) <= min)
-    return minLimit
-  }, [fieldHandle?.value])
+  }, [onChangeMask, handleChangeInput])
 
   const hasValue = TypeGuards.isString(fieldHandle?.value)
     ? (fieldHandle?.value as string).length > 0

@@ -40,7 +40,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     autoAdjustSelection,
     selectionStart,
     forceError,
-    onChangeText,
     multiline,
     ...textInputProps
   } = others
@@ -130,12 +129,13 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       {...buttonModeProps}
       selection={autoAdjustSelection ? currentSelection : undefined}
       placeholderTextColor={partialStyles?.placeholder?.color}
-      value={fieldHandle?.value}
       selectionColor={partialStyles?.selection?.color}
       secureTextEntry={secure && secureTextEntry}
       textAlignVertical={multiline ? 'top' : undefined}
       multiline={multiline}
       {...textInputProps}
+      value={fieldHandle?.value}
+      onChangeText={fieldHandle?.setValue}
       onBlur={handleBlur}
       onFocus={handleFocus}
       style={[
