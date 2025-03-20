@@ -58,8 +58,8 @@ Backdrop.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 }
 
 Backdrop.defaultProps = {
-  entering: FadeIn.duration(0).build(),
-  exiting: FadeOut.duration(0).build(),
+  entering: FadeIn.duration(100).build(),
+  exiting: FadeOut.duration(100).delay(100).build(),
 } as Partial<BackdropProps>
 
 MobileStyleRegistry.registerComponent(Backdrop)

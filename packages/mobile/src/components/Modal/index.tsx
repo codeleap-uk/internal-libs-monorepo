@@ -182,7 +182,7 @@ Modal.defaultProps = {
   dismissOnBackdrop: true,
   scroll: true,
   closeOnHardwareBackPress: true,
-  boxEntering: FadeIn.duration(100).delay(150).build(),
+  boxEntering: FadeIn.duration(100).delay(50).build(),
   boxExiting: FadeOut.duration(100).build(),
   withPortal: true,
   renderHeader: DefaultHeader,
