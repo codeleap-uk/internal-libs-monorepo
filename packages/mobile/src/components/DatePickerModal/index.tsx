@@ -113,8 +113,8 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     footerComponent: Footer,
     toggleOnConfirm,
     onConfirm: _onConfirm,
-    value: _value,
-    onValueChange: _onValueChange,
+    value,
+    onValueChange,
     locale,
     ...modalProps
   } = allProps
@@ -124,22 +124,21 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
 
   const {
-    fieldHandle,
-  } = useInputBase(field, fields.date as () => DateField<any>, [_value, _onValueChange])
-
-  const [value, setValue] = [fieldHandle?.value, fieldHandle.setValue]
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(field, fields.date, { value, onValueChange })
 
   const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
 
   const compositionStyles = useCompositionStyles(['input', 'doneButton', 'cancelButton', 'confirmButton'], styles)
 
-  const formattedDate = value ? formatDate(value) : ''
+  const formattedDate = inputValue ? formatDate(inputValue) : ''
 
   const tempDate = useRef<Date | null>(initialDate instanceof Date ? initialDate : new Date(initialDate))
 
   const onConfirm = () => {
     if (commitDate == 'onConfirm' && !!tempDate.current) {
-      setValue(tempDate.current)
+      onInputValueChange(tempDate.current)
     }
 
     if (isCustomModal && toggleOnConfirm) {
@@ -179,20 +178,20 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   } : {}
 
   const date = useMemo(() => {
-    const newValue = value ?? initialDate
+    const newValue = inputValue ?? initialDate
     return newValue instanceof Date ? newValue : new Date(newValue)
-  }, [value, initialDate])
+  }, [inputValue, initialDate])
 
   return (
     <>
       {!hideInput ? <OuterInput
         {...allProps}
         style={compositionStyles?.input}
-        value={value}
+        value={inputValue}
         debugName={debugName}
         visible={visible}
         toggle={toggle}
-        onValueChange={setValue}
+        onValueChange={onInputValueChange}
         valueLabel={formattedDate}
       /> : null}
 
@@ -206,7 +205,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
             tempDate.current = currentDate
 
             if (commitDate === 'onChange') {
-              setValue(currentDate)
+              onInputValueChange(currentDate)
             }
           }}
           locale={locale}
@@ -214,7 +213,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
           textColor={styles?.picker?.color}
           theme='light'
           androidVariant='iosClone'
-          onConfirm={setValue}
+          onConfirm={onInputValueChange}
           minimumDate={minimumDate}
           maximumDate={maximumDate}
           {...datePickerProps}
