@@ -64,18 +64,19 @@ export const Slider = (props: SliderProps) => {
   } = others
 
   const {
-    fieldHandle,
     wrapperRef,
-  } = useInputBase(field, fields.number, [value, onValueChange])
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(field, fields.number, { value, onValueChange })
 
-  const [_value, _setValue] = updateImmediately ? [fieldHandle?.value, fieldHandle.setValue] : React.useState<number | Array<number>>(0)
+  const [_value, _setValue] = updateImmediately ? [inputValue, onInputValueChange] : React.useState<number | Array<number>>(0)
 
   onUpdate(() => {
     if (updateImmediately) return
-    if (fieldHandle?.value !== _value) {
-      _setValue(fieldHandle?.value)
+    if (inputValue !== _value) {
+      _setValue(inputValue)
     }
-  }, [fieldHandle?.value])
+  }, [inputValue])
 
   const styles = useStylesFor(Slider.styleRegistryName, style)
 
@@ -106,7 +107,7 @@ export const Slider = (props: SliderProps) => {
         <View style={styles.labelRow}>
           {label ? (
             <Touchable
-              onPress={() => labelClickable ? fieldHandle.setValue(sliderProps?.minimumValue || minimumValue) : null}
+              onPress={() => labelClickable ? onInputValueChange(sliderProps?.minimumValue || minimumValue) : null}
               style={styles.labelBtn}
               debugName='slider title'
             >
@@ -115,7 +116,7 @@ export const Slider = (props: SliderProps) => {
           ) : null}
           {description ? (
             <Touchable
-              onPress={() => labelClickable ? fieldHandle.setValue(sliderProps?.maximumValue || maximumValue) : null}
+              onPress={() => labelClickable ? onInputValueChange(sliderProps?.maximumValue || maximumValue) : null}
               style={styles?.descriptionBtn}
               debugName='slider description'
             >
@@ -137,7 +138,7 @@ export const Slider = (props: SliderProps) => {
         maximumValue={maximumValue}
         onSlidingComplete={() => {
           if (updateImmediately) return
-          fieldHandle.setValue(_value)
+          onInputValueChange(_value)
         }}
         disabled={disabled}
         {...sliderProps}
@@ -163,7 +164,7 @@ export const Slider = (props: SliderProps) => {
                     index={idx}
                     style={style}
                     key={idx}
-                    onPress={() => trackMarksClickable ? fieldHandle.setValue(trackMarksProp[idx]) : null}
+                    onPress={() => trackMarksClickable ? onInputValueChange(trackMarksProp[idx]) : null}
                   />
                 }
 
@@ -175,7 +176,7 @@ export const Slider = (props: SliderProps) => {
                   content={content}
                   style={style}
                   key={idx}
-                  onPress={() => trackMarksClickable ? fieldHandle.setValue(trackMarksProp[idx]) : null}
+                  onPress={() => trackMarksClickable ? onInputValueChange(trackMarksProp[idx]) : null}
                 />
               })
             }

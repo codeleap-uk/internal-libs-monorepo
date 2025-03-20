@@ -47,8 +47,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const styles = useStylesFor(TextInput.styleRegistryName, style)
 
   const {
-    fieldHandle,
     validation,
+    inputValue,
+    onInputValueChange,
     innerInputRef,
     wrapperRef,
     isFocused, 
@@ -91,7 +92,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     },
     ...masking,
   } : {
-    onChangeText: fieldHandle.setValue
+    onChangeText: onInputValueChange,
   }
 
   const buttonModeProps = isPressable ? {
@@ -104,7 +105,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     ref={wrapperRef}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
-    error={hasError ? validation.message || forceError : null}
+    error={hasError ? validation?.message || forceError : null}
     style={{
       ...styles,
       innerWrapper: [
@@ -134,8 +135,8 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       textAlignVertical={multiline ? 'top' : undefined}
       multiline={multiline}
       {...textInputProps}
-      value={fieldHandle?.value}
-      onChangeText={fieldHandle?.setValue}
+      value={inputValue}
+      onChangeText={onInputValueChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
       style={[

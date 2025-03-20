@@ -32,21 +32,23 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     validation,
     innerInputRef,
     wrapperRef,
+    inputValue,
+    onInputValueChange,
   } = useInputBase(
     field as Field<number, any, any>,
     fields.number as () => Field<number, any, any>,
-    [value, onValueChange]
+    { value, onValueChange }
   )
 
   const incrementDisabled = useMemo(() => {
-    const maxLimit = TypeGuards.isNumber(max) && (Number(fieldHandle?.value) >= max)
+    const maxLimit = TypeGuards.isNumber(max) && (Number(inputValue) >= max)
     return maxLimit
-  }, [fieldHandle?.value])
+  }, [inputValue])
 
   const decrementDisabled = useMemo(() => {
-    const minLimit = TypeGuards.isNumber(min) && (Number(fieldHandle?.value) <= min)
+    const minLimit = TypeGuards.isNumber(min) && (Number(inputValue) <= min)
     return minLimit
-  }, [fieldHandle?.value])
+  }, [inputValue])
 
   const actionTimeoutRef = useRef(null)
 
@@ -62,11 +64,11 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     clearActionTimeoutRef()
 
     if (action === 'increment' && !incrementDisabled) {
-      const newValue = Number(fieldHandle?.value) + step
-      fieldHandle.setValue(newValue)
+      const newValue = Number(inputValue) + step
+      onInputValueChange(newValue)
     } else if (action === 'decrement' && !decrementDisabled) {
-      const newValue = Number(fieldHandle?.value) - step
-      fieldHandle.setValue(newValue)
+      const newValue = Number(inputValue) - step
+      onInputValueChange(newValue)
     }
 
     if (actionPressAutoFocus) {
@@ -74,10 +76,10 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
         setIsFocused(false)
       }, timeoutActionFocus)
     }
-  }, [fieldHandle?.value, incrementDisabled, decrementDisabled])
+  }, [inputValue, incrementDisabled, decrementDisabled])
 
   const checkValue = useCallback((newValue: number = null, withLimits = true) => {
-    const value = newValue ?? fieldHandle?.value
+    const value = newValue ?? inputValue
 
     if (withLimits) {
       if (TypeGuards.isNumber(max) && (Number(value) >= max)) {
@@ -92,19 +94,19 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     }
 
     if (value >= MAX_VALID_DIGITS) {
-      fieldHandle.setValue(MAX_VALID_DIGITS)
+      onInputValueChange(MAX_VALID_DIGITS)
       return MAX_VALID_DIGITS
     }
 
     return value
-  }, [fieldHandle?.value])
+  }, [inputValue])
 
   const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    fieldHandle.setValue(checkValue())
-    validation.onInputBlurred()
+    onInputValueChange(checkValue())
+    validation?.onInputBlurred?.()
     setIsFocused(false)
     onBlur?.(e)
-  }, [validation.onInputBlurred, onBlur, checkValue])
+  }, [validation?.onInputBlurred, onBlur, checkValue])
 
   const handleFocus = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     clearActionTimeoutRef()
@@ -115,7 +117,7 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
   const handleChangeInput = useCallback((text: string) => {
     const value = checkValue(parseValue(text), false)
 
-    fieldHandle.setValue(value)
+    onInputValueChange(value)
 
     return value
   }, [checkValue])
@@ -125,11 +127,11 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     if (onChangeMask) onChangeMask(masked, unmasked)
   }, [onChangeMask, handleChangeInput])
 
-  const hasValue = TypeGuards.isString(fieldHandle?.value)
-    ? (fieldHandle?.value as string).length > 0
-    : !TypeGuards.isNil(fieldHandle?.value)
+  const hasValue = TypeGuards.isString(inputValue)
+    ? (inputValue as string).length > 0
+    : !TypeGuards.isNil(inputValue)
 
-  const hasError = validation.showError || forceError
+  const hasError = validation?.showError || forceError
 
   return {
     isFocused,
@@ -148,5 +150,7 @@ export function useNumberIncrement(props: Partial<NumberIncrementProps>) {
     decrementDisabled,
     min,
     max,
+    inputValue,
+    onInputValueChange,
   }
 }

@@ -68,7 +68,7 @@ export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, 
   return (
     <TextInput
       value={search}
-      onChangeText={(value) => {
+      onValueChange={(value) => {
         onTypingChange?.(true)
         handleChangeSearch(value)
       }}

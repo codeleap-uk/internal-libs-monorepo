@@ -33,7 +33,9 @@ export function useTextInput(props: Partial<TextInputProps>) {
     validation,
     innerInputRef,
     wrapperRef,
-  } = useInputBase<string>(field, fields.text, [value, onValueChange], {
+    onInputValueChange,
+    inputValue,
+  } = useInputBase<string>(field, fields.text, { value, onValueChange }, {
     revealValue() {
       setSecureTextEntry(false)
     },
@@ -46,11 +48,11 @@ export function useTextInput(props: Partial<TextInputProps>) {
   }, [setSecureTextEntry]) 
 
   const handleBlur = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    validation.onInputBlurred()
+    validation?.onInputBlurred?.()
     setIsFocused(false)
     if (autoAdjustSelection) setCurrentSelection({ start: selectionStart })
     onBlur?.(e)
-  }, [validation.onInputBlurred, onBlur])
+  }, [validation?.onInputBlurred, onBlur])
 
   const handleFocus = useCallback((e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     setIsFocused(true)
@@ -59,15 +61,15 @@ export function useTextInput(props: Partial<TextInputProps>) {
   }, [onFocus])
 
   const handleMaskChange = useCallback((masked, unmasked) => {
-    fieldHandle.setValue(masking?.saveFormatted ? masked : masked)
+    onInputValueChange(masking?.saveFormatted ? masked : masked)
     if (onChangeMask) onChangeMask(masked, unmasked)
   }, [masking?.saveFormatted, onChangeMask])
 
-  const hasMultipleLines = multiline && fieldHandle?.value?.includes('\n')
+  const hasMultipleLines = multiline && inputValue?.includes('\n')
 
-  const hasValue = fieldHandle?.value?.length > 0
+  const hasValue = inputValue?.length > 0
 
-  const hasError = validation.showError || forceError
+  const hasError = validation?.showError || forceError
 
   return {
     isFocused,
@@ -84,5 +86,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     hasMultipleLines,
     hasValue,
     hasError,
+    inputValue,
+    onInputValueChange,
   }
 }

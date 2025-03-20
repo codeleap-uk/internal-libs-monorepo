@@ -116,17 +116,22 @@ export const Select = <T extends string | number = string, Multi extends boolean
     outerInputComponent,
     disabled,
     field,
-    value: _value,
-    onValueChange: _onValueChange,
+    value,
+    onValueChange,
     onSelect,
     ...modalProps
   } = allProps
 
-  const { fieldHandle } = useInputBase(field, fields.selectable as () => SelectableField<T, any>, [_value, _onValueChange])
+  const { 
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(
+    field,
+    fields.selectable as () => SelectableField<T, any>,
+    { value, onValueChange }
+  )
 
-  const value = fieldHandle.value
-
-  const isValueArray = TypeGuards.isArray(value) && multiple
+  const isValueArray = TypeGuards.isArray(inputValue) && multiple
 
   const {
     loading,
@@ -137,7 +142,7 @@ export const Select = <T extends string | number = string, Multi extends boolean
     load,
     onChangeSearch,
   } = useSearch({
-    value,
+    value: inputValue,
     multiple,
     options,
     filterItems,
@@ -185,25 +190,25 @@ export const Select = <T extends string | number = string, Multi extends boolean
     let removedIndex = null
 
     if (multiple && isValueArray) {
-      if (value.includes(selectedValue)) {
-        removedIndex = value.findIndex(v => v === selectedValue)
+      if (inputValue.includes(selectedValue)) {
+        removedIndex = inputValue.findIndex(v => v === selectedValue)
 
-        newValue = value.filter((v, i) => i !== removedIndex)
+        newValue = inputValue.filter((v, i) => i !== removedIndex)
       } else {
-        if (TypeGuards.isNumber(limit) && value.length >= limit) {
+        if (TypeGuards.isNumber(limit) && inputValue.length >= limit) {
           return
         }
 
         newOption = currentOptions.find(o => o.value === selectedValue)
 
-        newValue = [...value, selectedValue]
+        newValue = [...inputValue, selectedValue]
       }
     } else {
       newValue = selectedValue
       newOption = currentOptions.find(o => o.value === selectedValue)
     }
 
-    fieldHandle.setValue(newValue)
+    onInputValueChange(newValue)
 
     onSelect?.(newValue)
 
@@ -223,15 +228,15 @@ export const Select = <T extends string | number = string, Multi extends boolean
     if (closeOnSelect) {
       close?.()
     }
-  }, [isValueArray, (isValueArray ? value : [value]), limit, multiple, labelOptions, currentOptions])
+  }, [isValueArray, (isValueArray ? inputValue : [inputValue]), limit, multiple, labelOptions, currentOptions])
 
   const renderListItem = useCallback(({ item, index }) => {
     let selected = false
 
     if (multiple && isValueArray) {
-      selected = value?.includes(item.value)
+      selected = inputValue?.includes(item.value)
     } else {
-      selected = value === item.value
+      selected = inputValue === item.value
     }
 
     return (
@@ -250,20 +255,19 @@ export const Select = <T extends string | number = string, Multi extends boolean
         {...itemProps}
       />
     )
-  }, [value, select, multiple])
+  }, [inputValue, select, multiple])
 
-  const isEmpty = TypeGuards.isNil(value)
+  const isEmpty = TypeGuards.isNil(inputValue)
   const showClearIcon = !isEmpty && clearable
 
   const inputIcon = showClearIcon ? clearIconName : arrowIconName
 
   const onPressInputIcon = () => {
     if (showClearIcon) {
-      fieldHandle.setValue(null)
+      onInputValueChange(null)
     } else {
       close?.()
     }
-
   }
 
   const searchHeader = searchable ? <SearchInput
