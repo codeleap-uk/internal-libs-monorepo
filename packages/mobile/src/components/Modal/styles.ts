@@ -16,7 +16,6 @@ export type ModalParts =
   | 'description'
   | 'titleWrapper'
   | `closeButton${Capitalize<ActionIconComposition>}`
-  | 'topSpacing'
 
 export type ModalComposition =
   | ModalParts

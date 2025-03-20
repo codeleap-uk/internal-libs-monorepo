@@ -1,19 +1,19 @@
 import React from 'react'
 import { usePrevious, onMount, onUpdate } from '@codeleap/hooks'
 import { PropsOf } from '@codeleap/types'
-import { useModalContext } from './context'
+import { useModalContext } from './Context'
 import { Portal } from '@gorhom/portal'
 import { Modal as _Modal } from '../../components/Modal'
 
 type UseManagedModalArgs = {
   id?: string
-  initialVisible ?: boolean
+  initialVisible?: boolean
   parent?: string
   visible?: boolean
   toggle?: PropsOf<typeof _Modal>['toggle']
 }
 
-function useManagedModal(props:UseManagedModalArgs) {
+function useManagedModal(props: UseManagedModalArgs) {
   const {
     initialVisible = false,
     parent,
@@ -61,7 +61,7 @@ export type ManagedModalProps<T = PropsOf<typeof _Modal>> = Omit<T, 'visible' | 
   absolute?: boolean
 
 }
-export const Modal:React.FC<ManagedModalProps> = ({
+export const Modal: React.FC<ManagedModalProps> = ({
   children,
   absolute = true,
   ...props

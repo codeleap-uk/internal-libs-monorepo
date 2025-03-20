@@ -3,12 +3,12 @@ import { Permission } from './Permission'
 import * as PermissionTypes from './types'
 
 export class PermissionManager<
-    T extends PermissionTypes.PermissionActionRecord,
-    I extends PermissionTypes.IPermissionManager<T> = PermissionTypes.IPermissionManager<T>
+  T extends PermissionTypes.PermissionActionRecord,
+  I extends PermissionTypes.IPermissionManager<T> = PermissionTypes.IPermissionManager<T>
 > implements PermissionTypes.IPermissionManager<T> {
-  private _permissions:Record<keyof T, Permission>
+  private _permissions: Record<keyof T, Permission>
 
-  subscriberArgs:Parameters<PermissionTypes.ChangeListener<T>>
+  subscriberArgs: Parameters<PermissionTypes.ChangeListener<T>>
 
   private subscribers: PermissionTypes.ChangeListener<T>[]
 
@@ -21,8 +21,8 @@ export class PermissionManager<
   private params: T
 
   public permissions: {
-      [Property in keyof T as Uppercase<string & Property>] : Property
-    }
+    [Property in keyof T as Uppercase<string & Property>]: Property
+  }
 
   logger: Logger
 
@@ -65,7 +65,7 @@ export class PermissionManager<
     return this._permissions[name]
   }
 
-  getMany:I['getMany'] = async (perms, options) => {
+  getMany: I['getMany'] = async (perms, options) => {
 
     const results = []
 
@@ -81,11 +81,11 @@ export class PermissionManager<
   }
 
   // @ts-ignore
-  get:I['get'] = async (name, options) => {
+  get: I['get'] = async (name, options) => {
     return await this.check(name, options)
   }
 
-  onPermissionChange(name: keyof T, callback:PermissionTypes.PermissionSubscriber) {
+  onPermissionChange(name: keyof T, callback: PermissionTypes.PermissionSubscriber) {
     const subIdx = this.permSubscribers[name].push(callback) - 1
 
     return () => {
@@ -93,7 +93,7 @@ export class PermissionManager<
     }
   }
 
-  onChange(callback:PermissionTypes.ChangeListener<T>) {
+  onChange(callback: PermissionTypes.ChangeListener<T>) {
     const subIdx = this.subscribers.push(callback) - 1
 
     return () => {

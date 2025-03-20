@@ -1,7 +1,6 @@
 import { Option, Options, PropsOf } from '@codeleap/types'
 import { AppIcon, StyledProp } from '@codeleap/styles'
-import { StylesOf } from '../../types/utility'
-import { GetKeyboardAwarePropsOptions } from '../../utils'
+import { GetKeyboardAwarePropsOptions, StylesOf } from '../../types/utility'
 import { ActionIconProps } from '../ActionIcon'
 import { Icon } from '../Icon'
 import { FlatListProps } from '../List'

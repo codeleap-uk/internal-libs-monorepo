@@ -99,10 +99,6 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
     <View style={styles.wrapper} {...rest}>
       <TextInput
         style={compositionStyles.input}
-        onChangeText={(value) => {
-          setIsTyping(true)
-          handleChangeAddress(value)
-        }}
         onBlur={() => {
           setIsFocused(false)
         }}
@@ -111,6 +107,10 @@ export const PlacesAutocomplete = (props: PlacesAutocompleteProps) => {
         }}
         {...textInputProps}
         value={hasCustomValue ? textInputProps?.value : address}
+        onValueChange={(value) => {
+          setIsTyping(true)
+          handleChangeAddress(value)
+        }}
         rightIcon={rightIcon}
       />
       {isTyping ? (

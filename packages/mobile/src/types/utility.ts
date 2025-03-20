@@ -17,3 +17,11 @@ export type ChildrenProp = ReactNode | ReactNode[] | undefined
 export type ReanimatedExitingAnimation = (values: ExitAnimationsValues) => LayoutAnimation
 export type ReanimatedEnteringAnimation = (values: EntryAnimationsValues) => LayoutAnimation
 
+export type GetKeyboardAwarePropsOptions = {
+  baseStyleProp?: 'style' | 'contentContainerStyle'
+  adapt?: 'height' | 'maxHeight' | 'paddingBottom' | 'marginBottom' | 'bottom'
+  enabled?: boolean
+  animated?: boolean
+  transition?: TransitionConfig
+  enableOnAndroid?: boolean
+}

@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
-import { useModalContext } from '../ModalManager/context'
 import { onMount, onUpdate, useDebounce, usePrevious } from '@codeleap/hooks'
 import { deepEqual } from '@codeleap/utils'
 import { AppState, Linking } from 'react-native'
 import { PermissionConfig, PermissionModalsConfig } from './types'
-import { PermissionManager, PermissionTypes } from '../MobilePermissionManager'
+import { PermissionManager, PermissionTypes } from './package'
+import { useModalContext } from '../modals/Context'
 
 type TPermissionContext = {
   state: Record<string, PermissionTypes.PermissionStatus>
@@ -26,7 +26,7 @@ function getStatuses(state: PermissionsRecord) {
   return Object.fromEntries(statuses)
 }
 
-export function Provider({ children, AppPermissions, modalConfig }:PermissionProviderProps) {
+export function Provider({ children, AppPermissions, modalConfig }: PermissionProviderProps) {
 
   const [state, setState] = useState(() => getStatuses(AppPermissions.values))
 
@@ -50,7 +50,7 @@ export function Provider({ children, AppPermissions, modalConfig }:PermissionPro
       ...state,
       [forPermission]: status
     })
-  } 
+  }
 
 
   return <PermissionContext.Provider value={{
@@ -63,29 +63,29 @@ export function Provider({ children, AppPermissions, modalConfig }:PermissionPro
   </PermissionContext.Provider>
 }
 
-type TAskManyResults<T extends string> =Record<T, PermissionTypes.PermissionStatus> & {
+type TAskManyResults<T extends string> = Record<T, PermissionTypes.PermissionStatus> & {
   overall
   : PermissionTypes.PermissionStatus
 }
 
-type AskManyOpts<T extends string|number|symbol > = {
+type AskManyOpts<T extends string | number | symbol> = {
   breakOnDenied?: T[]
 }
 
 export type UsePermissions<
   _PermissionNames extends string,
   PermissionNames extends string = `${_PermissionNames}?` | _PermissionNames> = () => TPermissionContext & {
-  askPermission: (name: PermissionNames, onResolve?: (status: PermissionTypes.PermissionStatus) => any) => Promise<PermissionTypes.PermissionStatus>
-  askMany<T extends PermissionNames, R = TAskManyResults<T>>(
-    perms: T[],
-    onResolve?: (res:R) => any,
-    options?: AskManyOpts<T>
-  ):Promise<
-    R
-  >
-}
+    askPermission: (name: PermissionNames, onResolve?: (status: PermissionTypes.PermissionStatus) => any) => Promise<PermissionTypes.PermissionStatus>
+    askMany<T extends PermissionNames, R = TAskManyResults<T>>(
+      perms: T[],
+      onResolve?: (res: R) => any,
+      options?: AskManyOpts<T>
+    ): Promise<
+      R
+    >
+  }
 
-export const usePermissions:UsePermissions<any> = () => {
+export const usePermissions: UsePermissions<any> = () => {
   const modalCtx = useModalContext()
   const permissionCtx = useContext(PermissionContext)
 
@@ -122,7 +122,7 @@ export const usePermissions:UsePermissions<any> = () => {
 
   const askMany = async (
     perms: any[],
-    onResolve?: (res:any) => any,
+    onResolve?: (res: any) => any,
     options?: AskManyOpts<any>,
   ) => {
 
@@ -186,7 +186,7 @@ export const usePermissions:UsePermissions<any> = () => {
         modalCtx.toggleModal(prevModal, false, {})
       })
     }
-    const res:Parameters<typeof onResolve>[0] = {
+    const res: Parameters<typeof onResolve>[0] = {
       ...results,
       overall: Object.values(results).every(x => x === 'granted') ? 'granted' : 'denied',
     }

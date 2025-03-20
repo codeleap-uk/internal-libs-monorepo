@@ -38,10 +38,11 @@ export const Switch = (props: SwitchProps) => {
   const styles = useStylesFor(Switch.styleRegistryName, style)
 
   const {
-    fieldHandle,
     validation,
     wrapperRef,
-  } = useInputBase<boolean>(field, fields.boolean, [value, onValueChange])
+    inputValue,
+    onInputValueChange,
+  } = useInputBase<boolean>(field, fields.boolean, { value, onValueChange })
 
   const trackAnimation = useAnimatedVariantStyles({
     variantStyles: styles,
@@ -51,16 +52,16 @@ export const Switch = (props: SwitchProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = fieldHandle?.value ? styles['track:disabled-on'] : styles['track:disabled-off']
+        disabledStyle = inputValue ? styles['track:disabled-on'] : styles['track:disabled-off']
       }
-      const style = fieldHandle?.value ? styles['track:on'] : styles['track:off']
+      const style = inputValue ? styles['track:on'] : styles['track:off']
 
       return {
         ...style,
         ...disabledStyle,
       }
     },
-    dependencies: [fieldHandle?.value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   const thumbAnimation = useAnimatedVariantStyles({
@@ -71,34 +72,32 @@ export const Switch = (props: SwitchProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = fieldHandle?.value ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
+        disabledStyle = inputValue ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
       }
-      const style = fieldHandle?.value ? styles['thumb:on'] : styles['thumb:off']
+      const style = inputValue ? styles['thumb:on'] : styles['thumb:off']
       return {
         ...style,
         ...disabledStyle,
       }
 
     },
-    dependencies: [fieldHandle?.value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   // @ts-expect-error
   const _switchOnLeft = switchOnLeft ?? styles?.__props?.switchOnLeft
 
-  const hasError = validation.showError || forceError
+  const hasError = validation?.showError || forceError
 
   return <InputBase
     {...inputBaseProps}
     ref={wrapperRef}
     debugName={debugName}
     wrapper={Touchable}
-    error={hasError ? validation.message || forceError : null}
+    error={hasError ? validation?.message || forceError : null}
     style={styles}
     wrapperProps={{
-      onPress: () => {
-        fieldHandle.setValue(!fieldHandle?.value)
-      },
+      onPress: () => onInputValueChange(!inputValue),
       disabled,
       rippleDisabled: true,
     }}

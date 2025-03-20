@@ -8,7 +8,7 @@ export class Permission implements PermissionTypes.IPermission {
 
   shouldAsk: boolean
 
-  constructor(private actions:PermissionTypes.PermissionActions & {log?: AnyFunction}, public name = '') {
+  constructor(private actions: PermissionTypes.PermissionActions & { log?: AnyFunction }, public name = '') {
     this.actions = actions
     this.shouldAsk = true
     this.status = 'pending'
@@ -25,8 +25,8 @@ export class Permission implements PermissionTypes.IPermission {
     }
   }
 
-  async check(options?:PermissionTypes.CheckOptions): Promise<void> {
-    const _options:PermissionTypes.CheckOptions = {
+  async check(options?: PermissionTypes.CheckOptions): Promise<void> {
+    const _options: PermissionTypes.CheckOptions = {
       askOnPending: true,
       askOnDenied: false,
       ask: true,

@@ -131,9 +131,11 @@ export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedC
 
   return (
     <View style={styles?.wrapper}>
-      <View {...viewProps} style={styles?.labelWrapper}>
-        <Text style={styles?.labelText} text={label} />
-      </View>
+      {label ? (
+        <View {...viewProps} style={styles?.labelWrapper}>
+          <Text style={styles?.labelText} text={label} />
+        </View>
+      ) : null}
 
       <ScrollView
         horizontal

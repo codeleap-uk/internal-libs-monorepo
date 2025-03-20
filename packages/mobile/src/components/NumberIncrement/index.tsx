@@ -12,7 +12,7 @@ import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import CurrencyInput from 'react-native-currency-input'
 import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
-import { useNumberIncrement } from './useNumberIncrement'
+import { MAX_VALID_DIGITS, useNumberIncrement } from './useNumberIncrement'
 
 export * from './styles'
 export * from './types'
@@ -63,7 +63,6 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   const styles = useStylesFor(NumberIncrement.styleRegistryName, style)
 
   const {
-    fieldHandle,
     validation,
     min,
     max,
@@ -79,6 +78,8 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     handleMaskChange,
     handleBlur,
     handleFocus,
+    inputValue,
+    onInputValueChange,
   } = useNumberIncrement(allProps)
 
   const isFormatted = TypeGuards.isFunction(formatter)
@@ -123,9 +124,9 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
   } : {}
 
   const currencyExtraProps = isCurrency ? {
-    value: fieldHandle?.value,
+    value: inputValue,
     onChangeText: null,
-    onChangeValue: fieldHandle.setValue,
+    onChangeValue: onInputValueChange,
     prefix: prefix,
     separator: separator ?? '.',
     suffix: suffix,
@@ -145,7 +146,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
     <InputBase
       {...inputBaseProps}
       ref={wrapperRef}
-      error={hasError ? validation.message || forceError : null}
+      error={hasError ? validation?.message || forceError : null}
       style={styles}
       rightIcon={TypeGuards.isComponentOrElement(inputBaseProps.rightIcon) ? inputBaseProps.rightIcon : {
         name: 'plus' as AppIcon,
@@ -179,10 +180,10 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
           allowFontScaling={false}
           editable={!disabled}
           placeholderTextColor={partialStyles?.placeholder?.color}
-          value={isFormatted ? formatter(fieldHandle?.value ?? min) : String(fieldHandle?.value ?? min)}
           selectionColor={partialStyles?.selection?.color}
-          onChangeText={handleChangeInput}
           {...textInputProps}
+          onChangeText={handleChangeInput}
+          value={isFormatted ? formatter(inputValue ?? min) : String(inputValue ?? min)}
           onBlur={handleBlur}
           onFocus={handleFocus}
           style={[styles.input, partialStyles.input]}
@@ -192,7 +193,7 @@ export const NumberIncrement = forwardRef<NativeTextInput, NumberIncrementProps>
         />
       ) : (
         <Text
-          text={isFormatted ? formatter(fieldHandle?.value) : String(fieldHandle?.value)}
+          text={isFormatted ? formatter(inputValue) : String(inputValue)}
           style={[styles.input, partialStyles.input]}
         />
       )}
@@ -220,6 +221,8 @@ NumberIncrement.defaultProps = {
   timeoutActionFocus: 300,
   actionPressAutoFocus: true,
   actionDebounce: null,
+  min: 0,
+  max: MAX_VALID_DIGITS
 } as Partial<NumberIncrementProps>
 
 MobileStyleRegistry.registerComponent(NumberIncrement)

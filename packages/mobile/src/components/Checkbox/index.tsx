@@ -40,10 +40,11 @@ export const Checkbox = (props: CheckboxProps) => {
   const styles = useStylesFor(Checkbox.styleRegistryName, style)
 
   const {
-    fieldHandle,
     validation,
     wrapperRef,
-  } = useInputBase<boolean>(field, fields.boolean, [value, onValueChange])
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(field, fields.boolean, { value, onValueChange })
 
   const boxAnimation = useAnimatedVariantStyles({
     variantStyles: styles,
@@ -53,9 +54,9 @@ export const Checkbox = (props: CheckboxProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = fieldHandle?.value ? styles['box:disabled-checked'] : styles['box:disabled-unchecked']
+        disabledStyle = inputValue ? styles['box:disabled-checked'] : styles['box:disabled-unchecked']
       }
-      const style = fieldHandle?.value ? styles['box:checked'] : styles['box:unchecked']
+      const style = inputValue ? styles['box:checked'] : styles['box:unchecked']
 
       return {
         ...style,
@@ -63,7 +64,7 @@ export const Checkbox = (props: CheckboxProps) => {
       }
 
     },
-    dependencies: [fieldHandle?.value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   const checkmarkWrapperAnimation = useAnimatedVariantStyles({
@@ -74,34 +75,32 @@ export const Checkbox = (props: CheckboxProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = fieldHandle?.value ? styles['checkmarkWrapper:disabled-checked'] : styles['checkmarkWrapper:disabled-unchecked']
+        disabledStyle = inputValue ? styles['checkmarkWrapper:disabled-checked'] : styles['checkmarkWrapper:disabled-unchecked']
       }
-      const style = fieldHandle?.value ? styles['checkmarkWrapper:checked'] : styles['checkmarkWrapper:unchecked']
+      const style = inputValue ? styles['checkmarkWrapper:checked'] : styles['checkmarkWrapper:unchecked']
       return {
         ...style,
         ...disabledStyle,
       }
 
     },
-    dependencies: [fieldHandle?.value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   // @ts-expect-error
   const _checkboxOnLeft = checkboxOnLeft ?? styles.__props?.checkboxOnLeft
 
-  const hasError = validation.showError || forceError
+  const hasError = validation?.showError || forceError
 
   return <InputBase
     {...inputBaseProps}
     ref={wrapperRef}
-    error={hasError ? validation.message || forceError : null}
+    error={hasError ? validation?.message || forceError : null}
     debugName={debugName}
     wrapper={Touchable}
     style={styles}
     wrapperProps={{
-      onPress: () => {
-        fieldHandle.setValue(!fieldHandle?.value)
-      },
+      onPress: () => onInputValueChange(!inputValue),
       disabled,
       rippleDisabled: true,
     }}

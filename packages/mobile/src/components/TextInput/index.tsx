@@ -40,7 +40,6 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     autoAdjustSelection,
     selectionStart,
     forceError,
-    onChangeText,
     multiline,
     ...textInputProps
   } = others
@@ -48,8 +47,9 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const styles = useStylesFor(TextInput.styleRegistryName, style)
 
   const {
-    fieldHandle,
     validation,
+    inputValue,
+    onInputValueChange,
     innerInputRef,
     wrapperRef,
     isFocused, 
@@ -92,7 +92,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     },
     ...masking,
   } : {
-    onChangeText: fieldHandle.setValue
+    onChangeText: onInputValueChange,
   }
 
   const buttonModeProps = isPressable ? {
@@ -105,7 +105,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     ref={wrapperRef}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
-    error={hasError ? validation.message || forceError : null}
+    error={hasError ? validation?.message || forceError : null}
     style={{
       ...styles,
       innerWrapper: [
@@ -130,12 +130,13 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       {...buttonModeProps}
       selection={autoAdjustSelection ? currentSelection : undefined}
       placeholderTextColor={partialStyles?.placeholder?.color}
-      value={fieldHandle?.value}
       selectionColor={partialStyles?.selection?.color}
       secureTextEntry={secure && secureTextEntry}
       textAlignVertical={multiline ? 'top' : undefined}
       multiline={multiline}
       {...textInputProps}
+      value={inputValue}
+      onChangeText={onInputValueChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
       style={[

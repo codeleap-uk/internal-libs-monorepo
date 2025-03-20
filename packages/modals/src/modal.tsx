@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { atom, onMount, task } from 'nanostores'
 import { useStore } from '@nanostores/react'
 import { PropsOf, TypeGuards } from '@codeleap/types'
@@ -46,7 +46,7 @@ const DefaultWrapper = () => {
 }
 
 type WrapperComponentProps = Partial<PropsOf<typeof Modal.WrapperComponent>>
-
+const registeredIds = atom([])
 export class Modal<Params = {}, Result = {}, Metadata = {}> {
 
   id: string
@@ -62,6 +62,8 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
   _initialParams: Params
 
   _wrapperProps: IAtom<WrapperComponentProps>
+
+  _lazyWrapperProps: (params: Params) => WrapperComponentProps
 
   static registry: Record<string, Modal<any>> = {}
 
@@ -154,6 +156,7 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
     }
 
     Modal.registry[this.id] = this
+    registeredIds.set([ ...registeredIds.get(), this.id])
 
     this.visible.subscribe((visible, wasVisible) => {
       this.onVisibilityChanged(visible, wasVisible)
@@ -176,7 +179,9 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
   }
 
   open(params?: Params) {
-
+    if(this.visible.get()){
+      throw new Error(`Modal ${this.id} is already open. If you want to set the params, call .setParams instead of .open`)
+    }
     if (params) {
       this.params.set({
         ...this.params.get(),
@@ -192,13 +197,18 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
   close() {
     this.visible.set(false)
 
+    this.resetParams()
+
     return awaitTransition()
   }
 
   toggle() {
-    this.visible.set(!this.visible.get())
-
-    return awaitTransition()
+    if(this.visible.get()){
+      return this.close()
+    } else {
+      return this.open()
+    }
+ 
   }
 
   resetParams() {
@@ -226,14 +236,21 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
     }, [params])
   }
 
-  props(props: Partial<PropsOf<typeof Modal.WrapperComponent>>) {
-    this._wrapperProps.set(props)
+  props(props: Partial<WrapperComponentProps> | ((params: Params) => Partial<WrapperComponentProps>)) {
+
+    if(TypeGuards.isFunction(props)) {
+      this._lazyWrapperProps = props
+    } else {
+      this._wrapperProps.set(props)
+
+    }
+    
     return this
   }
 
   useProps(props: Partial<PropsOf<typeof Modal.WrapperComponent>>, deps = []) {
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       this._wrapperProps.set({
         ...this._wrapperProps.get(),
         ...props,
@@ -268,12 +285,16 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
       reject: this.reject,
     }
 
+    const lazyWrapperProps = this?._lazyWrapperProps ? this._lazyWrapperProps(params) : {}
+
     return <Modal.WrapperComponent
       {...this._wrapperProps}
       {...modalProps}
       {...wrapperProps}
+      {...lazyWrapperProps}
       visible={visible}
       toggle={this.toggle}
+      zIndex={this.stackIndex}
     >
       <Content
         visible={visible}
@@ -326,6 +347,7 @@ export class Modal<Params = {}, Result = {}, Metadata = {}> {
   }
 
   static GlobalOutlet() {
+    const ids = useStore(registeredIds)
     const modals = Object.values(Modal.registry).filter(m => !m._config.independent)
 
     return <>

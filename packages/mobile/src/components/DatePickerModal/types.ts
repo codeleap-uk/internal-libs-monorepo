@@ -47,4 +47,5 @@ export type DatePickerModalProps =
     style?: StyledProp<DatePickerModalComposition>
     value?: Date
     onValueChange?: (value: Date) => void
+    locale?: string
   }
