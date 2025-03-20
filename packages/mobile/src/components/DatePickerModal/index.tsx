@@ -1,7 +1,6 @@
 import React, { useMemo, useRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { useConditionalState } from '@codeleap/hooks'
-import { useLingui } from '@lingui/react/macro'
 import DatePicker from 'react-native-date-picker'
 import Modal from '../Modal'
 import { TextInput } from '../TextInput'
@@ -116,6 +115,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     onConfirm: _onConfirm,
     value: _value,
     onValueChange: _onValueChange,
+    locale,
     ...modalProps
   } = allProps
 
@@ -134,7 +134,6 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
   const compositionStyles = useCompositionStyles(['input', 'doneButton', 'cancelButton', 'confirmButton'], styles)
 
   const formattedDate = value ? formatDate(value) : ''
-  const { i18n } = useLingui()
 
   const tempDate = useRef<Date | null>(initialDate instanceof Date ? initialDate : new Date(initialDate))
 
@@ -210,7 +209,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
               setValue(currentDate)
             }
           }}
-          locale={i18n.locale}
+          locale={locale}
           // @ts-expect-error
           textColor={styles?.picker?.color}
           theme='light'
