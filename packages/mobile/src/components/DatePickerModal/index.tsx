@@ -2,9 +2,8 @@ import React, { useMemo, useRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { useConditionalState } from '@codeleap/hooks'
 import DatePicker from 'react-native-date-picker'
-import Modal from '../Modal'
+import { Modal } from '../Modal'
 import { TextInput } from '../TextInput'
-import { ModalManager } from '../../utils'
 import { Button } from '../Button'
 import { DatePickerModalProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
@@ -128,7 +127,7 @@ export const DatePickerModal = (props: DatePickerModalProps) => {
     onInputValueChange,
   } = useInputBase(field, fields.date, { value, onValueChange })
 
-  const Wrapper = isCustomModal ? ModalManager.Modal : React.Fragment
+  const Wrapper = isCustomModal ? Modal : React.Fragment
 
   const compositionStyles = useCompositionStyles(['input', 'doneButton', 'cancelButton', 'confirmButton'], styles)
 

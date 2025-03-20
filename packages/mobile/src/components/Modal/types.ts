@@ -20,7 +20,6 @@ export type ModalProps =
     closeIconName?: AppIcon
     visible?: boolean
     toggle?: () => void
-    zIndex?: number
     description?: React.ReactElement
     scroll?: boolean
     header?: React.ReactElement
@@ -30,7 +29,7 @@ export type ModalProps =
     scrollProps?: PropsOf<typeof Scroll, 'ref'>
     style?: StyledProp<ModalComposition>
     id?: string
-    absolute?: boolean
+    withPortal?: boolean
     boxEntering?: ReanimatedEnteringAnimation
     boxExiting?: ReanimatedExitingAnimation
   }

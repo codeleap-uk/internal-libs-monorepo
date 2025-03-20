@@ -6,8 +6,7 @@ export * from './deprecated'
 
 export { Linking } from 'react-native'
 import uuid from 'react-native-uuid'
-import * as RNKeyboardAwareScrollView from './utils/KeyboardAware'
-export { uuid, RNKeyboardAwareScrollView }
+export { uuid }
 export { MobileStyleRegistry } from './Registry'
 
 import './modules/formConfig'

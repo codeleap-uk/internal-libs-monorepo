@@ -1,9 +1,7 @@
-import { CreateOSAlert } from '@codeleap/modals'
+import { alert } from '@codeleap/modals'
 import { useEffect, useMemo, useState } from '@codeleap/hooks'
 import { FileInputImageSource, useFileInput } from '../FileInput'
 import { SortablePhoto, SortablePhotosProps, WithId } from './types'
-
-const SortableAlert = CreateOSAlert()
 
 export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const {
@@ -145,7 +143,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
   }
 
   const handlePressPhoto = (photo: T, order: number) => {
-    SortableAlert.custom({
+    alert.ask({
       title: modalTitle,
       body: modalBody,
       options: [
@@ -153,9 +151,6 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
         { text: modalCameraText, onPress: () => handleOpenPicker('camera', photo, order) },
         !!photo?.filename && { text: modalDeleteText, onPress: () => handleDeletePhoto(photo, order) },
       ],
-      // @ts-expect-error
-      closable: true,
-      isRow: false,
     })
 
     onPressPhoto?.(data, photo, order)

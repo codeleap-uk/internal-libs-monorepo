@@ -2,7 +2,6 @@ import React from 'react'
 import { AnyFunction, TypeGuards } from '@codeleap/types'
 import { onUpdate, useState } from '@codeleap/hooks'
 import { PortalProvider } from '@gorhom/portal'
-import { KeyboardProvider } from '../KeyboardAware'
 
 export type AppModalProps = {
   visible: boolean
@@ -38,7 +37,7 @@ export function Provider({ children }) {
     return !!modals[name]?.visible
   }
 
-  const toggleModal:TModalContext['toggleModal'] = (name, set?: boolean, props?: any) => {
+  const toggleModal: TModalContext['toggleModal'] = (name, set?: boolean, props?: any) => {
     const visible = isVisible(name)
 
     const newVisible = typeof set === 'boolean' ? set : !visible
@@ -58,7 +57,7 @@ export function Provider({ children }) {
     })
   }
 
-  const setModal:TModalContext['setModal'] = (name, to) => {
+  const setModal: TModalContext['setModal'] = (name, to) => {
 
     setModals((current) => ({
       ...current,
@@ -72,7 +71,7 @@ export function Provider({ children }) {
 
   // const codeleapCtx = useCodeleapContext()
   const defaultDuration = 300
-  const transition:TModalContext['transition'] = (from, to, options) => {
+  const transition: TModalContext['transition'] = (from, to, options) => {
     return new Promise((resolve) => {
       setTimeout(() => {
 
@@ -80,7 +79,7 @@ export function Provider({ children }) {
           toggleModal(to, true, options?.props)
           return
         }
-        const _options:ModalTransitionOptions = {
+        const _options: ModalTransitionOptions = {
           duration: defaultDuration,
           ...options,
         }
@@ -137,7 +136,7 @@ export function Provider({ children }) {
     setModals(newModals)
   }
 
-  return <KeyboardProvider>
+  return (
     <ModalContext.Provider value={{
       state: modals,
       toggleModal,
@@ -155,8 +154,7 @@ export function Provider({ children }) {
         {children}
       </PortalProvider>
     </ModalContext.Provider>
-  </KeyboardProvider>
-
+  )
 }
 
 export function useModalContext() {
@@ -175,9 +173,9 @@ export type UseModalSequenceOptions = {
 
 export function useModalSequence(ids: string[], options?: UseModalSequenceOptions) {
 
-  const _options:UseModalSequenceOptions = {
+  const _options: UseModalSequenceOptions = {
     closeLastOnFinish: true,
-    onFinish: () => {},
+    onFinish: () => { },
     resetOnFinish: false,
     waitForLastToCloseBeforeCallingFinish: true,
     ...options,
@@ -231,7 +229,7 @@ export function useModalSequence(ids: string[], options?: UseModalSequenceOption
   }
 
   function goto(idxOrId: string | number, props?: any) {
-    let newId:string = null
+    let newId: string = null
     if (TypeGuards.isString(idxOrId)) {
       newId = idxOrId
 
