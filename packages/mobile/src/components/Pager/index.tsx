@@ -16,7 +16,7 @@ export * from './styles'
 export * from './types'
 export * from './PagerDots'
 
-const window = Dimensions.get('window')
+const window = Dimensions.get('screen')
 
 export function Pager<T>(props: PagerProps<T>) {
   const {
