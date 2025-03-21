@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.10](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v1.0.0-55...v5.0.10) (2025-03-21)
+
+
+### Bug Fixes
+
+* **mobile:** select not show value ([de1c5f6](https://github.com/codeleap-uk/internal-libs-monorepo/commit/de1c5f63d27045a31a7209ba8ce6fd8e1fef8600))
+
 ### [5.0.9](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.0.8...v5.0.9) (2025-03-20)
 
 
