@@ -61,6 +61,7 @@ const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (
 
   return <TextInput
     value={TypeGuards.isString(currentValueLabel) ? currentValueLabel : null}
+    onValueChange={() => currentValueLabel}
     rightIcon={clearIcon}
     onPress={disabled ? null : () => toggle()}
     disabled={disabled}
