@@ -7,11 +7,8 @@ import { CarouselRenderItemInfo } from 'react-native-reanimated-carousel/lib/typ
 export type PageProps<T> = CarouselRenderItemInfo<T> & {
   isLast: boolean
   isFirst: boolean
-  isActive: boolean
   isOnly: boolean
-  isNext: boolean
   index: number
-  isPrevious: boolean
 }
 
 export type PagerProps<T> = Partial<Omit<TCarouselProps<T>, 'data' | 'renderItem'>> & {
@@ -24,4 +21,6 @@ export type PagerProps<T> = Partial<Omit<TCarouselProps<T>, 'data' | 'renderItem
   showDots?: boolean
   footer?: ReactNode
   autoCalculateFooterHeight?: boolean
+  removeFixedHeight?: number
+  removeFixedWidth?: number
 }
