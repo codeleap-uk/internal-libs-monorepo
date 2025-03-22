@@ -4,7 +4,6 @@ import { APIError } from './APIError'
 import { IRequestClient, RequestClientConfig } from './types'
 import { getRequestId, parseFailedRequest, toMultipart } from './utils'
 import { CancellablePromise } from '@codeleap/types'
-import { Logger, silentLogger } from '@codeleap/logger'
 
 export class RequestClient implements IRequestClient {
   queue: IRequestClient['queue']
@@ -13,13 +12,13 @@ export class RequestClient implements IRequestClient {
 
   axios: AxiosInstance
 
-  logger: Logger
+  logger: any
 
   toMultipart: RequestClientConfig['multipartParser']
 
   constructor({ logger, multipartParser = toMultipart, ...config }:RequestClientConfig) {
     this.config = config
-    this.logger = logger || silentLogger
+    this.logger = logger || null
 
     this.axios = axios.create(config)
 

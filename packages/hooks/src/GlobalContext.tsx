@@ -1,9 +1,8 @@
 import React, { createContext, ReactNode, useContext } from 'react'
-import { Logger, silentLogger } from '@codeleap/logger'
 import { AppSettings } from '@codeleap/types'
 
 type ContextProps = {
-  logger: Logger
+  logger: any
   Settings: AppSettings
   isBrowser: boolean
 }
@@ -11,7 +10,7 @@ type ContextProps = {
 const GlobalContext = createContext<ContextProps>({} as ContextProps)
 
 type ProviderProps = {
-  logger: Logger
+  logger: any
   settings: AppSettings
   isBrowser: boolean
   children: ReactNode
@@ -26,7 +25,7 @@ export const GlobalContextProvider = (props: ProviderProps) => {
   } = props
 
   const value: ContextProps = {
-    logger: logger || silentLogger,
+    logger: logger,
     Settings: settings,
     isBrowser,
   }

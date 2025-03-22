@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { onMount, useComponentTestId } from '@codeleap/hooks'
-import { useGlobalContext } from '@codeleap/hooks'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
@@ -49,26 +48,24 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
 
   const styles = useStylesFor(Touchable.styleRegistryName, style)
 
-  const { logger } = useGlobalContext()
-
   const testId = useComponentTestId(Touchable, touchableProps, ['style', 'children', 'debounce'])
 
   const press = () => {
     if (!onPress) return
 
     const _onPress = () => {
-      logger.log(
-        `<${debugComponent || 'Touchable'}/>  pressed`,
-        debugName,
-        'User interaction',
-      )
+      // logger.log(
+      //   `<${debugComponent || 'Touchable'}/>  pressed`,
+      //   debugName,
+      //   'User interaction',
+      // )
       if (dismissKeyboard) {
         Keyboard.dismiss()
       }
       if (analyticsEnabled) {
         const name = analyticsName || debugName
         if (!!name?.trim?.()) {
-          logger.analytics?.interaction(name, analyticsData)
+          // logger.analytics?.interaction(name, analyticsData)
         }
       }
 

@@ -1,4 +1,3 @@
-import { Logger } from '@codeleap/logger'
 import { FunctionType } from '@codeleap/types'
 
 export const permissionStatuses = ['unavailable', 'pending', 'denied', 'limited', 'granted', 'blocked'] as const
@@ -40,5 +39,5 @@ export type PermissionSubscriber = FunctionType<[PermissionState], any>
 export type PermissionArray<T> = ([name: keyof T, options: CheckOptions])[] | (keyof T)[]
 
 export type PermissionManagerOptions = {
-  logger?: Logger
+  logger?: any
 }

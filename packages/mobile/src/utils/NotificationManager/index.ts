@@ -1,8 +1,8 @@
 import { AnyFunction } from '@codeleap/types'
-import { silentLogger } from '@codeleap/logger' // @ts-ignore
 import messaging from '@react-native-firebase/messaging'
 import { Subscriber, Subscription } from '../Subscription'
 import { Message, NotificationInitializeCallback, NotificationManagerOptions, NotificationType, TNotification } from './types'
+import { logger } from '@codeleap/logger'
 
 export * from './types'
 
@@ -29,7 +29,6 @@ export class NotificationManager<N extends object = Message, E extends string = 
   public events = new Subscription<TNotification<N>, E>()
 
   constructor(
-    private _logger = silentLogger,
     options: NotificationManagerOptions<N> = {}
   ) {
     if (typeof options?.parser == 'function') {
@@ -55,14 +54,12 @@ export class NotificationManager<N extends object = Message, E extends string = 
   }
 
   public log(description: string, data: any = {}) {
-    if (!this._logger) return
-
     if (this.currentOptions.debug) {
-      this._logger.log(description, data, MODULE)
+      logger.log(description, data, MODULE)
     }
 
     if (this.currentOptions.slackDebug) {
-      this._logger.slack.echo(description, data, MODULE, {
+      logger.slack.echo(description, data, MODULE, {
         'include': ['version'],
         'sendIn': ['release', 'debug']
       })
