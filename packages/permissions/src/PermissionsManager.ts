@@ -53,9 +53,9 @@ export class PermissionsManager<P extends string> {
     this.checkAll()
   }
 
-  private log(msg: string, obj?: any) {
+  private log(msg: string, ...args: unknown[]) {
     if (!Permission.logsEnabled) return
-    logger.log(`(Permissions) -> ${msg}`, obj)
+    logger.log(`(Permissions) -> ${msg}`, ...(args ?? ''))
   }
 
   /**

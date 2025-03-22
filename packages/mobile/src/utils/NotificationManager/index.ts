@@ -53,7 +53,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
     })
   }
 
-  public log(description: string, data: any = {}) {
+  public log(description: string, data: any = '') {
     if (this.currentOptions.debug) {
       logger.log(`(${MODULE})`, description, data)
     }
