@@ -1,6 +1,7 @@
 import { Permission } from './Permission'
 import { PermissionOptions } from './types'
 import { PermissionStatus, PermissionConfig } from './globals'
+import { logger } from '@codeleap/logger'
 
 export class PermissionsManager<P extends string> {
   private requester: (permission: Permission) => Promise<PermissionStatus>
@@ -54,7 +55,7 @@ export class PermissionsManager<P extends string> {
 
   private log(msg: string, obj?: any) {
     if (!Permission.logsEnabled) return
-    console.log(`[Permissions] -> ${msg}`, obj)
+    logger.log(`(Permissions) -> ${msg}`, obj)
   }
 
   /**

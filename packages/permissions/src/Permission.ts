@@ -66,7 +66,7 @@ export class Permission {
 
   private log(msg: string, obj?: any) {
     if (!Permission.logsEnabled) return
-    logger.log(`(Permissions) ${this.name} -> ${msg}`, obj)
+    logger.log(`(Permission) ${this.name} -> ${msg}`, obj)
   }
 
   /**
