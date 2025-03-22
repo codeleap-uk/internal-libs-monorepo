@@ -55,7 +55,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
 
   public log(description: string, data: any = {}) {
     if (this.currentOptions.debug) {
-      logger.log(description, data, MODULE)
+      logger.log(`(${MODULE})`, description, data)
     }
 
     if (this.currentOptions.slackDebug) {
@@ -147,7 +147,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
    * @param {function} callback Callback that is executed when the services are initialized, returning the device token
   */
   public async initialize(callback: NotificationInitializeCallback) {
-    this.log('Initialize', this.currentOptions)
+    this.log('Initialize')
 
     this.unsubscribe()
 

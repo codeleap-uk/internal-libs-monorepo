@@ -31,7 +31,7 @@ export const inspectRender = (
 
   const { noHooks, logMode, throttleInterval, maxRenders = config.maxRenders } = options
 
-  if (!config.enable || !appSettings.config.Environment.IsDev) {
+  if (!config.enabled || !appSettings.config.Environment.IsDev) {
     return
   }
 

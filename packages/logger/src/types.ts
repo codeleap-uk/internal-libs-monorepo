@@ -12,7 +12,7 @@ export interface AppSettingsConfig {
       icon: string
       token: string
       baseURL?: string
-      enable?: boolean
+      enabled?: boolean
       options?: Record<string, any>
     }
   }
@@ -21,14 +21,14 @@ export interface AppSettingsConfig {
     ignoreLogs: string[]
 
     performanceInspector: {
-      enable: boolean
+      enabled: boolean
       maxRenders: number
       blacklist: string[]
     }
   }
 
   Sentry: {
-    enable: boolean
+    enabled: boolean
     dsn: string
     provider: any
     debug?: boolean

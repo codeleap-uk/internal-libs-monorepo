@@ -7,6 +7,7 @@ import { AnyRecord, SecondToLastArguments, TypeGuards } from '@codeleap/types';
 import { useStore } from '@nanostores/react'
 import { useFieldBinding } from './useFieldBinding';
 import { createRef, useRef, useState } from 'react';
+import { logger } from '@codeleap/logger';
 
 class ValidationError extends Error {
   data: any
@@ -197,7 +198,7 @@ export class Field<
   formatLog(...args: any[]) {
     const [firstArgument, ...otherArgs] = args
 
-    let PREFIX = `[FIELD: ${this.name}]`
+    let PREFIX = `(FIELD: ${this.name})`
     
     if(TypeGuards.isString(firstArgument)) {
       PREFIX += ` ${firstArgument}`
@@ -285,7 +286,7 @@ export class Field<
   }
 
   log(level = 'log', ...args: any[]){
-    if (Field.enableLogs) console[level](...this.formatLog(...args))
+    if (Field.enableLogs) logger[level](...this.formatLog(...args))
   }
   
   toInternalValue(v: any) {

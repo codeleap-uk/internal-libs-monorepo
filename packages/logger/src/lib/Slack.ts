@@ -50,7 +50,7 @@ export class SlackService {
     const options = this.parseOptions(messageOptions)
     const slack = this.parseData(label, slackData, options.info, moduleName)
 
-    const enabled = TypeGuards.isBoolean(this.echoConfig.enable) ? this.echoConfig.enable : true
+    const enabled = TypeGuards.isBoolean(this.echoConfig.enabled) ? this.echoConfig.enabled : true
   
     if (!options.send || !this.api || !this.echoConfig || !enabled) return
 

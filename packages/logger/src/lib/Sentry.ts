@@ -22,7 +22,7 @@ export class SentryService {
   }
 
   private get enabled() {
-    return appSettings.config.Sentry.enable
+    return appSettings.config.Sentry.enabled
   }
 
   constructor() {
@@ -34,6 +34,7 @@ export class SentryService {
         debug: config.debug,
         beforeBreadcrumb: config.beforeBreadcrumb,
         integrations: [],
+        enabled: this.enabled,
         ...config.initArgs,
       }
 
