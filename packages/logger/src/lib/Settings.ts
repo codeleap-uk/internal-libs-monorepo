@@ -1,4 +1,4 @@
-import { AppSettingsConfig } from './types'
+import { AppSettingsConfig } from '../types'
 
 class AppSettings {
   public config = {} as AppSettingsConfig

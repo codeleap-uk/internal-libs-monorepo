@@ -1,6 +1,20 @@
-import type { Breadcrumb, ClientOptions } from '@sentry/types'
-import { SentrySeverityMap, SentryProvider } from './types'
+import type { Breadcrumb, ClientOptions, SeverityLevel, Client } from '@sentry/types'
 import { appSettings } from './Settings'
+
+const SentrySeverityMap: Record<string, SeverityLevel> = {
+  debug: 'debug',
+  error: 'error',
+  info: 'info',
+  log: 'log',
+  warn: 'warning',
+  silent: 'log',
+}
+
+type SentryProvider = {
+  addBreadcrumb: (args: Breadcrumb) => void
+  init(options: ClientOptions): Client
+  captureException(err: any): void
+}
 
 export class SentryService {
   get provider(): SentryProvider {
@@ -27,13 +41,11 @@ export class SentryService {
     }
   }
 
-  captureBreadcrumb(type: string, content: [string, any, string]) {
+  captureBreadcrumb(type: string, msg: string, data: any, category = `logger:${type}`) {
     if (!this.enabled) return
 
-    const [message, data, category] = content
-
     const sentryArgs: Breadcrumb = {
-      message,
+      message: msg,
       data,
       category,
       level: SentrySeverityMap[type],
@@ -43,7 +55,7 @@ export class SentryService {
     this.provider.addBreadcrumb(sentryArgs)
   }
 
-  sendLog(err?: any) {
+  captureException(err: any) {
     if (!this.enabled) return
 
     this.provider.captureException(err)

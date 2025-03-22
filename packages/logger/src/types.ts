@@ -2,8 +2,6 @@
 export interface AppSettingsConfig {
   AppName: string
   
-  logsEnabled: boolean
-
   Environment: {
     IsDev: boolean
   }
@@ -14,7 +12,7 @@ export interface AppSettingsConfig {
       icon: string
       token: string
       baseURL?: string
-      enabled?: boolean
+      enable?: boolean
       options?: Record<string, any>
     }
   }
@@ -37,21 +35,4 @@ export interface AppSettingsConfig {
     initArgs?: any
     beforeBreadcrumb?: any
   }
-}
-
-import type { SeverityLevel, Client, ClientOptions } from '@sentry/types'
-
-export const SentrySeverityMap: Record<string, SeverityLevel> = {
-  debug: 'debug',
-  error: 'error',
-  info: 'info',
-  log: 'log',
-  warn: 'warning',
-  silent: 'log',
-}
-
-export type SentryProvider = {
-  addBreadcrumb: any
-  init(options: ClientOptions): Client
-  captureException(err: any): void
 }

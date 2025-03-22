@@ -19,6 +19,7 @@ type EchoSlackOptions = {
 }
 
 const DEFAULT_CHANNEL = '#_dev_logs'
+
 const DEFAULT_BASE_URL = 'https://slack.com/api/chat.postMessage'
 
 export class SlackService {
@@ -49,7 +50,7 @@ export class SlackService {
     const options = this.parseOptions(messageOptions)
     const slack = this.parseData(label, slackData, options.info, moduleName)
 
-    const enabled = TypeGuards.isBoolean(this.echoConfig.enabled) ? this.echoConfig.enabled : true
+    const enabled = TypeGuards.isBoolean(this.echoConfig.enable) ? this.echoConfig.enable : true
   
     if (!options.send || !this.api || !this.echoConfig || !enabled) return
 

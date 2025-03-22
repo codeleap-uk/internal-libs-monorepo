@@ -2,25 +2,11 @@ import { throttle } from '@codeleap/utils'
 import { useEffect } from 'react'
 import { PerformanceError } from './errors'
 import { appSettings } from '../Settings'
+import { InspectRenderOptions } from './types'
 
-export type InspectRenderOptions = {
-  noHooks?: boolean
-  logMode?: 'raw' | 'summarized'
-  throttleInterval?: number
-  maxRenders?: number
-}
-
-export type PerformanceInspector = {
-  inspectRender: (name: string, options?: InspectRenderOptions) => void
-}
+export * from './types'
 
 const renderCounter: Record<string, number> = {}
-
-const defaultInspectRenderOptions: InspectRenderOptions = {
-  noHooks: false,
-  logMode: 'summarized',
-  throttleInterval: 1000,
-}
 
 /**
   * inspectRender monitors how much time a component render per second.
@@ -31,7 +17,11 @@ const defaultInspectRenderOptions: InspectRenderOptions = {
 */
 export const inspectRender = (
   name: string,
-  options: InspectRenderOptions = defaultInspectRenderOptions,
+  options: InspectRenderOptions = {
+    noHooks: false,
+    logMode: 'summarized',
+    throttleInterval: 1000,
+  },
 ) => {
   const config = appSettings.config.Logger.performanceInspector
   
