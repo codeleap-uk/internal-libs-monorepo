@@ -2,6 +2,7 @@ import { alert } from '@codeleap/modals'
 import { useEffect, useMemo, useState } from '@codeleap/hooks'
 import { FileInputImageSource, useFileInput } from '../FileInput'
 import { SortablePhoto, SortablePhotosProps, WithId } from './types'
+import { logger } from '@codeleap/logger'
 
 export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotosProps<T>) => {
   const {
@@ -93,7 +94,7 @@ export const useSortablePhotos = <T extends SortablePhoto>(props: SortablePhotos
         multiple: isEdit ? false : props?.multiple
       })
     } catch (error) {
-      console.error('Error opening file picker:', error)
+      logger.error('Error opening file picker:', error)
     }
 
     if (files?.length <= 0) return null
