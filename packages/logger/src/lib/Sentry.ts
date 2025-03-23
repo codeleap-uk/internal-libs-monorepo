@@ -1,5 +1,5 @@
 import type { Breadcrumb, ClientOptions, SeverityLevel, Client } from '@sentry/types'
-import { appSettings } from './Settings'
+import { LoggerConfig } from '../types'
 
 const SentrySeverityMap: Record<string, SeverityLevel> = {
   debug: 'debug',
@@ -18,24 +18,22 @@ type SentryProvider = {
 
 export class SentryService {
   get provider(): SentryProvider {
-    return appSettings.config.Sentry.provider
+    return this.config.Sentry.provider
   }
 
   private get enabled() {
-    return appSettings.config.Sentry.enabled
+    return this.config.Sentry.enabled
   }
 
-  constructor() {
-    if (this.enabled) {
-      const config = appSettings.config.Sentry
-
+  constructor(private config: LoggerConfig) {
+    if (config.Sentry.enabled) {
       const initOptions: ClientOptions = {
-        dsn: config.dsn,
-        debug: config.debug,
-        beforeBreadcrumb: config.beforeBreadcrumb,
+        dsn: config.Sentry.dsn,
+        debug: config.Sentry.debug,
+        beforeBreadcrumb: config.Sentry.beforeBreadcrumb,
         integrations: [],
         enabled: this.enabled,
-        ...config.initArgs,
+        ...config.Sentry.initArgs,
       }
 
       this.provider?.init?.(initOptions)

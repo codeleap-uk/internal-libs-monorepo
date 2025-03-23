@@ -1,25 +1,27 @@
+import { LoggerConfig } from '../types'
 import { SentryService } from './Sentry'
-import { appSettings } from './Settings'
 import { SlackService } from './Slack'
-import { inspectRender } from './performance'
+import { PerformanceService } from './performance'
 
 export class Logger {
   static initialized = false
+
+  private config: LoggerConfig
 
   slack: SlackService
 
   sentry: SentryService
 
-  perf = {
-    inspectRender,
-  }
+  perf: PerformanceService
 
   private overrideConsoleMethod(args: unknown[], originalConsole: Console['log']) {
-    const ignoreLogs = appSettings.config.Logger.ignoreLogs
+    if (!Logger.initialized) return
+
+    const ignoreLogs = this.config.Logger.ignoreLogs
     const shouldIgnore = typeof args[0] === 'string' && ignoreLogs.some(ignoredWarning => args.join(' ').includes(ignoredWarning))
-    
+
     if (shouldIgnore) return
-    
+
     return originalConsole.apply(console, args)
   }
 
@@ -32,14 +34,18 @@ export class Logger {
     })
   }
 
-  initialize() {
+  initialize<T extends LoggerConfig>(config: T) {
     if (Logger.initialized) return
 
+    this.config = config
+
+    this.sentry = new SentryService(config)
+
+    this.slack = new SlackService(config)
+
+    this.perf = new PerformanceService(config)
+
     Logger.initialized = true
-
-    this.sentry = new SentryService()
-
-    this.slack = new SlackService()
   }
 
   info(...args: unknown[]) {

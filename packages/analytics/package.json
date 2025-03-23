@@ -16,6 +16,8 @@
     "build": "echo 'No build needed'"
   },
   "peerDependencies": {
+    "@codeleap/utils": "workspace:*",
+    "@codeleap/types": "workspace:*",
     "typescript": "5.5.2"
   }
 }

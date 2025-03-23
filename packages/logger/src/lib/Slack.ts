@@ -1,6 +1,6 @@
 import { inspect } from 'util'
 import { TypeGuards } from '@codeleap/types'
-import { appSettings } from './Settings'
+import { LoggerConfig } from '../types'
 
 type EchoSlack = {
   label: string
@@ -23,19 +23,19 @@ const DEFAULT_CHANNEL = '#_dev_logs'
 const DEFAULT_BASE_URL = 'https://slack.com/api/chat.postMessage'
 
 export class SlackService {
-  private get echoConfig() {
-    return appSettings.config.Slack.echo
-  } 
+  private echoConfig: LoggerConfig['Slack']['echo']
 
-  private get isDev() {
-    return appSettings.config.Environment.IsDev
-  }
+  private isDev: LoggerConfig['Environment']['IsDev']
 
-  private get appName() {
-    return appSettings.config.AppName
-  }
+  private appName: LoggerConfig['AppName']
 
   private api
+
+  constructor(private config: LoggerConfig) {
+    this.echoConfig = config.Slack.echo
+    this.isDev = config.Environment.IsDev
+    this.appName = config.AppName
+  }
 
   setApi(fetcher: any) {
     this.api = fetcher

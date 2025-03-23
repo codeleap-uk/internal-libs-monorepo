@@ -1,5 +1,5 @@
 
-export interface AppSettingsConfig {
+export type LoggerConfig = {
   AppName: string
   
   Environment: {

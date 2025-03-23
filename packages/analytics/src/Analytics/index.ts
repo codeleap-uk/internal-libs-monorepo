@@ -1,58 +1,51 @@
+import { AnyFunction, AnyRecord } from '@codeleap/types'
 import { obfuscate } from '../obfuscate'
-import { FunctionType, AnyFunction, AppSettings } from '@codeleap/types'
+import { AnalyticsFunctions, AnalyticsObject, AnalyticsOptions } from './types'
 
-export type AnalyticsObject = {
-  name: string
-  type: 'interaction' | 'event'
-  data: any
-}
+export * from './types'
 
-type IAnalyticsArgs = {
-  init(): any
-  prepareData: () => any
-  error?: (err: any) => any
-} & Record<`on${Capitalize<AnalyticsObject['type']>}`, FunctionType<[AnalyticsObject], void>>
+export class Analytics<Events extends AnyRecord> {
+  private enabled: boolean
 
-export class Analytics {
-
-  constructor(private callers: IAnalyticsArgs, private settings: AppSettings) {
-    this.callers.init()
-
-  }
-
-  private prepare() {
-    const data = this.callers.prepareData()
-
+  private prepareAnalyticsData() {
+    const data = this.options.prepareData()
     return data
   }
 
-  obfuscate(data) {
+  private obfuscateAnalyticsData(data: any) {
     return obfuscate({
       object: data,
-      keys: this?.settings?.Logger?.Obfuscate?.keys || [],
-      values: this?.settings?.Logger?.Obfuscate?.values || [],
+      keys: this.options.obfuscateKeys || [],
+      values: this.options.obfuscateValues || [],
     })
   }
 
-  event(name: string, data = {}) {
-    this.handle(name, data, 'event', this.callers.onEvent)
+  constructor(
+    private options: AnalyticsOptions,
+    private functions: AnalyticsFunctions
+  ) {
+    this.enabled = options.enabled
+    
+    if (options.enabled) {
+      this.options.init()
+    }
   }
 
-  interaction(name: string, data = {}) {
-    this.handle(name, data, 'interaction', this.callers.onInteraction)
-
+  event<T extends keyof Events>(name: T, data: Events[T] = {} as Events[T]) {
+    this.handle(name, data, 'event', this.functions.onEvent)
   }
 
-  onError(cb) {
-    this.callers.error = cb
+  interaction<T extends keyof Events>(name: T, data: Events[T] = {} as Events[T]) {
+    this.handle(name, data, 'interaction', this.functions.onInteraction)
   }
 
-  private handle(name: string, data: any, type: AnalyticsObject['type'], fn: AnyFunction) {
+  private handle(name: keyof Events, data: any, type: AnalyticsObject['type'], fn: AnyFunction) {
+    if (!this.enabled) return
+
     try {
-
-      const obfuscated = this.obfuscate({
+      const obfuscated = this.obfuscateAnalyticsData({
         ...data,
-        ...this.prepare(),
+        ...this.prepareAnalyticsData(),
       })
 
       fn({
@@ -61,7 +54,7 @@ export class Analytics {
         data: obfuscated,
       })
     } catch (e) {
-      this.callers.error(e)
+      this.functions.onError(e)
     }
   }
 }
