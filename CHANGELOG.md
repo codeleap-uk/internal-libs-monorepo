@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.0.13](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.0.12...v5.0.13) (2025-03-24)
+
+
+### Bug Fixes
+
+* **cli:** path cliDir ([543a466](https://github.com/codeleap-uk/internal-libs-monorepo/commit/543a466289fcc5464a3bc49d3fdb4a86c01b833c))
+
 ### [5.0.12](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.0.11...v5.0.12) (2025-03-24)
 
 ### [5.0.11](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.0.10...v5.0.11) (2025-03-21)
