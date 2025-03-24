@@ -16,7 +16,9 @@ process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(cwd, 'gcp-automation.json
 
 const isMonorepo = fs.existsSync(path.resolve(__dirname, '../../../apps'))
 
-export const cliDir = __dirname + (isMonorepo ? '../../../../apps/mobile/' : './')
+const projectRoot = path.resolve(__dirname, '../../../../')
+
+export const cliDir = isMonorepo ? path.join(projectRoot, 'apps/mobile/') : projectRoot
 
 export const cliConfigPath = path.resolve(cliDir, 'codeleapcli.config.json')
 
