@@ -9,6 +9,7 @@ import { syncIconsCommand } from './commands/syncIcons'
 import { convertorWebpCommand } from './commands/convertorWebp'
 import { configureThemeCommand } from './commands/configureTheme'
 import { linguiTranslateCommand } from './commands/linguiTranslate'
+import { configureSplashCommand } from './commands/configureSplash'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
@@ -25,6 +26,7 @@ cli({
     convertorWebpCommand,
     configureThemeCommand,
     linguiTranslateCommand,
+    configureSplashCommand,
   ],
   version: packageJson.version,
 

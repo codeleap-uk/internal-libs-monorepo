@@ -30,4 +30,10 @@ export type CodeleapCLIUserConfig = {
     localesDir: string
     baseLanguage: string
   }
+
+  splash?: {
+    assetsDir: string
+    splashImagePath: string
+    iosAppName: string
+  }
 }
