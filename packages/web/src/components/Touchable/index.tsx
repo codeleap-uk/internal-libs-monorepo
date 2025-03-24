@@ -1,5 +1,4 @@
 import { onMount } from '@codeleap/hooks'
-import { useGlobalContext } from '@codeleap/hooks'
 import { TypeGuards } from '@codeleap/types'
 import React, { ComponentType, ElementType, forwardRef, HTMLAttributes } from 'react'
 import { stopPropagation } from '../../lib'
@@ -8,6 +7,7 @@ import { TouchableProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { logger } from '@codeleap/logger'
 
 export * from './styles'
 export * from './types'
@@ -40,8 +40,6 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
 
   const pressed = React.useRef(!!leadingDebounce)
 
-  const { logger } = useGlobalContext()
-
   onMount(() => {
     if (!!leadingDebounce && !!debounce) {
       setTimeout(() => {
@@ -65,16 +63,16 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
       if (event && (event?.type !== 'click' && event?.keyCode !== 13 && event?.key !== 'Enter')) return null
 
       logger.log(
-        `<${debugComponent || 'Touchable'}/> pressed`,
+        `<${debugComponent || 'Touchable'}/> pressed:`,
         { debugName, debugComponent },
-        'User interaction',
       )
-      if (analyticsEnabled) {
-        const name = analyticsName || debugName
-        if (!!name?.trim?.()) {
-          logger.analytics?.interaction(name, analyticsData)
-        }
-      }
+
+      // if (analyticsEnabled) {
+      //   const name = analyticsName || debugName
+      //   if (!!name?.trim?.()) {
+      //     logger.analytics?.interaction(name, analyticsData)
+      //   }
+      // }
 
       if (TypeGuards.isFunction(onClick)) onClick?.(event)
       onPress?.()
