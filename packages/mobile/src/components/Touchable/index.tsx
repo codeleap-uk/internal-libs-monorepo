@@ -10,6 +10,7 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 import { TouchableProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { logger } from '@codeleap/logger'
 
 export * from './styles'
 export * from './types'
@@ -54,20 +55,21 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
     if (!onPress) return
 
     const _onPress = () => {
-      // logger.log(
-      //   `<${debugComponent || 'Touchable'}/>  pressed`,
-      //   debugName,
-      //   'User interaction',
-      // )
+      logger.log(
+        `<${debugComponent || 'Touchable'}/> pressed:`,
+        debugName,
+      )
+
       if (dismissKeyboard) {
         Keyboard.dismiss()
       }
-      if (analyticsEnabled) {
-        const name = analyticsName || debugName
-        if (!!name?.trim?.()) {
-          // logger.analytics?.interaction(name, analyticsData)
-        }
-      }
+      
+      // if (analyticsEnabled) {
+      //   const name = analyticsName || debugName
+      //   if (!!name?.trim?.()) {
+      //     logger.analytics?.interaction(name, analyticsData)
+      //   }
+      // }
 
       onPress()
     }
