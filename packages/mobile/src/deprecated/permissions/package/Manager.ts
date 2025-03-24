@@ -1,4 +1,3 @@
-import { Logger } from '@codeleap/logger'
 import { Permission } from './Permission'
 import * as PermissionTypes from './types'
 
@@ -24,7 +23,7 @@ export class PermissionManager<
     [Property in keyof T as Uppercase<string & Property>]: Property
   }
 
-  logger: Logger
+  logger
 
   constructor(perms: T, options?: PermissionTypes.PermissionManagerOptions) {
     this.params = perms

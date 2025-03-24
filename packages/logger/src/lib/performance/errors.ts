@@ -1,4 +1,4 @@
-import { InspectRenderOptions } from '.'
+import { InspectRenderOptions } from './types'
 
 type ErrorArgs = InspectRenderOptions & {
   name: string

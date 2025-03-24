@@ -1,7 +1,6 @@
 import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { onMount, useComponentTestId } from '@codeleap/hooks'
-import { useGlobalContext } from '@codeleap/hooks'
 import { Pressable, StyleSheet, View as RNView, Insets, Platform } from 'react-native'
 import { View } from '../View'
 import { TouchableFeedbackConfig, usePressableFeedback } from '../../utils'
@@ -11,6 +10,7 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 import { TouchableProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { logger } from '@codeleap/logger'
 
 export * from './styles'
 export * from './types'
@@ -49,8 +49,6 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
 
   const styles = useStylesFor(Touchable.styleRegistryName, style)
 
-  const { logger } = useGlobalContext()
-
   const testId = useComponentTestId(Touchable, touchableProps, ['style', 'children', 'debounce'])
 
   const press = () => {
@@ -58,19 +56,20 @@ export const Touchable = forwardRef<RNView, TouchableProps>((touchableProps, ref
 
     const _onPress = () => {
       logger.log(
-        `<${debugComponent || 'Touchable'}/>  pressed`,
+        `<${debugComponent || 'Touchable'}/> pressed:`,
         debugName,
-        'User interaction',
       )
+
       if (dismissKeyboard) {
         Keyboard.dismiss()
       }
-      if (analyticsEnabled) {
-        const name = analyticsName || debugName
-        if (!!name?.trim?.()) {
-          logger.analytics?.interaction(name, analyticsData)
-        }
-      }
+      
+      // if (analyticsEnabled) {
+      //   const name = analyticsName || debugName
+      //   if (!!name?.trim?.()) {
+      //     logger.analytics?.interaction(name, analyticsData)
+      //   }
+      // }
 
       onPress()
     }

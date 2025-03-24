@@ -59,7 +59,6 @@ export class ModalFlow<T extends ModalArray<any> = [], ModalParams = ModalFlowMo
   }
 
   get hasPendingRequest() {
-    console.log(this.resolve, this.reject)
     return !!this.resolve && !!this.reject
   }
 
@@ -119,7 +118,6 @@ export class ModalFlow<T extends ModalArray<any> = [], ModalParams = ModalFlowMo
   }
 
   request(params?: ModalParams, force = false) {
-    console.log(this.resolve, this.reject)
     if (this.hasPendingRequest && !force) {
       return Promise.reject(new Error('This flow already has a pending request'))
     }

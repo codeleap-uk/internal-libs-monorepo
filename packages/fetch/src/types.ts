@@ -1,5 +1,4 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import { Logger } from '@codeleap/logger'
 import { APIError } from './APIError'
 
 export type FetchFailure =
@@ -34,7 +33,7 @@ export type ExtraProperties = {
   rejectOnCancel?: boolean
   duplicateBehavior?: 'cancelPrevious' | 'maintainPrevious'
   multipart?: MultipartConfig | boolean
-  logger?: Logger
+  logger?: any
   debug?: boolean
   automaticMultipartParsing?: boolean
   multipartParser?: (body:any) => FormData | Promise<FormData>

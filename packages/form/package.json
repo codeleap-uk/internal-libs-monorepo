@@ -22,6 +22,7 @@
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "@codeleap/store": "workspace:*",
+    "@codeleap/logger": "workspace:*",
     "zod": "*",
     "react": "18.2.0",
     "typescript": "5.5.2",

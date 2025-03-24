@@ -20,6 +20,7 @@
   "peerDependencies": {
     "@codeleap/store": "workspace:*",
     "@codeleap/types": "workspace:*",
+    "@codeleap/logger": "workspace:*",
     "typescript": "5.5.2"
   }
 }

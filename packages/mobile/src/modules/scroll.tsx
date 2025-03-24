@@ -1,3 +1,4 @@
+import { logger } from '@codeleap/logger'
 import React, { MutableRefObject, useCallback, useContext, useImperativeHandle, useRef } from 'react'
 import { NativeScrollEvent, NativeSyntheticEvent, ScrollView, ScrollViewProps } from "react-native"
 
@@ -21,7 +22,7 @@ type ScrollContextValue = {
 
 const noOpScrollMethods = Object.fromEntries(
   scrollProperties.map(p => [p, () => {
-    console.warn(`"${p}" was called from a ScrollProvider ref without a bound scrollable component. This does not cause errors but may impact user experience and indicate an unhandled edge case in calling code`)
+    logger.warn(`"${p}" was called from a ScrollProvider ref without a bound scrollable component. This does not cause errors but may impact user experience and indicate an unhandled edge case in calling code`)
   }])
 )
 
@@ -49,7 +50,6 @@ export const useScrollPubSub = (ref: MutableRefObject<Omit<Scrollable,'subscribe
 
   useImperativeHandle(augmentedRef, () => ({
     scrollTo(...args){
-      console.log(ref.current)
       ref?.current.scrollTo(...args)
     },
     subscribe(e, cb){

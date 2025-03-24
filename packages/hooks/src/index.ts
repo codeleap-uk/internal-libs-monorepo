@@ -32,7 +32,6 @@ export * from './useUnmount'
 export * from './useSearch'
 export * from './usePartialState'
 export * from './useIsClient'
-export * from './GlobalContext'
 export * from './useComponentTestId'
 
 export {

@@ -2,6 +2,7 @@ import { GlobalState, globalState } from '@codeleap/store'
 import { PermissionOptions } from './types'
 import { PermissionConfig, PermissionStatus } from './globals'
 import { TypeGuards } from '@codeleap/types'
+import { logger } from '@codeleap/logger'
 
 export class Permission {
   /** The name of the permission. */
@@ -65,7 +66,7 @@ export class Permission {
 
   private log(msg: string, obj?: any) {
     if (!Permission.logsEnabled) return
-    console.log(`[Permissions] ${this.name} -> ${msg}`, obj)
+    logger.log(`(Permission) ${this.name} -> ${msg}`, obj)
   }
 
   /**
