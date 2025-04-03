@@ -1,67 +1,52 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { TypeGuards } from '@codeleap/types'
-import dayjs from 'dayjs'
-// @ts-ignore
-import { Calendar as RNCalendar, CalendarProps as RNCalendarProps, DateData } from 'react-native-calendars'
-import { View, ViewProps } from '../View'
-import { CalendarComposition } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, StyledProp } from '@codeleap/styles'
+import { Calendar as RNCalendar, DateData } from 'react-native-calendars'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { CalendarProps } from './types'
+import dayjs from 'dayjs'
 
-export type CalendarProps =
-  Omit<ViewProps, 'style'> &
-  {
-    onValueChange?: (date: Date | string) => any
-    value?: Date | string
-    calendarProps?: RNCalendarProps
-    style?: StyledProp<CalendarComposition>
-  }
-
+export * from './styles'
 export * from './types'
 
 export const Calendar = (props: CalendarProps) => {
   const {
     style,
-    calendarProps,
     value,
     onValueChange,
-    ...viewProps
+    ...calendarProps
   } = props
 
   const styles = useStylesFor(Calendar.styleRegistryName, style)
 
-  const isDateObject = TypeGuards.isInstance(value, Date)
-  const stringValue: string = isDateObject ? dayjs(value).format('YYYY/MM/DD') : value
+  const isDateValue = TypeGuards.isInstance(value, Date)
+  const stringValue = isDateValue ? dayjs(value).format('YYYY-MM-DD') : value ?? ''
 
-  function handleChange(date: DateData) {
-    if (!onValueChange) return
-    if (isDateObject) {
-      onValueChange(new Date(date.timestamp))
-    } else {
-      onValueChange(date.dateString)
-    }
-  }
+  const onChange = useCallback((date: DateData) => {
+    const newValue = isDateValue ? dayjs(date.dateString).toDate() : date.dateString
+    onValueChange?.(newValue)
+  }, [onValueChange])
 
-  return <View style={styles?.wrapper} {...viewProps}>
+  return (
     <RNCalendar
-      onDayPress={handleChange}
-      current={new Date(value).toISOString()}
+      onDayPress={onChange}
+      current={stringValue}
       monthFormat={'MMMM yyyy'}
-      markedDates={{
-        [stringValue]: { selected: true },
-      }}
-      theme={{
-        ...styles?.theme,
-        stylesheet: styles,
-      }}
       {...calendarProps}
+      markedDates={{ [stringValue]: { selected: true }, ...calendarProps?.markedDates }}
+      style={styles?.wrapper}
+      headerStyle={styles?.header}
+      theme={{
+        ...styles?.calendar,
+        ...calendarProps?.theme,
+      }}
     />
-  </View>
+  )
 }
 
 Calendar.styleRegistryName = 'Calendar'
-Calendar.elements = ['wrapper', 'theme', 'calendar', 'day', 'agenda', 'expandable', 'event', 'timeLabel', 'textDayStyle', 'dotStyle', 'arrowStyle', 'contentStyle', 'timelineContainer', 'line', 'verticalLine', 'nowIndicator']
+Calendar.elements = ['wrapper', 'header', 'calendar']
 Calendar.rootElement = 'wrapper'
 
 Calendar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
