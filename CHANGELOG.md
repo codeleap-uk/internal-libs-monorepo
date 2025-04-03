@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v1.0.0-60...v5.1.0) (2025-04-03)
+
+
+### Features
+
+* **mobile:** CalendarInput component ([18c6c11](https://github.com/codeleap-uk/internal-libs-monorepo/commit/18c6c11573651f436dcec135b55c4ec3a2c78a4a))
+
 ### [5.0.14](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.0.13...v5.0.14) (2025-03-24)
 
 ### [5.0.13](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.0.12...v5.0.13) (2025-03-24)
