@@ -1,7 +1,7 @@
 import { PropsOf, StylesOf } from '@codeleap/types'
 import { InputBaseComposition } from './styles'
 import { ActionIcon } from '../ActionIcon'
-import { View } from 'react-native'
+import { View, ViewProps } from 'react-native'
 
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
@@ -27,4 +27,5 @@ export type InputBaseProps = React.PropsWithChildren<{
   hideErrorMessage?: boolean
   hasValue?: boolean
   ref?: React.Ref<View>
+  onLayout?: ViewProps['onLayout']
 }>

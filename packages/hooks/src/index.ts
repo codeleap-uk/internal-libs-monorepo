@@ -33,6 +33,7 @@ export * from './useSearch'
 export * from './usePartialState'
 export * from './useIsClient'
 export * from './useComponentTestId'
+export * from './useId'
 
 export {
   useEffect,

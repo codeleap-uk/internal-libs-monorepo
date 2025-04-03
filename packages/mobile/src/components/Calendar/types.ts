@@ -5,7 +5,7 @@ import { CalendarComposition } from './styles'
 export type CalendarProps =
   Omit<RNCalendarProps, 'style'> &
   {
-    onValueChange?: (date: Date | string) => void
-    value?: Date | string
+    onValueChange: (date: Date | string) => void
+    value: Date | string
     style?: StyledProp<CalendarComposition>
   }

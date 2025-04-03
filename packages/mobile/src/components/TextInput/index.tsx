@@ -41,6 +41,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
     selectionStart,
     forceError,
     multiline,
+    onLayout,
     ...textInputProps
   } = others
 
@@ -73,7 +74,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
   const partialStyles = useInputBasePartialStyles(styles, ['placeholder', 'selection'], {
     disabled: isDisabled,
     error: !!hasError,
-    focus: isFocused,
+    focus: isFocused || textInputProps?.focused,
   })
 
   const visibilityToggleProps = visibilityToggle ? {
@@ -102,6 +103,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
 
   return <InputBase
     {...inputBaseProps}
+    onLayout={onLayout}
     ref={wrapperRef}
     innerWrapper={isPressable ? Touchable : undefined}
     debugName={debugName}
@@ -121,7 +123,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       dismissKeyboard: false,
     }}
     rightIcon={rightIcon}
-    focused={isFocused}
+    focused={isFocused || textInputProps?.focused}
     hasValue={hasValue}
   >
     <InputElement
@@ -142,7 +144,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       style={[
         styles?.input,
         multiline && styles['input:multiline'],
-        isFocused && styles['input:focused'],
+        (isFocused || textInputProps?.focused) && styles['input:focused'],
         hasError && styles['input:error'],
         isDisabled && styles['input:disabled'],
         hasMultipleLines && styles['input:hasMultipleLines'],

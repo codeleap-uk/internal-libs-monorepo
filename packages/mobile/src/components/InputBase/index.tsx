@@ -10,6 +10,8 @@ import RNAnimated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { View as RNView } from 'react-native'
 import { StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
+export { useInputBase } from './useInputBase'
+
 export * from './styles'
 export * from './utils'
 export * from './types'
