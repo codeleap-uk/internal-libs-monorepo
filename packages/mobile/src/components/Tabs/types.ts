@@ -9,6 +9,7 @@ export type TabsContextProps = {
   onValueChange?: (newValue: string) => void
   children?: ReactNode
   keepMounted?: boolean
+  withWrapper?: boolean
 }
 
 export type TabsProps =

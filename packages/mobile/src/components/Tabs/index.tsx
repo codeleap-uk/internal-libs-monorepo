@@ -21,6 +21,7 @@ export const Tabs = (props: TabsProps) => {
     onValueChange,
     defaultValue,
     keepMounted,
+    withWrapper,
     children,
     ...rest
   } = {
@@ -30,7 +31,7 @@ export const Tabs = (props: TabsProps) => {
 
   const styles = useStylesFor(Tabs.styleRegistryName, style)
 
-  return <View {...rest} style={styles?.wrapper}>
+  return (
     <TabsProvider
       value={value}
       onValueChange={onValueChange}
@@ -38,9 +39,13 @@ export const Tabs = (props: TabsProps) => {
       styles={styles}
       keepMounted={keepMounted}
     >
-      {children}
+      {withWrapper ? (
+        <View {...rest} style={styles?.wrapper}>
+          {children}
+        </View>
+      ) : <>{children}</>}
     </TabsProvider>
-  </View>
+  )
 }
 
 Tabs.Tab = Tab
@@ -61,6 +66,7 @@ Tabs.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 
 Tabs.defaultProps = {
   keepMounted: true,
+  withWrapper: true,
 } as Partial<TabsProps>
 
 MobileStyleRegistry.registerComponent(Tabs)

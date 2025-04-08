@@ -124,6 +124,7 @@ export const CalendarInput = (props: CalendarInputProps) => {
             style={compositionStyles.calendar}
             value={inputValue}
             onValueChange={onInputValueChange}
+            parseToDate
           />
         </Animated.View>
       )}

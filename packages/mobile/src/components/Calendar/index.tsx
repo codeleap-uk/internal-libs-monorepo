@@ -15,6 +15,7 @@ export const Calendar = (props: CalendarProps) => {
     style,
     value,
     onValueChange,
+    parseToDate,
     ...calendarProps
   } = props
 
@@ -24,7 +25,7 @@ export const Calendar = (props: CalendarProps) => {
   const stringValue = isDateValue ? dayjs(value).format('YYYY-MM-DD') : value ?? ''
 
   const onChange = useCallback((date: DateData) => {
-    const newValue = isDateValue ? dayjs(date.dateString).toDate() : date.dateString
+    const newValue = isDateValue || parseToDate ? dayjs(date.dateString).toDate() : date.dateString
     onValueChange?.(newValue)
   }, [onValueChange])
 
@@ -52,5 +53,9 @@ Calendar.rootElement = 'wrapper'
 Calendar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Calendar as (props: StyledComponentProps<CalendarProps, typeof styles>) => IJSX
 }
+
+Calendar.defaultProps = {
+  parseToDate: false,
+} as Partial<CalendarProps>
 
 MobileStyleRegistry.registerComponent(Calendar)

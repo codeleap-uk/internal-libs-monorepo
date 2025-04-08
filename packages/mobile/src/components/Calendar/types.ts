@@ -8,4 +8,5 @@ export type CalendarProps =
     onValueChange: (date: Date | string) => void
     value: Date | string
     style?: StyledProp<CalendarComposition>
+    parseToDate?: boolean
   }
