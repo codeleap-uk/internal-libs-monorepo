@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/utils",
-  "version": "5.1.3",
+  "version": "5.1.4",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
