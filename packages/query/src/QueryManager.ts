@@ -564,7 +564,7 @@ export class QueryManager<
         return this.itemMap[itemId]
       },
       queryFn: () => {
-        return this.options.retrieveItem(itemId)
+        return this.options.retrieveItem(itemId, options.params)
       },
       select,
 
