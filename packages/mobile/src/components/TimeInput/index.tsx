@@ -1,57 +1,57 @@
 import React, { useState } from 'react'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
-import { MobileStyleRegistry } from '../../Registry'
-import { useStylesFor } from '../../hooks'
-import { CalendarInputProps } from './types'
-import { View } from '../View'
-import { Calendar } from '../Calendar'
-import { TextInput } from '../TextInput'
+import { TimeInputProps } from './types'
 import dayjs from 'dayjs'
 import Animated, { FadeOut, FadeIn } from 'react-native-reanimated'
-import { useInputBase } from '../InputBase'
 import { fields } from '@codeleap/form'
+import DatePicker from 'react-native-date-picker'
+import { useStylesFor } from '../../hooks'
+import { useInputBase } from '../InputBase'
+import { View } from '../View'
+import { TextInput } from '../TextInput'
+import { MobileStyleRegistry } from '../../Registry'
 import { useInputOverlay } from '../InputBase/useInputOverlay'
 
 export * from './styles'
 export * from './types'
 
-export const CalendarInput = (props: CalendarInputProps) => {
+export const TimeInput = (props: TimeInputProps) => {
   const {
     style,
     value,
     onValueChange,
     disabled,
     gap,
-    calendarPosition,
+    timePickerPosition,
     rightIcon,
     leftIcon,
-    autoClosePeersCalendars,
+    autoClosePeersOverlays,
     field,
     format,
     overlay,
     ...textInputProps
   } = {
-    ...CalendarInput.defaultProps,
+    ...TimeInput.defaultProps,
     ...props
   }
 
-  const styles = useStylesFor(CalendarInput.styleRegistryName, style)
+  const styles = useStylesFor(TimeInput.styleRegistryName, style)
 
-  const compositionStyles = useCompositionStyles(['calendar', 'input'], styles)
+  const compositionStyles = useCompositionStyles(['input'], styles)
 
   const {
     inputValue,
     onInputValueChange,
-  } = useInputBase<Date | string>(field, fields.date as any, { value, onValueChange })
+  } = useInputBase<Date>(field, fields.date as any, { value, onValueChange })
 
   const [inputHeight, setInputHeight] = useState(0)
 
-  const [isOpen, toggle] = useInputOverlay(autoClosePeersCalendars)
+  const [isOpen, toggle] = useInputOverlay(autoClosePeersOverlays)
 
   return (
     <View style={[styles.wrapper, { position: 'relative' }]}>
       <TextInput
-        placeholder='Select Date'
+        placeholder='Select a time'
         disabled={disabled}
         {...textInputProps}
         style={compositionStyles.input}
@@ -80,38 +80,39 @@ export const CalendarInput = (props: CalendarInputProps) => {
           style={overlay ? {
             position: 'absolute',
             zIndex: 1,
-            [calendarPosition]: 0,
+            [timePickerPosition]: 0,
             top: inputHeight + gap,
           } : {
             marginTop: gap,
           }}
         >
-          <Calendar
-            style={compositionStyles.calendar}
-            value={inputValue}
-            onValueChange={onInputValueChange}
-            parseToDate
-          />
+          <View style={styles.timePicker}>
+            <DatePicker
+              mode='time'
+              onDateChange={onInputValueChange}
+              date={inputValue ?? new Date()}
+            />
+          </View>
         </Animated.View>
       )}
     </View>
   )
 }
 
-CalendarInput.styleRegistryName = 'CalendarInput'
-CalendarInput.elements = ['wrapper', 'calendar', 'input']
-CalendarInput.rootElement = 'wrapper'
+TimeInput.styleRegistryName = 'TimeInput'
+TimeInput.elements = ['wrapper', 'timePicker', 'input']
+TimeInput.rootElement = 'wrapper'
 
-CalendarInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return CalendarInput as (props: StyledComponentProps<CalendarInputProps, typeof styles>) => IJSX
+TimeInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return TimeInput as (props: StyledComponentProps<TimeInputProps, typeof styles>) => IJSX
 }
 
-CalendarInput.defaultProps = {
+TimeInput.defaultProps = {
   gap: 8,
-  calendarPosition: 'left',
+  timerPickerPosition: 'left',
   autoClosePeersCalendars: false,
-  format: 'DD/MM/YYYY',
+  format: 'hh:mm A',
   overlay: true,
-} as Partial<CalendarInputProps>
+} as Partial<TimeInputProps>
 
-MobileStyleRegistry.registerComponent(CalendarInput)
+MobileStyleRegistry.registerComponent(TimeInput)
