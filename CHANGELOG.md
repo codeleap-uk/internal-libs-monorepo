@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.2.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.1.4...v5.2.0) (2025-04-29)
+
+
+### Features
+
+* **mobile:** TimeInput component ([ea76b4d](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ea76b4dcf795d5b1c3ede195b323434f8e030e81))
+
 ### [5.1.4](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.1.3...v5.1.4) (2025-04-08)
 
 ### [5.1.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.1.2...v5.1.3) (2025-04-08)
