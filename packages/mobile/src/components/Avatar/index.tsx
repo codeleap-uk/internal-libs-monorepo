@@ -30,6 +30,8 @@ export const Avatar = (props: AvatarProps) => {
     noFeedback,
     badge,
     badgeProps = {},
+    imageProps,
+    badgeIconTouchProps,
     style,
     ...viewProps
   } = {
@@ -54,7 +56,7 @@ export const Avatar = (props: AvatarProps) => {
   }, [name, firstNameOnly])
 
   const renderContent = () => {
-    if (hasImage) return <Image source={image} style={styles.image} />
+    if (hasImage) return <Image source={image} {...imageProps} style={styles.image} />
     if (icon) return <Icon name={icon} style={styles.icon} />
     return <Text text={text || initials} style={styles.initials} />
   }
@@ -88,10 +90,11 @@ export const Avatar = (props: AvatarProps) => {
 
       {badgeIcon ? (
         <Touchable
-          debugName={`AvatarBadge:${debugName}`}
-          style={styles.badgeIconWrapper}
           onPress={() => onPress?.()}
           noFeedback
+          {...badgeIconTouchProps}
+          debugName={`AvatarBadge:${debugName}`}
+          style={styles.badgeIconWrapper}
         >
           <Icon name={badgeIcon} style={styles.badgeIcon} />
         </Touchable>
