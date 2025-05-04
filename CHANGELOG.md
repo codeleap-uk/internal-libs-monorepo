@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.2.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.1...v5.2.2) (2025-05-04)
+
+
+### Bug Fixes
+
+* **form:** setValues ([3f3928c](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3f3928c0cee8148b600d2096da333cd16b74e05a))
+
 ### [5.2.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.0...v5.2.1) (2025-05-02)
 
 ## [5.2.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.1.4...v5.2.0) (2025-04-29)
