@@ -83,7 +83,8 @@ class Form<T extends FormDef> {
   setValues(values: Partial<FormValues<T>>) {
     this.iterFields(([name, field]) => {
       const value = values?.[name]
-      if (value) field.setValue(value)
+      if (field._type === 'BOOLEAN' && TypeGuards.isBoolean(value)) field.setValue(value)
+      else if (value) field.setValue(value)
     })
   }
 
