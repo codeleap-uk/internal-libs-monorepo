@@ -29,6 +29,7 @@ export const TimeInput = (props: TimeInputProps) => {
     field,
     format,
     overlay,
+    timePickerProps,
     ...textInputProps
   } = {
     ...TimeInput.defaultProps,
@@ -89,6 +90,8 @@ export const TimeInput = (props: TimeInputProps) => {
           <View style={styles.timePicker}>
             <DatePicker
               mode='time'
+              theme='light'
+              {...timePickerProps}
               onDateChange={onInputValueChange}
               date={inputValue ?? new Date()}
             />

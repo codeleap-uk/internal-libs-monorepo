@@ -2,6 +2,7 @@ import { StyledProp } from '@codeleap/styles'
 import { TimeInputComposition } from './styles'
 import { DateField } from '@codeleap/form'
 import { TextInputProps } from '../TextInput'
+import { DatePickerProps } from 'react-native-date-picker'
 
 export type TimeInputProps =
   Omit<TextInputProps, 'value' | 'onValueChange' | 'field' | 'style'> &
@@ -14,6 +15,7 @@ export type TimeInputProps =
     field?: DateField<any>
     format?: string
     overlay?: boolean
+    timePickerProps?: Partial<DatePickerProps>
 
     /**
       * Defines the position where the calendar will be anchored relative to the input.
