@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.2.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.2...v5.2.3) (2025-05-05)
+
+
+### Bug Fixes
+
+* **mobile:** time theme ([e64c736](https://github.com/codeleap-uk/internal-libs-monorepo/commit/e64c7361de6835aff7ca05313e70275238acccab))
+
 ### [5.2.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.1...v5.2.2) (2025-05-04)
 
 
