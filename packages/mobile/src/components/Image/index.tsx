@@ -24,6 +24,7 @@ export const Image = React.memo((props: ImageProps) => {
     source,
     withLoadingOverlay,
     maintainAspectRatio,
+    touchProps,
     ...imageProps
   } = {
     ...Image.defaultProps,
@@ -50,6 +51,7 @@ export const Image = React.memo((props: ImageProps) => {
     debugName: `Press spotlight image ${props.source}`,
     style: styles.touchable,
     android_ripple: null,
+    ...touchProps,
   }
 
   const aspectRatioStyle = React.useMemo(() => {
