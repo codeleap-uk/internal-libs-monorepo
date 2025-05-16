@@ -1,5 +1,6 @@
 import { FlatList, FlatListProps } from 'react-native'
 import { useTabContext } from './Context'
+import React from 'react'
 
 type TabListProps = Omit<FlatListProps<any>, 'data' | 'renderItem'>
 

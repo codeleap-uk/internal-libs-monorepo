@@ -8,6 +8,7 @@ import { TabsProps } from './types'
 import { IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import React from 'react'
 
 export { useTabContext } from './Context'
 

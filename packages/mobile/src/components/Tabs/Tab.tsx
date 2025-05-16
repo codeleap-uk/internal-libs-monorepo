@@ -5,6 +5,7 @@ import { TabPropsWithCtx } from './types'
 import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
 import { Text } from '../Text'
+import React from 'react'
 
 type TabProps = {
   value: string

@@ -4,6 +4,7 @@ import { memoBy } from '@codeleap/utils'
 import { TabPropsWithCtx } from './types'
 import { View, ViewProps } from '../View'
 import { ICSS } from '@codeleap/styles'
+import React from 'react'
 
 type PanelProps = Omit<ViewProps, 'style'> & {
   value: string
