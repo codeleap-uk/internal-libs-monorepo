@@ -63,7 +63,7 @@ export const Tab = (props: TabProps) => {
   return <TabMemoized
     {...props}
     active={active}
-    setValue={setValue}
+    setValue={(value) => setValue(value, null)}
     styles={styles}
   />
 }

@@ -1,17 +1,25 @@
-import { ScrollView, ScrollViewProps } from 'react-native'
+import { FlatList, FlatListProps } from 'react-native'
 import { useTabContext } from './Context'
 
-type TabListProps = ScrollViewProps
+type TabListProps = Omit<FlatListProps<any>, 'data' | 'renderItem'>
 
 export const TabList = (props: TabListProps) => {
-  const { styles } = useTabContext()
+  const { children, ...flatListProps } = props
+
+  const { styles, flatListRef } = useTabContext()
+
+  const childrenArray = React.Children.toArray(children)
 
   return (
-    <ScrollView
+    <FlatList
       horizontal
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
-      {...props}
+      {...flatListProps}
+      ref={flatListRef}
+      data={childrenArray}
+      renderItem={({ item }) => item}
+      keyExtractor={(_, index) => `tab-${index}`}
       style={styles?.tabList}
       contentContainerStyle={styles?.tabListContainer}
     />
