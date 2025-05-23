@@ -15,6 +15,7 @@ export type CalendarInputProps =
     field?: DateField<any>
     format?: string
     overlay?: boolean
+    calendarProps?: Partial<CalendarProps>
 
     /**
       * Defines the position where the calendar will be anchored relative to the input.
