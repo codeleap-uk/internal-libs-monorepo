@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.3.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.6...v5.3.0) (2025-05-23)
+
+
+### Features
+
+* **mobile:** calendar range ([902fe6b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/902fe6bb1ae19e4bf7a324ccd4f51a5ac6c45d77))
+
 ### [5.2.6](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.5...v5.2.6) (2025-05-16)
 
 ### [5.2.5](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.2.4...v5.2.5) (2025-05-16)
