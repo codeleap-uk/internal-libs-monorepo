@@ -4,10 +4,10 @@ import { Text, View } from '../components'
 import { DatePickerProps, DayComponentProps } from './types'
 import ReactDatePicker from 'react-datepicker'
 import { Header, OuterInput } from './components'
-import { format, isBefore, isAfter } from 'date-fns'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import dayjs from 'dayjs'
 
 export * from './styles'
 export * from './types'
@@ -53,14 +53,14 @@ export function DatePicker(props: DatePickerProps) {
       ...dayProps,
     }
 
-    const date = format(new Date(param?.date), 'dd MMM yyyy')
-    const dateValue = value ? format(new Date(value), 'dd MMM yyyy') : ''
+    const date = dayjs(param?.date).format('DD MMM YYYY');
+    const dateValue = value ? dayjs(value).format('DD MMM YYYY') : ''
 
     const isSelected = date === dateValue
 
     const isDisabled = [
-      isBefore(param?.date, minDate),
-      isAfter(param?.date, maxDate),
+      dayjs(param?.date).isBefore(dayjs(minDate)),
+      dayjs(param?.date).isAfter(dayjs(maxDate))
     ].some(Boolean)
 
     const getStyles = (key) => {

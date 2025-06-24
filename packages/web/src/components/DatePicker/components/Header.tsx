@@ -1,8 +1,8 @@
 import { TypeGuards } from '@codeleap/types'
 import { ActionIcon, Text, View } from '../../components'
 import { DatePickerArrowProps, DatePickerHeaderComponent } from '../types'
-import { format, getYear } from 'date-fns'
 import { AppIcon, useCompositionStyles } from '@codeleap/styles'
+import dayjs from 'dayjs'
 
 export const ArrowLabel = ({ name, direction, ...props }: DatePickerArrowProps) => {
   return (
@@ -30,8 +30,8 @@ export const Header = (props: DatePickerHeaderComponent) => {
     formatHeaderTitle,
   } = props
 
-  const month = format(date, 'MMMM')
-  const year = getYear(date)
+  const month = dayjs(date).format('MMMM')
+  const year = dayjs(date).year()
 
   const title = TypeGuards.isFunction(formatHeaderTitle)
     ? formatHeaderTitle(date)
