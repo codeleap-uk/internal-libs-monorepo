@@ -1,7 +1,7 @@
 import { AnyRef, MobileInputFile } from '@codeleap/types'
 import { DocumentPickerOptions } from 'react-native-document-picker'
 import { Options } from 'react-native-image-crop-picker'
-import { OSAlert } from '../../utils'
+import { AlertOptions } from '@codeleap/modals'
 
 export type FileInputImageSource = 'camera' | 'library' | 'fs'
 
@@ -17,10 +17,9 @@ export type FileInputProps = {
   options?: DocumentPickerOptions
   ref?: AnyRef<FileInputRef>
   type?: 'image' | 'anyFile'
-  alertProps?: Parameters<typeof OSAlert.ask>[0]
+  alertProps?: AlertOptions & {}
   pickerOptions?: Partial<Options>
   required?: boolean
-  onOpenCamera?: (resolve: (() => void)) => Promise<void>
   onOpenFileSystem?: (resolve: (() => void)) => Promise<void>
   onOpenGallery?: (resolve: (() => void)) => Promise<void>
   onError?: (error: any) => void

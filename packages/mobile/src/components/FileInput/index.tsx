@@ -1,10 +1,10 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { MobileFile } from '@codeleap/types'
 import { parseFilePathData } from '@codeleap/utils'
-import { OSAlert } from '../../utils'
 import ImageCropPicker, { ImageOrVideo, Options } from 'react-native-image-crop-picker'
 import DocumentPicker from 'react-native-document-picker'
 import { FileInputImageSource, FileInputProps, FileInputRef, FileResult } from './types'
+import { alert } from '@codeleap/modals'
 
 export * from './types'
 
@@ -35,13 +35,15 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
     onFileSelect,
     options,
     type = 'image',
-    alertProps,
     pickerOptions,
-    onOpenCamera = null,
     onOpenGallery = null,
     onOpenFileSystem = null,
     onError,
-  } = fileInputProps
+    alertProps,
+  } = {
+    ...fileInputProps,
+    ...FileInput.defaultProps,
+  }
 
   const resolveWithFile = useRef<(file: FileResult[]) => any>()
 
@@ -56,6 +58,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
   async function openFileSystem() {
     try {
       let files = await DocumentPicker.pick(options)
+
       if (!Array.isArray(files)) {
         files = [files]
       }
@@ -103,22 +106,11 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
       } else if (imageSource === 'library') {
         onPress('library', options)
       } else {
-        OSAlert.ask({
+        alert.ask({
           title: 'Change Image',
           body: 'Do you want to take a new picture or select an existing one?',
           ...alertProps,
           options: [
-            {
-              text: alertProps?.options?.[0]?.text || 'Camera',
-              onPress: () => {
-                if (onOpenCamera) {
-                  onOpenCamera(() => onPress('camera'))
-                } else {
-                  onPress('camera')
-                }
-              },
-              ...alertProps?.options?.[1],
-            },
             {
               text: 'Library',
               onPress: () => {
@@ -128,26 +120,23 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
                   onPress('library')
                 }
               },
-              ...alertProps?.options?.[2],
+              ...alertProps?.options?.[0],
             },
             {
               text: 'Cancel',
               style: 'cancel',
-              onPress: () => { },
-              ...alertProps?.options?.[0],
+              ...alertProps?.options?.[1]
             },
-          ],
+          ]
         })
       }
     } else {
       if (onOpenFileSystem) {
         onOpenFileSystem(() => onPress('fs'))
       } else {
-
         onPress('fs')
       }
     }
-
   }
 
   useImperativeHandle(ref, () => ({
@@ -162,7 +151,9 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
   return null
 })
 
-export const FileInput = _FileInput as unknown as ((props: FileInputProps) => JSX.Element)
+export const FileInput = _FileInput as unknown as ((props: FileInputProps) => JSX.Element) & { defaultProps: Partial<FileInputProps> }
+
+FileInput.defaultProps = {}
 
 export const useFileInput = () => {
   const inputRef = useRef<FileInputRef>(null)
