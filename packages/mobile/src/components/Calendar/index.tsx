@@ -31,10 +31,10 @@ export const Calendar = (props: CalendarProps) => {
     if (!value) return isRange ? [] : ''
 
     if (isRange) {
-      return (value as any).map((v) => dateUtils.removeTimezoneAndFormat(v))
+      return (value as any).map((v) => dateUtils.removeTimezoneAndFormat(v, DATE_FORMAT))
     }
 
-    return dateUtils.removeTimezoneAndFormat(value)
+    return dateUtils.removeTimezoneAndFormat(value, DATE_FORMAT)
   }, [value, isRange])
 
   const markedDates = useMemo(() => {
@@ -56,7 +56,7 @@ export const Calendar = (props: CalendarProps) => {
     let current = startDate
 
     while (current.isSameOrBefore(endDate)) {
-      const dateStr = dateUtils.removeTimezoneAndFormat(current)
+      const dateStr = dateUtils.removeTimezoneAndFormat(current, DATE_FORMAT)
       marked[dateStr] = {
         selected: true,
         ...(current.isSame(startDate) && { startingDay: true }),

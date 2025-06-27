@@ -55,10 +55,10 @@ export const CalendarInput = (props: CalendarInputProps) => {
     if (Array.isArray(inputValue)) {
       const filled = inputValue.filter(Boolean)
       if (filled.length < inputValue.length) return ''
-      return filled.map((v) => dateUtils.removeTimezoneAndFormat(v)).join(' - ')
+      return filled.map((v) => dateUtils.removeTimezoneAndFormat(v, format)).join(' - ')
     }
   
-    return dateUtils.removeTimezoneAndFormat(inputValue)
+    return dateUtils.removeTimezoneAndFormat(inputValue, format)
   }, [inputValue, format])
   
   return (
