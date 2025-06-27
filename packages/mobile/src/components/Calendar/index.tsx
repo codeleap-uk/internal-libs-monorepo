@@ -6,6 +6,7 @@ import { useStylesFor } from '../../hooks'
 import { CalendarProps } from './types'
 import dayjs, { Dayjs } from 'dayjs'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import { dateUtils } from '@codeleap/utils'
 
 dayjs.extend(isSameOrBefore)
 
@@ -13,10 +14,6 @@ export * from './styles'
 export * from './types'
 
 const DATE_FORMAT = 'YYYY-MM-DD'
-
-const formatDate = (date: Dayjs | Date | string): string => {
-  return dayjs(date).startOf('day').format(DATE_FORMAT)
-}
 
 export const Calendar = (props: CalendarProps) => {
   const {
@@ -34,10 +31,10 @@ export const Calendar = (props: CalendarProps) => {
     if (!value) return isRange ? [] : ''
 
     if (isRange) {
-      return (value as any).map(v => v ? formatDate(v) : '')
+      return (value as any).map((v) => dateUtils.removeTimezoneAndFormat(v))
     }
 
-    return formatDate(value)
+    return dateUtils.removeTimezoneAndFormat(value)
   }, [value, isRange])
 
   const markedDates = useMemo(() => {
@@ -59,7 +56,7 @@ export const Calendar = (props: CalendarProps) => {
     let current = startDate
 
     while (current.isSameOrBefore(endDate)) {
-      const dateStr = formatDate(current)
+      const dateStr = dateUtils.removeTimezoneAndFormat(current)
       marked[dateStr] = {
         selected: true,
         ...(current.isSame(startDate) && { startingDay: true }),

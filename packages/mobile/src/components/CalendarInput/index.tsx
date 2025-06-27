@@ -6,11 +6,11 @@ import { CalendarInputProps } from './types'
 import { View } from '../View'
 import { Calendar } from '../Calendar'
 import { TextInput } from '../TextInput'
-import dayjs from 'dayjs'
 import Animated, { FadeOut, FadeIn } from 'react-native-reanimated'
 import { useInputBase } from '../InputBase'
 import { fields } from '@codeleap/form'
 import { useInputOverlay } from '../InputBase/useInputOverlay'
+import { dateUtils } from '@codeleap/utils'
 
 export * from './styles'
 export * from './types'
@@ -50,17 +50,15 @@ export const CalendarInput = (props: CalendarInputProps) => {
   const [isOpen, toggle] = useInputOverlay(autoClosePeersCalendars)
 
   const formattedValue = useMemo(() => {
-    const normalize = (d: any) => dayjs(d).startOf('day').format(format)
-  
     if (!inputValue) return ''
   
     if (Array.isArray(inputValue)) {
       const filled = inputValue.filter(Boolean)
       if (filled.length < inputValue.length) return ''
-      return filled.map(normalize).join(' - ')
+      return filled.map((v) => dateUtils.removeTimezoneAndFormat(v)).join(' - ')
     }
   
-    return normalize(inputValue)
+    return dateUtils.removeTimezoneAndFormat(inputValue)
   }, [inputValue, format])
   
   return (
