@@ -4,16 +4,13 @@ import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { CalendarInputProps } from './types'
 import { View } from '../View'
-import { Calendar, CalendarProps } from '../Calendar'
+import { Calendar } from '../Calendar'
 import { TextInput } from '../TextInput'
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
 import Animated, { FadeOut, FadeIn } from 'react-native-reanimated'
 import { useInputBase } from '../InputBase'
 import { fields } from '@codeleap/form'
 import { useInputOverlay } from '../InputBase/useInputOverlay'
-
-dayjs.extend(utc)
 
 export * from './styles'
 export * from './types'
@@ -46,26 +43,26 @@ export const CalendarInput = (props: CalendarInputProps) => {
   const {
     inputValue,
     onInputValueChange,
-  } = useInputBase<CalendarProps['value']>(field, fields.date as any, { value, onValueChange })
+  } = useInputBase<any>(field, fields.date as any, { value, onValueChange })
 
   const [inputHeight, setInputHeight] = useState(0)
 
   const [isOpen, toggle] = useInputOverlay(autoClosePeersCalendars)
 
   const formattedValue = useMemo(() => {
-    const isRange = Array.isArray(inputValue)
-
-    if (isRange ? inputValue?.some(v => !v) : !inputValue) return ''
-    
-    if (isRange) {
-      return inputValue
-        .map(date => dayjs.utc(date).format(format))
-        .join(' - ')
+    const normalize = (d: any) => dayjs(d).startOf('day').format(format)
+  
+    if (!inputValue) return ''
+  
+    if (Array.isArray(inputValue)) {
+      const filled = inputValue.filter(Boolean)
+      if (filled.length < inputValue.length) return ''
+      return filled.map(normalize).join(' - ')
     }
-    
-    return dayjs.utc(inputValue).format(format)
+  
+    return normalize(inputValue)
   }, [inputValue, format])
-
+  
   return (
     <View style={[styles.wrapper, { position: 'relative' }]}>
       <TextInput
@@ -108,7 +105,6 @@ export const CalendarInput = (props: CalendarInputProps) => {
             style={compositionStyles.calendar}
             value={inputValue}
             onValueChange={onInputValueChange}
-            parseToDate
             {...calendarProps}
           />
         </Animated.View>

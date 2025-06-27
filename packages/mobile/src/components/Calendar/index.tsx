@@ -1,116 +1,110 @@
 import React, { useCallback, useMemo } from 'react'
-import { TypeGuards } from '@codeleap/types'
 import { Calendar as RNCalendar, DateData } from 'react-native-calendars'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { CalendarProps } from './types'
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
+import dayjs, { Dayjs } from 'dayjs'
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 
-dayjs.extend(utc)
+dayjs.extend(isSameOrBefore)
 
 export * from './styles'
 export * from './types'
+
+const DATE_FORMAT = 'YYYY-MM-DD'
+
+const formatDate = (date: Dayjs | Date | string): string => {
+  return dayjs(date).startOf('day').format(DATE_FORMAT)
+}
 
 export const Calendar = (props: CalendarProps) => {
   const {
     style,
     value,
     onValueChange,
-    parseToDate,
     ...calendarProps
   } = props
 
   const styles = useStylesFor(Calendar.styleRegistryName, style)
 
-  const isDateValue = TypeGuards.isInstance(value, Date)
-  const isDateRange = Array.isArray(value)
+  const isRange = Array.isArray(value)
 
   const stringValue = useMemo(() => {
-    if (isDateRange) {
-      return value.map(date => 
-        isDateValue ? dayjs.utc(date).format('YYYY-MM-DD') : date ?? ''
-      )
+    if (!value) return isRange ? [] : ''
+
+    if (isRange) {
+      return (value as any).map(v => v ? formatDate(v) : '')
     }
 
-    return isDateValue ? dayjs.utc(value).format('YYYY-MM-DD') : value ?? ''
-  }, [value])
+    return formatDate(value)
+  }, [value, isRange])
 
   const markedDates = useMemo(() => {
-    if (isDateRange && Array.isArray(stringValue)) {
-      if (stringValue.length === 0) return {}
-      if (stringValue.length === 1) {
-        const [start] = [...stringValue]
-
-        const dateStr = dayjs(start).format('YYYY-MM-DD')
-
-        return { [dateStr]: { selected: true } }
-      }
-      
-      const [start, end] = [...stringValue]
-      const startDate = dayjs(start)
-      const endDate = dayjs(end)
-      
-      const markedDates: Record<string, any> = {}
-      
-      let currentDate = startDate
-
-      while (currentDate.isBefore(endDate) || currentDate.isSame(endDate)) {
-        const dateStr = currentDate.format('YYYY-MM-DD')
-
-        markedDates[dateStr] = {
-          selected: true,
-          ...(currentDate.isSame(startDate) && { startingDay: true }),
-          ...(currentDate.isSame(endDate) && { endingDay: true })
-        }
-        
-        currentDate = currentDate.add(1, 'day')
-      }
-      
-      return markedDates
+    if (!isRange) {
+      return stringValue ? { [stringValue as string]: { selected: true } } : {}
     }
-    
-    return { [stringValue as string]: { selected: true } }
-  }, [stringValue])
 
-  const onChange = useCallback((date: DateData) => {
-    if (isDateRange) {
-      const newValue = Array.isArray(value) ? [...value] : []
-      let newDates: any = []
-      
-      if (newValue.length === 0 || newValue.length === 2) {
-        newDates = [date.dateString]
-      } else if (newValue.length === 1) {
-        const firstDate = newValue[0]
-        const secondDate = date.dateString
-        
-        if (dayjs(firstDate).isAfter(dayjs(secondDate))) {
-          newDates = [secondDate, firstDate]
-        } else {
-          newDates = [firstDate, secondDate]
-        }
+    const rangeValues = stringValue as string[]
+    if (rangeValues.length === 0) return {}
+
+    if (rangeValues.length === 1) {
+      return { [rangeValues[0]]: { selected: true } }
+    }
+
+    const [start, end] = rangeValues
+    const startDate = dayjs(start)
+    const endDate = dayjs(end)
+    const marked: Record<string, any> = {}
+    let current = startDate
+
+    while (current.isSameOrBefore(endDate)) {
+      const dateStr = formatDate(current)
+      marked[dateStr] = {
+        selected: true,
+        ...(current.isSame(startDate) && { startingDay: true }),
+        ...(current.isSame(endDate) && { endingDay: true }),
       }
-      
-      const parsedDates = isDateValue || parseToDate ? 
-        newDates.map(d => dayjs(d).toDate()) : 
-        newDates
-      
-      onValueChange?.(parsedDates)
+      current = current.add(1, 'day')
+    }
+
+    return marked
+  }, [stringValue, isRange])
+
+  const handleDateChange = useCallback((date: DateData) => {
+    if (!onValueChange) return
+
+    const selected = dayjs(date.dateString).startOf('day')
+
+    if (isRange) {
+      const current = Array.isArray(value) ? value : []
+      let newDates: Dayjs[] = []
+
+      if (current.length === 0 || current.length === 2) {
+        newDates = [selected]
+      } else if (current.length === 1) {
+        const first = dayjs(current[0]).startOf('day')
+        newDates = first.isAfter(selected) 
+          ? [selected, first] 
+          : [first, selected]
+      }
+
+      onValueChange(newDates)
     } else {
-      const newValue = isDateValue || parseToDate ? dayjs(date.dateString).toDate() : date.dateString
-      onValueChange?.(newValue)
+      onValueChange(selected)
     }
-  }, [onValueChange, value])
+  }, [onValueChange, value, isRange])
 
   const currentValue = useMemo(() => {
-    return isDateRange ? (Array.isArray(stringValue) ? stringValue[0] : '') : stringValue
-  }, [stringValue])
-  
+    return isRange 
+      ? (Array.isArray(stringValue) ? stringValue[0] : '') 
+      : stringValue
+  }, [stringValue, isRange])
+
   return (
     <RNCalendar
-      onDayPress={onChange}
-      current={currentValue}
+      onDayPress={handleDateChange}
+      current={currentValue as string}
       monthFormat={'MMMM yyyy'}
       {...calendarProps}
       markedDates={{
@@ -135,8 +129,6 @@ Calendar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Calendar as (props: StyledComponentProps<CalendarProps, typeof styles>) => IJSX
 }
 
-Calendar.defaultProps = {
-  parseToDate: false,
-} as Partial<CalendarProps>
+Calendar.defaultProps = {} as Partial<CalendarProps>
 
 MobileStyleRegistry.registerComponent(Calendar)
