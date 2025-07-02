@@ -22,6 +22,7 @@ export type InputBaseProps = React.PropsWithChildren<{
   labelAsRow?: boolean
   noError?: boolean
   innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
+  ref?: React.MutableRefObject<HTMLDivElement>
 }>
 
 export type OmitDiff<T1, T2> = {

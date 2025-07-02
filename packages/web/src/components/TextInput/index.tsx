@@ -1,120 +1,94 @@
-import { useBooleanToggle } from '@codeleap/hooks'
 import { TypeGuards } from '@codeleap/types'
-import { useValidate } from '@codeleap/deprecated'
-import React, {
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 import InputMask from 'react-input-mask'
 import { Touchable } from '../Touchable'
 import { InputBase, selectInputBaseProps } from '../InputBase'
-import { getMaskInputProps } from './mask'
 import { getTestId } from '../../lib/utils/test'
 import { InputRef, TextInputProps } from './types'
-import { FileInputRef } from '../FileInput'
 import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { useTextInput } from './useTextInput'
+import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
 
 export * from './types'
 export * from './styles'
 export * from './mask'
 
-export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputRef) => {
+export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
+  const allProps = {
+    ...TextInput.defaultProps,
+    ...props,
+  }
+
   const {
     inputBaseProps,
     others,
-  } = selectInputBaseProps({
-    ...TextInput.defaultProps,
-    ...props,
-  })
+  } = selectInputBaseProps(allProps)
 
   const {
     style,
-    value,
-    validate,
     debugName,
     visibilityToggle,
     password,
     onPress,
-    multiline,
     caretColor,
-    focused,
-    _error,
-    masking,
     visibleIcon,
     hiddenIcon,
     ...textInputProps
   } = others as TextInputProps
 
-  const innerInputRef = useRef<InputRef>(null)
-
   const styles = useStylesFor(TextInput.styleRegistryName, style)
 
-  const [_isFocused, setIsFocused] = useState(false)
+  const {
+    isMultiline,
+    isMasked,
+    isFocused,
+    secureTextEntry,
+    handleBlur,
+    handleFocus,
+    handleChange,
+    maskProps,
+    innerInputRef,
+    wrapperRef,
+    errorMessage,
+    toggleSecureTextEntry,
+    hasMultipleLines,
+    hasError,
+    inputValue,
+  } = useTextInput(allProps)
 
-  const isFocused = _isFocused || focused
+  const isDisabled = !!inputBaseProps.disabled
 
-  const [secureTextEntry, toggleSecureTextEntry] = useBooleanToggle(true)
-
-  const isMultiline = multiline
-
-  const isMasked = !TypeGuards.isNil(masking)
-  const maskProps = isMasked ? getMaskInputProps({ masking }) : null
+  const partialStyles = useInputBasePartialStyles(styles, ['placeholder', 'selection'], {
+    disabled: isDisabled,
+    error: !!hasError,
+    focus: isFocused,
+  })
 
   const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
 
-  // @ts-ignore
+  const isPressable = TypeGuards.isFunction(onPress)
+
+  const focus = () => {
+    if (isMasked) {
+      // @ts-expect-error
+      innerInputRef.current?.getInputDOMNode()?.focus()
+    }
+
+    innerInputRef.current?.focus?.()
+  }
+
   useImperativeHandle(inputRef, () => {
     return {
-      focus: () => {
-        if (isMasked) {
-          // @ts-expect-error
-          innerInputRef.current?.getInputDOMNode()?.focus()
-        }
-        innerInputRef.current?.focus?.()
-      },
+      focus: () => focus(),
       isTextInput: true,
       getInputRef: () => {
-        return innerInputRef.current
+        return innerInputRef.current as unknown as HTMLInputElement
       },
     }
   }, [!!innerInputRef?.current?.focus])
-
-  const isPressable = TypeGuards.isFunction(onPress)
-
-  const validation = useValidate(
-    value,
-    TypeGuards.isFunction(maskProps?.validator) ? maskProps?.validator : validate,
-  )
-
-  const handleBlur = React.useCallback((e: React.FocusEvent<HTMLInputElement, Element>) => {
-    validation?.onInputBlurred()
-    setIsFocused(false)
-    props?.onBlur?.(e)
-  }, [validation?.onInputBlurred, props?.onBlur])
-
-  const handleFocus = React.useCallback((e: React.FocusEvent<HTMLInputElement, Element>) => {
-    validation?.onInputFocused()
-    setIsFocused(true)
-    props?.onFocus?.(e)
-  }, [validation?.onInputFocused, props?.onFocus])
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const _text = event?.target?.value
-
-    const _value = isMasked && maskProps?.notSaveFormatted
-      ? maskProps?.getRawValue(_text)
-      : _text
-
-    if (props?.onChange) props?.onChange(event)
-    if (props?.onChangeText) props?.onChangeText(_value)
-  }
-
-  const isDisabled = !!inputBaseProps.disabled
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
@@ -128,27 +102,6 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
     editable: false,
     caretHidden: true,
   } : {}
-  const rows = textInputProps?.rows ?? (
-    isMultiline ? 2 : undefined
-  )
-  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || !!rows)
-
-  const hasError = !validation.isValid || _error
-  const errorMessage = validation.message || _error
-
-  const placeholderStyles = [
-    styles.placeholder,
-    isFocused && styles['placeholder:focus'],
-    hasError && styles['placeholder:error'],
-    isDisabled && styles['placeholder:disabled'],
-  ]
-
-  const selectionStyles = [
-    styles.selection,
-    isFocused && styles['selection:focus'],
-    hasError && styles['selection:error'],
-    isDisabled && styles['selection:disabled'],
-  ]
 
   const secureTextProps = (password && secureTextEntry) && {
     type: 'password',
@@ -166,6 +119,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
     <InputBase
       innerWrapper={isPressable ? Touchable : undefined}
       {...inputBaseProps}
+      ref={wrapperRef}
       debugName={debugName}
       error={hasError ? errorMessage : null}
       style={{
@@ -179,11 +133,7 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
       innerWrapperProps={{
         ...(inputBaseProps.innerWrapperProps || {}),
         [inputBaseAction]: () => {
-          if (isMasked) {
-            // @ts-expect-error
-            innerInputRef.current?.getInputDOMNode()?.focus()
-          }
-          innerInputRef.current?.focus?.()
+          focus()
           if (isPressable) onPress?.()
         },
         debugName,
@@ -196,8 +146,6 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
         {...buttonModeProps}
         {...secureTextProps}
         {...textInputProps}
-        value={value}
-        onChange={(e) => handleChange(e)}
         // @ts-ignore
         onBlur={handleBlur}
         // @ts-ignore
@@ -210,10 +158,10 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
           isDisabled && styles['input:disabled'],
           hasMultipleLines && styles['input:hasMultipleLines'],
           {
-            '&::placeholder': placeholderStyles,
+            '&::placeholder': partialStyles?.placeholder,
           },
           {
-            '&::selection': selectionStyles,
+            '&::selection': partialStyles?.selection,
           },
           {
             '&:focus': [
@@ -224,6 +172,8 @@ export const TextInput = forwardRef<FileInputRef, TextInputProps>((props, inputR
           },
         ]}
         {...maskProps}
+        value={inputValue}
+        onChange={handleChange}
         ref={innerInputRef}
         data-testid={testId}
       />

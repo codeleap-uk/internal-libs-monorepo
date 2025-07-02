@@ -4,11 +4,12 @@ import { AppIcon, StyledProp } from '@codeleap/styles'
 import { InputBaseProps } from '../InputBase'
 import { HTMLProps } from '../../types'
 import { TextInputComposition } from './styles'
+import { Field } from '@codeleap/form'
 
 type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps =
-  Omit<InputBaseProps, 'style'> &
+  Omit<InputBaseProps, 'style' | 'ref'> &
   Omit<NativeTextInputProps, 'value' | 'crossOrigin' | 'ref' | 'style'> &
   {
     style?: StyledProp<TextInputComposition>
@@ -16,17 +17,18 @@ export type TextInputProps =
     validate?: FormTypes.ValidatorWithoutForm<string> | yup.Schema<string>
     debugName?: string
     visibilityToggle?: boolean
-    value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: (textValue: string) => void
     caretColor?: string
     focused?: boolean
-    _error?: boolean
+    forceError?: string
     rows?: number
     masking?: TextInputMaskingProps
     visibleIcon?: AppIcon
     hiddenIcon?: AppIcon
+    field?: Field<string, any, any>
+    value?: string
+    onValueChange?: (value: string) => void
   }
 
 export type InputRef = {
