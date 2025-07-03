@@ -1,8 +1,7 @@
-import { useMemo } from 'react'
-import { TextStyle, ViewStyle } from 'react-native'
+import { CSSProperties, useMemo } from 'react'
 
 export function useInputBasePartialStyles<C extends string, S extends Record<string, boolean>>(
-  styles: Record<C, ViewStyle>,
+  styles: Record<C, CSSProperties>,
   styleKeys: Array<C | [C, boolean]>,
   states: S,
 ) {
@@ -33,6 +32,6 @@ export function useInputBasePartialStyles<C extends string, S extends Record<str
       }
 
       return acc
-    }, {} as Record<C, ViewStyle & TextStyle>)
+    }, {} as Record<C, CSSProperties>)
   }, [states])
 }

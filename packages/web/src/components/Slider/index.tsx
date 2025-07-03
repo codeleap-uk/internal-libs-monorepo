@@ -1,7 +1,6 @@
 import React from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { onMount, useRef } from '@codeleap/hooks'
-
 import { View } from '../View'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Text } from '../Text'
@@ -16,6 +15,9 @@ import { SliderProps, TrackMarkProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
+import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
+import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyles'
 
 export * from './styles'
 export * from './types'
@@ -45,6 +47,7 @@ export const Slider = (props: SliderProps) => {
     onValueChange,
     onValueCommit,
     value: _value,
+    field,
     label,
     debugName,
     style,
@@ -65,8 +68,14 @@ export const Slider = (props: SliderProps) => {
 
   const styles = useStylesFor(Slider.styleRegistryName, style)
 
-  const isUniqueValue = !TypeGuards.isArray(_value)
-  const value = isUniqueValue ? [_value] : _value
+  const {
+    wrapperRef,
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(field, fields.number, { value: _value, onValueChange })
+
+  const isUniqueValue = !TypeGuards.isArray(inputValue)
+  const value = isUniqueValue ? [inputValue] : inputValue
 
   const _defaultValue = TypeGuards.isArray(defaultSliderValue) ? defaultSliderValue : [defaultSliderValue]
 
@@ -80,42 +89,12 @@ export const Slider = (props: SliderProps) => {
   })
 
   const handleChange: SliderProps['onValueChange'] = (newValue: Array<number>) => {
-    onValueChange?.(isUniqueValue ? newValue?.[0] : newValue)
+    onInputValueChange?.(isUniqueValue ? newValue?.[0] : newValue)
   }
 
   const handleValueCommit = (newValue: Array<number>) => {
     onValueCommit?.(newValue)
   }
-
-  const thumbStyle = React.useMemo(() => {
-    return mergeStyles([
-      styles.thumb,
-      disabled && styles['thumb:disabled'],
-    ])
-  }, [])
-
-  const trackStyle = React.useMemo(() => {
-    return mergeStyles([
-      styles.track,
-      disabled && styles['track:disabled'],
-      styles.unselectedTrack,
-      disabled && styles['unselectedTrack:disabled'],
-    ])
-  }, [disabled])
-
-  const selectedTrackStyle = React.useMemo(() => {
-    return mergeStyles([
-      styles.selectedTrack,
-      disabled && styles['selectedTrack:disabled'],
-    ])
-  }, [disabled])
-
-  const containerStyle = React.useMemo(() => {
-    return mergeStyles([
-      styles.sliderContainer,
-      disabled && styles['sliderContainer:disabled'],
-    ])
-  }, [disabled])
 
   const trackMarksHaveContent = !(TypeGuards.isArray(trackMarks) || TypeGuards.isNil(trackMarks))
 
@@ -126,19 +105,15 @@ export const Slider = (props: SliderProps) => {
     return Object.keys(trackMarks).map((key) => Number(key))
   }, [trackMarksHaveContent])
 
-  const trackMarkStyle = React.useMemo(() => {
-    return mergeStyles([
-      styles.trackMark,
-      disabled && styles['trackMark:disabled'],
-    ])
-  }, [disabled])
+  const partialStyles = useInputBasePartialStyles(
+    styles,
+    ['thumb', 'track', 'selectedTrack', 'unselectedTrack', 'sliderContainer', 'trackMark', 'trackMarkWrapper'],
+    { disabled }
+  )
 
-  const trackMarkWrapperStyle = React.useMemo(() => {
-    return mergeStyles([
-      styles.trackMarkWrapper,
-      disabled && styles['trackMarkWrapper:disabled'],
-    ])
-  }, [disabled])
+  const trackStyle = React.useMemo(() => {
+    return mergeStyles([partialStyles?.track, partialStyles.unselectedTrack])
+  }, [partialStyles?.track, partialStyles.unselectedTrack])
 
   const sliderLabel = React.useMemo(() => {
     if (TypeGuards.isNil(indicatorLabel) || !indicatorLabel?.order && !indicatorLabel?.transformer) {
@@ -168,6 +143,7 @@ export const Slider = (props: SliderProps) => {
   return (
     <InputBase
       {...inputBaseProps}
+      ref={wrapperRef}
       disabled={disabled}
       style={styles}
       labelAsRow
@@ -182,20 +158,20 @@ export const Slider = (props: SliderProps) => {
         defaultValue={defaultValue}
         onValueCommit={handleValueCommit}
         onValueChange={handleChange}
-        style={containerStyle}
+        style={partialStyles?.sliderContainer}
         value={value}
         minStepsBetweenThumbs={minStepsBetweenThumbs}
       >
         <SliderTrack style={trackStyle}>
-          <SliderRange style={selectedTrackStyle} />
+          <SliderRange style={partialStyles?.selectedTrack} />
         </SliderTrack>
 
         {defaultValue.map((_, i) => (
           <SliderThumb
             key={i}
-            style={thumbStyle}
+            style={partialStyles?.thumb}
             onClick={() => {
-              if (onPressThumbSetValue) onValueChange?.(value)
+              if (onPressThumbSetValue) onInputValueChange?.(value)
               if (TypeGuards.isFunction(onPressThumb)) onPressThumb?.(value, i)
             }}
           />
@@ -203,7 +179,7 @@ export const Slider = (props: SliderProps) => {
       </SliderContainer>
 
       {trackMarksProp ?
-        <View style={trackMarkWrapperStyle}>
+        <View style={partialStyles?.trackMarkWrapper}>
           {
             trackMarksProp.map((_, idx) => {
               let idxStyle = {}
@@ -225,7 +201,7 @@ export const Slider = (props: SliderProps) => {
                 }
               }
 
-              const style = mergeStyles([trackMarkStyle, idxStyle])
+              const style = mergeStyles([partialStyles?.trackMark, idxStyle])
 
               if (!trackMarksHaveContent) {
                 return <SliderTrackMark

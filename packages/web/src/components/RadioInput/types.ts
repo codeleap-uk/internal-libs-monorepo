@@ -1,29 +1,30 @@
-import { StylesOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/deprecated'
+import { StylesOf, Options, Option } from '@codeleap/types'
 import { InputBaseProps } from '../InputBase'
 import { ReactNode } from 'react'
-import { StyledProp } from '@codeleap/styles'
+import { ICSS, StyledProp } from '@codeleap/styles'
 import { RadioInputComposition } from './styles'
+import { SelectableField } from '@codeleap/form'
 
-type WrapperProps = InputBaseProps
-
-type RadioOption<T> = FormTypes.Options<T>[number] & {
+type RadioOption<T extends string | number> = Option<T> & {
   disabled?: boolean
 }
 
-export type RadioInputProps<T extends string|number> = Omit<WrapperProps, 'style'> & {
-  options: RadioOption<T>[]
-  value: T
-  onValueChange(value: T): void
-  label: ReactNode
-  style?: StyledProp<RadioInputComposition>
-}
+export type RadioInputProps<T extends string | number> =
+  Omit<InputBaseProps, 'style'> &
+  {
+    options: RadioOption<T>[]
+    label: ReactNode
+    style?: StyledProp<RadioInputComposition>
+    field?: SelectableField<T, any>
+    value?: T
+    onValueChange?: (value: T) => void
+  }
 
-export type RadioOptionProps<T extends string|number> = {
+export type RadioOptionProps<T extends string | number> = {
   item: RadioOption<T>
   selected: boolean
   onSelect(): void
-  styles?: StylesOf<RadioInputComposition>
+  styles?: Record<RadioInputComposition, ICSS>
   debugName?: string
   disabled?: boolean
   separator?: boolean
