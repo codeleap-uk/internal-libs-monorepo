@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { TextInputProps } from './types'
 import { TypeGuards } from '@codeleap/types'
 import { getMaskInputProps } from './mask'
@@ -11,26 +11,24 @@ export function useTextInput(props: Partial<TextInputProps>) {
     onBlur,
     field,
     masking,
-    multiline,
+    multiline: isMultiline,
     forceError,
     value,
-    focused,
     onValueChange,
     rows: providedRows,
   } = props
 
-  const [_isFocused, setIsFocused] = useState(false)
-
-  const isFocused = _isFocused || focused
+  const [isFocused, setIsFocused] = useState(false)
 
   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
   const toggleSecureTextEntry = () => setSecureTextEntry(s => !s)
 
-  const isMultiline = multiline
-
   const isMasked = !TypeGuards.isNil(masking)
-  const maskProps = isMasked ? getMaskInputProps({ masking }) : null
+
+  const maskProps = useMemo(() => {
+    return isMasked ? getMaskInputProps({ masking }) : null
+  }, [masking])
 
   const {
     fieldHandle,
@@ -52,7 +50,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
   }, [setSecureTextEntry])
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement, Element>) => {
-    validation?.onInputBlurred()
+    validation?.onInputBlurred?.()
     setIsFocused(false)
     onBlur?.(e)
   }, [validation?.onInputBlurred, onBlur])
@@ -74,12 +72,11 @@ export function useTextInput(props: Partial<TextInputProps>) {
 
   const rows = providedRows ?? (isMultiline ? 2 : undefined)
 
-  const hasMultipleLines = isMultiline && (String(value)?.includes('\n') || !!rows)
+  const hasMultipleLines = isMultiline && (String(inputValue)?.includes('\n') || !!rows)
 
-  const hasValue = inputValue?.length > 0
+  const hasError = validation?.showError || forceError
 
-  const hasError = !validation.isValid || forceError
-  const errorMessage = validation.message || forceError
+  const errorMessage = validation?.message || forceError
 
   return {
     maskProps,
@@ -97,9 +94,8 @@ export function useTextInput(props: Partial<TextInputProps>) {
     errorMessage,
     toggleSecureTextEntry,
     hasMultipleLines,
-    hasValue,
     hasError,
-    inputValue,
+    inputValue: inputValue || '',
     onInputValueChange,
   }
 }

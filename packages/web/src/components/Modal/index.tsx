@@ -1,6 +1,6 @@
 import { TypeGuards } from '@codeleap/types'
 import { onMount, onUpdate } from '@codeleap/hooks'
-import React, { useId, useRef } from 'react'
+import React, { useCallback, useId, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { v4 } from 'uuid'
 import { View } from '../View'
@@ -76,61 +76,12 @@ const ModalDefaultHeader = (props: ModalHeaderProps) => {
   )
 }
 
-export const ModalContent = (modalProps: ModalProps & { id: string }) => {
-  const {
-    children,
-    visible,
-    title,
-    toggle,
-    footer,
-    style,
-    renderHeader: ModalHeader,
-    closable,
-    withOverlay,
-    showClose,
-    closeIconName,
-    scroll,
-    renderModalBody,
-    closeOnEscape,
-    onClose,
-    overlayProps,
-    dismissOnBackdrop,
-    zIndex,
-    withScrollContainer,
-    debugName,
-    backdropProps,
-    alterHistory,
-    id: modalId,
-    autoIndex,
-    ...props
-  } = modalProps
-
-  const styles = useStylesFor(Modal.styleRegistryName, style)
-
+const ModalWrapper = ({ styles, visible, modalId, autoIndex, children, closeOnEscPress }) => {
   const index = modalsState.use(state => state.indexes?.[modalId] ?? 0)
 
-  const id = useId()
   const modalRef = useRef(null)
 
-  const toggleAndReturn = () => {
-    toggle?.()
-
-    if (alterHistory) {
-      window.history.back()
-    }
-
-    if (TypeGuards.isFunction(onClose)) onClose()
-  }
-
-  function closeOnEscPress(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (!closeOnEscape) return null
-
-    if (e?.key === 'Escape' || e?.keyCode === 27) {
-      toggleAndReturn()
-    }
-  }
-
-  const handleTabKeyPress = (e: React.KeyboardEvent<HTMLDivElement>, { firstElement, lastElement }: Record<'firstElement' | 'lastElement', HTMLDivElement>) => {
+  const handleTabKeyPress = useCallback((e: React.KeyboardEvent<HTMLDivElement>, { firstElement, lastElement }: Record<'firstElement' | 'lastElement', HTMLDivElement>) => {
     if (e.key === 'Tab' || e?.keyCode === 9) {
       if (e.shiftKey && document.activeElement === firstElement) {
         e.preventDefault()
@@ -143,7 +94,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
         firstElement.focus()
       }
     }
-  }
+  }, [])
 
   onUpdate(() => {
     if (visible) {
@@ -163,29 +114,81 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
     }
   }, [visible])
 
+  return <View
+    ref={modalRef}
+    aria-hidden={!visible}
+    style={[
+      styles.wrapper,
+      visible ? styles['wrapper:visible'] : styles['wrapper:hidden'],
+      autoIndex ? { zIndex: index } : null,
+    ]}
+  >
+    {children}
+  </View>
+}
+
+const ModalContent = (modalProps: ModalProps & { id: string }) => {
+  const {
+    children,
+    visible,
+    title,
+    toggle,
+    footer,
+    style,
+    renderHeader: ModalHeader,
+    closable,
+    withOverlay,
+    showClose,
+    closeIconName,
+    renderModalBody: ModalBody,
+    closeOnEscape,
+    onClose,
+    overlayProps,
+    dismissOnBackdrop,
+    debugName,
+    backdropProps,
+    alterHistory,
+    id: modalId,
+    autoIndex,
+    ...props
+  } = modalProps
+
+  const styles = useStylesFor(Modal.styleRegistryName, style)
+
+  const id = useId()
+
+  const toggleAndReturn = () => {
+    toggle?.()
+
+    if (alterHistory) {
+      window.history.back()
+    }
+
+    if (TypeGuards.isFunction(onClose)) onClose()
+  }
+
+  const closeOnEscPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!closeOnEscape) return null
+
+    if (e?.key === 'Escape' || e?.keyCode === 27) {
+      toggleAndReturn()
+    }
+  }
+
+  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => null
+
   useIsomorphicEffect(() => {
     const modal = document.getElementById(id)
     if (modal) modal.focus()
   }, [id])
 
-  const close = (closable && dismissOnBackdrop) ? toggleAndReturn : () => null
-
-  const ModalBody = renderModalBody || View
-
-  const _zIndex = React.useMemo(() => {
-    return TypeGuards.isNumber(zIndex) ? { zIndex } : {}
-  }, [zIndex])
-
   return (
-    <View
-      ref={modalRef}
-      aria-hidden={!visible}
-      style={[
-        styles.wrapper,
-        visible ? styles['wrapper:visible'] : styles['wrapper:hidden'],
-        autoIndex ? { zIndex: index } : null,
-        _zIndex,
-      ]}
+    <ModalWrapper
+      styles={styles}
+      modalId={modalId}
+      autoIndex={autoIndex}
+      visible={visible}
+      closeOnEscPress={closeOnEscPress}
     >
       <Overlay
         debugName={debugName}
@@ -240,7 +243,7 @@ export const ModalContent = (modalProps: ModalProps & { id: string }) => {
           ) : null}
         </View>
       </View>
-    </View>
+    </ModalWrapper>
   )
 }
 
@@ -328,14 +331,11 @@ Modal.defaultProps = {
   closable: true,
   withOverlay: true,
   showClose: true,
-  scroll: false,
   closeOnEscape: true,
   renderHeader: ModalDefaultHeader,
-  keepMounted: true,
+  renderModalBody: View,
   dismissOnBackdrop: true,
-  zIndex: null,
   description: null,
-  withScrollContainer: false,
   scrollLock: false,
   autoIndex: false,
   alterHistory: false,

@@ -36,6 +36,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     caretColor,
     visibleIcon,
     hiddenIcon,
+    focused,
     ...textInputProps
   } = others as TextInputProps
 
@@ -44,7 +45,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
   const {
     isMultiline,
     isMasked,
-    isFocused,
+    isFocused: isInputFocused,
     secureTextEntry,
     handleBlur,
     handleFocus,
@@ -58,6 +59,8 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     hasError,
     inputValue,
   } = useTextInput(allProps)
+
+  const isFocused = isInputFocused || focused
 
   const isDisabled = !!inputBaseProps.disabled
 
@@ -146,9 +149,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
         {...buttonModeProps}
         {...secureTextProps}
         {...textInputProps}
-        // @ts-ignore
         onBlur={handleBlur}
-        // @ts-ignore
         onFocus={handleFocus}
         css={[
           styles.input,
