@@ -1,4 +1,4 @@
-import { StylesOf, Options, Option } from '@codeleap/types'
+import { Option } from '@codeleap/types'
 import { InputBaseProps } from '../InputBase'
 import { ReactNode } from 'react'
 import { ICSS, StyledProp } from '@codeleap/styles'
