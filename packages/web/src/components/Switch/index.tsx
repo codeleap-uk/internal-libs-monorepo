@@ -6,6 +6,8 @@ import { motion } from 'framer-motion'
 import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { SwitchProps } from './types'
+import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -29,9 +31,17 @@ export const Switch = (props: SwitchProps) => {
     onValueChange,
     onChange,
     switchOnLeft,
+    field,
   } = switchProps
 
   const styles = useStylesFor(Switch.styleRegistryName, style)
+
+  const {
+    validation,
+    wrapperRef,
+    inputValue,
+    onInputValueChange,
+  } = useInputBase<boolean>(field, fields.boolean, { value, onValueChange })
 
   const trackAnimation = useAnimatedVariantStyles({
     variantStyles: styles,
@@ -40,16 +50,16 @@ export const Switch = (props: SwitchProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? styles['track:disabled-on'] : styles['track:disabled-off']
+        disabledStyle = inputValue ? styles['track:disabled-on'] : styles['track:disabled-off']
       }
-      const style = value ? styles['track:on'] : styles['track:off']
+      const style = inputValue ? styles['track:on'] : styles['track:off']
 
       return {
         ...style,
         ...disabledStyle,
       }
     },
-    dependencies: [value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   const thumbAnimation = useAnimatedVariantStyles({
@@ -59,15 +69,15 @@ export const Switch = (props: SwitchProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
+        disabledStyle = inputValue ? styles['thumb:disabled-on'] : styles['thumb:disabled-off']
       }
-      const style = value ? styles['thumb:on'] : styles['thumb:off']
+      const style = inputValue ? styles['thumb:on'] : styles['thumb:off']
       return {
         ...style,
         ...disabledStyle,
       }
     },
-    dependencies: [value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   // @ts-expect-error icss type
@@ -79,14 +89,15 @@ export const Switch = (props: SwitchProps) => {
   const handleChange = (e) => {
     if (disabled) return
     if (e?.type === 'click' || e?.keyCode === 13 || e?.key === 'Enter') {
-      if (onValueChange) onValueChange?.(!value)
-      if (onChange) onChange?.(!value)
+      onInputValueChange?.(!inputValue)
+      if (onChange) onChange?.(!inputValue)
     }
   }
 
   return (
     <InputBase
       {...inputBaseProps}
+      ref={wrapperRef}
       debugName={debugName}
       style={styles}
       order={_switchOnLeft ? reversedOrder : InputBaseDefaultOrder}

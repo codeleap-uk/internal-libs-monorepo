@@ -1,12 +1,11 @@
 import { StylesOf } from '@codeleap/types'
-import { FormTypes } from '@codeleap/deprecated'
 import { ReactDatePickerCustomHeaderProps, ReactDatePickerProps } from 'react-datepicker'
 import { ActionIconProps, TextInputProps } from '../components'
 import { DatePickerComposition, DatePickerHeaderComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
 
 export type DatePickerOuterInputProps = TextInputProps & {
-  valueLabel: FormTypes.Label
+  valueLabel: React.ReactNode
   hideInput?: boolean
 }
 
@@ -51,7 +50,7 @@ export type DatePickerProps =
     dayProps?: Partial<DayComponentProps>
     yearComponent?: React.ComponentType<Partial<YearComponentProps>>
     yearProps?: Partial<YearComponentProps>
-    formatDate?: (date: Date | string) => FormTypes.Label
+    formatDate?: (date: Date | string) => React.ReactNode
     datePickerProps?: Omit<Partial<ReactDatePickerProps>, 'customInput' | 'renderCustomHeader' | RootDatePickerProps>
     onValueChange: (date: Date) => void
     defaultValue?: Date

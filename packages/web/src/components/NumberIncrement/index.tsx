@@ -65,8 +65,6 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     typed: hasValue,
   })
 
-  console.log('CURRENT', partialStyles?.input)
-
   const InputFormat = TypeGuards.isString(format) || TypeGuards.isString(mask)
     ? PatternFormat
     : NumericFormat
