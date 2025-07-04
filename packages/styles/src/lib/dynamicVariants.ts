@@ -22,14 +22,16 @@ export type Value =
   | number
   | ''
 
+type Color = string // keyof IColors
+
 export type DynamicVariants =
-  `color:${keyof IColors}` |
+  `color:${Color}` |
   `border${Capitalize<typeof borderDirection[number]>}Width:${keyof IBorderRadius}` |
-  `border${Capitalize<typeof borderDirection[number]>}Color:${keyof IColors}` |
+  `border${Capitalize<typeof borderDirection[number]>}Color:${Color}` |
   `borderRadius:${keyof IBorderRadius}` |
   `border${Capitalize<typeof borderYDirection[number]>}${Capitalize<typeof borderXDirection[number]>}Radius:${keyof IBorderRadius}` |
   `cursor:${typeof cursorTypes[number]}` |
-  `bg:${keyof IColors}` |
+  `bg:${Color}` |
   `br:${keyof IBorderRadius}` |
   `scale:${Value}`
 
@@ -41,7 +43,7 @@ export const createDynamicVariants = () => {
   }
 
   colorVariants.forEach(variant => {
-    createVariant(variant, (theme, color: keyof IColors) => ({
+    createVariant(variant, (theme, color: Color) => ({
       [variant]: theme.baseColors[color],
     }))
   })
@@ -68,7 +70,7 @@ export const createDynamicVariants = () => {
 
   createVariant('cursor', (theme, cursor: typeof cursorTypes[number]) => ({ cursor }))
 
-  createVariant('bg', (theme, color: keyof IColors) => ({
+  createVariant('bg', (theme, color: Color) => ({
     backgroundColor: theme.baseColors[color],
   }))
 
