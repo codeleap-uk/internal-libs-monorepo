@@ -1,4 +1,3 @@
-import { FormTypes, yup } from '@codeleap/deprecated'
 import { MutableRefObject } from 'react'
 import { GroupBase, NoticeProps, OptionProps, Props } from 'react-select'
 import { AsyncProps } from 'react-select/async'
@@ -7,6 +6,8 @@ import { ButtonProps } from '../Button'
 import { InputBaseProps } from '../InputBase'
 import { SelectComposition, OptionState } from './styles'
 import { ICSS, StyledProp } from '@codeleap/styles'
+import { Label, Option, Options } from '@codeleap/types'
+import { Validator } from '@codeleap/form'
 
 type SelectValue<T, Multi extends boolean> = Multi extends true ? T[] : T
 
@@ -14,23 +15,23 @@ type OmitWithValues<T> = Omit<T, 'options' | 'value' | 'isMulti' | 'loadOptions'
 
 type DynamicSelectProps<T, Multi extends boolean> =
   ({
-    loadOptions?: (search: string) => Promise<FormTypes.Options<T>>
-    defaultValues?: FormTypes.Options<T>
+    loadOptions?: (search: string) => Promise<Options<T>>
+    defaultValues?: Options<T>
   } & OmitWithValues<
-    AsyncProps<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>>
+    AsyncProps<Option<T>, Multi, GroupBase<Option<T>>>
   >) |
   ({
     loadOptions?: never
   } & OmitWithValues<
-    Props<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>>
+    Props<Option<T>, Multi, GroupBase<Option<T>>>
   >)
 
 export type ReactSelectProps<T, Multi extends boolean = false> = Omit<InputBaseProps, 'style'> & {
-  options: FormTypes.Options<T> & { itemProps?: ButtonProps }
+  options: Options<T> & { itemProps?: ButtonProps }
   value: SelectValue<T, Multi>
   onValueChange?: (value: SelectValue<T, Multi>) => void
   multiple?: Multi
-  validate?: FormTypes.ValidatorWithoutForm<SelectValue<T, Multi>> | yup.Schema<SelectValue<T, Multi>>
+  validate?: Validator<SelectValue<T, Multi>, any, any>
 } & DynamicSelectProps<T, Multi>
 
 export type ComponentPartProps = {
@@ -97,9 +98,9 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     limit?: number
     loadInitialValue?: boolean
     loadingMessage?: string
-    selectedOption?: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>
+    selectedOption?: { label: Label; value: T } | SelectValue<T, Multi>
     selectRef?: MutableRefObject<any>
-    setSelectedOption?: (value: { label: FormTypes.Label; value: T } | SelectValue<T, Multi>) => void
+    setSelectedOption?: (value: { label: Label; value: T } | SelectValue<T, Multi>) => void
     style?: StyledProp<SelectComposition>
   } & Omit<
     ReactSelectProps<T, Multi>,

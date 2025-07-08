@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { Prev } from './pathMapping'
 /* eslint-disable no-unused-vars */
 export type AnyFunction = (...args: any[]) => any
@@ -122,3 +123,5 @@ export type SecondToLastArguments<T extends AnyFunction> = T extends ((...args: 
 export type Options<T> = { label: string; value: T }[]
 
 export type Option<T> = Options<T>[number]
+
+export type Label = string | ReactNode
