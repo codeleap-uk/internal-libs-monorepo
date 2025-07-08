@@ -59,3 +59,5 @@ export type VariantStyleSheet = Record<string, any>
 export type StyledProp<T extends string> = StyleProp<Record<T, ICSS>>
 
 export type StyleAggregator<T extends string = any> = (theme: ITheme, style: Record< T, ICSS>) => Record< T, ICSS>
+
+export type StyleRecord<K extends string> = Record<K, ICSS>

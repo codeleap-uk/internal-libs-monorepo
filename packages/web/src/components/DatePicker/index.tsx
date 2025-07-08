@@ -1,13 +1,11 @@
-import { TypeGuards } from '@codeleap/types'
 import { useCallback, useConditionalState } from '@codeleap/hooks'
-import { Text, View } from '../components'
-import { DatePickerProps, DayComponentProps } from './types'
+import { View } from '../components'
+import { DatePickerProps } from './types'
 import ReactDatePicker from 'react-datepicker'
-import { Header, OuterInput } from './components'
+import { DayContent, Header, OuterInput, YearContent } from './components'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
-import dayjs from 'dayjs'
 
 export * from './styles'
 export * from './types'
@@ -23,19 +21,19 @@ export function DatePicker(props: DatePickerProps) {
     outerInputComponent: OuterInputComponent,
     headerComponent: HeaderComponent,
     headerProps: _headerProps,
-    dayComponent: DayComponent,
-    dayProps,
-    yearComponent: YearComponent,
-    yearProps,
+    dayComponent,
+    dayProps: providedDayProps,
+    yearComponent,
+    yearProps: providedYearProps,
     datePickerProps,
     minDate,
     maxDate,
     startDate,
-    visible: _visible,
-    toggle: _toggle,
-    yearShow: _yearShow,
-    setYearShow: _setYearShow,
     disabled,
+    visible: providedVisible,
+    toggle: providedToggle,
+    yearShow: providedYearShow,
+    setYearShow: providedSetYearShow,
     ...otherProps
   } = {
     ...DatePicker.defaultProps,
@@ -44,86 +42,37 @@ export function DatePicker(props: DatePickerProps) {
 
   const styles = useStylesFor(DatePicker.styleRegistryName, style)
 
-  const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false })
-  const [yearShow, setYearShow] = useConditionalState(_yearShow, _setYearShow, { initialValue: false })
-
-  const DayContentComponent = useCallback((_param: DayComponentProps) => {
-    const param = {
-      ..._param,
-      ...dayProps,
-    }
-
-    const date = dayjs(param?.date).format('DD MMM YYYY');
-    const dateValue = value ? dayjs(value).format('DD MMM YYYY') : ''
-
-    const isSelected = date === dateValue
-
-    const isDisabled = [
-      dayjs(param?.date).isBefore(dayjs(minDate)),
-      dayjs(param?.date).isAfter(dayjs(maxDate))
-    ].some(Boolean)
-
-    const getStyles = (key) => {
-      return {
-        ...styles[key],
-        ...(isSelected && styles[`${key}:selected`]),
-        ...(!isSelected && isDisabled && styles[`${key}:disabled`]),
-      }
-    }
-
-    if (TypeGuards.isFunction(DayComponent)) {
-      return (
-        <DayComponent
-          {...param}
-          value={value}
-          disabled={isDisabled}
-          selected={isSelected}
-          styles={styles}
-        />
-      )
-    }
-
-    return (
-      <View style={getStyles('dayWrapper')}>
-        <Text style={getStyles('day')} text={String(param?.day)} />
-      </View>
-    )
-  }, [value])
-
-  const YearContentComponent = useCallback((_param) => {
-    const param = {
-      ..._param,
-      ...yearProps,
-    }
-
-    const isSelected = String(value)?.includes(param?.year)
-
-    const getStyles = (key) => {
-      return {
-        ...styles[key],
-        ...(isSelected && styles[`${key}:selected`]),
-      }
-    }
-
-    if (TypeGuards.isFunction(YearComponent)) {
-      return (
-        <YearComponent
-          {...param}
-          value={value}
-          selected={isSelected}
-          styles={styles}
-        />
-      )
-    }
-
-    return (
-      <View style={getStyles('yearWrapper')}>
-        <Text style={getStyles('year')} text={param?.year} />
-      </View>
-    )
-  }, [value])
-
   const compositionStyles = useCompositionStyles(['outerInput', 'header'], styles)
+
+  const [visible, toggle] = useConditionalState(providedVisible, providedToggle, { initialValue: false })
+  const [yearShow, setYearShow] = useConditionalState(providedYearShow, providedSetYearShow, { initialValue: false })
+
+  const DayContentComponent = useCallback(({ day, date }) => {
+    return (
+      <DayContent
+        day={day}
+        date={date}
+        {...providedDayProps}
+        value={value}
+        minDate={minDate}
+        maxDate={maxDate}
+        component={dayComponent}
+        styles={styles}
+      />
+    )
+  }, [value])
+
+  const YearContentComponent = useCallback(({ year }) => {
+    return (
+      <YearContent
+        year={year}
+        {...providedYearProps}
+        value={value}
+        component={yearComponent}
+        styles={styles}
+      />
+    )
+  }, [value])
 
   return (
     <View style={styles.wrapper}>

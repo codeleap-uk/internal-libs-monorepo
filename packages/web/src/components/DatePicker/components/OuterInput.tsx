@@ -1,14 +1,13 @@
 import { TextInput } from '../../components'
 import { DatePickerProps } from '../types'
 
-export const OuterInput: DatePickerProps['outerInputComponent'] = ({ valueLabel, focused, hideInput, ...props }) => {
+export const OuterInput: DatePickerProps['outerInputComponent'] = ({ hideInput, ...props }) => {
   if (hideInput) {
     return null
   }
 
   return (
     <TextInput
-      validate={!focused && props?.validate}
       debugName='DatePicker - OuterInputComponent'
       masking={{
         type: 'custom',

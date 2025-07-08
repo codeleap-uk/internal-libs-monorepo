@@ -30,7 +30,7 @@ export type DayComponentProps = {
 export type YearComponentProps = {
   year: string | number
   value: Date
-  selected: boolean
+  selected?: boolean
   styles: DatePickerProps['style']
 }
 
@@ -42,7 +42,6 @@ export type DatePickerProps =
   {
     style?: StyledProp<DatePickerComposition>
     hideInput?: boolean
-    value: Date
     outerInputComponent?: React.ComponentType<Partial<DatePickerOuterInputProps>>
     headerComponent?: React.ComponentType<Partial<DatePickerHeaderComponent>>
     headerProps?: Partial<DatePickerHeaderComponent>
@@ -52,10 +51,11 @@ export type DatePickerProps =
     yearProps?: Partial<YearComponentProps>
     formatDate?: (date: Date | string) => React.ReactNode
     datePickerProps?: Omit<Partial<ReactDatePickerProps>, 'customInput' | 'renderCustomHeader' | RootDatePickerProps>
-    onValueChange: (date: Date) => void
     defaultValue?: Date
     visible?: boolean
     toggle?: () => void
     yearShow?: boolean
     setYearShow?: () => void
+    value: Date
+    onValueChange: (date: Date) => void
   }
