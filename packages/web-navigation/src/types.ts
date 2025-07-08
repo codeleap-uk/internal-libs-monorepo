@@ -1,7 +1,7 @@
 export type ExtractParams<T extends string> =
   T extends `${infer _Start}{{${infer Param}}}${infer Rest}`
-    ? Param | ExtractParams<Rest>
-    : never
+  ? Param | ExtractParams<Rest>
+  : never
 
 type Params<T> = {
   [K in keyof T]: T[K] extends string ? ExtractParams<T[K]> : Params<T[K]>;
@@ -10,16 +10,16 @@ type Params<T> = {
 // @ts-ignore
 type ExtractRoutes<T, PM, Prefix extends string = ''> = {
   [K in keyof T & string]:
-    T[K] extends string
-      ? {
-        // @ts-ignore
-        [P in `${Prefix}${Prefix extends '' ? '' : '.'}${K}`]: PM[K]
-      } // @ts-ignore
-      : ExtractRoutes<T[K], PM[K], `${Prefix}${Prefix extends '' ? '' : '.'}${K}`>
+  T[K] extends string
+  ? {
+    // @ts-ignore
+    [P in `${Prefix}${Prefix extends '' ? '' : '.'}${K}`]: PM[K]
+  } // @ts-ignore
+  : ExtractRoutes<T[K], PM[K], `${Prefix}${Prefix extends '' ? '' : '.'}${K}`>
 }[keyof T]
 
 type UnionToIntersection<U> =
-  (U extends any ? (x: U)=> void : never) extends ((x: infer I)=>void) ? I : never
+  (U extends any ? (x: U) => void : never) extends ((x: infer I) => void) ? I : never
 
 export type Routes<T> = UnionToIntersection<ExtractRoutes<T, Params<T>>>
 
