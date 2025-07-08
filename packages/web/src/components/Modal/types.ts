@@ -19,20 +19,16 @@ export type ModalProps =
     showClose?: boolean
     closable?: boolean
     dismissOnBackdrop?: boolean
-    scroll?: boolean
     header?: React.ReactElement
     footer?: React.ReactNode
     withOverlay?: boolean
     closeIconName?: AppIcon
-    keepMounted?: boolean
     renderHeader?: (props: ModalHeaderProps) => React.ReactElement
     debugName?: string
     closeButtonProps?: Partial<ActionIconProps>
     closeOnEscape?: boolean
     onClose?: () => void
     overlayProps?: Partial<OverlayProps>
-    zIndex?: number
-    withScrollContainer?: boolean
     scrollLock?: boolean
     backdropProps?: Partial<TouchableProps>
     alterHistory?: boolean

@@ -5,7 +5,7 @@ const IS_SSR = typeof window === 'undefined' || typeof history === 'undefined'
 
 const defaultConfig: Partial<Config> = {
   historyEnabled: false,
-  getMetadata: () => {},
+  getMetadata: () => { },
 }
 
 export type {
@@ -73,7 +73,7 @@ export class Navigation<O extends object, R extends object = {}, C extends Recor
   public isCurrentRoute<T extends keyof Routes<R>>(
     route: T,
     // @ts-expect-error
-    routeParams: Record<Routes<R>[T], string|number> = {} as any,
+    routeParams: Record<Routes<R>[T], string | number> = {} as any,
     exact = false,
   ) {
     if (IS_SSR) return false
@@ -138,7 +138,7 @@ export class Navigation<O extends object, R extends object = {}, C extends Recor
   public getPathWithParams<T extends keyof Routes<R>>(
     route: T,
     // @ts-expect-error
-    routeParams: Record<Routes<R>[T], string|number> = {} as any,
+    routeParams: Record<Routes<R>[T], string | number> = {} as any,
   ) {
     let path = this.getPath(route)
 
@@ -198,7 +198,7 @@ export class Navigation<O extends object, R extends object = {}, C extends Recor
   public navigate<T extends keyof Routes<R>>(
     route: T,
     // @ts-expect-error
-    options: Record<Routes<R>[T], string|number> & O & { params?: RouteParams } = {} as any,
+    options: Record<Routes<R>[T], string | number> & O & { params?: RouteParams } = {} as any,
   ) {
     // @ts-ignore
     let path = this.getPath(route)

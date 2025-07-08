@@ -3,10 +3,10 @@ import { globalState } from '@codeleap/store'
 
 const overlapIndex = 99
 
-export const modalsState = globalState({ currentModal: null, indexes: {} })
+export const modalsState = globalState<{ currentModal: string | null; indexes: Record<string, number> }>({ currentModal: null, indexes: {} })
 
 export function modalInferIndexes(visible: boolean, id: string) {
-  const indexes = { ...modalsState.value.indexes }
+  const indexes = { ...modalsState.value?.indexes }
 
   if (!visible) {
     indexes[id] = overlapIndex
@@ -26,7 +26,7 @@ export function modalInferIndexes(visible: boolean, id: string) {
 }
 
 export function modalScrollLock(to: boolean, modalIdentifier: string) {
-  let modalId = modalsState.value.currentModal
+  let modalId = modalsState.value?.currentModal
 
   const alreadyDifferentOpenedModal = !TypeGuards.isNil(modalId) && modalIdentifier !== modalId
 

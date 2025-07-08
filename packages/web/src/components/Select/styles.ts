@@ -1,4 +1,3 @@
-import { FormTypes } from '@codeleap/deprecated'
 import { capitalize } from '@codeleap/utils'
 import { ICSS, useNestedStylesByKey } from '@codeleap/styles'
 import { CSSObjectWithLabel, GroupBase, StylesConfig } from 'react-select'
@@ -6,6 +5,7 @@ import { ButtonParts as _ButtonParts } from '../Button'
 import { InputBaseParts } from '../InputBase'
 import { SelectProps, UseSelectStylesProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
+import { Option } from '@codeleap/types'
 
 type ButtonParts = _ButtonParts
 
@@ -130,7 +130,7 @@ export function useSelectStyles<T, Multi extends boolean>(props: UseSelectStyles
     }
   }
 
-  const reactSelectStyles: StylesConfig<FormTypes.Option<T>, Multi, GroupBase<FormTypes.Option<T>>> = {
+  const reactSelectStyles: StylesConfig<Option<T>, Multi, GroupBase<Option<T>>> = {
     container: (baseStyles) => stylesKey('inputContainer', baseStyles),
     control: () => stylesKey('inputContainer'),
     menuPortal: (baseStyles) => stylesKey('listPortal', parseMenuPortalStyles(baseStyles)),

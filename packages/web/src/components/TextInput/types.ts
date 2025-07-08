@@ -1,32 +1,33 @@
-import { FormTypes, yup } from '@codeleap/deprecated'
 import { TouchableProps } from '../Touchable'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 import { InputBaseProps } from '../InputBase'
 import { HTMLProps } from '../../types'
 import { TextInputComposition } from './styles'
+import { Field } from '@codeleap/form'
+import { AnyFunction } from '@codeleap/types'
 
 type NativeTextInputProps = HTMLProps<'input'>
 
 export type TextInputProps =
-  Omit<InputBaseProps, 'style'> &
+  Omit<InputBaseProps, 'style' | 'ref'> &
   Omit<NativeTextInputProps, 'value' | 'crossOrigin' | 'ref' | 'style'> &
   {
     style?: StyledProp<TextInputComposition>
     password?: boolean
-    validate?: FormTypes.ValidatorWithoutForm<string> | yup.Schema<string>
     debugName?: string
     visibilityToggle?: boolean
-    value?: NativeTextInputProps['value']
     multiline?: boolean
     onPress?: TouchableProps['onPress']
-    onChangeText?: (textValue: string) => void
     caretColor?: string
     focused?: boolean
-    _error?: boolean
+    forceError?: string
     rows?: number
     masking?: TextInputMaskingProps
     visibleIcon?: AppIcon
     hiddenIcon?: AppIcon
+    field?: Field<string, any, any>
+    value?: string
+    onValueChange?: (value: string) => void
   }
 
 export type InputRef = {
@@ -56,7 +57,7 @@ export type MaskProps = {
   maskChar?: string
   formatChars?: Record<string, FormatChar>
   alwaysShowMask?: boolean
-  validator?: FormTypes.ValidatorFunctionWithoutForm
+  validator?: AnyFunction
   maskType?: 'BRL' | 'INTERNATIONAL'
   getRawValue?: (value: any) => string
 }

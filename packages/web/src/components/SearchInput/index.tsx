@@ -69,7 +69,7 @@ export const SearchInput = (props: SearchInputProps) => {
     <TextInput
       value={search}
       placeholder={placeholder}
-      onChangeText={(value) => {
+      onValueChange={(value) => {
         onTypingChange?.(true)
         handleChangeSearch(value)
       }}

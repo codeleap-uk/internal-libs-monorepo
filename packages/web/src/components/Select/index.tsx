@@ -1,7 +1,6 @@
 import React, { useRef, forwardRef, useImperativeHandle } from 'react'
 import { useState, onUpdate, useEffect } from '@codeleap/hooks'
-import { TypeGuards } from '@codeleap/types'
-import { FormTypes, useValidate } from '@codeleap/deprecated'
+import { Option, TypeGuards } from '@codeleap/types'
 import _Select, { components, MenuListProps, MenuProps, MultiValueProps, NoticeProps } from 'react-select'
 import Async from 'react-select/async'
 import { useSelectStyles } from './styles'
@@ -14,6 +13,7 @@ import { ActivityIndicator } from '../ActivityIndicator'
 import { Icon } from '../Icon'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, AppIcon, ICSS, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { useValidate } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -165,9 +165,6 @@ const defaultFormatPlaceholderNoItems = (props: PlaceholderProps & { text: strin
 export const Select = forwardRef<HTMLInputElement, SelectProps>(
   <T extends string | number = string, Multi extends boolean = false>
   (props: SelectProps<T, Multi>, inputRef: React.ForwardedRef<HTMLInputElement>) => {
-
-    type Option = FormTypes.Option<T>
-
     const {
       inputBaseProps,
       others: selectProps,
@@ -244,13 +241,12 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
 
     const isFocused = _isFocused || focused
 
-    // @ts-ignore
     const validation = useValidate(value, validate)
 
     const isDisabled = !!inputBaseProps.disabled
 
-    const hasError = !validation.isValid || _error
-    const errorMessage = validation.message || _error
+    const hasError = validation?.showError || _error
+    const errorMessage = validation?.message || _error
 
     const {
       reactSelectStyles,
@@ -301,7 +297,7 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
       }
     }
 
-    const handleChange = (opt: Multi extends true ? Option[] : Option) => {
+    const handleChange = (opt: Multi extends true ? Option<T>[] : Option<T>) => {
       if (TypeGuards.isArray(opt)) {
         // @ts-ignore
         if (TypeGuards.isNumber(limit) && opt?.length > limit && opt?.length > selectedOption?.length) {
@@ -326,10 +322,9 @@ export const Select = forwardRef<HTMLInputElement, SelectProps>(
     }, [validation?.onInputBlurred, props?.onBlur])
 
     const handleFocus: SelectProps['onFocus'] = React.useCallback((e) => {
-      validation?.onInputFocused()
       setIsFocused(true)
       props?.onFocus?.(e)
-    }, [validation?.onInputFocused, props?.onFocus])
+    }, [props?.onFocus])
 
     const SelectComponent = !!loadOptions ? Async : _Select
 

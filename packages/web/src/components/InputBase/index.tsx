@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { getRenderedComponent } from '@codeleap/utils'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -6,6 +6,7 @@ import { View } from '../View'
 import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
+import { StyledComponentWithProps } from '@codeleap/styles'
 
 export * from './styles'
 export * from './utils'
@@ -22,7 +23,7 @@ const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
   return <React.Fragment>{props.children}</React.Fragment>
 }
 
-export const InputBase = (props: InputBaseProps) => {
+export const InputBase = forwardRef((props: InputBaseProps, ref) => {
   const allProps = {
     ...InputBase.defaultProps,
     ...props,
@@ -35,9 +36,9 @@ export const InputBase = (props: InputBaseProps) => {
     description,
     leftIcon,
     rightIcon,
-    wrapper,
+    wrapper: WrapperComponent,
     debugName,
-    innerWrapper,
+    innerWrapper: InnerWrapperComponent,
     focused,
     innerWrapperProps,
     wrapperProps,
@@ -49,9 +50,6 @@ export const InputBase = (props: InputBaseProps) => {
     innerWrapperRef,
     ...otherProps
   } = allProps
-
-  const WrapperComponent = wrapper || View
-  const InnerWrapperComponent = innerWrapper || View
 
   const styles = useInputBaseStyles(allProps)
 
@@ -101,6 +99,7 @@ export const InputBase = (props: InputBaseProps) => {
       {...otherProps}
       {...wrapperProps}
       style={styles.wrapperStyle}
+      ref={ref}
     >
       {
         order.map((key) => (
@@ -111,7 +110,7 @@ export const InputBase = (props: InputBaseProps) => {
       }
     </WrapperComponent>
   )
-}
+}) as StyledComponentWithProps<InputBaseProps>
 
 InputBase.elements = [
   'wrapper',
@@ -134,4 +133,6 @@ InputBase.defaultProps = {
   leftIcon: null,
   description: null,
   error: null,
+  wrapper: View,
+  innerWrapper: View,
 } as Partial<InputBaseProps>

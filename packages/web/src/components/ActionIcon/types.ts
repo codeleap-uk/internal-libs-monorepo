@@ -5,7 +5,7 @@ import { IconProps } from '../Icon'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 
 export type ActionIconProps =
-  Omit<TouchableProps, 'style'> &
+  Omit<TouchableProps, 'style' | 'debugName'> &
   ComponentCommonProps &
   {
     iconProps?: Partial<IconProps>

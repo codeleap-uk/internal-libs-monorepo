@@ -1,12 +1,12 @@
 import React from 'react'
-import { onUpdate, useCallback, useState } from '@codeleap/hooks'
-import { useValidate } from '@codeleap/deprecated'
+import { onUpdate, useCallback } from '@codeleap/hooks'
 import { BubbleMenu, FloatingMenu, EditorContent } from '@tiptap/react'
 import { FileInput, Text, View } from '../components'
 import { TextEditorProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { useValidate } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -20,7 +20,6 @@ export const TextEditor = (props: TextEditorProps) => {
     floatingMenuProps,
     toolbarComponent,
     fileInputRef,
-    _error,
     validate,
   } = {
     ...TextEditor.defaultProps,
@@ -29,22 +28,15 @@ export const TextEditor = (props: TextEditorProps) => {
 
   const styles = useStylesFor(TextEditor.styleRegistryName, style)
 
-  const [_isFocused, setIsFocused] = useState(false)
   const validation = useValidate(editor?.getText() ?? '', validate)
 
-  const hasError = !validation.isValid || _error
-  const errorMessage = validation.message || _error
   const isDisabled = !editor?.isEditable ?? null
 
   const handleBlur = React.useCallback(() => {
     validation?.onInputBlurred()
-    setIsFocused(false)
   }, [validation?.onInputBlurred])
 
-  const handleFocus = React.useCallback(() => {
-    validation?.onInputFocused()
-    setIsFocused(true)
-  }, [validation?.onInputFocused])
+  const handleFocus = React.useCallback(() => {}, [])
 
   onUpdate(() => {
     editor?.on('blur', handleBlur)
@@ -80,7 +72,7 @@ export const TextEditor = (props: TextEditorProps) => {
 
   const editorStyles = [
     styles.editor,
-    hasError && styles['editor:error'],
+    validation?.showError && styles['editor:error'],
     isDisabled && styles['editor:disabled'],
   ]
 
@@ -90,7 +82,7 @@ export const TextEditor = (props: TextEditorProps) => {
     <View
       style={[
         styles.wrapper,
-        hasError && styles['wrapper:error'],
+        validation?.showError && styles['wrapper:error'],
         {
           '.tiptap': editorStyles,
         },
@@ -101,7 +93,7 @@ export const TextEditor = (props: TextEditorProps) => {
       <_BubbleMenu />
       <_FloatingMenu />
       <EditorContent editor={editor} />
-      {hasError ? <Text text={errorMessage as string} style={styles['errorMessage:error']} /> : null}
+      {validation?.showError ? <Text text={validation?.message as string} style={styles['errorMessage:error']} /> : null}
       <FileInput ref={fileInputRef} />
     </View>
   )

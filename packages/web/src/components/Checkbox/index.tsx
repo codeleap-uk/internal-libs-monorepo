@@ -8,6 +8,8 @@ import { AnyRecord, AppIcon, IJSX, mergeStyles, StyledComponentProps } from '@co
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { CheckboxParts } from './styles'
 import { TypeGuards } from '@codeleap/types'
+import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -25,15 +27,23 @@ export const Checkbox = (props: CheckboxProps) => {
 
   const {
     style,
-    value,
     disabled,
     debugName,
+    field,
+    value,
     onValueChange,
     checkboxOnLeft,
     checkIcon,
   } = checkboxProps
 
   const styles = useStylesFor(Checkbox.styleRegistryName, style)
+
+  const {
+    validation,
+    wrapperRef,
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(field, fields.boolean, { value, onValueChange })
 
   const boxAnimation = useAnimatedVariantStyles({
     variantStyles: styles,
@@ -42,16 +52,16 @@ export const Checkbox = (props: CheckboxProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? styles['box:disabled-checked'] : styles['box:disabled-unchecked']
+        disabledStyle = inputValue ? styles['box:disabled-checked'] : styles['box:disabled-unchecked']
       }
-      const style = value ? styles['box:checked'] : styles['box:unchecked']
+      const style = inputValue ? styles['box:checked'] : styles['box:unchecked']
 
       return {
         ...style,
         ...disabledStyle,
       }
     },
-    dependencies: [value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   const checkmarkWrapperAnimation = useAnimatedVariantStyles({
@@ -67,15 +77,15 @@ export const Checkbox = (props: CheckboxProps) => {
       'worklet'
       let disabledStyle = {}
       if (disabled) {
-        disabledStyle = value ? styles['checkmarkWrapper:disabled-checked'] : styles['checkmarkWrapper:disabled-unchecked']
+        disabledStyle = inputValue ? styles['checkmarkWrapper:disabled-checked'] : styles['checkmarkWrapper:disabled-unchecked']
       }
-      const style = value ? styles['checkmarkWrapper:checked'] : styles['checkmarkWrapper:unchecked']
+      const style = inputValue ? styles['checkmarkWrapper:checked'] : styles['checkmarkWrapper:unchecked']
       return {
         ...style,
         ...disabledStyle,
       }
     },
-    dependencies: [value, disabled],
+    dependencies: [inputValue, disabled],
   })
 
   // @ts-expect-error __props is ICSS
@@ -83,14 +93,14 @@ export const Checkbox = (props: CheckboxProps) => {
 
   const handleChange = (e) => {
     if (disabled) return
-    if (!TypeGuards.isFunction(onValueChange)) return
+    if (!TypeGuards.isFunction(onInputValueChange)) return
 
     const isSpaceBarClick = e?.keyCode === 32
     const isEnterKey = e?.key === 'Enter'
     const isClick = e?.type === 'click'
 
     if (isClick || e?.keyCode === 13 || isSpaceBarClick || isEnterKey) {
-      onValueChange?.(!value)
+      onInputValueChange?.(!inputValue)
     }
   }
 
@@ -105,9 +115,13 @@ export const Checkbox = (props: CheckboxProps) => {
     checkmark: getStyles('checkmark'),
   }
 
+  const hasError = validation?.showError
+
   return (
     <InputBase
       {...inputBaseProps}
+      ref={wrapperRef}
+      error={hasError ? validation?.message : null}
       debugName={debugName}
       style={styles}
       order={_checkboxOnLeft ? reversedOrder : InputBaseDefaultOrder}

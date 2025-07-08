@@ -15,13 +15,14 @@ export type InputBaseProps = React.PropsWithChildren<{
   innerWrapperProps?: any
   style?: StylesOf<InputBaseComposition>
   description?: React.ReactNode
-  debugName: string
+  debugName?: string
   focused?: boolean
   disabled?: boolean
   order?: OrderedParts[]
   labelAsRow?: boolean
   noError?: boolean
   innerWrapperRef?: React.MutableRefObject<HTMLDivElement | null>
+  ref?: React.MutableRefObject<HTMLDivElement>
 }>
 
 export type OmitDiff<T1, T2> = {
