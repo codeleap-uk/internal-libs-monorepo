@@ -32,11 +32,11 @@ export const useValidate = <T, V extends Validator<T, any, any>>(value: T, provi
 
   const validation = validate(value)
 
-  const isValid = validation.isValid
+  const isValid = validation?.isValid ?? true
 
   const isInvalid = !isValid
 
-  const message = validation.readableError ?? validation.error?.[0]?.message
+  const message = validation?.readableError ?? validation?.error?.[0]?.message
 
   const errorDisplayRequiresBlur = startedUnset
 
