@@ -9,7 +9,7 @@ import { useFieldBinding } from './useFieldBinding';
 import { createRef, useRef, useState } from 'react';
 import { logger } from '@codeleap/logger';
 
-class ValidationError extends Error {
+export class ValidationError extends Error {
   data: any
 
   constructor(data: any) {
