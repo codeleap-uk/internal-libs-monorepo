@@ -3,7 +3,7 @@ import { TypeGuards } from '@codeleap/types'
 import { AppTheme, Theme, themeStore, Breakpoint } from '@codeleap/styles'
 import { getMediaQuery, isMediaQuery } from '../tools'
 
-const getTheme = () => themeStore.getState().current as AppTheme<Theme>
+const getTheme = () => themeStore.themeTyped
 
 function validateBreakpoint(currentTheme: AppTheme<Theme>, breakpoint: string) {
   const matchesDown = isMediaQuery(currentTheme.media.down(breakpoint as never))

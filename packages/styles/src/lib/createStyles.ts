@@ -9,7 +9,7 @@ export function createStyles<K extends string, V extends Value = {}>(
   styles: StylesShape<K, V> | ((theme: ITheme) => StylesShape<K, V>),
 ) {
   const compute = () => {
-    const current = themeStore.getState().current
+    const current = themeStore.theme
 
     if (typeof styles === 'function') {
       return !current ? {} as StylesShape<K, V> : styles(current)
