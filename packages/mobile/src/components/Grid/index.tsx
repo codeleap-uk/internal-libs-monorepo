@@ -4,9 +4,8 @@ import { View, ViewProps } from '../View'
 import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { RefreshControl } from '../RefreshControl'
 import { List, ListItem } from '../List'
-
 import { GridProps } from './types'
-import { AnyRecord, AppTheme, IJSX, StyledComponentProps, StyledComponentWithProps, Theme, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -33,7 +32,7 @@ export const Grid = forwardRef<FlatList, GridProps>((flatGridProps, ref) => {
     ...flatGridProps,
   }
 
-  const themeSpacing = useTheme(store => (store.current as AppTheme<Theme>)?.spacing)
+  const themeSpacing = useTheme(store => store.theme?.spacing)
 
   const styles = useStylesFor(Grid.styleRegistryName, style)
 

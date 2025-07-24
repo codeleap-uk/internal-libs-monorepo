@@ -3,7 +3,7 @@ import { View } from '../View'
 import { Button } from '../Button'
 import { useMediaQuery, usePagination, useStylesFor, WebStyleRegistry } from '../../lib'
 import { PaginationButtonsProps } from './types'
-import { AnyRecord, AppIcon, AppTheme, IJSX, StyledComponentProps, Theme, useCompositionStyles, useTheme } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles, useTheme } from '@codeleap/styles'
 
 export * from './styles'
 export * from './types'
@@ -30,11 +30,11 @@ export const PaginationButtons = (props: PaginationButtonsProps) => {
     ...paginationProps
   } = allProps
 
-  const theme = useTheme(store => store?.current) as AppTheme<Theme>
+  const themeMedia = useTheme(store => store?.theme?.media)
 
   const { boundaries = 2 } = paginationProps
 
-  const query = theme?.media?.down('tabletSmall' as never)
+  const query = themeMedia?.down('tabletSmall' as never)
 
   const _isMobile = useMediaQuery(query)
   const isMobileQuery = TypeGuards.isBoolean(isMobile) ? isMobile : _isMobile

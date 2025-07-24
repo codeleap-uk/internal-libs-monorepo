@@ -6,7 +6,7 @@ type AppVariantsMap = {
 }
 
 export function createAppVariants<T extends AppVariantsMap>(variants: T) {
-  themeStore.setState({ variants })
+  themeStore.setVariants(variants)
 
   return variants
 }

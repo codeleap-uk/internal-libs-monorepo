@@ -1,9 +1,7 @@
-import { create } from 'zustand'
-import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
-import { AnyRecord } from '../types'
 import { CacheType } from '../types/cache'
 import { StyleConstants } from './constants'
 import { hashKey } from './hashKey'
+import { StateStorage } from '../types/store'
 
 function getStaleTime() {
   const time = 7
@@ -15,23 +13,15 @@ function getStaleTime() {
   return currentTime
 }
 
-type StorePersistor = {
-  cached: AnyRecord
-  cacheFor: (key: string, value: any) => void
-  staleTime: Date
-  reset: () => void
-}
-
 export class Cache<T extends any = any> {
   cache: Record<string, T> = {}
 
-  persistor = null
+  get persistKeyCache() {
+    return `@styles.caches.${this.registryName}.cache`
+  }
 
-  store: StorePersistor = {
-    cached: {},
-    cacheFor: () => null,
-    reset: () => null,
-    staleTime: null
+  get persistKeyStaleTime() {
+    return `@styles.caches.${this.registryName}.staleTime`
   }
 
   constructor(
@@ -39,23 +29,21 @@ export class Cache<T extends any = any> {
     private storage: StateStorage = null,
     public persistCache: boolean = !!storage,
   ) {
-    if (!persistCache) return
+    if (!persistCache || !StyleConstants.STORE_CACHE_ENABLED) return
 
-    this.createPersistor(registryName)
-
-    if (!StyleConstants.STORE_CACHE_ENABLED || !this.persistor) return
+    const { persistedCache, persistedStaleTime } = this.loadStorage()
 
     const currentTime = new Date()
-    const staleTime = new Date(this.store.staleTime)
 
-    const isStaled = currentTime > staleTime
+    const isStaled = currentTime > persistedStaleTime
 
     if (isStaled) {
-      this.store.reset()
+      this.clearStorage()
       return
     }
 
-    this.setCache(this.store.cached)
+    this.setCache(persistedCache)
+    this.storeStaleTime(persistedStaleTime)
   }
 
   keyFor(cacheBaseKey: string, data: Array<any> | any) {
@@ -72,9 +60,11 @@ export class Cache<T extends any = any> {
 
   cacheFor(key: string, cache: T) {
     this.cache[key] = cache
-    if (this.persistCache) this.store.cacheFor(key, cache)
+    if (this.persistCache) this.storeCache()
     return cache
   }
+
+  // utils
 
   setCache(cache: Record<string, T>) {
     this.cache = cache
@@ -82,50 +72,41 @@ export class Cache<T extends any = any> {
 
   clear() {
     this.cache = {}
-    if (this.persistCache) this.persistor.persist.clearStorage()
+    this.clearStorage()
   }
 
-  createPersistor(registryName: string) {
-    if (!this.persistCache) return null
+  // storage
 
-    const persistor = create(persist<StorePersistor>(
-      (set, get) => ({
-        staleTime: getStaleTime(),
-        cached: {},
-        cacheFor: (key, value) => set(store => {
-          const cached = store.cached
+  loadStorage() {
+    if (!this.persistCache) return
 
-          cached[key] = value
-    
-          return {
-            cached
-          }
-        }),
-        reset: () => set({
-          cached: {},
-          staleTime: getStaleTime()
-        })
-      }),
-      {
-        name: `@styles.caches.${registryName}`,
-        version: StyleConstants.STORES_PERSIST_VERSION,
-        migrate: (persistedState: StorePersistor, version) => {
-          if (version != StyleConstants.STORES_PERSIST_VERSION) {
-            persistedState.staleTime = getStaleTime()
-            persistedState.cached = {}
-    
-            return persistedState
-          }
-    
-          return persistedState as StorePersistor
-        },
-        storage: createJSONStorage(() => this.storage),
-      }
-    ))
+    const persistedStaleTime = this.storage.getItem(this.persistKeyStaleTime)
+    const persistedCache = JSON.parse(this.storage.getItem(this.persistKeyCache))
 
-    this.persistor = persistor
-    this.store = persistor.getState()
+    return {
+      persistedStaleTime: !persistedStaleTime ? getStaleTime() : new Date(persistedStaleTime),
+      persistedCache,
+    }
+  }
 
-    return persistor
+  clearStorage() {
+    if (!this.persistCache) return
+
+    this.storage.removeItem(this.persistKeyStaleTime)
+    this.storage.removeItem(this.persistKeyCache)
+  }
+
+  storeCache(cache: Record<string, T> = null) {
+    if (!this.persistCache) return
+
+    const value = JSON.stringify(cache ?? this.cache)
+    this.storage.setItem(this.persistKeyCache, value)
+  }
+
+  storeStaleTime(staleTime: Date) {
+    if (!this.persistCache) return
+
+    const value = staleTime.toISOString()
+    this.storage.setItem(this.persistKeyStaleTime, value)
   }
 }

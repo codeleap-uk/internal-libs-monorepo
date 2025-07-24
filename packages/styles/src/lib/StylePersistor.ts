@@ -1,4 +1,4 @@
-import { StateStorage } from 'zustand/middleware'
+import { StateStorage } from '../types/store'
 import { minifier } from './minifier'
 
 export type StoragePersistor = {

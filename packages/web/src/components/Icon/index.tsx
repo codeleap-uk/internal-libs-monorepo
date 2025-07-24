@@ -1,6 +1,6 @@
 import { View } from '../View'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
-import { AnyRecord, AppTheme, IJSX, StyledComponentProps, Theme, useTheme } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps, useTheme } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { IconProps } from './types'
 
@@ -18,11 +18,11 @@ export const Icon = (props:IconProps) => {
     ...props,
   }
 
-  const theme = useTheme(store => store.current) as AppTheme<Theme>
+  const themeIcons = useTheme(store => store.theme?.icons)
 
   const styles = useStylesFor(Icon.styleRegistryName, style)
 
-  const Component = theme?.icons?.[name]
+  const Component = themeIcons?.[name]
 
   if (!name) {
     const iconStyle = styles.icon as React.CSSProperties & { size: number }

@@ -33,13 +33,13 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     baseColors,
 
     currentColorScheme() {
-      return themeStore.getState().colorScheme
+      return themeStore.colorScheme
     },
 
     breakpoints: breakpoints ?? {},
 
     get colors() {
-      const colorScheme = themeStore.getState().colorScheme
+      const colorScheme = themeStore.colorScheme
 
       if (colorScheme === 'default') return colors
 
@@ -53,11 +53,12 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     },
 
     setColorScheme(colorScheme: ColorScheme<Theme>) {
-      themeStore.setState({ colorScheme: colorScheme as string })
+      themeStore.setColorScheme(colorScheme as string)
       colorSchemaPersistor.set(colorScheme as string)
     },
 
     baseSpacing: theme.baseSpacing,
+
     value: (n = 1) => theme.baseSpacing * n,
 
     spacing: {
@@ -109,10 +110,9 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     },
   }
 
-  themeStore.setState({
-    current: themeObj,
-    colorScheme: colorSchemaPersistor.get() ?? 'default',
-  })
+  themeStore.setColorScheme(colorSchemaPersistor.get() ?? 'default')
+
+  themeStore.setTheme(themeObj)
 
   return themeObj
 }

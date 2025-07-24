@@ -1,4 +1,4 @@
-import { AppTheme, IColors, ICSS, Theme } from '../types'
+import { IColors, ICSS } from '../types'
 import { borderDirection } from './dynamicVariants'
 import { themeStore } from './themeStore'
 import { capitalize } from './utils'
@@ -21,7 +21,7 @@ export const borderCreator: BorderCreator = (args) => {
     directions = ['left', 'top', 'bottom', 'right'],
   } = args
 
-  const theme = themeStore.getState().current as AppTheme<Theme>
+  const theme = themeStore.themeTyped
 
   const color = theme?.baseColors?.[colorKey] ?? colorKey
 

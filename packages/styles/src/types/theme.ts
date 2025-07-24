@@ -8,7 +8,7 @@ type AnyMap = {
   [key: string]: any
 }
 
-type ColorMap = {
+export type ColorMap = {
   [key: string]: string
 }
 
