@@ -1,6 +1,5 @@
 import React from 'react'
 import { TypeGuards } from '@codeleap/types'
-import { forwardRef } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { Touchable } from '../Touchable'
@@ -15,7 +14,7 @@ import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyle
 export * from './styles'
 export * from './types'
 
-export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inputRef) => {
+export const TextInput = (props: TextInputProps) => {
   const allProps = {
     ...TextInput.defaultProps,
     ...props,
@@ -155,7 +154,7 @@ export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, inp
       {...maskingExtraProps}
     />
   </InputBase>
-}) as StyledComponentWithProps<TextInputProps>
+}
 
 TextInput.styleRegistryName = 'TextInput'
 TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']

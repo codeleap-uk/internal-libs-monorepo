@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { getRenderedComponent } from '@codeleap/utils'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -7,8 +7,6 @@ import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
 import RNAnimated, { FadeIn, FadeOut } from 'react-native-reanimated'
-import { View as RNView } from 'react-native'
-import { StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
 
 export { useInputBase } from './useInputBase'
 
@@ -23,11 +21,7 @@ export const InputBaseDefaultOrder: InputBaseProps['order'] = [
   'error',
 ]
 
-const KeyPassthrough = (props: React.PropsWithChildren<any>) => {
-  return <>{props.children}</>
-}
-
-export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBaseProps, ref) => {
+export const InputBase = (props: InputBaseProps) => {
   const {
     children,
     error = null,
@@ -35,9 +29,9 @@ export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBasePro
     description = null,
     leftIcon = null,
     rightIcon = null,
-    wrapper: WrapperComponent,
+    wrapper,
     debugName,
-    innerWrapper: InnerWrapperComponent,
+    innerWrapper,
     focused,
     innerWrapperProps = {},
     wrapperProps = {},
@@ -46,6 +40,7 @@ export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBasePro
     style,
     labelAsRow,
     hideErrorMessage,
+    ref,
     ...otherProps
   } = {
     ...InputBase.defaultProps,
@@ -68,26 +63,9 @@ export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBasePro
     dismissKeyboard: false,
   })
 
-  const _label = TypeGuards.isString(label) ? <Text text={label} style={styles.labelStyle} /> : label
+  const WrapperComponent = wrapper ?? View
 
-  const _error = TypeGuards.isString(error) ? <Text text={error} style={styles.errorStyle} /> : error
-
-  const _description = TypeGuards.isString(description) ? <Text text={description} style={styles.descriptionStyle} /> : description
-
-  const parts = {
-    label: labelAsRow ? <View style={styles.labelRowStyle}>
-      {_label}
-      {_description}
-    </View> : _label,
-    description: labelAsRow ? null : _description,
-    innerWrapper: <InnerWrapperComponent style={[
-      styles.innerWrapperStyle,
-    ]} {...innerWrapperProps}>
-      {_leftIcon}
-      {children}
-      {_rightIcon}
-    </InnerWrapperComponent>,
-  }
+  const InnerWrapperComponent = innerWrapper ?? View
 
   return <WrapperComponent
     {...otherProps}
@@ -95,19 +73,23 @@ export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBasePro
     style={styles.wrapperStyle}
     ref={ref}
   >
-    {
-      order.map((key) => <KeyPassthrough key={key}>
-        {parts[key]}
-      </KeyPassthrough>)
-    }
+    {TypeGuards.isString(label) ? <Text text={label} style={styles.labelStyle} /> : label}
+
+    {TypeGuards.isString(description) ? <Text text={description} style={styles.descriptionStyle} /> : description}
+
+    <InnerWrapperComponent style={styles.innerWrapperStyle} {...innerWrapperProps}>
+      {_leftIcon}
+      {children}
+      {_rightIcon}
+    </InnerWrapperComponent>
 
     {hideErrorMessage || !error ? null : (
       <RNAnimated.View exiting={FadeOut.duration(100)} entering={FadeIn.duration(200)}>
-        {_error}
+        {TypeGuards.isString(error) ? <Text text={error} style={styles.errorStyle} /> : error}
       </RNAnimated.View>
     )}
   </WrapperComponent>
-}) as StyledComponentWithProps<InputBaseProps>
+}
 
 InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
 

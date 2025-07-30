@@ -2,7 +2,6 @@ import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import { MobileFile } from '@codeleap/types'
 import { parseFilePathData } from '@codeleap/utils'
 import ImageCropPicker, { ImageOrVideo, Options } from 'react-native-image-crop-picker'
-import DocumentPicker from 'react-native-document-picker'
 import { FileInputImageSource, FileInputProps, FileInputRef, FileResult } from './types'
 import { alert } from '@codeleap/modals'
 
@@ -33,12 +32,10 @@ function parsePickerData(data: ImageOrVideo): FileResult {
 const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref) => {
   const {
     onFileSelect,
-    options,
     type = 'image',
     pickerOptions,
     onOpenGallery = null,
     onOpenFileSystem = null,
-    onError,
     alertProps,
   } = {
     ...fileInputProps,
@@ -53,26 +50,6 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
       resolveWithFile.current = null
     }
     onFileSelect?.(files)
-  }
-
-  async function openFileSystem() {
-    try {
-      let files = await DocumentPicker.pick(options)
-
-      if (!Array.isArray(files)) {
-        files = [files]
-      }
-
-      const filesWithPreview = files.map((file) => ({ preview: file.uri, file })) as FileResult[]
-
-      handleResolve?.(filesWithPreview)
-    } catch (err) {
-      handleError(err)
-    }
-  }
-
-  function handleError(err) {
-    onError?.(err)
   }
 
   const mergedOptions = {
@@ -92,7 +69,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
 
   const onPress = (open?: FileInputImageSource, options?: Options) => {
     if (open == 'fs') {
-      openFileSystem()
+      // openFileSystem()
     } else {
       const call = open === 'camera' ? 'openCamera' : 'openPicker'
       ImageCropPicker[call]({ ...mergedOptions, ...(options || {}) }).then(handlePickerResolution)
@@ -132,7 +109,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
       }
     } else {
       if (onOpenFileSystem) {
-        onOpenFileSystem(() => onPress('fs'))
+        // onOpenFileSystem(() => onPress('fs'))
       } else {
         onPress('fs')
       }

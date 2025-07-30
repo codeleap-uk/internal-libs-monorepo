@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { TimeInputProps } from './types'
 import dayjs from 'dayjs'
-import Animated, { FadeOut, FadeIn } from 'react-native-reanimated'
 import { fields } from '@codeleap/form'
 import DatePicker from 'react-native-date-picker'
 import { useStylesFor } from '../../hooks'
@@ -10,7 +9,7 @@ import { useInputBase } from '../InputBase'
 import { View } from '../View'
 import { TextInput } from '../TextInput'
 import { MobileStyleRegistry } from '../../Registry'
-import { useInputOverlay } from '../InputBase/useInputOverlay'
+import { InputOverlay, inputOverlayManager } from '../InputOverlay'
 
 export * from './styles'
 export * from './types'
@@ -45,17 +44,38 @@ export const TimeInput = (props: TimeInputProps) => {
     onInputValueChange,
   } = useInputBase<Date>(field, fields.date as any, { value, onValueChange })
 
-  const [inputHeight, setInputHeight] = useState(0)
-
-  const [isOpen, toggle] = useInputOverlay(autoClosePeersOverlays)
+  const { isOpen, toggle, id } = inputOverlayManager.use()
 
   return (
-    <View style={[styles.wrapper, { position: 'relative' }]}>
+    <InputOverlay.Layout
+      style={styles.wrapper}
+      position={timePickerPosition}
+      gap={gap}
+      isOpen={isOpen}
+      mode={overlay ? 'overlay' : 'content'}
+      hideOverlay={disabled}
+      id={id}
+      content={
+        <View style={styles.timePicker}>
+          <DatePicker
+            mode='time'
+            theme='light'
+            {...timePickerProps}
+            onDateChange={onInputValueChange}
+            date={inputValue ?? new Date()}
+          />
+        </View>
+      }
+    >
       <TextInput
         placeholder='Select a time'
         disabled={disabled}
         {...textInputProps}
         style={compositionStyles.input}
+        value={!inputValue ? '' : dayjs(inputValue).format(format)}
+        onValueChange={() => inputValue}
+        onPress={disabled ? undefined : toggle}
+        focused={isOpen}
         leftIcon={!leftIcon ? null : {
           ...leftIcon,
           onPress: toggle,
@@ -64,41 +84,8 @@ export const TimeInput = (props: TimeInputProps) => {
           ...rightIcon,
           onPress: toggle,
         }}
-        value={!inputValue ? '' : dayjs(inputValue).format(format)}
-        onValueChange={() => inputValue}
-        onPress={disabled ? null : toggle}
-        innerWrapperProps={{
-          rippleDisabled: true,
-        }}
-        focused={isOpen}
-        onLayout={(e) => setInputHeight(e.nativeEvent.layout.height)}
       />
-
-      {!isOpen || disabled ? null : (
-        <Animated.View
-          exiting={FadeOut.duration(150)}
-          entering={FadeIn.duration(150)}
-          style={overlay ? {
-            position: 'absolute',
-            zIndex: 1,
-            [timePickerPosition]: 0,
-            top: inputHeight + gap,
-          } : {
-            marginTop: gap,
-          }}
-        >
-          <View style={styles.timePicker}>
-            <DatePicker
-              mode='time'
-              theme='light'
-              {...timePickerProps}
-              onDateChange={onInputValueChange}
-              date={inputValue ?? new Date()}
-            />
-          </View>
-        </Animated.View>
-      )}
-    </View>
+    </InputOverlay.Layout>
   )
 }
 

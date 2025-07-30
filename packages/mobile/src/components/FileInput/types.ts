@@ -1,5 +1,4 @@
 import { AnyRef, MobileInputFile } from '@codeleap/types'
-import { DocumentPickerOptions } from 'react-native-document-picker'
 import { Options } from 'react-native-image-crop-picker'
 import { AlertOptions } from '@codeleap/modals'
 
@@ -14,7 +13,6 @@ export type FileInputRef = {
 export type FileInputProps = {
   mode: 'hidden' | 'button'
   onFileSelect?: (files: FileResult[]) => void
-  options?: DocumentPickerOptions
   ref?: AnyRef<FileInputRef>
   type?: 'image' | 'anyFile'
   alertProps?: AlertOptions & {}
@@ -22,5 +20,4 @@ export type FileInputProps = {
   required?: boolean
   onOpenFileSystem?: (resolve: (() => void)) => Promise<void>
   onOpenGallery?: (resolve: (() => void)) => Promise<void>
-  onError?: (error: any) => void
 }
