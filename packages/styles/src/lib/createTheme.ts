@@ -1,4 +1,4 @@
-import { AppTheme, ColorScheme, Theme } from '../types'
+import { AppTheme, Theme } from '../types'
 import { borderCreator } from './borderCreator'
 import { createMediaQueries } from './mediaQuery'
 import { multiplierProperty } from './multiplierProperty'
@@ -6,12 +6,15 @@ import { defaultVariants } from './defaultVariants'
 import { spacingFactory } from './spacing'
 import { themeStore } from './themeStore'
 
-type ColorSchemaPersistor = {
-  get: () => string
-  set: (colorSchema: string) => void
+type ThemePersistor = {
+  get: (name: string) => any
+  set: (name: string, value: any) => void
 }
 
-export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: ColorSchemaPersistor): AppTheme<T> => {
+const colorSchemeKey = '@styles.theme.colorScheme'
+const alternateColorsKey = '@styles.theme.alternateColors'
+
+export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePersistor): AppTheme<T> => {
   const {
     colors,
     breakpoints,
@@ -27,8 +30,23 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     ...otherThemeValues
   } = theme
 
+  themeStore.setColorScheme(themePersistor.get(colorSchemeKey) ?? 'default')
+
+  const persistedAlternateColors = themePersistor.get(alternateColorsKey)
+
+  const alternateColors = {
+    ...(persistedAlternateColors ?? {}),
+    ...otherThemeValues?.alternateColors,
+  }
+
+  themeStore.setAlternateColorsScheme(alternateColors)
+
   const themeObj: AppTheme<T> = {
     ...otherThemeValues,
+
+    get alternateColors() {
+      return themeStore.alternateColorsScheme
+    },
 
     baseColors,
 
@@ -39,11 +57,11 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
     breakpoints: breakpoints ?? {},
 
     get colors() {
-      const colorScheme = themeStore.colorScheme
+      const colorScheme = themeStore.colorScheme ?? 'default'
 
       if (colorScheme === 'default') return colors
 
-      const scheme = theme.alternateColors?.[colorScheme]
+      const scheme = themeStore.alternateColorsScheme?.[colorScheme]
 
       if (!scheme) {
         console.warn(`Color scheme ${colorScheme} not found in theme`)
@@ -52,9 +70,30 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       return scheme ?? colors
     },
 
-    setColorScheme(colorScheme: ColorScheme<Theme>) {
-      themeStore.setColorScheme(colorScheme as string)
-      colorSchemaPersistor.set(colorScheme as string)
+    setColorScheme(colorScheme: string) {
+      const hasScheme = !!themeStore.alternateColorsScheme?.[colorScheme]
+
+      if (!hasScheme) {
+        console.warn(`Color scheme ${colorScheme} not found in theme`)
+        return
+      }
+
+      themeStore.setColorScheme(colorScheme)
+
+      themePersistor.set(colorSchemeKey, colorScheme)
+    },
+
+    injectColorScheme(name, colorMap) {
+      themeStore.injectColorScheme(name, colorMap)
+
+      const persistedAlternateColors = themePersistor.get(alternateColorsKey)
+
+      const unpersistedAlternateColors = {
+        ...(persistedAlternateColors ?? {}),
+        [name]: colorMap,
+      }
+
+      themePersistor.set(alternateColorsKey, unpersistedAlternateColors)
     },
 
     baseSpacing: theme.baseSpacing,
@@ -109,8 +148,6 @@ export const createTheme = <T extends Theme>(theme: T, colorSchemaPersistor: Col
       }
     },
   }
-
-  themeStore.setColorScheme(colorSchemaPersistor.get() ?? 'default')
 
   themeStore.setTheme(themeObj)
 

@@ -8,6 +8,8 @@ export type ThemeState = {
 }
 
 class ThemeStore {
+  private readonly alternateColorsSchemeStore = map<{ [key: string]: ColorMap }>({})
+
   public readonly colorSchemeStore = atom<string | null>(null)
 
   public readonly themeStore = map<ITheme | null>(null)
@@ -30,6 +32,10 @@ class ThemeStore {
     return this.variantsStore.get()
   }
 
+  get alternateColorsScheme() {
+    return this.alternateColorsSchemeStore.get() ?? {}
+  }
+
   setVariants<T>(variants: T) {
     this.variantsStore.set(variants as unknown as IAppVariants)
   }
@@ -42,19 +48,39 @@ class ThemeStore {
     this.themeStore.set(theme)
   }
 
+  setAlternateColorsScheme(colors: { [key: string]: ColorMap }) {
+    this.alternateColorsSchemeStore.set(colors)
+  }
+
+  // utils
+
+  private getBaseColorScheme(): ColorMap {
+    const alternateColors = this.alternateColorsScheme ?? {}
+    const colorSchemeKeys = Object.keys(alternateColors)
+    
+    if (colorSchemeKeys.length === 0) {
+      return {}
+    }
+    
+    return alternateColors[colorSchemeKeys[0]] ?? {}
+  }
+
   injectColorScheme(name: string, colors: ColorMap) {
-    const currentTheme = this.themeStore.get() as AppTheme<Theme>
+    const baseColors = this.getBaseColorScheme()
+    const currentAlternateColors = this.alternateColorsScheme ?? {}
 
     const alternateColors = {
-      ...(currentTheme?.['alternateColors'] ?? {})
+      ...currentAlternateColors,
+
+      [name]: {
+        ...baseColors,
+        ...colors,
+      }
     }
+    
+    this.setAlternateColorsScheme(alternateColors)
 
-    alternateColors[name] = colors
-
-    this.setTheme({
-      ...currentTheme,
-      alternateColors,
-    })
+    return alternateColors
   }
 }
 
