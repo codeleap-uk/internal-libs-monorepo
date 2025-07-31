@@ -1,5 +1,5 @@
 import { AppTheme, ColorMap, IAppVariants, ITheme, Theme } from '../types'
-import { map, atom, computed } from 'nanostores'
+import { map, computed } from 'nanostores'
 
 export type ThemeState = {
   theme: AppTheme<Theme> | null
@@ -8,13 +8,13 @@ export type ThemeState = {
 }
 
 class ThemeStore {
-  private readonly alternateColorsSchemeStore = map<{ [key: string]: ColorMap }>({})
+  private alternateColorsSchemeStore: { [key: string]: ColorMap } = {}
 
-  public readonly colorSchemeStore = atom<string | null>(null)
+  public colorSchemeStore: string = null
 
-  public readonly themeStore = map<ITheme | null>(null)
+  public themeStore = map<ITheme | null>(null)
 
-  public readonly variantsStore = map<IAppVariants>({})
+  public variantsStore: IAppVariants = {} as IAppVariants
 
   get theme() {
     return this.themeStore.get()
@@ -25,23 +25,23 @@ class ThemeStore {
   }
 
   get colorScheme() {
-    return this.colorSchemeStore.get()
+    return this.colorSchemeStore
   }
 
   get variants() {
-    return this.variantsStore.get()
+    return this.variantsStore
   }
 
   get alternateColorsScheme() {
-    return this.alternateColorsSchemeStore.get() ?? {}
+    return this.alternateColorsSchemeStore ?? {}
   }
 
   setVariants<T>(variants: T) {
-    this.variantsStore.set(variants as unknown as IAppVariants)
+    this.variantsStore = variants as unknown as IAppVariants
   }
 
   setColorScheme(colorScheme: string) {
-    this.colorSchemeStore.set(colorScheme)
+    this.colorSchemeStore = colorScheme
   }
 
   setTheme(theme: ITheme) {
@@ -49,7 +49,7 @@ class ThemeStore {
   }
 
   setAlternateColorsScheme(colors: { [key: string]: ColorMap }) {
-    this.alternateColorsSchemeStore.set(colors)
+    this.alternateColorsSchemeStore = colors
   }
 
   // utils
@@ -88,10 +88,6 @@ export const themeStore = new ThemeStore()
 
 export const themeStoreComputed = computed([
   themeStore['themeStore'], 
-  themeStore['colorSchemeStore'], 
-  themeStore['variantsStore']
-], (theme, colorScheme, variants) => ({
+], (theme) => ({
   theme: theme as unknown as AppTheme<Theme>,
-  colorScheme,
-  variants
 }))

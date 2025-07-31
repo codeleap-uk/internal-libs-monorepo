@@ -34,19 +34,15 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
 
   const persistedAlternateColors = themePersistor.get(alternateColorsKey)
 
-  const alternateColors = {
+  const currentAlternateColors = {
     ...(persistedAlternateColors ?? {}),
     ...otherThemeValues?.alternateColors,
   }
 
-  themeStore.setAlternateColorsScheme(alternateColors)
+  themeStore.setAlternateColorsScheme(currentAlternateColors)
 
   const themeObj: AppTheme<T> = {
     ...otherThemeValues,
-
-    get alternateColors() {
-      return themeStore.alternateColorsScheme
-    },
 
     baseColors,
 
@@ -71,7 +67,7 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
     },
 
     setColorScheme(colorScheme: string) {
-      const hasScheme = !!themeStore.alternateColorsScheme?.[colorScheme]
+      const hasScheme = colorScheme === 'default' ? true : !!themeStore.alternateColorsScheme?.[colorScheme]
 
       if (!hasScheme) {
         console.warn(`Color scheme ${colorScheme} not found in theme`)
