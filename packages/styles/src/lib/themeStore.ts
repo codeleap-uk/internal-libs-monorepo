@@ -3,8 +3,6 @@ import { map, computed } from 'nanostores'
 
 export type ThemeState = {
   theme: AppTheme<Theme> | null
-  colorScheme: string | null
-  variants: IAppVariants
 }
 
 class ThemeStore {
