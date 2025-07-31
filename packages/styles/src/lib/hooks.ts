@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { ICSS } from '../types'
 import { getNestedStylesByKey } from './utils'
-import { useShallow } from 'zustand/react/shallow'
-import { ThemeStore, themeStore } from './themeStore'
+import { ThemeState, themeStoreComputed } from './themeStore'
+import { useStore } from '@nanostores/react'
 
 export const useStyleObserver = (style) => {
   return useMemo(() => {
@@ -26,10 +26,18 @@ export function useNestedStylesByKey<T extends string>(match: string, componentS
   }, [styles])
 }
 
-type ThemeSelector<T = Record<string, any>> = (store: ThemeStore) => T
+type ThemeSelector<T> = (state: ThemeState) => T
 
-export const useTheme = <T = Record<string, any>>(selector: ThemeSelector<T>): T => {
-  return themeStore(useShallow(selector))
+export const useTheme = <T = ThemeState>(
+  selector?: ThemeSelector<T>
+): T => {
+  const state = useStore(themeStoreComputed)
+  
+  if (!selector) {
+    return state as T
+  }
+  
+  return selector(state)
 }
 
 export function useCompositionStyles<T extends string, C extends string>(

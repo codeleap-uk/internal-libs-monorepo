@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
 import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleAggregator, StyleProp, VariantStyleSheet } from '../types'
-import { ThemeStore, themeStore } from './themeStore'
+import { themeStore } from './themeStore'
 import deepmerge from '@fastify/deepmerge'
 import { MultiplierFunction } from './spacing'
 import { defaultVariants } from './defaultVariants'
@@ -8,8 +8,8 @@ import { dynamicVariants } from './dynamicVariants'
 import { capitalize, ignoredStyleKeys, isSpacingKey } from './utils'
 import { StyleCache } from './StyleCache'
 import { minifier } from './minifier'
-import { StateStorage } from 'zustand/middleware'
 import rfdc from 'rfdc'
+import { StateStorage } from '../types/store'
 
 const deepClone = rfdc()
 
@@ -22,20 +22,16 @@ export class CodeleapStyleRegistry {
 
   components: Record<string, AnyStyledComponent> = {}
 
-  private theme: ThemeStore
-
   private styleCache: StyleCache
 
   constructor(storage: StateStorage) {
     this.styleCache = new StyleCache(storage)
 
-    this.theme = themeStore.getState()
-
     this.registerCommonVariants()
 
-    const currentColorScheme = this.theme?.current?.['currentColorScheme']?.() ?? this.theme?.colorScheme ?? 'default'
+    const currentColorScheme = themeStore.theme?.['currentColorScheme']?.() ?? themeStore.colorScheme ?? 'default'
 
-    this.styleCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariants])
+    this.styleCache.registerBaseKey([currentColorScheme, themeStore.theme, this.commonVariants])
   }
 
   computeCommonVariantStyle(componentName: string, variant: string, component = null) {
@@ -47,7 +43,7 @@ export class CodeleapStyleRegistry {
       }
     }
 
-    const theme = this.theme.current
+    const theme = themeStore.theme
 
     let mediaQuery = null
 
@@ -104,7 +100,7 @@ export class CodeleapStyleRegistry {
       return cache.value
     }
 
-    const theme = this.theme.current
+    const theme = themeStore.theme
 
     const variantStyles = variants.map((variant) => {
       if (!!stylesheet[variant]) {
@@ -294,7 +290,7 @@ export class CodeleapStyleRegistry {
     const [breakpoint, query] = responsiveKey?.includes(':') ? responsiveKey?.split(':') : [responsiveKey, 'down']
 
     // @ts-expect-error - media not has type
-    const mediaQuery = this.theme.current.media?.[query]?.(breakpoint)
+    const mediaQuery = themeStore.theme?.media?.[query]?.(breakpoint)
 
     return mediaQuery
   }
@@ -471,11 +467,11 @@ export class CodeleapStyleRegistry {
   }
 
   registerCommonVariants() {
-    const spacingVariants = this.theme.current?.['spacing']
+    const spacingVariants = themeStore.theme?.['spacing']
 
-    const insetVariants = this.theme.current?.['inset']
+    const insetVariants = themeStore.theme?.['inset']
 
-    const appVariants = this.theme.variants
+    const appVariants = themeStore.variants
 
     const commonVariants = deepmerge({ all: true })(
       defaultVariants,
@@ -516,11 +512,9 @@ export class CodeleapStyleRegistry {
   }
 
   update() {
-    this.theme = themeStore.getState()
+    const currentColorScheme = themeStore.theme?.['currentColorScheme']?.() ?? themeStore.colorScheme ?? 'default'
 
-    const currentColorScheme = this.theme?.current?.['currentColorScheme']?.() ?? this.theme?.colorScheme ?? 'default'
-
-    this.styleCache.registerBaseKey([currentColorScheme, this.theme.current, this.commonVariants])
+    this.styleCache.registerBaseKey([currentColorScheme, themeStore.theme, this.commonVariants])
   }
 
   private copyStyle(style: any) {
@@ -529,7 +523,7 @@ export class CodeleapStyleRegistry {
 
   createStyles<K extends string = string>(styles: Record<K, StyleProp<AnyRecord, ''>> | ((theme: ITheme) => Record<K, StyleProp<AnyRecord, ''>>)): Record<K, ICSS> {
     const compute = () => {
-      const current = themeStore.getState().current
+      const current = themeStore.theme
 
       const stylesObj = typeof styles === 'function' ? styles(current) : styles
 

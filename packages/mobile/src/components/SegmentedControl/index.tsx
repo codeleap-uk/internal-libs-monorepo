@@ -23,8 +23,7 @@ const defaultAnimation = {
 }
 
 export const SegmentedControl = React.forwardRef<SegmentedControlRef, SegmentedControlProps>((props, ref) => {
-  // @ts-expect-error
-  const [themeValues, themeSpacing] = useTheme(store => [store.current?.values, store.current?.spacing])
+  const [themeValues, themeSpacing] = useTheme(store => [store.theme?.values as any, store.theme?.spacing])
 
   const {
     options = [],

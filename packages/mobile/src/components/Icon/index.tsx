@@ -4,7 +4,7 @@ import { arePropsEqual } from '@codeleap/utils'
 import { Badge } from '../Badge'
 import { View } from '../View'
 import { IconProps } from './types'
-import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, useTheme, StyledComponentWithProps, AppTheme, Theme } from '@codeleap/styles'
+import { useNestedStylesByKey, AnyRecord, StyledComponentProps, IJSX, useTheme, StyledComponentWithProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 
@@ -25,7 +25,7 @@ export const IconComponent = (props: IconProps) => {
     ...props,
   }
 
-  const icons = useTheme(store => (store.current as AppTheme<Theme>)?.icons)
+  const icons = useTheme(store => store.theme?.icons)
 
   const styles = useStylesFor(Icon.styleRegistryName, style)
 
