@@ -13,9 +13,9 @@ export type InputBaseProps = React.PropsWithChildren<{
   error?: React.ReactNode
   leftIcon?: IconProp
   rightIcon?: IconProp
-  wrapper?: React.FC<any>
+  wrapper?: (props: any) => JSX.Element
   wrapperProps?: any
-  innerWrapper?: React.FC<any>
+  innerWrapper?: (props: any) => JSX.Element
   innerWrapperProps?: any
   description?: React.ReactNode
   debugName?: string

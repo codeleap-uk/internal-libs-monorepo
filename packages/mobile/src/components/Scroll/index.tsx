@@ -1,8 +1,7 @@
-import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { ScrollView } from 'react-native'
-import { RefreshControl } from '../RefreshControl'
-import { ScrollProps, ScrollRef } from './types'
-import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { ScrollProps } from './types'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
@@ -11,7 +10,7 @@ import { ScrollProvider, useScrollPubSub } from '../../modules/scroll'
 export * from './styles'
 export * from './types'
 
-export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
+export const Scroll = (scrollProps: ScrollProps) => {
   const {
     style,
     refreshTimeout,
@@ -19,33 +18,11 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
     refreshControlProps = {},
     contentContainerStyle,
     keyboardAware,
-    onRefresh: onRefresh,
     ...props
   } = {
     ...Scroll.defaultProps,
     ...scrollProps,
   }
-
-  const hasRefresh = !!onRefresh
-  const [refreshing, setRefreshing] = useState(false)
-  const refreshingDisplay = props.refreshing !== undefined ? props.refreshing : refreshing
-
-  const timer = React.useRef(null)
-
-  const refresh = useCallback(() => {
-    if (timer.current !== null) {
-      clearTimeout(timer.current)
-      timer.current = null
-    }
-
-    setRefreshing(true)
-
-    onRefresh?.()
-
-    timer.current = setTimeout(() => {
-      setRefreshing(false)
-    }, refreshTimeout)
-  }, [onRefresh])
 
   const styles = useStylesFor(Scroll.styleRegistryName, style)
 
@@ -53,9 +30,8 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
 
   const _scrollRef = useRef<ScrollView>()
 
+  // @ts-ignore
   const { ref: scrollRef, emit } = useScrollPubSub(_scrollRef)
-
-  useImperativeHandle(ref, () => scrollRef.current as unknown as  ScrollView, [])
 
   return (
     <ScrollProvider ref={scrollRef}>
@@ -63,15 +39,6 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
         showsVerticalScrollIndicator={false}
         // @ts-ignore
         ref={_scrollRef}
-        refreshControl={
-          hasRefresh && (
-            <RefreshControl
-              refreshing={refreshingDisplay}
-              onRefresh={refresh}
-              {...refreshControlProps}
-            />
-          )
-        }
         bottomOffset={30}
         {...props}
         style={styles?.wrapper}
@@ -85,7 +52,7 @@ export const Scroll = forwardRef<ScrollRef, ScrollProps>((scrollProps, ref) => {
       </Component>
     </ScrollProvider>
   )
-}) as StyledComponentWithProps<ScrollProps>
+}
 
 Scroll.styleRegistryName = 'Scroll'
 Scroll.elements = ['wrapper', 'content']

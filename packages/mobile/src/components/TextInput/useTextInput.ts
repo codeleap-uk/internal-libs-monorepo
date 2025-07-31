@@ -3,6 +3,7 @@ import { TextInputProps } from './types'
 import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native/types'
 import { useInputBase } from '../InputBase/useInputBase'
 import { fields } from '@codeleap/form'
+import { inputOverlayManager } from '../InputOverlay'
 
 export function useTextInput(props: Partial<TextInputProps>) {
   const { 
@@ -58,6 +59,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     setIsFocused(true)
     if (autoAdjustSelection) setCurrentSelection(null)
     onFocus?.(e)
+    inputOverlayManager.closeAll()
   }, [onFocus])
 
   const handleMaskChange = useCallback((masked, unmasked) => {
