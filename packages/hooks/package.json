@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/hooks",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
