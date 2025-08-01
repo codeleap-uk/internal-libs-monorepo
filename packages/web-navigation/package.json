@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web-navigation",
-  "version": "5.5.3",
+  "version": "5.5.4",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
