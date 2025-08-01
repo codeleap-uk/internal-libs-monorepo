@@ -34,15 +34,19 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
 
   const persistedAlternateColors = themePersistor.get(alternateColorsKey)
 
-  const currentAlternateColors = {
+  const alternateColors = {
     ...(persistedAlternateColors ?? {}),
     ...otherThemeValues?.alternateColors,
   }
 
-  themeStore.setAlternateColorsScheme(currentAlternateColors)
+  themeStore.setAlternateColorsScheme(alternateColors)
 
   const themeObj: AppTheme<T> = {
     ...otherThemeValues,
+
+    get alternateColors() {
+      return themeStore.alternateColorsScheme
+    },
 
     baseColors,
 

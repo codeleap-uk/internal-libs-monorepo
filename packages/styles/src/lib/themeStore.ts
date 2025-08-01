@@ -1,18 +1,19 @@
 import { AppTheme, ColorMap, IAppVariants, ITheme, Theme } from '../types'
-import { map, computed } from 'nanostores'
+import { map, computed, atom } from 'nanostores'
 
 export type ThemeState = {
   theme: AppTheme<Theme> | null
+  colorScheme: string | null
 }
 
 class ThemeStore {
-  private alternateColorsSchemeStore: { [key: string]: ColorMap } = {}
+  private readonly alternateColorsSchemeStore = map<{ [key: string]: ColorMap }>({})
 
-  public colorSchemeStore: string = null
+  public readonly colorSchemeStore = atom<string | null>(null)
 
-  public themeStore = map<ITheme | null>(null)
+  public readonly themeStore = map<ITheme | null>(null)
 
-  public variantsStore: IAppVariants = {} as IAppVariants
+  public readonly variantsStore = map<IAppVariants>({})
 
   get theme() {
     return this.themeStore.get()
@@ -23,23 +24,23 @@ class ThemeStore {
   }
 
   get colorScheme() {
-    return this.colorSchemeStore
+    return this.colorSchemeStore.get()
   }
 
   get variants() {
-    return this.variantsStore
+    return this.variantsStore.get()
   }
 
   get alternateColorsScheme() {
-    return this.alternateColorsSchemeStore ?? {}
+    return this.alternateColorsSchemeStore.get() ?? {}
   }
 
   setVariants<T>(variants: T) {
-    this.variantsStore = variants as unknown as IAppVariants
+    this.variantsStore.set(variants as unknown as IAppVariants)
   }
 
   setColorScheme(colorScheme: string) {
-    this.colorSchemeStore = colorScheme
+    this.colorSchemeStore.set(colorScheme)
   }
 
   setTheme(theme: ITheme) {
@@ -47,7 +48,7 @@ class ThemeStore {
   }
 
   setAlternateColorsScheme(colors: { [key: string]: ColorMap }) {
-    this.alternateColorsSchemeStore = colors
+    this.alternateColorsSchemeStore.set(colors)
   }
 
   // utils
@@ -86,6 +87,8 @@ export const themeStore = new ThemeStore()
 
 export const themeStoreComputed = computed([
   themeStore['themeStore'], 
-], (theme) => ({
+  themeStore['colorSchemeStore'], 
+], (theme, colorScheme) => ({
   theme: theme as unknown as AppTheme<Theme>,
+  colorScheme,
 }))
