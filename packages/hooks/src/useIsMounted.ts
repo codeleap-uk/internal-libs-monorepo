@@ -1,7 +1,9 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 
+const isReactNativeOrServer = typeof navigator !== 'undefined'
+
 const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
+  isReactNativeOrServer ? useLayoutEffect : useEffect
 
 /**
  * Hook to check if the component has mounted. SSR safe.
