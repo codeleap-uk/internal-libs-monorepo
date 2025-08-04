@@ -31,7 +31,7 @@ export * from './useEffectOnce'
 export * from './useUnmount'
 export * from './useSearch'
 export * from './usePartialState'
-export * from './useIsClient'
+export * from './useIsMounted'
 export * from './useComponentTestId'
 export * from './useId'
 

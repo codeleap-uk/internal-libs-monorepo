@@ -67,7 +67,7 @@ export class Cache<T extends any = any> {
   // utils
 
   setCache(cache: Record<string, T>) {
-    this.cache = cache
+    this.cache = cache ?? {}
   }
 
   clear() {
