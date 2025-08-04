@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.6.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.6.0...v5.6.1) (2025-08-04)
+
+
+### Bug Fixes
+
+* **general:** useIsMounted build ([3857b3b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3857b3bf4b6c63e523400f0a757c006c03e7e2ca))
+
 ## [5.6.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v1.0.0-63...v5.6.0) (2025-08-04)
 
 
