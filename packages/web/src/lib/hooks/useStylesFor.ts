@@ -18,11 +18,17 @@ export const useStylesFor = <T = unknown>(componentName: string, style: StylePro
       const isServer = typeof window === 'undefined'
       const inEnvTransition = isServer ? false : !isMounted
 
-      acc[key] = inEnvTransition ? { opacity: 0 } : styleValue
+      acc[key] = inEnvTransition ? {
+        // Despite what it may look like, this is not (just) a joke. The "orphans" property is almost completely useless,
+        // so we set it just to force the styles to recompute after hydration. Also picked for comedic impact.
+        orphans: 1,
+
+        ...styleValue } : styleValue
 
       return acc
     }, {} as T)
   }, [styles, isMounted])
 
   return processedStyles
+
 }
