@@ -22,7 +22,7 @@ export function hexToHSL(hex: string) {
   return {
     h: Math.round(h * 360),
     s: Math.round(s * 100),
-    l: Math.round(l * 100)
+    l: Math.round(l * 100),
   }
 }
 
@@ -32,8 +32,7 @@ export function hslToHex(h: number, s: number, l: number): string {
 
   const k = (n: number) => (n + h / 30) % 12
   const a = s * Math.min(l, 1 - l)
-  const f = (n: number) =>
-    Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))))
+  const f = (n: number) => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))))
 
   return `#${[f(0), f(8), f(4)].map(x => x.toString(16).padStart(2, '0')).join('')}`
 }
@@ -51,40 +50,53 @@ export function hslToRGB(h: number, s: number, l: number) {
 
   const k = (n: number) => (n + h / 30) % 12
   const a = s * Math.min(l, 1 - l)
-  const f = (n: number) =>
-    Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))))
+  const f = (n: number) => Math.round(255 * (l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))))
 
   return {
     r: f(0),
     g: f(8),
-    b: f(4)
+    b: f(4),
   }
 }
 
+const lightnesses = [95, 85, 75, 60, 45, 30, 27, 21, 16, 10]
+
+const defaultLightnessMap = Object.fromEntries(
+  lightnesses.map((l, i) => {
+    const step = ((i + 1) * 100).toString()
+    return [step, l]
+  }),
+)
+
+const alphas = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90]
+
+const defaultAlphasMap = Object.fromEntries(
+  alphas.map((a, i) => {
+    const step = ((i + 1) * 100).toString()
+    return [step, a]
+  }),
+)
+
 export function generateColorScheme(
-  anchorHex: string, 
-  prefix: string = 'primary'
+  anchorHex: string,
+  prefix = 'primary',
+  lightnesses:typeof defaultLightnessMap = defaultLightnessMap,
+  alphas: typeof defaultAlphasMap = defaultAlphasMap,
 ): ColorMap {
   const { h, s } = hexToHSL(anchorHex)
   const baseRGB = hexToRGB(anchorHex)
-  
+
   const scheme: ColorMap = {}
-  
-  const lightnesses = [95, 85, 75, 60, 45, 30, 27, 21, 16, 10]
-  
-  lightnesses.forEach((lightness, index) => {
-    const step = (index + 1) * 100
+
+  Object.entries(lightnesses).forEach(([step, lightness]) => {
     const rgb = hslToRGB(h, s, lightness)
     scheme[`${prefix}Solid${step}`] = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1.00)`
   })
-  
-  const alphas = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90]
-  
-  alphas.forEach((alpha, index) => {
-    const step = (index + 1) * 100
+
+  Object.entries(alphas).forEach(([step, alpha]) => {
     scheme[`${prefix}Transparent${step}`] = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, ${alpha.toFixed(2)})`
   })
-  
+
   return scheme
 }
 
