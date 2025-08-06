@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/analytics",
-  "version": "5.6.3",
+  "version": "5.7.0",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {

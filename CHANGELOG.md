@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.7.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.6.3...v5.7.0) (2025-08-06)
+
+
+### Features
+
+* **styles:** allow customization of color generation ([2006406](https://github.com/codeleap-uk/internal-libs-monorepo/commit/2006406fe4099debc63bafca5b2f36febbdc6c68))
+
 ### [5.6.3](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.6.2...v5.6.3) (2025-08-04)
 
 
