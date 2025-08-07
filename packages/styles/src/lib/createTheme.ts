@@ -95,6 +95,17 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
 
       themePersistor.set(alternateColorsKey, unpersistedAlternateColors)
     },
+    ejectColorScheme(name) {
+      themeStore.ejectColorScheme(name)
+
+      const persistedAlternateColors = themePersistor.get(alternateColorsKey)
+
+      if (name in persistedAlternateColors) {
+        delete persistedAlternateColors[name]
+      }
+
+      themePersistor.set(alternateColorsKey, persistedAlternateColors)
+    },
 
     baseSpacing: theme.baseSpacing,
 
