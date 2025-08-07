@@ -56,11 +56,11 @@ class ThemeStore {
   private getBaseColorScheme(): ColorMap {
     const alternateColors = this.alternateColorsScheme ?? {}
     const colorSchemeKeys = Object.keys(alternateColors)
-    
+
     if (colorSchemeKeys.length === 0) {
       return {}
     }
-    
+
     return alternateColors[colorSchemeKeys[0]] ?? {}
   }
 
@@ -74,20 +74,32 @@ class ThemeStore {
       [name]: {
         ...baseColors,
         ...colors,
-      }
+      },
     }
-    
+
     this.setAlternateColorsScheme(alternateColors)
 
     return alternateColors
+  }
+
+  ejectColorScheme(name:string) {
+    const currentAlternateColors = this.alternateColorsScheme ?? {}
+
+    if (name in currentAlternateColors) {
+      delete currentAlternateColors[name]
+    }
+
+    this.setAlternateColorsScheme(currentAlternateColors)
+
+    return currentAlternateColors
   }
 }
 
 export const themeStore = new ThemeStore()
 
 export const themeStoreComputed = computed([
-  themeStore['themeStore'], 
-  themeStore['colorSchemeStore'], 
+  themeStore.themeStore,
+  themeStore.colorSchemeStore,
 ], (theme, colorScheme) => ({
   theme: theme as unknown as AppTheme<Theme>,
   colorScheme,
