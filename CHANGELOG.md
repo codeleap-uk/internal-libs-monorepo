@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [5.7.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.7.0...v5.7.1) (2025-08-07)
+
+
+### Bug Fixes
+
+* **styles:** add ejectColorScheme to theme ([9836615](https://github.com/codeleap-uk/internal-libs-monorepo/commit/98366153bcbda7b427bb55b653fa272d055c614e))
+
 ## [5.7.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.6.3...v5.7.0) (2025-08-06)
 
 
