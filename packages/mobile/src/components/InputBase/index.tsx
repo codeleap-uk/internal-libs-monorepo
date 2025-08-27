@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { getRenderedComponent } from '@codeleap/utils'
 import { ActionIcon, ActionIconProps } from '../ActionIcon'
@@ -7,6 +7,8 @@ import { useInputBaseStyles } from './styles'
 import { InputBaseProps } from './types'
 import { Text } from '../Text'
 import RNAnimated, { FadeIn, FadeOut } from 'react-native-reanimated'
+import { View as RNView } from 'react-native'
+import { StyledComponentWithProps } from '@codeleap/styles'
 
 export { useInputBase } from './useInputBase'
 
@@ -21,7 +23,7 @@ export const InputBaseDefaultOrder: InputBaseProps['order'] = [
   'error',
 ]
 
-export const InputBase = (props: InputBaseProps) => {
+export const InputBase = forwardRef<RNView, InputBaseProps>((props: InputBaseProps, ref) => {
   const {
     children,
     error = null,
@@ -40,7 +42,6 @@ export const InputBase = (props: InputBaseProps) => {
     style,
     labelAsRow,
     hideErrorMessage,
-    ref,
     ...otherProps
   } = {
     ...InputBase.defaultProps,
@@ -89,7 +90,7 @@ export const InputBase = (props: InputBaseProps) => {
       </RNAnimated.View>
     )}
   </WrapperComponent>
-}
+}) as StyledComponentWithProps<InputBaseProps>
 
 InputBase.elements = ['wrapper', 'innerWrapper', 'label', 'errorMessage', 'description', 'icon', 'leftIcon', 'rightIcon']
 

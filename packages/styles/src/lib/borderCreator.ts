@@ -23,7 +23,7 @@ export const borderCreator: BorderCreator = (args) => {
 
   const theme = themeStore.themeTyped
 
-  const color = theme?.baseColors?.[colorKey] ?? colorKey
+  const color = theme?.colors?.[colorKey] ?? colorKey
 
   let borderStyles: ICSS = {}
 

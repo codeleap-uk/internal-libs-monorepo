@@ -53,7 +53,7 @@ class ThemeStore {
 
   // utils
 
-  private getBaseColorScheme(): ColorMap {
+  private getBaseSchemeColors(): ColorMap {
     const alternateColors = this.alternateColorsScheme ?? {}
     const colorSchemeKeys = Object.keys(alternateColors)
 
@@ -65,14 +65,14 @@ class ThemeStore {
   }
 
   injectColorScheme(name: string, colors: ColorMap) {
-    const baseColors = this.getBaseColorScheme()
+    const baseSchemeColors = this.getBaseSchemeColors()
     const currentAlternateColors = this.alternateColorsScheme ?? {}
 
     const alternateColors = {
       ...currentAlternateColors,
 
       [name]: {
-        ...baseColors,
+        ...baseSchemeColors,
         ...colors,
       },
     }

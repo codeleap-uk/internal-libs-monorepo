@@ -1,6 +1,6 @@
 
 export class StaleControl {
-  private wiperId: NodeJS.Timeout = null
+  private wiperId: NodeJS.Timer = null
 
   constructor(
     private staleTime: number = 60, // minutes

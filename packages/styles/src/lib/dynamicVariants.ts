@@ -22,6 +22,9 @@ export type Value =
   | number
   | ''
 
+// @note
+// Typing has been removed because figma's new color organization is extremely heavy, 
+// perhaps in a future typescript update
 type Color = string // keyof IColors
 
 export type DynamicVariants =
@@ -44,7 +47,7 @@ export const createDynamicVariants = () => {
 
   colorVariants.forEach(variant => {
     createVariant(variant, (theme, color: Color) => ({
-      [variant]: theme.baseColors[color],
+      [variant]: theme.colors[color],
     }))
   })
 
@@ -63,7 +66,7 @@ export const createDynamicVariants = () => {
       const variant = `border${capitalize(direction)}${capitalize(property)}`
 
       createVariant(variant, (theme, value: string) => ({
-        [variant]: property == 'color' ? theme.baseColors[value] : theme.radius[value],
+        [variant]: property == 'color' ? theme.colors[value] : theme.radius[value],
       }))
     })
   })
@@ -71,7 +74,7 @@ export const createDynamicVariants = () => {
   createVariant('cursor', (theme, cursor: typeof cursorTypes[number]) => ({ cursor }))
 
   createVariant('bg', (theme, color: Color) => ({
-    backgroundColor: theme.baseColors[color],
+    backgroundColor: theme.colors[color],
   }))
 
   createVariant('effect', (theme, effect: keyof IEffects) => theme.effects[effect])
