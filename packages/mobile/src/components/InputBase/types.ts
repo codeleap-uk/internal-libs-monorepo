@@ -27,4 +27,5 @@ export type InputBaseProps = React.PropsWithChildren<{
   hideErrorMessage?: boolean
   hasValue?: boolean
   onLayout?: ViewProps['onLayout']
+  ref?: any
 }>

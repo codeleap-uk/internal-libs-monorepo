@@ -13,11 +13,10 @@ export function stateAssign<T>(newValue: Partial<T>, stateValue: T): T {
   }  
   
   return newValue as T
-  
 }
 
-export const createStateSlice = <T, R>(
-  store: WritableAtom<T>,
+export const createStateSlice = <T, R, S extends WritableAtom<T>>(
+  store: S,
   selector: (state: T) => R,
   deselector?: (result: R) => Partial<T>  
 ) => ({
@@ -28,7 +27,6 @@ export const createStateSlice = <T, R>(
     })
   },
   set(v: R) {
-    
     if(!deselector) {
       throw new Error('[createStateSelector] deselector must be implemented to call set on state slices')
     }
@@ -41,8 +39,8 @@ export const createStateSlice = <T, R>(
   }
 } as WritableAtom<R>)
 
-export function useStateSelector<T, R>(
-  store: WritableAtom<T>,
+export function useStateSelector<T, R, S extends WritableAtom<T>>(
+  store: S,
   selector: (state: T) => R
 ): R {
   const slice = useMemo(() => createStateSlice(store, selector), [selector])
