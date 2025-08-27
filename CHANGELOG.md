@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.8.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.6.1...v5.8.0) (2025-08-27)
+
+
+### Features
+
+* **styles:** allow customization of color generation ([2006406](https://github.com/codeleap-uk/internal-libs-monorepo/commit/2006406fe4099debc63bafca5b2f36febbdc6c68))
+
+
+### Bug Fixes
+
+* **styles:** add ejectColorScheme to theme ([9836615](https://github.com/codeleap-uk/internal-libs-monorepo/commit/98366153bcbda7b427bb55b653fa272d055c614e))
+* **web:** add orphans to fix ssr styling ([284536b](https://github.com/codeleap-uk/internal-libs-monorepo/commit/284536b0908b8b720d0f9f4e6d5de0145ffa058d))
+
 ### [5.7.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.7.0...v5.7.1) (2025-08-07)
 
 
