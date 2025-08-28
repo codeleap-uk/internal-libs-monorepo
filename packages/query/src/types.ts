@@ -35,9 +35,10 @@ export type DeleteOptions<T extends QueryManagerItem> = {
 
 }
 
-export type RetrieveOptions<T extends QueryManagerItem> = {
+export type RetrieveOptions<T extends QueryManagerItem, ExtraArgs = any> = {
   queryOptions?: Partial<UseQueryOptions<T, unknown, T>>
   id?: T['id']
+  params?: ExtraArgs
 }
 
 export type ListOptions<T extends QueryManagerItem, ExtraArgs = any> = {
@@ -54,8 +55,8 @@ export type QueryManagerAction<
   Meta extends QueryManagerMeta = QueryManagerMeta,
   Args extends any[] = any[]
 > = (
-    manager: QueryManager<T, ExtraArgs, Meta>, ...args: Args
-  ) => any
+  manager: QueryManager<T, ExtraArgs, Meta>, ...args: Args
+) => any
 
 export type QueryManagerActions<
   T extends QueryManagerItem,
@@ -87,7 +88,7 @@ export type QueryManagerOptions<
   createItem?: (data: Partial<T>, args?: ExtraArgs) => Promise<T>
   updateItem?: (data: Partial<T>, args?: ExtraArgs) => Promise<T>
   deleteItem?: (data: T, args?: ExtraArgs) => Promise<T>
-  retrieveItem?: (id: T['id']) => Promise<T>
+  retrieveItem?: (id: T['id'], args?: ExtraArgs) => Promise<T>
 
   useListEffect?: UseListEffect<T>
 
