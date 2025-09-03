@@ -16,6 +16,8 @@ export type EmptyPlaceholderProps = {
   image?: ImageProps['source']
   icon?: AppIcon
   loading?: boolean
+  button?: () => void
+  buttonText?: string
   style?: StyledProp<EmptyPlaceholderComposition>
   renderEmpty?: RenderEmpty
 }

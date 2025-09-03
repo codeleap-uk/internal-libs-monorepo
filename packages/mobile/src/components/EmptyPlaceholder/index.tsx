@@ -8,6 +8,7 @@ import { EmptyPlaceholderProps } from './types'
 import { AnyRecord, AppIcon, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { Button } from '../Button'
 
 export * from './styles'
 export * from './types'
@@ -22,6 +23,7 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
     icon = null,
     renderEmpty,
     style,
+    button,
   } = {
     ...EmptyPlaceholder.defaultProps,
     ...props,
@@ -71,12 +73,26 @@ export const EmptyPlaceholder = (props: EmptyPlaceholderProps) => {
 
       {React.isValidElement(emptyText) ? emptyText : <Text text={emptyText} style={styles.title} />}
       {React.isValidElement(description) ? description : <Text text={description} style={styles.description} />}
+
+      {button && (
+        React.isValidElement(button) ? (
+          button
+        ) : (
+          <Button
+            style={styles.button}
+            debugName='empty-placeholder-button'
+            text={props.buttonText || 'Button'}
+            onPress={button}
+          />
+        )
+      )}
+
     </View>
   )
 }
 
 EmptyPlaceholder.styleRegistryName = 'EmptyPlaceholder'
-EmptyPlaceholder.elements = ['wrapper', 'loader', 'title', 'description', 'image', 'icon']
+EmptyPlaceholder.elements = ['wrapper', 'loader', 'title', 'description', 'image', 'icon', 'button']
 EmptyPlaceholder.rootElement = 'wrapper'
 
 EmptyPlaceholder.withVariantTypes = <S extends AnyRecord>(styles: S) => {
