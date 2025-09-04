@@ -1,3 +1,4 @@
+import React from 'react'
 import { AppIcon, useCompositionStyles } from '@codeleap/styles'
 import { Icon } from '../Icon'
 import { Text } from '../Text'
@@ -5,9 +6,9 @@ import { EmptyPlaceholderButtonProps, EmptyPlaceholderIllustrationProps, EmptyPl
 import { Image } from '../Image'
 import { useEmptyPlaceholderContext } from './context'
 import { Button } from '../Button'
-import React from 'react'
 import { View } from '../View'
 import { ActivityIndicator } from '../ActivityIndicator'
+import { TypeGuards } from '@codeleap/types'
 
 export const EmptyPlaceholderInfo = (props: EmptyPlaceholderInfoProps) => {
   const { title, description, styles, itemName } = useEmptyPlaceholderContext(props)
@@ -30,18 +31,21 @@ export const EmptyPlaceholderIllustration = (props: EmptyPlaceholderIllustration
 }
 
 export const EmptyPlaceholderButton = (props: EmptyPlaceholderButtonProps) => {
-  const { styles, buttonText, text, ...buttonProps } = useEmptyPlaceholderContext(props)
+  const { styles, buttonText, text, onPress, ...buttonProps } = useEmptyPlaceholderContext(props)
 
   const buttonStyles = useCompositionStyles('button', styles)
 
-  const txt = text || buttonText
+  const displayText = text || buttonText
+
+  if (!TypeGuards.isFunction(onPress)) return null
 
   return (
     <Button
       {...buttonProps}
+      onPress={onPress}
       debugName={`emptyPlaceholderButton:${buttonText}`}
       style={buttonStyles}
-      text={txt}
+      text={displayText}
     />
   )
 }
@@ -53,11 +57,33 @@ export const EmptyPlaceholderLoading = () => {
 
   if (!loading) return null
 
-  if (React.isValidElement(LoadingComponent)) return LoadingComponent
+  if (React.isValidElement(LoadingComponent)) {
+    return <>{LoadingComponent}</>
+  }
 
   return (
     <View style={[styles.wrapper, styles['wrapper:loading']]} >
       <ActivityIndicator style={activityIndicatorStyles} />
+    </View>
+  )
+}
+
+export const EmptyPlaceholderContent = ({ children }: React.PropsWithChildren) => {
+  const { loading, styles } = useEmptyPlaceholderContext()
+
+  if (loading) {
+    return <EmptyPlaceholderLoading />
+  }
+
+  if (children) {
+    return <View style={styles.wrapper}>{children}</View>
+  }
+
+  return (
+    <View style={styles.wrapper}>
+      <EmptyPlaceholderIllustration />
+      <EmptyPlaceholderInfo />
+      <EmptyPlaceholderButton />
     </View>
   )
 }
