@@ -8,7 +8,7 @@ export const useEmptyPlaceholderContext = <T = EmptyPlaceholderCtxValue>(args: P
 
   if (!ctx) {
     throw new Error(
-      'useEmptyPlaceholderContext must be used within an EmptyPlaceholder component. '
+      'useEmptyPlaceholderContext must be used within an EmptyPlaceholder component.'
     )
   }
 

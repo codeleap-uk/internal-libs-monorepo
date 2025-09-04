@@ -4,7 +4,7 @@ import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { EmptyPlaceholderContext } from './context'
-import { EmptyPlaceholderContent, EmptyPlaceholderButton, EmptyPlaceholderIllustration, EmptyPlaceholderInfo, EmptyPlaceholderLoading } from './Components'
+import { EmptyPlaceholderContent, EmptyPlaceholderButton, EmptyPlaceholderIllustration, EmptyPlaceholderInfo } from './Components'
 
 export * from './styles'
 export * from './types'
