@@ -41,7 +41,7 @@ export const useTheme = <T = ThemeState>(
 }
 
 export function useCompositionStyles<T extends string, C extends string>(
-  composition: Array<T>,
+  composition: (T | Array<T>),
   componentStyles: Partial<Record<C, ICSS>>
 ): Partial<Record<T, ICSS>> {
   const styles = {
@@ -51,8 +51,12 @@ export function useCompositionStyles<T extends string, C extends string>(
   return useMemo(() => {
     const compositionStyles = {}
 
-    for (const element of composition) {
-      compositionStyles[element as string] = getNestedStylesByKey(element, styles)
+    if (Array.isArray(composition)) {
+      for (const element of composition) {
+        compositionStyles[element as string] = getNestedStylesByKey(element, styles)
+      }
+    } else {
+      compositionStyles[composition as string] = getNestedStylesByKey(composition, styles)
     }
 
     return compositionStyles

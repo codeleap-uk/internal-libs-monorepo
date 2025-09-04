@@ -1,11 +1,12 @@
 import { ActivityIndicatorComposition } from '../ActivityIndicator'
+import { ButtonComposition } from '../Button'
 
 export type EmptyPlaceholderComposition =
-  | 'wrapper:loading'
-  | `loader${Capitalize<ActivityIndicatorComposition>}`
   | 'wrapper'
+  | 'wrapper:loading'
   | 'title'
   | 'description'
   | 'image'
-  | 'imageWrapper'
   | 'icon'
+  | `button${Capitalize<ButtonComposition>}`
+  | `loader${Capitalize<ActivityIndicatorComposition>}`
