@@ -4,7 +4,10 @@ import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
 import { EmptyPlaceholderContext } from './context'
-import { EmptyPlaceholderContent, EmptyPlaceholderButton, EmptyPlaceholderIllustration, EmptyPlaceholderInfo } from './Components'
+import { EmptyPlaceholderInfo } from './components/Info'
+import { EmptyPlaceholderButton } from './components/Button'
+import { EmptyPlaceholderIllustration } from './components/Illustration'
+import { EmptyPlaceholderContent } from './components/Content'
 
 export * from './styles'
 export * from './types'
@@ -42,6 +45,8 @@ EmptyPlaceholder.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return EmptyPlaceholder as ((props: StyledComponentProps<EmptyPlaceholderProps, typeof styles>) => IJSX) & Pick<typeof EmptyPlaceholder, 'Button' | 'Illustration' | 'Info'>
 }
 
-EmptyPlaceholder.defaultProps = {} as Partial<EmptyPlaceholderProps>
+EmptyPlaceholder.defaultProps = {
+  order: ['illustration', 'info', 'button']
+} as Partial<EmptyPlaceholderProps>
 
 MobileStyleRegistry.registerComponent(EmptyPlaceholder)

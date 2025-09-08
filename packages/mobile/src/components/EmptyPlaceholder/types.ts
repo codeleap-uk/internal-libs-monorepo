@@ -17,6 +17,7 @@ export type EmptyPlaceholderProps = {
   children?: ReactNode
   onPress?: AnyFunction
   buttonText?: string
+  order?: Array<'info' | 'illustration' | 'button'>
 }
 
 export type EmptyPlaceholderInfoProps = Pick<EmptyPlaceholderProps, 'title' | 'description'>
