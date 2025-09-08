@@ -639,7 +639,7 @@ export class QueryManager<
           this.removeItem(ctx.addedId)
         }
       },
-      onSuccess: (data) => {
+      onSuccess: (data, _, ctx) => {
         if (!tmpOptions.current?.optimistic) {
           this.addItem({
             item: data,
@@ -647,7 +647,7 @@ export class QueryManager<
             onListsWithFilters: tmpOptions?.current?.onListsWithFilters,
           })
         } else {
-          this.updateItems(data)
+          this.updateItems({ ...data, id: ctx.addedId })
         }
       },
     })
