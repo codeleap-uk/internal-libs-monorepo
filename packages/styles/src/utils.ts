@@ -1,6 +1,6 @@
-import deepmerge from '@fastify/deepmerge'
-import { ICSS, StyledProp } from '../types'
-import { spacingShortVariants, spacingVariants } from '../types/spacing'
+import { ICSS, StyledProp } from './types'
+import { spacingShortVariants, spacingVariants } from './types/spacing'
+import { deepmerge } from './tools'
 
 export function capitalize(str: string, reverse = false) {
   if (!str.length) return str

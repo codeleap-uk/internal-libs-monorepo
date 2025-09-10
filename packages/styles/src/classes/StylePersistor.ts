@@ -1,5 +1,5 @@
 import { StateStorage } from '../types/store'
-import { minifier } from './minifier'
+import { minifier } from '../tools'
 
 export type StoragePersistor = {
   set: (key: string, value: any) => void

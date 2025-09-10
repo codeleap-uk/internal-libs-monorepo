@@ -1,7 +1,7 @@
-import { BorderCreator } from '../lib/borderCreator'
-import { MediaQueries } from '../lib/mediaQuery'
-import type { DefaultVariants } from '../lib/defaultVariants'
-import { MultiplierFunction, Spacings } from '../lib/spacing'
+import { BorderCreator } from '../variants/borderCreator'
+import { MediaQueries } from '../variants/mediaQuery'
+import type { DefaultVariants } from '../variants/defaultVariants'
+import { MultiplierFunction, Spacings } from '../variants/spacing'
 import { ICSS, IEffect } from './core'
 
 type AnyMap = {

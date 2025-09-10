@@ -1,7 +1,7 @@
 import { IColors, ICSS } from '../types'
 import { borderDirection } from './dynamicVariants'
-import { themeStore } from './themeStore'
-import { capitalize } from './utils'
+import { themeStore } from '../theme'
+import { capitalize } from '../utils'
 
 type BorderCreatorArgs = {
   color: keyof IColors | (string & {})

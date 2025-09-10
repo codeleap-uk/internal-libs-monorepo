@@ -1,5 +1,5 @@
 import { AnyRecord, ICSS, ITheme } from '../types'
-import { themeStore } from './themeStore'
+import { themeStore } from '../theme'
 
 type Value = AnyRecord
 

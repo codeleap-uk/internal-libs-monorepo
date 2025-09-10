@@ -1,17 +1,12 @@
 /* eslint-disable dot-notation */
-import { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleAggregator, StyleProp, VariantStyleSheet } from '../types'
-import { themeStore } from './themeStore'
-import deepmerge from '@fastify/deepmerge'
-import { MultiplierFunction } from './spacing'
-import { defaultVariants } from './defaultVariants'
-import { dynamicVariants } from './dynamicVariants'
-import { capitalize, ignoredStyleKeys, isSpacingKey } from './utils'
+import type { AnyRecord, AnyStyledComponent, ICSS, ITheme, StyleAggregator, StyleProp, VariantStyleSheet } from '../types'
+import type { StateStorage } from '../types/store'
+import type { MultiplierFunction } from '../variants'
+import { themeStore } from '../theme'
+import { defaultVariants, dynamicVariants } from '../variants'
+import { capitalize, ignoredStyleKeys, isSpacingKey } from '../utils'
 import { StyleCache } from './StyleCache'
-import { minifier } from './minifier'
-import rfdc from 'rfdc'
-import { StateStorage } from '../types/store'
-
-const deepClone = rfdc()
+import { minifier, deepClone, deepmerge } from '../tools'
 
 export class CodeleapStyleRegistry {
   stylesheets: Record<string, VariantStyleSheet> = {}

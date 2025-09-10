@@ -1,0 +1,1 @@
+export { default as deepmerge } from '@fastify/deepmerge'

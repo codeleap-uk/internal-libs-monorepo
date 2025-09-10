@@ -1,10 +1,7 @@
 import { AppTheme, Theme } from '../types'
-import { borderCreator } from './borderCreator'
-import { createMediaQueries } from './mediaQuery'
-import { multiplierProperty } from './multiplierProperty'
-import { defaultVariants } from './defaultVariants'
-import { spacingFactory } from './spacing'
-import { themeStore } from './themeStore'
+import { borderCreator, createMediaQueries, defaultVariants, spacingFactory } from '../variants'
+import { multiplierProperty } from '../tools'
+import { themeStore } from '../theme'
 
 type ThemePersistor = {
   get: (name: string) => any

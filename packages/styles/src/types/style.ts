@@ -1,6 +1,6 @@
-import { DynamicVariants } from '../lib/dynamicVariants'
-import { Queries } from '../lib/mediaQuery'
-import { DefaultVariants } from '../lib/defaultVariants'
+import { DynamicVariants } from '../variants/dynamicVariants'
+import { Queries } from '../variants/mediaQuery'
+import { DefaultVariants } from '../variants/defaultVariants'
 import { AnyRecord, IAppVariants, IBreakpoints, ICSS, IEffects, ITheme } from './core'
 import { Multiplier, Spacing } from './spacing'
 

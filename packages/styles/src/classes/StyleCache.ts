@@ -1,8 +1,7 @@
 import { Cache } from './Cacher'
-import { hashKey } from './hashKey'
-import { StyleConstants } from './constants'
+import { hashKey, minifier } from '../tools'
+import { StyleConstants } from '../constants'
 import { CacheType } from '../types/cache'
-import { minifier } from './minifier'
 import { StateStorage } from '../types/store'
 
 export class StyleCache {

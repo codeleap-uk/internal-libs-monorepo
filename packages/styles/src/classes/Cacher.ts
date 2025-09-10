@@ -1,7 +1,7 @@
 import { CacheType } from '../types/cache'
-import { StyleConstants } from './constants'
-import { hashKey } from './hashKey'
 import { StateStorage } from '../types/store'
+import { StyleConstants } from '../constants'
+import { hashKey } from '../tools'
 
 function getStaleTime() {
   const time = 7

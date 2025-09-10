@@ -1,1 +1,6 @@
 export * as colorTools from './colors'
+export * from './hashKey'
+export * from './minifier'
+export * from './multiplierProperty'
+export * from './deepClone'
+export * from './deepmerge'
