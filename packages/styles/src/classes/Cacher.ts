@@ -3,7 +3,11 @@ import { StateStorage } from '../types/store'
 import { StyleConstants } from '../constants'
 import { hashKey } from '../tools'
 
-function getStaleTime() {
+/**
+ * Generates a stale time date by adding 7 days to the current date
+ * @returns {Date} The future date representing the stale time
+ */
+function generateStaleTime() {
   const time = 7
 
   let currentTime = new Date()
@@ -13,17 +17,36 @@ function getStaleTime() {
   return currentTime
 }
 
+/**
+ * Generic cache implementation with persistence and stale time management
+ * @template T - The type of values stored in the cache
+ */
 export class Cache<T extends any = any> {
+  /** In-memory cache storage */
   cache: Record<string, T> = {}
 
+  /**
+   * Gets the persistence key for cache data
+   * @returns {string} The storage key for cache data
+   */
   get persistKeyCache() {
     return `@styles.caches.${this.registryName}.cache`
   }
 
+  /**
+   * Gets the persistence key for stale time
+   * @returns {string} The storage key for stale time
+   */
   get persistKeyStaleTime() {
     return `@styles.caches.${this.registryName}.staleTime`
   }
 
+  /**
+   * Creates a new Cache instance
+   * @param {CacheType} registryName - The name/type of the cache registry
+   * @param {StateStorage} [storage=null] - The storage implementation for persistence
+   * @param {boolean} [persistCache=!!storage] - Whether to persist cache to storage
+   */
   constructor(
     public registryName: CacheType,
     private storage: StateStorage = null,
@@ -46,6 +69,12 @@ export class Cache<T extends any = any> {
     this.storeStaleTime(persistedStaleTime)
   }
 
+  /**
+   * Generates a cache key and retrieves the cached value
+   * @param {string} cacheBaseKey - The base key for cache generation
+   * @param {Array<any> | any} data - The data to use for key generation
+   * @returns {{ key: string, value: T | null }} Object containing the cache key and value
+   */
   keyFor(cacheBaseKey: string, data: Array<any> | any) {
     const values = [cacheBaseKey, data]
 
@@ -58,37 +87,53 @@ export class Cache<T extends any = any> {
     }
   }
 
+  /**
+   * Stores a value in the cache and optionally persists it
+   * @param {string} key - The cache key
+   * @param {T} cache - The value to cache
+   * @returns {T} The cached value
+   */
   cacheFor(key: string, cache: T) {
     this.cache[key] = cache
     if (this.persistCache) this.storeCache()
     return cache
   }
 
-  // utils
-
+  /**
+   * Replaces the entire cache with new data
+   * @param {Record<string, T>} cache - The new cache data
+   */
   setCache(cache: Record<string, T>) {
     this.cache = cache ?? {}
   }
 
+  /**
+   * Clears both in-memory and persistent cache
+   */
   clear() {
     this.cache = {}
     this.clearStorage()
   }
 
-  // storage
-
+  /**
+   * Loads cache data and stale time from persistent storage
+   * @returns {{ persistedStaleTime: Date, persistedCache: any }} Loaded data from storage
+   */
   loadStorage() {
-    if (!this.persistCache) return
+    if (!this.persistCache) return { persistedStaleTime: generateStaleTime(), persistedCache: {} }
 
     const persistedStaleTime = this.storage.getItem(this.persistKeyStaleTime)
     const persistedCache = this.storage.getItem(this.persistKeyCache)
 
     return {
-      persistedStaleTime: !persistedStaleTime ? getStaleTime() : new Date(persistedStaleTime),
+      persistedStaleTime: !persistedStaleTime ? generateStaleTime() : new Date(persistedStaleTime),
       persistedCache,
     }
   }
 
+  /**
+   * Clears cache data from persistent storage
+   */
   clearStorage() {
     if (!this.persistCache) return
 
@@ -96,6 +141,10 @@ export class Cache<T extends any = any> {
     this.storage.removeItem(this.persistKeyCache)
   }
 
+  /**
+   * Stores cache data to persistent storage
+   * @param {Record<string, T>} [cache=null] - Cache data to store (uses current cache if not provided)
+   */
   storeCache(cache: Record<string, T> = null) {
     if (!this.persistCache) return
 
@@ -103,6 +152,10 @@ export class Cache<T extends any = any> {
     this.storage.setItem(this.persistKeyCache, value)
   }
 
+  /**
+   * Stores stale time to persistent storage
+   * @param {Date} staleTime - The stale time to store
+   */
   storeStaleTime(staleTime: Date) {
     if (!this.persistCache) return
 
