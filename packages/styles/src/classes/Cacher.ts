@@ -99,7 +99,7 @@ export class Cache<T extends any = any> {
   storeCache(cache: Record<string, T> = null) {
     if (!this.persistCache) return
 
-    const value = JSON.stringify(cache ?? this.cache)
+    const value = cache ?? this.cache
     this.storage.setItem(this.persistKeyCache, value)
   }
 
