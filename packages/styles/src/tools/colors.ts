@@ -1,5 +1,9 @@
-import { ColorMap } from '../types'
-
+/**
+ * Converts a hex color to HSL format.
+ * 
+ * @param {string} hex - Hex color string (e.g., '#ff5733')
+ * @returns {object} HSL object with h (0-360), s (0-100), l (0-100)
+ */
 export function hexToHSL(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16) / 255
   const g = parseInt(hex.slice(3, 5), 16) / 255
@@ -26,6 +30,14 @@ export function hexToHSL(hex: string) {
   }
 }
 
+/**
+ * Converts HSL values to hex color format.
+ * 
+ * @param {number} h - Hue (0-360)
+ * @param {number} s - Saturation (0-100)
+ * @param {number} l - Lightness (0-100)
+ * @returns {string} Hex color string
+ */
 export function hslToHex(h: number, s: number, l: number): string {
   s /= 100
   l /= 100
@@ -37,6 +49,12 @@ export function hslToHex(h: number, s: number, l: number): string {
   return `#${[f(0), f(8), f(4)].map(x => x.toString(16).padStart(2, '0')).join('')}`
 }
 
+/**
+ * Converts a hex color to RGB format.
+ * 
+ * @param {string} hex - Hex color string (e.g., '#ff5733')
+ * @returns {object} RGB object with r, g, b values (0-255)
+ */
 export function hexToRGB(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
@@ -44,6 +62,14 @@ export function hexToRGB(hex: string) {
   return { r, g, b }
 }
 
+/**
+ * Converts HSL values to RGB format.
+ * 
+ * @param {number} h - Hue (0-360)
+ * @param {number} s - Saturation (0-100)
+ * @param {number} l - Lightness (0-100)
+ * @returns {object} RGB object with r, g, b values (0-255)
+ */
 export function hslToRGB(h: number, s: number, l: number) {
   s /= 100
   l /= 100
@@ -59,47 +85,13 @@ export function hslToRGB(h: number, s: number, l: number) {
   }
 }
 
-const lightnesses = [95, 85, 75, 60, 45, 30, 27, 21, 16, 10]
-
-const defaultLightnessMap = Object.fromEntries(
-  lightnesses.map((l, i) => {
-    const step = ((i + 1) * 100).toString()
-    return [step, l]
-  }),
-)
-
-const alphas = [0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90]
-
-const defaultAlphasMap = Object.fromEntries(
-  alphas.map((a, i) => {
-    const step = ((i + 1) * 100).toString()
-    return [step, a]
-  }),
-)
-
-export function generateColorScheme(
-  anchorHex: string,
-  prefix = 'primary',
-  lightnesses:typeof defaultLightnessMap = defaultLightnessMap,
-  alphas: typeof defaultAlphasMap = defaultAlphasMap,
-): ColorMap {
-  const { h, s } = hexToHSL(anchorHex)
-  const baseRGB = hexToRGB(anchorHex)
-
-  const scheme: ColorMap = {}
-
-  Object.entries(lightnesses).forEach(([step, lightness]) => {
-    const rgb = hslToRGB(h, s, lightness)
-    scheme[`${prefix}Solid${step}`] = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 1.00)`
-  })
-
-  Object.entries(alphas).forEach(([step, alpha]) => {
-    scheme[`${prefix}Transparent${step}`] = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, ${alpha.toFixed(2)})`
-  })
-
-  return scheme
-}
-
+/**
+ * Calculates the relative luminance of an RGB color.
+ * Uses the WCAG formula for accessibility calculations.
+ * 
+ * @param {object} rgb - RGB object with r, g, b values (0-255)
+ * @returns {number} Luminance value (0-1)
+ */
 export function getLuminance({ r, g, b }: { r: number; g: number; b: number }): number {
   const [R, G, B] = [r, g, b].map(c => {
     const channel = c / 255
@@ -111,6 +103,15 @@ export function getLuminance({ r, g, b }: { r: number; g: number; b: number }): 
   return 0.2126 * R + 0.7152 * G + 0.0722 * B
 }
 
+/**
+ * Determines the best text color (dark or light) for a given background.
+ * Uses luminance calculation for optimal contrast.
+ * 
+ * @param {string} backgroundHex - Background hex color
+ * @param {string} darkColor - Dark text color option
+ * @param {string} lightColor - Light text color option
+ * @returns {string} Recommended text color
+ */
 export function getTextColor(backgroundHex: string, darkColor = 'black', lightColor = 'white'): string {
   const rgb = hexToRGB(backgroundHex)
   const luminance = getLuminance(rgb)
