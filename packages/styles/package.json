@@ -10,28 +10,23 @@
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
-    "ts-node-dev": "^1.1.8",
-    "test": "bun test ./src/"
+    "ts-node-dev": "^1.1.8"
   },
   "scripts": {
     "build": "echo 'No build needed'",
-    "lint": "eslint -c  .eslintrc.js --fix \"./src/**/*.{ts,tsx,js,jsx}\"",
-    "test": "./node_modules/.bin/mocha --require ts-node/register src/tests/**/*.spec.ts",
-    "run-sc": "tsnd --transpile-only",
-    "test:watch": "./node_modules/.bin/mocha --require ts-node/register ./src/tests/**/*.spec.ts -w --watch-files ./src/tests/**/*.spec.ts",
-    "createStyleSheets": "bun run-sc src/scripts/createStyleSheets.ts"
+    "test": "bun test ./src"
   },
   "peerDependencies": {
     "react": "18.2.0",
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "@fastify/deepmerge": "1.3.0",
+    "@fastify/deepmerge": "3.1.0",
     "@nanostores/persistent": "^1.1.0",
     "@nanostores/react": "^1.0.0",
-    "js-sha256": "0.11.0",
-    "lz-string": "^1.5.0",
+    "js-sha256": "0.11.1",
+    "lz-string": "1.5.0",
     "nanostores": "^1.0.1",
-    "rfdc": "^1.4.1"
+    "rfdc": "1.4.1"
   }
 }
