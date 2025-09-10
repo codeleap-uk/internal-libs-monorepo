@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
-    "ts-node-dev": "^1.1.8"
+    "ts-node-dev": "^1.1.8",
+    "test": "bun test ./src/"
   },
   "scripts": {
     "build": "echo 'No build needed'",
