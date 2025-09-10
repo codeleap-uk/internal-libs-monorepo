@@ -81,7 +81,7 @@ export class Cache<T extends any = any> {
     if (!this.persistCache) return
 
     const persistedStaleTime = this.storage.getItem(this.persistKeyStaleTime)
-    const persistedCache = JSON.parse(this.storage.getItem(this.persistKeyCache))
+    const persistedCache = this.storage.getItem(this.persistKeyCache)
 
     return {
       persistedStaleTime: !persistedStaleTime ? getStaleTime() : new Date(persistedStaleTime),

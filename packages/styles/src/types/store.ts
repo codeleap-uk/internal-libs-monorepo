@@ -1,5 +1,5 @@
 export interface StateStorage {
-  getItem: (name: string) => string | null
+  getItem: (name: string) => any | null
   setItem: (name: string, value: any) => void
   removeItem: (name: string) => void
 }
