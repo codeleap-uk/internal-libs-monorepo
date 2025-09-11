@@ -5,6 +5,15 @@ type Value = AnyRecord
 
 type StylesShape<K extends string, V extends Value> = Partial<Record<K, ICSS & Partial<Omit<V, keyof ICSS>>>>
 
+/**
+ * Creates a reactive styles object that automatically updates when theme changes.
+ * Uses a proxy to re-compute styles on each access, ensuring theme changes are reflected.
+ * 
+ * @template K - Style keys (extends string)
+ * @template V - Additional value type (extends AnyRecord)
+ * @param {StylesShape<K, V> | ((theme: ITheme) => StylesShape<K, V>)} styles - Static styles object or function that receives theme
+ * @returns {StylesShape<K, V>} Proxied styles object that recomputes on theme changes
+ */
 export function createStyles<K extends string, V extends Value = {}>(
   styles: StylesShape<K, V> | ((theme: ITheme) => StylesShape<K, V>),
 ) {
