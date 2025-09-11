@@ -1,5 +1,18 @@
 import { Theme } from '../types/theme'
 
+/**
+ * Validates and normalizes a theme object.
+ * Ensures all alternate color schemes include the same keys as `colors`,
+ * and merges `baseColors` into `colors` and `alternateColors`.
+ *
+ * @template T extends Theme
+ * @param {T} theme - The theme to validate.
+ * @throws {Error} If an alternate scheme is missing a required color.
+ * @returns {T & {
+ *   alternateColors: Record<string, Record<string, string>>,
+ *   colors: Record<string, string>
+ * }} The validated theme with merged colors.
+ */
 export function validateTheme<T extends Theme>(theme: T) {
   const baseColors = theme.baseColors
   
