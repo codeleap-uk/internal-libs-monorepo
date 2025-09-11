@@ -1,5 +1,5 @@
 import { IBorderRadius, IColors, IEffects } from '../types'
-import { capitalize } from './utils'
+import { capitalize } from '../utils'
 
 export type VariantFunction = (value: any) => any
 

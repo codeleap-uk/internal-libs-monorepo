@@ -1,8 +1,12 @@
-import './lib/constants'
-import './lib/utils'
+import './constants'
+import './utils'
 
+export * from './classes'
+export * from './hooks'
 export * from './lib'
-export * from './types'
+export * from './theme'
 export * from './tools'
-
-export { default as deepmerge } from '@fastify/deepmerge'
+export * from './types'
+export * from './variants'
+export * from './constants'
+export * from './utils'

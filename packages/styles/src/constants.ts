@@ -6,4 +6,5 @@ export const StyleConstants = {
   STORE_CACHE_ENABLED: true,
   CACHE_ENABLED: true,
   IS_BROWSER: isBrowser() as boolean,
+  LOG: false,
 }

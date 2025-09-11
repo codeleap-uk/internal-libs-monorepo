@@ -1,10 +1,7 @@
 import { AppTheme, Theme } from '../types'
-import { borderCreator } from './borderCreator'
-import { createMediaQueries } from './mediaQuery'
-import { multiplierProperty } from './multiplierProperty'
-import { defaultVariants } from './defaultVariants'
-import { spacingFactory } from './spacing'
-import { themeStore } from './themeStore'
+import { borderCreator, createMediaQueries, defaultVariants, spacingFactory } from '../variants'
+import { minifier, multiplierProperty } from '../tools'
+import { themeStore } from '../theme'
 
 type ThemePersistor = {
   get: (name: string) => any
@@ -30,9 +27,20 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
     ...otherThemeValues
   } = theme
 
-  themeStore.setColorScheme(themePersistor.get(colorSchemeKey) ?? 'default')
+  const persistor = {
+    get: (key: string) => {
+      const value = themePersistor.get(key)
+      if (!value) return null
+      return minifier.decompress(value)
+    },
+    set: (key: string, value: any) => {
+      return themePersistor.set(key, !value ? '' : minifier.compress(value))
+    }
+  }
 
-  const persistedAlternateColors = themePersistor.get(alternateColorsKey)
+  themeStore.setColorScheme(persistor.get(colorSchemeKey) ?? 'default')
+
+  const persistedAlternateColors = persistor.get(alternateColorsKey)
 
   const alternateColors = {
     ...(persistedAlternateColors ?? {}),
@@ -80,31 +88,32 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
 
       themeStore.setColorScheme(colorScheme)
 
-      themePersistor.set(colorSchemeKey, colorScheme)
+      persistor.set(colorSchemeKey, colorScheme)
     },
 
     injectColorScheme(name, colorMap) {
       themeStore.injectColorScheme(name, colorMap)
 
-      const persistedAlternateColors = themePersistor.get(alternateColorsKey)
+      const persistedAlternateColors = persistor.get(alternateColorsKey)
 
       const unpersistedAlternateColors = {
         ...(persistedAlternateColors ?? {}),
         [name]: colorMap,
       }
 
-      themePersistor.set(alternateColorsKey, unpersistedAlternateColors)
+      persistor.set(alternateColorsKey, unpersistedAlternateColors)
     },
+    
     ejectColorScheme(name) {
       themeStore.ejectColorScheme(name)
 
-      const persistedAlternateColors = themePersistor.get(alternateColorsKey)
+      const persistedAlternateColors = persistor.get(alternateColorsKey)
 
       if (name in persistedAlternateColors) {
         delete persistedAlternateColors[name]
       }
 
-      themePersistor.set(alternateColorsKey, persistedAlternateColors)
+      persistor.set(alternateColorsKey, persistedAlternateColors)
     },
 
     baseSpacing: theme.baseSpacing,
