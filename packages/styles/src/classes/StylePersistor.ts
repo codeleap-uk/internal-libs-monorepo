@@ -1,5 +1,6 @@
 import { StateStorage } from '../types/store'
 import { minifier } from '../tools'
+import { StyleConstants } from '../constants'
 
 export type StoragePersistor = {
   set: (key: string, value: any) => void
@@ -40,6 +41,10 @@ export class StylePersistor implements StateStorage {
    */
   getItem(name: string): string | null {
     const persistedValue = this.storage.get(name)
+
+    if (StyleConstants.LOG) {
+      console.log('StylePersistor [getItem] => ' + name, persistedValue)
+    }
 
     return minifier.decompress(persistedValue ?? null)
   }

@@ -65,6 +65,10 @@ export class Cache<T extends any = any> {
       return
     }
 
+    if (StyleConstants.LOG) {
+      console.log('Cache [constructor] ->', { persistedCache, persistedStaleTime, registryName })
+    }
+
     this.setCache(persistedCache)
     this.storeStaleTime(persistedStaleTime)
   }
