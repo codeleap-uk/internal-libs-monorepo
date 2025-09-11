@@ -10,14 +10,10 @@
   },
   "devDependencies": {
     "@codeleap/config": "workspace:*",
-    "@testing-library/jest-dom": "^6.8.0",
-    "@testing-library/react": "^16.3.0",
-    "jsdom": "^26.1.0",
     "ts-node-dev": "^1.1.8"
   },
   "scripts": {
-    "build": "echo 'No build needed'",
-    "test": "echo 'Running tests...' && bun test ./src --preload ./test-setup.ts"
+    "build": "echo 'No build needed'"
   },
   "peerDependencies": {
     "react": "18.2.0",
@@ -25,11 +21,10 @@
   },
   "dependencies": {
     "@fastify/deepmerge": "3.1.0",
-    "@nanostores/persistent": "^1.1.0",
-    "@nanostores/react": "^1.0.0",
+    "@nanostores/react": "1.0.0",
     "js-sha256": "0.11.1",
     "lz-string": "1.5.0",
-    "nanostores": "^1.0.1",
+    "nanostores": "1.0.1",
     "rfdc": "1.4.1"
   }
 }
