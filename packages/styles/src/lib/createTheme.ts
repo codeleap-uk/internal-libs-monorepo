@@ -92,6 +92,7 @@ export const createTheme = <T extends Theme>(theme: T, themePersistor: ThemePers
 
       themePersistor.set(alternateColorsKey, unpersistedAlternateColors)
     },
+    
     ejectColorScheme(name) {
       themeStore.ejectColorScheme(name)
 
