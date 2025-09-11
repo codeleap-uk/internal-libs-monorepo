@@ -53,7 +53,7 @@ describe('spacing', () => {
     expect(margin.ml(2)).toEqual({ marginLeft: 16 })
     expect(margin.mx(2)).toEqual({ marginLeft: 16, marginRight: 16 })
     expect(margin.my(2)).toEqual({ marginTop: 16, marginBottom: 16 })
-    // expect(margin.m(2)).toEqual({ marginTop: 16, marginBottom: 16, marginLeft: 16, marginRight: 16 })
+    expect(margin.m(2)).toEqual({ marginTop: 16, marginBottom: 16, marginLeft: 16, marginRight: 16 })
   })
 
   test('should handle horizontal and vertical shortcuts', () => {
@@ -104,6 +104,7 @@ describe('spacing', () => {
     
     expect(padding.pt(2)).toEqual({ paddingTop: 16 })
     expect(padding.px(2)).toEqual({ paddingLeft: 16, paddingRight: 16 })
+    expect(padding.p(2)).toEqual({ paddingLeft: 16, paddingRight: 16, paddingBottom: 16, paddingTop: 16 })
   })
 
   test('should handle decimal multipliers', () => {
