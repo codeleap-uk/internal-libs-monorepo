@@ -46,6 +46,7 @@ export const mockTheme = () => {
       icons: {},
       presets: {},
       values: {},
+      isBrowser: true,
     }),
     {
       set: (name, colorSchema) => {},
