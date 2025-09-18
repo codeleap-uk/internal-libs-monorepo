@@ -8,9 +8,12 @@ import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { AvatarContext } from './context'
 import { AvatarContent } from './components/AvatarContent'
 import { AvatarBadge } from './components/AvatarBadge'
+import { AvatarImage } from './components/AvatarImage'
+import { AvatarInitials } from './components/AvatarInitials'
+import { AvatarIcon } from './components/AvatarIcon'
+import { AvatarDescription } from './components/AvatarDescription'
 import { useStylesFor } from '../../hooks'
 import { matchInitialToColor } from '@codeleap/utils'
-import { AvatarDescription } from './components/Avatardescription'
 
 export * from './styles'
 export * from './types'
@@ -75,10 +78,18 @@ export const Avatar = (props: AvatarProps) => {
 }
 
 Avatar.styleRegistryName = 'Avatar'
-Avatar.elements = ['wrapper', 'touchable', 'initials', 'image', 'icon', 'description', 'badge']
+Avatar.elements = ['wrapper', 'touchable', 'initials', 'image', 'icon', 'description', 'badge', 'badgeIconWrapper', 'badgeIcon', 'descriptionOverlay']
 Avatar.rootElement = 'wrapper'
 
-Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => Avatar as (props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX
+Avatar.Image = AvatarImage
+Avatar.Initials = AvatarInitials
+Avatar.Icon = AvatarIcon
+Avatar.Badge = AvatarBadge
+Avatar.Description = AvatarDescription
+
+Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Avatar as ((props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX) & Pick<typeof Avatar, 'Image' | 'Initials' | 'Icon' | 'Badge' | 'Description'>
+}
 
 Avatar.defaultProps = {
   badge: false,
