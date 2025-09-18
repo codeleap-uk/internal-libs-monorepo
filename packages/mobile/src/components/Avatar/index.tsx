@@ -1,17 +1,16 @@
-import React from 'react'
-import { TypeGuards } from '@codeleap/types'
-import { useMemo } from '@codeleap/hooks'
-import { matchInitialToColor } from '@codeleap/utils'
-import { Image } from '../Image'
-import { Touchable } from '../Touchable'
-import { Text } from '../Text'
+import React, { useMemo } from 'react'
 import { View, ViewProps } from '../View'
+import { Touchable } from '../Touchable'
 import { Icon } from '../Icon'
-import { Badge } from '../Badge'
 import { AvatarProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AvatarContext } from './context'
+import { AvatarContent } from './components/AvatarContent'
+import { AvatarBadge } from './components/AvatarBadge'
 import { useStylesFor } from '../../hooks'
+import { matchInitialToColor } from '@codeleap/utils'
+import { AvatarDescription } from './components/Avatardescription'
 
 export * from './styles'
 export * from './types'
@@ -21,19 +20,12 @@ export const Avatar = (props: AvatarProps) => {
     debugName,
     name = '',
     firstNameOnly,
-    image,
-    icon,
-    badgeIcon,
-    text,
-    description,
     onPress,
     noFeedback,
-    badge,
-    badgeProps = {},
-    imageProps,
+    badgeIcon,
     badgeIconTouchProps,
     style,
-    ...viewProps
+    ...contextValue
   } = {
     ...Avatar.defaultProps,
     ...props,
@@ -41,65 +33,44 @@ export const Avatar = (props: AvatarProps) => {
 
   const styles = useStylesFor(Avatar.styleRegistryName, style)
 
-  const hasImage = !!image
-
-  const { initials, randomColor } = useMemo(() => {
-    const [first = '', last = ''] = TypeGuards.isString(name) ? name.split(' ') : name
-    const initials = [first[0]]
-    
-    if (!firstNameOnly) initials.push(last[0])
-
-    return {
-      initials: initials?.join(' '),
-      randomColor: matchInitialToColor(first[0]),
-    }
-  }, [name, firstNameOnly])
-
-  const renderContent = () => {
-    if (hasImage) return <Image source={image} {...imageProps} style={styles.image} />
-    if (icon) return <Icon name={icon} style={styles.icon} />
-    return <Text text={text || initials} style={styles.initials} />
-  }
+  const { randomColor } = useMemo(() => {
+    const [first = ''] = typeof name === 'string' ? name.split(' ') : Array.isArray(name) ? name : ['']
+    return { randomColor: matchInitialToColor(first[0]) }
+  }, [name])
 
   // @ts-expect-error icss type
   const hasBackgroundColor = !!styles?.touchable?.backgroundColor
 
-  const badgeStyles = useNestedStylesByKey('badge', styles)
-
   return (
-    <View {...viewProps as ViewProps} style={styles.wrapper}>
-      <Touchable
-        debugName={'Avatar:' + debugName}
-        onPress={() => onPress?.()}
-        style={[
-          styles.touchable,
-          !hasBackgroundColor && { backgroundColor: randomColor },
-        ]}
-        noFeedback={noFeedback || !onPress}
-      >
-        {renderContent()}
-
-        {!!description ? (
-          <View style={styles.descriptionOverlay}>
-            <Text text={description} style={styles.description} />
-          </View>
-        ) : null}
-
-        <Badge badge={badge} {...badgeProps} style={badgeStyles} />
-      </Touchable>
-
-      {badgeIcon ? (
+    <AvatarContext.Provider value={{ debugName, name: name || '', firstNameOnly, ...contextValue, styles }}>
+      <View {...(contextValue as ViewProps)} style={styles.wrapper}>
         <Touchable
+          debugName={'Avatar:' + debugName}
           onPress={() => onPress?.()}
-          noFeedback
-          {...badgeIconTouchProps}
-          debugName={`AvatarBadge:${debugName}`}
-          style={styles.badgeIconWrapper}
+          noFeedback={noFeedback || !onPress}
+          style={[
+            styles.touchable,
+            !hasBackgroundColor && { backgroundColor: randomColor },
+          ]}
         >
-          <Icon name={badgeIcon} style={styles.badgeIcon} />
+          <AvatarContent />
+          <AvatarDescription />
+          <AvatarBadge />
         </Touchable>
-      ) : null}
-    </View>
+
+        {badgeIcon ? (
+          <Touchable
+            onPress={() => onPress?.()}
+            noFeedback
+            {...badgeIconTouchProps}
+            debugName={`AvatarBadge:${debugName}`}
+            style={styles.badgeIconWrapper}
+          >
+            <Icon name={badgeIcon} style={styles.badgeIcon} />
+          </Touchable>
+        ) : null}
+      </View>
+    </AvatarContext.Provider>
   )
 }
 
@@ -107,9 +78,7 @@ Avatar.styleRegistryName = 'Avatar'
 Avatar.elements = ['wrapper', 'touchable', 'initials', 'image', 'icon', 'description', 'badge']
 Avatar.rootElement = 'wrapper'
 
-Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Avatar as (props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX
-}
+Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => Avatar as (props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX
 
 Avatar.defaultProps = {
   badge: false,
