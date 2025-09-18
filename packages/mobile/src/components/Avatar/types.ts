@@ -1,4 +1,4 @@
-import { StyledProp } from '@codeleap/styles'
+import { StyledProp, StyleRecord } from '@codeleap/styles'
 import { BadgeComponentProps } from '../Badge'
 import { IconProps } from '../Icon'
 import { ImageProps } from '../Image'
@@ -23,4 +23,8 @@ export type AvatarProps =
     onPress?: () => void
     noFeedback?: boolean
     imageProps?: Partial<ImageProps>
+  }
+
+export type AvatarCtxValue = Omit<AvatarProps, 'style'> & {
+    styles: StyleRecord<AvatarComposition>
   }
