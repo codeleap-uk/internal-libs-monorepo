@@ -1,6 +1,6 @@
 import { codeleapCommand } from '../../lib/Command'
 import { inquirer, path } from '../../lib'
-import { createFile, formatComponentName, generateComponentFile, generateStylesheetFile } from './utils'
+import { createFile, formatComponentName, generateComponentFile, generateStylesheetFile, updateComponentsImport, updateStylesheetsImport } from './utils'
 import { cliDir, USER_CONFIG } from '../../constants'
 
 const commandName = 'create-component'
@@ -20,8 +20,8 @@ export const createComponentCommand = codeleapCommand(
   async () => {
     const answers = await inquirer.prompt([
       {
-        name: 'name',
-        message: 'What is the name of your component?',
+        name: 'componentName',
+        message: 'Component Name?',
         validate: (input: string) => {
           if (!input || input.trim().length === 0) {
             return 'Component name is required'
@@ -33,41 +33,44 @@ export const createComponentCommand = codeleapCommand(
         },
       },
       {
-        name: 'folder',
+        name: 'componentNameFolder',
         message: 'In which folder would you like to create the component? (default is shared)',
         default: 'shared',
       },
     ])
 
-    const answerName = answers.name.trim()
-    const folder = answers.folder.trim()
-    const name = formatComponentName(answerName)
+    const answerName = answers.componentName.trim()
+    const componentFolder = answers.componentNameFolder.trim()
+    const componentName = formatComponentName(answerName)
 
-    const componentsDir = path.join(cliDir, USER_CONFIG.components.componentsDir, folder)
+    const componentsDir = path.join(cliDir, USER_CONFIG.components.componentsDir, componentFolder)
     const stylesheetsDir = path.join(cliDir, USER_CONFIG.components.stylesheetsDir)
 
-    const componentFileName = `${name}.tsx`
-    const stylesheetFileName = `${name}.ts`
+    const componentFileName = `${componentName}.tsx`
+    const stylesheetFileName = `${componentName}.ts`
 
     const componentFilePath = path.join(componentsDir, componentFileName)
     const stylesheetFilePath = path.join(stylesheetsDir, stylesheetFileName)
 
-    const componentContent = generateComponentFile(name)
-    const stylesheetContent = generateStylesheetFile(name)
+    const componentContent = generateComponentFile(componentName, USER_CONFIG.components?.app)
+    const stylesheetContent = generateStylesheetFile(componentName, USER_CONFIG.components?.app)
 
     createFile({
       dir: componentsDir,
       filePath: componentFilePath,
       content: componentContent,
-      fileName: `${name}.tsx`,
+      fileName: `${componentName}.tsx`,
     })
 
     createFile({
       dir: stylesheetsDir,
       filePath: stylesheetFilePath,
       content: stylesheetContent,
-      fileName: `${name}.ts`,
+      fileName: `${componentName}.ts`,
     })
+
+    updateStylesheetsImport(stylesheetsDir, componentName)
+    updateComponentsImport(USER_CONFIG.components.componentsDir, componentFolder, componentName)
   },
 )
 

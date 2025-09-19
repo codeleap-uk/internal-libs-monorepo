@@ -1,3 +1,5 @@
+export type AppType = 'web' | 'mobile'
+
 export type CodeleapCLIUserConfig = {
   GITHUB_TOKEN: string
   SHELL?: string
@@ -40,5 +42,6 @@ export type CodeleapCLIUserConfig = {
   components?: {
     componentsDir: string
     stylesheetsDir: string
+    app: AppType
   }
 }
