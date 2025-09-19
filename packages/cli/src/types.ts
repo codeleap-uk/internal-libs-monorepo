@@ -36,4 +36,9 @@ export type CodeleapCLIUserConfig = {
     splashImagePath: string
     iosAppName: string
   }
+
+  components?: {
+    componentsDir: string
+    stylesheetsDir: string
+  }
 }
