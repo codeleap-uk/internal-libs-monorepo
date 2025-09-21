@@ -10,7 +10,7 @@ export class Mutations<T extends QueryItem, F> {
     private queryName: string
   ) { }
 
-  addItem(newItem: T, position: 'start' | 'end' | RemovedItemMap = 'end', listFilters?: F) {
+  addItem(newItem: T, position: 'start' | 'end' | RemovedItemMap = 'start', listFilters?: F) {
     const isMultiQueryKeys = Array.isArray(position) && position?.length >= 1
 
     if (isMultiQueryKeys) {

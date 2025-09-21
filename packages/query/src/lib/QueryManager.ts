@@ -103,8 +103,9 @@ export class QueryManager<T extends QueryItem, F> {
     const items = query.data?.allItems ?? []
 
     return {
-      query,
       items,
+      queryKey,
+      query,
     }
   }
 
@@ -146,6 +147,7 @@ export class QueryManager<T extends QueryItem, F> {
 
     return {
       item: query.data,
+      queryKey,
       query,
     }
   }

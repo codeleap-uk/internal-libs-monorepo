@@ -65,8 +65,10 @@ export class QueryKeys<T extends QueryItem, F> {
     const queryKey = query?.queryKey?.join('/')
 
     if (!TypeGuards.isNil(toIgnoreQueryKeys)) {
-      const ignoreQueryKeys = Array.isArray(toIgnoreQueryKeys) ? toIgnoreQueryKeys : [toIgnoreQueryKeys]
-      if (ignoreQueryKeys.some(k => deepEqual(query?.queryKey, k))) return false
+      const ignoreQueryKeys = Array.isArray(toIgnoreQueryKeys?.[0]) ? toIgnoreQueryKeys : [toIgnoreQueryKeys]
+      if (ignoreQueryKeys.some(key => deepEqual(query?.queryKey, key))) {
+        return false
+      } 
     }
 
     const isListQueryKey = queryKey?.includes(queryName) && queryKey?.includes('list')
