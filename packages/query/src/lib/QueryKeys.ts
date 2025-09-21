@@ -199,7 +199,7 @@ export class QueryKeys<T extends QueryItem, F> {
 
     const queryData = this.queryClient.getQueryData<T>(queryKey)
 
-    if (!queryData?.id && onlyQueryData) {
+    if (!queryData?.id && !onlyQueryData) {
       const { itemMap } = this.getListData()
 
       return itemMap?.[id]
