@@ -14,7 +14,6 @@ import { TypeGuards } from '@codeleap/types'
 
 /**
  * - usePaginatedList
- * - next e previous precisa retornar undefined por conta do hasNextPage
  */
 
 export class QueryManager<T extends QueryItem, F> {
@@ -109,9 +108,8 @@ export class QueryManager<T extends QueryItem, F> {
     }
   }
 
-  useRetrieve(options: RetrieveQueryOptions<T>) {
+  useRetrieve(id: T['id'], options: RetrieveQueryOptions<T> = {}) {
     const {
-      id,
       select,
       ...queryOptions
     } = options
@@ -137,7 +135,7 @@ export class QueryManager<T extends QueryItem, F> {
       queryKey,
 
       queryFn: () => {
-        return this.options.retrieveFn(options?.id)
+        return this.options.retrieveFn(id)
       },
 
       select: (data) => {

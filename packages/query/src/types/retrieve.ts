@@ -4,6 +4,4 @@ import { QueryItem } from './core'
 export type RetrieveQueryOptions<T extends QueryItem> = Omit<
   UndefinedInitialDataOptions<T, Error, T, QueryKey>,
   'queryKey' | 'queryFn'
-> & {
-  id: T['id']
-}
+>
