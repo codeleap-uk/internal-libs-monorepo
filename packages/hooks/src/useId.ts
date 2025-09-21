@@ -1,8 +1,8 @@
-import { useRef } from 'react'
-import uuid from 'react-native-uuid'
+import { useRef, useId as _useId } from 'react'
 
-export function useId(id = uuid.v4()) {
+export function useId(id?: string | number) {
+  const defaultId = _useId()
   const idRef = useRef(id)
 
-  return idRef.current as unknown as string
+  return idRef.current ?? defaultId
 }

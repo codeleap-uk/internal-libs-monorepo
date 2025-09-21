@@ -13,3 +13,10 @@ export type ItemPosition = {
 }
 
 export type RemovedItemMap = [QueryKey, ItemPosition][]
+
+export type PaginationResponse<T extends QueryItem> = {
+  count: number
+  next: string
+  previous: string
+  results: T[]
+}
