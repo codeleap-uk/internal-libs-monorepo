@@ -1,36 +1,74 @@
 import { useMutation, useQuery, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
-import { QueryClient } from '../../types'
+import { QueryOperationsOptions, MutationFn, QueryFn, InferMutationParams, InferMutationReturn, InferQueryParams, InferQueryReturn } from './types'
 
-export type QueryOperationsOptions = {
-  queryClient: QueryClient
-}
-
-type MutationFn<T = any, R = any> = (data: T) => Promise<R> | R
-type QueryFn<T = any, R = any> = (params?: T) => Promise<R> | R
-
-type InferMutationParams<T> = T extends MutationFn<infer P, any> ? P : never
-type InferMutationReturn<T> = T extends MutationFn<any, infer R> ? R : never
-type InferQueryParams<T> = T extends QueryFn<infer P, any> ? P : never
-type InferQueryReturn<T> = T extends QueryFn<any, infer R> ? R : never
-
+/**
+ * Builder class for creating type-safe query and mutation operations
+ * @template TMutations - Record type containing all registered mutation functions
+ * @template TQueries - Record type containing all registered query functions
+ * 
+ * @description
+ * QueryOperations provides a fluent interface for building collections of queries and mutations
+ * with full type safety. It acts as a centralized registry for all data operations and provides
+ * corresponding React hooks that are automatically typed based on the registered functions.
+ * 
+ * Key features:
+ * - Fluent builder pattern for registering operations
+ * - Automatic type inference for parameters and return types
+ * - Type-safe React hooks generation
+ * - Immutable operation registration (returns new instances)
+ */
 export class QueryOperations<
   TMutations,
   TQueries,
 > {
+  /**
+   * Creates a new QueryOperations instance
+   * @param _options - Configuration options including QueryClient
+   * @param _mutations - Record of registered mutation functions (internal)
+   * @param _queries - Record of registered query functions (internal)
+   */
   constructor(
     private _options: QueryOperationsOptions,
     private _mutations: TMutations = {} as TMutations,
     private _queries: TQueries = {} as TQueries
   ) { }
 
+  /**
+   * Gets all registered mutation functions
+   * @returns Readonly record of mutation functions
+   */
   get mutations(): Readonly<TMutations> {
     return this._mutations
   }
 
+  /**
+   * Gets all registered query functions
+   * @returns Readonly record of query functions
+   */
   get queries(): Readonly<TQueries> {
     return this._queries
   }
 
+  /**
+   * Registers a new mutation function
+   * @template K - The name/key for the mutation
+   * @template T - The input data type for the mutation
+   * @template R - The return data type for the mutation
+   * @param name - Unique name identifier for the mutation
+   * @param fn - The mutation function that performs the operation
+   * @returns New QueryOperations instance with the mutation added
+   * 
+   * @example
+   * ```typescript
+   * const operations = createQueryOperations({ queryClient })
+   *   .mutation('createUser', async (userData: CreateUserData) => {
+   *     return api.post('/users', userData)
+   *   })
+   *   .mutation('updateUser', async (userData: UpdateUserData) => {
+   *     return api.put(`/users/${userData.id}`, userData)
+   *   })
+   * ```
+   */
   mutation<K extends string, T = any, R = any>(
     name: K,
     fn: MutationFn<T, R>
@@ -42,6 +80,26 @@ export class QueryOperations<
     )
   }
 
+  /**
+   * Registers a new query function
+   * @template K - The name/key for the query
+   * @template T - The parameters type for the query
+   * @template R - The return data type for the query
+   * @param name - Unique name identifier for the query
+   * @param fn - The query function that fetches the data
+   * @returns New QueryOperations instance with the query added
+   * 
+   * @example
+   * ```typescript
+   * const operations = createQueryOperations({ queryClient })
+   *   .query('getUser', async (userId: string) => {
+   *     return api.get(`/users/${userId}`)
+   *   })
+   *   .query('getUsers', async (filters?: UserFilters) => {
+   *     return api.get('/users', { params: filters })
+   *   })
+   * ```
+   */
   query<K extends string, T = any, R = any>(
     name: K,
     fn: QueryFn<T, R>
@@ -53,6 +111,31 @@ export class QueryOperations<
     )
   }
 
+  /**
+   * React hook for executing mutations with full type safety
+   * @template K - The mutation key type
+   * @param mutationKey - The name of the registered mutation to use
+   * @param options - React Query mutation options (excluding mutationFn and mutationKey)
+   * @returns React Query mutation object with inferred types
+   * 
+   * @description
+   * This hook automatically provides type-safe parameters and return types based on the
+   * registered mutation function. It handles error cases and provides proper TypeScript
+   * inference for the mutation data and variables.
+   * 
+   * @example
+   * ```typescript
+   * const createUserMutation = operations.useMutation('createUser', {
+   *   onSuccess: (user) => {
+   *     // 'user' is automatically typed as the return type of createUser
+   *     console.log('Created user:', user.id)
+   *   }
+   * })
+   * 
+   * // Usage - parameters are type-checked
+   * createUserMutation.mutate({ name: 'John', email: 'john@example.com' })
+   * ```
+   */
   useMutation<K extends keyof TMutations>(
     mutationKey: K,
     options?: Omit<
@@ -81,6 +164,35 @@ export class QueryOperations<
     })
   }
 
+  /**
+   * React hook for executing queries with full type safety
+   * @template K - The query key type
+   * @param queryKey - The name of the registered query to use
+   * @param params - Parameters to pass to the query function (optional if query doesn't require params)
+   * @param options - React Query options (excluding queryKey and queryFn)
+   * @returns React Query query object with inferred types
+   * 
+   * @description
+   * This hook automatically provides type-safe parameters and return types based on the
+   * registered query function. It generates appropriate query keys and handles parameter
+   * validation.
+   * 
+   * @example
+   * ```typescript
+   * // Query with parameters
+   * const userQuery = operations.useQuery('getUser', 'user-123', {
+   *   enabled: !!userId
+   * })
+   * 
+   * // Query without parameters
+   * const usersQuery = operations.useQuery('getUsers', undefined, {
+   *   refetchInterval: 30000
+   * })
+   * 
+   * // Query with optional parameters
+   * const filteredUsersQuery = operations.useQuery('getUsers', { status: 'active' })
+   * ```
+   */
   useQuery<K extends keyof TQueries>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>,
@@ -110,6 +222,26 @@ export class QueryOperations<
     } as any)
   }
 
+  /**
+   * Generates a properly typed query key for React Query
+   * @template K - The query key type
+   * @param queryKey - The name of the query
+   * @param params - Optional parameters for the query
+   * @returns Query key array, with params included only when necessary
+   * 
+   * @description
+   * This method creates React Query compatible keys that include parameters when present.
+   * The return type is conditionally typed based on whether the query requires parameters.
+   * 
+   * @example
+   * ```typescript
+   * // Returns ['getUser', 'user-123']
+   * const keyWithParams = operations.getQueryKey('getUser', 'user-123')
+   * 
+   * // Returns ['getUsers']
+   * const keyWithoutParams = operations.getQueryKey('getUsers')
+   * ```
+   */
   getQueryKey<K extends keyof TQueries>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>
@@ -121,11 +253,19 @@ export class QueryOperations<
     return (params !== undefined ? [queryKey, params] : [queryKey]) as any
   }
 
+  /**
+   * Generates a mutation key for React Query
+   * @template K - The mutation key type
+   * @param mutationKey - The name of the mutation
+   * @returns Mutation key array containing only the mutation name
+   * 
+   * @example
+   * ```typescript
+   * // Returns ['createUser']
+   * const mutationKey = operations.getMutationKey('createUser')
+   * ```
+   */
   getMutationKey<K extends keyof TMutations>(mutationKey: K): [K] {
     return [mutationKey]
   }
-}
-
-export function createQueryOperations(options: QueryOperationsOptions) {
-  return new QueryOperations(options)
 }

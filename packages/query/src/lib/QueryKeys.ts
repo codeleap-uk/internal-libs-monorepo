@@ -4,16 +4,26 @@ import { TypeGuards } from '@codeleap/types'
 import { ListPaginationResponse, ListSelector, PageParam, QueryClient, QueryItem } from '../types'
 import deepEqual from 'fast-deep-equal'
 
+/**
+ * Class for managing React Query keys and operations for a specific query type
+ * @template T - The query item type that extends QueryItem
+ * @template F - The filter type used for list queries
+ */
 export class QueryKeys<T extends QueryItem, F> {
+  /**
+   * Creates a new QueryKeys instance
+   * @param queryName - The name of the query used as base for all keys
+   * @param queryClient - The React Query client instance
+   */
   constructor(
     private queryName: string,
     private queryClient: QueryClient
   ) { }
 
   /**
-   * keys
-  */
-
+   * Gets the base query keys for different operations
+   * @returns Object containing base query keys for list, retrieve, create, update, and delete operations
+   */
   get keys() {
     return {
       // queries
@@ -27,6 +37,11 @@ export class QueryKeys<T extends QueryItem, F> {
     }
   }
 
+  /**
+   * Generates a list query key with optional filters
+   * @param filters - Optional filters to include in the query key
+   * @returns Query key array with or without filters
+   */
   listKeyWithFilters(filters?: F): QueryKey {
     const hasValidFilters = filters != null && (
       typeof filters !== 'object'
@@ -39,12 +54,22 @@ export class QueryKeys<T extends QueryItem, F> {
     return hasValidFilters ? [...this.keys.list, filters] : this.keys.list
   }
 
+  /**
+   * React hook that returns a memoized list query key with filters
+   * @param filters - Optional filters to include in the query key
+   * @returns Memoized query key array
+   */
   useListKeyWithFilters(filters?: F) {
     return useMemo(() => {
       return this.listKeyWithFilters(filters)
     }, [filters])
   }
 
+  /**
+   * React hook that returns a memoized retrieve query key
+   * @param id - The ID of the item to retrieve
+   * @returns Memoized query key array for retrieve operation
+   */
   useRetrieveKey(id: QueryItem['id']) {
     return useMemo(() => {
       return this.keys.retrieve(id)
@@ -52,15 +77,26 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * utilities function
-  */
-
+   * Predicate function to check if a query belongs to this query name (all operations)
+   * @private
+   * @param queryName - The query name to match against
+   * @param query - The query object to check
+   * @returns True if the query matches the query name
+   */
   private predicateQueryKeyAll(queryName: string, query: Query<unknown, Error, unknown, QueryKey>) {
     const queryKey = query?.queryKey?.join('/')
 
     return queryKey?.includes(queryName)
   }
 
+  /**
+   * Predicate function to check if a query is a list query for this query name
+   * @private
+   * @param queryName - The query name to match against
+   * @param query - The query object to check
+   * @param toIgnoreQueryKeys - Query keys to ignore in the matching
+   * @returns True if the query is a list query and not in the ignore list
+   */
   private predicateQueryKeyList(queryName: string, query: Query<unknown, Error, unknown, QueryKey>, toIgnoreQueryKeys?: QueryKey | QueryKey[]) {
     const queryKey = query?.queryKey?.join('/')
 
@@ -68,7 +104,7 @@ export class QueryKeys<T extends QueryItem, F> {
       const ignoreQueryKeys = Array.isArray(toIgnoreQueryKeys?.[0]) ? toIgnoreQueryKeys : [toIgnoreQueryKeys]
       if (ignoreQueryKeys.some(key => deepEqual(query?.queryKey, key))) {
         return false
-      } 
+      }
     }
 
     const isListQueryKey = queryKey?.includes(queryName) && queryKey?.includes('list')
@@ -77,9 +113,11 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * invalidate functions
-  */
-
+   * Invalidates all queries for this query name
+   * @param filters - Optional filters to apply to the invalidation
+   * @param options - Optional invalidation options
+   * @returns Promise that resolves when invalidation is complete
+   */
   async invalidateAll(filters?: InvalidateQueryFilters<QueryKey>, options?: InvalidateOptions) {
     return this.queryClient.invalidateQueries({
       ...filters,
@@ -87,6 +125,14 @@ export class QueryKeys<T extends QueryItem, F> {
     }, options)
   }
 
+  /**
+   * Invalidates list queries, optionally with specific filters
+   * @param listFilters - Optional filters to target specific list queries
+   * @param ignoreQueryKeys - Query keys to ignore during invalidation
+   * @param filters - Optional filters to apply to the invalidation
+   * @param options - Optional invalidation options
+   * @returns Promise that resolves when invalidation is complete
+   */
   async invalidateList(listFilters?: F, ignoreQueryKeys?: QueryKey | QueryKey[], filters?: InvalidateQueryFilters<QueryKey>, options?: InvalidateOptions) {
     if (!!listFilters) {
       const queryKey = this.listKeyWithFilters(listFilters)
@@ -100,6 +146,13 @@ export class QueryKeys<T extends QueryItem, F> {
     }, options)
   }
 
+  /**
+   * Invalidates a specific retrieve query by ID
+   * @param id - The ID of the item to invalidate
+   * @param filters - Optional filters to apply to the invalidation
+   * @param options - Optional invalidation options
+   * @returns Promise that resolves when invalidation is complete
+   */
   async invalidateRetrieve(id: QueryItem['id'], filters?: InvalidateQueryFilters<QueryKey>, options?: InvalidateOptions) {
     const queryKey = this.keys.retrieve(id)
 
@@ -110,9 +163,11 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * refetch functions
-  */
-
+   * Refetches all queries for this query name
+   * @param filters - Optional filters to apply to the refetch
+   * @param options - Optional refetch options
+   * @returns Promise that resolves when refetch is complete
+   */
   async refetchAll(filters?: RefetchQueryFilters<QueryKey>, options?: RefetchOptions) {
     return this.queryClient.refetchQueries({
       ...filters,
@@ -120,6 +175,14 @@ export class QueryKeys<T extends QueryItem, F> {
     }, options)
   }
 
+  /**
+   * Refetches list queries, optionally with specific filters
+   * @param listFilters - Optional filters to target specific list queries
+   * @param ignoreQueryKeys - Query keys to ignore during refetch
+   * @param filters - Optional filters to apply to the refetch
+   * @param options - Optional refetch options
+   * @returns Promise that resolves when refetch is complete
+   */
   async refetchList(listFilters?: F, ignoreQueryKeys?: QueryKey | QueryKey[], filters?: RefetchQueryFilters<QueryKey>, options?: RefetchOptions) {
     if (!!listFilters) {
       const queryKey = this.listKeyWithFilters(listFilters)
@@ -133,6 +196,13 @@ export class QueryKeys<T extends QueryItem, F> {
     }, options)
   }
 
+  /**
+   * Refetches a specific retrieve query by ID
+   * @param id - The ID of the item to refetch
+   * @param filters - Optional filters to apply to the refetch
+   * @param options - Optional refetch options
+   * @returns Promise that resolves when refetch is complete
+   */
   async refetchRetrieve(id: QueryItem['id'], filters?: RefetchQueryFilters<QueryKey>, options?: RefetchOptions) {
     const queryKey = this.keys.retrieve(id)
 
@@ -143,9 +213,11 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * remove queries functions
-  */
-
+   * Removes a specific retrieve query data from the cache
+   * @param id - The ID of the item to remove from cache
+   * @param filters - Optional filters to apply to the removal
+   * @returns Promise that resolves when removal is complete
+   */
   async removeRetrieveQueryData(id: QueryItem['id'], filters?: QueryFilters<QueryKey>) {
     const queryKey = this.keys.retrieve(id)
 
@@ -156,9 +228,13 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * cancel queries functions
-  */
-
+   * Cancels list queries that are currently in flight
+   * @param listFilters - Optional filters to target specific list queries
+   * @param ignoreQueryKeys - Query keys to ignore during cancellation
+   * @param filters - Optional filters to apply to the cancellation
+   * @param options - Optional cancellation options
+   * @returns Promise that resolves when cancellation is complete
+   */
   async cancelListQueries(listFilters?: F, ignoreQueryKeys?: QueryKey | QueryKey[], filters?: QueryFilters<QueryKey>, options?: CancelOptions) {
     if (!!listFilters) {
       const queryKey = this.listKeyWithFilters(listFilters)
@@ -173,9 +249,10 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * data getters
-  */
-
+   * Gets list data from the cache, including both items array and item map
+   * @param filters - Optional filters to target specific list data
+   * @returns Object containing items array and itemMap (keyed by ID)
+   */
   getListData(filters?: F) {
     const queryKey = this.listKeyWithFilters(filters)
 
@@ -194,6 +271,12 @@ export class QueryKeys<T extends QueryItem, F> {
     }
   }
 
+  /**
+   * Gets retrieve data from cache, with fallback to list data
+   * @param id - The ID of the item to retrieve
+   * @param onlyQueryData - If true, only returns data from the specific retrieve query, not from list data
+   * @returns The item data or undefined if not found
+   */
   getRetrieveData(id: QueryItem['id'], onlyQueryData = false): T | undefined {
     if (TypeGuards.isNil(id)) return undefined
 
@@ -211,9 +294,9 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * utils functions
+   * Gets all list queries from the query cache
+   * @returns Array of list queries for this query name
    */
-
   getAllListQueries() {
     const queries = this.queryClient.getQueryCache().findAll({
       predicate: (query) => this.predicateQueryKeyList(this.queryName, query),
@@ -223,6 +306,14 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 }
 
+/**
+ * Factory function to create a new QueryKeys instance
+ * @template T - The query item type that extends QueryItem
+ * @template F - The filter type used for list queries
+ * @param name - The name of the query used as base for all keys
+ * @param queryClient - The React Query client instance
+ * @returns New QueryKeys instance
+ */
 export const createQueryKeys = <T extends QueryItem, F>(name: string, queryClient: QueryClient) => {
   return new QueryKeys<T, F>(name, queryClient)
 }

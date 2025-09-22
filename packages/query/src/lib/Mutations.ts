@@ -3,13 +3,42 @@ import { QueryKeys } from './QueryKeys'
 import { ItemPosition, ListPaginationResponse, PageParam, QueryClient, QueryItem, RemovedItemMap, WithTempId } from '../types'
 import deepEqual from 'fast-deep-equal'
 
+/**
+ * Class for managing mutations and cache updates for React Query list data
+ * @template T - The query item type that extends QueryItem
+ * @template F - The filter type used for list queries
+ */
 export class Mutations<T extends QueryItem, F> {
+  /**
+   * Creates a new Mutations instance
+   * @param queryKeys - The QueryKeys instance for managing query keys
+   * @param queryClient - The React Query client instance
+   * @param queryName - The name of the query used for identification
+   */
   constructor(
     private queryKeys: QueryKeys<T, F>,
     private queryClient: QueryClient,
     private queryName: string
   ) { }
 
+  /**
+   * Adds a new item to the cached list data
+   * @param newItem - The new item to add to the list
+   * @param position - Where to add the item: 'start', 'end', or a RemovedItemMap for specific positions
+   * @param listFilters - Optional filters to target specific list queries
+   * 
+   * @example
+   * ```typescript
+   * // Add item to the beginning
+   * mutations.addItem(newUser, 'start')
+   * 
+   * // Add item to the end with filters
+   * mutations.addItem(newUser, 'end', { status: 'active' })
+   * 
+   * // Add item to specific positions (restore from removed item map)
+   * mutations.addItem(newUser, removedItemMap)
+   * ```
+   */
   addItem(newItem: T, position: 'start' | 'end' | RemovedItemMap = 'start', listFilters?: F) {
     const isMultiQueryKeys = Array.isArray(position) && position?.length >= 1
 
@@ -85,6 +114,21 @@ export class Mutations<T extends QueryItem, F> {
     this.queryClient.setQueryData(queryKey, newData)
   }
 
+  /**
+   * Removes an item from all cached list queries and returns the positions where it was found
+   * @param itemId - The ID of the item to remove
+   * @returns A RemovedItemMap containing the query keys and positions where the item was found, or null if not found
+   * 
+   * @example
+   * ```typescript
+   * const removedPositions = mutations.removeItem('user-123')
+   * 
+   * // Later, restore the item to its original positions
+   * if (removedPositions) {
+   *   mutations.addItem(restoredUser, removedPositions)
+   * }
+   * ```
+   */
   removeItem(itemId: QueryItem['id']): RemovedItemMap | null {
     this.queryKeys.removeRetrieveQueryData(itemId)
 
@@ -137,6 +181,29 @@ export class Mutations<T extends QueryItem, F> {
     return removedItemMap
   }
 
+  /**
+   * Updates existing items in all cached list queries and individual retrieve queries
+   * @param data - Single item or array of items to update. Items can have tempId for temporary identification
+   * 
+   * @description
+   * This method:
+   * - Finds items by their ID or tempId in all list queries
+   * - Updates the items only if the data has actually changed (uses deep equality check)
+   * - Updates both list cache and individual retrieve cache
+   * - Removes tempId from the final cached data
+   * 
+   * @example
+   * ```typescript
+   * // Update single item
+   * mutations.updateItems({ id: 'user-123', name: 'Updated Name', tempId: 'temp-1' })
+   * 
+   * // Update multiple items
+   * mutations.updateItems([
+   *   { id: 'user-123', name: 'Updated Name' },
+   *   { id: 'user-456', status: 'active' }
+   * ])
+   * ```
+   */
   updateItems(data: WithTempId<T> | WithTempId<T>[]) {
     const listQueries = this.queryKeys.getAllListQueries()
 
@@ -188,6 +255,21 @@ export class Mutations<T extends QueryItem, F> {
   }
 }
 
+/**
+ * Factory function to create a new Mutations instance
+ * @template T - The query item type that extends QueryItem
+ * @template F - The filter type used for list queries
+ * @param queryKeys - The QueryKeys instance for managing query keys
+ * @param queryClient - The React Query client instance
+ * @param queryName - The name of the query used for identification
+ * @returns New Mutations instance
+ * 
+ * @example
+ * ```typescript
+ * const userQueryKeys = createQueryKeys<User, UserFilters>('users', queryClient)
+ * const userMutations = createMutations(userQueryKeys, queryClient, 'users')
+ * ```
+ */
 export const createMutations = <T extends QueryItem, F>(queryKeys: QueryKeys<T, F>, queryClient: QueryClient, queryName: string) => {
   return new Mutations<T, F>(queryKeys, queryClient, queryName)
 }
