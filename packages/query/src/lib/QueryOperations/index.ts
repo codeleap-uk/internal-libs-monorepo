@@ -1,4 +1,4 @@
-import { useMutation, useQuery, UseQueryOptions, UseMutationOptions } from '@tanstack/react-query'
+import { useMutation, useQuery, UseQueryOptions, UseMutationOptions, QueryKey } from '@tanstack/react-query'
 import { QueryOperationsOptions, MutationFn, QueryFn, InferMutationParams, InferMutationReturn, InferQueryParams, InferQueryReturn } from './types'
 
 /**
@@ -144,7 +144,7 @@ export class QueryOperations<
         Error,
         InferMutationParams<TMutations[K]>
       >,
-      'mutationFn' | 'mutationKey'
+      'mutationFn'
     >
   ) {
     const mutationFn = this._mutations[mutationKey] as MutationFn
@@ -203,7 +203,7 @@ export class QueryOperations<
         InferQueryReturn<TQueries[K]>,
         ReturnType<this['getQueryKey']>
       >,
-      'queryKey' | 'queryFn'
+      'queryFn'
     >
   ) {
     const queryFn = this._queries[queryKey] as QueryFn
@@ -245,12 +245,8 @@ export class QueryOperations<
   getQueryKey<K extends keyof TQueries>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>
-  ): InferQueryParams<TQueries[K]> extends never
-    ? [K]
-    : InferQueryParams<TQueries[K]> extends undefined
-    ? [K]
-    : [K, InferQueryParams<TQueries[K]>] {
-    return (params !== undefined ? [queryKey, params] : [queryKey]) as any
+  ): QueryKey {
+    return (params !== undefined ? [queryKey, params] : [queryKey]) as QueryKey
   }
 
   /**
@@ -265,7 +261,7 @@ export class QueryOperations<
    * const mutationKey = operations.getMutationKey('createUser')
    * ```
    */
-  getMutationKey<K extends keyof TMutations>(mutationKey: K): [K] {
-    return [mutationKey]
+  getMutationKey<K extends keyof TMutations>(mutationKey: K): QueryKey {
+    return [mutationKey] as QueryKey
   }
 }
