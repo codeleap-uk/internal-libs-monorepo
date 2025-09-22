@@ -23,6 +23,7 @@ export type AvatarProps =
     onPress?: () => void
     noFeedback?: boolean
     imageProps?: Partial<ImageProps>
+    compactInitials?: boolean
   }
 
 export type AvatarCtxValue = Omit<AvatarProps, 'style'> & {
