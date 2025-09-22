@@ -99,6 +99,10 @@ export class QueryManager<T extends QueryItem, F> {
       ...queryOptions,
     })
 
+    const useListEffect = (this.options.useListEffect ?? ((args: any) => null))
+
+    useListEffect(query)
+
     const items = query.data?.allItems ?? []
 
     return {

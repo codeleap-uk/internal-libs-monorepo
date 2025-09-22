@@ -1,15 +1,13 @@
 import React from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { AnyFunction, TypeGuards } from '@codeleap/types'
-import { UseListEffect } from '@codeleap/query'
+import { QueryManagerOptions } from '@codeleap/query'
 
 type useQueryListRefresh = (
-  listQuery: Parameters<UseListEffect>[0],
+  listQuery: Parameters<QueryManagerOptions<any, any>['useListEffect']>[0],
   options?: {
     staleTime?: number
-    silentRefresh?: boolean
     initialStale?: boolean
-    cancelQueryEnabled?: boolean
     refreshQueryEnabled?: boolean
     onFocus?: AnyFunction
     onBlur?: AnyFunction
@@ -19,10 +17,8 @@ type useQueryListRefresh = (
 export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}) => {
   const {
     staleTime = 5000,
-    initialStale = listQuery?.query?.isStale,
-    cancelQueryEnabled = true,
+    initialStale = listQuery?.isStale,
     refreshQueryEnabled = true,
-    silentRefresh = false,
     onFocus,
     onBlur,
   } = options
@@ -33,7 +29,7 @@ export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}
   useFocusEffect(
     React.useCallback(() => {
       if (staleRefetch.current && refreshQueryEnabled) {
-        listQuery?.refreshQuery(silentRefresh)
+        listQuery?.refetch()
       }
 
       if (TypeGuards.isFunction(onFocus)) {
@@ -41,7 +37,6 @@ export const useQueryListRefresh: useQueryListRefresh = (listQuery, options = {}
       }
 
       return () => {
-        if (cancelQueryEnabled) listQuery?.cancelQuery?.()
         staleRefetch.current = false
 
         if (staleTimeout.current == null) {

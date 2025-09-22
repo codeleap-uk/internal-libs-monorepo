@@ -1,4 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query'
+import { UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query'
 
 export type QueryItem = {
   id: string | number
@@ -16,6 +16,12 @@ export type QueryManagerOptions<T extends QueryItem, F> = {
   listFn?: (limit: number, offset: number, filters: F) => Promise<ListPaginationResponse<T>>
 
   listLimit?: number
+
+  useListEffect?: (listQuery: UseInfiniteQueryResult<{
+    pageParams: number[]
+    pages: ListPaginationResponse<T>[]
+    allItems: T[]
+  }, Error>) => void
 
   retrieveFn?: (id: T['id']) => Promise<T>
 
