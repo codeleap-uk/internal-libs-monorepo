@@ -1,6 +1,6 @@
 import { useRef, useId as _useId } from 'react'
 
-export function useId(id?: string | number) {
+export function useId<T>(id?: T) {
   const defaultId = _useId()
   const idRef = useRef(id)
 
