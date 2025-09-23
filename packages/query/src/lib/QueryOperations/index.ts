@@ -265,6 +265,29 @@ export class QueryOperations<
     return [mutationKey] as QueryKey
   }
 
+  /**
+   * Prefetches a query to populate the cache ahead of time
+   * @template K - The query key type
+   * @param queryKey - The name of the registered query to prefetch
+   * @param params - Parameters to pass to the query function (optional if query doesn't require params)
+   * @param options - React Query prefetch options
+   * @returns Promise that resolves when the prefetch is complete
+   * 
+   * @example
+   * ```typescript
+   * // Prefetch user data when hovering over a user link
+   * const handleUserHover = async (userId: string) => {
+   *   await operations.prefetchQuery('getUser', userId, {
+   *     staleTime: 5 * 60 * 1000 // 5 minutes
+   *   })
+   * }
+   * 
+   * // Prefetch data on route change
+   * useEffect(() => {
+   *   operations.prefetchQuery('getUsers', { status: 'active' })
+   * }, [])
+   * ```
+   */
   prefetchQuery<K extends keyof TQueries>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>,
@@ -281,6 +304,35 @@ export class QueryOperations<
     })
   }
 
+  /**
+   * Retrieves cached query data if it exists
+   * @template K - The query key type
+   * @template T - The expected return type (defaults to inferred query return type)
+   * @param queryKey - The name of the registered query
+   * @param params - Parameters used when the query was cached (optional if query doesn't require params)
+   * @returns The cached data if it exists, undefined otherwise
+   * 
+   * @example
+   * ```typescript
+   * // Get cached user data
+   * const cachedUser = operations.getQueryData('getUser', 'user-123')
+   * if (cachedUser) {
+   *   console.log('User already in cache:', cachedUser.name)
+   * }
+   * 
+   * // Check if users list is cached before showing loading state
+   * const cachedUsers = operations.getQueryData('getUsers')
+   * const showSkeleton = !cachedUsers
+   * 
+   * // Access cached data in event handlers
+   * const handleUserAction = () => {
+   *   const currentUser = operations.getQueryData('getCurrentUser')
+   *   if (currentUser?.role === 'admin') {
+   *     // Perform admin action
+   *   }
+   * }
+   * ```
+   */
   getQueryData<K extends keyof TQueries, T = InferQueryReturn<TQueries[K]>>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>,
