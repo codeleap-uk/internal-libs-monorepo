@@ -1,4 +1,4 @@
-import { useMutation, useQuery, UseQueryOptions, UseMutationOptions, QueryKey } from '@tanstack/react-query'
+import { useMutation, useQuery, UseQueryOptions, UseMutationOptions, QueryKey, FetchQueryOptions } from '@tanstack/react-query'
 import { QueryOperationsOptions, MutationFn, QueryFn, InferMutationParams, InferMutationReturn, InferQueryParams, InferQueryReturn } from './types'
 
 /**
@@ -193,16 +193,16 @@ export class QueryOperations<
    * const filteredUsersQuery = operations.useQuery('getUsers', { status: 'active' })
    * ```
    */
-  useQuery<K extends keyof TQueries>(
+  useQuery<K extends keyof TQueries, T = InferQueryReturn<TQueries[K]>>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>,
     options?: Omit<
-      UseQueryOptions<
+      Partial<UseQueryOptions<
         InferQueryReturn<TQueries[K]>,
         Error,
-        InferQueryReturn<TQueries[K]>,
+        T,
         ReturnType<this['getQueryKey']>
-      >,
+      >>,
       'queryFn'
     >
   ) {
@@ -210,7 +210,7 @@ export class QueryOperations<
 
     type TData = InferQueryReturn<TQueries[K]>
 
-    return useQuery<TData, Error, TData, ReturnType<this['getQueryKey']>>({
+    return useQuery<TData, Error, T, ReturnType<this['getQueryKey']>>({
       queryKey: this.getQueryKey(queryKey, params),
       queryFn: async (): Promise<TData> => {
         if (!queryFn) {
@@ -263,5 +263,30 @@ export class QueryOperations<
    */
   getMutationKey<K extends keyof TMutations>(mutationKey: K): QueryKey {
     return [mutationKey] as QueryKey
+  }
+
+  prefetchQuery<K extends keyof TQueries>(
+    queryKey: K,
+    params?: InferQueryParams<TQueries[K]>,
+    options?: FetchQueryOptions<any, Error, any, QueryKey, never>
+  ) {
+    const prefetchQueryKey = this.getQueryKey(queryKey, params)
+
+    const queryFn = this._queries[queryKey] as QueryFn
+
+    return this._options.queryClient.prefetchQuery({
+      queryKey: prefetchQueryKey,
+      queryFn: queryFn,
+      ...options,
+    })
+  }
+
+  getQueryData<K extends keyof TQueries, T = InferQueryReturn<TQueries[K]>>(
+    queryKey: K,
+    params?: InferQueryParams<TQueries[K]>,
+  ) {
+    const prefetchQueryKey = this.getQueryKey(queryKey, params)
+
+    return this._options.queryClient.getQueryData<T, QueryKey>(prefetchQueryKey)
   }
 }
