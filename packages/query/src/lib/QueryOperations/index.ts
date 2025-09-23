@@ -201,7 +201,7 @@ export class QueryOperations<
         InferQueryReturn<TQueries[K]>,
         Error,
         T,
-        ReturnType<this['getQueryKey']>
+        QueryKey
       >>,
       'queryFn'
     >
@@ -210,7 +210,7 @@ export class QueryOperations<
 
     type TData = InferQueryReturn<TQueries[K]>
 
-    return useQuery<TData, Error, T, ReturnType<this['getQueryKey']>>({
+    return useQuery<TData, Error, T, QueryKey>({
       queryKey: this.getQueryKey(queryKey, params),
       queryFn: async (): Promise<TData> => {
         if (!queryFn) {
@@ -288,16 +288,16 @@ export class QueryOperations<
    * }, [])
    * ```
    */
-  prefetchQuery<K extends keyof TQueries>(
+  prefetchQuery<K extends keyof TQueries, T = InferQueryReturn<TQueries[K]>>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>,
-    options?: FetchQueryOptions<any, Error, any, QueryKey, never>
+    options?: FetchQueryOptions<InferQueryReturn<TQueries[K]>, Error, T, QueryKey, never>
   ) {
     const prefetchQueryKey = this.getQueryKey(queryKey, params)
 
     const queryFn = this._queries[queryKey] as QueryFn
 
-    return this._options.queryClient.prefetchQuery({
+    return this._options.queryClient.prefetchQuery<InferQueryReturn<TQueries[K]>, Error, T, QueryKey>({
       queryKey: prefetchQueryKey,
       queryFn: queryFn,
       ...options,
@@ -333,11 +333,18 @@ export class QueryOperations<
    * }
    * ```
    */
-  getQueryData<K extends keyof TQueries, T = InferQueryReturn<TQueries[K]>>(
+  async getQueryData<K extends keyof TQueries, T = InferQueryReturn<TQueries[K]>>(
     queryKey: K,
     params?: InferQueryParams<TQueries[K]>,
+    options?: FetchQueryOptions<InferQueryReturn<TQueries[K]>, Error, T, QueryKey, never>,
   ) {
     const prefetchQueryKey = this.getQueryKey(queryKey, params)
+
+    const cachedData = this._options.queryClient.getQueryData<T, QueryKey>(prefetchQueryKey)
+
+    if (!cachedData) {
+      await this.prefetchQuery(queryKey, params, options)
+    }
 
     return this._options.queryClient.getQueryData<T, QueryKey>(prefetchQueryKey)
   }
