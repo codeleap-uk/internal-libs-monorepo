@@ -478,7 +478,7 @@ export class QueryManager<T extends QueryItem, F> {
    * }
    * ```
    */
-  prefetchRetrieve(id: T['id'], options: FetchQueryOptions<T, Error, T, QueryKey, never>) {
+  prefetchRetrieve(id: T['id'], options: Omit<FetchQueryOptions<T, Error, T, QueryKey, never>, 'queryKey' | 'queryFn'> = {}) {
     return this.options.queryClient.prefetchQuery({
       ...options,
       queryKey: this.queryKeys.keys.retrieve(id),

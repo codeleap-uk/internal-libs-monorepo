@@ -207,9 +207,18 @@ export class Mutations<T extends QueryItem, F> {
   updateItems(data: WithTempId<T> | WithTempId<T>[]) {
     const listQueries = this.queryKeys.getAllListQueries()
 
-    const dataMap = Array.isArray(data)
-      ? Object.fromEntries(data.map(item => [item?.tempId ?? item?.id, item]))
-      : { [data?.tempId ?? data?.id]: data }
+    const dataArray = Array.isArray(data) ? data : [data]
+
+    for (const item of dataArray) {
+      const { tempId, ...updateData } = item
+      const cachedQueryKey = this.queryKeys.keys.retrieve(updateData.id)
+      const cachedItemData = this.queryKeys.getRetrieveData(updateData.id)
+      if (!deepEqual(cachedItemData, updateData)) {
+        this.queryClient.setQueryData(cachedQueryKey, updateData)
+      }
+    }
+
+    const dataMap = Object.fromEntries(dataArray.map(item => [item?.tempId ?? item?.id, item]))
 
     for (const query of listQueries) {
       const oldData = query.state?.data
@@ -231,10 +240,6 @@ export class Mutations<T extends QueryItem, F> {
             if (needsUpdate) {
               pageChanged = true
               hasChanges = true
-
-              const cachedQueryKey = this.queryKeys.keys.retrieve(updateData.id)
-              this.queryClient.setQueryData(cachedQueryKey, updateData)
-
               return updateData
             }
           }
