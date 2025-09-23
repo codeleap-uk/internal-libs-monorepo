@@ -42,7 +42,7 @@
     "react-select": "^5.7.3",
     "react-slick": "^0.29.0",
     "slick-carousel": "^1.8.1",
-    "uuid": "^8.3.2"
+    "uuid": "13.0.0"
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
