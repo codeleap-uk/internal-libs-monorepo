@@ -46,7 +46,7 @@ export class Mutations<T extends QueryItem, F> {
       for (const [queryKey, itemPosition] of position) {
         const currentData = this.queryClient.getQueryData<InfiniteData<ListPaginationResponse<T>, PageParam>>(queryKey)
 
-        const updatedPages = [...currentData.pages]
+        const updatedPages = [...(currentData?.pages || [])]
 
         if (itemPosition.pageIndex < updatedPages.length) {
           const targetPage = [...updatedPages[itemPosition.pageIndex]]
@@ -224,11 +224,11 @@ export class Mutations<T extends QueryItem, F> {
       const oldData = query.state?.data
       const queryKey = query?.queryKey
 
-      if (!oldData) continue
+      if (!oldData?.pages || !Array.isArray(oldData?.pages)) continue
 
       let hasChanges = false
 
-      const updatedPages = oldData.pages.map(page => {
+      const updatedPages = (oldData?.pages ?? [])?.filter(Array.isArray)?.map(page => {
         let pageChanged = false
 
         const updatedPage = page.map((item) => {
