@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/form",
-  "version": "5.8.6",
+  "version": "5.8.7",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
