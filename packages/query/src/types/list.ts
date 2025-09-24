@@ -15,10 +15,7 @@ type InfiniteQueryOptions<T extends QueryItem> = UseInfiniteQueryOptions<
   PageParam
 >
 
-export type ListQueryOptions<T extends QueryItem, F> = Omit<
-  InfiniteQueryOptions<T>,
-  'queryKey' | 'queryFn' | 'initialPageParam' | 'getNextPageParam' | 'getPreviousPageParam' | 'select'
-> & {
+export type ListQueryOptions<T extends QueryItem, F> = Partial<InfiniteQueryOptions<T>> & {
   limit?: number
   filters?: F
 }
