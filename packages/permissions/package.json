@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/permissions",
-  "version": "5.8.5",
+  "version": "5.8.6",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
