@@ -5,3 +5,8 @@ export type RetrieveQueryOptions<T extends QueryItem> = Omit<
   UndefinedInitialDataOptions<T, Error, T, QueryKey>,
   'queryKey' | 'queryFn'
 >
+
+export type RetrieveDataOptions = {
+  onlyQueryData?: boolean
+  deepSearch?: boolean
+}

@@ -1,7 +1,7 @@
 import { CancelOptions, InfiniteData, InvalidateOptions, InvalidateQueryFilters, Query, QueryFilters, QueryKey, RefetchOptions, RefetchQueryFilters } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { TypeGuards } from '@codeleap/types'
-import { ListPaginationResponse, ListSelector, PageParam, QueryClient, QueryItem } from '../types'
+import { ListPaginationResponse, ListSelector, PageParam, QueryClient, QueryItem, RetrieveDataOptions } from '../types'
 import deepEqual from 'fast-deep-equal'
 
 /**
@@ -272,25 +272,57 @@ export class QueryKeys<T extends QueryItem, F> {
   }
 
   /**
-   * Gets retrieve data from cache, with fallback to list data
-   * @param id - The ID of the item to retrieve
-   * @param onlyQueryData - If true, only returns data from the specific retrieve query, not from list data
-   * @returns The item data or undefined if not found
+    * Retrieves item data from cache with intelligent fallback strategies
+    * 
+    * @description Searches for an item using a multi-layered approach:
+    * 1. Direct cache lookup using retrieve query
+    * 2. Fallback to itemMap from list data (shallow search)  
+    * 3. Deep search through all paginated list queries
+    * 
+    * @param {QueryItem['id']} id - The unique identifier of the item to retrieve
+    * @param {RetrieveDataOptions} [options] - Configuration options for retrieval behavior
+    * @param {boolean} [options.onlyQueryData=false] - If true, only returns data from the specific retrieve query cache, ignoring list data fallbacks
+    * @param {boolean} [options.deepSearch=true] - If true, performs deep search through paginated queries when item not found in direct cache or itemMap
+    * 
+    * @returns Item | undefined
    */
-  getRetrieveData(id: QueryItem['id'], onlyQueryData = false): T | undefined {
+  getRetrieveData(id: QueryItem['id'], options: RetrieveDataOptions = {}): T | undefined {
+    const {
+      onlyQueryData = false,
+      deepSearch = false,
+    } = options
+
     if (TypeGuards.isNil(id)) return undefined
 
     const queryKey = this.keys.retrieve(id)
 
     const queryData = this.queryClient.getQueryData<T>(queryKey)
 
-    if (!queryData?.id && !onlyQueryData) {
+    if (queryData?.id) return queryData
+
+    if (onlyQueryData) return undefined
+
+    if (!deepSearch) {
       const { itemMap } = this.getListData()
 
       return itemMap?.[id]
     }
 
-    return queryData
+    const queries = this.getAllListQueries()
+
+    for (const query of queries) {
+      const pages = query.state.data?.pages
+      if (!pages?.length) continue
+
+      const item = pages
+        .filter(Boolean)
+        .flatMap(page => Array.isArray(page) ? page : [])
+        .find(item => item?.id === id)
+
+      if (item) return item
+    }
+
+    return undefined
   }
 
   /**
