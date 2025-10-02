@@ -1,4 +1,4 @@
-import { FetchQueryOptions, InfiniteData, MutationFunctionContext, QueryKey, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
+import { FetchInfiniteQueryOptions, FetchQueryOptions, InfiniteData, MutationFunctionContext, QueryKey, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { createQueryKeys, QueryKeys } from './QueryKeys'
 import { createMutations, Mutations } from './Mutations'
@@ -483,6 +483,41 @@ export class QueryManager<T extends QueryItem, F> {
       ...options,
       queryKey: this.queryKeys.keys.retrieve(id),
       queryFn: () => this.options.retrieveFn(id),
+    })
+  }
+
+  /**
+   * Prefetches a paginated list with filters for improved performance
+   * @param filters - Filter parameters to apply to the list query
+   * @param options - Prefetch options compatible with React Query's infinite queries
+   * @param options.initialOffset - Starting offset for pagination (default: 0)
+   * @returns Promise that resolves when prefetch is complete
+   * 
+   * @description
+   * Use this method to preload paginated list data that users are likely to need soon.
+   * 
+   * @example
+   * ```typescript
+   * const handle = () => {
+   *   queryManager.prefetchList(
+   *     { category: 'electronics' },
+   *     { staleTime: 5 * 60 * 1000 }
+   *   )
+   * }
+   * 
+   * ```
+   */
+  prefetchList(
+    filters?: F,
+    options: Omit<FetchInfiniteQueryOptions<ListPaginationResponse<T>, Error, ListPaginationResponse<T>, QueryKey, number>, 'queryKey' | 'queryFn' | 'initialPageParam'> & { initialOffset?: number } = {}
+  ) {
+    const { initialOffset = 0, ...prefetchOptions } = options
+
+    return this.options.queryClient.prefetchInfiniteQuery({
+      ...prefetchOptions as any,
+      initialPageParam: initialOffset,
+      queryKey: this.queryKeys.listKeyWithFilters(filters),
+      queryFn: () => this.options.listFn(this.options.listLimit ?? 10, initialOffset, filters),
     })
   }
 }
