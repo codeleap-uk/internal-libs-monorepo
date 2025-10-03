@@ -43,20 +43,21 @@ export const createComponentCommand = codeleapCommand(
     const componentFolder = answers.componentNameFolder.trim()
     const componentName = formatComponentName(answerName)
 
-    const componentsDir = path.join(cliDir, USER_CONFIG.components.componentsDir, componentFolder)
+    const componentsFileDir = path.join(cliDir, USER_CONFIG.components.componentsDir, componentFolder)
     const stylesheetsDir = path.join(cliDir, USER_CONFIG.components.stylesheetsDir)
+    const componentsDir = path.join(cliDir, USER_CONFIG.components.componentsDir)
 
     const componentFileName = `${componentName}.tsx`
     const stylesheetFileName = `${componentName}.ts`
 
-    const componentFilePath = path.join(componentsDir, componentFileName)
+    const componentFilePath = path.join(componentsFileDir, componentFileName)
     const stylesheetFilePath = path.join(stylesheetsDir, stylesheetFileName)
 
     const componentContent = generateComponentFile(componentName, USER_CONFIG.components?.app)
     const stylesheetContent = generateStylesheetFile(componentName, USER_CONFIG.components?.app)
 
     createFile({
-      dir: componentsDir,
+      dir: componentsFileDir,
       filePath: componentFilePath,
       content: componentContent,
       fileName: `${componentName}.tsx`,
@@ -70,7 +71,6 @@ export const createComponentCommand = codeleapCommand(
     })
 
     updateStylesheetsImport(stylesheetsDir, componentName)
-    updateComponentsImport(USER_CONFIG.components.componentsDir, componentFolder, componentName)
+    updateComponentsImport(componentsDir, componentFolder, componentName)
   },
 )
-

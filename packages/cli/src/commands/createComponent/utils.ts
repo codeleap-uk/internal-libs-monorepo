@@ -1,4 +1,4 @@
-import { fs } from '../../lib'
+import { fs, path } from '../../lib'
 import { AppType } from '../../types'
 
 export function capitalize(name: string) {
@@ -17,20 +17,19 @@ import { StyledComponent } from '@codeleap/styles'
 import { useStylesFor } from '@codeleap/${app}'
 
 type ${componentName}Props = {
-  switchServerOnPress?: boolean
-  inverseColor?: boolean
+  
 }
 
-export const ${componentName}: StyledComponent<
-  typeof StyleSheets.${componentName}Styles,
-  ${componentName}Props
-> = props => {
-  const styles = useStylesFor(${componentName}.styleRegistryName, props?.style)
+export const ${componentName}: StyledComponent<typeof StyleSheets.${componentName}Styles, ${componentName}Props> = (props) => {
+  const { style } = props
+
+  const styles = useStylesFor(${componentName}.styleRegistryName, style)
+
   return null
 }
 
 ${componentName}.styleRegistryName = '${componentName}'
-${componentName}.elements = []
+${componentName}.elements = ['wrapper']
 
 StyleRegistry.registerComponent(${componentName})
 `
@@ -97,8 +96,8 @@ export function updateStylesheetsImport(stylesheetsDir: string, componentName: s
 }
 
 export function updateComponentsImport(componentsDir: string, componentFolder: string, componentName: string) {
-  const indexTsPath = `${componentsDir}/index.ts`
-  const indexTsxPath = `${componentsDir}/index.tsx`
+  const indexTsPath = path.join(componentsDir, 'index.ts')
+  const indexTsxPath = path.join(componentsDir, 'index.tsx')
 
   let indexPath: string
   if (fs.existsSync(indexTsPath)) {
@@ -118,11 +117,11 @@ export function updateComponentsImport(componentsDir: string, componentFolder: s
     fs.writeFileSync(indexPath, updatedContent, 'utf-8')
     console.log(`✅ Added export for ${componentFolder} to ${indexPath}`)
   } else {
-    console.log(`ℹ️ Export for ${componentFolder} already exists in ${indexPath}`)
+    console.log(`💬 Export for ${componentFolder} already exists in ${indexPath}`)
   }
 
-  const componentIndexTsPath = `${componentsDir}/${componentFolder}/index.ts`
-  const componentIndexTsxPath = `${componentsDir}/${componentFolder}/index.tsx`
+  const componentIndexTsPath = path.join(componentsDir, componentFolder, 'index.ts') //`${componentsDir}/${componentFolder}/index.ts`
+  const componentIndexTsxPath = path.join(componentsDir, componentFolder, 'index.tsx') //`${componentsDir}/${componentFolder}/index.tsx`
 
   let componentIndexPath: string
   if (fs.existsSync(componentIndexTsPath)) {
