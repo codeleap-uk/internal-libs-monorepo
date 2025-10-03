@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/utils",
-  "version": "5.8.3",
+  "version": "5.8.9",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -22,7 +22,7 @@
     "dayjs": "1.11.13",
     "typescript": "5.5.2",
     "react": "18.2.0",
-    "@tanstack/react-query": "5.60.6"
+    "@tanstack/react-query": "5.89.0"
   },
   "dependencies": {
     "tinycolor2": "^1.4.2",

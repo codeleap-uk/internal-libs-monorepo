@@ -1,5 +1,5 @@
 import { AnyFunction } from '@codeleap/types'
-import { uuid } from '..'
+import uuid from 'react-native-uuid'
 
 const throttleTimerId = {}
 

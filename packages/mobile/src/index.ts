@@ -5,8 +5,10 @@ export * from './modules'
 export * from './deprecated'
 
 export { Linking } from 'react-native'
-import uuid from 'react-native-uuid'
-export { uuid }
 export { MobileStyleRegistry } from './Registry'
+
+import uuid from 'react-native-uuid'
+
+export { uuid }
 
 import './modules/formConfig'

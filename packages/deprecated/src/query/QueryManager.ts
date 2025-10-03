@@ -608,8 +608,8 @@ export class QueryManager<
         return this.options.createItem(data)
       },
       mutationKey: this.queryKeys.create,
-      onMutate: async (data) => {
-        options?.mutationOptions?.onMutate?.(data)
+      onMutate: async (data, ctx) => {
+        options?.mutationOptions?.onMutate?.(data, ctx)
         if (!!tmpOptions?.current?.optimistic) {
           await this.queryClient.cancelQueries({ queryKey: this.queryKeys.list })
           const addedItem = {
@@ -696,8 +696,8 @@ export class QueryManager<
     const query = useMutation({
       ...options?.mutationOptions,
       mutationKey: this.queryKeys.update,
-      onMutate: async (data) => {
-        options?.mutationOptions?.onMutate?.(data)
+      onMutate: async (data, ctx) => {
+        options?.mutationOptions?.onMutate?.(data, ctx)
         if (tmpOptions.current?.optimistic) {
 
           const prevItem = await this.getItem(data.id, {
@@ -783,8 +783,8 @@ export class QueryManager<
     const query = useMutation({
       ...options?.mutationOptions,
       mutationKey: this.queryKeys.delete,
-      onMutate: async (data) => {
-        options?.mutationOptions?.onMutate?.(data)
+      onMutate: async (data, ctx) => {
+        options?.mutationOptions?.onMutate?.(data, ctx)
         if (tmpOptions.current?.optimistic) {
 
           const prevItem = await this.getItem(data.id, {
@@ -951,4 +951,3 @@ export class QueryManager<
   }
 
 }
-
