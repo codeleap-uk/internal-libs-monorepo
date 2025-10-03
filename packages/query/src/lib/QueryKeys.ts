@@ -337,6 +337,11 @@ export class QueryKeys<T extends QueryItem, F> {
     return queries as Query<ListPaginationResponse<T>, Error, Omit<ListSelector<T>, 'allItems'>, QueryKey>[]
   }
 
+  /**
+   * Gets a specific list query from the query cache
+   * @param listFilters - Optional filters to identify a specific list query. If omitted, returns the unfiltered list query
+   * @returns The matching list query, or undefined if not found
+   */
   getListQuery(listFilters?: F) {
     const query = this.queryClient.getQueryCache().find({
       queryKey: this.listKeyWithFilters(listFilters)

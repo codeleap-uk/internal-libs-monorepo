@@ -116,13 +116,18 @@ export class Mutations<T extends QueryItem, F> {
   }
 
   /**
-   * Removes an item from all cached list queries and returns the positions where it was found
+   * Removes an item from all or specific cached list query and returns the positions where it was found
    * @param itemId - The ID of the item to remove
-   * @returns A RemovedItemMap containing the query keys and positions where the item was found, or null if not found
+   * @param listFilters - Optional filters to target a specific list query. If omitted, removes from all list queries
+   * @returns A RemovedItemMap containing the query keys and positions where the item was found, or null if not found in any query
    * 
    * @example
    * ```typescript
+   * // Remove from all list queries
    * const removedPositions = mutations.removeItem('user-123')
+   * 
+   * // Remove from a specific filtered list
+   * const removedPositions = mutations.removeItem('user-123', { status: 'active' })
    * 
    * // Later, restore the item to its original positions
    * if (removedPositions) {
