@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/logger",
-  "version": "5.8.3",
+  "version": "5.8.8",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {

@@ -1,9 +1,3 @@
-export * from './QueryManager'
-export * from './queryClient'
+export * from './lib'
 export * from './types'
-
-import * as ReactQuery from '@tanstack/react-query'
-
-export {
-  ReactQuery
-}
+export * from './factors'

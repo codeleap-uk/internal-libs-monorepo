@@ -1,45 +1,11 @@
-import * as ReactQuery from '@tanstack/react-query'
 import { waitFor } from '@codeleap/utils'
-import { QueryManagerOptions, QueryManagerItem } from './types'
-import { QueryManager } from './QueryManager'
+import { QueryClient, QueryKey, Query, hashKey, QueryCacheNotifyEvent, matchQuery, QueryOptions } from '@tanstack/react-query'
+import { DynamicEnhancedQuery, EnhancedQuery, PollQueryOptions, PollingResult, QueryKeyBuilder } from './types'
 
-export type QueryKeyBuilder<Args extends any[] = any[]> = (...args:Args) => ReactQuery.QueryKey
+export class QueryClientEnhanced {
+  constructor(public client: QueryClient) { }
 
-type PollingResult<T> = {
-  stop: boolean
-  data: T
-}
-
-type PollingCallback<T, R> = (query: ReactQuery.Query<T>, count: number, prev?: R) => Promise<PollingResult<R>>
-
-type PollQueryOptions<T, R> = {
-  interval: number
-  callback: PollingCallback<T, R>
-  leading?: boolean
-  initialData?: R
-}
-
-interface EnhancedQuery<T> extends ReactQuery.Query<T> {
-  waitForRefresh(): Promise<ReactQuery.Query<T>>
-  listen(callback: (e: ReactQuery.QueryCacheNotifyEvent) => void): () => void
-  refresh(): Promise<T>
-  poll<R>(
-    options: PollQueryOptions<T, R>
-  ): Promise<R>
-  getData(): T
-  ensureData(options?: Partial<ReactQuery.EnsureQueryDataOptions<T, Error, T, ReactQuery.QueryKey, never>>): Promise<T>
-  key: ReactQuery.QueryKey
-}
-
-type DynamicEnhancedQuery<T, BuilderArgs extends any[]> = {
-  [P in keyof EnhancedQuery<T>]: (...args: BuilderArgs) => EnhancedQuery<T>[P]
-}
-
-export class CodeleapQueryClient {
-  constructor(public client: ReactQuery.QueryClient) {
-  }
-
-  listenToQuery(key: ReactQuery.QueryKey, callback: (e: ReactQuery.QueryCacheNotifyEvent) => void) {
+  listenToQuery(key: QueryKey, callback: (e: QueryCacheNotifyEvent) => void) {
     const cache = this.client.getQueryCache()
 
     const query = cache.find({ exact: true, queryKey: key })
@@ -49,7 +15,7 @@ export class CodeleapQueryClient {
     }
 
     const removeListener = cache.subscribe((e) => {
-      const matches = ReactQuery.matchQuery({ exact: true, queryKey: key }, e.query)
+      const matches = matchQuery({ exact: true, queryKey: key }, e.query)
 
       if (matches) {
         callback(e)
@@ -61,7 +27,7 @@ export class CodeleapQueryClient {
   }
 
   async pollQuery<T, R>(
-    key: ReactQuery.QueryKey,
+    key: QueryKey,
     options: PollQueryOptions<T, R>,
   ) {
     const { interval, callback, initialData, leading = false } = options
@@ -100,10 +66,9 @@ export class CodeleapQueryClient {
     }
 
     return result?.data
-
   }
 
-  queryProxy<T>(key: ReactQuery.QueryKey) {
+  queryProxy<T>(key: QueryKey) {
     const getClient = () => this
 
     return new Proxy<EnhancedQuery<T>>({} as EnhancedQuery<T>, {
@@ -133,15 +98,16 @@ export class CodeleapQueryClient {
         }
 
         switch (p) {
-
           case 'waitForRefresh':
             return () => {
               return client.waitForRefresh<T>(key)
             }
+
           case 'listen':
-            return (callback: (e: ReactQuery.QueryCacheNotifyEvent) => void) => {
+            return (callback: (e: QueryCacheNotifyEvent) => void) => {
               return client.listenToQuery(key, callback)
             }
+
           case 'ensureData':
             return (options) => {
               return client.client.ensureQueryData<T>({
@@ -149,6 +115,7 @@ export class CodeleapQueryClient {
                 ...options
               })
             }
+
           case 'refresh':
             return async () => {
               client.client.refetchQueries({
@@ -158,19 +125,20 @@ export class CodeleapQueryClient {
               const newQuery = await client.waitForRefresh<T>(key)
               return newQuery.state.data
             }
+
           case 'poll':
             return (options: PollQueryOptions<T, any>) => {
               return client.pollQuery(key, options)
             }
+
           default:
             return Reflect.get(query, p, receiver)
         }
       },
-
     })
   }
 
-  waitForRefresh<T>(key: ReactQuery.QueryKey) {
+  waitForRefresh<T>(key: QueryKey) {
     const initialQuery = this.client.getQueryCache().find({ exact: true, queryKey: key })
 
     if (!initialQuery) {
@@ -180,7 +148,7 @@ export class CodeleapQueryClient {
     const updateTime = initialQuery.state.dataUpdatedAt
     const errorTime = initialQuery.state.errorUpdatedAt
 
-    return new Promise<ReactQuery.Query<T>>((resolve, reject) => {
+    return new Promise<Query<T>>((resolve, reject) => {
       const removeListener = this.listenToQuery(key, (e) => {
         const query = e.query
 
@@ -207,21 +175,19 @@ export class CodeleapQueryClient {
 
   }
 
-  queryKey<Data>(k: ReactQuery.QueryKey, options?: ReactQuery.QueryOptions<Data>) {
-
-    if(options){
-      
+  queryKey<Data>(k: QueryKey, options?: QueryOptions<Data>) {
+    if (options) {
       this.client.setQueryDefaults(k, options)
 
       const cache = this.client.getQueryCache()
-      
-      const q = new ReactQuery.Query({
-        cache,
+
+      const q = new Query({
+        client: this.client,
         queryKey: k,
-        queryHash: ReactQuery.hashKey(k),
+        queryHash: hashKey(k),
         ...options,
       })
-      
+
       cache.add(q)
     }
 
@@ -229,12 +195,11 @@ export class CodeleapQueryClient {
   }
 
   dynamicQueryKey<Data, BuilderArgs extends any[] = any[]>(k: QueryKeyBuilder<BuilderArgs>) {
-
     const getClient = () => this
 
     return new Proxy<DynamicEnhancedQuery<Data, BuilderArgs>>({} as DynamicEnhancedQuery<Data, BuilderArgs>, {
       get(target, p, receiver) {
-        return (...params:BuilderArgs) => {
+        return (...params: BuilderArgs) => {
           const key = k(...params)
 
           const proxy = getClient().queryProxy<Data>(key)
@@ -244,17 +209,4 @@ export class CodeleapQueryClient {
       },
     })
   }
-
-  queryManager<T extends QueryManagerItem, Args>(name:string, options: Partial<QueryManagerOptions<T, Args>>) {
-    // @ts-expect-error
-    const m = new QueryManager<T, Args>({
-      name,
-      queryClient: this.client,
-      ...options,
-
-    })
-
-    return m
-  }
-
 }

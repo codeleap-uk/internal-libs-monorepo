@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/query",
-  "version": "5.8.3",
+  "version": "5.8.8",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -11,8 +11,6 @@
   "devDependencies": {
     "@codeleap/config": "workspace:*",
     "@codeleap/types": "workspace:*",
-    "@codeleap/utils": "workspace:*",
-    "@codeleap/hooks": "workspace:*",
     "ts-node-dev": "1.1.8"
   },
   "scripts": {
@@ -20,12 +18,10 @@
   },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
-    "@codeleap/utils": "workspace:*",
-    "@codeleap/hooks": "workspace:*",
     "typescript": "5.5.2",
-    "@tanstack/react-query": "5.60.6"
+    "@tanstack/react-query": "5.89.0"
   },
   "dependencies": {
-    "immer": "10.1.1"
+    "fast-deep-equal": "3.1.3"
   }
 }
