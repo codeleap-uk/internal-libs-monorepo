@@ -2,6 +2,7 @@ import { InfiniteData } from '@tanstack/query-core'
 import { QueryKeys } from './QueryKeys'
 import { ItemPosition, ListPaginationResponse, PageParam, QueryClient, QueryItem, RemovedItemMap, WithTempId } from '../types'
 import deepEqual from 'fast-deep-equal'
+import { TypeGuards } from '@codeleap/types'
 
 /**
  * Class for managing mutations and cache updates for React Query list data
@@ -129,10 +130,10 @@ export class Mutations<T extends QueryItem, F> {
    * }
    * ```
    */
-  removeItem(itemId: QueryItem['id']): RemovedItemMap | null {
+  removeItem(itemId: QueryItem['id'], listFilters?: F): RemovedItemMap | null {
     this.queryKeys.removeRetrieveQueryData(itemId)
 
-    const listQueries = this.queryKeys.getAllListQueries()
+    const listQueries = TypeGuards.isNil(listFilters) ? this.queryKeys.getAllListQueries() : [this.queryKeys.getListQuery(listFilters)]
 
     const removedItemMap: RemovedItemMap = []
 

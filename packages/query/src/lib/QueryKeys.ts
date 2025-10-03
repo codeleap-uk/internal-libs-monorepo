@@ -336,6 +336,14 @@ export class QueryKeys<T extends QueryItem, F> {
 
     return queries as Query<ListPaginationResponse<T>, Error, Omit<ListSelector<T>, 'allItems'>, QueryKey>[]
   }
+
+  getListQuery(listFilters?: F) {
+    const query = this.queryClient.getQueryCache().find({
+      queryKey: this.listKeyWithFilters(listFilters)
+    })
+
+    return query as Query<ListPaginationResponse<T>, Error, Omit<ListSelector<T>, 'allItems'>, QueryKey>
+  }
 }
 
 /**
