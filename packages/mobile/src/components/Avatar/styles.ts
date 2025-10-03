@@ -2,13 +2,9 @@ import { BadgeComposition } from '../Badge'
 
 export type AvatarComposition =
   | 'wrapper'
-  | 'touchable'
-  | 'initials'
+  | 'text'
   | 'image'
   | 'icon'
-  | 'iconWrapper'
-  | 'description'
-  | 'descriptionOverlay'
-  | 'badgeIconWrapper'
-  | 'badgeIcon'
+  | 'overlayIconWrapper'
+  | 'overlayIcon'
   | `badge${Capitalize<BadgeComposition>}`
