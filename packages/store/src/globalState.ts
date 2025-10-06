@@ -30,6 +30,13 @@ export function globalState<T>(value: T, config: GlobalStateConfig = defaultConf
         }
       }
 
+      if (prop === 'get') {
+        return (selector?: StateSelector<T, any>) => {
+          if (!selector) return target.get()
+          return selector(target.get())
+        }
+      }
+
       if (prop === 'set') {
         return (newValue: Partial<T>) => {
           const value = stateAssign(newValue, target.get())
