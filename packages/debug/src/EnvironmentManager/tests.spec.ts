@@ -94,7 +94,7 @@ describe('EnvironmentManager', () => {
       manager.setEnabled(EDITORS.USER)
       expect(manager.isEnabled).toBe(true)
 
-      const result = manager.setEnabled(null)
+      const result = manager.setEnabled(false)
       expect(result).toBe(false)
       expect(manager.isEnabled).toBe(false)
     })
@@ -106,7 +106,7 @@ describe('EnvironmentManager', () => {
     })
 
     test('should return default environment when disabled', () => {
-      manager.setEnabled(null)
+      manager.setEnabled(false)
       const env = manager.env
       expect(env.environment).toBe('development')
     })
@@ -118,7 +118,7 @@ describe('EnvironmentManager', () => {
     })
 
     test('should not set environment when disabled', () => {
-      manager.setEnabled(null)
+      manager.setEnabled(false)
       manager.setEnvironment('production')
       expect(manager.isEnvironment('development')).toBe(true)
     })
@@ -174,7 +174,7 @@ describe('EnvironmentManager', () => {
     })
 
     test('should return default URL when disabled', () => {
-      manager.setEnabled(null)
+      manager.setEnabled(false)
       expect(manager.serverUrl).toBe(envs.development)
     })
 

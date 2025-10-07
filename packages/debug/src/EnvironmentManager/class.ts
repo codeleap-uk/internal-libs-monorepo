@@ -52,9 +52,10 @@ export class EnvironmentManager<T extends StringRecord> {
     return this.defaultConfig
   }
 
-  setEnabled(by: Editor = null) {
-    this.store.set({ enabledBy: by })
-    return !TypeGuards.isNil(by)
+  setEnabled(by: Editor | false = false) {
+    const disable = by === false || TypeGuards.isNil(by)
+    this.store.set({ enabledBy: disable ? null : by })
+    return !disable
   }
 
   get isEnabled(): boolean {
@@ -119,9 +120,9 @@ export class EnvironmentManager<T extends StringRecord> {
   use() {
     const value = this.store.use()
 
-    const { enabledBy, ...options } = value ?? this.defaultConfig
+    const { enabledBy, ...config } = value ?? this.defaultConfig
 
-    const [customUrl, setCustomUrl] = useState(options?.customUrl)
+    const [customUrl, setCustomUrl] = useState(config?.customUrl)
 
     const changed = useMemo(() => !deepEqual(value, this.initialStoreValue), [value])
 
@@ -129,7 +130,7 @@ export class EnvironmentManager<T extends StringRecord> {
       enabled: !!enabledBy,
       enabledByUser: enabledBy === EDITORS.USER,
       enabledBySystem: enabledBy === EDITORS.SYSTEM,
-      options,
+      config,
       changed,
       customUrl,
       setCustomUrl,
