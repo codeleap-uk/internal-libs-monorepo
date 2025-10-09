@@ -80,13 +80,13 @@ export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => 
   return (
     <FlatList
       ItemSeparatorComponent={separator as unknown as React.ComponentType}
-      refreshControl={!!onRefresh && (
+      refreshControl={TypeGuards.isFunction(onRefresh) ? (
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
           {...refreshControlProps}
         />
-      )}
+      ) : null}
       ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}

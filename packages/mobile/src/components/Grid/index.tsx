@@ -8,6 +8,7 @@ import { GridProps } from './types'
 import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps, useTheme } from '@codeleap/styles'
 import { MobileStyleRegistry } from '../../Registry'
 import { useStylesFor } from '../../hooks'
+import { TypeGuards } from '@codeleap/types'
 
 export * from './styles'
 export * from './types'
@@ -65,7 +66,7 @@ export const Grid = forwardRef<FlatList, GridProps>((flatGridProps, ref) => {
 
   const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
   const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
-  const refreshControl = !!onRefresh && <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} />
+  const refreshControl = TypeGuards.isFunction(onRefresh) ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} {...refreshControlProps} /> : null
 
   return (
     <List

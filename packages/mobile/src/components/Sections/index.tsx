@@ -120,13 +120,13 @@ export function Sections<T>(sectionsProps: SectionProps<T>) {
   return (
     <SectionList
       ItemSeparatorComponent={separator}
-      refreshControl={!!onRefresh && (
+      refreshControl={TypeGuards.isFunction(onRefresh) ? (
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
           {...refreshControlProps}
         />
-      )}
+      ) : null}
       ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
