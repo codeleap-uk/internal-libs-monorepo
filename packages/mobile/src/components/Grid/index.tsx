@@ -26,7 +26,7 @@ export const Grid = forwardRef<FlatList, GridProps>((flatGridProps, ref) => {
     refreshControlProps = {},
     spacing,
     numColumns,
-    renderItem: RenderItem,
+    renderItem: providedRenderItem,
     ...props
   } = {
     ...Grid.defaultProps,
@@ -38,7 +38,7 @@ export const Grid = forwardRef<FlatList, GridProps>((flatGridProps, ref) => {
   const styles = useStylesFor(Grid.styleRegistryName, style)
 
   const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
-    if (!RenderItem) return null
+    if (!providedRenderItem) return null
 
     const listLength = props?.data?.length || 0
 
@@ -59,10 +59,13 @@ export const Grid = forwardRef<FlatList, GridProps>((flatGridProps, ref) => {
 
     return (
       <View style={[styles.itemWrapper, gap]}>
-        <RenderItem {...data} {..._itemProps} />
+        {providedRenderItem({
+          ...data,
+          ..._itemProps
+        })}
       </View>
     )
-  }, [RenderItem, props?.data?.length])
+  }, [providedRenderItem, props?.data?.length])
 
   const separatorStyles = { height: themeSpacing?.value?.(spacing), ...styles.separator }
   const separator = props?.separators || (!!spacing ? <RenderSeparator separatorStyles={separatorStyles} /> : null)
