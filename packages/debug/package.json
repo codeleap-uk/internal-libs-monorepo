@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/debug",
-  "version": "5.8.10",
+  "version": "5.8.11",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {

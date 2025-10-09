@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/web",
-  "version": "5.8.10",
+  "version": "5.8.11",
   "main": "src/index.ts",
   "repository": {
     "url": "https://github.com/codeleap-uk/internal-libs-monorepo.git",
