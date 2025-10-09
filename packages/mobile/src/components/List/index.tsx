@@ -29,7 +29,7 @@ export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => 
     keyboardAware,
     fakeEmpty = loading,
     contentContainerStyle,
-    renderItem: RenderItem,
+    renderItem: providedRenderItem,
     data,
     ...props
   } = {
@@ -44,7 +44,7 @@ export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => 
   const dataLength = data?.length || 0
 
   const renderItem = useCallback((data: ListRenderItemInfo<any>) => {
-    if (!RenderItem) return null
+    if (!providedRenderItem) return null
 
     const isFirst = data.index === 0
     const isLast = data.index === dataLength - 1
@@ -58,8 +58,8 @@ export const List = forwardRef<FlatList, FlatListProps>((flatListProps, ref) => 
       isOnly,
     }
 
-    return <RenderItem {...itemProps} />
-  }, [dataLength, RenderItem])
+    return providedRenderItem(itemProps)
+  }, [dataLength, providedRenderItem])
 
   const isEmpty = !data || !data?.length
 
