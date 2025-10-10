@@ -15,7 +15,7 @@
     "build": "echo 'No build needed'"
   },
   "peerDependencies": {
-    "typescript": "5.5.2",
+    "typescript": "5.9.2",
     "@fastify/deepmerge": "1.3.0"
   }
 }

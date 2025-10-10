@@ -18,6 +18,6 @@
   "peerDependencies": {
     "@codeleap/utils": "workspace:*",
     "@codeleap/types": "workspace:*",
-    "typescript": "5.5.2"
+    "typescript": "5.9.2"
   }
 }

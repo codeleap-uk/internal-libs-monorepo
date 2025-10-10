@@ -7,31 +7,31 @@ module.exports = {
       "label": "React",
       "dependencies": ["react-dom"],
       packages: ["**"],
-      pinVersion: "18.2.0"
+      pinVersion: "19.1.0"
     },
     {
       "label": "React",
       "dependencies": ["react"],
       packages: ["**"],
-      pinVersion: "18.2.0"
+      pinVersion: "19.1.0"
     },
     {
       "label": "Typescript",
       "dependencies": ["typescript"],
       packages: ["**"],
-      pinVersion: "5.5.2"
+      pinVersion: "5.9.2"
     },
     {
       "label": "React native",
       "dependencies": ["react-native"],
       packages: ["**"],
-      pinVersion: "0.77.1"
+      pinVersion: "0.81.4"
 
     },
     {
       dependencies: ["@types/react"],
       packages: ["**"],
-      pinVersion: "18.0.35"
+      pinVersion: "19.1.0"
     },
 
     {

@@ -16,7 +16,7 @@
     "build": "echo 'No build needed'"
   },
   "peerDependencies": {
-    "typescript": "5.5.2",
-    "react": "18.2.0"
+    "typescript": "5.9.2",
+    "react": "19.1.0"
   }
 }
