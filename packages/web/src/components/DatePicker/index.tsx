@@ -1,7 +1,7 @@
 import { useCallback, useConditionalState } from '@codeleap/hooks'
 import { View } from '../components'
 import { DatePickerProps } from './types'
-import ReactDatePicker from 'react-datepicker'
+import { DatePicker as ReactDatePicker } from 'react-datepicker'
 import { DayContent, Header, OuterInput, YearContent } from './components'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
@@ -77,9 +77,10 @@ export function DatePicker(props: DatePickerProps) {
   return (
     <View style={styles.wrapper}>
       <ReactDatePicker
-        onChange={onValueChange}
+        onChange={onValueChange as any}
+        selected={value as any}
+        selectsMultiple
         open={visible}
-        selected={value}
         todayButton={null}
         shouldCloseOnSelect={false}
         openToDate={defaultValue ?? value}
@@ -130,7 +131,7 @@ export function DatePicker(props: DatePickerProps) {
           if (date.getFullYear() < startDate.getFullYear() || date.getFullYear() > maxDate.getFullYear()) return false
           return true
         }}
-        {...datePickerProps}
+        {...datePickerProps as any}
       />
     </View>
   )
