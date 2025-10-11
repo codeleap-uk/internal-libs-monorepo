@@ -68,21 +68,24 @@ export function getRenderedComponent<P = any>(
   DefaultComponent: React.ComponentType<P>,
   props?: P,
 ): React.ReactNode {
+  const _ComponentOrProps = ComponentOrProps as any
+  const _DefaultComponent = DefaultComponent as any
+
   if (TypeGuards.isNil(ComponentOrProps) || Object.keys(ComponentOrProps).length === 0) {
     return null
   }
 
   if (TypeGuards.isFunction(ComponentOrProps)) {
-    return <ComponentOrProps {...props} />
+    return <_ComponentOrProps {...props as unknown as P} />
   }
 
   if (React.isValidElement(ComponentOrProps)) {
     return ComponentOrProps
   }
 
-  const _props = ComponentOrProps as P
+  const _props = ComponentOrProps as unknown as P
 
-  return <DefaultComponent {...props} {..._props} />
+  return <_DefaultComponent {...props as unknown as P} {..._props} />
 }
 
 /**

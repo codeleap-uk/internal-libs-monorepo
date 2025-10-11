@@ -19,6 +19,6 @@
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "typescript": "5.5.2",
-    "react": "18.2.0"
+    "react": "19.1.0"
   }
 }

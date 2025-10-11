@@ -161,8 +161,8 @@ type FooterComponentProps = SpotlightHeaderComponent
 
 export type SpotlightProps = {
   name?: string
-  HeaderComponent?: (props: SpotlightHeaderComponent) => JSX.Element
-  FooterComponent?: (props: FooterComponentProps) => JSX.Element
+  HeaderComponent?: (props: SpotlightHeaderComponent) => React.ReactElement
+  FooterComponent?: (props: FooterComponentProps) => React.ReactElement
   showFooter?: boolean
 } & ImageViewProps
 

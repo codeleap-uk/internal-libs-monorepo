@@ -12,7 +12,7 @@ import { logger } from '@codeleap/logger'
 export * from './styles'
 export * from './types'
 
-export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchableProps: TouchableProps, ref) => {
+export const Touchable = (touchableProps: TouchableProps) => {
   const allProps = {
     ...Touchable.defaultProps,
     ...touchableProps,
@@ -33,6 +33,7 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
     analyticsEnabled,
     analyticsName,
     analyticsData,
+    ref,
     ...props
   } = allProps
 
@@ -48,7 +49,7 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
     }
   })
 
-  const Component = component as unknown as ComponentType<HTMLAttributes<HTMLButtonElement>>
+  const Component: any = component as unknown as ComponentType<HTMLAttributes<HTMLButtonElement>>
 
   const notPressable = !TypeGuards.isFunction(onPress) && !TypeGuards.isFunction(onClick)
 
@@ -102,12 +103,11 @@ export const Touchable = forwardRef<HTMLButtonElement, TouchableProps>((touchabl
       onClick={handleClick}
       onKeyDown={handleClick}
       ref={ref}
-      // @ts-expect-error icss type
       css={[styles.wrapper, disabled && styles['wrapper:disabled']]}
       data-testid={testId}
     />
   )
-}) as StyledComponentWithProps<TouchableProps>
+}
 
 Touchable.styleRegistryName = 'Touchable'
 Touchable.elements = ['wrapper']

@@ -19,8 +19,8 @@ export type ProgressBarProps =
     rightIconProps?: Partial<IconProps>
     text?: string
     textProps?: Partial<TextProps>
-    leftText?: TextProps['text'] | JSX.Element
+    leftText?: TextProps['text'] | React.ReactElement
     leftTextProps?: Partial<TextProps>
-    rightText?: TextProps['text'] | JSX.Element
+    rightText?: TextProps['text'] | React.ReactElement
     rightTextProps?: Partial<TextProps>
   }

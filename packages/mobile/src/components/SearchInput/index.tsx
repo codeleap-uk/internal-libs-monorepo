@@ -6,7 +6,7 @@ import { TypeGuards } from '@codeleap/types'
 import { TextInput as RNTextInput } from 'react-native'
 
 export type SearchInputProps = {
-  onTypingChange: (isTyping: boolean) => void
+  onTypingChange?: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
   onValueChange?: (search: string) => void
   onClear?: () => void
@@ -18,7 +18,11 @@ export type SearchInputProps = {
   placeholder?: string
 } & Partial<TextInputProps>
 
-export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, RNTextInput> = forwardRef((props, ref) => {
+type Component = React.ForwardRefExoticComponent<SearchInputProps> & {
+  defaultProps?: Partial<SearchInputProps>
+}
+
+export const SearchInput: Component = forwardRef((props: SearchInputProps, ref) => {
   const {
     debugName,
     onClear,
@@ -80,7 +84,7 @@ export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, 
       leftIcon={{
         name: searchIcon,
       }}
-      ref={ref}
+      ref={ref as any}
       {...others}
     />
   )

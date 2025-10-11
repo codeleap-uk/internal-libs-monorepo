@@ -28,7 +28,7 @@ export const Scroll = (scrollProps: ScrollProps) => {
 
   const Component = keyboardAware ? KeyboardAwareScrollView : ScrollView
 
-  const _scrollRef = useRef<ScrollView>()
+  const _scrollRef = useRef<ScrollView>(null)
 
   // @ts-ignore
   const { ref: scrollRef, emit } = useScrollPubSub(_scrollRef)

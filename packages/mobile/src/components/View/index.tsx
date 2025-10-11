@@ -32,7 +32,7 @@ export const View = forwardRef<RNView, ViewProps>((props, ref) => {
       ref={ref}
     />
   )
-}) as StyledComponentWithProps<ViewProps> & { Animated?: (props: ViewAnimatedProps) => JSX.Element }
+}) as StyledComponentWithProps<ViewProps> & { Animated?: (props: ViewAnimatedProps) => React.ReactElement }
 
 View.Animated = (props: ViewAnimatedProps) => {
   return <View {...props} />

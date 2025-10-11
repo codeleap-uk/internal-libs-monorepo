@@ -1,5 +1,5 @@
 import { View } from '../View'
-import React, { forwardRef } from 'react'
+import React from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { ActivityIndicatorProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
@@ -9,11 +9,12 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 export * from './styles'
 export * from './types'
 
-export const ActivityIndicator = forwardRef<HTMLDivElement, ActivityIndicatorProps>((props, ref) => {
+export const ActivityIndicator = (props: ActivityIndicatorProps) => {
   const {
     style,
     component: Component,
     size,
+    ref,
     ...rest
   } = {
     ...ActivityIndicator.defaultProps,
@@ -36,7 +37,7 @@ export const ActivityIndicator = forwardRef<HTMLDivElement, ActivityIndicatorPro
       style={[styles.wrapper, _size]}
     />
   )
-}) as StyledComponentWithProps<ActivityIndicatorProps>
+}
 
 ActivityIndicator.styleRegistryName = 'ActivityIndicator'
 ActivityIndicator.elements = ['wrapper']

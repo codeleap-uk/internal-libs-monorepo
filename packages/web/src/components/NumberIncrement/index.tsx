@@ -69,7 +69,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
     ? PatternFormat
     : NumericFormat
 
-  const Input = TypeGuards.isFunction(formatter)
+  const Input: any = TypeGuards.isFunction(formatter)
     ? NumberFormatBase
     : InputFormat
 
@@ -111,9 +111,7 @@ export const NumberIncrement = (props: NumberIncrementProps) => {
         <Input
           displayType='input'
           css={[
-            // @ts-ignore
             partialStyles?.input,
-            // @ts-ignore
             {
               '&::placeholder': partialStyles?.placeholder,
             },

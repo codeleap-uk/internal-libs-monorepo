@@ -1,10 +1,11 @@
 import { StyledProp } from '@codeleap/styles'
-import { FileInputProps } from '../FileInput'
+import { FileInputProps, FileInputRef } from '../FileInput'
 import { CropPickerComposition } from './styles'
 import { ReactCropProps } from 'react-image-crop'
 import { ModalProps } from '../Modal'
 import { useCropPicker } from '../../lib'
 import { ButtonProps } from '../Button'
+import { RefObject } from 'react'
 
 export type BaseCropProps = Partial<ReactCropProps>
 
@@ -20,6 +21,7 @@ export type CropPickerProps =
     handle?: ReturnType<typeof useCropPicker>
     withLoading?: boolean
     confirmButtonProps?: Partial<ButtonProps>
+    ref?: RefObject<FileInputRef | null>
   }
 
 export type ImageReading = HTMLImageElement

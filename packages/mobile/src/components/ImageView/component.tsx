@@ -13,6 +13,7 @@ export const ImageView = (props: ImageViewProps) => {
   }, [props.visible])
 
   return (
+    // @ts-ignore
     <_ImageView
       doubleTapToZoomEnabled={false}
       presentationStyle={'overFullScreen'}

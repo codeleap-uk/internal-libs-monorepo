@@ -30,9 +30,9 @@ export type ColorPickerProps = {
   openPickerProps?: ActionIconProps
   onConfirm?: (color: ColorTypes) => void
   onClear?: () => void
-  openPickerComponent?: (props: ColorPickerPickerProps) => JSX.Element
-  pickerComponent?: (props: any) => JSX.Element
-  footerComponent?: (props: ColorPickerFooterProps) => JSX.Element
+  openPickerComponent?: (props: ColorPickerPickerProps) => React.ReactElement
+  pickerComponent?: (props: any) => React.ReactElement
+  footerComponent?: (props: ColorPickerFooterProps) => React.ReactElement
   visible?: boolean
   toggle?: React.Dispatch<React.SetStateAction<boolean>>
   children?: React.ReactNode

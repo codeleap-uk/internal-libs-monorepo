@@ -1,5 +1,5 @@
-import { StylesOf } from '@codeleap/types'
-import { ReactDatePickerCustomHeaderProps, ReactDatePickerProps } from 'react-datepicker'
+import { AnyFunction, StylesOf } from '@codeleap/types'
+import { ReactDatePickerCustomHeaderProps, DatePickerProps as ReactDatePickerProps } from 'react-datepicker'
 import { ActionIconProps, TextInputProps } from '../components'
 import { DatePickerComposition, DatePickerHeaderComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
@@ -12,6 +12,7 @@ export type DatePickerOuterInputProps = TextInputProps & {
 export type DatePickerHeaderComponent = Omit<ReactDatePickerCustomHeaderProps, 'styles'> & {
   styles?: StylesOf<DatePickerHeaderComposition>
   formatHeaderTitle?: (date: Date) => string
+  setYearShow?: AnyFunction
 }
 
 export type DatePickerArrowProps = Partial<ActionIconProps> & {
@@ -56,6 +57,6 @@ export type DatePickerProps =
     toggle?: () => void
     yearShow?: boolean
     setYearShow?: () => void
-    value: Date
-    onValueChange: (date: Date) => void
+    value: ReactDatePickerProps['selected']
+    onValueChange: ReactDatePickerProps['onChange']
   }

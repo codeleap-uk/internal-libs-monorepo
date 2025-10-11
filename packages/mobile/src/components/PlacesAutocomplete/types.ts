@@ -8,10 +8,10 @@ import { PlaceAddress, PlaceLatLng } from '@codeleap/types'
 
 export type CustomData = {
   item?: Partial<PlaceAddress> & Partial<PlaceLatLng>
-  content?: JSX.Element
+  content?: React.ReactElement
 }
 
-export type PlaceItem = PlaceAddress & PlaceLatLng & { content?: JSX.Element }
+export type PlaceItem = PlaceAddress & PlaceLatLng & { content?: React.ReactElement }
 
 export type PlaceRowProps = {
   item?: PlaceItem
@@ -21,7 +21,7 @@ export type PlaceRowProps = {
 
 export type PlacesAutocompleteProps = {
   style?: StyledProp<PlacesAutocompleteComposition>
-  itemRow?: (props: any) => JSX.Element
+  itemRow?: (props: any) => React.ReactElement
   textInputProps?: TextInputProps
   emptyPlaceholderProps?: EmptyPlaceholderProps
   listProps?: FlatListProps

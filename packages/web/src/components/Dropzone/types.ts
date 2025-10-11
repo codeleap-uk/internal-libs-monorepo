@@ -3,6 +3,7 @@ import { DropzoneComposition } from './styles'
 import { DropzoneOptions, FileRejection, DropzoneRef as ReactDropzoneRef } from 'react-dropzone'
 import { ActionIconComposition } from '../ActionIcon'
 import { AppIcon, StyledProp } from '@codeleap/styles'
+import { RefObject } from 'react'
 
 export type DropzoneFile = File
 
@@ -23,7 +24,8 @@ export type DropzoneProps =
     fileRightIcon?: AppIcon
     fileLeftIcon?: AppIcon
     withImagePreview?: boolean
-    FilePreviewComponent?: (props: DropzoneInnerFilePreviewProps) => JSX.Element
+    FilePreviewComponent?: (props: DropzoneInnerFilePreviewProps) => React.ReactElement
+    ref?: RefObject<DropzoneRef | null>
   }
 
 export type DropzoneFilePreviewProps =

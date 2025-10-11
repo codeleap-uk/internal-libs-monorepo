@@ -1,7 +1,7 @@
 import { StylesOf } from '@codeleap/types'
 import { EmptyPlaceholderProps } from '../EmptyPlaceholder'
 import { ViewProps } from '../View'
-import { MotionProps } from 'framer-motion'
+import { MotionProps } from 'motion/react'
 import { ActivityIndicatorProps } from '../ActivityIndicator'
 import { ComponentCommonProps } from '../../types'
 import { ItemMasonryProps, ListMasonryProps, UseInfiniteScrollArgs, UseInfiniteScrollReturn } from '../../lib'

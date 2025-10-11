@@ -38,7 +38,7 @@ const ScrollContext = React.createContext({} as ScrollContextValue)
 export const useScrollPubSub = (ref: MutableRefObject<Omit<Scrollable,'subscribe'>>) => {
   const listeners = useRef(new Map())
 
-  const augmentedRef = useRef<Scrollable>()
+  const augmentedRef = useRef<Scrollable>(null)
 
   const emit = useCallback((event: keyof ScrollEvents, e: NativeSyntheticEvent<NativeScrollEvent>) => {
     listeners.current.forEach((cb, key) => {

@@ -4,7 +4,7 @@ import { TypeGuards } from '@codeleap/types'
 import { useRef } from '@codeleap/hooks'
 
 import { Text } from '../Text'
-import { motion, AnimationProps } from 'framer-motion'
+import { motion, TargetAndTransition } from 'motion/react'
 import { useAnimatedVariantStyles } from '../../lib'
 import { SegmentedControlOptionProps, SegmentedControlProps } from './types'
 import { Touchable } from '../Touchable'
@@ -16,7 +16,7 @@ import { AnyRecord, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/st
 export * from './styles'
 export * from './types'
 
-const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props, ref) => {
+const Option = (props: SegmentedControlOptionProps) => {
   const {
     selected,
     onPress,
@@ -27,6 +27,7 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
     largestWidth,
     textProps,
     disabled,
+    ref,
     ...touchableProps
   } = props
 
@@ -38,7 +39,7 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
 
   return (
     <Touchable
-      key={touchableProps.key}
+      key={touchableProps.key as any}
       ref={ref as unknown as React.Ref<HTMLButtonElement>}
       onPress={onPress}
       disabled={disabled}
@@ -70,7 +71,7 @@ const Option = forwardRef<HTMLButtonElement, SegmentedControlOptionProps>((props
       />
     </Touchable>
   )
-})
+}
 
 export const SegmentedControl = (props: SegmentedControlProps) => {
   const {
@@ -122,7 +123,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
           duration: transitionDuration,
         },
         ...animationProps,
-      } as AnimationProps
+      } as TargetAndTransition
     },
     dependencies: [currentOptionIdx, largestWidth.width],
   })

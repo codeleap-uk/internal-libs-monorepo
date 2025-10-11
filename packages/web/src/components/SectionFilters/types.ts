@@ -52,7 +52,7 @@ export type SectionFiltersProps = {
   onSelectItem?: (item: onSelectItemProps) => void
   onClearItems?: ClearFunction
   onApplyItems?: ApplyFunction
-  renderFooterComponent?: (props: SectionFilterFooterProps) => JSX.Element
+  renderFooterComponent?: (props: SectionFilterFooterProps) => React.ReactElement
   applyFilterButtonProps?: Omit<ButtonProps, 'debugName'>
   clearFilterButtonProps?: Omit<ButtonProps, 'debugName'>
   filterOnOptionPress?: boolean

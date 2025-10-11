@@ -109,7 +109,7 @@ const FilePreview = (props: DropzoneFilePreviewProps) => {
   )
 }
 
-export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
+export const Dropzone = (props: DropzoneProps) => {
   const {
     icon,
     placeholder,
@@ -126,6 +126,7 @@ export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
     children,
     FilePreviewComponent,
     style,
+    ref,
     ...rest
   } = {
     ...Dropzone.defaultProps,
@@ -221,7 +222,7 @@ export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>((props, ref) => {
         <input {...getInputProps() as HTMLProps<HTMLInputElement>} />
       </View>
     </View>)
-}) as StyledComponentWithProps<DropzoneProps>
+}
 
 Dropzone.styleRegistryName = 'Dropzone'
 

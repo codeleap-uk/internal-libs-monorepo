@@ -1,5 +1,4 @@
 import { StylesOf } from '@codeleap/types'
-import { Settings } from 'react-slick'
 import { PagerComposition } from './styles'
 import React, { ReactNode, ReactElement } from 'react'
 import { ViewProps } from '../View'
@@ -11,14 +10,17 @@ export type PagerRef = {
 }
 
 export type PagerProps =
-  Omit<Settings, 'style'> &
+  Omit<{
+    dots: any
+    infinite: any
+  }, 'style'> &
   ComponentCommonProps &
   {
     style?: StyledProp<PagerComposition>
     page?: number
     children: ReactNode
     onChange?: (page: number) => void
-    renderPageWrapper?: React.FC
+    renderPageWrapper?: any
     footer?: ReactElement
     dotsProps?: DotsProps
     pageWrapperProps?: ViewProps
