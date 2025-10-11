@@ -38,7 +38,7 @@
     "react-image-crop": "^10.1.8",
     "react-input-mask": "^2.0.4",
     "react-number-format": "^5.4.2",
-    "react-select": "^5.7.3",
+    "react-select": "^5.10.2",
     "slick-carousel": "^1.8.1",
     "uuid": "13.0.0"
   },
@@ -57,7 +57,6 @@
     "dayjs": "1.11.18",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-select": "*",
     "typescript": "5.5.2"
   }
 }
