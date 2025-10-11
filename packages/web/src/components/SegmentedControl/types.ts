@@ -3,7 +3,7 @@ import { StylesOf } from '@codeleap/types'
 import { TextProps } from '../Text'
 import { TouchableProps } from '../Touchable'
 import { SegmentedControlComposition } from './styles'
-import { MotionProps, AnimationProps, ForwardRefComponent } from 'framer-motion'
+import { MotionProps, TargetAndTransition, ForwardRefComponent } from 'motion/react'
 import { IconProps } from '../Icon'
 import { AppIcon, StyledProp } from '@codeleap/styles'
 
@@ -17,7 +17,7 @@ export type SegmentedControlProps<T = string> = {
   touchableProps?: Partial<TouchableProps>
   debugName?: string
   disabled?: boolean
-  animationProps?: AnimationProps
+  animationProps?: TargetAndTransition
   transitionDuration?: number
   RenderAnimatedView?: ForwardRefComponent<HTMLDivElement, any>
   textProps?: TextProps

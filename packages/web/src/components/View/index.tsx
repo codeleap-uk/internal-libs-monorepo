@@ -1,6 +1,6 @@
 import { TypeGuards } from '@codeleap/types'
 import React, { ElementType } from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'

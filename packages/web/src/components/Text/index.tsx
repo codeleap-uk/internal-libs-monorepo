@@ -1,5 +1,5 @@
 import { TypeGuards } from '@codeleap/types'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import React, { ElementType, forwardRef } from 'react'
 import { TextProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'

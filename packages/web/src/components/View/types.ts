@@ -1,11 +1,11 @@
-import { AnimationProps, MotionProps } from 'framer-motion'
+import { TargetAndTransition, MotionProps } from 'motion/react'
 import { AnyRecord, StyledProp } from '@codeleap/styles'
 import { ViewComposition } from './styles'
 import { ComponentPropsWithRef, ElementType } from 'react'
 
 export type ViewProps<T extends ElementType = 'div'> =
   Omit<ComponentPropsWithRef<T>, 'style' | 'children'> &
-  Omit<AnimationProps, 'style' | 'children'> &
+  Omit<TargetAndTransition, 'style' | 'children'> &
   {
     component?: ElementType<AnyRecord>
     debugName?: string

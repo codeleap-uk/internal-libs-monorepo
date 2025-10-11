@@ -4,7 +4,7 @@ import { TypeGuards } from '@codeleap/types'
 import { useRef } from '@codeleap/hooks'
 
 import { Text } from '../Text'
-import { motion, AnimationProps } from 'framer-motion'
+import { motion, TargetAndTransition } from 'motion/react'
 import { useAnimatedVariantStyles } from '../../lib'
 import { SegmentedControlOptionProps, SegmentedControlProps } from './types'
 import { Touchable } from '../Touchable'
@@ -123,7 +123,7 @@ export const SegmentedControl = (props: SegmentedControlProps) => {
           duration: transitionDuration,
         },
         ...animationProps,
-      } as AnimationProps
+      } as TargetAndTransition
     },
     dependencies: [currentOptionIdx, largestWidth.width],
   })
