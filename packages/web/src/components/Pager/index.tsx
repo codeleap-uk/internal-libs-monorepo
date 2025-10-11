@@ -1,5 +1,5 @@
 import { onUpdate } from '@codeleap/hooks'
-import Slider from 'react-slick'
+// import Slider from 'react-slick'
 import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import { View } from '../View'
 import { Touchable } from '../Touchable'
@@ -43,7 +43,7 @@ const Dots = (params: DotsProps) => {
 }
 
 export const Pager = forwardRef<PagerRef, PagerProps>((props, ref) => {
-  const sliderRef = useRef<Slider>()
+  const sliderRef = useRef<any>(undefined)
 
   const {
     style,
@@ -84,49 +84,51 @@ export const Pager = forwardRef<PagerRef, PagerProps>((props, ref) => {
     goTo(page)
   }, [page])
 
-  return (
-    <View style={styles.wrapper}>
-      <Slider
-        adaptiveHeight={true}
-        {...rest}
-        arrows={false}
-        ref={sliderRef}
-        dots={false}
-        swipe={!disableSwipe}
-        infinite={infinite}
-        accessibility={false}
-        afterChange={onChange}
-      >
-        {childArray.map((child, index) => {
-          return (
-            // @ts-expect-error @verify
-            <PageWrapper
-              key={index}
-              style={styles.pageWrapper}
-              {...pageWrapperProps}
-            >
-              {child}
-            </PageWrapper>
-          )
-        })}
-      </Slider>
+  return null
 
-      <View style={styles.footerWrapper}>
-        {footer}
+  // return (
+  //   <View style={styles.wrapper}>
+  //     <Slider
+  //       adaptiveHeight={true}
+  //       {...rest}
+  //       arrows={false}
+  //       ref={sliderRef}
+  //       dots={false}
+  //       swipe={!disableSwipe}
+  //       infinite={infinite}
+  //       accessibility={false}
+  //       afterChange={onChange}
+  //     >
+  //       {childArray.map((child, index) => {
+  //         return (
+  //           // @ts-expect-error @verify
+  //           <PageWrapper
+  //             key={index}
+  //             style={styles.pageWrapper}
+  //             {...pageWrapperProps}
+  //           >
+  //             {child}
+  //           </PageWrapper>
+  //         )
+  //       })}
+  //     </Slider>
 
-        {dots ? (
-          <Dots
-            page={page}
-            onPress={onChange}
-            childArray={childArray}
-            styles={styles}
-            dotsDisabled={dotsDisabled}
-            {...dotsProps}
-          />
-        ) : null}
-      </View>
-    </View>
-  )
+  //     <View style={styles.footerWrapper}>
+  //       {footer}
+
+  //       {dots ? (
+  //         <Dots
+  //           page={page}
+  //           onPress={onChange}
+  //           childArray={childArray}
+  //           styles={styles}
+  //           dotsDisabled={dotsDisabled}
+  //           {...dotsProps}
+  //         />
+  //       ) : null}
+  //     </View>
+  //   </View>
+  // )
 }) as StyledComponentWithProps<PagerProps>
 
 Pager.styleRegistryName = 'Pager'

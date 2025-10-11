@@ -49,7 +49,7 @@ export type TCustomOption = OptionProps & ComponentPartProps & ComponentCommonPr
   styles?: OptionState['baseStyles']
 }
 
-type SelectPlaceholderElement = string | ((props: PlaceholderProps) => JSX.Element) | JSX.Element
+type SelectPlaceholderElement = string | ((props: PlaceholderProps) => React.ReactElement) | React.ReactElement
 
 export type PlaceholderProps = NoticeProps & ComponentPartProps & {
   text: SelectPlaceholderElement
@@ -74,11 +74,11 @@ export type SelectProps<T = any, Multi extends boolean = false> = React.PropsWit
     closeOnSelect?: boolean
     focused?: boolean
     _error?: string
-    renderItem?: (props: TCustomOption) => JSX.Element
-    FooterComponent?: () => JSX.Element
-    PlaceholderComponent?: (props: PlaceholderProps) => JSX.Element
-    PlaceholderNoItemsComponent?: (props: PlaceholderProps) => JSX.Element
-    LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => JSX.Element
+    renderItem?: (props: TCustomOption) => React.ReactElement
+    FooterComponent?: () => React.ReactElement
+    PlaceholderComponent?: (props: PlaceholderProps) => React.ReactElement
+    PlaceholderNoItemsComponent?: (props: PlaceholderProps) => React.ReactElement
+    LoadingIndicatorComponent?: (props: LoadingIndicatorProps) => React.ReactElement
     noItemsText?: SelectPlaceholderElement
     noItemsIcon?: SelectPlaceholderElement
     noItemsImage?: PlaceholderProps['image']

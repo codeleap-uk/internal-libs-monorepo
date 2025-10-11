@@ -16,7 +16,7 @@ export type TextEditorProps = React.PropsWithChildren<{
   style?: StyledProp<TextEditorComposition>
   bubbleMenuProps?: BubbleMenuProps & { renderContent: React.ReactNode }
   floatingMenuProps?: FloatingMenuProps & { renderContent: React.ReactNode }
-  toolbarComponent?: JSX.Element
+  toolbarComponent?: React.ReactElement
   fileInputRef?: RefObject<FileInputRef>
   validate?: Validator<string, any, any>
 }>

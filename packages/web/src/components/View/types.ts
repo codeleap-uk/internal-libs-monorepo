@@ -4,8 +4,8 @@ import { ViewComposition } from './styles'
 import { ComponentPropsWithRef, ElementType } from 'react'
 
 export type ViewProps<T extends ElementType = 'div'> =
-  Omit<ComponentPropsWithRef<T>, 'style'> &
-  Omit<AnimationProps, 'style'> &
+  Omit<ComponentPropsWithRef<T>, 'style' | 'children'> &
+  Omit<AnimationProps, 'style' | 'children'> &
   {
     component?: ElementType<AnyRecord>
     debugName?: string

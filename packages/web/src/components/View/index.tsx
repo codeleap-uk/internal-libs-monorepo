@@ -1,5 +1,5 @@
 import { TypeGuards } from '@codeleap/types'
-import React, { ElementType, forwardRef } from 'react'
+import React, { ElementType } from 'react'
 import { motion } from 'framer-motion'
 import { ViewProps } from './types'
 import { getTestId } from '../../lib/utils/test'
@@ -10,7 +10,7 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 export * from './styles'
 export * from './types'
 
-export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
+export const View = (viewProps: ViewProps) => {
   const {
     component,
     children,
@@ -23,6 +23,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
     style,
     animated,
     animatedProps,
+    ref,
     ...props
   } = {
     ...View.defaultProps,
@@ -31,7 +32,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
 
   const styles = useStylesFor(View.styleRegistryName, style)
 
-  const Component: ElementType = animated ? (motion?.[component as string] || motion.div) : (component || 'div')
+  const Component: any = animated ? (motion?.[component as string] || motion.div) : (component || 'div')
 
   function handleHover(isMouseOverElement: boolean) {
     onHover?.(isMouseOverElement)
@@ -56,7 +57,7 @@ export const View = forwardRef<HTMLDivElement, ViewProps>((viewProps, ref) => {
       {children}
     </Component>
   )
-}) as StyledComponentWithProps<ViewProps>
+}
 
 View.styleRegistryName = 'View'
 View.elements = ['wrapper']

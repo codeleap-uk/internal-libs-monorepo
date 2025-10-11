@@ -2,7 +2,6 @@ export * from './components/components'
 export * from './utils'
 export * from './hooks'
 export * from './modules'
-export * from './deprecated'
 
 export { Linking } from 'react-native'
 export { MobileStyleRegistry } from './Registry'

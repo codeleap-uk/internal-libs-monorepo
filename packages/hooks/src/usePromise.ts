@@ -9,8 +9,8 @@ type UsePromiseOptions<T = any> = {
 }
 
 export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
-  const rejectRef = useRef<AnyFunction>()
-  const resolveRef = useRef<(v:T) => any>()
+  const rejectRef = useRef<AnyFunction>(null)
+  const resolveRef = useRef<(v:T) => any>(null)
   const timeoutRef = useRef(null)
   const reject = async (err: any) => {
     await rejectRef.current?.(err)

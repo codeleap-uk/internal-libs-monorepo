@@ -23,7 +23,7 @@
     "@codeleap/utils": "workspace:*",
     "@codeleap/logger": "workspace:*",
     "axios": "^1.7.9",
-    "typescript": "5.9.2",
+    "typescript": "5.5.2",
     "react": "19.1.0",
     "@tanstack/react-query": "5.89.0"
   }

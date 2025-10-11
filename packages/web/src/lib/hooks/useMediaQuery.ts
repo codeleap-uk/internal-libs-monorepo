@@ -4,7 +4,7 @@ import { attachMediaListener, getMediaQuery, isMediaQuery } from '../tools'
 export function useMediaQuery(query: string) {
   const [matches, setMatches] = useState(isMediaQuery(query))
 
-  const queryRef = useRef<MediaQueryList>()
+  const queryRef = useRef<MediaQueryList>(undefined)
 
   useEffect(() => {
     if (query?.trim() === '' || !query) return

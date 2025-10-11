@@ -12,6 +12,6 @@ export type ImageProps =
     resizeMode?: keyof typeof FastImage.resizeMode
     spotlight?: string
     maintainAspectRatio?: boolean
-    withLoadingOverlay?: boolean | ((props: LoadingOverlayProps) => JSX.Element)
+    withLoadingOverlay?: boolean | ((props: LoadingOverlayProps) => React.ReactElement)
     touchProps?: Partial<TouchableProps>
   }

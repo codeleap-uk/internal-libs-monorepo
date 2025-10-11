@@ -28,7 +28,7 @@
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
     "react": "19.1.0",
-    "typescript": "5.9.2",
+    "typescript": "5.5.2",
     "yup": "1.6.1",
     "@tanstack/react-query": "5.89.0"
   }

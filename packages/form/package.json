@@ -25,6 +25,6 @@
     "@codeleap/logger": "workspace:*",
     "zod": "*",
     "react": "19.1.0",
-    "typescript": "5.9.2"
+    "typescript": "5.5.2"
   }
 }

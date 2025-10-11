@@ -9,9 +9,9 @@ export type PaginationIndicatorProps =
   ComponentCommonProps & 
   {
     isFetching?: boolean
-    noMoreItemsText: JSX.Element | string | number
+    noMoreItemsText: React.ReactElement | string | number
     hasMore?: boolean
-    activityIndicator?: JSX.Element
+    activityIndicator?: React.ReactElement
     style?: StyledProp<PaginationIndicatorComposition>
     indicatorProps?: Partial<ActivityIndicatorProps>
     textProps?: Partial<TextProps<'p'>>

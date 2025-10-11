@@ -13,7 +13,7 @@ export type PageProps<T> = CarouselRenderItemInfo<T> & {
 
 export type PagerProps<T> = Partial<Omit<TCarouselProps<T>, 'data' | 'renderItem'>> & {
   pages: TCarouselProps<T>['data']
-  renderItem?: (props: PageProps<T>) => JSX.Element
+  renderItem?: (props: PageProps<T>) => React.ReactElement
   page?: number
   onChangePage?: (page: number) => void
   initialPage?: number
