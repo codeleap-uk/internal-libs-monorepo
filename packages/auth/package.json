@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/auth",
-  "version": "5.8.14",
+  "version": "5.8.15",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
