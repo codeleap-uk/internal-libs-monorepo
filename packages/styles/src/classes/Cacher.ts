@@ -25,6 +25,12 @@ export class Cache<T extends any = any> {
   /** In-memory cache storage */
   cache: Record<string, T> = {}
 
+  /** Debounce timer for batch persistence */
+  private persistTimer: NodeJS.Timer | null = null
+
+  /** Debounce delay in milliseconds */
+  private persistDelay: number = 4500
+
   /**
    * Gets the persistence key for cache data
    * @returns {string} The storage key for cache data
@@ -99,7 +105,11 @@ export class Cache<T extends any = any> {
    */
   cacheFor(key: string, cache: T) {
     this.cache[key] = cache
-    if (this.persistCache) this.storeCache()
+
+    if (this.persistCache) {
+      this.schedulePersist()
+    }
+
     return cache
   }
 
@@ -115,8 +125,27 @@ export class Cache<T extends any = any> {
    * Clears both in-memory and persistent cache
    */
   clear() {
+    if (this.persistTimer) {
+      clearTimeout(this.persistTimer)
+      this.persistTimer = null
+    }
+
     this.cache = {}
     this.clearStorage()
+  }
+
+  /**
+   * Schedules cache persistence with debounce
+   */
+   private schedulePersist() {
+    if (this.persistTimer) {
+      clearTimeout(this.persistTimer)
+    }
+    
+    this.persistTimer = setTimeout(() => {
+      this.storeCache()
+      this.persistTimer = null
+    }, this.persistDelay)
   }
 
   /**
