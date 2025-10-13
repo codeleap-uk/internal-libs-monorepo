@@ -24,6 +24,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          npm rebuild sharp
           bun install
 
       - name: Install Turbo
