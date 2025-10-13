@@ -6,7 +6,7 @@ import { downloadKeystores } from './commands/downloadKeystores'
 import { generateReleaseKey } from './commands/keystoresAndroid'
 import { renameMobileCommand } from './commands/rename'
 import { syncIconsCommand } from './commands/syncIcons'
-import { convertorWebpCommand } from './commands/convertorWebp'
+// import { convertorWebpCommand } from './commands/convertorWebp'
 import { configureThemeCommand } from './commands/configureTheme'
 import { linguiTranslateCommand } from './commands/linguiTranslate'
 import { configureSplashCommand } from './commands/configureSplash'
@@ -25,7 +25,7 @@ cli({
     configureCommand,
     downloadKeystores,
     syncIconsCommand,
-    convertorWebpCommand,
+    // convertorWebpCommand,
     configureThemeCommand,
     linguiTranslateCommand,
     configureSplashCommand,
