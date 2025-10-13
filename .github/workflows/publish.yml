@@ -22,9 +22,12 @@ jobs:
       
       - uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
+      - name: Fix sharp
         run: |
           npm rebuild sharp
+
+      - name: Install dependencies
+        run: |
           bun install
 
       - name: Install Turbo
