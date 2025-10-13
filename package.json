@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "node ./scripts/postInstall.js && bun run patch-package && bun mobile script:generateLicense",
+    "postinstall": "bun run patch-package",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
