@@ -1,7 +1,7 @@
 import { codeleapCommand } from '../lib/Command'
 import fs from 'fs'
 import path from 'path'
-import sharp from 'sharp'
+// import sharp from 'sharp'
 import { inquirer } from '../lib'
 import '../lib/firebase'
 import { CodeleapCLIUserConfig } from '../types'
@@ -87,42 +87,42 @@ export const convertorWebpCommand = codeleapCommand(
 
     console.log('Files to convert', files)
 
-    for (const file of files) {
-      const inputPath = path.join(settings.input, file);
-      const outputPath = path.join(settings.output, path.parse(file).name + '.webp')
+    // for (const file of files) {
+    //   const inputPath = path.join(settings.input, file);
+    //   const outputPath = path.join(settings.output, path.parse(file).name + '.webp')
 
-      if (fs.existsSync(outputPath)) {
-        fs.unlinkSync(outputPath)
-      }
+    //   if (fs.existsSync(outputPath)) {
+    //     fs.unlinkSync(outputPath)
+    //   }
 
-      const img = sharp(inputPath)
-      const img_metadata = await img.metadata()
+    //   const img = sharp(inputPath)
+    //   const img_metadata = await img.metadata()
 
-      let imageProcessing = img.webp({ quality: Number(settings?.convertor?.compressionQuality) })
+    //   let imageProcessing = img.webp({ quality: Number(settings?.convertor?.compressionQuality) })
 
-      const needResize = img_metadata?.width && img_metadata?.width > settings?.convertor?.resizeWidth
+    //   const needResize = img_metadata?.width && img_metadata?.width > settings?.convertor?.resizeWidth
 
-      if (needResize) {
-        const newWidth = parseInt(String(settings?.convertor?.resizeWidth))
-        const newHeight = parseInt(String(img_metadata.height * (newWidth / img_metadata.width)))
+    //   if (needResize) {
+    //     const newWidth = parseInt(String(settings?.convertor?.resizeWidth))
+    //     const newHeight = parseInt(String(img_metadata.height * (newWidth / img_metadata.width)))
 
-        imageProcessing = imageProcessing.resize({ width: newWidth, height: newHeight })
-      }
+    //     imageProcessing = imageProcessing.resize({ width: newWidth, height: newHeight })
+    //   }
 
-      const hasAlfaChannels = img_metadata.channels && img_metadata.channels >= 4
+    //   const hasAlfaChannels = img_metadata.channels && img_metadata.channels >= 4
 
-      if (hasAlfaChannels && !!settings.convertor.processColorChannels) {
-        imageProcessing = imageProcessing.toColorspace('srgb')
-      }
+    //   if (hasAlfaChannels && !!settings.convertor.processColorChannels) {
+    //     imageProcessing = imageProcessing.toColorspace('srgb')
+    //   }
 
-      imageProcessing.toFile(outputPath, (err, info) => {
-        if (err) {
-          console.error(`Error converting ${file} to webP`, err)
-          process.exit(1)
-        } else {
-          console.log(`Image ${file} converted to webP`, info)
-        }
-      })
-    }
+    //   imageProcessing.toFile(outputPath, (err, info) => {
+    //     if (err) {
+    //       console.error(`Error converting ${file} to webP`, err)
+    //       process.exit(1)
+    //     } else {
+    //       console.log(`Image ${file} converted to webP`, info)
+    //     }
+    //   })
+    // }
   },
 )
