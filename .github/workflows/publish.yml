@@ -28,6 +28,7 @@ jobs:
 
       - name: Fix sharp
         run: |
+          npm install sharp
           npm rebuild sharp
 
       - name: Install dependencies
