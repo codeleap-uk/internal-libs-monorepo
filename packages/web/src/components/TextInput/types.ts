@@ -4,17 +4,11 @@ import { InputBaseProps } from '../InputBase'
 import { HTMLProps } from '../../types'
 import { TextInputComposition } from './styles'
 import { Field } from '@codeleap/form'
-import { AnyFunction } from '@codeleap/types'
 import { RefObject } from 'react'
-import { FactoryArg } from 'imask'
 
 type NativeTextInputProps = HTMLProps<'input'>
 
-export type InputRef = {
-  isTextInput?: boolean
-  focus: () => void
-  getInputRef: () => HTMLInputElement
-}
+export type InputRef = HTMLInputElement
 
 export type TextInputProps =
   Omit<InputBaseProps, 'style' | 'ref'> &
@@ -30,7 +24,6 @@ export type TextInputProps =
     focused?: boolean
     forceError?: string
     rows?: number
-    masking?: TextInputMaskingProps
     visibleIcon?: AppIcon
     hiddenIcon?: AppIcon
     field?: Field<string, any, any>
@@ -39,32 +32,3 @@ export type TextInputProps =
     onChangeText?: NativeTextInputProps['onChange']
     ref?: RefObject<InputRef | null>
   }
-
-export type IMaskConfig = {
-  mask?: FactoryArg
-  obfuscated?: boolean
-  lazy?: boolean
-  placeholderChar?: string
-  maskType?: 'BRL' | 'INTERNATIONAL'
-  getRawValue?: (value: any) => string
-  onAccept?: AnyFunction
-}
-
-export type TextInputMaskTypeProp =
-  | 'credit-card'
-  | 'cpf'
-  | 'cnpj'
-  | 'zip-code'
-  | 'cel-phone'
-  | 'custom'
-
-export interface TextInputMaskingProps {
-  type: TextInputMaskTypeProp
-  options?: IMaskConfig
-  onChangeMask?: AnyFunction
-  saveFormatted?: boolean
-}
-
-export type InputMaskProps = {
-  masking: TextInputMaskingProps
-}

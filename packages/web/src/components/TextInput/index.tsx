@@ -1,7 +1,6 @@
 import { TypeGuards } from '@codeleap/types'
 import React, { useImperativeHandle } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
-import { IMaskInput } from 'react-imask'
 import { Touchable } from '../Touchable'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { getTestId } from '../../lib/utils/test'
@@ -14,7 +13,6 @@ import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyle
 
 export * from './types'
 export * from './styles'
-export * from './mask'
 
 export const TextInput = (props: TextInputProps) => {
   const allProps = {
@@ -45,14 +43,11 @@ export const TextInput = (props: TextInputProps) => {
 
   const {
     isMultiline,
-    isMasked,
     isFocused: isInputFocused,
     secureTextEntry,
     handleBlur,
     handleFocus,
     handleChange,
-    handleAccept,
-    maskProps,
     innerInputRef,
     wrapperRef,
     errorMessage,
@@ -72,23 +67,13 @@ export const TextInput = (props: TextInputProps) => {
     focus: isFocused,
   })
 
-  const InputElement: any = isMasked ? IMaskInput : isMultiline ? TextareaAutosize : 'input'
+  const InputElement: any = isMultiline ? TextareaAutosize : 'input'
 
   const isPressable = TypeGuards.isFunction(onPress)
 
-  const focus = () => {
-    innerInputRef.current?.focus?.()
-  }
-
   useImperativeHandle(inputRef, () => {
-    return {
-      focus: () => focus(),
-      isTextInput: true,
-      getInputRef: () => {
-        return innerInputRef.current as unknown as HTMLInputElement
-      },
-    }
-  }, [!!innerInputRef?.current?.focus])
+    return innerInputRef?.current
+  }, [])
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
@@ -169,16 +154,8 @@ export const TextInput = (props: TextInputProps) => {
             ],
           },
         ] as any}
-        {...(isMasked ? {
-          ...maskProps,
-          onAccept: handleAccept,
-          inputRef: innerInputRef,
-          unmask: maskProps?.notSaveFormatted ? true : false,
-          type: maskProps?.obfuscated ? 'password' : textInputProps.type,
-        } : {
-          onChange: handleChange,
-          ref: innerInputRef,
-        })}
+        onChange={handleChange}
+        ref={innerInputRef}
         value={inputValue}
         data-testid={testId}
       />
@@ -198,7 +175,6 @@ TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 TextInput.defaultProps = {
   hiddenIcon: 'input-visiblity:hidden' as AppIcon,
   visibleIcon: 'input-visiblity:visible' as AppIcon,
-  masking: null,
 } as TextInputProps
 
 WebStyleRegistry.registerComponent(TextInput)

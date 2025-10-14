@@ -1,7 +1,6 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState } from 'react'
 import { TextInputProps } from './types'
 import { TypeGuards } from '@codeleap/types'
-import { getMaskInputProps } from './mask'
 import { useInputBase } from '../InputBase/useInputBase'
 import { fields } from '@codeleap/form'
 
@@ -10,7 +9,6 @@ export function useTextInput(props: Partial<TextInputProps>) {
     onFocus,
     onBlur,
     field,
-    masking,
     multiline: isMultiline,
     forceError,
     value,
@@ -24,12 +22,6 @@ export function useTextInput(props: Partial<TextInputProps>) {
   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
   const toggleSecureTextEntry = () => setSecureTextEntry(s => !s)
-
-  const isMasked = !TypeGuards.isNil(masking)
-
-  const maskProps = useMemo(() => {
-    return isMasked ? getMaskInputProps({ masking }) : null
-  }, [masking])
 
   const {
     fieldHandle,
@@ -71,15 +63,6 @@ export function useTextInput(props: Partial<TextInputProps>) {
     onInputValueChange(inputValue)
   }, [onInputValueChange, onChangeText])
 
-  const handleAccept = useCallback((value: string, maskRef: any) => {
-    const finalValue = isMasked && maskProps?.notSaveFormatted
-      ? maskProps?.getRawValue(value)
-      : value
-
-    onInputValueChange(finalValue)
-    maskProps?.onAccept?.(value, maskRef)
-  }, [isMasked, maskProps, onInputValueChange])
-
   const rows = providedRows ?? (isMultiline ? 2 : undefined)
 
   const hasMultipleLines = isMultiline && (String(inputValue)?.includes('\n') || !!rows)
@@ -89,15 +72,12 @@ export function useTextInput(props: Partial<TextInputProps>) {
   const errorMessage = validation?.message || forceError
 
   return {
-    maskProps,
     isMultiline,
-    isMasked,
     isFocused,
     secureTextEntry,
     handleBlur,
     handleFocus,
     handleChange,
-    handleAccept,
     fieldHandle,
     validation,
     innerInputRef,
