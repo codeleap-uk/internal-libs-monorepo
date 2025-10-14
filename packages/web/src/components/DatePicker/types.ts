@@ -39,7 +39,7 @@ type RootDatePickerProps = 'startDate' | 'minDate' | 'maxDate'
 
 export type DatePickerProps =
   Omit<Partial<Pick<Partial<ReactDatePickerProps>, RootDatePickerProps>>, 'style'> &
-  Omit<TextInputProps, 'defaultValue' | 'style'> &
+  Omit<TextInputProps, 'defaultValue' | 'style' | 'value' | 'onValueChange'> &
   {
     style?: StyledProp<DatePickerComposition>
     hideInput?: boolean
