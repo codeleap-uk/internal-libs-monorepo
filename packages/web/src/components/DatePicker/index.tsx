@@ -77,15 +77,14 @@ export function DatePicker(props: DatePickerProps) {
   return (
     <View style={styles.wrapper}>
       <ReactDatePicker
-        onChange={onValueChange as any}
-        selected={value as any}
-        selectsMultiple
+        onChange={(date) => onValueChange(date as any)}
+        selected={value}
         open={visible}
         todayButton={null}
         shouldCloseOnSelect={false}
         openToDate={defaultValue ?? value}
         dateFormat='dd/MM/yyyy'
-        formatWeekDay={(t) => t[0]}
+        formatWeekDay={(day) => day.charAt(0)}
         calendarStartDay={1}
         placeholderText={otherProps?.placeholder}
         disabled={disabled}

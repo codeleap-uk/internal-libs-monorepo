@@ -5,8 +5,16 @@ import { HTMLProps } from '../../types'
 import { TextInputComposition } from './styles'
 import { Field } from '@codeleap/form'
 import { AnyFunction } from '@codeleap/types'
+import { RefObject } from 'react'
+import { FactoryArg } from 'imask'
 
 type NativeTextInputProps = HTMLProps<'input'>
+
+export type InputRef = {
+  isTextInput?: boolean
+  focus: () => void
+  getInputRef: () => HTMLInputElement
+}
 
 export type TextInputProps =
   Omit<InputBaseProps, 'style' | 'ref'> &
@@ -28,38 +36,18 @@ export type TextInputProps =
     field?: Field<string, any, any>
     value?: string
     onValueChange?: (value: string) => void
+    onChangeText?: NativeTextInputProps['onChange']
+    ref?: RefObject<InputRef | null>
   }
 
-export type InputRef = {
-  isTextInput?: boolean
-  focus: () => void
-  getInputRef: () => HTMLInputElement
-}
-
-type beforeMaskedValueChangeArgs = {
-  state: {
-    value: string | undefined
-    selection: {
-      start: number
-      end: number
-      length?: number
-    }
-  }
-  userInput: null | string
-}
-
-export type FormatChar = `[${string}]`
-
-export type MaskProps = {
+export type IMaskConfig = {
+  mask?: FactoryArg
   obfuscated?: boolean
-  mask?: string
-  placeholder?: string
-  maskChar?: string
-  formatChars?: Record<string, FormatChar>
-  alwaysShowMask?: boolean
-  validator?: AnyFunction
+  lazy?: boolean
+  placeholderChar?: string
   maskType?: 'BRL' | 'INTERNATIONAL'
   getRawValue?: (value: any) => string
+  onAccept?: AnyFunction
 }
 
 export type TextInputMaskTypeProp =
@@ -72,12 +60,8 @@ export type TextInputMaskTypeProp =
 
 export interface TextInputMaskingProps {
   type: TextInputMaskTypeProp
-  options?: MaskProps
-  onChangeMask?: (
-    newState: beforeMaskedValueChangeArgs['state'],
-    oldState: beforeMaskedValueChangeArgs['state'],
-    userInput: beforeMaskedValueChangeArgs['userInput']
-  ) => beforeMaskedValueChangeArgs['state']
+  options?: IMaskConfig
+  onChangeMask?: AnyFunction
   saveFormatted?: boolean
 }
 

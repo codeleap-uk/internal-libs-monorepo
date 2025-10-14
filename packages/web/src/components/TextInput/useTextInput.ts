@@ -15,6 +15,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     forceError,
     value,
     onValueChange,
+    onChangeText,
     rows: providedRows,
   } = props
 
@@ -37,7 +38,11 @@ export function useTextInput(props: Partial<TextInputProps>) {
     wrapperRef,
     onInputValueChange,
     inputValue,
-  } = useInputBase<string>(field, fields.text, { value, onValueChange }, {
+  } = useInputBase<string>(
+    field,
+    fields.text,
+    { value, onValueChange: onValueChange ?? onChangeText as any },
+    {
     revealValue() {
       setSecureTextEntry(false)
     },
@@ -61,14 +66,19 @@ export function useTextInput(props: Partial<TextInputProps>) {
   }, [onFocus])
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    if (TypeGuards.isFunction(onChangeText)) return onChangeText(event)
     const inputValue = event?.target?.value
+    onInputValueChange(inputValue)
+  }, [onInputValueChange, onChangeText])
 
-    const value = isMasked && maskProps?.notSaveFormatted
-      ? maskProps?.getRawValue(inputValue)
-      : inputValue
+  const handleAccept = useCallback((value: string, maskRef: any) => {
+    const finalValue = isMasked && maskProps?.notSaveFormatted
+      ? maskProps?.getRawValue(value)
+      : value
 
-    onInputValueChange(value)
-  }, [onInputValueChange])
+    onInputValueChange(finalValue)
+    maskProps?.onAccept?.(value, maskRef)
+  }, [isMasked, maskProps, onInputValueChange])
 
   const rows = providedRows ?? (isMultiline ? 2 : undefined)
 
@@ -87,6 +97,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
     handleBlur,
     handleFocus,
     handleChange,
+    handleAccept,
     fieldHandle,
     validation,
     innerInputRef,

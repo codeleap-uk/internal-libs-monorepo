@@ -1,12 +1,12 @@
 import { TypeGuards } from '@codeleap/types'
-import React, { forwardRef, useImperativeHandle } from 'react'
+import React, { useImperativeHandle } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
-import InputMask from 'react-input-mask'
+import { IMaskInput } from 'react-imask'
 import { Touchable } from '../Touchable'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { getTestId } from '../../lib/utils/test'
-import { InputRef, TextInputProps } from './types'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { TextInputProps } from './types'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { useTextInput } from './useTextInput'
@@ -16,7 +16,7 @@ export * from './types'
 export * from './styles'
 export * from './mask'
 
-export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
+export const TextInput = (props: TextInputProps) => {
   const allProps = {
     ...TextInput.defaultProps,
     ...props,
@@ -37,6 +37,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     visibleIcon,
     hiddenIcon,
     focused,
+    ref: inputRef,
     ...textInputProps
   } = others as TextInputProps
 
@@ -50,6 +51,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     handleBlur,
     handleFocus,
     handleChange,
+    handleAccept,
     maskProps,
     innerInputRef,
     wrapperRef,
@@ -70,16 +72,11 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     focus: isFocused,
   })
 
-  const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
+  const InputElement: any = isMasked ? IMaskInput : isMultiline ? TextareaAutosize : 'input'
 
   const isPressable = TypeGuards.isFunction(onPress)
 
   const focus = () => {
-    if (isMasked) {
-      // @ts-expect-error
-      innerInputRef.current?.getInputDOMNode()?.focus()
-    }
-
     innerInputRef.current?.focus?.()
   }
 
@@ -149,8 +146,8 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
         {...buttonModeProps}
         {...secureTextProps}
         {...textInputProps}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        onBlur={handleBlur as any}
+        onFocus={handleFocus as any}
         css={[
           styles.input,
           isMultiline && styles['input:multiline'],
@@ -171,17 +168,24 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
               caretColorStyle,
             ],
           },
-        ]}
-        {...maskProps}
+        ] as any}
+        {...(isMasked ? {
+          ...maskProps,
+          onAccept: handleAccept,
+          inputRef: innerInputRef,
+          unmask: maskProps?.notSaveFormatted ? true : false,
+          type: maskProps?.obfuscated ? 'password' : textInputProps.type,
+        } : {
+          onChange: handleChange,
+          ref: innerInputRef,
+        })}
         value={inputValue}
-        onChange={handleChange}
-        ref={innerInputRef}
         data-testid={testId}
       />
     </InputBase>
   )
 
-}) as StyledComponentWithProps<TextInputProps>
+}
 
 TextInput.styleRegistryName = 'TextInput'
 TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']
