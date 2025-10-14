@@ -3,6 +3,7 @@ import { ReactDatePickerCustomHeaderProps, DatePickerProps as ReactDatePickerPro
 import { ActionIconProps, TextInputProps } from '../components'
 import { DatePickerComposition, DatePickerHeaderComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
+import { DateField } from '@codeleap/form'
 
 export type DatePickerOuterInputProps = TextInputProps & {
   valueLabel: React.ReactNode
@@ -57,6 +58,7 @@ export type DatePickerProps =
     toggle?: () => void
     yearShow?: boolean
     setYearShow?: () => void
-    value: ReactDatePickerProps['selected']
-    onValueChange: ReactDatePickerProps['onChange']
+    value?: Date
+    onValueChange?: (value: Date) => void
+    field?: DateField<any>
   }
