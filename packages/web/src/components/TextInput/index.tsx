@@ -1,6 +1,6 @@
 import { TypeGuards } from '@codeleap/types'
 import React, { useImperativeHandle } from 'react'
-import TextareaAutosize from 'react-autosize-textarea'
+import TextareaAutosize from 'react-textarea-autosize'
 import { Touchable } from '../Touchable'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { getTestId } from '../../lib/utils/test'

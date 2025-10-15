@@ -69,6 +69,10 @@
     "node": ">=14.0.0"
   },
   "packageManager": "bun@1.1.33",
+  "resolutions": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
   "patchedDependencies": {
     "react-native-keyboard-controller@1.19.0": "patches/react-native-keyboard-controller@1.19.0.patch"
   }
