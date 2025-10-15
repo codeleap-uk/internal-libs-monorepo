@@ -132,7 +132,7 @@ export class QueryClientEnhanced {
             }
 
           default:
-            return Reflect.get(query, p, receiver)
+            return Reflect.get(query, p, query)
         }
       },
     })
@@ -204,7 +204,7 @@ export class QueryClientEnhanced {
 
           const proxy = getClient().queryProxy<Data>(key)
 
-          return Reflect.get(proxy, p, receiver)
+          return Reflect.get(proxy, p, proxy)
         }
       },
     })
