@@ -80,10 +80,17 @@ export class QueryClientEnhanced {
         switch (p) {
           case 'key':
             return key
+
           case 'getData':
             return () => {
               return client.client.getQueryData<T>(key)
             }
+            
+          case 'setData':
+            return (updater: T | ((old: T | undefined) => T)) => {
+              return client.client.setQueryData<T>(key, updater)
+            }
+
           default:
             break
         }
