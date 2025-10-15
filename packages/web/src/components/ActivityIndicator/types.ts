@@ -1,4 +1,4 @@
-import React, { RefObject } from 'react'
+import React from 'react'
 import { StyledProp } from '@codeleap/styles'
 import { ComponentCommonProps } from '../../types'
 import { ActivityIndicatorComposition } from './styles'
@@ -9,5 +9,4 @@ export type ActivityIndicatorProps =
     style?: StyledProp<ActivityIndicatorComposition>
     component?: React.ComponentType<Omit<ActivityIndicatorProps & { ref?: React.Ref<HTMLDivElement> }, 'component'>>
     size?: number
-    ref?: RefObject<HTMLDivElement | null>
   }

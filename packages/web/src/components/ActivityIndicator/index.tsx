@@ -14,7 +14,6 @@ export const ActivityIndicator = (props: ActivityIndicatorProps) => {
     style,
     component: Component,
     size,
-    ref,
     ...rest
   } = {
     ...ActivityIndicator.defaultProps,
@@ -32,7 +31,6 @@ export const ActivityIndicator = (props: ActivityIndicatorProps) => {
 
   return (
     <Component
-      ref={ref}
       {...rest}
       style={[styles.wrapper, _size]}
     />
