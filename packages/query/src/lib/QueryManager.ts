@@ -96,7 +96,9 @@ export class QueryManager<T extends QueryItem, F> {
       queryFn: async (query) => {
         const listOffset = query?.pageParam ?? 0
 
-        return this.options?.listFn?.(listLimit, listOffset, filters)
+        const data = this.options?.listFn?.(listLimit, listOffset, filters)
+
+        return TypeGuards.isArray(data) ? data : []
       },
 
       initialPageParam: 0,
