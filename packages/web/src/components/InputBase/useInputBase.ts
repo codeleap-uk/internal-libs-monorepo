@@ -14,7 +14,7 @@ export function useInputBase<V,  T extends Field<V, any, any, unknown> = Field<V
 
   const hasInternalState = useMemo(() => TypeGuards.isFunction(onValueChange) && !TypeGuards.isNil(value), [])
 
-  const wrapperRef = useRef<HTMLDivElement>()
+  const wrapperRef = useRef<HTMLDivElement>(undefined)
 
   const innerInputRef = useRef<HTMLInputElement>(null)
 

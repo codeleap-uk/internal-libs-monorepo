@@ -382,11 +382,11 @@
 														"type": "reference",
 														"target": {
 															"sourceFileName": "apps/web/node_modules/@types/react/index.d.ts",
-															"qualifiedName": "__global.JSX.Element"
+															"qualifiedName": "__global.React.ReactElement"
 														},
-														"name": "JSX.Element",
+														"name": "React.ReactElement",
 														"package": "@types/react",
-														"qualifiedName": "__global.JSX.Element"
+														"qualifiedName": "__global.React.ReactElement"
 													}
 												}
 											]

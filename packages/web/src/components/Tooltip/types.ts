@@ -26,7 +26,7 @@ export type TooltipProps =
   {
     toggle?: AnyFunction
     visible?: boolean
-    content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => JSX.Element)
+    content: React.ReactNode | ((props: TooltipProps & { variantsStyles: StylesOf<TooltipComposition> }) => React.ReactElement)
     triggerWrapper?: React.ElementType
     triggerWrapperProps?: Partial<ViewProps>
     style?: StyledProp<TooltipComposition>

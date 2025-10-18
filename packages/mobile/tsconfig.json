@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "module": "ES2015", /* Specify what module code is generated. */
+    "module": "ES2015",
     "moduleResolution": "node",
     "target": "ESNext",
     "lib": [
- 
       "es2019",
       "es2020.bigint",
       "es2020.date",
@@ -19,17 +18,13 @@
       "es2022.object",
       "es2022.string"
     ],
-    "jsx": "react-native",
-    /* Modules */
-    // "rootDir": "./",                                  /* Specify the root folder within your source files. */                                    /* Specify a set of entries that re-map imports to additional lookup locations. */
-    "allowUmdGlobalAccess": true, /* Allow accessing UMD globals from modules. */
-    "allowJs": true, /* Allow JavaScript files to be a part of your program. Use the `checkJS` option to get errors from these files. */
-    "isolatedModules": true, /* Ensure that each file can be safely transpiled without relying on other imports. */
-    "allowSyntheticDefaultImports": true, /* Allow 'import x from y' when a module doesn't have a default export. */
-    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
-    // "preserveSymlinks": true,                         /* Disable resolving symlinks to their realpath. This correlates to the same flag in node. */
-    "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
-    /* Type Checking */
+    "jsx": "react-jsx",
+    "allowUmdGlobalAccess": true,
+    "allowJs": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "outDir": "./dist",
     "declaration": true,
@@ -44,11 +39,4 @@
     "../../node_modules",
     "dist"
   ],
-  "typedocOptions": {
-    "entryPoints": [
-      "src/index.ts",
-    ],
-    "out": "docs",
-    "name": "CodeLeap web lib"
-  },
 }

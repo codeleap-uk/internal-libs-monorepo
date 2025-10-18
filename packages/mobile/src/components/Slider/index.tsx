@@ -126,6 +126,7 @@ export const Slider = (props: SliderProps) => {
         </View>
       ) : null}
 
+      {/* @ts-ignore */}
       <RNSlider
         value={_value}
         onValueChange={_setValue}

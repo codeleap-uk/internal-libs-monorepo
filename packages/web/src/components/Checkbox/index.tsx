@@ -1,7 +1,7 @@
 import { InputBase, InputBaseDefaultOrder, selectInputBaseProps } from '../InputBase'
 import { useAnimatedVariantStyles } from '../..'
 import { Icon } from '../Icon'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { CheckboxProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, AppIcon, IJSX, mergeStyles, StyledComponentProps } from '@codeleap/styles'

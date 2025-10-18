@@ -1,5 +1,5 @@
 import { StyledProp } from '@codeleap/styles'
-import { MotionProps } from 'framer-motion'
+import { MotionProps } from 'motion/react'
 import { CollapseComposition } from './styles'
 
 export type CollapseProps =

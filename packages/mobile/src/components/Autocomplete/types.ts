@@ -19,7 +19,7 @@ export type AutocompleteRenderFNProps<T> = {
   iconProps?: Partial<PropsOf<typeof Icon>>
 }
 
-export type AutocompleteRenderFN<T> = (props: AutocompleteRenderFNProps<T>) => JSX.Element
+export type AutocompleteRenderFN<T> = (props: AutocompleteRenderFNProps<T>) => React.ReactElement
 
 export type AutocompleteValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
 

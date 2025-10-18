@@ -1,8 +1,8 @@
 
 type Dots = 'dot' | 'dot:selected' | 'dot:disabled' | 'dots'
 
-export type PagerComposition =
+export type CarouselComposition =
   | 'wrapper'
-  | 'pageWrapper'
+  | 'slideWrapper'
   | 'footerWrapper'
   | Dots

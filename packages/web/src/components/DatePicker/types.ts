@@ -1,8 +1,9 @@
-import { StylesOf } from '@codeleap/types'
-import { ReactDatePickerCustomHeaderProps, ReactDatePickerProps } from 'react-datepicker'
+import { AnyFunction, StylesOf } from '@codeleap/types'
+import { ReactDatePickerCustomHeaderProps, DatePickerProps as ReactDatePickerProps } from 'react-datepicker'
 import { ActionIconProps, TextInputProps } from '../components'
 import { DatePickerComposition, DatePickerHeaderComposition } from './styles'
 import { StyledProp } from '@codeleap/styles'
+import { DateField } from '@codeleap/form'
 
 export type DatePickerOuterInputProps = TextInputProps & {
   valueLabel: React.ReactNode
@@ -12,6 +13,7 @@ export type DatePickerOuterInputProps = TextInputProps & {
 export type DatePickerHeaderComponent = Omit<ReactDatePickerCustomHeaderProps, 'styles'> & {
   styles?: StylesOf<DatePickerHeaderComposition>
   formatHeaderTitle?: (date: Date) => string
+  setYearShow?: AnyFunction
 }
 
 export type DatePickerArrowProps = Partial<ActionIconProps> & {
@@ -38,7 +40,7 @@ type RootDatePickerProps = 'startDate' | 'minDate' | 'maxDate'
 
 export type DatePickerProps =
   Omit<Partial<Pick<Partial<ReactDatePickerProps>, RootDatePickerProps>>, 'style'> &
-  Omit<TextInputProps, 'defaultValue' | 'style'> &
+  Omit<TextInputProps, 'defaultValue' | 'style' | 'value' | 'onValueChange'> &
   {
     style?: StyledProp<DatePickerComposition>
     hideInput?: boolean
@@ -56,6 +58,7 @@ export type DatePickerProps =
     toggle?: () => void
     yearShow?: boolean
     setYearShow?: () => void
-    value: Date
-    onValueChange: (date: Date) => void
+    value?: Date
+    onValueChange?: (value: Date) => void
+    field?: DateField<any>
   }

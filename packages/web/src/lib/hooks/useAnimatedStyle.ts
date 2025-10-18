@@ -1,17 +1,21 @@
 import { useRef, useEffect, useState } from 'react'
-import { AnimationProps } from 'framer-motion'
+import { TargetAndTransition, Transition } from 'motion/react'
 
-type UpdaterReturn = Omit<AnimationProps['animate'], 'transition'> & {
-  transition: AnimationProps['transition']
+type UpdaterReturn = TargetAndTransition & {
+  transition?: Transition
 }
 
-type UseAnimatedStyleReturn = Pick<AnimationProps, 'animate' | 'initial' | 'transition'>
+type UseAnimatedStyleReturn = {
+  animate: TargetAndTransition
+  initial: boolean
+  transition: Transition | undefined
+}
 
 export const useAnimatedStyle = (updater: () => UpdaterReturn, deps: Array<any>): UseAnimatedStyleReturn => {
   const initialStyle = updater()
 
-  const [animatedStyle, setAnimatedStyle] = useState(initialStyle)
-  const transition = useRef(initialStyle.transition)
+  const [animatedStyle, setAnimatedStyle] = useState<TargetAndTransition>(initialStyle)
+  const transition = useRef<Transition | undefined>(initialStyle.transition)
 
   useEffect(() => {
     const animatedStyleUpdated = updater()

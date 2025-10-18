@@ -24,8 +24,8 @@ export type SegmentedControlProps<T = string> =
     textProps?: Partial<TextProps>
     touchableProps?: Partial<TouchableProps>
     label?: string
-    renderOption?: (props: SegmentedControlOptionProps) => JSX.Element
-    renderBubble?: (props: Partial<SegmentedControlProps>) => JSX.Element
+    renderOption?: (props: SegmentedControlOptionProps) => React.ReactElement
+    renderBubble?: (props: Partial<SegmentedControlProps>) => React.ReactElement
     getItemWidth?: (item: { label: string; value: T }, idx: number, arr: { label: string; value: T }[]) => number
     scrollToCurrentOptionOnMount?: boolean
     style?: StyledProp<SegmentedControlComposition>

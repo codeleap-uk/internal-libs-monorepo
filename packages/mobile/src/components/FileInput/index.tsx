@@ -42,7 +42,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
     ...FileInput.defaultProps,
   }
 
-  const resolveWithFile = useRef<(file: FileResult[]) => any>()
+  const resolveWithFile = useRef<(file: FileResult[]) => any>(undefined)
 
   const handleResolve = (files: Array<FileResult>) => {
     if (resolveWithFile.current) {
@@ -128,7 +128,7 @@ const _FileInput = forwardRef<FileInputRef, FileInputProps>((fileInputProps, ref
   return null
 })
 
-export const FileInput = _FileInput as unknown as ((props: FileInputProps) => JSX.Element) & { defaultProps: Partial<FileInputProps> }
+export const FileInput = _FileInput as unknown as ((props: FileInputProps) => React.ReactElement) & { defaultProps: Partial<FileInputProps> }
 
 FileInput.defaultProps = {}
 

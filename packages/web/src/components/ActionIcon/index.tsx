@@ -32,7 +32,7 @@ export const ActionIcon = (props: ActionIconProps) => {
 
   const isPressable = TypeGuards.isFunction(onPress) && !disabled
 
-  const WrapperComponent: ElementType = isPressable ? Touchable : View
+  const WrapperComponent: any = isPressable ? Touchable : View
 
   const handlePress = (e) => {
     if (!isPressable) return

@@ -1,0 +1,32 @@
+diff --git a/src/components/KeyboardAwareScrollView/index.tsx b/src/components/KeyboardAwareScrollView/index.tsx
+index 4e2b22c0b47f40dbcd1801dc2d301ec6c8aac942..a5471a48af5aeae8152f48ec1f1ac979defb688a 100644
+--- a/src/components/KeyboardAwareScrollView/index.tsx
++++ b/src/components/KeyboardAwareScrollView/index.tsx
+@@ -43,6 +43,8 @@ export type KeyboardAwareScrollViewProps = {
+   extraKeyboardSpace?: number;
+   /** Custom component for `ScrollView`. Default is `ScrollView`. */
+   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
++
++  inverted?: boolean;
+ } & ScrollViewProps;
+ 
+ // Everything begins from `onStart` handler. This handler is called every time,
+@@ -112,6 +114,7 @@ const KeyboardAwareScrollView = forwardRef<
+       extraKeyboardSpace = 0,
+       ScrollViewComponent = Reanimated.ScrollView,
+       snapToOffsets,
++      inverted = false,
+       ...rest
+     },
+     ref,
+@@ -425,8 +428,9 @@ const KeyboardAwareScrollView = forwardRef<
+         scrollEventThrottle={16}
+         onLayout={onScrollViewLayout}
+       >
++        {inverted ? (enabled && <Reanimated.View style={view} />) : null}
+         {children}
+-        {enabled && <Reanimated.View style={view} />}
++        {inverted ? null : (enabled && <Reanimated.View style={view} />)}
+       </ScrollViewComponent>
+     );
+   },

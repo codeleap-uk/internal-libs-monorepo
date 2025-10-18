@@ -96,7 +96,9 @@ export class QueryManager<T extends QueryItem, F> {
       queryFn: async (query) => {
         const listOffset = query?.pageParam ?? 0
 
-        return this.options?.listFn?.(listLimit, listOffset, filters)
+        const data = await this.options?.listFn?.(listLimit, listOffset, filters)
+
+        return TypeGuards.isArray(data) ? data : [] as ListPaginationResponse<T>
       },
 
       initialPageParam: 0,

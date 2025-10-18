@@ -1,7 +1,7 @@
 import { TextInput } from '../../components'
 import { DatePickerProps } from '../types'
 
-export const OuterInput: DatePickerProps['outerInputComponent'] = ({ hideInput, ...props }) => {
+export const OuterInput: DatePickerProps['outerInputComponent'] = ({ hideInput, onChange, value, ...props }) => {
   if (hideInput) {
     return null
   }
@@ -9,18 +9,9 @@ export const OuterInput: DatePickerProps['outerInputComponent'] = ({ hideInput, 
   return (
     <TextInput
       debugName='DatePicker - OuterInputComponent'
-      masking={{
-        type: 'custom',
-        options: {
-          mask: 'xx/xx/xxxx',
-          placeholder: props.placeholder,
-          formatChars: {
-            x: '[0123456789]',
-          },
-          maskChar: '',
-        },
-      }}
       {...props}
+      value={value}
+      onChangeText={onChange}
     />
   )
 }

@@ -9,7 +9,7 @@ export type PaginationButtonsProps =
   {
     onFetchNextPage?: AnyFunction
     onFetchPreviousPage?: AnyFunction
-    renderItem?: (item: string | number, index: number) => JSX.Element
+    renderItem?: (item: string | number, index: number) => React.ReactElement
     onPressItem?: (item: string | number) => void
     shouldAbbreviate?: boolean
     abbreviationSymbol?: string

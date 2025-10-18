@@ -13,7 +13,7 @@ export type ProgressCircleProps =
     circleStyles?: Parameters<typeof buildStyles>[0]
     children?: React.ReactNode
     size?: number
-    text?: string | JSX.Element
+    text?: string | React.ReactElement
     textProps?: Partial<TextProps>
     icon?: AppIcon
     iconProps?: Partial<IconProps>

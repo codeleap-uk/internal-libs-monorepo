@@ -11,7 +11,7 @@ export * from './types'
 export * from './context'
 export * from './useSectionFilters'
 
-const SectionComponent = memoBy((props: SectionComponentProps<TSectionFilterItem> & { renderWith: (props: SectionFilterComponentProps<TSectionFilterItem>) => JSX.Element }) => {
+const SectionComponent = memoBy((props: SectionComponentProps<TSectionFilterItem> & { renderWith: (props: SectionFilterComponentProps<TSectionFilterItem>) => React.ReactElement }) => {
   const { renderWith: Component, index } = props
 
   const handle = useSectionFiltersContext()

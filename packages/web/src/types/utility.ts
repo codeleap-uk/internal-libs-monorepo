@@ -1,5 +1,5 @@
 import { ICSS } from '@codeleap/styles'
-import React from 'react'
+import React, { JSX } from 'react'
 
 export type StylesOf<C extends string> = Partial<Record<C, ICSS>>
 
@@ -33,7 +33,7 @@ export type NativeHTMLElement = keyof ElementMap
 
 export type HTMLProps<T extends NativeHTMLElement> = ElementMap[T]
 
-export type ComponentWithDefaultProps<P> = ((props: P) => JSX.Element) & { defaultProps?: Partial<P> }
+export type ComponentWithDefaultProps<P> = ((props: P) => React.ReactElement) & { defaultProps?: Partial<P> }
 
 export type ComponentCommonProps = {
   debugName?: string

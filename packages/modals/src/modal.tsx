@@ -18,7 +18,7 @@ export type ModalParams<P = {}, Result = {}> = {
 
 type ModalRef = any
 
-type RenderModalContent<Params = {}, Result = {}> = (props: ModalParams<Params, Result>, ref: ModalRef) => JSX.Element
+type RenderModalContent<Params = {}, Result = {}> = (props: ModalParams<Params, Result>) => React.ReactElement
 
 type ModalConfig<P, M = { }> = {
   initialParams?: P | (() => Promise<P>)

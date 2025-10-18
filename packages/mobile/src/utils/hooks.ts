@@ -2,7 +2,7 @@ import { onUpdate, usePrevious, useRef, useState } from '@codeleap/hooks'
 import { shadeColor } from '@codeleap/utils'
 import { TypeGuards } from '@codeleap/types'
 import { Animated, Platform, BackHandler, ViewStyle, ImageStyle, TextStyle, StyleSheet, StyleProp } from 'react-native'
-import { AnimatedStyleProp, Easing, EasingFn, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import { AnimatedStyle, Easing, EasingFunction, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { PressableRippleProps } from '../modules/PressableRipple/type'
 import { useMemo } from 'react'
 import { mergeStyles } from '@codeleap/styles'
@@ -62,7 +62,7 @@ type AnimatableProperties = 'scale' | 'scaleX' | 'scaleY' | 'translateX' | 'tran
 type VariantTransitionConfig = {
   type: 'timing'
   duration?: number
-  easing?: EasingFn
+  easing?: EasingFunction
 }
 
 export type TransitionConfig = Partial<Record<AnimatableProperties, VariantTransitionConfig>> | VariantTransitionConfig
@@ -70,7 +70,7 @@ export type TransitionConfig = Partial<Record<AnimatableProperties, VariantTrans
 type UseAnimatedVariantStylesConfig<T extends Record<string|number|symbol, any>, K extends keyof T > = {
   variantStyles: T
   animatedProperties: K[]
-  updater: (states: SelectProperties<T, K>) => AnimatedStyleProp<ViewStyle | ImageStyle | TextStyle>
+  updater: (states: SelectProperties<T, K>) => AnimatedStyle<ViewStyle | ImageStyle | TextStyle>
   transition?: TransitionConfig
   dependencies?: any[]
 }
