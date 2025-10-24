@@ -5,7 +5,7 @@ import { EmptyPlaceholder } from '../EmptyPlaceholder'
 import { VirtualListItemsProps, VirtualListContainerProps } from './types'
 
 export function VirtualListItems<T>(props: VirtualListItemsProps<T>) {
-  const { renderItem: Item, FooterComponent = () => null } = props
+  const { renderItem: Item, ListFooterComponent = () => null } = props
 
   const virtualizer = useVirtualListContext(v => v.virtualizer)
   const listItems = useVirtualListContext(v => v.list.data)
@@ -43,7 +43,7 @@ export function VirtualListItems<T>(props: VirtualListItemsProps<T>) {
 
     if (isPaginationIndicator) {
       return <ItemWrapper key={item.key} item={item}>
-        <FooterComponent />
+        <ListFooterComponent />
       </ItemWrapper>
     }
 
@@ -51,7 +51,7 @@ export function VirtualListItems<T>(props: VirtualListItemsProps<T>) {
       <Item index={item.index} item={data} />
     </ItemWrapper>
 
-  }, [Item, ItemWrapper, listItems, FooterComponent, paginationIndicatorIndex])
+  }, [Item, ItemWrapper, listItems, ListFooterComponent, paginationIndicatorIndex])
 
   const containerStyle = useMemo(() => ({
     height: `${virtualizer.getTotalSize()}px`,

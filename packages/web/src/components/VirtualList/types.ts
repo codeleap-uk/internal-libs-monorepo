@@ -30,7 +30,7 @@ export type VirtualListContextValue<T> = {
 
 export type VirtualListItemsProps<T> = {
   renderItem: (data: VirtualListItem<T>) => ReactElement
-  FooterComponent?: () => ReactElement
+  ListFooterComponent?: () => ReactElement
 }
 
 export type VirtualListContainerProps = React.PropsWithChildren<React.ComponentPropsWithoutRef<'div'>> & {

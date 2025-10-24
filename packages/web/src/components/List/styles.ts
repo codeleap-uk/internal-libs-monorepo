@@ -1,11 +1,3 @@
+export type ListParts = 'wrapper' | 'list'
 
-type ListStates = 'empty' | 'loading'
-
-export type ListParts =
-  'wrapper' |
-  'innerWrapper' |
-  'separator' |
-  'refreshControl' |
-  'refreshControlIndicator'
-
-export type ListComposition = `${ListParts}:${ListStates}` | ListParts
+export type ListComposition = ListParts
