@@ -72,7 +72,7 @@ jobs:
           echo "update version code"
           export GPLAY=$(google-play get-latest-build-number --package-name ${{ inputs.package-name }} --credentials @file:apps/mobile/android/lib/keystores/playstore-credentials.json --verbose)
           
-          bun mobile updatePlayStoreVersion $GPLAY
+          bun mobile script:updatePlayStoreVersion $GPLAY
           cat apps/mobile/android/lib/version.json
       
       - name: Get version name
