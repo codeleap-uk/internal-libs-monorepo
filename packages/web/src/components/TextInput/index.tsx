@@ -1,12 +1,11 @@
 import { TypeGuards } from '@codeleap/types'
-import React, { forwardRef, useImperativeHandle } from 'react'
-import TextareaAutosize from 'react-autosize-textarea'
-import InputMask from 'react-input-mask'
+import React, { useImperativeHandle } from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 import { Touchable } from '../Touchable'
 import { InputBase, selectInputBaseProps } from '../InputBase'
 import { getTestId } from '../../lib/utils/test'
-import { InputRef, TextInputProps } from './types'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, StyledComponentWithProps } from '@codeleap/styles'
+import { TextInputProps } from './types'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { useTextInput } from './useTextInput'
@@ -14,9 +13,8 @@ import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyle
 
 export * from './types'
 export * from './styles'
-export * from './mask'
 
-export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) => {
+export const TextInput = (props: TextInputProps) => {
   const allProps = {
     ...TextInput.defaultProps,
     ...props,
@@ -37,6 +35,7 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     visibleIcon,
     hiddenIcon,
     focused,
+    ref: inputRef,
     ...textInputProps
   } = others as TextInputProps
 
@@ -44,13 +43,11 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
 
   const {
     isMultiline,
-    isMasked,
     isFocused: isInputFocused,
     secureTextEntry,
     handleBlur,
     handleFocus,
     handleChange,
-    maskProps,
     innerInputRef,
     wrapperRef,
     errorMessage,
@@ -70,28 +67,13 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
     focus: isFocused,
   })
 
-  const InputElement = isMasked ? InputMask : isMultiline ? TextareaAutosize : 'input'
+  const InputElement: any = isMultiline ? TextareaAutosize : 'input'
 
   const isPressable = TypeGuards.isFunction(onPress)
 
-  const focus = () => {
-    if (isMasked) {
-      // @ts-expect-error
-      innerInputRef.current?.getInputDOMNode()?.focus()
-    }
-
-    innerInputRef.current?.focus?.()
-  }
-
   useImperativeHandle(inputRef, () => {
-    return {
-      focus: () => focus(),
-      isTextInput: true,
-      getInputRef: () => {
-        return innerInputRef.current as unknown as HTMLInputElement
-      },
-    }
-  }, [!!innerInputRef?.current?.focus])
+    return innerInputRef?.current
+  }, [])
 
   const visibilityToggleProps = visibilityToggle ? {
     onPress: toggleSecureTextEntry,
@@ -149,8 +131,8 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
         {...buttonModeProps}
         {...secureTextProps}
         {...textInputProps}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
+        onBlur={handleBlur as any}
+        onFocus={handleFocus as any}
         css={[
           styles.input,
           isMultiline && styles['input:multiline'],
@@ -171,17 +153,16 @@ export const TextInput = forwardRef<InputRef, TextInputProps>((props, inputRef) 
               caretColorStyle,
             ],
           },
-        ]}
-        {...maskProps}
-        value={inputValue}
+        ] as any}
         onChange={handleChange}
         ref={innerInputRef}
+        value={inputValue}
         data-testid={testId}
       />
     </InputBase>
   )
 
-}) as StyledComponentWithProps<TextInputProps>
+}
 
 TextInput.styleRegistryName = 'TextInput'
 TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']
@@ -194,7 +175,6 @@ TextInput.withVariantTypes = <S extends AnyRecord>(styles: S) => {
 TextInput.defaultProps = {
   hiddenIcon: 'input-visiblity:hidden' as AppIcon,
   visibleIcon: 'input-visiblity:visible' as AppIcon,
-  masking: null,
 } as TextInputProps
 
 WebStyleRegistry.registerComponent(TextInput)

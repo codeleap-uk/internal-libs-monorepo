@@ -6,16 +6,16 @@ import { View, ViewProps } from 'react-native'
 type ActionIconProps = PropsOf<typeof ActionIcon>
 
 type OrderedParts = 'label' | 'description' | 'innerWrapper' | 'error'
-type IconProp = Partial<ActionIconProps> | JSX.Element
+type IconProp = Partial<ActionIconProps> | React.ReactElement
 
 export type InputBaseProps = React.PropsWithChildren<{
   label?: React.ReactNode
   error?: React.ReactNode
   leftIcon?: IconProp
   rightIcon?: IconProp
-  wrapper?: (props: any) => JSX.Element
+  wrapper?: (props: any) => React.ReactElement
   wrapperProps?: any
-  innerWrapper?: (props: any) => JSX.Element
+  innerWrapper?: (props: any) => React.ReactElement
   innerWrapperProps?: any
   description?: React.ReactNode
   debugName?: string

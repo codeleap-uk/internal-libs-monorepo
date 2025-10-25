@@ -18,7 +18,7 @@ import { useValidate } from '@codeleap/form'
 export * from './styles'
 export * from './types'
 
-const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => JSX.Element }) => {
+const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption) => React.ReactElement }) => {
   const {
     isSelected,
     optionsStyles,
@@ -59,7 +59,7 @@ const DefaultOption = (props: TCustomOption & { component: (props: TCustomOption
   )
 }
 
-const CustomMenu = (props: MenuProps & { Footer: () => JSX.Element }) => {
+const CustomMenu = (props: MenuProps & { Footer: () => React.ReactElement }) => {
   const { Footer, children } = props
   return <React.Fragment>
     <components.Menu {...props}>
@@ -89,7 +89,7 @@ const DefaultPlaceholder = (props: PlaceholderProps) => {
     if (TypeGuards.isString(TextPlaceholder)) {
       return <Text debugName={debugName} text={TextPlaceholder} style={defaultStyles.text} />
     } else if (React.isValidElement(TextPlaceholder)) {
-      return TextPlaceholder as JSX.Element
+      return TextPlaceholder as React.ReactElement
     } else if (TypeGuards.isFunction(TextPlaceholder)) {
       return <TextPlaceholder {...props} />
     }

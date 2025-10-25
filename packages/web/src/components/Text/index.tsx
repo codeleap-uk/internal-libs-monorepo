@@ -1,5 +1,5 @@
 import { TypeGuards } from '@codeleap/types'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import React, { ElementType, forwardRef } from 'react'
 import { TextProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
@@ -9,7 +9,7 @@ import { AnyRecord, IJSX, StyledComponentProps, StyledComponentWithProps } from 
 export * from './styles'
 export * from './types'
 
-export const Text = forwardRef<HTMLParagraphElement, TextProps>((textProps, ref) => {
+export const Text = (textProps: TextProps) => {
   const {
     style,
     text,
@@ -22,6 +22,7 @@ export const Text = forwardRef<HTMLParagraphElement, TextProps>((textProps, ref)
     onClick,
     animated,
     animatedProps,
+    ref,
     ...props
   } = {
     ...Text.defaultProps,
@@ -76,7 +77,7 @@ export const Text = forwardRef<HTMLParagraphElement, TextProps>((textProps, ref)
       {text || children}
     </Component>
   )
-}) as StyledComponentWithProps<TextProps>
+}
 
 Text.styleRegistryName = 'Text'
 Text.elements = ['text']

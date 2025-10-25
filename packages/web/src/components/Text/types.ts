@@ -1,7 +1,7 @@
-import { ComponentPropsWithoutRef, ElementType } from 'react'
+import { ComponentPropsWithoutRef, ElementType, RefObject } from 'react'
 import { TextComposition } from './styles'
 import { AnyRecord, StyledProp } from '@codeleap/styles'
-import { MotionProps } from 'framer-motion'
+import { MotionProps } from 'motion/react'
 
 export type TextProps<T extends ElementType = 'p'> =
   Omit<ComponentPropsWithoutRef<T>, 'style'> &
@@ -15,4 +15,5 @@ export type TextProps<T extends ElementType = 'p'> =
     onPress?: (event: React.MouseEventHandler<T>) => void
     animated?: boolean
     animatedProps?: Partial<MotionProps>
+    ref?: RefObject<HTMLParagraphElement | null>
   }

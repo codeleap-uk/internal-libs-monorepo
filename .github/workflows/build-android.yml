@@ -59,7 +59,10 @@ jobs:
         run: |
           mv keystores-android/* apps/mobile/android/app/keystores
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.23
 
       - name: Get latest google play version
         run: |

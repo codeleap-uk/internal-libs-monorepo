@@ -20,12 +20,12 @@ export type EmptyPlaceholderProps =
     itemName?: string
     title?: React.ReactElement | string
     description?: React.ReactElement | string
-    icon?: AppIcon | ((props: EmptyPlaceholderProps) => JSX.Element)
+    icon?: AppIcon | ((props: EmptyPlaceholderProps) => React.ReactElement)
     image?: string
     imageProps?: ImgHTMLAttributes<HTMLImageElement>
     loading?: boolean
     style?: StyledProp<EmptyPlaceholderComposition>
-    renderEmpty?: (props: RenderEmptyProps) => JSX.Element
+    renderEmpty?: (props: RenderEmptyProps) => React.ReactElement
     wrapperProps?: ViewProps
     imageWrapperProps?: ViewProps
     indicatorProps?: Partial<ActivityIndicatorProps>

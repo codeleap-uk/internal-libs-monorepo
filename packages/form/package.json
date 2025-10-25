@@ -24,7 +24,7 @@
     "@codeleap/store": "workspace:*",
     "@codeleap/logger": "workspace:*",
     "zod": "*",
-    "react": "18.2.0",
+    "react": "19.1.0",
     "typescript": "5.5.2"
   }
 }

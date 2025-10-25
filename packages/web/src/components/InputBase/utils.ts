@@ -1,6 +1,6 @@
 import { IconState, IconStyles, InputBaseKey, InputBaseProps, OmitDiff } from './types'
 
-export function selectInputBaseProps<T extends Omit<InputBaseProps, 'style'>>(props: T): {
+export function selectInputBaseProps<T extends Omit<InputBaseProps, 'style' | 'ref'>>(props: T): {
   inputBaseProps: InputBaseProps
   others: OmitDiff<T, T>
 } {

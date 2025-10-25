@@ -25,7 +25,7 @@ export type SelectRenderFNProps<T> = {
   text?: string
 }
 
-export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => JSX.Element
+export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => React.ReactElement
 
 type SelectModalProps = Omit<ModalProps, 'style'>
 
@@ -41,7 +41,7 @@ export type SelectOuterInputProps<T extends string | number = any, Multi extends
   clearIcon?: Partial<ActionIconProps>
 }
 
-type OuterInputComponent<T extends string | number, Multi extends boolean> = (props: SelectOuterInputProps<T, Multi>) => JSX.Element
+type OuterInputComponent<T extends string | number, Multi extends boolean> = (props: SelectOuterInputProps<T, Multi>) => React.ReactElement
 
 export type ValueBoundSelectProps<
   T extends string | number,

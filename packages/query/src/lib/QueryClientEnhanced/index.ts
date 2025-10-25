@@ -80,10 +80,17 @@ export class QueryClientEnhanced {
         switch (p) {
           case 'key':
             return key
+
           case 'getData':
             return () => {
               return client.client.getQueryData<T>(key)
             }
+            
+          case 'setData':
+            return (updater: T | ((old: T | undefined) => T)) => {
+              return client.client.setQueryData<T>(key, updater)
+            }
+
           default:
             break
         }
@@ -132,7 +139,7 @@ export class QueryClientEnhanced {
             }
 
           default:
-            return Reflect.get(query, p, receiver)
+            return Reflect.get(query, p, query)
         }
       },
     })
@@ -204,7 +211,7 @@ export class QueryClientEnhanced {
 
           const proxy = getClient().queryProxy<Data>(key)
 
-          return Reflect.get(proxy, p, receiver)
+          return Reflect.get(proxy, p, proxy)
         }
       },
     })
