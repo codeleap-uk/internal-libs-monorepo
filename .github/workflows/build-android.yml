@@ -96,7 +96,7 @@ jobs:
           key: ${{ steps.version.outputs.cache_key }}
 
       - name: Setup bun
-      - uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@v2
         if: steps.cache-artifacts.outputs.cache-hit != 'true'
         with:
           bun-version: 1.2.23
