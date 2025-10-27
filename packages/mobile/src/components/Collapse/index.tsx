@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { ViewProps } from 'react-native'
 import Animated, {
   Easing,
   useSharedValue,
@@ -71,7 +70,6 @@ export const Collapse = (props: CollapseProps) => {
 Collapse.styleRegistryName = 'Collapse'
 Collapse.elements = ['wrapper', 'content']
 Collapse.rootElement = 'wrapper'
-
 
 Collapse.withVariantTypes = <S extends AnyRecord>(styles: S) => {
   return Collapse as (props: StyledComponentProps<CollapseProps, typeof styles>) => IJSX
