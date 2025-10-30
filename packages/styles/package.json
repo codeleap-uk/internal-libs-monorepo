@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/styles",
-  "version": "5.8.21",
+  "version": "6.0.0",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {

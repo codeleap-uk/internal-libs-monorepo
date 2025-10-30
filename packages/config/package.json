@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/config",
-  "version": "5.8.21",
+  "version": "6.0.0",
   "main": "index.js",
   "license": "UNLICENSED",
   "repository": {
