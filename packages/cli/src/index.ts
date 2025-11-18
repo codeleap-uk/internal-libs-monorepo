@@ -10,6 +10,7 @@ import { convertorWebpCommand } from './commands/convertorWebp'
 import { configureThemeCommand } from './commands/configureTheme'
 import { linguiTranslateCommand } from './commands/linguiTranslate'
 import { configureSplashCommand } from './commands/configureSplash'
+import { createComponentCommand } from './commands/createComponent'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
@@ -17,9 +18,10 @@ const packageJson = require('../package.json')
 cli({
   name: 'codeleap',
   commands: [
-    generateReleaseKey, 
-    renameMobileCommand, 
-    createAppCommand, 
+    createComponentCommand,
+    generateReleaseKey,
+    renameMobileCommand,
+    createAppCommand,
     configureCommand,
     downloadKeystores,
     syncIconsCommand,
@@ -29,7 +31,6 @@ cli({
     configureSplashCommand,
   ],
   version: packageJson.version,
-
 })
 
-export {}
+export { }

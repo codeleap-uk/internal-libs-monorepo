@@ -1,5 +1,6 @@
 import { AnyRecord, IJSX } from './core'
 import { StyleProp, VariantStyleSheet } from './style'
+import React, { JSX } from 'react'
 
 export type PropsWithVariants<Props extends AnyRecord, VariantStyles extends AnyRecord> = Omit<Props, 'style'> & {
   style?: StyleProp<

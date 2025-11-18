@@ -1,6 +1,6 @@
 import React from 'react'
 import { onUpdate, useCallback } from '@codeleap/hooks'
-import { BubbleMenu, FloatingMenu, EditorContent } from '@tiptap/react'
+// import { BubbleMenu, FloatingMenu, EditorContent } from '@tiptap/react'
 import { FileInput, Text, View } from '../components'
 import { TextEditorProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
@@ -49,25 +49,27 @@ export const TextEditor = (props: TextEditorProps) => {
   }, [editor, handleBlur, handleFocus])
 
   const _BubbleMenu = useCallback(() => {
-    return (
-      // @ts-expect-error icss type
-      <BubbleMenu css={[styles.bubbleMenu]} {...bubbleMenuProps} editor={editor}>
-        <View style={styles.bubbleMenuInnerWrapper}>
-          {bubbleMenuProps?.renderContent}
-        </View>
-      </BubbleMenu>
-    )
+    return null
+    // return (
+    //   // @ts-expect-error icss type
+    //   <BubbleMenu css={[styles.bubbleMenu]} {...bubbleMenuProps} editor={editor}>
+    //     <View style={styles.bubbleMenuInnerWrapper}>
+    //       {bubbleMenuProps?.renderContent}
+    //     </View>
+    //   </BubbleMenu>
+    // )
   }, [editor])
 
   const _FloatingMenu = useCallback(() => {
-    return (
-      // @ts-expect-error icss type
-      <FloatingMenu css={[styles.floatingMenu]} {...floatingMenuProps} editor={editor}>
-        <View style={styles.floatingMenuInnerWrapper}>
-          {floatingMenuProps?.renderContent}
-        </View>
-      </FloatingMenu>
-    )
+    return null
+    // return (
+    //   // @ts-expect-error icss type
+    //   <FloatingMenu css={[styles.floatingMenu]} {...floatingMenuProps} editor={editor}>
+    //     <View style={styles.floatingMenuInnerWrapper}>
+    //       {floatingMenuProps?.renderContent}
+    //     </View>
+    //   </FloatingMenu>
+    // )
   }, [editor])
 
   const editorStyles = [
@@ -92,7 +94,7 @@ export const TextEditor = (props: TextEditorProps) => {
       {children}
       <_BubbleMenu />
       <_FloatingMenu />
-      <EditorContent editor={editor} />
+      {/* <EditorContent editor={editor} /> */}
       {validation?.showError ? <Text text={validation?.message as string} style={styles['errorMessage:error']} /> : null}
       <FileInput ref={fileInputRef} />
     </View>

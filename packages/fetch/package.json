@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/fetch",
-  "version": "5.8.3",
+  "version": "6.0.1",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {

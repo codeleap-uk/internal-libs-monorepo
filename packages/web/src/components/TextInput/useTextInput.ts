@@ -1,7 +1,6 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useState } from 'react'
 import { TextInputProps } from './types'
 import { TypeGuards } from '@codeleap/types'
-import { getMaskInputProps } from './mask'
 import { useInputBase } from '../InputBase/useInputBase'
 import { fields } from '@codeleap/form'
 
@@ -10,11 +9,11 @@ export function useTextInput(props: Partial<TextInputProps>) {
     onFocus,
     onBlur,
     field,
-    masking,
     multiline: isMultiline,
     forceError,
     value,
     onValueChange,
+    onChangeText,
     rows: providedRows,
   } = props
 
@@ -24,12 +23,6 @@ export function useTextInput(props: Partial<TextInputProps>) {
 
   const toggleSecureTextEntry = () => setSecureTextEntry(s => !s)
 
-  const isMasked = !TypeGuards.isNil(masking)
-
-  const maskProps = useMemo(() => {
-    return isMasked ? getMaskInputProps({ masking }) : null
-  }, [masking])
-
   const {
     fieldHandle,
     validation,
@@ -37,7 +30,11 @@ export function useTextInput(props: Partial<TextInputProps>) {
     wrapperRef,
     onInputValueChange,
     inputValue,
-  } = useInputBase<string>(field, fields.text, { value, onValueChange }, {
+  } = useInputBase<string>(
+    field,
+    fields.text,
+    { value, onValueChange: onValueChange ?? onChangeText as any },
+    {
     revealValue() {
       setSecureTextEntry(false)
     },
@@ -61,14 +58,10 @@ export function useTextInput(props: Partial<TextInputProps>) {
   }, [onFocus])
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    if (TypeGuards.isFunction(onChangeText)) return onChangeText(event)
     const inputValue = event?.target?.value
-
-    const value = isMasked && maskProps?.notSaveFormatted
-      ? maskProps?.getRawValue(inputValue)
-      : inputValue
-
-    onInputValueChange(value)
-  }, [onInputValueChange])
+    onInputValueChange(inputValue)
+  }, [onInputValueChange, onChangeText])
 
   const rows = providedRows ?? (isMultiline ? 2 : undefined)
 
@@ -79,9 +72,7 @@ export function useTextInput(props: Partial<TextInputProps>) {
   const errorMessage = validation?.message || forceError
 
   return {
-    maskProps,
     isMultiline,
-    isMasked,
     isFocused,
     secureTextEntry,
     handleBlur,

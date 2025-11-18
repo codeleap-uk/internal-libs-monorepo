@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/mobile",
-  "version": "5.8.3",
+  "version": "6.0.1",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -31,21 +31,21 @@
     "@codeleap/logger": "workspace:*",
     "@codeleap/styles": "workspace:*",
     "@codeleap/modals": "workspace:*",
-    "@d11/react-native-fast-image": "8.9.2",
-    "@react-native-firebase/messaging": "21.12.0",
-    "@react-navigation/bottom-tabs": "7.3.10",
-    "@react-navigation/native": "7.1.6",
-    "@react-navigation/native-stack": "7.3.10",
-    "react": "18.2.0",
-    "react-native": "0.77.1",
-    "react-native-calendars": "1.1310.0",
+    "@d11/react-native-fast-image": "8.12.0",
+    "@react-native-firebase/messaging": "23.4.1",
+    "@react-navigation/bottom-tabs": "7.4.9",
+    "@react-navigation/native": "7.1.18",
+    "@react-navigation/native-stack": "7.3.28",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-calendars": "1.1313.0",
     "react-native-date-picker": "5.0.10",
-    "react-native-device-info": "14.0.4",
-    "react-native-gesture-handler": "2.24.0",
-    "react-native-image-crop-picker": "0.42.0",
+    "react-native-device-info": "14.1.1",
+    "react-native-gesture-handler": "2.28.0",
+    "react-native-image-crop-picker": "0.51.0",
     "react-native-image-viewing": "0.2.2",
-    "react-native-localize": "3.4.1",
-    "react-native-mmkv": "3.2.0",
+    "react-native-localize": "3.5.2",
+    "react-native-mmkv": "3.3.3",
     "react-native-super-grid": "4.6.1",
     "typescript": "5.5.2"
   },
@@ -56,6 +56,6 @@
     "react-native-masked-text": "1.13.0",
     "react-native-reanimated-carousel": "4.0.2",
     "react-native-sortables": "1.1.1",
-    "react-native-uuid": "2.0.1"
+    "react-native-uuid": "2.0.3"
   }
 }

@@ -88,6 +88,7 @@ export function Pager<T>(props: PagerProps<T>) {
 
   return (
     <View style={[{ width, opacity: !loaded ? 0 : 1 }, styles.wrapper]}>
+      {/* @ts-ignore */}
       <Carousel
         data={pages}
         autoPlay={false}

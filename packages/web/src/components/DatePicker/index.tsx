@@ -1,11 +1,13 @@
 import { useCallback, useConditionalState } from '@codeleap/hooks'
 import { View } from '../components'
 import { DatePickerProps } from './types'
-import ReactDatePicker from 'react-datepicker'
+import { DatePicker as ReactDatePicker } from 'react-datepicker'
 import { DayContent, Header, OuterInput, YearContent } from './components'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
 import { AnyRecord, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import { useInputBase } from '../InputBase/useInputBase'
+import { fields } from '@codeleap/form'
 
 export * from './styles'
 export * from './types'
@@ -16,6 +18,7 @@ export function DatePicker(props: DatePickerProps) {
     hideInput,
     value,
     onValueChange,
+    field,
     style,
     defaultValue,
     outerInputComponent: OuterInputComponent,
@@ -47,44 +50,49 @@ export function DatePicker(props: DatePickerProps) {
   const [visible, toggle] = useConditionalState(providedVisible, providedToggle, { initialValue: false })
   const [yearShow, setYearShow] = useConditionalState(providedYearShow, providedSetYearShow, { initialValue: false })
 
+  const {
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(field, fields.date, { value, onValueChange })
+
   const DayContentComponent = useCallback(({ day, date }) => {
     return (
       <DayContent
         day={day}
         date={date}
         {...providedDayProps}
-        value={value}
+        value={inputValue}
         minDate={minDate}
         maxDate={maxDate}
         component={dayComponent}
         styles={styles}
       />
     )
-  }, [value])
+  }, [inputValue])
 
   const YearContentComponent = useCallback(({ year }) => {
     return (
       <YearContent
         year={year}
         {...providedYearProps}
-        value={value}
+        value={inputValue}
         component={yearComponent}
         styles={styles}
       />
     )
-  }, [value])
+  }, [inputValue])
 
   return (
     <View style={styles.wrapper}>
       <ReactDatePicker
-        onChange={onValueChange}
+        onChange={(date) => onInputValueChange(date as any)}
+        selected={inputValue}
         open={visible}
-        selected={value}
         todayButton={null}
         shouldCloseOnSelect={false}
-        openToDate={defaultValue ?? value}
+        openToDate={defaultValue ?? inputValue}
         dateFormat='dd/MM/yyyy'
-        formatWeekDay={(t) => t[0]}
+        formatWeekDay={(day) => day.charAt(0)}
         calendarStartDay={1}
         placeholderText={otherProps?.placeholder}
         disabled={disabled}
@@ -130,7 +138,7 @@ export function DatePicker(props: DatePickerProps) {
           if (date.getFullYear() < startDate.getFullYear() || date.getFullYear() > maxDate.getFullYear()) return false
           return true
         }}
-        {...datePickerProps}
+        {...datePickerProps as any}
       />
     </View>
   )

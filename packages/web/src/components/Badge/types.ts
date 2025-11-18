@@ -15,7 +15,7 @@ export type BadgeProps =
     innerWrapperProps?: Partial<ViewProps>
     textProps?: Partial<TextProps>
     getBadgeContent?: (props: BadgeContent) => string
-    renderBadgeContent?: (props: BadgeContent & { content: string }) => JSX.Element
+    renderBadgeContent?: (props: BadgeContent & { content: string }) => React.ReactElement
     disabled?: boolean
     badge?: number | boolean
   }

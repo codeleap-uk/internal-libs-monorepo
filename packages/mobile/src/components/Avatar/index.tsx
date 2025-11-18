@@ -1,39 +1,23 @@
 import React from 'react'
-import { TypeGuards } from '@codeleap/types'
-import { useMemo } from '@codeleap/hooks'
-import { matchInitialToColor } from '@codeleap/utils'
-import { Image } from '../Image'
-import { Touchable } from '../Touchable'
-import { Text } from '../Text'
-import { View, ViewProps } from '../View'
-import { Icon } from '../Icon'
-import { Badge } from '../Badge'
 import { AvatarProps } from './types'
 import { MobileStyleRegistry } from '../../Registry'
-import { AnyRecord, useNestedStylesByKey, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
+import { AvatarContext } from './context'
+import { AvatarContent } from './components/Content'
 import { useStylesFor } from '../../hooks'
+import { AvatarIllustration } from './components/Illustration'
+import { AvatarText } from './components/Text'
+import { AvatarBadge } from './components/Badge'
+import { AvatarOverlayIcon } from './components/OverlayIcon'
 
 export * from './styles'
 export * from './types'
 
 export const Avatar = (props: AvatarProps) => {
   const {
-    debugName,
-    name = '',
-    firstNameOnly,
-    image,
-    icon,
-    badgeIcon,
-    text,
-    description,
-    onPress,
-    noFeedback,
-    badge,
-    badgeProps = {},
-    imageProps,
-    badgeIconTouchProps,
+    children,
     style,
-    ...viewProps
+    ...contextValue
   } = {
     ...Avatar.defaultProps,
     ...props,
@@ -41,79 +25,31 @@ export const Avatar = (props: AvatarProps) => {
 
   const styles = useStylesFor(Avatar.styleRegistryName, style)
 
-  const hasImage = !!image
-
-  const { initials, randomColor } = useMemo(() => {
-    const [first = '', last = ''] = TypeGuards.isString(name) ? name.split(' ') : name
-    const initials = [first[0]]
-    
-    if (!firstNameOnly) initials.push(last[0])
-
-    return {
-      initials: initials?.join(' '),
-      randomColor: matchInitialToColor(first[0]),
-    }
-  }, [name, firstNameOnly])
-
-  const renderContent = () => {
-    if (hasImage) return <Image source={image} {...imageProps} style={styles.image} />
-    if (icon) return <Icon name={icon} style={styles.icon} />
-    return <Text text={text || initials} style={styles.initials} />
-  }
-
-  // @ts-expect-error icss type
-  const hasBackgroundColor = !!styles?.touchable?.backgroundColor
-
-  const badgeStyles = useNestedStylesByKey('badge', styles)
-
   return (
-    <View {...viewProps as ViewProps} style={styles.wrapper}>
-      <Touchable
-        debugName={'Avatar:' + debugName}
-        onPress={() => onPress?.()}
-        style={[
-          styles.touchable,
-          !hasBackgroundColor && { backgroundColor: randomColor },
-        ]}
-        noFeedback={noFeedback || !onPress}
-      >
-        {renderContent()}
-
-        {!!description ? (
-          <View style={styles.descriptionOverlay}>
-            <Text text={description} style={styles.description} />
-          </View>
-        ) : null}
-
-        <Badge badge={badge} {...badgeProps} style={badgeStyles} />
-      </Touchable>
-
-      {badgeIcon ? (
-        <Touchable
-          onPress={() => onPress?.()}
-          noFeedback
-          {...badgeIconTouchProps}
-          debugName={`AvatarBadge:${debugName}`}
-          style={styles.badgeIconWrapper}
-        >
-          <Icon name={badgeIcon} style={styles.badgeIcon} />
-        </Touchable>
-      ) : null}
-    </View>
+    <AvatarContext.Provider value={{ ...contextValue, styles }}>
+      <AvatarContent>
+        {children}
+      </AvatarContent>
+    </AvatarContext.Provider>
   )
 }
 
 Avatar.styleRegistryName = 'Avatar'
-Avatar.elements = ['wrapper', 'touchable', 'initials', 'image', 'icon', 'description', 'badge']
+Avatar.elements = ['wrapper', 'text', 'image', 'icon', 'overlayIcon', 'badge']
 Avatar.rootElement = 'wrapper'
 
+Avatar.Illustration = AvatarIllustration
+Avatar.Text = AvatarText
+Avatar.Badge = AvatarBadge
+Avatar.OverlayIcon = AvatarOverlayIcon
+
 Avatar.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Avatar as (props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX
+  return Avatar as ((props: StyledComponentProps<AvatarProps, typeof styles>) => IJSX) & Pick<typeof Avatar, 'Text' | 'Illustration' | 'Badge' | 'OverlayIcon'>
 }
 
 Avatar.defaultProps = {
   badge: false,
-  firstNameOnly: true,
-} as AvatarProps
+  firstNameOnly: false,
+} as Partial<AvatarProps>
 
 MobileStyleRegistry.registerComponent(Avatar)

@@ -17,7 +17,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 export * from './styles'
 export * from './types'
 
-export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref) => {
+export const CropPicker = (props: CropPickerProps) => {
   const {
     onFileSelect,
     targetCrop,
@@ -29,6 +29,7 @@ export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref)
     withLoading,
     style,
     confirmButtonProps,
+    ref,
     ...fileInputProps
   } = {
     ...CropPicker.defaultProps,
@@ -87,7 +88,7 @@ export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref)
           >
             <img
               src={image?.src}
-              // @ts-expect-error
+              // @ts-ignore
               css={[styles.cropPreview, styles.previewSize]}
             />
           </ReactCrop>
@@ -96,7 +97,7 @@ export const CropPicker = forwardRef<FileInputRef, CropPickerProps>((props, ref)
       </Modal>
     </>
   )
-}) as StyledComponentWithProps<CropPickerProps>
+}
 
 CropPicker.styleRegistryName = 'CropPicker'
 CropPicker.elements = ['previewSize', 'cropPreview', 'confirmButton', 'modal']

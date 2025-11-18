@@ -8,7 +8,7 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "node ./scripts/postInstall.js && bun run patch-package",
+    "postinstall": "bun mobile script:generateLicense",
     "build": "turbo run build",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
@@ -62,15 +62,18 @@
     "ts-node-dev": "1.1.8",
     "typedoc": "0.25.1",
     "typedoc-json-parser": "^8.2.0",
-    "typescript": "5.0.4"
+    "typescript": "5.5.2"
   },
   "engines": {
     "npm": ">=7.0.0",
     "node": ">=14.0.0"
   },
   "packageManager": "bun@1.1.33",
+  "resolutions": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
   "patchedDependencies": {
-    "@boterop/react-native-background-timer@2.5.2": "patches/@boterop%2Freact-native-background-timer@2.5.2.patch",
-    "react-native-keyboard-controller@1.16.5": "patches/react-native-keyboard-controller@1.16.5.patch"
+    "react-native-keyboard-controller@1.19.0": "patches/react-native-keyboard-controller@1.19.0.patch"
   }
 }

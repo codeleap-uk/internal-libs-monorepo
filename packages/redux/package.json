@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/redux",
-  "version": "5.8.3",
+  "version": "6.0.1",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -21,7 +21,7 @@
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "typescript": "5.5.2",
-    "react": "18.2.0"
+    "react": "19.1.0"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.1"

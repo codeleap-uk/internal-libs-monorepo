@@ -2,7 +2,7 @@ import { CollapseProps } from './types'
 import { useStylesFor } from '../../lib/hooks/useStylesFor'
 import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
 import { WebStyleRegistry } from '../../lib/WebStyleRegistry'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 export * from './styles'
 export * from './types'

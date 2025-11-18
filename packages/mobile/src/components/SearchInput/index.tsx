@@ -1,12 +1,12 @@
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useCallback, useState } from 'react'
 import { AppIcon } from '@codeleap/styles'
-import { ComponentWithDefaultProps, ForwardRefComponentWithDefaultProps } from '../../types'
+import { ForwardRefComponentWithDefaultProps } from '../../types'
 import { TextInputProps, TextInput } from '../TextInput'
 import { TypeGuards } from '@codeleap/types'
-import { TextInput  as RNTextInput } from 'react-native'
+import { TextInput as RNTextInput } from 'react-native'
 
 export type SearchInputProps = {
-  onTypingChange: (isTyping: boolean) => void
+  onTypingChange?: (isTyping: boolean) => void
   onSearchChange: (search: string) => void
   onValueChange?: (search: string) => void
   onClear?: () => void
@@ -18,7 +18,11 @@ export type SearchInputProps = {
   placeholder?: string
 } & Partial<TextInputProps>
 
-export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, RNTextInput> = forwardRef((props, ref) => {
+type Component = React.ForwardRefExoticComponent<SearchInputProps> & {
+  defaultProps?: Partial<SearchInputProps>
+}
+
+export const SearchInput: Component = forwardRef((props: SearchInputProps, ref) => {
   const {
     debugName,
     onClear,
@@ -41,7 +45,9 @@ export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, 
 
   const setSearchTimeout = React.useRef<NodeJS.Timer | null>(null)
 
-  const handleChangeSearch = (value: string) => {
+  const handleChangeSearch = useCallback((value: string) => {
+    onTypingChange?.(true)
+
     setSearch(value)
 
     if (TypeGuards.isNil(debounce)) {
@@ -49,29 +55,26 @@ export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, 
     } else {
       if (setSearchTimeout.current) {
         clearTimeout(setSearchTimeout.current)
+        setSearchTimeout.current = null
       }
 
       setSearchTimeout.current = setTimeout(() => {
-
         onSearchChange(value)
         onTypingChange?.(false)
       }, debounce ?? 0)
     }
-  }
+  }, [onSearchChange, onTypingChange])
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     setSearch('')
     onSearchChange?.('')
     onClear?.()
-  }
+  }, [])
 
   return (
     <TextInput
       value={search}
-      onValueChange={(value) => {
-        onTypingChange?.(true)
-        handleChangeSearch(value)
-      }}
+      onValueChange={handleChangeSearch}
       placeholder={placeholder}
       debugName={`Search ${debugName}`}
       rightIcon={(showClear?.(search) ?? true) && {
@@ -81,14 +84,14 @@ export const SearchInput: ForwardRefComponentWithDefaultProps<SearchInputProps, 
       leftIcon={{
         name: searchIcon,
       }}
-      ref={ref}
+      ref={ref as any}
       {...others}
     />
   )
 })
 
 SearchInput.defaultProps = {
-  debounce: null,
+  debounce: 500,
   clearIcon: 'x' as AppIcon,
   searchIcon: 'search' as AppIcon,
   showClear: (s) => !!s?.trim?.()

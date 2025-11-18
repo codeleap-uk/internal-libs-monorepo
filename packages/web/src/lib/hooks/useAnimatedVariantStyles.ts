@@ -1,4 +1,4 @@
-import { AnimationProps } from 'framer-motion'
+import { TargetAndTransition } from 'motion/react'
 import { SelectProperties } from '../../types'
 import { useStaticAnimationStyles } from './useStaticAnimationStyles'
 import { useState, useEffect } from 'react'
@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 type UseAnimatedVariantStylesConfig<T extends Record<string | number | symbol, any>, K extends keyof T> = {
   variantStyles: T
   animatedProperties: K[]
-  updater: (states: SelectProperties<T, K>) => AnimationProps
+  updater: (states: SelectProperties<T, K>) => TargetAndTransition
   dependencies?: any[]
 }
 

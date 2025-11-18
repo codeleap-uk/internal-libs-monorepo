@@ -1,5 +1,5 @@
 import { AnyFunction } from '@codeleap/types'
-import { ComponentPropsWithRef, ElementType } from 'react'
+import { ComponentPropsWithRef, ElementType, ReactNode } from 'react'
 import { TouchableComposition } from './styles'
 import { AnyRecord, StyledProp } from '@codeleap/styles'
 
@@ -19,4 +19,5 @@ export type TouchableProps<T extends ElementType = 'button'> =
     analyticsEnabled?: boolean
     analyticsName?: string
     analyticsData?: Record<string, any>
+    children?: ReactNode
   }

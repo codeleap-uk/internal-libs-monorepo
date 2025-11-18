@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/styles",
-  "version": "5.8.3",
+  "version": "6.0.1",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -16,8 +16,8 @@
     "build": "echo 'No build needed'"
   },
   "peerDependencies": {
-    "react": "18.2.0",
-    "typescript": "5.0.4"
+    "react": "19.1.0",
+    "typescript": "5.5.2"
   },
   "dependencies": {
     "@fastify/deepmerge": "3.1.0",

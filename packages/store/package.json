@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/store",
-  "version": "5.8.3",
+  "version": "6.0.1",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -17,7 +17,7 @@
   },
   "peerDependencies": {
     "typescript": "5.5.2",
-    "react": "18.2.0",
+    "react": "19.1.0",
     "nanostores": "*",
     "@nanostores/react": "*",
     "@nanostores/persistent": "*"

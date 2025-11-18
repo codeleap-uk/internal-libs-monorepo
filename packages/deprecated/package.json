@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/deprecated",
-  "version": "5.8.3",
+  "version": "6.0.1",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
@@ -19,13 +19,17 @@
   "scripts": {
     "build": "echo 'No build needed'"
   },
+  "dependencies": {
+    "immer": "10.1.1"
+  },
   "peerDependencies": {
     "@codeleap/types": "workspace:*",
     "@codeleap/utils": "workspace:*",
     "@codeleap/hooks": "workspace:*",
     "@codeleap/i18n": "workspace:*",
-    "react": "18.2.0",
+    "react": "19.1.0",
     "typescript": "5.5.2",
-    "yup": "1.6.1"
+    "yup": "1.6.1",
+    "@tanstack/react-query": "5.89.0"
   }
 }

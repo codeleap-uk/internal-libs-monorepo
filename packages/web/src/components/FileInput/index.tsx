@@ -5,20 +5,21 @@ import { FileInputProps, FileInputRef } from './types'
 
 export * from './types'
 
-export const FileInput = forwardRef<FileInputRef, FileInputProps>((props, ref) => {
+export const FileInput = (props: FileInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const {
     onFileSelect,
     autoClear,
     onChange,
+    ref,
     ...inputProps
   } = {
     ...FileInput.defaultProps,
     ...props,
   }
 
-  const resolveWithFile = useRef<(file: WebInputFile[]) => any>()
+  const resolveWithFile = useRef<(file: WebInputFile[]) => any>(undefined)
 
   const clearInput = useCallback(() => {
     if (!inputRef.current) return
@@ -66,7 +67,7 @@ export const FileInput = forwardRef<FileInputRef, FileInputProps>((props, ref) =
       onChange={handleChange}
     />
   )
-})
+}
 
 FileInput.defaultProps = {
   autoClear: true,

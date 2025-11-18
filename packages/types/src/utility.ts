@@ -5,6 +5,8 @@ export type AnyFunction = (...args: any[]) => any
 
 export type AnyRecord = Record<string, any>
 
+export type StringRecord = Record<string, string>
+
 export type ReadOnly<T> = {
   readonly [Property in keyof T]: T[Property];
 }
@@ -125,3 +127,7 @@ export type Options<T> = { label: string; value: T }[]
 export type Option<T> = Options<T>[number]
 
 export type Label = string | ReactNode
+
+export type ValueOf<T> = T[keyof T]
+
+export type Keyof<T> = keyof T

@@ -3,7 +3,7 @@ import { PageProps } from './types'
 import { TypeGuards } from '@codeleap/types'
 
 type PagerItemComponentProps = PageProps<any> & {
-  renderItem: (props: any) => JSX.Element
+  renderItem: (props: any) => React.ReactElement
 }
 
 function PagerItemComponent(props: PagerItemComponentProps) {

@@ -30,10 +30,10 @@ export function Sections<T>(sectionsProps: SectionProps<T>) {
     fakeEmpty = loading,
     contentContainerStyle,
     refreshControl,
-    renderItem: RenderItem,
+    renderItem: providedRenderItem,
     sections: data,
-    renderSectionHeader: RenderSectionHeader,
-    renderSectionFooter: RenderSectionFooter,
+    renderSectionHeader: providedRenderSectionHeader,
+    renderSectionFooter: providedRenderSectionFooter,
     ...props
   } = {
     ...Sections.defaultProps,
@@ -67,23 +67,23 @@ export function Sections<T>(sectionsProps: SectionProps<T>) {
   }
 
   const renderSectionHeader = useCallback((data: SectionRenderComponentProps<T>) => {
-    if (!RenderSectionHeader) return null
+    if (!providedRenderSectionHeader) return null
 
     const positionProps = getSectionProps(data)
 
-    return <RenderSectionHeader {...data.section} {...positionProps} />
-  }, [RenderSectionHeader, sections?.length])
+    return providedRenderSectionHeader({ ...data.section, ...positionProps })
+  }, [providedRenderSectionHeader, sections?.length])
 
   const renderSectionFooter = useCallback((data: SectionRenderComponentProps<T>) => {
-    if (!RenderSectionFooter) return null
+    if (!providedRenderSectionFooter) return null
 
     const positionProps = getSectionProps(data)
 
-    return <RenderSectionFooter {...data.section} {...positionProps} />
-  }, [RenderSectionFooter, sections?.length])
+    return providedRenderSectionFooter({ ...data.section, ...positionProps })
+  }, [providedRenderSectionFooter, sections?.length])
 
   const renderItem = useCallback((data: AugmentedSectionRenderItemInfo<T>) => {
-    if (!RenderItem) return null
+    if (!providedRenderItem) return null
 
     const listLength = data?.section?.data?.length || 0
 
@@ -91,15 +91,13 @@ export function Sections<T>(sectionsProps: SectionProps<T>) {
     const isLast = data?.index === listLength - 1
     const isOnly = isFirst && isLast
 
-    return (
-      <RenderItem
-        {...data}
-        isFirst={isFirst}
-        isLast={isLast}
-        isOnly={isOnly}
-      />
-    )
-  }, [RenderItem])
+    return providedRenderItem({
+      ...data,
+      isFirst,
+      isLast,
+      isOnly,
+    })
+  }, [providedRenderItem])
 
   const isEmpty = !sections || !sections?.length
 
@@ -120,13 +118,13 @@ export function Sections<T>(sectionsProps: SectionProps<T>) {
   return (
     <SectionList
       ItemSeparatorComponent={separator}
-      refreshControl={!!onRefresh && (
+      refreshControl={TypeGuards.isFunction(onRefresh) ? (
         <RefreshControl
           refreshing={refreshing}
           onRefresh={onRefresh}
           {...refreshControlProps}
         />
-      )}
+      ) : null}
       ListEmptyComponent={<EmptyPlaceholder {..._placeholder} />}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef, useImperativeHandle } from 'react'
 import { TypeGuards } from '@codeleap/types'
 import { TextInput as NativeTextInput } from 'react-native'
 import { InputBase, selectInputBaseProps } from '../InputBase'
@@ -14,7 +14,7 @@ import { useInputBasePartialStyles } from '../InputBase/useInputBasePartialStyle
 export * from './styles'
 export * from './types'
 
-export const TextInput = (props: TextInputProps) => {
+export const TextInput = forwardRef<NativeTextInput, TextInputProps>((props, ref) => {
   const allProps = {
     ...TextInput.defaultProps,
     ...props,
@@ -63,6 +63,14 @@ export const TextInput = (props: TextInputProps) => {
     handleBlur,
     handleFocus,
   } = useTextInput(allProps)
+
+  useImperativeHandle(ref, () => {
+    if (!innerInputRef.current) return null
+
+    return {
+      ...innerInputRef.current,
+    } as NativeTextInput
+  })
   
   const InputElement = masking ? MaskedTextInput : NativeTextInput
 
@@ -154,7 +162,7 @@ export const TextInput = (props: TextInputProps) => {
       {...maskingExtraProps}
     />
   </InputBase>
-}
+}) as StyledComponentWithProps<TextInputProps>
 
 TextInput.styleRegistryName = 'TextInput'
 TextInput.elements = [...InputBase.elements, 'input', 'placeholder', 'selection']

@@ -55,11 +55,14 @@ jobs:
           token: ${{ secrets.personal_access_token }}
           path: keystores-android
 
-      - name: Move credentials to apps/mobile/android/app/keystores
+      - name: Move credentials to apps/mobile/android/lib/keystores
         run: |
-          mv keystores-android/* apps/mobile/android/app/keystores
+          mv keystores-android/* apps/mobile/android/lib/keystores
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.23
 
       - name: Get latest google play version
         run: |
@@ -67,16 +70,16 @@ jobs:
           pip3 install pyOpenSSL==24.2.1 --upgrade
 
           echo "update version code"
-          export GPLAY=$(google-play get-latest-build-number --package-name ${{ inputs.package-name }} --credentials @file:apps/mobile/android/app/keystores/playstore-credentials.json --verbose)
+          export GPLAY=$(google-play get-latest-build-number --package-name ${{ inputs.package-name }} --credentials @file:apps/mobile/android/lib/keystores/playstore-credentials.json --verbose)
           
-          bun mobile updatePlayStoreVersion $GPLAY
-          cat apps/mobile/android/app/version.json
+          bun mobile script:updatePlayStoreVersion $GPLAY
+          cat apps/mobile/android/lib/version.json
       
       - name: Get version name
         id: version
         run: |
-          VERSION_NAME=$(cat apps/mobile/android/app/version.json | jq -r '.name')
-          VERSION_CODE=$(cat apps/mobile/android/app/version.json | jq -r '.code')
+          VERSION_NAME=$(cat apps/mobile/android/lib/version.json | jq -r '.name')
+          VERSION_CODE=$(cat apps/mobile/android/lib/version.json | jq -r '.code')
           version_name="v${VERSION_NAME}-${VERSION_CODE}"
           echo "version_name=$version_name" >> "$GITHUB_OUTPUT"
           echo "apk_path="app-$version_name.apk"" >> "$GITHUB_OUTPUT"
@@ -92,8 +95,11 @@ jobs:
             ${{ steps.version.outputs.aab_path }}
           key: ${{ steps.version.outputs.cache_key }}
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
         if: steps.cache-artifacts.outputs.cache-hit != 'true'
+        with:
+          bun-version: 1.2.23
 
       - name: Install dependencies
         if: steps.cache-artifacts.outputs.cache-hit != 'true'

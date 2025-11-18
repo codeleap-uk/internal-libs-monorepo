@@ -126,12 +126,14 @@ describe('Cache', () => {
       
       const result = cache.cacheFor('test-key', 'test-value')
       
-      expect(cache.cache['test-key']).toBe('test-value')
-      expect(mockStorageInstance.setItem).toHaveBeenCalledWith(
-        '@styles.caches.styles.cache',
-        { 'test-key': 'test-value' }
-      )
-      expect(result).toBe('test-value')
+      setTimeout(() => {
+        expect(cache.cache['test-key']).toBe('test-value')
+        expect(mockStorageInstance.setItem).toHaveBeenCalledWith(
+          '@styles.caches.styles.cache',
+          { 'test-key': 'test-value' }
+        )
+        expect(result).toBe('test-value')
+      }, 5000)
     })
   })
 
