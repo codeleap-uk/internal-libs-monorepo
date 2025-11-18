@@ -3,6 +3,22 @@ import { useBooleanToggle } from '../useBooleanToggle'
 import { useSearchParams } from './types'
 import { TypeGuards } from '@codeleap/types'
 
+/**
+ * Hook that manages searchable select/autocomplete state with async loading support.
+ * Handles both local filtering and remote data fetching.
+ *
+ * @example
+ * const search = useSearch({
+ *   value: 'selected-value',
+ *   multiple: false,
+ *   defaultOptions: [...],
+ *   loadOptions: async (query) => fetchOptions(query),
+ *   filterItems: (query, opts) => opts.filter(o => o.label.includes(query))
+ * })
+ *
+ * search.onChangeSearch('query')
+ * search.load()
+ */
 export function useSearch<T extends string|number = string, Multi extends boolean = false>(props: useSearchParams<T, Multi>) {
   const {
     value,

@@ -8,10 +8,24 @@ type UsePromiseOptions<T = any> = {
   debugName?: string
 }
 
+/**
+ * Hook that creates a deferred promise with manual resolve/reject control.
+ * Useful for coordinating asynchronous operations across component lifecycle.
+ *
+ * @example
+ * const promise = usePromise({ timeout: 5000 })
+ * const handleClick = async () => {
+ *   const result = await promise._await()
+ *   console.log(result)
+ * }
+ * // Later, from another callback:
+ * promise.resolve('success')
+ */
 export const usePromise = <T = any>(options?: UsePromiseOptions<T>) => {
   const rejectRef = useRef<AnyFunction>(null)
   const resolveRef = useRef<(v:T) => any>(null)
   const timeoutRef = useRef(null)
+
   const reject = async (err: any) => {
     await rejectRef.current?.(err)
     options?.onReject?.(err)

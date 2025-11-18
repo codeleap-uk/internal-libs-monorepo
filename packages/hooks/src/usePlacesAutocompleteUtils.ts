@@ -7,6 +7,22 @@ export type UsePlacesAutocompleteUtilsProps<T extends Record<string, any>> = {
   onPress?: (address: string, item: T) => void
 }
 
+/**
+ * Hook that manages address autocomplete state with debounced input handling.
+ * Useful for Google Places autocomplete implementations.
+ *
+ * @example
+ * const {
+ *   address,
+ *   handleChangeAddress,
+ *   handlePressAddress,
+ *   isTyping
+ * } = usePlacesAutocompleteUtils({
+ *   debounce: 500,
+ *   onValueChange: (addr) => fetchPlaces(addr),
+ *   onPress: (addr, item) => console.log('Selected:', item)
+ * })
+ */
 export const usePlacesAutocompleteUtils = <T extends Record<string, any>>(props: UsePlacesAutocompleteUtilsProps<T>) => {
   const {
     debounce = 250,

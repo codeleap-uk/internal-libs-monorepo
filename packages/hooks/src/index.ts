@@ -13,9 +13,7 @@ import {
 
 export * from './useConditionalState'
 export * from './usePromise'
-export * from './useListState'
 export * from './useUncontrolled'
-export * from './useCounter'
 export * from './useForceRender'
 export * from './useDebounce'
 export * from './useInterval'
@@ -34,6 +32,13 @@ export * from './usePartialState'
 export * from './useIsMounted'
 export * from './useComponentTestId'
 export * from './useId'
+export * from './useAnimatedState'
+export * from './useDebounceCallback'
+export * from './useDerivedRef'
+export * from './useDerivedState'
+export * from './useFilteredList'
+export * from './useLazyStore'
+export * from './useOptions'
 
 export {
   useEffect,
