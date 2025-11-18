@@ -3,6 +3,19 @@ import { AnyFunction } from '@codeleap/types'
 
 type UseIntervalHandler = (clear: AnyFunction) => void
 
+/**
+ * Hook that manages an interval with start and clear controls.
+ * The handler receives a clear function to stop the interval from within.
+ *
+ * @example
+ * const { start, clear } = useInterval((clearFn) => {
+ *   console.log('Tick')
+ *   if (shouldStop) clearFn()
+ * }, 1000)
+ *
+ * start() // Starts the interval
+ * clear() // Stops the interval
+ */
 export function useInterval(handler: UseIntervalHandler, interval: number) {
   const intervalRef = useRef<NodeJS.Timer | null>(null)
   const handlerRef = useRef<UseIntervalHandler>(handler)

@@ -13,8 +13,7 @@ const simpleHash = (str: string): string => {
 const normalizeProps = <P extends AnyRecord>(props: P, keys: Array<keyof P>): Partial<P> => {
   return keys.reduce((acc, key) => {
     if (key === 'children') {
-      acc[key] = Children.map(props[key], (child) =>
-        typeof child === 'object' ? '[Component]' : child
+      acc[key] = Children.map(props[key], (child) => typeof child === 'object' ? '[Component]' : child,
       )
     } else {
       acc[key] = props[key]
@@ -28,16 +27,24 @@ const normalizeDebugName = (debugName: string) => {
 }
 
 const generateComponentTestId = <P extends AnyRecord>(componentName: string, props: P, keys: Array<keyof P>) => {
-  const hasDebugName = typeof props?.['debugName'] === 'string'
-  if (hasDebugName) return `${componentName}:${normalizeDebugName(props?.['debugName'])}`
+  const hasDebugName = typeof props?.debugName === 'string'
+  if (hasDebugName) return `${componentName}:${normalizeDebugName(props?.debugName)}`
   const extractedProps = normalizeProps(props, keys)
   return `${componentName}:${simpleHash(JSON.stringify(extractedProps))}`
 }
 
+/**
+ * Hook that generates a stable test ID for a component based on its props.
+ * Uses debugName if available, otherwise generates a hash from specified prop keys.
+ *
+ * @example
+ * const testId = useComponentTestId(Button, props, ['label', 'variant'])
+ * // Returns: "Button:debug-name" or "Button:123456"
+ */
 export const useComponentTestId = <P extends AnyRecord>(
   Component: any,
   props: P,
-  keys: Array<keyof P>
+  keys: Array<keyof P>,
 ) => {
   const testIdRef = useRef(generateComponentTestId(Component.styleRegistryName, props, keys))
   return testIdRef.current

@@ -11,6 +11,18 @@ export interface UncontrolledOptions<T> {
   rule: (value: T | null | undefined) => boolean
 }
 
+/**
+ * Hook that manages controlled/uncontrolled component pattern with smooth transitions.
+ *
+ * @example
+ * const [value, handleChange, mode] = useUncontrolled({
+ *   value: props.value,
+ *   defaultValue: 'default',
+ *   finalValue: '',
+ *   rule: (v) => v !== undefined,
+ *   onChange: (v) => props.onChange?.(v)
+ * })
+ */
 export function useUncontrolled<T>({
   value,
   defaultValue,

@@ -13,6 +13,9 @@ type Params = {
   showDetails?: boolean
 }
 
+/**
+ * Retrieves detailed information for a specific Google Place.
+ */
 export const retrievePlaceDetails = async (placeId: string, apiKey: string) => {
   const response = await axios.get(BASE_URL_DETAILS, {
     params: {
@@ -24,6 +27,10 @@ export const retrievePlaceDetails = async (placeId: string, apiKey: string) => {
   return response?.data?.result
 }
 
+/**
+ * Retrieves places from Google Places API or Geocoding API.
+ * Supports both text search and lat/lng coordinates.
+ */
 export const retrievePlaces = async (params: Params) => {
   let response
   const inputWithoutSpaces = params?.input?.replace(/\s/g, '')
@@ -53,6 +60,17 @@ export const retrievePlaces = async (params: Params) => {
 
 export type UsePlacesParams = Params
 
+/**
+ * Hook that fetches Google Places using React Query.
+ * Automatically handles caching and refetching.
+ *
+ * @example
+ * const places = usePlaces({
+ *   input: 'New York',
+ *   key: 'YOUR_API_KEY',
+ *   showDetails: true
+ * })
+ */
 export const usePlaces = (params: Params) => {
   const places = useQuery({
     queryKey: ['places', params],
