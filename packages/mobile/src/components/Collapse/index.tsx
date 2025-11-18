@@ -1,46 +1,35 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
+import { LayoutChangeEvent, View } from 'react-native'
+import { CollapseAnimationConfig, CollapseProps } from './types'
 import Animated, {
   Easing,
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated'
-import { View } from 'react-native'
-import { CollapseProps } from './types'
-import { AnyRecord, IJSX, StyledComponentProps } from '@codeleap/styles'
-import { MobileStyleRegistry } from '../../Registry'
-import { useStylesFor } from '../../hooks'
 
-export * from './styles'
 export * from './types'
-
-const animationConfig = {
-  duration: 300,
-  easing: Easing.inOut(Easing.quad),
-}
 
 export const Collapse = (props: CollapseProps) => {
   const {
     open,
     children,
     style,
+    contentContainerStyle,
+    animationConfig,
     ...rest
   } = {
     ...Collapse.defaultProps,
     ...props,
   }
 
-  const styles = useStylesFor(Collapse.styleRegistryName, style)
-
   const height = useSharedValue(0)
   const animatedHeight = useSharedValue(0)
 
-  useEffect(() => {
-    animatedHeight.value = withTiming(open ? height.value : 0, animationConfig)
-  }, [open])
-
-  const onLayout = (event: any) => {
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
     const measuredHeight = event.nativeEvent.layout.height
+
+    if (height.value != 0) return
 
     if (measuredHeight) {
       height.value = measuredHeight
@@ -49,34 +38,33 @@ export const Collapse = (props: CollapseProps) => {
         animatedHeight.value = withTiming(measuredHeight, animationConfig)
       }
     }
-  }
+  }, [open])
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       maxHeight: height.value === 0 ? 'auto' : animatedHeight.value,
       overflow: 'hidden',
     }
-  }, [animatedHeight, open])
+  })
+
+  useEffect(() => {
+    animatedHeight.value = withTiming(open ? height.value : 0, animationConfig)
+  }, [open])
 
   return (
-    <Animated.View style={[animatedStyle, styles.wrapper]} {...rest}>
-      <View onLayout={onLayout}>
+    <Animated.View {...rest} style={[animatedStyle, style]}>
+      <View onLayout={onLayout} style={contentContainerStyle}>
         {children}
       </View>
     </Animated.View>
   )
 }
 
-Collapse.styleRegistryName = 'Collapse'
-Collapse.elements = ['wrapper', 'content']
-Collapse.rootElement = 'wrapper'
-
-Collapse.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Collapse as (props: StyledComponentProps<CollapseProps, typeof styles>) => IJSX
+const defaultAnimationConfig: CollapseAnimationConfig = {
+  duration: 300,
+  easing: Easing.inOut(Easing.quad),
 }
 
 Collapse.defaultProps = {
-  open: false,
-} as Partial<CollapseProps>
-
-MobileStyleRegistry.registerComponent(Collapse)
+  animationConfig: defaultAnimationConfig,
+} as CollapseProps
