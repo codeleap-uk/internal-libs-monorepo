@@ -1,5 +1,5 @@
 export type AnyRecord = {
-  [x:string]: any
+  [x: string]: any
 }
 
 export type SegmentConfig<C, U extends SegmentUser, M extends string = DefaultMode> = {
@@ -8,6 +8,7 @@ export type SegmentConfig<C, U extends SegmentUser, M extends string = DefaultMo
   getUserTraits: (user: U) => AnyRecord
   mode: M
   prefix?: Record<M, string | null>
+  suffix?: Record<M, string | null>
   createClient: (writeKey: string) => C
 }
 
