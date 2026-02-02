@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.1.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v6.0.1...v6.1.0) (2026-02-02)
+
+
+### Features
+
+* **segment:** add event suffix handling and refactor event name construction ([3a9d161](https://github.com/codeleap-uk/internal-libs-monorepo/commit/3a9d161e726bc7f147e21af2a2912c10edd87534))
+
 ### [6.0.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.8.21...v6.0.1) (2025-10-30)
 
 ### [5.8.21](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v5.8.20...v5.8.21) (2025-10-13)
