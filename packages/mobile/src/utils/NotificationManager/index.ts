@@ -138,7 +138,7 @@ export class NotificationManager<N extends object = Message, E extends string = 
       })
     })
 
-    return () => messaging().setBackgroundMessageHandler(() => null)
+    return () => messaging().setBackgroundMessageHandler(async () => {})
   }
 
   /**
