@@ -8,7 +8,7 @@ const defaultConfig: SegmentGeneralConfig<any, SegmentUser, DefaultMode> = {
   prefix: {
     'dev': 'dev',
     'prod': null,
-  }
+  },
 }
 
 export class Segment<C extends SegmentMethods, U extends SegmentUser = SegmentUser, M extends string = DefaultMode> {
@@ -29,6 +29,11 @@ export class Segment<C extends SegmentMethods, U extends SegmentUser = SegmentUs
   private get eventPrefix() {
     const modePrefix = this.config.prefix?.[this.config.mode] ?? null
     return !modePrefix ? '' : `${modePrefix}_`
+  }
+
+  private get eventSuffix() {
+    const modeSuffix = this.config.suffix?.[this.config.mode] ?? null
+    return !modeSuffix ? '' : `_${modeSuffix}`
   }
 
   constructor(config: SegmentConfig<C, U, M>) {
@@ -52,22 +57,26 @@ export class Segment<C extends SegmentMethods, U extends SegmentUser = SegmentUs
     }
   }
 
+  private buildEventName(name: string): string {
+    return `${this.eventPrefix}${name}${this.eventSuffix}`
+  }
+
   public async track<T extends AnyRecord>(eventName: string, properties: T | undefined = undefined) {
     if (!this.enabled) return
 
-    await this.client?.track?.(`${this.eventPrefix}${eventName}`, properties)
+    await this.client?.track?.(this.buildEventName(eventName), properties)
   }
 
   public async screen(name: string, options: AnyRecord | undefined = undefined) {
     if (!this.enabled) return
 
-    await this.client?.screen?.(`${this.eventPrefix}${name}`, options)
+    await this.client?.screen?.(this.buildEventName(name), options)
   }
 
   public async group(groupId: string, groupTraits: AnyRecord | undefined = undefined) {
     if (!this.enabled) return
 
-    await this.client?.group(`${this.eventPrefix}${groupId}`, groupTraits)
+    await this.client?.group(this.buildEventName(groupId), groupTraits)
   }
 
   public async alias(newUserId: string) {
