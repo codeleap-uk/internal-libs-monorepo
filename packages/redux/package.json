@@ -1,6 +1,6 @@
 {
   "name": "@codeleap/redux",
-  "version": "6.1.1",
+  "version": "6.1.2",
   "main": "src/index.ts",
   "license": "UNLICENSED",
   "repository": {
