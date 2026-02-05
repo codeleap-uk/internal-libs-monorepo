@@ -8,8 +8,10 @@ import { SelectList } from './components/SelectList'
 import { fields, SelectableField } from '@codeleap/form'
 import { useInputBase } from '../InputBase'
 import { SelectBaseProps, SelectProps } from './types'
+import { ComponentType } from 'react'
+import { List } from '../List'
 
-export const NewSelect = <T extends string | number>(props: SelectProps<T>) => {
+export const NewSelect = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
     options: providedOptions,
     value,
@@ -22,6 +24,8 @@ export const NewSelect = <T extends string | number>(props: SelectProps<T>) => {
     loadOptionsFn,
     onLoadOptionsError,
     field,
+    ListComponent,
+    ...listProps
   } = {
     ...NewSelect.defaultProps,
     ...props,
@@ -81,6 +85,8 @@ export const NewSelect = <T extends string | number>(props: SelectProps<T>) => {
         ListHeaderComponent={ListHeader}
         limit={limit}
         multiple={multiple}
+        Component={ListComponent}
+        {...listProps}
       />
     </Modal>
   </>
@@ -91,4 +97,5 @@ NewSelect.defaultProps = {
   getLabelFn: defaultGetLabel,
   searchable: true,
   multiple: false,
-} as Partial<SelectBaseProps<any, any>>
+  ListComponent: List,
+} as Partial<SelectBaseProps<any, any, any>>

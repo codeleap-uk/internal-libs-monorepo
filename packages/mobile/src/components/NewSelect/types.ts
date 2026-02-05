@@ -1,9 +1,12 @@
-import { Option, Options } from '@codeleap/types'
+import { Option, Options, PropsOf } from '@codeleap/types'
 import { UseSelectSearchParams } from './hooks/useSelectSearch'
 import { SelectableField } from '@codeleap/form'
+import { ComponentType } from 'react'
+import { List } from '../List'
 
-export type SelectBaseProps<T extends string | number, Multi extends boolean = false> =
+export type SelectBaseProps<T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
   Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
+  Partial<PropsOf<C>> &
   {
     options: Options<T>
     value: Multi extends true ? T[] : T | null
@@ -14,6 +17,7 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     getLabelFn?: (optionsOrOptions: Option<T> | Options<T>) => string
     multiple?: Multi
     limit?: number
+    ListComponent?: C
   }
 
-export type SelectProps<T extends string | number> = SelectBaseProps<T, false> | SelectBaseProps<T, true>
+export type SelectProps<T extends string | number, C extends ComponentType<any> = typeof List> = SelectBaseProps<T, false, C> | SelectBaseProps<T, true, C>
