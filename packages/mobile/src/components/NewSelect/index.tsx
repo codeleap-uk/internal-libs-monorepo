@@ -9,21 +9,23 @@ import { SelectList } from './components/SelectList'
 import { fields, SelectableField } from '@codeleap/form'
 import { useInputBase } from '../InputBase'
 
-type SelectProps<T> =
+type SelectBaseProps<T extends string | number, Multi extends boolean = false> =
   Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
   {
     options: Options<T>
-    value: T
-    onValueChange: (newValue: T) => void
+    value: Multi extends true ? T[] : T | null
+    onValueChange: (newValue: Multi extends true ? T[] : T | null) => void
     onSelect?: (value: T) => void
     field?: SelectableField<T, any>
     searchable?: boolean
     getLabelFn?: (optionsOrOptions: Option<T> | Options<T>) => string
-    multiple?: boolean
+    multiple?: Multi
     limit?: number
   }
 
-export const NewSelect = <T extends string | number | any>(props: SelectProps<T>) => {
+type SelectProps<T extends string | number> = SelectBaseProps<T, false> | SelectBaseProps<T, true>
+
+export const NewSelect = <T extends string | number>(props: SelectProps<T>) => {
   const {
     options: providedOptions,
     value,
@@ -88,8 +90,8 @@ export const NewSelect = <T extends string | number | any>(props: SelectProps<T>
     <Modal visible={visible} toggle={toggle}>
       <SelectList
         options={options}
-        value={inputValue as any}
-        onValueChange={onInputValueChange as any}
+        value={inputValue}
+        onValueChange={onInputValueChange}
         fakeEmpty={selectSearch.loading}
         placeholder={{ loading: selectSearch?.loading }}
         ListHeaderComponent={ListHeader}
@@ -104,5 +106,5 @@ NewSelect.defaultProps = {
   filterFn: defaultFilterFunction,
   getLabelFn: defaultGetLabel,
   searchable: true,
-  multiple: true,
-} as SelectProps<any>
+  multiple: false,
+} as Partial<SelectBaseProps<any, any>>
