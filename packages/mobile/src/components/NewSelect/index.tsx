@@ -1,29 +1,13 @@
-import { Option, Options } from '@codeleap/types'
 import { SelectInput } from './components/Input'
 import { Modal } from '../Modal'
 import { useBooleanToggle, useCallback } from '@codeleap/hooks'
-import { useSelectSearch, UseSelectSearchParams } from './hooks/useSelectSearch'
+import { useSelectSearch } from './hooks/useSelectSearch'
 import { SearchInput } from '../SearchInput'
 import { defaultFilterFunction, defaultGetLabel } from './defaults'
 import { SelectList } from './components/SelectList'
 import { fields, SelectableField } from '@codeleap/form'
 import { useInputBase } from '../InputBase'
-
-type SelectBaseProps<T extends string | number, Multi extends boolean = false> =
-  Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
-  {
-    options: Options<T>
-    value: Multi extends true ? T[] : T | null
-    onValueChange: (newValue: Multi extends true ? T[] : T | null) => void
-    onSelect?: (value: T) => void
-    field?: SelectableField<T, any>
-    searchable?: boolean
-    getLabelFn?: (optionsOrOptions: Option<T> | Options<T>) => string
-    multiple?: Multi
-    limit?: number
-  }
-
-type SelectProps<T extends string | number> = SelectBaseProps<T, false> | SelectBaseProps<T, true>
+import { SelectBaseProps, SelectProps } from './types'
 
 export const NewSelect = <T extends string | number>(props: SelectProps<T>) => {
   const {
