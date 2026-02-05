@@ -1,7 +1,7 @@
 import { useStore } from '@nanostores/react'
 import { setPersistentEngine, persistentAtom } from '@nanostores/persistent'
 import { atom, WritableAtom } from 'nanostores'
-import { GlobalState, GlobalStateConfig, StateSelector } from './types'
+import { GlobalState, GlobalStateConfig, StateSelector, StateSetter } from './types'
 import { stateAssign, useStateSelector } from './utils'
 import { arrayHandler, arrayOps } from './array'
 
@@ -38,29 +38,29 @@ export function globalState<T>(value: T, config: GlobalStateConfig = defaultConf
       }
 
       if (prop === 'set') {
-        return (newValue: Partial<T>) => {
+        return (newValue: StateSetter<Partial<T>>) => {
           const value = stateAssign(newValue, target.get())
           target.set(value)
         }
       }
 
-      if(prop == 'reset'){
+      if (prop == 'reset') {
         return Reflect.get(target, 'set', receiver)
       }
-      
-      if(arrayOps.includes(prop as string)){
+
+      if (arrayOps.includes(prop as string)) {
         const currentValue = target.get()
-        
-        if(!Array.isArray(currentValue)) {
+
+        if (!Array.isArray(currentValue)) {
           throw new Error('Cannot call array methods on a non array store')
         }
 
-        const handle =  arrayHandler(target as WritableAtom<any[]>)
+        const handle = arrayHandler(target as WritableAtom<any[]>)
 
         return Reflect.get(handle, prop, receiver)
       }
 
       return Reflect.get(target, prop, receiver)
-    }
+    },
   }) as unknown as GlobalState<T>
 }
