@@ -6,6 +6,8 @@ import { useSelectSearch, UseSelectSearchParams } from './hooks/useSelectSearch'
 import { SearchInput } from '../SearchInput'
 import { defaultFilterFunction, defaultGetLabel } from './defaults'
 import { SelectList } from './components/SelectList'
+import { fields, SelectableField } from '@codeleap/form'
+import { useInputBase } from '../InputBase'
 
 type SelectProps<T> =
   Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
@@ -13,6 +15,8 @@ type SelectProps<T> =
     options: Options<T>
     value: T
     onValueChange: (newValue: T) => void
+    onSelect?: (value: T) => void
+    field?: SelectableField<T, any>
     searchable?: boolean
     getLabelFn?: (optionsOrOptions: Option<T> | Options<T>) => string
     multiple?: boolean
@@ -31,10 +35,20 @@ export const NewSelect = <T extends string | number | any>(props: SelectProps<T>
     filterFn,
     loadOptionsFn,
     onLoadOptionsError,
+    field,
   } = {
     ...NewSelect.defaultProps,
     ...props,
   }
+
+  const {
+    inputValue,
+    onInputValueChange,
+  } = useInputBase(
+    field,
+    fields.selectable as () => SelectableField<T, any>,
+    { value, onValueChange },
+  )
 
   const [visible, toggle] = useBooleanToggle(false)
 
@@ -66,7 +80,7 @@ export const NewSelect = <T extends string | number | any>(props: SelectProps<T>
   return <>
     <SelectInput
       options={options}
-      value={value}
+      value={inputValue}
       onPress={() => toggle()}
       getLabelFn={getLabelFn}
     />
@@ -74,8 +88,8 @@ export const NewSelect = <T extends string | number | any>(props: SelectProps<T>
     <Modal visible={visible} toggle={toggle}>
       <SelectList
         options={options}
-        value={value as any}
-        onValueChange={onValueChange as any}
+        value={inputValue as any}
+        onValueChange={onInputValueChange as any}
         fakeEmpty={selectSearch.loading}
         placeholder={{ loading: selectSearch?.loading }}
         ListHeaderComponent={ListHeader}
