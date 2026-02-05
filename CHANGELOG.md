@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.2.0](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v6.1.2...v6.2.0) (2026-02-05)
+
+
+### Features
+
+* **store:** add callback setter to global state and improve test coverage ([ad142eb](https://github.com/codeleap-uk/internal-libs-monorepo/commit/ad142ebdb95e0bca789765c2c964096b664b492b))
+
+
+### Bug Fixes
+
+* correct background message handler return in NotificationManager ([0661450](https://github.com/codeleap-uk/internal-libs-monorepo/commit/06614506e27a187fb9e3a4354a531361d5867092))
+
 ### [6.1.2](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v6.1.1...v6.1.2) (2026-02-02)
 
 ### [6.1.1](https://github.com/codeleap-uk/internal-libs-monorepo/compare/v6.1.0...v6.1.1) (2026-02-02)
