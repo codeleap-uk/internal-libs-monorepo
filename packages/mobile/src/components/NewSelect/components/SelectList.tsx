@@ -1,22 +1,22 @@
-import { Options, PropsOf } from '@codeleap/types'
+import { PropsOf } from '@codeleap/types'
 import { ComponentType, useCallback } from 'react'
 import { List } from '../../List'
 import { MemoizedSelectDefaultItem } from './DefaultItem'
 import { useSelect } from '../hooks/useSelect'
+import { SelectProps } from '../types'
 
-type SelectListProps<T, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
-  Partial<PropsOf<C>> &
+type SelectListProps<T extends string | number, C extends ComponentType<any> = typeof List> =
+  PropsOf<C> &
+  Pick<
+    SelectProps<T, C>,
+    'options' | 'onSelect' | 'onValueChange' | 'value' | 'limit' | 'multiple'
+  > &
   {
-    options: Options<T>
-    value: Multi extends true ? T[] : T | null
-    onValueChange: (newValue: Multi extends true ? T[] : T | null) => void
     Component?: C
-    limit?: number
-    multiple?: Multi
   }
 
-export const SelectList = <T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List>(
-  props: SelectListProps<T, Multi, C>,
+export const SelectList = <T extends string | number, C extends ComponentType<any> = typeof List>(
+  props: SelectListProps<T, C>,
 ) => {
   const {
     options,
@@ -24,11 +24,17 @@ export const SelectList = <T extends string | number, Multi extends boolean = fa
     onValueChange,
     Component = List,
     limit,
-    multiple = false as Multi,
+    multiple = false,
+    onSelect: providedOnSelect,
     ...listProps
   } = props
 
-  const { onSelect } = useSelect(onValueChange, multiple, limit)
+  const { onSelect } = useSelect(
+    onValueChange,
+    multiple,
+    limit,
+    providedOnSelect,
+  )
 
   const renderItem = useCallback(({ item }) => {
     const selected = multiple

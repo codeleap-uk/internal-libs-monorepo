@@ -5,6 +5,7 @@ export function useSelect<T extends string | number>(
   onValueChange: (newValue: any) => void,
   multiple = false,
   limit?: number,
+  onSelect?: (option: Option<T>) => void,
 ) {
   const selectedValueRef = useRef<any>(multiple ? [] : null)
 
@@ -14,7 +15,8 @@ export function useSelect<T extends string | number>(
 
     selectedValueRef.current = newValue
     onValueChange(newValue)
-  }, [onValueChange])
+    onSelect?.(selectedOption)
+  }, [onValueChange, onSelect])
 
   const onMultiSelect = useCallback((selectedOption: Option<T>) => {
     const currentValue = [...selectedValueRef.current] as T[]
@@ -25,7 +27,8 @@ export function useSelect<T extends string | number>(
     if (isDeselect) {
       const newValue = currentValue.filter(v => v !== selectedValue)
       selectedValueRef.current = newValue
-      return onValueChange(newValue)
+      onValueChange(newValue)
+      return onSelect?.(selectedOption)
     }
 
     if (TypeGuards.isNumber(limit) && currentValue.length >= limit) return
@@ -34,7 +37,8 @@ export function useSelect<T extends string | number>(
 
     selectedValueRef.current = newValue
     onValueChange(newValue)
-  }, [onValueChange, limit])
+    onSelect?.(selectedOption)
+  }, [onValueChange, limit, onSelect])
 
   return {
     onSelect: multiple ? onMultiSelect : onSingleSelect,

@@ -9,7 +9,14 @@ type SelectInputProps<T> = Omit<TextInputProps, 'value'> & {
 }
 
 export const SelectInput = <T extends string | number | any>(props: SelectInputProps<T>) => {
-  const { options, value, getLabelFn, ...inputProps } = props
+  const {
+    options,
+    value,
+    getLabelFn,
+    disabled,
+    onPress,
+    ...inputProps
+  } = props
 
   const label = useMemo(() => {
     if (!value) return ''
@@ -28,9 +35,10 @@ export const SelectInput = <T extends string | number | any>(props: SelectInputP
   return (
     <TextInput
       {...inputProps}
+      onPress={disabled ? null : onPress}
+      disabled={disabled}
       value={label}
       onValueChange={() => label}
-      placeholder={'Select'}
     />
   )
 }

@@ -1,6 +1,6 @@
 import { SelectInput } from './components/Input'
 import { Modal } from '../Modal'
-import { useBooleanToggle, useCallback } from '@codeleap/hooks'
+import { useCallback, useConditionalState } from '@codeleap/hooks'
 import { useSelectSearch } from './hooks/useSelectSearch'
 import { SearchInput } from '../SearchInput'
 import { defaultFilterFunction, defaultGetLabel } from './defaults'
@@ -23,9 +23,19 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     filterFn,
     loadOptionsFn,
     onLoadOptionsError,
+    onSelect,
     field,
     ListComponent,
-    ...listProps
+    visible: providedVisible,
+    toggle: providedToggle,
+    disabled,
+    placeholder,
+    modalProps,
+    inputProps,
+    searchInputProps,
+    listProps,
+    hideInput,
+    closeOnSelect,
   } = {
     ...NewSelect.defaultProps,
     ...props,
@@ -40,7 +50,11 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     { value, onValueChange },
   )
 
-  const [visible, toggle] = useBooleanToggle(false)
+  const [visible, toggle] = useConditionalState(
+    providedVisible,
+    providedToggle,
+    { isBooleanToggle: true, initialValue: false },
+  )
 
   const selectSearch = useSelectSearch({
     options: providedOptions,
@@ -51,11 +65,16 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
 
   const options = searchable ? selectSearch.filteredOptions : providedOptions
 
+  const onSelectOption: SelectProps<T, C>['onSelect'] = useCallback((optionsOrOptions) => {
+    if (closeOnSelect) toggle(false)
+    onSelect?.(optionsOrOptions)
+  }, [closeOnSelect, onSelect])
+
   const ListHeader = useCallback(() => {
     if (!searchable) return null
 
     return <SearchInput
-      debugName={''}
+      debugName={'select:search'}
       debounce={selectSearch.isAsync ? 800 : null}
       onSearchChange={selectSearch.onSearch}
       placeholder='Search'
@@ -64,18 +83,24 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
           selectSearch.onChangeLoading(isTyping)
         }
       }}
+      {...searchInputProps}
     />
-  }, [])
+  }, [searchInputProps])
 
   return <>
-    <SelectInput
-      options={options}
-      value={inputValue}
-      onPress={() => toggle()}
-      getLabelFn={getLabelFn}
-    />
+    {hideInput ? null : (
+      <SelectInput
+        options={options}
+        value={inputValue}
+        onPress={toggle}
+        getLabelFn={getLabelFn}
+        disabled={disabled}
+        placeholder={placeholder}
+        {...inputProps}
+      />
+    )}
 
-    <Modal visible={visible} toggle={toggle}>
+    <Modal {...modalProps} visible={visible} toggle={toggle}>
       <SelectList
         options={options}
         value={inputValue}
@@ -86,6 +111,7 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
         limit={limit}
         multiple={multiple}
         Component={ListComponent}
+        onSelect={onSelectOption}
         {...listProps}
       />
     </Modal>
@@ -98,4 +124,5 @@ NewSelect.defaultProps = {
   searchable: true,
   multiple: false,
   ListComponent: List,
+  placeholder: 'Select',
 } as Partial<SelectBaseProps<any, any, any>>
