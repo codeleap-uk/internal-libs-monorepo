@@ -10,6 +10,7 @@ import { useInputBase } from '../InputBase'
 import { SelectBaseProps, SelectProps } from './types'
 import { ComponentType } from 'react'
 import { List } from '../List'
+import { AppIcon } from '@codeleap/styles'
 
 export const NewSelect = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
@@ -36,6 +37,9 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     listProps,
     hideInput,
     closeOnSelect,
+    selectIcon,
+    clearIcon,
+    clearable,
   } = {
     ...NewSelect.defaultProps,
     ...props,
@@ -92,10 +96,15 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
       <SelectInput
         options={options}
         value={inputValue}
-        onPress={toggle}
+        onValueChange={onInputValueChange}
+        toggle={toggle}
         getLabelFn={getLabelFn}
         disabled={disabled}
         placeholder={placeholder}
+        multiple={multiple}
+        clearIcon={clearIcon}
+        selectIcon={selectIcon}
+        clearable={clearable}
         {...inputProps}
       />
     )}
@@ -125,4 +134,7 @@ NewSelect.defaultProps = {
   multiple: false,
   ListComponent: List,
   placeholder: 'Select',
+  selectIcon: 'chevrons-up-down' as AppIcon,
+  clearIcon: 'x' as AppIcon,
+  selectedIcon: 'check' as AppIcon,
 } as Partial<SelectBaseProps<any, any, any>>

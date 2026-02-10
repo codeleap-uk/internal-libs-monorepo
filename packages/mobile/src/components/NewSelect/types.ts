@@ -32,12 +32,13 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     listProps?: Partial<PropsOf<C>>
     hideInput?: boolean
     closeOnSelect?: boolean
-
-    style?: StylesOf<SelectComposition>
-    selectedIcon?: AppIcon
     clearIcon?: AppIcon
     selectIcon?: AppIcon
     clearable?: boolean
+
+    style?: StylesOf<SelectComposition>
+    selectedIcon?: AppIcon
+    renderItem: any
   }
 
 export type SelectProps<T extends string | number, C extends ComponentType<any> = typeof List> = SelectBaseProps<T, false, C> | SelectBaseProps<T, true, C>

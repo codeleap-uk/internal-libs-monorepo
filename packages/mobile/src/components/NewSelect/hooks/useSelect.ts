@@ -1,13 +1,21 @@
 import { Option, TypeGuards } from '@codeleap/types'
-import { useCallback, useRef } from 'react'
+import { deepEqual } from '@codeleap/utils'
+import { useCallback, useEffect, useRef } from 'react'
 
 export function useSelect<T extends string | number>(
+  value: any,
   onValueChange: (newValue: any) => void,
   multiple = false,
   limit?: number,
   onSelect?: (option: Option<T>) => void,
 ) {
   const selectedValueRef = useRef<any>(multiple ? [] : null)
+
+  useEffect(() => {
+    if (!deepEqual(value, selectedValueRef.current)) {
+      selectedValueRef.current = value
+    }
+  }, [value])
 
   const onSingleSelect = useCallback((selectedOption: Option<T>) => {
     const isDeselect = selectedValueRef.current === selectedOption?.value

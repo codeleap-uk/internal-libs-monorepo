@@ -30,6 +30,7 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
   } = props
 
   const { onSelect } = useSelect(
+    value,
     onValueChange,
     multiple,
     limit,
