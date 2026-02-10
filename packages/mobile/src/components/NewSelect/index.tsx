@@ -98,7 +98,7 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
       {...searchInputProps}
       style={compositionStyles?.searchInput}
     />
-  }, [searchInputProps, compositionStyles?.searchInput])
+  }, [searchInputProps])
 
   return <>
     {hideInput ? null : (
