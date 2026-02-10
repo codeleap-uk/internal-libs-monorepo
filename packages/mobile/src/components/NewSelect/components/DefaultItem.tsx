@@ -7,9 +7,10 @@ export const SelectDefaultItem = <T extends string | number>(props: SelectRender
     item,
     onSelect,
     selected,
+    style,
   } = props
 
-  console.log('[RENDER] item', item)
+  console.log('[RENDER] item', item, selected)
 
   return (
     <Button
@@ -17,6 +18,8 @@ export const SelectDefaultItem = <T extends string | number>(props: SelectRender
       text={item?.label}
       rightIcon={selected ? 'check' as never : null as never}
       onPress={onSelect}
+      style={style}
+      selected={selected}
     />
   )
 }

@@ -6,7 +6,7 @@ import { List } from '../List'
 import { ModalProps } from '../Modal'
 import { TextInputProps } from '../TextInput'
 import { SearchInputProps } from '../SearchInput'
-import { SelectComposition } from './styles'
+import { SelectComposition, SelectItemComposition } from './styles'
 import { AppIcon } from '@codeleap/styles'
 
 export type SelectRenderItemInfo<T> = {
@@ -14,6 +14,7 @@ export type SelectRenderItemInfo<T> = {
   selected: boolean
   item: Option<T>
   index: number
+  style: StylesOf<SelectItemComposition>
 }
 
 export type SelectBaseProps<T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
@@ -34,9 +35,9 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     disabled?: boolean
     placeholder?: string
     modalProps?: Omit<ModalProps, 'visible' | 'toggle'>
-    inputProps?: Partial<TextInputProps>
-    searchInputProps?: Partial<SearchInputProps>
-    listProps?: Partial<PropsOf<C>>
+    inputProps?: Omit<TextInputProps, 'style'>
+    searchInputProps?: Omit<SearchInputProps, 'style'>
+    listProps?: Omit<PropsOf<C>, 'style'>
     hideInput?: boolean
     closeOnSelect?: boolean
     clearIcon?: AppIcon

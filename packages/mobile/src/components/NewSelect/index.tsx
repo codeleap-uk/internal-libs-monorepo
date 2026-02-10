@@ -10,7 +10,9 @@ import { useInputBase } from '../InputBase'
 import { SelectBaseProps, SelectProps } from './types'
 import { ComponentType } from 'react'
 import { List } from '../List'
-import { AppIcon } from '@codeleap/styles'
+import { AppIcon, useCompositionStyles } from '@codeleap/styles'
+import { useStylesFor } from '../../hooks'
+import { MobileStyleRegistry } from '../../Registry'
 
 export const NewSelect = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
@@ -41,6 +43,7 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     clearIcon,
     clearable,
     renderItem,
+    style,
   } = {
     ...NewSelect.defaultProps,
     ...props,
@@ -60,6 +63,10 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     providedToggle,
     { isBooleanToggle: true, initialValue: false },
   )
+
+  const styles = useStylesFor(NewSelect.styleRegistryName, style)
+
+  const compositionStyles = useCompositionStyles(['item', 'list', 'input', 'searchInput'], styles)
 
   const selectSearch = useSelectSearch({
     options: providedOptions,
@@ -89,8 +96,9 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
         }
       }}
       {...searchInputProps}
+      style={compositionStyles?.searchInput}
     />
-  }, [searchInputProps])
+  }, [searchInputProps, compositionStyles?.searchInput])
 
   return <>
     {hideInput ? null : (
@@ -107,10 +115,11 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
         selectIcon={selectIcon}
         clearable={clearable}
         {...inputProps}
+        style={compositionStyles?.input}
       />
     )}
 
-    <Modal {...modalProps} visible={visible} toggle={toggle}>
+    <Modal {...modalProps} visible={visible} toggle={toggle} style={styles}>
       <SelectList
         options={options}
         value={inputValue}
@@ -123,11 +132,17 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
         Component={ListComponent}
         onSelect={onSelectOption}
         renderItem={renderItem}
+        itemStyle={compositionStyles?.item}
         {...listProps}
+        style={compositionStyles?.list}
       />
     </Modal>
   </>
 }
+
+NewSelect.styleRegistryName = 'Select'
+NewSelect.elements = ['input', 'list', 'item', 'searchInput']
+NewSelect.rootElement = 'inputWrapper'
 
 NewSelect.defaultProps = {
   filterFn: defaultFilterFunction,
@@ -140,3 +155,5 @@ NewSelect.defaultProps = {
   clearIcon: 'x' as AppIcon,
   selectedIcon: 'check' as AppIcon,
 } as Partial<SelectBaseProps<any, any, any>>
+
+// MobileStyleRegistry.registerComponent(NewSelect)

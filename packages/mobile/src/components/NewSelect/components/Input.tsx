@@ -25,7 +25,8 @@ export const SelectInput = <T extends string | number>(props: SelectInputProps<T
     ...inputProps
   } = props
 
-  const canClear = !TypeGuards.isNil(value) && clearable
+  const isEmpty = TypeGuards.isArray(value) ? value?.length <= 0 : TypeGuards.isNil(value)
+  const canClear = !isEmpty && clearable
   const inputIcon = canClear ? clearIcon : selectIcon
 
   const onPressInputIcon = () => {

@@ -1,9 +1,10 @@
-import { PropsOf, TypeGuards } from '@codeleap/types'
+import { PropsOf, StylesOf, TypeGuards } from '@codeleap/types'
 import { ComponentType, useCallback } from 'react'
 import { List } from '../../List'
 import { useSelect } from '../hooks/useSelect'
 import { SelectProps } from '../types'
 import { MemoizedSelectDefaultItem } from './DefaultItem'
+import { SelectItemComposition } from '../styles'
 
 type SelectListProps<T extends string | number, C extends ComponentType<any> = typeof List> =
   Omit<PropsOf<C>, 'renderItem' | 'data'> &
@@ -13,6 +14,7 @@ type SelectListProps<T extends string | number, C extends ComponentType<any> = t
   > &
   {
     Component?: C
+    itemStyle?: StylesOf<SelectItemComposition>
   }
 
 export const SelectList = <T extends string | number, C extends ComponentType<any> = typeof List>(
@@ -27,6 +29,7 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
     multiple = false,
     onSelect: providedOnSelect,
     renderItem: providedRenderItem,
+    itemStyle,
     ...listProps
   } = props
 
@@ -44,7 +47,13 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
       : value === item?.value
 
     if (TypeGuards.isFunction(providedRenderItem)) {
-      return providedRenderItem({ selected, item, index, onSelect: () => onSelect(item) })
+      return providedRenderItem({
+        selected,
+        item,
+        index,
+        onSelect: () => onSelect(item),
+        style: itemStyle,
+      })
     }
 
     return (
@@ -53,6 +62,7 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
         item={item}
         index={index}
         onSelect={() => onSelect(item)}
+        style={itemStyle}
       />
     )
   }, [value, onSelect, multiple])
