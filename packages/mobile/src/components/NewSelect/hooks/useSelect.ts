@@ -27,7 +27,7 @@ export function useSelect<T extends string | number>(
   }, [onValueChange, onSelect])
 
   const onMultiSelect = useCallback((selectedOption: Option<T>) => {
-    const currentValue = [...selectedValueRef.current] as T[]
+    const currentValue = [...(selectedValueRef.current ?? [])] as T[]
     const selectedValue = selectedOption?.value
 
     const isDeselect = currentValue.includes(selectedValue)

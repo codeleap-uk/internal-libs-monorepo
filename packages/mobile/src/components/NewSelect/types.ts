@@ -44,7 +44,6 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     selectIcon?: AppIcon
     clearable?: boolean
     renderItem?: (info: SelectRenderItemInfo<T>) => ReactElement
-
     style?: StylesOf<SelectComposition>
   }
 
