@@ -69,6 +69,7 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
 
   return (
     <Component
+      separators
       {...listProps}
       data={options}
       renderItem={renderItem}
