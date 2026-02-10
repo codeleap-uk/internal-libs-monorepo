@@ -10,9 +10,12 @@ import { useInputBase } from '../InputBase'
 import { SelectBaseProps, SelectProps } from './types'
 import { ComponentType } from 'react'
 import { List } from '../List'
-import { AppIcon, useCompositionStyles } from '@codeleap/styles'
+import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
 import { useStylesFor } from '../../hooks'
 import { MobileStyleRegistry } from '../../Registry'
+
+export * from './styles'
+export * from './types'
 
 export const Select = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
@@ -33,6 +36,7 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
     toggle: providedToggle,
     disabled,
     placeholder,
+    label,
     modalProps,
     inputProps,
     searchInputProps,
@@ -44,6 +48,7 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
     clearable,
     renderItem,
     style,
+    SelectInputComponent,
   } = {
     ...Select.defaultProps,
     ...props,
@@ -102,7 +107,7 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
 
   return <>
     {hideInput ? null : (
-      <SelectInput
+      <SelectInputComponent
         options={options}
         value={inputValue}
         onValueChange={onInputValueChange}
@@ -114,6 +119,7 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
         clearIcon={clearIcon}
         selectIcon={selectIcon}
         clearable={clearable}
+        label={label}
         {...inputProps}
         style={compositionStyles?.input}
       />
@@ -144,6 +150,10 @@ Select.styleRegistryName = 'Select'
 Select.elements = ['input', 'list', 'item', 'searchInput']
 Select.rootElement = 'inputWrapper'
 
+Select.withVariantTypes = <S extends AnyRecord>(styles: S) => {
+  return Select as (<T extends string | number = string, C extends ComponentType<any> = typeof List>(props: StyledComponentProps<SelectProps<T, C>, typeof styles>) => IJSX)
+}
+
 Select.defaultProps = {
   filterFn: defaultFilterFunction,
   getLabelFn: defaultGetLabel,
@@ -154,6 +164,7 @@ Select.defaultProps = {
   selectIcon: 'chevrons-up-down' as AppIcon,
   clearIcon: 'x' as AppIcon,
   selectedIcon: 'check' as AppIcon,
+  SelectInputComponent: SelectInput,
 } as Partial<SelectBaseProps<any, any, any>>
 
-// MobileStyleRegistry.registerComponent(Select)
+MobileStyleRegistry.registerComponent(Select)

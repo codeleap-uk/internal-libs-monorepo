@@ -17,6 +17,21 @@ export type SelectRenderItemInfo<T> = {
   style: StylesOf<SelectItemComposition>
 }
 
+export type SelectInputComponentProps<T extends string | number = any, Multi extends boolean = false> = {
+  options: Options<T>
+  value: Multi extends true ? T[] : T | null
+  onValueChange: (newValue: Multi extends true ? T[] : T | null) => void
+  toggle: AnyFunction
+  getLabelFn?: (optionsOrOptions: Option<T> | Options<T>) => string
+  disabled?: boolean
+  placeholder?: string
+  multiple?: Multi
+  clearIcon?: AppIcon
+  selectIcon?: AppIcon
+  clearable?: boolean
+  style?: any
+}
+
 export type SelectBaseProps<T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
   Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
   {
@@ -34,9 +49,10 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     toggle?: AnyFunction
     disabled?: boolean
     placeholder?: string
-    modalProps?: Omit<ModalProps, 'visible' | 'toggle'>
-    inputProps?: Omit<TextInputProps, 'style'>
-    searchInputProps?: Omit<SearchInputProps, 'style'>
+    label?: string
+    modalProps?: Partial<Omit<ModalProps, 'visible' | 'toggle'>>
+    inputProps?: Omit<TextInputProps, 'style' | 'value' | 'onValueChange'>
+    searchInputProps?: Partial<Omit<SearchInputProps, 'style'>>
     listProps?: Omit<PropsOf<C>, 'style'>
     hideInput?: boolean
     closeOnSelect?: boolean
@@ -44,6 +60,7 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     selectIcon?: AppIcon
     clearable?: boolean
     renderItem?: (info: SelectRenderItemInfo<T>) => ReactElement
+    SelectInputComponent?: ComponentType<SelectInputComponentProps<T, Multi>>
     style?: StylesOf<SelectComposition>
   }
 

@@ -1,16 +1,9 @@
 import { TypeGuards } from '@codeleap/types'
-import { TextInput, TextInputProps } from '../../TextInput'
+import { TextInput } from '../../TextInput'
 import { useMemo } from 'react'
-import { SelectProps } from '../types'
+import { SelectInputComponentProps } from '../types'
 
-type SelectInputProps<T extends string | number> =
-  Omit<TextInputProps, 'value' | 'onValueChange'> &
-  Pick<
-    SelectProps<T>,
-    'value' | 'onValueChange' | 'getLabelFn' | 'options' | 'clearIcon' | 'selectIcon' | 'toggle' | 'clearable' | 'multiple'
-  >
-
-export const SelectInput = <T extends string | number>(props: SelectInputProps<T>) => {
+export const SelectInput = <T extends string | number>(props: SelectInputComponentProps<T>) => {
   const {
     options,
     value,
@@ -34,7 +27,7 @@ export const SelectInput = <T extends string | number>(props: SelectInputProps<T
     else toggle()
   }
 
-  const label = useMemo(() => {
+  const text = useMemo(() => {
     if (!value) return ''
 
     let optionsOrOptions = null
@@ -57,8 +50,8 @@ export const SelectInput = <T extends string | number>(props: SelectInputProps<T
       {...inputProps}
       onPress={disabled ? null : toggle}
       disabled={disabled}
-      value={label}
-      onValueChange={() => label}
+      value={text}
+      onValueChange={() => text}
     />
   )
 }
