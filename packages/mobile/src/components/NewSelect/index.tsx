@@ -14,7 +14,7 @@ import { AppIcon, useCompositionStyles } from '@codeleap/styles'
 import { useStylesFor } from '../../hooks'
 import { MobileStyleRegistry } from '../../Registry'
 
-export const NewSelect = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
+export const Select = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
     options: providedOptions,
     value,
@@ -45,7 +45,7 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     renderItem,
     style,
   } = {
-    ...NewSelect.defaultProps,
+    ...Select.defaultProps,
     ...props,
   }
 
@@ -64,7 +64,7 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
     { isBooleanToggle: true, initialValue: false },
   )
 
-  const styles = useStylesFor(NewSelect.styleRegistryName, style)
+  const styles = useStylesFor(Select.styleRegistryName, style)
 
   const compositionStyles = useCompositionStyles(['item', 'list', 'input', 'searchInput'], styles)
 
@@ -140,11 +140,11 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
   </>
 }
 
-NewSelect.styleRegistryName = 'Select'
-NewSelect.elements = ['input', 'list', 'item', 'searchInput']
-NewSelect.rootElement = 'inputWrapper'
+Select.styleRegistryName = 'Select'
+Select.elements = ['input', 'list', 'item', 'searchInput']
+Select.rootElement = 'inputWrapper'
 
-NewSelect.defaultProps = {
+Select.defaultProps = {
   filterFn: defaultFilterFunction,
   getLabelFn: defaultGetLabel,
   searchable: true,
@@ -156,4 +156,4 @@ NewSelect.defaultProps = {
   selectedIcon: 'check' as AppIcon,
 } as Partial<SelectBaseProps<any, any, any>>
 
-// MobileStyleRegistry.registerComponent(NewSelect)
+// MobileStyleRegistry.registerComponent(Select)
