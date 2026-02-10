@@ -139,6 +139,10 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
         onSelect={onSelectOption}
         renderItem={renderItem}
         itemStyle={compositionStyles?.item}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        windowSize={5}
+        removeClippedSubviews={true}
         {...listProps}
         style={compositionStyles?.list}
       />
