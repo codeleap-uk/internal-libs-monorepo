@@ -1,96 +1,50 @@
-import { Option, Options, PropsOf } from '@codeleap/types'
-import { AppIcon, StyledProp } from '@codeleap/styles'
-import { GetKeyboardAwarePropsOptions, StylesOf } from '../../types/utility'
-import { ActionIconProps } from '../ActionIcon'
-import { Icon } from '../Icon'
-import { FlatListProps } from '../List'
-import { ModalProps } from '../Modal'
-import { Text } from '../Text'
-import { TextInputComposition } from '../TextInput'
-import { SearchInputProps } from '../SearchInput'
-import { Touchable } from '../Touchable'
-import { SelectComposition } from './styles'
+import { AnyFunction, Option, Options, PropsOf, StylesOf } from '@codeleap/types'
+import { UseSelectSearchParams } from './hooks/useSelectSearch'
 import { SelectableField } from '@codeleap/form'
+import { ComponentType, ReactElement } from 'react'
+import { List } from '../List'
+import { ModalProps } from '../Modal'
+import { TextInputProps } from '../TextInput'
+import { SearchInputProps } from '../SearchInput'
+import { SelectComposition, SelectItemComposition } from './styles'
+import { AppIcon } from '@codeleap/styles'
 
-export type SelectRenderFNProps<T> = {
-  style: StylesOf<SelectComposition>
-  onPress: () => void
-  selected?: boolean
+export type SelectRenderItemInfo<T> = {
+  onSelect: () => void
+  selected: boolean
   item: Option<T>
-  touchableProps?: Partial<PropsOf<typeof Touchable>>
-  textProps?: Partial<PropsOf<typeof Text>>
-  iconProps?: Partial<PropsOf<typeof Icon>>
   index: number
-  debugName: string
-  text?: string
+  style: StylesOf<SelectItemComposition>
 }
 
-export type SelectRenderFN<T> = (props: SelectRenderFNProps<T>) => React.ReactElement
-
-type SelectModalProps = Omit<ModalProps, 'style'>
-
-export type SelectValue<T, Multi extends boolean = false> = Multi extends true ? T[] : T
-
-type SelectHeaderProps = {
-  searchComponent?: React.ReactNode
-}
-
-export type SelectOuterInputProps<T extends string | number = any, Multi extends boolean = false> = SelectProps<T, Multi> & {
-  currentValueLabel: string
-  styles?: StylesOf<TextInputComposition>
-  clearIcon?: Partial<ActionIconProps>
-}
-
-type OuterInputComponent<T extends string | number, Multi extends boolean> = (props: SelectOuterInputProps<T, Multi>) => React.ReactElement
-
-export type ValueBoundSelectProps<
-  T extends string | number,
-  Multi extends boolean = false
-> = {
-  options?: Options<T>
-  defaultOptions?: Options<T>
-  loadOptions?: (search: string) => Promise<Options<T>>
-  renderItem?: SelectRenderFN<SelectValue<T, Multi>>
-  filterItems?: (search: string, items: Options<T>) => Options<T>
-  onLoadOptionsError?: (error: any) => void
-  multiple?: Multi
-  getLabel?: (forOption: Multi extends true ? Options<T> : Option<T>) => string
-  outerInputComponent?: OuterInputComponent<T, Multi>
-  inputProps?: Partial<SelectOuterInputProps<T, Multi>>
-  disabled?: boolean
-}
-
-export type ReplaceSelectProps<Props, T extends string | number, Multi extends boolean = false> = Omit<
-  Props,
-  keyof ValueBoundSelectProps<T, Multi>
-> & ValueBoundSelectProps<T, Multi>
-
-export type SelectProps<T extends string | number = any, Multi extends boolean = false> =
-  SelectModalProps &
-  ValueBoundSelectProps<T, Multi> &
+export type SelectBaseProps<T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
+  Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
   {
-    placeholder?: string
-    label?: string
-    hideInput?: boolean
-    selectedIcon?: AppIcon
-    arrowIconName?: AppIcon
-    closeOnSelect?: boolean
-    listProps?: Partial<FlatListProps>
-    clearable?: boolean
-    clearIconName?: AppIcon
-    keyboardAware?: GetKeyboardAwarePropsOptions
-    multiple?: Multi
-    itemProps?: Partial<Pick<SelectRenderFNProps<any>, 'iconProps' | 'textProps' | 'touchableProps'>>
-    searchable?: boolean
-    limit?: number
-    ListHeaderComponent?: React.ComponentType<SelectHeaderProps>
-    ListComponent?: React.ComponentType<any>
-    searchInputProps?: Partial<SearchInputProps>
-    loadOptionsOnMount?: boolean
-    loadOptionsOnOpen?: boolean
-    style?: StyledProp<SelectComposition>
+    options: Options<T>
+    value?: Multi extends true ? T[] : T | null
+    onValueChange?: (newValue: Multi extends true ? T[] : T | null) => void
+    onSelect?: (option: Option<T>) => void
     field?: SelectableField<T, any>
-    value?: T
-    onValueChange?: (value: T) => void
-    onSelect?: (value: T) => void
+    searchable?: boolean
+    getLabelFn?: (optionsOrOptions: Option<T> | Options<T>) => string
+    multiple?: Multi
+    limit?: number
+    ListComponent?: C
+    visible?: boolean
+    toggle?: AnyFunction
+    disabled?: boolean
+    placeholder?: string
+    modalProps?: Omit<ModalProps, 'visible' | 'toggle'>
+    inputProps?: Omit<TextInputProps, 'style'>
+    searchInputProps?: Omit<SearchInputProps, 'style'>
+    listProps?: Omit<PropsOf<C>, 'style'>
+    hideInput?: boolean
+    closeOnSelect?: boolean
+    clearIcon?: AppIcon
+    selectIcon?: AppIcon
+    clearable?: boolean
+    renderItem?: (info: SelectRenderItemInfo<T>) => ReactElement
+    style?: StylesOf<SelectComposition>
   }
+
+export type SelectProps<T extends string | number, C extends ComponentType<any> = typeof List> = SelectBaseProps<T, false, C> | SelectBaseProps<T, true, C>

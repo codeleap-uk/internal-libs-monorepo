@@ -1,376 +1,159 @@
-/* eslint-disable max-lines */
-import { Option, Options, TypeGuards } from '@codeleap/types'
-import {
-  onMount,
-  onUpdate,
-  usePrevious,
-  useSearch,
-  useConditionalState,
-} from '@codeleap/hooks'
-import React, { useCallback, useMemo } from 'react'
-import { List } from '../List'
-import { TextInput } from '../TextInput'
-import { SelectProps, ValueBoundSelectProps } from './types'
-import { Button } from '../Button'
-import { AnyRecord, AppIcon, IJSX, StyledComponentProps, useCompositionStyles } from '@codeleap/styles'
+import { SelectInput } from './components/Input'
 import { Modal } from '../Modal'
-import { MobileStyleRegistry } from '../../Registry'
+import { useCallback, useConditionalState } from '@codeleap/hooks'
+import { useSelectSearch } from './hooks/useSelectSearch'
 import { SearchInput } from '../SearchInput'
+import { defaultFilterFunction, defaultGetLabel } from './defaults'
+import { SelectList } from './components/SelectList'
+import { fields, SelectableField } from '@codeleap/form'
+import { useInputBase } from '../InputBase'
+import { SelectBaseProps, SelectProps } from './types'
+import { ComponentType } from 'react'
+import { List } from '../List'
+import { AppIcon, useCompositionStyles } from '@codeleap/styles'
 import { useStylesFor } from '../../hooks'
-import { SelectableField, fields } from '@codeleap/form'
-import { useInputBase } from '../InputBase/useInputBase'
+import { MobileStyleRegistry } from '../../Registry'
 
-export * from './styles'
-export * from './types'
-
-const defaultFilterFunction = (search: string, options: Options<any>) => {
-  return options.filter((option) => {
-    if (TypeGuards.isString(option.label)) {
-      return option.label.toLowerCase().includes(search.toLowerCase())
-    }
-
-    return option.label === search
-  })
-}
-
-const defaultGetLabel = (option) => {
-  if (TypeGuards.isArray(option)) {
-    if (option?.length === 0) return null
-
-    const labels = option?.map(option => option?.label)?.filter(value => !!value)
-
-    return labels?.join(', ')
-  } else {
-    if (!option) return null
-    return option?.label
-  }
-}
-
-const OuterInput: ValueBoundSelectProps<any, boolean>['outerInputComponent'] = (props) => {
+export const Select = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
-    currentValueLabel,
-    debugName,
-    clearIcon,
-    label,
-    toggle,
-    style,
-    placeholder,
-    disabled = false,
-    inputProps = {},
-  } = props
-
-  return <TextInput
-    value={TypeGuards.isString(currentValueLabel) ? currentValueLabel : null}
-    onValueChange={() => currentValueLabel}
-    rightIcon={clearIcon}
-    onPress={disabled ? null : () => toggle()}
-    disabled={disabled}
-    label={label}
-    debugName={debugName}
-    style={style}
-    innerWrapperProps={{
-      rippleDisabled: true,
-    }}
-    placeholder={placeholder as any}
-    {...inputProps}
-  />
-}
-
-export const Select = <T extends string | number = string, Multi extends boolean = false>(selectProps: SelectProps<T, Multi>) => {
-  const allProps = {
-    ...Select.defaultProps,
-    ...selectProps,
-  }
-
-  const {
-    label,
-    options = [],
-    style,
-    description,
-    renderItem: Item,
-    listProps,
-    debugName,
-    placeholder,
-    arrowIconName,
-    clearIconName,
-    clearable,
-    selectedIcon,
-    inputProps = {},
-    hideInput,
-    itemProps = {},
-    searchable,
-    loadOptions,
-    multiple,
-    closeOnSelect = !multiple,
-    limit = null,
-    defaultOptions = options,
-    visible: _visible,
-    toggle: _toggle,
-    ListHeaderComponent,
-    ListComponent,
-    onLoadOptionsError,
-    loadOptionsOnMount = defaultOptions.length === 0,
-    loadOptionsOnOpen,
-    filterItems,
-    getLabel,
-    searchInputProps,
-    outerInputComponent,
-    disabled,
-    field,
+    options: providedOptions,
     value,
     onValueChange,
+    searchable,
+    multiple,
+    limit,
+    getLabelFn,
+    filterFn,
+    loadOptionsFn,
+    onLoadOptionsError,
     onSelect,
-    ...modalProps
-  } = allProps
+    field,
+    ListComponent,
+    visible: providedVisible,
+    toggle: providedToggle,
+    disabled,
+    placeholder,
+    modalProps,
+    inputProps,
+    searchInputProps,
+    listProps,
+    hideInput,
+    closeOnSelect,
+    selectIcon,
+    clearIcon,
+    clearable,
+    renderItem,
+    style,
+  } = {
+    ...Select.defaultProps,
+    ...props,
+  }
 
-  const { 
+  const {
     inputValue,
     onInputValueChange,
   } = useInputBase(
     field,
     fields.selectable as () => SelectableField<T, any>,
-    { value, onValueChange }
+    { value, onValueChange },
   )
 
-  const isValueArray = TypeGuards.isArray(inputValue) && multiple
-
-  const {
-    loading,
-    setLoading,
-    labelOptions,
-    setLabelOptions,
-    filteredOptions,
-    load,
-    onChangeSearch,
-  } = useSearch({
-    value: inputValue,
-    multiple,
-    options,
-    filterItems,
-    debugName,
-    defaultOptions,
-    loadOptions,
-    onLoadOptionsError,
-  })
-
-  const [visible, toggle] = useConditionalState(_visible, _toggle, { initialValue: false, isBooleanToggle: true })
-
-  const currentValueLabel = useMemo(() => {
-    const _options = (multiple ? labelOptions : labelOptions?.[0]) as Multi extends true ? Options<T> : Option<T>
-
-    const label = getLabel(_options)
-
-    return label
-  }, [labelOptions])
-
-  onMount(() => {
-    if (loadOptionsOnMount && !!loadOptions) {
-      load()
-    }
-  })
-
-  const prevVisible = usePrevious(visible)
-
-  onUpdate(() => {
-    if (visible && !prevVisible && loadOptionsOnOpen && !!loadOptions) {
-      load()
-    }
-  }, [visible, prevVisible])
+  const [visible, toggle] = useConditionalState(
+    providedVisible,
+    providedToggle,
+    { isBooleanToggle: true, initialValue: false },
+  )
 
   const styles = useStylesFor(Select.styleRegistryName, style)
 
   const compositionStyles = useCompositionStyles(['item', 'list', 'input', 'searchInput'], styles)
 
-  const currentOptions = searchable ? filteredOptions : defaultOptions
+  const selectSearch = useSelectSearch({
+    options: providedOptions,
+    filterFn,
+    loadOptionsFn,
+    onLoadOptionsError,
+  })
 
-  const close = () => toggle?.()
+  const options = searchable ? selectSearch.filteredOptions : providedOptions
 
-  const select = useCallback((selectedValue) => {
-    let newValue = null
-    let newOption = null
-    let removedIndex = null
+  const onSelectOption: SelectProps<T, C>['onSelect'] = useCallback((option) => {
+    if (closeOnSelect) toggle(false)
+    onSelect?.(option)
+  }, [closeOnSelect, onSelect])
 
-    if (multiple && isValueArray) {
-      if (inputValue.includes(selectedValue)) {
-        removedIndex = inputValue.findIndex(v => v === selectedValue)
+  const ListHeader = useCallback(() => {
+    if (!searchable) return null
 
-        newValue = inputValue.filter((v, i) => i !== removedIndex)
-      } else {
-        if (TypeGuards.isNumber(limit) && inputValue.length >= limit) {
-          return
+    return <SearchInput
+      debugName={'select:search'}
+      debounce={selectSearch.isAsync ? 800 : null}
+      onSearchChange={selectSearch.onSearch}
+      placeholder='Search'
+      onTypingChange={(isTyping) => {
+        if (selectSearch?.isAsync) {
+          selectSearch.onChangeLoading(isTyping)
         }
-
-        newOption = currentOptions.find(o => o.value === selectedValue)
-
-        newValue = [...inputValue, selectedValue]
-      }
-    } else {
-      newValue = selectedValue
-      newOption = currentOptions.find(o => o.value === selectedValue)
-    }
-
-    onInputValueChange(newValue)
-
-    onSelect?.(newValue)
-
-    if (isValueArray) {
-      if (removedIndex !== null) {
-        const newOptions = [...labelOptions]
-        newOptions.splice(removedIndex, 1)
-        setLabelOptions(newOptions)
-      } else {
-        const newLabels = [...labelOptions, newOption]
-        setLabelOptions(newLabels)
-      }
-    } else {
-      setLabelOptions([newOption])
-    }
-
-    if (closeOnSelect) {
-      close?.()
-    }
-  }, [isValueArray, (isValueArray ? inputValue : [inputValue]), limit, multiple, labelOptions, currentOptions])
-
-  const renderListItem = useCallback(({ item, index }) => {
-    let selected = false
-
-    if (multiple && isValueArray) {
-      selected = inputValue?.includes(item.value)
-    } else {
-      selected = inputValue === item.value
-    }
-
-    return (
-      <Item
-        debugName={`${debugName} item ${item.value}`}
-        selected={selected}
-        text={item.label}
-        item={item}
-        onPress={() => select(item.value)}
-        // @ts-ignore
-        icon={selectedIcon}
-        // @ts-ignore
-        rightIcon={selectedIcon}
-        style={compositionStyles?.item}
-        index={index}
-        {...itemProps}
-      />
-    )
-  }, [inputValue, select, multiple])
-
-  const isEmpty = TypeGuards.isNil(inputValue)
-  const showClearIcon = !isEmpty && clearable
-
-  const inputIcon = showClearIcon ? clearIconName : arrowIconName
-
-  const onPressInputIcon = () => {
-    if (showClearIcon) {
-      onInputValueChange(null)
-    } else {
-      close?.()
-    }
-  }
-
-  const searchHeader = searchable ? <SearchInput
-    debugName={debugName}
-    onTypingChange={(isTyping) => {
-      if (searchable && !!loadOptions) {
-        setLoading(isTyping)
-      }
-    }}
-    debounce={!!loadOptions ? 800 : null}
-    onSearchChange={onChangeSearch}
-    style={compositionStyles?.searchInput}
-    {...searchInputProps}
-  /> : null
-
-  const _ListHeaderComponent = useMemo(() => {
-    if (ListHeaderComponent) {
-      return <ListHeaderComponent
-        searchComponent={searchHeader}
-      />
-    }
-
-    return searchHeader
-
-  }, [searchable, ListHeaderComponent])
-
-  const Input = outerInputComponent
+      }}
+      {...searchInputProps}
+      style={compositionStyles?.searchInput}
+    />
+  }, [searchInputProps])
 
   return <>
-    {
-      !hideInput ? (
-        // @ts-ignore
-        <Input
-          clearIcon={{
-            icon: inputIcon as AppIcon,
-            onPress: disabled ? null : onPressInputIcon,
-          }}
-          currentValueLabel={currentValueLabel}
-          debugName={`${debugName} select input`}
-          style={compositionStyles?.input}
-          {...allProps}
-          {...inputProps}
-          visible={visible}
-          toggle={toggle}
-        />
-      ) : null
-    }
+    {hideInput ? null : (
+      <SelectInput
+        options={options}
+        value={inputValue}
+        onValueChange={onInputValueChange}
+        toggle={toggle}
+        getLabelFn={getLabelFn}
+        disabled={disabled}
+        placeholder={placeholder}
+        multiple={multiple}
+        clearIcon={clearIcon}
+        selectIcon={selectIcon}
+        clearable={clearable}
+        {...inputProps}
+        style={compositionStyles?.input}
+      />
+    )}
 
-    <Modal
-      title={label}
-      description={description}
-      {...modalProps}
-      debugName={`${debugName} modal`}
-      style={styles}
-      id={null}
-      visible={visible}
-      toggle={toggle}
-    >
-      <ListComponent
-        data={searchable ? filteredOptions : options}
-        scrollEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        style={compositionStyles?.list}
-        keyExtractor={(i: { value: any }) => i.value}
-        renderItem={renderListItem}
-        fakeEmpty={loading}
-        separators
-        keyboardAware={false}
+    <Modal {...modalProps} visible={visible} toggle={toggle} style={styles}>
+      <SelectList
+        options={options}
+        value={inputValue}
+        onValueChange={onInputValueChange}
+        fakeEmpty={selectSearch.loading}
+        placeholder={{ loading: selectSearch?.loading }}
+        ListHeaderComponent={ListHeader}
+        limit={limit}
+        multiple={multiple}
+        Component={ListComponent}
+        onSelect={onSelectOption}
+        renderItem={renderItem}
+        itemStyle={compositionStyles?.item}
         {...listProps}
-        ListHeaderComponent={_ListHeaderComponent}
-        placeholder={{
-          loading,
-        }}
+        style={compositionStyles?.list}
       />
     </Modal>
   </>
 }
 
 Select.styleRegistryName = 'Select'
-Select.elements = [...Modal.elements, 'input', 'list', 'item', 'searchInput']
+Select.elements = ['input', 'list', 'item', 'searchInput']
 Select.rootElement = 'inputWrapper'
 
-Select.withVariantTypes = <S extends AnyRecord>(styles: S) => {
-  return Select as (<T extends string | number = string, Multi extends boolean = false>(props: StyledComponentProps<SelectProps<T, Multi>, typeof styles>) => IJSX)
-}
-
 Select.defaultProps = {
-  getLabel: defaultGetLabel,
-  outerInputComponent: OuterInput,
-  searchInputProps: {},
-  arrowIconName: 'chevrons-up-down' as AppIcon,
-  clearIconName: 'x' as AppIcon,
-  placeholder: 'Select',
-  clearable: false,
-  selectedIcon: 'check' as AppIcon,
-  hideInput: false,
+  filterFn: defaultFilterFunction,
+  getLabelFn: defaultGetLabel,
+  searchable: true,
   multiple: false,
-  loadOptionsOnOpen: false,
-  disabled: false,
-  filterItems: defaultFilterFunction,
-  renderItem: Button,
   ListComponent: List,
-} as Partial<SelectProps<any, boolean>>
+  placeholder: 'Select',
+  selectIcon: 'chevrons-up-down' as AppIcon,
+  clearIcon: 'x' as AppIcon,
+  selectedIcon: 'check' as AppIcon,
+} as Partial<SelectBaseProps<any, any, any>>
 
-MobileStyleRegistry.registerComponent(Select)
+// MobileStyleRegistry.registerComponent(Select)
