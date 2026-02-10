@@ -11,7 +11,6 @@ import { SelectBaseProps, SelectProps } from './types'
 import { ComponentType } from 'react'
 import { List } from '../List'
 import { AppIcon } from '@codeleap/styles'
-import { MemoizedSelectDefaultItem } from './components/DefaultItem'
 
 export const NewSelect = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {
@@ -71,9 +70,9 @@ export const NewSelect = <T extends string | number, C extends ComponentType<any
 
   const options = searchable ? selectSearch.filteredOptions : providedOptions
 
-  const onSelectOption: SelectProps<T, C>['onSelect'] = useCallback((optionsOrOptions) => {
+  const onSelectOption: SelectProps<T, C>['onSelect'] = useCallback((option) => {
     if (closeOnSelect) toggle(false)
-    onSelect?.(optionsOrOptions)
+    onSelect?.(option)
   }, [closeOnSelect, onSelect])
 
   const ListHeader = useCallback(() => {
