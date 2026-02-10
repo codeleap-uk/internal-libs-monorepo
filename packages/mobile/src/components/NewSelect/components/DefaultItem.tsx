@@ -1,12 +1,24 @@
 import { memoBy } from '@codeleap/utils'
-import { Button, ButtonProps } from '../../Button'
+import { Button } from '../../Button'
+import { SelectRenderItemInfo } from '../types'
 
-export const SelectDefaultItem = (props: ButtonProps) => {
-  console.log('RE RENDER', props?.text)
+export const SelectDefaultItem = <T extends string | number>(props: SelectRenderItemInfo<T>) => {
+  const {
+    item,
+    onSelect,
+    selected,
+  } = props
 
-  const text = props?.selected ? 'Selected - ' + props?.text : props?.text
+  console.log('[RENDER] item', item)
 
-  return <Button {...props} text={text} />
+  return (
+    <Button
+      debugName='select:defaultItem'
+      text={item?.label}
+      rightIcon={selected ? 'check' as never : null as never}
+      onPress={onSelect}
+    />
+  )
 }
 
 export const MemoizedSelectDefaultItem = memoBy(SelectDefaultItem, 'selected')

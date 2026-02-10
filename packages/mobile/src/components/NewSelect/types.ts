@@ -1,13 +1,20 @@
 import { AnyFunction, Option, Options, PropsOf, StylesOf } from '@codeleap/types'
 import { UseSelectSearchParams } from './hooks/useSelectSearch'
 import { SelectableField } from '@codeleap/form'
-import { ComponentType } from 'react'
+import { ComponentType, ReactElement } from 'react'
 import { List } from '../List'
 import { ModalProps } from '../Modal'
 import { TextInputProps } from '../TextInput'
 import { SearchInputProps } from '../SearchInput'
 import { SelectComposition } from './styles'
 import { AppIcon } from '@codeleap/styles'
+
+export type SelectRenderItemInfo<T> = {
+  onSelect: () => void
+  selected: boolean
+  item: Option<T>
+  index: number
+}
 
 export type SelectBaseProps<T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
   Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
@@ -35,10 +42,9 @@ export type SelectBaseProps<T extends string | number, Multi extends boolean = f
     clearIcon?: AppIcon
     selectIcon?: AppIcon
     clearable?: boolean
+    renderItem?: (info: SelectRenderItemInfo<T>) => ReactElement
 
     style?: StylesOf<SelectComposition>
-    selectedIcon?: AppIcon
-    renderItem: any
   }
 
 export type SelectProps<T extends string | number, C extends ComponentType<any> = typeof List> = SelectBaseProps<T, false, C> | SelectBaseProps<T, true, C>

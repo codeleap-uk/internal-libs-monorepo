@@ -1,15 +1,15 @@
-import { PropsOf } from '@codeleap/types'
+import { PropsOf, TypeGuards } from '@codeleap/types'
 import { ComponentType, useCallback } from 'react'
 import { List } from '../../List'
-import { MemoizedSelectDefaultItem } from './DefaultItem'
 import { useSelect } from '../hooks/useSelect'
 import { SelectProps } from '../types'
+import { MemoizedSelectDefaultItem } from './DefaultItem'
 
 type SelectListProps<T extends string | number, C extends ComponentType<any> = typeof List> =
-  PropsOf<C> &
+  Omit<PropsOf<C>, 'renderItem' | 'data'> &
   Pick<
     SelectProps<T, C>,
-    'options' | 'onSelect' | 'onValueChange' | 'value' | 'limit' | 'multiple'
+    'options' | 'onSelect' | 'onValueChange' | 'value' | 'limit' | 'multiple' | 'renderItem'
   > &
   {
     Component?: C
@@ -26,6 +26,7 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
     limit,
     multiple = false,
     onSelect: providedOnSelect,
+    renderItem: providedRenderItem,
     ...listProps
   } = props
 
@@ -37,17 +38,21 @@ export const SelectList = <T extends string | number, C extends ComponentType<an
     providedOnSelect,
   )
 
-  const renderItem = useCallback(({ item }) => {
+  const renderItem = useCallback(({ item, index }) => {
     const selected = multiple
       ? (value as T[])?.includes(item?.value)
       : value === item?.value
 
+    if (TypeGuards.isFunction(providedRenderItem)) {
+      return providedRenderItem({ selected, item, index, onSelect: () => onSelect(item) })
+    }
+
     return (
       <MemoizedSelectDefaultItem
-        debugName='button'
         selected={selected}
-        text={item?.label}
-        onPress={() => onSelect(item)}
+        item={item}
+        index={index}
+        onSelect={() => onSelect(item)}
       />
     )
   }, [value, onSelect, multiple])
