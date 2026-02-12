@@ -47,9 +47,9 @@ export const SelectInput = <T extends string | number>(props: SelectInputCompone
         icon: inputIcon,
         onPress: onPressInputIcon,
       }}
-      {...inputProps}
       onPress={disabled ? null : toggle}
       disabled={disabled}
+      {...inputProps}
       value={text}
       onValueChange={() => text}
     />
