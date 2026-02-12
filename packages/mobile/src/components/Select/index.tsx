@@ -131,7 +131,6 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
         value={inputValue}
         onValueChange={onInputValueChange}
         fakeEmpty={selectSearch.loading}
-        placeholder={{ loading: selectSearch?.loading }}
         ListHeaderComponent={ListHeader}
         limit={limit}
         multiple={multiple}
@@ -144,6 +143,7 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
         windowSize={5}
         removeClippedSubviews={true}
         {...listProps}
+        placeholder={{ ...listProps?.placeholder, loading: selectSearch?.loading }}
         style={compositionStyles?.list}
       />
     </Modal>
@@ -169,6 +169,7 @@ Select.defaultProps = {
   clearIcon: 'x' as AppIcon,
   selectedIcon: 'check' as AppIcon,
   SelectInputComponent: SelectInput,
+  listProps: {},
 } as Partial<SelectBaseProps<any, any, any>>
 
 MobileStyleRegistry.registerComponent(Select)

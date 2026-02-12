@@ -49,15 +49,15 @@ export function useSpotlight(name: string) {
   const ctx = useContext(SpotlightCtx)
 
   const imList =
-    Object.values(ctx.spotlights[name] || {})
+    Object.values(ctx?.spotlights?.[name] || {})
 
   return {
     images: imList,
-    currentIndex: ctx.indexes[name],
+    currentIndex: ctx?.indexes?.[name],
     set(img: ImageSource, id?: string) {
       const newId = id || uuid.v4() as string
-      ctx.setSpotlights((prev) => {
-        const images = { ...prev[name] }
+      ctx?.setSpotlights((prev) => {
+        const images = { ...prev?.[name] }
 
         if (id !== null) {
           images[id] = {
@@ -83,8 +83,8 @@ export function useSpotlight(name: string) {
       return newId
     },
     remove(id: string) {
-      ctx.setSpotlights((prev) => {
-        const images = { ...prev[name] }
+      ctx?.setSpotlights((prev) => {
+        const images = { ...prev?.[name] }
         delete images[id]
         return {
           ...prev,
@@ -94,24 +94,24 @@ export function useSpotlight(name: string) {
     },
     open(id: string) {
       const newIdx = imList.findIndex(x => x.id === id)
-      ctx.setIndexes((prev) => ({
+      ctx?.setIndexes((prev) => ({
         ...prev,
         [name]: newIdx,
       }))
     },
     close() {
 
-      ctx.setIndexes((prev) => ({
+      ctx?.setIndexes((prev) => ({
         ...prev,
         [name]: undefined,
       }))
     },
     clear() {
-      ctx.setIndexes((prev) => ({
+      ctx?.setIndexes((prev) => ({
         ...prev,
         [name]: undefined,
       }))
-      ctx.setSpotlights((prev) => {
+      ctx?.setSpotlights((prev) => {
 
         return {
           ...prev,
