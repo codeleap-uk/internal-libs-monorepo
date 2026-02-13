@@ -39,6 +39,8 @@ export * from './useDerivedState'
 export * from './useFilteredList'
 export * from './useLazyStore'
 export * from './useOptions'
+export * from './useSelect'
+export * from './useSelectSearch'
 
 export {
   useEffect,

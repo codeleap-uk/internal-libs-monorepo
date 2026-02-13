@@ -1,7 +1,6 @@
 import { SelectInput } from './components/Input'
 import { Modal } from '../Modal'
-import { useCallback, useConditionalState } from '@codeleap/hooks'
-import { useSelectSearch } from './hooks/useSelectSearch'
+import { useCallback, useConditionalState, useSelectSearch } from '@codeleap/hooks'
 import { SearchInput } from '../SearchInput'
 import { defaultFilterFunction, defaultGetLabel } from './defaults'
 import { SelectList } from './components/SelectList'
@@ -16,6 +15,9 @@ import { MobileStyleRegistry } from '../../Registry'
 
 export * from './styles'
 export * from './types'
+export * from './components/DefaultItem'
+export * from './components/Input'
+export * from './components/SelectList'
 
 export const Select = <T extends string | number, C extends ComponentType<any> = typeof List>(props: SelectProps<T, C>) => {
   const {

@@ -2,6 +2,15 @@ import { Option, TypeGuards } from '@codeleap/types'
 import { deepEqual } from '@codeleap/utils'
 import { useCallback, useEffect, useRef } from 'react'
 
+/**
+ * Hook for managing single or multiple option selection with deselection support.
+ *
+ * @example
+ * const { onSelect } = useSelect(selectedValue, setSelectedValue)
+ *
+ * @example
+ * const { onSelect } = useSelect(selectedValues, setSelectedValues, true, 3)
+ */
 export function useSelect<T extends string | number>(
   value: any,
   onValueChange: (newValue: any) => void,

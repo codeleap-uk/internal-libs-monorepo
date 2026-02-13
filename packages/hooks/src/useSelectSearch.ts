@@ -9,6 +9,20 @@ export type UseSelectSearchParams<T> = {
   onLoadOptionsError?: (err: Error) => void
 }
 
+/**
+ * Hook for managing search and filtering of selectable options. Supports both synchronous filtering and asynchronous loading.
+ *
+ * @example
+ * const search = useSelectSearch({
+ *   options: allOptions,
+ *   filterFn: (term, opts) => opts.filter(o => o.label.includes(term))
+ * })
+ *
+ * @example
+ * const search = useSelectSearch({
+ *   loadOptionsFn: async (term) => fetchOptions(term)
+ * })
+ */
 export const useSelectSearch = <T>(params: UseSelectSearchParams<T>) => {
   const {
     filterFn,

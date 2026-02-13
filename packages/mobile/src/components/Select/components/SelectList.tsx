@@ -1,7 +1,7 @@
 import { PropsOf, StylesOf, TypeGuards } from '@codeleap/types'
 import { ComponentType, useCallback } from 'react'
 import { List } from '../../List'
-import { useSelect } from '../hooks/useSelect'
+import { useSelect } from '@codeleap/hooks'
 import { SelectProps } from '../types'
 import { MemoizedSelectDefaultItem } from './DefaultItem'
 import { SelectItemComposition } from '../styles'
