@@ -167,7 +167,6 @@ Select.defaultProps = {
   placeholder: 'Select',
   selectIcon: 'chevrons-up-down' as AppIcon,
   clearIcon: 'x' as AppIcon,
-  selectedIcon: 'check' as AppIcon,
   SelectInputComponent: SelectInput,
   listProps: {},
 } as Partial<SelectBaseProps<any, any, any>>

@@ -35,7 +35,7 @@ export type SelectInputComponentProps<T extends string | number = any, Multi ext
 export type SelectBaseProps<T extends string | number, Multi extends boolean = false, C extends ComponentType<any> = typeof List> =
   Pick<UseSelectSearchParams<T>, 'filterFn' | 'loadOptionsFn' | 'onLoadOptionsError'> &
   {
-    options: Options<T>
+    options?: Options<T>
     value?: Multi extends true ? T[] : T | null
     onValueChange?: (newValue: Multi extends true ? T[] : T | null) => void
     onSelect?: (option: Option<T>) => void
