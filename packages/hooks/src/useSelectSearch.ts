@@ -63,5 +63,6 @@ export const useSelectSearch = <T>(params: UseSelectSearchParams<T>) => {
     filteredOptions,
     onChangeLoading: setLoading,
     isAsync: TypeGuards.isFunction(loadOptionsFn),
+    onResetFilteredOptions: () => onFilterOptions(options),
   }
 }

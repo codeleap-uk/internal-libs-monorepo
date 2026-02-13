@@ -65,12 +65,6 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
     { value, onValueChange },
   )
 
-  const [visible, toggle] = useConditionalState(
-    providedVisible,
-    providedToggle,
-    { isBooleanToggle: true, initialValue: false },
-  )
-
   const styles = useStylesFor(Select.styleRegistryName, style)
 
   const compositionStyles = useCompositionStyles(['item', 'list', 'input', 'searchInput'], styles)
@@ -81,6 +75,17 @@ export const Select = <T extends string | number, C extends ComponentType<any> =
     loadOptionsFn,
     onLoadOptionsError,
   })
+
+  const [visible, internalToggle] = useConditionalState(
+    providedVisible,
+    providedToggle,
+    { isBooleanToggle: true, initialValue: false },
+  )
+
+  const toggle = (newVisible?: boolean) => {
+    if (searchable) selectSearch.onResetFilteredOptions()
+    internalToggle(newVisible)
+  }
 
   const options = searchable ? selectSearch.filteredOptions : providedOptions
 
