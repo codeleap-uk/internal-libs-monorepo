@@ -1,5 +1,4 @@
 import { AnyFunction, Option, Options, PropsOf, StylesOf } from '@codeleap/types'
-import { UseSelectSearchParams } from './hooks/useSelectSearch'
 import { SelectableField } from '@codeleap/form'
 import { ComponentType, ReactElement } from 'react'
 import { List } from '../List'
@@ -8,6 +7,7 @@ import { TextInputProps } from '../TextInput'
 import { SearchInputProps } from '../SearchInput'
 import { SelectComposition, SelectItemComposition } from './styles'
 import { AppIcon } from '@codeleap/styles'
+import { UseSelectSearchParams } from '@codeleap/hooks'
 
 export type SelectRenderItemInfo<T> = {
   onSelect: () => void
